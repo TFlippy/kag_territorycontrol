@@ -17,6 +17,7 @@
   <li><b>Caesar</b> - Spriting</li>
   <li><b>Olimarrex</b> - Scripting</li>
   <li><b>Gingerbeard</b> - Mapping</li>
+  <li><b>Jenny</b> - Spriting</li>
 </ul>
 
 
