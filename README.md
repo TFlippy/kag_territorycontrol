@@ -1,5 +1,5 @@
 <h2 align = 'center'><img src="https://imgur.com/w4xpq4L.png"><br>Territory Control</h2>
-<p align = 'center'>A <a href="https://github.com/transhumandesign">King Arthur's Gold</a> Mod by TFlippy</p>
+<p align = 'center'>A <a href="https://github.com/transhumandesign/kag-base">King Arthur's Gold</a> Mod by TFlippy</p>
 <h2>About</h2>
 <p>
   Territory Control revolves around base building, gathering resources, conquering other teams and ruling the world.
