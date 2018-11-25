@@ -115,7 +115,7 @@ void DoExplosion(CBlob@ this)
 		{
 			CBlob@ blob = server_CreateBlob("mat_mithril", -1, this.getPosition());
 			blob.setVelocity(getRandomVelocity(angle, 4 + XORRandom(15), 60));
-			blob.server_SetQuantity(50 + XORRandom(100));
+			blob.server_SetQuantity(XORRandom(75));
 			
 			CBlob@ gas = server_CreateBlob("falloutgas", -1, this.getPosition());
 			gas.setVelocity(getRandomVelocity(angle, 8 + XORRandom(10), 70));
