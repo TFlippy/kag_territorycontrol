@@ -144,11 +144,11 @@ void onRenderScoreboard(CRules@ this)
 
 		GUI::SetFont("menu");
 		GUI::DrawText("General Rules and Notes", Vec2f(10 + tl.x, 10 + tl.y), black);
-		
-		GUI::DrawText("- Do not grief or sabotage your team, such as by wasting resources or stealing the leadership and kicking everyone out.", Vec2f(10 + tl.x, 45 + tl.y), black);
-		GUI::DrawText("- Intentionally crashing the server will result in a lengthy ban.", Vec2f(10 + tl.x, 60 + tl.y), black);
-		GUI::DrawText("- Do not encase neutral spawns in iron or plasteel.", Vec2f(10 + tl.x, 75 + tl.y), black);
-		GUI::DrawText("- Spawnkilling and killing neutrals is allowed - just remember that you won't be a likeable person.", Vec2f(10 + tl.x, 90 + tl.y), black);
+		GUI::DrawText("- Do not grief or sabotage your team, such as by wasting resources or stealing the leadership and kicking everyone out.", Vec2f(10 + tl.x, 30 + tl.y), black);
+		GUI::DrawText("- Intentionally crashing the server will result in a lengthy ban.", Vec2f(10 + tl.x, 45 + tl.y), black);
+		GUI::DrawText("- Do not encase neutral spawns in iron or plasteel.", Vec2f(10 + tl.x, 60 + tl.y), black);
+		GUI::DrawText("- Spawnkilling and killing neutrals is allowed - just remember that you won't be a likeable person.", Vec2f(10 + tl.x, 75 + tl.y), black);
+		GUI::DrawText("- Do not hoard slaves. Slaving everyone ruins the fun for the rest of the server.", Vec2f(10 + tl.x, 90 + tl.y), black);
 		// GUI::DrawText("- If you see an admin abusing, report it in the #report channel of our Discord server.", Vec2f(10 + tl.x, 90 + tl.y), black);
 	}
 	
@@ -521,7 +521,7 @@ void onRenderScoreboard(CRules@ this)
 		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
 	}
 	
-	// Discord Button
+	// Blog Button
 	{
 		f32 width = 100;
 		f32 height = 40;
@@ -535,6 +535,47 @@ void onRenderScoreboard(CRules@ this)
 	
 		Vec2f tl = Vec2f(getScreenWidth() - 340 - width, y_offset + 10);
 		Vec2f br = Vec2f(getScreenWidth() - 340, tl.y + height);
+		
+		CControls@ controls = getControls();
+		Vec2f mousePos = controls.getMouseScreenPos();
+		
+		bool hover = mousePos.x > tl.x && mousePos.x < br.x && mousePos.y > tl.y && mousePos.y < br.y;
+		
+		if (hover)
+		{
+			GUI::DrawButton(tl, br);
+			
+			if (controls.isKeyJustPressed(KEY_LBUTTON))
+			{
+				Sound::Play("option");
+			
+				OpenWebsite("www.tflippy.com");
+				// Engine::AcceptWebsiteOpen(true);
+				// Menu::CloseAllMenus();
+			}
+		}
+		else
+		{
+			GUI::DrawPane(tl, br, 0xffcfcfcf);
+		}
+		
+		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
+	}
+	
+	// GitHub Button
+	{
+		f32 width = 100;
+		f32 height = 40;
+		
+		const string text = "GitHub Repository";
+		
+		Vec2f dim;
+		GUI::GetTextDimensions(text, dim);
+	
+		width = dim.x + 20;
+	
+		Vec2f tl = Vec2f(getScreenWidth() - 735 - width, y_offset + 10);
+		Vec2f br = Vec2f(getScreenWidth() - 735, tl.y + height);
 		
 		CControls@ controls = getControls();
 		Vec2f mousePos = controls.getMouseScreenPos();
