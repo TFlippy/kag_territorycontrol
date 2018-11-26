@@ -17,8 +17,7 @@ void onTick(CRules@ this)
     if(getGameTime() % 30 == 0)
     {
 		CMap@ map = getMap();
-		//Might be unneccessart but leaving it just to be safe
-		//Map netvars are attached to the map, so when we move to the next one it basically resets for us
+		
 		u32 lastMeteor = this.get_u32("lastMeteor");
 		u32 lastWreckage = this.get_u32("lastWreckage");
 		u32 time = getGameTime();
@@ -27,7 +26,7 @@ void onTick(CRules@ this)
 	
 		// print("last meteor: " + timeSinceMeteor + "; Chance: " + Maths::Max(10000 - timeSinceMeteor, 0));
 	
-        if (timeSinceMeteor > 60 && XORRandom(Maths::Max(350 - timeSinceMeteor, 0)) == 0) // Meteor strike
+        if (timeSinceMeteor > 6000 && XORRandom(Maths::Max(35000 - timeSinceMeteor, 0)) == 0) // Meteor strike
         {
             print("Random event: Meteor");
             server_CreateBlob("meteor", -1, Vec2f(XORRandom(map.tilemapwidth) * map.tilesize, 0.0f));
@@ -35,7 +34,7 @@ void onTick(CRules@ this)
 			lastMeteor = time;
         }
 		
-		if (timeSinceWreckage > 300 && XORRandom(Maths::Max(1200 - timeSinceWreckage, 0)) == 0) // Wreckage
+		if (timeSinceWreckage > 30000 && XORRandom(Maths::Max(120000 - timeSinceWreckage, 0)) == 0) // Wreckage
         {
             print("Random event: Wreckage");
             server_CreateBlob(XORRandom(100) > 50 ? "ancientship" : "poisonship", -1, Vec2f(XORRandom(map.tilemapwidth) * map.tilesize, 0.0f));
