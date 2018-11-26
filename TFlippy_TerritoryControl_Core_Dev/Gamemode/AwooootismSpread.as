@@ -35,13 +35,13 @@ void onCollision( CBlob@ this, CBlob@ blob, bool solid )
 			return;
 		}
 		CPlayer@ p = blob.getPlayer();
-		CPlayer@ h = this.getPlayer();
-		if(p !is null && h !is null)
+		CPlayer@ tp = this.getPlayer();
+		if(p !is null && tp !is null)
 		{
-			if(!h.hasTag("awootism"))
+			if(!tp.hasTag("awootism"))
 			{
-				h.Tag("awootism");
-				h.Sync("awootism",false);
+				tp.Tag("awootism");
+				tp.Sync("awootism",false);
 			}
 			if(!p.hasTag("awootism"))
 			{
@@ -58,7 +58,7 @@ void onCollision( CBlob@ this, CBlob@ blob, bool solid )
 				}
 
 				string message = p.getCharacterName();
-				string infectGiver = h.getCharacterName();
+				string infectGiver = tp.getCharacterName();
 				client_AddToChat(message +" has been infected by "+infectGiver, SColor(255, 255, 0, 0));
 				
 			}

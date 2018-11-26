@@ -13,6 +13,10 @@
 
 void onInit(CBlob@ this)
 {
+	//Adding awootism check in rain
+	this.addCommandID("removeAwootism");
+	//
+
 	this.getShape().SetStatic(true);
 	this.getCurrentScript().tickFrequency = 1;
 	
@@ -159,6 +163,26 @@ void onTick(CBlob@ this)
 		// print("" + (fog * modifier));
 		
 		this.getShape().SetAngleDegrees(10 + sine);
+
+		//Awootism check
+		CPlayer@ player = getLocalPlayer();
+		if(player !is null)
+		{
+			if(player.hasTag("awootism"))
+			{
+				if(!map.rayCastSolidNoBlobs(blob.getPosition(), Vec2f(blob.getPosition().x,0)) || blob.isInWater())
+				{
+					CBitStream params;
+					params.write_u16(blob.getNetworkID());
+					params.write_u16(player.getNetworkID());
+					this.SendCommand(this.getCommandID("removeAwootism"),params);
+					client_AddToChat("You have been cured from awootism!", SColor(255, 255, 0, 0));
+					player.Untag("awootism");
+					blob.Tag("infectOver");
+				}
+			}
+		}
+		//End
 	}
 	
 	if (getNet().isServer())
@@ -192,6 +216,30 @@ void onTick(CBlob@ this)
 		DecayStuff();
 	}
 }
+
+void onCommand(CBlob@ this,u8 cmd,CBitStream @params)
+{
+	if(cmd==this.getCommandID("removeAwootism")) 
+	{
+		u16 blob1,player1;
+
+		if(!params.saferead_u16(blob1)) {
+			return;
+		}
+		if(!params.saferead_u16(player1)) {
+			return;
+		}
+
+		CBlob@ ourBlob = getBlobByNetworkID(blob1);
+		CPlayer@ player = getPlayerByNetworkId(player1);
+
+		player.Untag("awootism");
+		player.Sync("awootism",false);
+		ourBlob.Tag("infectOver");
+		ourBlob.Sync("infectOver",false);
+	}
+}
+
 
 f32 Lerp(f32 v0, f32 v1, f32 t) 
 {
