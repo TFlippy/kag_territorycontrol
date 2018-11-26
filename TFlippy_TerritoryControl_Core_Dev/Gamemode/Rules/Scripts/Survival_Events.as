@@ -1,8 +1,5 @@
 #define SERVER_ONLY
 
-u32 lastMeteor = 0;
-u32 lastWreckage = 0;
-
 void onInit(CRules@ this)
 {
 
@@ -13,6 +10,15 @@ void onTick(CRules@ this)
     if(getGameTime() % 30 == 0)
     {
 		CMap@ map = getMap();
+		//Might be unneccessart but leaving it just to be safe
+		//Map netvars are attached to the map, so when we move to the next one it basically resets for us
+		if(!map.exists("lastMeteor") || !map.exists("lastWreckage"))
+		{
+			map.set_u32("lastMeteor", 0);
+			map.set_u32("lastWreckage", 0);
+		}
+		u32 lastMeteor = map.get_u32("lastMeteor");
+		u32 lastWreckage = map.get_u32("lastWreckage");
 		u32 time = getGameTime();
 		u32 timeSinceMeteor = time - lastMeteor;
 		u32 timeSinceWreckage = time - lastWreckage;
@@ -34,6 +40,8 @@ void onTick(CRules@ this)
 			
 			lastWreckage = time;
         }
+		map.set_u32("lastMeteor", lastMeteor);
+		map.set_u32("lastWreckage", lastWreckage);	
     }
 
 	// f32 rot = (getGameTime() * 0.5f % 360);
