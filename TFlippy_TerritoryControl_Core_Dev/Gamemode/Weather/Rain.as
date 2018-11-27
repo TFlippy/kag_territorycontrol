@@ -4,6 +4,7 @@
 #include "FireParticle.as";
 #include "canGrow.as";
 #include "MakeSeed.as";
+#include "CustomBlocks.as";
 
 // const Vec2f arm_offset = Vec2f(-2, -4);
 
@@ -380,6 +381,18 @@ void DecayStuff()
 							// print("" + CMap::tile_castle);
 						}
 					}
+					else if (offsetChainTileType == CMap::tile_concrete)
+					{
+						if (XORRandom(5) == 0) map.server_SetTile(offsetChainPos, CMap::tile_castle_moss);
+						else
+						{
+							map.server_SetTile(offsetChainPos, CMap::tile_mossyconcrete + XORRandom(2)); 
+						
+							// map.server_DestroyTile(offsetChainPos, XORRandom(10));
+							// print("" + offsetChainTileType = map.getTile(offsetChainPos).type);
+							// print("" + CMap::tile_castle);
+						}
+					}
 					else if (offsetChainTileType == CMap::tile_castle_back_moss)
 					{
 						if (XORRandom(8) == 0)
@@ -459,6 +472,38 @@ void DecayStuff()
 						for (int j = 0; j < XORRandom(8); j++)
 						{
 							map.server_DestroyTile(Vec2f(offsetChainPos.x + (XORRandom(4) - 2) * 8, offsetChainPos.y + (XORRandom(4) - 2) * 8), 0.5f);
+						}
+					}
+					else if (offsetChainTileType == CMap::tile_mossybconcrete)
+					{
+						if (XORRandom(10) == 0)
+						{
+							if (map.isTileSolid(map.getTile(offsetChainPos + Vec2f(0, 8)).type))
+							{
+								if (getTaggedBlobsInRadius(map, offsetChainPos, 24, "nature") < 3) 
+								{
+									server_MakeSeed(offsetChainPos, seeds[XORRandom(seeds.length)]);
+								}
+							}
+							else if (map.isTileSolid(map.getTile(offsetChainPos + Vec2f(0, -8)).type))
+							{
+								if (getTaggedBlobsInRadius(map, offsetChainPos, 12, "nature") == 0) 
+								{
+									server_CreateBlob("ivy", -1, offsetChainPos + Vec2f(0, 16));
+								}
+							}
+							else
+							{
+								if (getTaggedBlobsInRadius(map, offsetChainPos, 24, "nature") == 0) 
+								{
+									server_CreateBlob("bush", -1, offsetChainPos);
+									
+									for (int k = 0; k < XORRandom(8); k++)
+									{
+										map.server_DestroyTile(Vec2f(offsetChainPos.x + (XORRandom(4) - 2) * 8, offsetChainPos.y + (XORRandom(4) - 2) * 8), 0.5f);
+									}
+								}
+							}
 						}
 					}
 					
