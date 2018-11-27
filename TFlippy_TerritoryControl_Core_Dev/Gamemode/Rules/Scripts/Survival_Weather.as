@@ -9,6 +9,8 @@ void onInit(CRules@ this)
 
 void onRestart(CRules@ this)
 {
+	this.set_bool("raining", false);
+
 	u32 time = getGameTime();
 	
 	start_rain = time + 3000 + XORRandom(50000);
