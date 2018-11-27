@@ -249,7 +249,7 @@ namespace CMap
 		tile_bconcrete_d6,
 		tile_bconcrete_d7,
 		
-		tile_mossybconcrete,
+		tile_mossybconcrete = tile_bconcrete_d0 + 10,
 		tile_mossybconcrete_d0,
 		tile_mossybconcrete_d1,
 		tile_mossybconcrete_d2,
@@ -257,6 +257,36 @@ namespace CMap
 		tile_mossybconcrete_d4,
 	};
 };
+
+bool isTileIron(TileType tile)
+{
+	return tile >= CMap::tile_iron && tile <= CMap::tile_iron_v14;
+}
+
+bool isTileRustyIron(TileType tile)
+{
+	return tile >= CMap::tile_rustyiron && tile <= CMap::tile_rustyiron_d4;
+}
+
+bool isTileConcrete(TileType tile)
+{
+	return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_v14;
+}
+
+bool isTileBConcrete(TileType tile)
+{
+	return tile >= CMap::tile_bconcrete && tile <= CMap::tile_bconcrete_v14;
+}
+
+bool isTileMossyConcrete(TileType tile)
+{
+	return tile >= CMap::tile_mossyconcrete && tile <= CMap::tile_mossyconcrete_d4;
+}
+
+bool isTileMossyBConcrete(TileType tile)
+{
+	return tile >= CMap::tile_mossybconcrete && tile <= CMap::tile_mossybconcrete_d4;
+}
 
 void onInit(CMap@ this)
 {

@@ -136,7 +136,16 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 2);
 		blocks[0].push_back(b);
 	}
-	
+	{
+		BuildBlock b(CMap::tile_concrete, "concrete_block", "$concrete_block$", "Concrete Block\nSlightly more durable than stone.");
+		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 4);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_bconcrete, "bconcrete_block", "$bconcrete_block$", "Background Concrete Block\nSlightly more durable than stone.");
+		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 2);
+		blocks[0].push_back(b);
+	}
 	{
 		BuildBlock b(CMap::tile_iron, "iron_block", "$iron_block$", "Iron Plating\nA durable metal block. Indestructible by peasants.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 2);
@@ -158,7 +167,17 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "coin", "", "Coins", 2);
 		blocks[0].push_back(b);
 	}
-	
+	{
+		BuildBlock b(CMap::tile_reinforcedconcrete, "reinforcedconcrete_block", "$reinforcedconcrete_block$", "Reinforced Concrete Block\nMore durable than concrete.");
+		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 4);
+		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 2);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_ground, "ground_block", "$ground_block$", "Dirt\nFairly resistant to explosions.\nMay be only placed on dirt backgrounds or damaged dirt.");
+		AddRequirement(b.reqs, "blob", "mat_dirt", "Dirt", 10);
+		blocks[0].push_back(b);
+	}
 	{
 		BuildBlock b(CMap::tile_plasteel, "plasteel_block", "$plasteel_block$", "Plasteel Panel\nAn advanced composite material. Nearly indestructible.");
 		AddRequirement(b.reqs, "blob", "mat_plasteel", "Plasteel Sheet", 2);
@@ -169,6 +188,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_plasteel", "Plasteel Sheet", 1);
 		blocks[0].push_back(b);
 	}
+	
 	{
 		BuildBlock b(0, "stone_door", "$stone_door$", "Stone Door\nPlace next to walls");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
@@ -242,27 +262,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	{
 		BuildBlock b(0, "iron_platform", "$icon_ironplatform$", "Iron Platform\nReinforced one-way platform. Indestructible by peasants.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 3);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(CMap::tile_ground, "ground_block", "$ground_block$", "Dirt\nFairly resistant to explosions.\nMay be only placed on dirt backgrounds or damaged dirt.");
-		AddRequirement(b.reqs, "blob", "mat_dirt", "Dirt", 10);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(CMap::tile_concrete, "concrete_block", "$concrete_block$", "Concrete Block\nSlightly more durable than stone.");
-		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 4);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(CMap::tile_bconcrete, "bconcrete_block", "$bconcrete_block$", "Background Concrete Block\nSlightly more durable than stone.");
-		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 4);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(CMap::tile_reinforcedconcrete, "reinforcedconcrete_block", "$reinforcedconcrete_block$", "Reinforced Concrete Block\nMore durable than concrete.");
-		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 4);
-		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 2);
 		blocks[0].push_back(b);
 	}
 	

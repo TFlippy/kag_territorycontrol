@@ -531,18 +531,15 @@ void PlaceMostLikelyTile(CMap@ map, int offset)
 	{
 		const TileType[] neighborhood = { up, down, left, right };
 		
-		if ((neighborhood.find(CMap::tile_castle) != -1) ||
-		    (neighborhood.find(CMap::tile_castle_back) != -1))
+		if ((neighborhood.find(CMap::tile_castle) != -1) || (neighborhood.find(CMap::tile_castle_back) != -1))
 		{
 			map.SetTile(offset, CMap::tile_castle_back);
 		}
-		else if ((neighborhood.find(CMap::tile_wood) != -1) ||
-		         (neighborhood.find(CMap::tile_wood_back) != -1))
+		else if ((neighborhood.find(CMap::tile_wood) != -1) || (neighborhood.find(CMap::tile_wood_back) != -1))
 		{
 			map.SetTile(offset, CMap::tile_wood_back );
 		}
-		else if ((neighborhood.find(CMap::tile_ground) != -1) ||
-		         (neighborhood.find(CMap::tile_ground_back) != -1))
+		else if ((neighborhood.find(CMap::tile_ground) != -1) || (neighborhood.find(CMap::tile_ground_back) != -1))
 		{
 			map.SetTile(offset, CMap::tile_ground_back);
 		}
