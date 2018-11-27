@@ -536,58 +536,26 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				
 					// this.SetGlobalMessage(text);
 				// }
-				else if (tokens[0] == "!cursor")
-				{
-					if (tokens.length > 1)
-					{
-						string name = tokens[1];
-
-						CBlob@ newBlob = server_CreateBlob(name, blob.getTeamNum(), blob.getAimPos());
-						if (newBlob !is null && player !is null) 
-						{
-							newBlob.SetDamageOwnerPlayer(player);
-							
-							int quantity;
-							if (tokens.length > 2)
-							{
-								quantity = parseInt(tokens[2]);
-							}
-							else
-							{
-								quantity = newBlob.maxQuantity;
-							}
-							
-							newBlob.server_SetQuantity(quantity);
-						}
-					}
-				
-					return false;
-				}
 				else
 				{
-					if (tokens.length > 0)
-					{
-						string name = tokens[0].substr(1);
+					Vec2f spawnPos = blob.getPosition();
+					string name = tokens[0].substr(1, tokens[0].size());
 
-						CBlob@ newBlob = server_CreateBlob(name, blob.getTeamNum(), blob.getPosition());
-						if (newBlob !is null && player !is null) 
-						{
-							newBlob.SetDamageOwnerPlayer(player);
-							
-							int quantity;
-							if (tokens.length > 1)
-							{
-								quantity = parseInt(tokens[1]);
-							}
-							else
-							{
-								quantity = newBlob.maxQuantity;
-							}
-							
-							newBlob.server_SetQuantity(quantity);
-						}
+					if(tokens[0] == "!cursor")
+					{
+						if(tokens.length != 2) return false;
+
+						spawnPos = blob.getAimPos();
+						name = tokens[1];
 					}
-				
+
+					//Spawn a blob. (e.g. "!banana")
+					CBlob@ newBlob = server_CreateBlob(name, blob.getTeamNum(), spawnPos);
+					if (newBlob !is null && player !is null) 
+					{
+						newBlob.SetDamageOwnerPlayer(player);
+						newBlob.server_SetQuantity(newBlob.maxQuantity);
+					}
 					return false;
 				}
 			}

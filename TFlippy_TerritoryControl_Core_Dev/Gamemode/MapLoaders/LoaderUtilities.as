@@ -3,6 +3,60 @@
 #include "Explosion.as";
 #include "Hitters.as";
 #include "CustomBlocks.as";
+//#include "MatterSparks.as";
+
+// void CalculateMinimapColour( CMap@ this, u32 offset, TileType tile, SColor &out col)
+// {
+    // if (this.isTileSolid(tile) || (tile >= CMap::tile_iron && tile <= CMap::tile_matter_d2) || (tile >= CMap::tile_tnt && tile <= CMap::tile_rail_1_bg))
+	// {
+		// TileType leftside = this.getTile( offset - 1).type;
+		// TileType rightside = this.getTile( offset + 1).type;
+		// TileType upside = this.getTile( offset - this.tilemapwidth).type;
+		// TileType downside = this.getTile( offset + this.tilemapwidth).type;
+		// if(
+		// (!this.isTileSolid(leftside) && leftside < 256) ||
+		// (!this.isTileSolid(rightside) && rightside < 256) ||
+		// (!this.isTileSolid(upside) && upside < 256) ||
+		// (!this.isTileSolid(downside) && downside < 256)
+		// )
+		// col = SColor(0xff844715);
+		// else
+		// col = SColor(0xffC4873A);
+	// }
+	// else if (!this.isTileSolid(tile) && tile != 0 && !isGrassTile(tile))
+	// {
+		// TileType leftside = this.getTile( offset - 1).type;
+		// TileType rightside = this.getTile( offset + 1).type;
+		// TileType upside = this.getTile( offset - this.tilemapwidth).type;
+		// TileType downside = this.getTile( offset + this.tilemapwidth).type;
+		// if(
+		// (leftside == 0) ||
+		// (rightside == 0) ||
+		// (downside == 0) ||
+		// (upside == 0)
+		// )
+		// {
+			// if(this.isInWater(this.getTileWorldPosition(offset)))
+				// col = SColor(0xff789B8C);
+			// else
+				// col = SColor(0xffC4873A);
+		// }
+		// else
+		// {
+			// if(this.isInWater(this.getTileWorldPosition(offset)))
+				// col = SColor(0xff90AE9D);
+			// else
+				// col = SColor(0xffF3AC5C);
+		// }
+	// }
+	// else if (this.getTile(offset).type == 0 || isGrassTile(tile))
+	// {
+		// if(this.isInWater(this.getTileWorldPosition(offset)))
+			// col = SColor(0xffBDC5B4);
+		// else
+			// col = SColor(0xffEDCCA6);
+	// }
+// }
 
 bool isGrassTile(u16 tile)
 {
@@ -36,6 +90,23 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 	{
 		switch(oldTileType)
 		{
+			case CMap::tile_iron:
+				return CMap::tile_iron_d0;
+				
+			case CMap::tile_iron_d0:
+			case CMap::tile_iron_d1:
+			case CMap::tile_iron_d2:
+			case CMap::tile_iron_d3:
+			case CMap::tile_iron_d4:
+			case CMap::tile_iron_d5:
+			case CMap::tile_iron_d6:
+			case CMap::tile_iron_d7:
+				return oldTileType + 1;
+
+			case CMap::tile_iron_d8:
+				return CMap::tile_empty;
+
+
 			case CMap::tile_glass:
 				return CMap::tile_glass_d0;
 
@@ -250,183 +321,6 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			{
 				return CMap::tile_empty;
 			}
-			
-			case CMap::tile_iron:
-				return CMap::tile_iron_d0;
-				
-			case CMap::tile_iron_v0:
-			case CMap::tile_iron_v1:
-			case CMap::tile_iron_v2:
-			case CMap::tile_iron_v3:
-			case CMap::tile_iron_v4:
-			case CMap::tile_iron_v5:
-			case CMap::tile_iron_v6:
-			case CMap::tile_iron_v7:
-			case CMap::tile_iron_v8:
-			case CMap::tile_iron_v9:
-			case CMap::tile_iron_v10:
-			case CMap::tile_iron_v11:
-			case CMap::tile_iron_v12:
-			case CMap::tile_iron_v13:
-			case CMap::tile_iron_v14:
-			{
-				Vec2f pos = map.getTileWorldPosition(index);
-				
-				map.server_SetTile(pos, CMap::tile_iron_d0);
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
-
-				for (u8 i = 0; i < 4; i++)
-				{
-					iron_Update(map, map.getTileWorldPosition(index) + directions[i]);
-				}
-				return CMap::tile_iron_d0;
-			}
-				
-			case CMap::tile_iron_d0:
-			case CMap::tile_iron_d1:
-			case CMap::tile_iron_d2:
-			case CMap::tile_iron_d3:
-			case CMap::tile_iron_d4:
-			case CMap::tile_iron_d5:
-			case CMap::tile_iron_d6:
-			case CMap::tile_iron_d7:
-				return oldTileType + 1;
-
-			case CMap::tile_iron_d8:
-				return CMap::tile_empty;
-				
-			case CMap::tile_rustyiron:
-				return CMap::tile_rustyiron_d0;
-				
-			case CMap::tile_rustyiron_d0:
-			case CMap::tile_rustyiron_d1:
-			case CMap::tile_rustyiron_d2:
-			case CMap::tile_rustyiron_d3:
-				return oldTileType + 1;
-				
-			case CMap::tile_rustyiron_d4:
-				return CMap::tile_empty;
-			
-			case CMap::tile_reinforcedconcrete:
-				return CMap::tile_concrete_d0;
-
-			case CMap::tile_reinforcedconcrete_v0:
-			case CMap::tile_reinforcedconcrete_v1:
-			case CMap::tile_reinforcedconcrete_v2:
-			case CMap::tile_reinforcedconcrete_v3:
-			case CMap::tile_reinforcedconcrete_v4:
-			case CMap::tile_reinforcedconcrete_v5:
-			case CMap::tile_reinforcedconcrete_v6:
-			case CMap::tile_reinforcedconcrete_v7:
-			case CMap::tile_reinforcedconcrete_v8:
-			case CMap::tile_reinforcedconcrete_v9:
-			case CMap::tile_reinforcedconcrete_v10:
-			case CMap::tile_reinforcedconcrete_v11:
-			case CMap::tile_reinforcedconcrete_v12:
-			case CMap::tile_reinforcedconcrete_v13:
-			case CMap::tile_reinforcedconcrete_v14:
-			{
-				Vec2f pos = map.getTileWorldPosition(index);
-				
-				map.server_SetTile(pos, CMap::tile_reinforcedconcrete_d0);
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
-
-				for (u8 i = 0; i < 4; i++)
-				{
-					reinforcedconcrete_Update(map, map.getTileWorldPosition(index) + directions[i]);
-				}
-				return CMap::tile_reinforcedconcrete_d0;
-			}
-			
-			case CMap::tile_reinforcedconcrete_d0:
-			case CMap::tile_reinforcedconcrete_d1:
-			case CMap::tile_reinforcedconcrete_d2:
-			case CMap::tile_reinforcedconcrete_d3:
-			case CMap::tile_reinforcedconcrete_d4:
-			case CMap::tile_reinforcedconcrete_d5:
-			case CMap::tile_reinforcedconcrete_d6:
-			case CMap::tile_reinforcedconcrete_d7:
-			case CMap::tile_reinforcedconcrete_d8:
-			case CMap::tile_reinforcedconcrete_d9:
-			case CMap::tile_reinforcedconcrete_d10:
-			case CMap::tile_reinforcedconcrete_d11:
-			case CMap::tile_reinforcedconcrete_d12:
-			case CMap::tile_reinforcedconcrete_d13:
-			case CMap::tile_reinforcedconcrete_d14:
-				return oldTileType + 1;
-
-			case CMap::tile_reinforcedconcrete_d15:
-				return CMap::tile_empty;
-			
-			case CMap::tile_mossyconcrete:
-				return CMap::tile_mossyconcrete_d0;
-				
-			case CMap::tile_mossyconcrete_d0:
-			case CMap::tile_mossyconcrete_d1:
-			case CMap::tile_mossyconcrete_d2:
-			case CMap::tile_mossyconcrete_d3:
-				return oldTileType + 1;
-				
-			case CMap::tile_mossyconcrete_d4:
-				return CMap::tile_empty;
-			
-			case CMap::tile_bconcrete:
-				return CMap::tile_bconcrete_d0;
-
-			case CMap::tile_bconcrete_v0:
-			case CMap::tile_bconcrete_v1:
-			case CMap::tile_bconcrete_v2:
-			case CMap::tile_bconcrete_v3:
-			case CMap::tile_bconcrete_v4:
-			case CMap::tile_bconcrete_v5:
-			case CMap::tile_bconcrete_v6:
-			case CMap::tile_bconcrete_v7:
-			case CMap::tile_bconcrete_v8:
-			case CMap::tile_bconcrete_v9:
-			case CMap::tile_bconcrete_v10:
-			case CMap::tile_bconcrete_v11:
-			case CMap::tile_bconcrete_v12:
-			case CMap::tile_bconcrete_v13:
-			case CMap::tile_bconcrete_v14:
-			{
-				Vec2f pos = map.getTileWorldPosition(index);
-				
-				map.server_SetTile(pos, CMap::tile_bconcrete_d0);
-				
-				for (u8 i = 0; i < 4; i++)
-				{
-					bconcrete_Update(map, map.getTileWorldPosition(index) + directions[i]);
-				}
-				return CMap::tile_bconcrete_d0;
-			}
-
-			case CMap::tile_bconcrete_d0:
-			case CMap::tile_bconcrete_d1:
-			case CMap::tile_bconcrete_d2:
-			case CMap::tile_bconcrete_d3:
-			case CMap::tile_bconcrete_d4:
-			case CMap::tile_bconcrete_d5:
-			case CMap::tile_bconcrete_d6:
-				return oldTileType + 1;
-
-			case CMap::tile_bconcrete_d7:
-			{
-				return CMap::tile_empty;
-			}
-			
-			case CMap::tile_mossybconcrete:
-				return CMap::tile_mossybconcrete_d0;
-				
-			case CMap::tile_mossybconcrete_d0:
-			case CMap::tile_mossybconcrete_d1:
-			case CMap::tile_mossybconcrete_d2:
-			case CMap::tile_mossybconcrete_d3:
-				return oldTileType + 1;
-				
-			case CMap::tile_mossybconcrete_d4:
-				return CMap::tile_empty;
 		}
 	}
 	return map.getTile(index).type;
@@ -441,20 +335,20 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 		case CMap::tile_empty:
 		case CMap::tile_ground_back:
 		{
-			if(tile_old == CMap::tile_iron_d8 || tile_old == CMap::tile_biron_d8 || tile_old == CMap::tile_rustyiron_d4)
+			if(tile_old == CMap::tile_iron_d8 || tile_old == CMap::tile_biron_d8)
 				OnIronTileDestroyed(map, index);
 			else if (tile_old == CMap::tile_bglass_d0 || tile_old == CMap::tile_glass_d0)
 				OnGlassTileDestroyed(map, index);
 			else if (tile_old == CMap::tile_plasteel_d14 || tile_old == CMap::tile_bplasteel_d14)
 				OnPlasteelTileDestroyed(map, index);
-			else if (tile_old == CMap::tile_concrete_d7 || tile_old == CMap::tile_reinforcedconcrete_d15 || tile_old == CMap::tile_mossyconcrete_d4 || tile_old == CMap::tile_bconcrete_d7)
+			else if (tile_old == CMap::tile_concrete_d7)
 				OnConcreteTileDestroyed(map, index);
 			else if (tile_old == CMap::tile_matter_d2)
 				OnMatterTileDestroyed(map, index);
 			break;
 		}
 	}
-	/*
+	
 	CRules@ rules = getRules();
 	if(tile_new == CMap::tile_matter)
 	{
@@ -467,7 +361,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 		CBitStream params;
 		params.write_Vec2f(map.getTileWorldPosition(index));
 		rules.SendCommand(rules.getCommandID("remove_tile"), params);
-	}*/
+	}
 	
 
 	if (map.getTile(index).type > 255)
@@ -478,6 +372,25 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 
 		switch(tile_new)
 		{		
+			case CMap::tile_iron:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				break;
+
+			case CMap::tile_iron_d0:
+			case CMap::tile_iron_d1:
+			case CMap::tile_iron_d2:
+			case CMap::tile_iron_d3:	
+			case CMap::tile_iron_d4:
+			case CMap::tile_iron_d5:
+			case CMap::tile_iron_d6:
+			case CMap::tile_iron_d7:
+			case CMap::tile_iron_d8:
+				OnIronTileHit(map, index);
+				break;
+
+
 			case CMap::tile_glass:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
@@ -720,177 +633,6 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::FLAMMABLE);			
 				break;
-			
-			case CMap::tile_iron:
-			{
-				Vec2f pos = map.getTileWorldPosition(index);
-				
-				iron_SetTile(map, pos);
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
-				
-				break;
-			}
-			
-			case CMap::tile_iron_v0:
-			case CMap::tile_iron_v1:
-			case CMap::tile_iron_v2:
-			case CMap::tile_iron_v3:
-			case CMap::tile_iron_v4:
-			case CMap::tile_iron_v5:
-			case CMap::tile_iron_v6:
-			case CMap::tile_iron_v7:
-			case CMap::tile_iron_v8:
-			case CMap::tile_iron_v9:
-			case CMap::tile_iron_v10:
-			case CMap::tile_iron_v11:
-			case CMap::tile_iron_v12:
-			case CMap::tile_iron_v13:
-			case CMap::tile_iron_v14:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
-				break;
-
-			case CMap::tile_iron_d0:
-			case CMap::tile_iron_d1:
-			case CMap::tile_iron_d2:
-			case CMap::tile_iron_d3:	
-			case CMap::tile_iron_d4:
-			case CMap::tile_iron_d5:
-			case CMap::tile_iron_d6:
-			case CMap::tile_iron_d7:
-			case CMap::tile_iron_d8:
-				OnIronTileHit(map, index);
-				break;
-			
-			case CMap::tile_rustyiron:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
-				break;
-				
-			case CMap::tile_rustyiron_d0:
-			case CMap::tile_rustyiron_d1:
-			case CMap::tile_rustyiron_d2:
-			case CMap::tile_rustyiron_d3:
-			case CMap::tile_rustyiron_d4:
-				OnIronTileHit(map, index);
-				break;
-			
-			case CMap::tile_reinforcedconcrete:
-			{
-				Vec2f pos = map.getTileWorldPosition(index);
-				
-				reinforcedconcrete_SetTile(map, pos);
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
-				
-				break;
-			}
-			
-			case CMap::tile_reinforcedconcrete_v0:
-			case CMap::tile_reinforcedconcrete_v1:
-			case CMap::tile_reinforcedconcrete_v2:
-			case CMap::tile_reinforcedconcrete_v3:
-			case CMap::tile_reinforcedconcrete_v4:
-			case CMap::tile_reinforcedconcrete_v5:
-			case CMap::tile_reinforcedconcrete_v6:
-			case CMap::tile_reinforcedconcrete_v7:
-			case CMap::tile_reinforcedconcrete_v8:
-			case CMap::tile_reinforcedconcrete_v9:
-			case CMap::tile_reinforcedconcrete_v10:
-			case CMap::tile_reinforcedconcrete_v11:
-			case CMap::tile_reinforcedconcrete_v12:
-			case CMap::tile_reinforcedconcrete_v13:
-			case CMap::tile_reinforcedconcrete_v14:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
-				break;
-				
-			case CMap::tile_reinforcedconcrete_d0:
-			case CMap::tile_reinforcedconcrete_d1:
-			case CMap::tile_reinforcedconcrete_d2:
-			case CMap::tile_reinforcedconcrete_d3:
-			case CMap::tile_reinforcedconcrete_d4:
-			case CMap::tile_reinforcedconcrete_d5:
-			case CMap::tile_reinforcedconcrete_d6:
-			case CMap::tile_reinforcedconcrete_d7:
-			case CMap::tile_reinforcedconcrete_d8:
-			case CMap::tile_reinforcedconcrete_d9:
-			case CMap::tile_reinforcedconcrete_d10:
-			case CMap::tile_reinforcedconcrete_d11:
-			case CMap::tile_reinforcedconcrete_d12:
-			case CMap::tile_reinforcedconcrete_d13:
-			case CMap::tile_reinforcedconcrete_d14:
-			case CMap::tile_reinforcedconcrete_d15:
-				OnConcreteTileHit(map, index);
-				break;
-			
-			case CMap::tile_mossyconcrete:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
-				break;
-				
-			case CMap::tile_mossyconcrete_d0:
-			case CMap::tile_mossyconcrete_d1:
-			case CMap::tile_mossyconcrete_d2:
-			case CMap::tile_mossyconcrete_d3:
-			case CMap::tile_mossyconcrete_d4:
-				OnConcreteTileHit(map, index);
-				break;
-			
-			case CMap::tile_bconcrete:
-			{
-				Vec2f pos = map.getTileWorldPosition(index);
-				
-				bconcrete_SetTile(map, pos);
-				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
-				
-				break;
-			}
-
-			case CMap::tile_bconcrete_v0:
-			case CMap::tile_bconcrete_v1:
-			case CMap::tile_bconcrete_v2:
-			case CMap::tile_bconcrete_v3:
-			case CMap::tile_bconcrete_v4:
-			case CMap::tile_bconcrete_v5:
-			case CMap::tile_bconcrete_v6:
-			case CMap::tile_bconcrete_v7:
-			case CMap::tile_bconcrete_v8:
-			case CMap::tile_bconcrete_v9:
-			case CMap::tile_bconcrete_v10:
-			case CMap::tile_bconcrete_v11:
-			case CMap::tile_bconcrete_v12:
-			case CMap::tile_bconcrete_v13:
-			case CMap::tile_bconcrete_v14:
-				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
-				break;
-
-			case CMap::tile_bconcrete_d0:
-			case CMap::tile_bconcrete_d1:
-			case CMap::tile_bconcrete_d2:
-			case CMap::tile_bconcrete_d3:
-			case CMap::tile_bconcrete_d4:
-			case CMap::tile_bconcrete_d5:
-			case CMap::tile_bconcrete_d6:
-			case CMap::tile_bconcrete_d7:
-				OnBConcreteTileHit(map, index);
-				break;
-			
-			case CMap::tile_mossybconcrete:
-				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
-				break;
-				
-			case CMap::tile_mossybconcrete_d0:
-			case CMap::tile_mossybconcrete_d1:
-			case CMap::tile_mossybconcrete_d2:
-			case CMap::tile_mossybconcrete_d3:
-			case CMap::tile_mossybconcrete_d4:
-				OnConcreteTileHit(map, index);
-				break;
 		}
 	}
 }
@@ -961,41 +703,6 @@ void OnBIronTileUpdate(bool updateThis, bool updateOthers, CMap@ map, Vec2f pos)
 		if(isDown)																				//
 			OnBIronTileUpdate(true, false, map, pos + Vec2f( 0.0f, 8.0f));						//
 	}																							//
-}																								//
-
-void iron_SetTile(CMap@ map, Vec2f pos)															//
-{																								//
-    map.SetTile(map.getTileOffset(pos), CMap::tile_iron + iron_GetMask(map, pos));				//
-																								//
-    for (u8 i = 0; i < 4; i++)																	//
-    {																							//  
-        iron_Update(map, pos + directions[i]);													//
-    }																							//
-}																								//
-																								//
-u8 iron_GetMask(CMap@ map, Vec2f pos)															//
-{																								//
-    u8 mask = 0;																				//
-																								//
-    for (u8 i = 0; i < 4; i++)																	//
-    {																							//
-        if (isIronTile(map, pos + directions[i])) mask |= 1 << i;								//
-    }																							//
-																								//
-    return mask;																				//
-}																								//
-																								//
-void iron_Update(CMap@ map, Vec2f pos)															//
-{																								//
-    u16 tile = map.getTile(pos).type;															//
-    if (isIronTile(map, pos))																	//
-		map.SetTile(map.getTileOffset(pos),CMap::tile_iron+iron_GetMask(map,pos));				//
-}																								//
-																								//
-bool isIronTile(CMap@ map, Vec2f pos)															//
-{																								//
-    u16 tile = map.getTile(pos).type;															//
-    return tile >= CMap::tile_iron && tile <= CMap::tile_iron_v14;								//
 }																								//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 void OnGlassTileHit(CMap@ map, u32 index)														//
@@ -1192,25 +899,6 @@ void OnConcreteTileHit(CMap@ map, u32 index)													//
 	}																							//
 }																								//
 																								//
-void OnBConcreteTileHit(CMap@ map, u32 index)													//
-{																								//
-	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);			//
-																								//
-	if (getNet().isClient())																	//
-	{ 																							//
-		Vec2f pos = map.getTileWorldPosition(index);											//
-		for (int i = 0; i < 3; i++)																//
-		{																						//
-			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);									//
-			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;//
-			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)					//
-			: SColor(255, 110, 100, 93);														//
-			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);									//
-		}																						//
-		Sound::Play("PickStone" + (1 + XORRandom(3)), pos, 1.0f, 1.0f);							//
-	}																							//
-}																								//
-																								//
 void OnConcreteTileDestroyed(CMap@ map, u32 index)												//
 {																								//
 	if (getNet().isClient())																	//
@@ -1264,76 +952,6 @@ bool isConcreteTile(CMap@ map, Vec2f pos)														//
     u16 tile = map.getTile(pos).type;															//
     return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_v14;						//
 }																								//
-
-void reinforcedconcrete_SetTile(CMap@ map, Vec2f pos)											//
-{																								//
-    map.SetTile(map.getTileOffset(pos), CMap::tile_reinforcedconcrete + reinforcedconcrete_GetMask(map, pos));
-																								//
-    for (u8 i = 0; i < 4; i++)																	//
-    {																							//
-        reinforcedconcrete_Update(map, pos + directions[i]);									//
-    }																							//
-}																								//
-																								//
-u8 reinforcedconcrete_GetMask(CMap@ map, Vec2f pos)												//
-{																								//
-    u8 mask = 0;																				//
-																								//
-    for (u8 i = 0; i < 4; i++)																	//
-    {																							//
-        if (isReinforcedConcreteTile(map, pos + directions[i])) mask |= 1 << i;					//
-    }																							//
-																								//
-    return mask;																				//
-}																								//
-																								//
-void reinforcedconcrete_Update(CMap@ map, Vec2f pos)											//
-{																								//
-    u16 tile = map.getTile(pos).type;															//
-    if (isReinforcedConcreteTile(map, pos))														//
-		map.SetTile(map.getTileOffset(pos),CMap::tile_reinforcedconcrete+reinforcedconcrete_GetMask(map,pos));
-}																								//
-																								//
-bool isReinforcedConcreteTile(CMap@ map, Vec2f pos)												//
-{																								//
-    u16 tile = map.getTile(pos).type;															//
-    return tile >= CMap::tile_reinforcedconcrete && tile <= CMap::tile_reinforcedconcrete_v14;	//
-}	
-
-void bconcrete_SetTile(CMap@ map, Vec2f pos)											//
-{																								//
-    map.SetTile(map.getTileOffset(pos), CMap::tile_bconcrete + bconcrete_GetMask(map, pos));
-																								//
-    for (u8 i = 0; i < 4; i++)																	//
-    {																							//
-        bconcrete_Update(map, pos + directions[i]);									//
-    }																							//
-}																								//
-																								//
-u8 bconcrete_GetMask(CMap@ map, Vec2f pos)												//
-{																								//
-    u8 mask = 0;																				//
-																								//
-    for (u8 i = 0; i < 4; i++)																	//
-    {																							//
-        if (isBConcreteTile(map, pos + directions[i])) mask |= 1 << i;					//
-    }																							//
-																								//
-    return mask;																				//
-}																								//
-																								//
-void bconcrete_Update(CMap@ map, Vec2f pos)											//
-{																								//
-    u16 tile = map.getTile(pos).type;															//
-    if (isBConcreteTile(map, pos))														//
-		map.SetTile(map.getTileOffset(pos),CMap::tile_bconcrete+bconcrete_GetMask(map,pos));
-}																								//
-																								//
-bool isBConcreteTile(CMap@ map, Vec2f pos)												//
-{																								//
-    u16 tile = map.getTile(pos).type;															//
-    return tile >= CMap::tile_bconcrete && tile <= CMap::tile_bconcrete_v14;	//
-}	
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 void tntsparks(Vec2f at)																		//
 {																								//

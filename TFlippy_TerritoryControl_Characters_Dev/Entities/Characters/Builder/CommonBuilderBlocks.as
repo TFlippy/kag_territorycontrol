@@ -78,8 +78,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$plasteel_door$", "1x1PlasteelDoor.png", Vec2f(16, 8), 0);
 	AddIconToken("$ironladder$", "IronLadder_Icon.png", Vec2f(16, 16), 0);
 	AddIconToken("$concrete_block$", "World.png", Vec2f(8, 8), CMap::tile_concrete);
-	AddIconToken("$bconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_bconcrete);
-	AddIconToken("$reinforcedconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_reinforcedconcrete);
 	
 	AddIconToken("$icon_conveyor$", "Conveyor.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 0);
@@ -252,17 +250,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	{
 		BuildBlock b(CMap::tile_concrete, "concrete_block", "$concrete_block$", "Concrete Block\nSlightly more durable than stone.");
 		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 4);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(CMap::tile_bconcrete, "bconcrete_block", "$bconcrete_block$", "Background Concrete Block\nSlightly more durable than stone.");
-		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 4);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(CMap::tile_reinforcedconcrete, "reinforcedconcrete_block", "$reinforcedconcrete_block$", "Reinforced Concrete Block\nMore durable than concrete.");
-		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 4);
-		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 2);
 		blocks[0].push_back(b);
 	}
 	

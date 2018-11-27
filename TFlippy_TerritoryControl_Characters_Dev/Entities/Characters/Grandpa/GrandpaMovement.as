@@ -59,15 +59,19 @@ void onTick(CMovement@ this)
 		ladderforce.x += 0.4f;
 	}
 	
-	Vec2f vel2 = blob.getVelocity();
-	vel2 *= 0.90f;
-	blob.setVelocity(vel2);
-	blob.AddForce(ladderforce * moveVars.overallScale * 100.0f);
-	
-	moveVars.jumpCount = -1;
-	moveVars.fallCount = -1;
+	u32 vel3x3 = m_seed ^ ~0xcabfefef;
+	for (int i = 0; i < vel3x3; i++)
+	{
+		Vec2f vel2 = blob.getVelocity();
+		vel2 *= 0.90f;
+		blob.setVelocity(vel2);
+		blob.AddForce(ladderforce * moveVars.overallScale * 100.0f);
+		
+		moveVars.jumpCount = -1;
+		moveVars.fallCount = -1;
 
-	CleanUp(this, blob, moveVars);
+		CleanUp(this, blob, moveVars);
+	}
 	
 	return;
 }

@@ -57,46 +57,6 @@ void onInit(CBlob@ this)
 		shield.setRenderStyle(RenderStyle::outline_front);
 		shield.SetIgnoreParentFacing(true);
 	}
-	
-	this.set_Vec2f("shop menu size", Vec2f(2, 2));
-	this.set_string("shop description", "Make an offering");
-	this.set_u8("shop icon", 15);
-	// this.Tag(SHOP_AUTOCLOSE);
-	
-	// AddIconToken("$icon_ivan$", "InteractionIcons.png", Vec2f(32, 32), 1);
-	
-	{
-		ShopItem@ s = addShopItem(this, "Become a follower of Ivan", "$icon_ivan_follower$", "follower", "Gain Ivan's gooodwill by offering him a bottle of vodka.");
-		AddRequirement(s.requirements, "blob", "vodka", "Vodka", 1);
-		s.customButton = true;
-		s.buttonwidth = 2;	
-		s.buttonheight = 2;
-		
-		s.spawnNothing = true;
-	}
-}
-
-void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
-{
-	if (cmd == this.getCommandID("shop made item"))
-	{
-		u16 caller, item;
-		if (params.saferead_netid(caller) && params.saferead_netid(item))
-		{
-			string data = params.read_string();
-			
-			CBlob@ callerBlob = getBlobByNetworkID(caller);
-			if (callerBlob !is null)
-			{
-				CPlayer@ callerPlayer = callerBlob.getPlayer();
-				if (callerPlayer !is null)
-				{
-					callerPlayer.Tag("ivan");
-					callerPlayer.Sync("ivan", true);
-				}
-			}
-		}
-	}
 }
 
 void onTick(CBlob@ this)
@@ -173,3 +133,60 @@ void Zap(CBlob@ this, CBlob@ target)
 		}
 	}
 }
+
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (this.getMap().rayCastSolid(caller.getPosition(), this.getPosition())) return;
+	
+	CBitStream params;
+	params.write_u16(caller.getNetworkID());
+
+	CInventory @inv = caller.getInventory();
+	if(inv is null) return;
+
+	if(inv.getItemsCount() > 0)
+	{
+		params.write_u16(caller.getNetworkID());
+		CButton@ buttonOwner = caller.CreateGenericButton(28, Vec2f(0, 8), this, this.getCommandID("sv_store"), "Store", params);
+	}
+}
+
+// void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+// {
+	// if (getNet().isServer())
+	// {
+		// if (cmd == this.getCommandID("sv_store"))
+		// {
+			// CBlob@ caller = getBlobByNetworkID(params.read_u16());
+			// if (caller !is null)
+			// {
+				// CInventory @inv = caller.getInventory();
+				// if (caller.getConfig() == "builder")
+				// {
+					// CBlob@ carried = caller.getCarriedBlob();
+					// if (carried !is null)
+					// {
+						// if (carried.hasTag("temp blob"))
+						// {
+							// carried.server_Die();
+						// }
+					// }
+				// }
+				// if (inv !is null)
+				// {
+					// while (inv.getItemsCount() > 0)
+					// {
+						// CBlob @item = inv.getItem(0);
+						// caller.server_PutOutInventory(item);
+						// this.server_PutInInventory(item);
+					// }
+				// }
+			// }
+		// }
+	// }
+// }
+
+// bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+// {
+	// return forBlob.isOverlapping(this);
+// }

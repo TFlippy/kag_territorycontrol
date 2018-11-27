@@ -17,7 +17,7 @@ void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu@ gridmenu)
 
 	Vec2f MENU_POS;
 	
-	if (name == "builder" || name == "peasant") MENU_POS = gridmenu.getUpperLeftPosition() + Vec2f(-84, -204);
+	if (name == "builder" || name == "peasant") MENU_POS = gridmenu.getUpperLeftPosition() + Vec2f(-36, -132);
 	else if (name == "archer") MENU_POS = gridmenu.getUpperLeftPosition() + Vec2f(-84, -56);
 	else MENU_POS = gridmenu.getUpperLeftPosition() + Vec2f(-36, -56);
 

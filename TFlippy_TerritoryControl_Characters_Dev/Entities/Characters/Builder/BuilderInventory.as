@@ -40,7 +40,7 @@ const string[] PAGE_NAME =
 const u8 GRID_SIZE = 48;
 const u8 GRID_PADDING = 12;
 
-const Vec2f MENU_SIZE(6, 6);
+const Vec2f MENU_SIZE(4, 7);
 const u32 SHOW_NO_BUILD_TIME = 90;
 
 void onInit(CInventory@ this)
@@ -57,7 +57,7 @@ void onInit(CInventory@ this)
 
 	if(!blob.exists(inventory_offset))
 	{
-		blob.set_Vec2f(inventory_offset, Vec2f(0, 256));
+		blob.set_Vec2f(inventory_offset, Vec2f(0, 192));
 	}
 
 	AddIconToken("$BUILDER_CLEAR$", "BuilderIcons.png", Vec2f(32, 32), 2);
