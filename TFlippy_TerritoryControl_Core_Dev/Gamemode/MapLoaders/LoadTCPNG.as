@@ -51,12 +51,16 @@ namespace tc_colors
 		color_pirategull = 0xffe4e6bb,
 		color_badger = 0xff5a5546,
 		color_barbedwire = 0xff5f6473,
+		color_iron_platform = 0xffcccccc,
 
 		color_glass = 0xff6d95a1,
 		color_glass_bg = 0xff5a7a83,
 		color_iron = 0xff5f5f5f,
 		color_iron_bg = 0xff454545,
 		color_concrete = 0xffadaa96,
+		color_concrete_bg = 0xff656358,
+		color_reinforced_concrete = 0xff90928a,
+		color_reinforced_concrete_bg = 0xff454642,
 		color_rail = 0xff777d84,
 		color_rail_bg = 0xff494d52,
 	};
@@ -95,12 +99,14 @@ class TCPNGLoader : PNGLoader
 			
 			case tc_colors::color_trader_neutral:
 			{
+				autotile(offset);
 				spawnBlob(map, "trader", offset, -1);
 				break;
 			}
 			
 			case tc_colors::color_hobo_neutral:
 			{
+				autotile(offset);
 				spawnBlob(map, "hobo", offset, -1);
 				break;
 			}
@@ -123,6 +129,7 @@ class TCPNGLoader : PNGLoader
 			}
 			case tc_colors::color_chickencoop:
 			{
+				autotile(offset);
 				spawnBlob(map, "chickencoop", offset, -1);
 				break;
 			}
@@ -188,11 +195,13 @@ class TCPNGLoader : PNGLoader
 			}
 			case tc_colors::color_badger:
 			{
+				autotile(offset);
 				spawnBlob(map, "badger", offset, -1);
 				break;
 			}
 			case tc_colors::color_pirategull:
 			{
+				autotile(offset);
 				spawnBlob(map, "pirategull", offset, 230);
 				break;
 			}
@@ -221,6 +230,16 @@ class TCPNGLoader : PNGLoader
 				map.SetTile(offset, CMap::tile_concrete);
 				break;
 			}
+			case tc_colors::color_concrete_bg:
+			{
+				map.SetTile(offset, CMap::tile_bconcrete);
+				break;
+			}
+			case tc_colors::color_reinforced_concrete:
+			{
+				map.SetTile(offset, CMap::tile_reinforcedconcrete);
+				break;
+			}
 			case tc_colors::color_irondoor_chicken:
 			{
 				map.SetTile(offset, CMap::tile_biron);
@@ -244,14 +263,22 @@ class TCPNGLoader : PNGLoader
 				spawnBlob(map, "barbedwire", offset, -1);
 				break;
 			}
+			case tc_colors::color_iron_platform:
+			{
+				map.SetTile(offset, CMap::tile_biron);
+				spawnBlob(map, "iron_platform", offset, -1);
+				break;
+			}
 			case tc_colors::color_zapper_chicken:
 			{
+				autotile(offset);
 				CBlob@ blob = spawnBlob(map, "zapper", offset, 250);
 				blob.setPosition(blob.getPosition() + Vec2f(0, -8));
 				break;
 			}
 			case tc_colors::color_sentry_chicken:
 			{
+				autotile(offset);
 				CBlob@ blob = spawnBlob(map, "sentry", offset, 250);
 				blob.setPosition(blob.getPosition() + Vec2f(0, -8));
 				break;

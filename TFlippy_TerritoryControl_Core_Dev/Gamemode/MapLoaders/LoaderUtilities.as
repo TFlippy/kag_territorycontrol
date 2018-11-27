@@ -330,9 +330,9 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 				Vec2f pos = map.getTileWorldPosition(index);
 				
 				map.server_SetTile(pos, CMap::tile_reinforcedconcrete_d0);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::FLAMMABLE);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
-
+				
 				for (u8 i = 0; i < 4; i++)
 				{
 					reinforcedconcrete_Update(map, map.getTileWorldPosition(index) + directions[i]);
@@ -394,6 +394,8 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 				Vec2f pos = map.getTileWorldPosition(index);
 				
 				map.server_SetTile(pos, CMap::tile_bconcrete_d0);
+				map.AddTileFlag(index, Tile::BACKGROUND | Tile::WATER_PASSES | Tile::LIGHT_PASSES);
+				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
 				
 				for (u8 i = 0; i < 4; i++)
 				{
@@ -483,6 +485,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				Vec2f pos = map.getTileWorldPosition(index);
 				glass_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				map.RemoveTileFlag( index, Tile::WATER_PASSES);
+				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 			}
@@ -503,6 +507,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_glass_v13:
 			case CMap::tile_glass_v14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				
 				break;
 				
 			case CMap::tile_glass_d0:
@@ -512,7 +517,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 
 			case CMap::tile_plasteel:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 						
@@ -536,7 +542,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				
 			case CMap::tile_matter:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 				
@@ -552,6 +559,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_brick_v3:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				
 				break;
 				
 			case CMap::tile_bglass:
@@ -560,6 +568,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				bglass_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES | Tile::LIGHT_SOURCE);
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				
 				break;
 			}
 				
@@ -579,6 +588,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_bglass_v13:
 			case CMap::tile_bglass_v14:
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES | Tile::LIGHT_SOURCE);
+				
 				break;
 				
 			case CMap::tile_bglass_d0:
@@ -622,6 +632,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_biron_d:
 			case CMap::tile_biron_m:
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
+				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 				
@@ -640,6 +651,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_bplasteel:
 				if((index / map.tilemapwidth + index % map.tilemapwidth) % 2 == 0) map.SetTile(index, CMap::tile_bplasteel_v0);
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
+				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 						
@@ -664,6 +676,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_tnt:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES | Tile::FLAMMABLE);
 				map.RemoveTileFlag( index, Tile::LIGHT_SOURCE);
+				
 				if (getNet().isClient()) Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 				
@@ -673,7 +686,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				
 				concrete_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
@@ -695,7 +709,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_concrete_v13:
 			case CMap::tile_concrete_v14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				
 				break;
 				
 			case CMap::tile_concrete_d0:
@@ -727,7 +742,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				
 				iron_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
@@ -749,7 +765,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_iron_v13:
 			case CMap::tile_iron_v14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				
 				break;
 
 			case CMap::tile_iron_d0:
@@ -766,7 +783,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			
 			case CMap::tile_rustyiron:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				
 				break;
 				
 			case CMap::tile_rustyiron_d0:
@@ -783,7 +801,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				
 				reinforcedconcrete_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
@@ -805,7 +824,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_reinforcedconcrete_v13:
 			case CMap::tile_reinforcedconcrete_v14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				break;
 				
 			case CMap::tile_reinforcedconcrete_d0:
@@ -829,7 +848,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			
 			case CMap::tile_mossyconcrete:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				break;
 				
 			case CMap::tile_mossyconcrete_d0:
@@ -845,7 +864,9 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				Vec2f pos = map.getTileWorldPosition(index);
 				
 				bconcrete_SetTile(map, pos);
-				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
+				map.AddTileFlag(index, Tile::BACKGROUND | Tile::WATER_PASSES | Tile::LIGHT_PASSES);
+				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
+				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
@@ -867,6 +888,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_bconcrete_v13:
 			case CMap::tile_bconcrete_v14:
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
+				map.RemoveTileFlag( index, Tile::LIGHT_SOURCE);
 				break;
 
 			case CMap::tile_bconcrete_d0:
@@ -882,6 +904,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			
 			case CMap::tile_mossybconcrete:
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
+				map.RemoveTileFlag( index, Tile::LIGHT_SOURCE);
 				break;
 				
 			case CMap::tile_mossybconcrete_d0:
@@ -889,7 +912,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_mossybconcrete_d2:
 			case CMap::tile_mossybconcrete_d3:
 			case CMap::tile_mossybconcrete_d4:
-				OnConcreteTileHit(map, index);
+				OnBConcreteTileHit(map, index);
 				break;
 		}
 	}
