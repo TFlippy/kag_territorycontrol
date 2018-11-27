@@ -7,39 +7,80 @@ class ParticleUI
 	Vec2f TopLeft;
 	Vec2f BotRight;
 	int ImgId;
+	u8 Effect;
 	Vec2f Vel;
 	SColor Col;
+	int TimeMade;
 
-
-	ParticleUI(Vec2f sizeOfImage, Vec2f spawnWorldPos,int imageId)
+	ParticleUI(Vec2f sizeOfImage, Vec2f spawnWorldPos,int imageId, u8 ParticleEffect = 0)
 	{
 		Size = sizeOfImage;
 		Vec2f temp = Vec2f(sizeOfImage.x / 2,sizeOfImage.y / 2);
 		TopLeft = Vec2f(spawnWorldPos.x - temp.x, spawnWorldPos.y - temp.y);
 		BotRight = Vec2f(spawnWorldPos.x + temp.x, spawnWorldPos.y + temp.y);
 		ImgId = imageId;
-		Vel = getRandomVelocity(1, 0.5, 360);	
-		Col = SColor(255,1+XORRandom(255),1+XORRandom(255),1 + XORRandom(255));
+		Effect = ParticleEffect;
+		if(ParticleEffect == 0)
+		{
+			Vel = getRandomVelocity(1, 0.5, 360);	
+			Col = SColor(255,1+XORRandom(255),1+XORRandom(255),1 + XORRandom(255));
+		}
+		else
+		{
+			TimeMade = getGameTime();	
+			Vel = getRandomVelocity(1, 0.5, 360);	
+			Col = SColor(200,255,255,255);
+		}
 	}
 
 	void onFakeTick()
 	{
-		if(Col.getAlpha() != 0)
+		//0 = Rainbow pulse out
+		//1 = rajangs heart effect (fade in and out)
+		switch(Effect)
 		{
-			Col.setAlpha(Col.getAlpha() - 3);
+			case 0:
+			{
+				if(Col.getAlpha() != 0)
+				{
+					Col.setAlpha(Col.getAlpha() - 3);
+				}
+				//float moveMe = Maths::Sin(getGameTime() / 1.5f);
+				
+				TopLeft += Vel;
+				BotRight += Vel;
+			}	
+			break;
+
+
+			case 1:
+			{
+				int timeAlive = getGameTime() - TimeMade;
+				if(timeAlive < 15)
+				{
+					Col.setAlpha(Col.getAlpha() - 10);
+					BotRight -= Vec2f(0.2,0.2);
+					TopLeft += Vec2f(0.2,0.2);
+				}
+				else if (timeAlive < 30)
+				{
+					Col.setAlpha(Col.getAlpha() + 10);
+					BotRight += Vec2f(0.2,0.2);
+					TopLeft -= Vec2f(0.2,0.2);
+				}
+				else
+				{
+					Col.setAlpha(Col.getAlpha() - 10);
+					BotRight -= Vec2f(0.2,0.2);
+					TopLeft += Vec2f(0.2,0.2);
+				}
+				TopLeft += Vel;
+				BotRight += Vel;
+			}
+			break;
+			
 		}
-		//float moveMe = Maths::Sin(getGameTime() / 1.5f);
 		
-		TopLeft += Vel;
-		BotRight += Vel;
-		if(Vel.x > 0)
-		{
-			//Vel += Vec2f(+0.0005,+0.05);
-		}
-		else
-		{
-			//Vel += Vec2f(-0.0005,+0.05);
-		}
 	}
 
 	bool isTimeToDie()
@@ -97,14 +138,11 @@ class GroupedParticleUI
 
 
 GroupedParticleUI@ Particles = GroupedParticleUI();
-const string mainSpriteName = "testy.png";
 Vertex[] v_r_0;
 Vertex[] v_r_1;
 Vertex[] v_r_2;
 Vertex[] v_r_3;
 Vertex[] v_r_rajang_0;
-Vertex[] v_r_rajang_1;
-Vertex[] v_r_rajang_2;
 
 void onRestart(CRules@ this)
 {
@@ -120,7 +158,7 @@ void Reset(CRules@ this)
 {
 
 	Particles.Clean();
-	Render::addScript(Render::layer_objects, "UIClass", "renderMeHarder", 100.0f);
+	Render::addScript(Render::layer_objects, "UIClass", "renderMeHarder", 0.0f);
 
 }
 
@@ -141,12 +179,15 @@ void no(CMap@ map)
 
 	//Check blobs on screen for particle effects
 	CBlob@[] blobsInBox;
-	map.getBlobsInBox(getDriver().getWorldPosFromScreenPos(Vec2f(0,0)),getDriver().getWorldPosFromScreenPos(Vec2f(getScreenWidth(),getScreenHeight())),@blobsInBox);
+	Driver@ driver = getDriver();
+	map.getBlobsInBox(driver.getWorldPosFromScreenPos(Vec2f(0,0)),driver.getWorldPosFromScreenPos(Vec2f(getScreenWidth(),getScreenHeight())),@blobsInBox);
 	for(int a = 0; a < blobsInBox.length(); ++a)
 	{
 		CBlob@ blob = blobsInBox[a];
 		if(blob !is null)
 		{
+
+			//players
 			CPlayer@ p = blob.getPlayer();
 			if(p !is null)
 			{
@@ -174,7 +215,7 @@ void no(CMap@ map)
 							break;
 
 							case 3:
-								@newParticle = ParticleUI(Vec2f(10,3),blob.getPosition(),0);
+								@newParticle = ParticleUI(Vec2f(10,3),blob.getPosition(),3);
 								Particles.AddNewUI(newParticle);
 							break;	
 
@@ -187,26 +228,8 @@ void no(CMap@ map)
 				{
 					if(blob.getTickSinceCreated() % 30 == 0) //TODO spawns more then one (remember its onRender and not onTick)
 					{
-						int result = XORRandom(3);
-						ParticleUI@ newParticle;
-						switch(result)
-						{
-							case 0:
-								@newParticle = ParticleUI(Vec2f(12,3),blob.getPosition(),100);
-								Particles.AddNewUI(newParticle);
-							break;
-
-							case 1:
-								@newParticle = ParticleUI(Vec2f(15,4),blob.getPosition(),101);
-								Particles.AddNewUI(newParticle);
-							break;
-
-							case 2:
-								@newParticle = ParticleUI(Vec2f(18,4),blob.getPosition(),102);
-								Particles.AddNewUI(newParticle);
-							break;	
-
-						}
+						ParticleUI@ newParticle =  ParticleUI(Vec2f(11,12),blob.getPosition(),100,1);
+						Particles.AddNewUI(newParticle);
 					}
 				}
 			}
@@ -264,20 +287,6 @@ void no(CMap@ map)
 					v_r_rajang_0.push_back(Vertex(tP.BotRight.x, tP.BotRight.y, 1, 1, 1, tP.Col));
 					v_r_rajang_0.push_back(Vertex(tP.TopLeft.x,  tP.BotRight.y, 1, 0, 1, tP.Col));
 				break;
-
-				case 101:
-					v_r_rajang_1.push_back(Vertex(tP.TopLeft.x,  tP.TopLeft.y,  1, 0, 0, tP.Col));
-					v_r_rajang_1.push_back(Vertex(tP.BotRight.x, tP.TopLeft.y,  1, 1, 0, tP.Col));
-					v_r_rajang_1.push_back(Vertex(tP.BotRight.x, tP.BotRight.y, 1, 1, 1, tP.Col));
-					v_r_rajang_1.push_back(Vertex(tP.TopLeft.x,  tP.BotRight.y, 1, 0, 1, tP.Col));
-				break;
-
-				case 102:
-					v_r_rajang_2.push_back(Vertex(tP.TopLeft.x,  tP.TopLeft.y,  1, 0, 0, tP.Col));
-					v_r_rajang_2.push_back(Vertex(tP.BotRight.x, tP.TopLeft.y,  1, 1, 0, tP.Col));
-					v_r_rajang_2.push_back(Vertex(tP.BotRight.x, tP.BotRight.y, 1, 1, 1, tP.Col));
-					v_r_rajang_2.push_back(Vertex(tP.TopLeft.x,  tP.BotRight.y, 1, 0, 1, tP.Col));
-				break;
 			}
 			
 		}
@@ -303,34 +312,9 @@ void no(CMap@ map)
 		}
 		if(v_r_rajang_0.length() > 0)
 		{
-			Render::RawQuads("digga0.png", v_r_rajang_0);
+			Render::RawQuads("Heart.png", v_r_rajang_0);
 			v_r_rajang_0.clear();
-		}
-		if(v_r_rajang_1.length() > 0)
-		{
-			Render::RawQuads("digga1.png", v_r_rajang_1);
-			v_r_rajang_1.clear();
-		}
-		if(v_r_rajang_2.length() > 0)
-		{
-			Render::RawQuads("digga2.png", v_r_rajang_2);
-			v_r_rajang_2.clear();
 		}
 	}
 	
-}
-
-
-//other stuff
-
-void onNewPlayerJoin( CRules@ this, CPlayer@ player )
-{
-	if(player !is null)
-	{
-		if(player.getUsername() == "digga")
-		{
-			player.Tag("awootism");
-			player.Sync("awootism",false);
-		}
-	}
 }

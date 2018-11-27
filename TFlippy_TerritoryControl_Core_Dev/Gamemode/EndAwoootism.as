@@ -25,15 +25,15 @@ void onTick(CBlob@ this)
 				b.Tag("infectOver");
 				b.Sync("infectOver",false);
 			}
-			if(p.hasTag("awootism"))
-			{
-				infectList += p.getUsername() + '\n';
-				p.Untag("awootism");
-				p.Sync("awootism",false);
-			}
+		}
+		if(p.hasTag("awootism"))
+		{
+			infectList += '\n'+ p.getUsername();
+			p.Untag("awootism");
+			p.Sync("awootism",false);
 		}
 	}
-	client_AddToChat("The infection is over, here is the list of people who got infected!\n"+infectList, SColor(255, 255, 0, 0));
+	client_AddToChat("The infection is over, here is the list of people who were infected when awootism ended!"+infectList, SColor(255, 255, 0, 0));
 	this.Tag("endAwoo");
 	this.Sync("endAwoo",false);
 }

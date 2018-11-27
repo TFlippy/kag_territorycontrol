@@ -183,46 +183,81 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 	if (player.getUsername() == "digga" || player.getCharacterName() == "Rajang" || player.hasTag("awootism")) 
 	{
 		string emptyBOI = "";
+		bool noTouch = false;
 
 		for (int i = 0; i < text_out.length; i++)
   		{
 
         	string letter = text_out.substr(i,1);
-        	if(i == 0)
-        	{
-        		emptyBOI += letter;
-        		continue;
-        	}
+			if(player.getUsername() == "digga" || player.getUsername() == "vamist")
+			{
+				if(letter == '.')
+				{
+					noTouch = true;
+					continue;
+				}
+			}
+			if(!noTouch)
+			{
+				if(i == 0)
+				{
+					emptyBOI += letter;
+					continue;
+				}
 
-        	if(letter == 'r' || letter == 'R')
-        	{
-        		if(XORRandom(4) > 1)
-        		{
-        			emptyBOI += 'w';
-        		}
-        	}
-        	else if(letter == 'e' || letter == 'o' || letter == 'u' || letter == 'E' || letter == 'O' || letter == 'U')
-        	{
-        		if(XORRandom(1) == 0)
-        		{
-        			if(XORRandom(2) == 0)
-        			{
-        				emptyBOI += letter + 'w';
-        			}
-        			else
-        			{
-        				emptyBOI += 'w' + letter;
-        			}
-        		}
-        		else
-        		{
-        			emptyBOI += letter;
-        		}
-        	}
-        	else
-        	{
-        		emptyBOI += letter;
-        	}
+
+				if(letter == 'r' || letter == 'R')
+				{
+					if(XORRandom(4) > 1)
+					{
+						emptyBOI += 'w';
+					}
+				}
+				else if(letter == 'e' || letter == 'o' || letter == 'u')
+				{
+					if(XORRandom(1) == 0)
+					{
+						if(XORRandom(2) == 0)
+						{
+							emptyBOI += letter + 'w';
+						}
+						else
+						{
+							emptyBOI += 'w' + letter;
+						}
+					}
+					else
+					{
+						emptyBOI += letter;
+					}
+				}
+				else if(letter == 'E' || letter == 'O' || letter == 'U')
+				{
+					if(XORRandom(1) == 0)
+					{
+						if(XORRandom(2) == 0)
+						{
+							emptyBOI += letter + 'W';
+						}
+						else
+						{
+							emptyBOI += 'W' + letter;
+						}
+					}
+					else
+					{
+						emptyBOI += letter;
+					}
+				}
+				else
+				{
+					emptyBOI += letter;
+				}
+			}
+			else
+			{
+				emptyBOI += letter;
+			}
         }
         
 		text_out = emptyBOI;
@@ -230,7 +265,7 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 
 		if(XORRandom(5) > 2)
 		{
-			switch(XORRandom(4))
+			switch(XORRandom(6))
 			{
 				case 0: text_out += " UwU";
 						break;
@@ -246,6 +281,9 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 
 				case 4: text_out += " >w<";
 						break;
+				
+				case 5: text_out += "U//w//U";
+						break;
 			}
 		}
 	}
@@ -259,7 +297,7 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 	}
 	
-	// if( player.getUsername() == "TFlippy" || player.getCharacterName() == "TFlippy")if(XORRandom(100) == 0)text_out = "[If you have any problems using your TFlipppy9000, please consult your local Pirate-Rob.]";
+	if( player.getUsername() == "TFlippy" || player.getCharacterName() == "TFlippy")if(XORRandom(100) == 0)text_out = "[If you have any problems using your TFlipppy9000, please consult your local Pirate-Rob.]";
 	
 	return true;
 }
