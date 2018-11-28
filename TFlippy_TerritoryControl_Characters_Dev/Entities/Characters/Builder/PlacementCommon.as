@@ -184,7 +184,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		}
 	}
 
-//printf("c");
+	//printf("c");
 	bool canPlaceOnBackground = ((blob is null) || (blob.getShape().getConsts().support > 0));   // if this is a blob it has to do support - so spikes cant be placed on back
 
 	if (

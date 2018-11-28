@@ -655,7 +655,8 @@ bool IsCool(string username)
 			username=="Vamist" ||
 			username=="Pirate-Rob" ||
 			username=="GoldenGuy" ||
-			username=="Koi_";
+			username=="Koi_" ||
+			username=="digga";
 }
 CPlayer@ GetPlayer(string username)
 {

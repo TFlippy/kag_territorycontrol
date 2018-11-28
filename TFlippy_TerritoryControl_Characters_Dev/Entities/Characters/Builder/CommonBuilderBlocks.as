@@ -110,6 +110,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_camp$", "Camp.png", Vec2f(80, 24), 0);
 	AddIconToken("$icon_oiltank$","OilTank.png",Vec2f(32, 16),0);
 	AddIconToken("$icon_druglab$","DrugLab.png",Vec2f(32, 40),0);
+	AddIconToken("$icon_banner$","ClanBanner.png",Vec2f(16, 32),0);
 	// AddIconToken("$icon_cargocontainer$", "CargoContainer.png", Vec2f(64, 24), 0);
 
 	
@@ -594,6 +595,12 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(24, 24);
 		blocks[3].push_back(b);
 	}	
+	{
+		BuildBlock b(0, "banner", "$icon_banner$", "Clan Banner\nIf your in a TC Clan, the clan banner will appear");
+		AddRequirement(b.reqs, "coin", "", "Coins", 150);
+		b.size.Set(16, 32);
+		blocks[3].push_back(b);
+	}
 	{
 		BuildBlock b(0, "industriallamp", "$industriallamp$", "Industrial Lamp\nA sturdy lamp to ligthen up the mood in your factory.\nActs as a support block.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 30);

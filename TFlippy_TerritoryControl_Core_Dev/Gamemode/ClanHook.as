@@ -44,6 +44,7 @@ class Clans
     string[]@ darkList;
     string[]@ ivanList;
     string[]@ LuxList;
+    string[]@ spekList;
 
     Clans(){}
     //Update each clan list
@@ -55,6 +56,7 @@ class Clans
         @TclfList     = returnStringList("tclf").toLower().split('|');
         @darkList     = returnStringList("dark").toLower().split('|');
         @ivanList     = returnStringList("ivan").toLower().split('|');
+        @spekList     = returnStringList("spek").toLower().split('|');
     }
 
     //Clan if a player is in a clan, if so give them a property
@@ -99,6 +101,11 @@ class Clans
         else if(ivanList.find(userName) != -1)
         {
             player.set_string("clanData","Invanists United");
+            player.Sync("clanData",true);
+        }
+        else if(spekList.find(userName) != -1)
+        {
+            player.set_string("clanData","Sepulka");
             player.Sync("clanData",true);
         }
     }
