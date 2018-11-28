@@ -33,11 +33,11 @@ void onInit(CBlob@ this)
 	CSprite@ sprite = this.getSprite();
 	
 	sprite.SetEmitSound("Ivan_Music.ogg");
-	sprite.SetEmitSoundVolume(1.0f);
+	sprite.SetEmitSoundVolume(0.4f);
 	sprite.SetEmitSoundSpeed(1.0f);
 	sprite.SetEmitSoundPaused(false);
 					
-	CSpriteLayer@ shield = sprite.addSpriteLayer("shield", "Shield.png" , 16, 64, this.getTeamNum(), 0);
+	CSpriteLayer@ shield = sprite.addSpriteLayer("shield", "Ivan_Shield.png" , 16, 64, this.getTeamNum(), 0);
 
 	if (shield !is null)
 	{
@@ -63,10 +63,10 @@ void onInit(CBlob@ this)
 	this.set_u8("shop icon", 15);
 	// this.Tag(SHOP_AUTOCLOSE);
 	
-	// AddIconToken("$icon_ivan$", "InteractionIcons.png", Vec2f(32, 32), 1);
+	AddIconToken("$icon_ivan_follower$", "InteractionIcons.png", Vec2f(32, 32), 11);
 	
 	{
-		ShopItem@ s = addShopItem(this, "Become a follower of Ivan", "$icon_ivan_follower$", "follower", "Gain Ivan's gooodwill by offering him a bottle of vodka.");
+		ShopItem@ s = addShopItem(this, "Become a follower of Ivan", "$icon_ivan_follower$", "follower", "Gain Ivan's goodwill by offering him a bottle of vodka.");
 		AddRequirement(s.requirements, "blob", "vodka", "Vodka", 1);
 		s.customButton = true;
 		s.buttonwidth = 2;	
@@ -88,23 +88,71 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CBlob@ callerBlob = getBlobByNetworkID(caller);
 			if (callerBlob !is null)
 			{
-				CPlayer@ callerPlayer = callerBlob.getPlayer();
-				if (callerPlayer !is null)
+				this.getSprite().PlaySound("Ivan_Offering.ogg", 2.00f, 1.00f);
+			
+				CBlob@ localBlob = getLocalPlayerBlob();
+				if (localBlob !is null)
 				{
-					callerPlayer.Tag("ivan");
-					callerPlayer.Sync("ivan", true);
+					if (this.getDistanceTo(localBlob) < 128)
+					{
+						SetScreenFlash(255, 255, 255, 255, 3.00f);
+					}
 				}
+			
+				// CPlayer@ callerPlayer = callerBlob.getPlayer();
+				// if (callerPlayer !is null)
+				// {
+					// callerPlayer.Tag("ivan");
+					// callerPlayer.Sync("ivan", true);
+				// }
 			}
 		}
 	}
 }
 
+const SColor[] colors = 
+{
+	SColor(255, 255, 30, 30),
+	SColor(255, 30, 255, 30),
+	SColor(255, 30, 30, 255)
+};
+
 void onTick(CBlob@ this)
 {
 	f32 radius = 128.00f;
 
+	SColor color = colors[XORRandom(colors.length)];
+	
+	CBlob@ localBlob = getLocalPlayerBlob();
+	if (localBlob !is null)
+	{
+		f32 dist = this.getDistanceTo(localBlob);
+		f32 distMod = 1.00f - dist / radius;
+		f32 sqrDistMod = 1.00f - Maths::Sqrt(dist / radius);
+		
+		if (dist < radius * 2.00f) 
+		{
+			ShakeScreen(50.0f, 15, this.getPosition());
+		}
+		
+		if (dist < radius)
+		{
+			if (getGameTime() % 8 == 0) 
+			{
+				SetScreenFlash(100 * distMod, color.getRed(), color.getGreen(), color.getBlue(), 0.2f);
+			}
+		}
+	}
+	
+	if (getGameTime() % 8 == 0) 
+	{
+		this.SetLight(true);
+		this.SetLightRadius(radius);
+		this.SetLightColor(color);
+	}
+	
 	CBlob@[] blobsInRadius;
-	if (this.getMap().getBlobsInRadius(this.getPosition(), radius, @blobsInRadius))
+	if (this.getMap().getBlobsInRadius(this.getPosition(), radius * 0.50f, @blobsInRadius))
 	{
 		int index = -1;
 		f32 s_dist = 1337;
@@ -115,7 +163,7 @@ void onTick(CBlob@ this)
 			CBlob@ b = blobsInRadius[i];
 			u8 team = b.getTeamNum();
 			
-			if (team < 7 && b.hasTag("flesh"))
+			if (team < 7 && team <= 200 && b.hasTag("flesh"))
 			{
 				f32 dist = (b.getPosition() - this.getPosition()).Length();
 				if (dist < s_dist)
@@ -139,7 +187,7 @@ void Zap(CBlob@ this, CBlob@ target)
 {
 	if (target.get_u32("next zap") > getGameTime()) return;
 
-	f32 radius = 128.00f;
+	f32 radius = 128.00f * 0.50f;
 	
 	Vec2f dir = target.getPosition() - this.getPosition();
 	f32 dist = Maths::Abs(dir.Length());
@@ -151,13 +199,13 @@ void Zap(CBlob@ this, CBlob@ target)
 	
 	if (getNet().isServer())
 	{
-		f32 damage = target.getInitialHealth() * 0.75f;
-		this.server_Hit(target, target.getPosition(), dir, damage * (target.hasTag("explosive") ? 16.00f : 1.00f) , HittersTC::forcefield);
+		f32 damage = 0.125f;
+		this.server_Hit(target, target.getPosition(), dir, damage * (target.hasTag("explosive") ? 16.00f : 1.00f) , HittersTC::staff);
 	}
 	
 	if (getNet().isClient())
 	{
-		// this.getSprite().PlaySound("energy_disintegrate_" + XORRandom(2) + ".ogg");
+		this.getSprite().PlaySound("Ivan_Zap.ogg");
 		
 		CSpriteLayer@ shield = this.getSprite().getSpriteLayer("shield");
 		if (shield !is null)
