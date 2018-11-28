@@ -121,6 +121,7 @@ void LoadDefaultGUI()
 		
 		// Gunsmith
 		AddIconToken("$rifle$", "Rifle.png", Vec2f(24, 8), 0);
+		AddIconToken("$leverrifle$", "LeverRifle.png", Vec2f(24, 8), 0);
 		AddIconToken("$smg$", "SMG.png", Vec2f(24, 8), 0);
 		AddIconToken("$revolver$", "Revolver.png", Vec2f(16, 8), 0);
 		AddIconToken("$icon_bazooka$", "Bazooka.png", Vec2f(16, 8), 0);
