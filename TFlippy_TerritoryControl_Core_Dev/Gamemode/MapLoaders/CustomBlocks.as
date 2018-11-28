@@ -263,6 +263,11 @@ bool isTileIron(TileType tile)
 	return tile >= CMap::tile_iron && tile <= CMap::tile_iron_v14;
 }
 
+bool isTileBIron(TileType tile)
+{
+	return tile >= CMap::tile_biron && tile <= CMap::tile_biron_m;
+}
+
 bool isTileRustyIron(TileType tile)
 {
 	return tile >= CMap::tile_rustyiron && tile <= CMap::tile_rustyiron_d4;

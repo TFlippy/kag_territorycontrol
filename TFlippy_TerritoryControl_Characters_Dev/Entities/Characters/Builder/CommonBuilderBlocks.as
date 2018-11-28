@@ -137,27 +137,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(CMap::tile_concrete, "concrete_block", "$concrete_block$", "Concrete Block\nSlightly more durable than stone.");
-		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 4);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(CMap::tile_bconcrete, "bconcrete_block", "$bconcrete_block$", "Background Concrete Block\nSlightly more durable than stone.");
-		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 2);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(CMap::tile_iron, "iron_block", "$iron_block$", "Iron Plating\nA durable metal block. Indestructible by peasants.");
-		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 2);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(CMap::tile_biron, "biron_block", "$biron_block$", "Background Iron Plating\nA durable background support. Indestructible by peasants.");
-		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 1);
-		blocks[0].push_back(b);
-	}
-	
-	{
 		BuildBlock b(CMap::tile_glass, "glass_block", "$glass_block$", "Glass\nFancy and fragile.");
 		AddRequirement(b.reqs, "coin", "", "Coins", 10);
 		blocks[0].push_back(b);
@@ -168,9 +147,29 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(CMap::tile_reinforcedconcrete, "reinforcedconcrete_block", "$reinforcedconcrete_block$", "Reinforced Concrete Block\nMore durable than concrete.");
+		BuildBlock b(CMap::tile_concrete, "concrete_block", "$concrete_block$", "Concrete Block\nSlightly more durable than stone.");
 		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 4);
-		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 2);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_bconcrete, "bconcrete_block", "$bconcrete_block$", "Background Concrete Block\nSlightly more durable than stone.");
+		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 2);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_iron, "iron_block", "$iron_block$", "Iron Plating\nA durable metal block. Unbreakable by peasants.");
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 2);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_biron, "biron_block", "$biron_block$", "Background Iron Plating\nA durable background support. Unbreakable by peasants.");
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 1);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_reinforcedconcrete, "reinforcedconcrete_block", "$reinforcedconcrete_block$", "Reinforced Concrete Block\nMore durable than concrete.");
+		AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 5);
+		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 1);
 		blocks[0].push_back(b);
 	}
 	{
@@ -260,7 +259,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "iron_platform", "$icon_ironplatform$", "Iron Platform\nReinforced one-way platform. Indestructible by peasants.");
+		BuildBlock b(0, "iron_platform", "$icon_ironplatform$", "Iron Platform\nReinforced one-way platform. Unbreakable by peasants.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 3);
 		blocks[0].push_back(b);
 	}

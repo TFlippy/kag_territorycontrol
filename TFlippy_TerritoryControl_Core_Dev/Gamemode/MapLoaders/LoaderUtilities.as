@@ -309,7 +309,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 				return CMap::tile_empty;
 			
 			case CMap::tile_reinforcedconcrete:
-				return CMap::tile_concrete_d0;
+				return CMap::tile_reinforcedconcrete_d0;
 
 			case CMap::tile_reinforcedconcrete_v0:
 			case CMap::tile_reinforcedconcrete_v1:
