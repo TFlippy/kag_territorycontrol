@@ -1,10 +1,7 @@
 //#include "TDM_Structs.as";
 #include "ScoreboardCommon.as";
 #include "Survival_Structs.as";
-
-#include "UI.as"
-
-#include "ClanFinder.as"
+#include "UI.as";
 
 //skin
 // #include "MainButtonRender.as"
@@ -21,24 +18,9 @@
 
 // #include "UILabel.as"
 
-/*const string kagdevs = "geti;mm;flieslikeabrick;furai;jrgp;";
+const string kagdevs = "geti;mm;flieslikeabrick;furai;jrgp;";
 const string tcdevs = "tflippy;pirate-rob;merser433;goldenguy;koi_;";
-const string contributors = "cesar0;sylw;sjd360;";*/ //moved to ClanFinder.as for ease of clan update
-
-void onInit(CRules@ this)
-{
-	onRestart(this);
-}
-
-void onReload(CRules@ this)
-{
-	onRestart(this);
-}
-
-void onRestart(CRules@ this)
-{
-	UpdateClanList();
-}
+const string contributors = "cesar0;sylw;sjd360;mr_hobo;";
 
 void onRenderScoreboard(CRules@ this)
 {
@@ -265,17 +247,7 @@ void onRenderScoreboard(CRules@ this)
 			string rank = getRank(p, dev);
 			s32 ping_in_ms = s32(p.getPing() * 1000.0f / 30.0f);
 			u16 coins = p.getCoins();
-			string clan = getClan(p);
-			/*if(clan == "Dutch Republic")
-				GUI::DrawIcon("DutchRepublic.png", 0, Vec2f(16,16), Vec2f(bottomright.x - 770, topleft.y), 0.5f, p.getTeamNum());
-			else if(clan == "Irregular Militia")
-				GUI::DrawIcon("IrregularMilitia.png", 0, Vec2f(16,16), Vec2f(bottomright.x - 770, topleft.y), 0.5f, p.getTeamNum());
-			else if(clan == "Soviet Union")
-				GUI::DrawIcon("SovietUnion.png", 0, Vec2f(16,16), Vec2f(bottomright.x - 770, topleft.y), 0.5f, p.getTeamNum());
-			else if(clan == "Eastern Orthodox Church")
-				GUI::DrawIcon("OrderOfChaos.png", 0, Vec2f(16,16), Vec2f(bottomright.x - 770, topleft.y), 0.5f, p.getTeamNum());
-			else if(clan == "DARK")
-				GUI::DrawIcon("DARK.png", 0, Vec2f(16,16), Vec2f(bottomright.x - 770, topleft.y), 0.5f, p.getTeamNum());*/
+			string clan = p.exists("clanData") ? p.get_string("clanData") : "";
 
 			
 
@@ -291,8 +263,6 @@ void onRenderScoreboard(CRules@ this)
 				GUI::DrawText("" + p.getKills(), Vec2f(bottomright.x - 270, topleft.y), color_gray);
 				GUI::DrawText("" + p.getDeaths(), Vec2f(bottomright.x - 220, topleft.y), color_gray);
 				GUI::DrawText(rank, Vec2f(bottomright.x - 150, topleft.y), color_gray);
-				if(clan != "")
-					GUI::DrawIcon(clan + ".png", 0, Vec2f(16,16), Vec2f(bottomright.x - 640, topleft.y), 0.5f, p.getTeamNum());
 			}
 			else
 			{
@@ -306,8 +276,6 @@ void onRenderScoreboard(CRules@ this)
 				GUI::DrawText("" + p.getKills(), Vec2f(bottomright.x - 350, topleft.y), color_gray);
 				GUI::DrawText("" + p.getDeaths(), Vec2f(bottomright.x - 250, topleft.y), color_gray);
 				GUI::DrawText(rank, Vec2f(bottomright.x - 150, topleft.y), color_gray);
-				if(clan != "")
-				GUI::DrawIcon(clan + ".png", 0, Vec2f(16,16), Vec2f(bottomright.x - 770, topleft.y), 0.5f, p.getTeamNum());
 			}
 
 
@@ -602,4 +570,29 @@ void onRenderScoreboard(CRules@ this)
 		
 		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
 	}
+}
+
+string getRank(CPlayer@ p, bool &out dev)
+{
+	string username = p.getUsername().toLower() + ";";
+	string seclev = getSecurity().getPlayerSeclev(p).getName();
+	dev = false;
+	
+	if (kagdevs.find(username) != -1) return "KAG Developer";
+	else if (tcdevs.find(username) != -1)
+	{	
+		dev = true;
+		return (username == "tflippy;" ? "Lead " : "") + "TC Developer";
+	}
+	else if (contributors.find(username) != -1) return "Contributor";
+	else if (username == "vamist;") return "Glorious Server Host";
+	else if (username == "mrhobo;") return "Clan Leader";
+	else if (username == "turtlecake;") return "Clan Leader";
+	else if (username == "rhysdavid299;") return "Clan Leader";
+	else if (username == "agenthightower;") return "Clan Leader";
+	else if (username == "blackguy123;") return "Clan Leader";
+	else if (username == "mrpineapple;") return "Clan Leader";
+	else if (seclev != "Normal") seclev;
+	
+	return "";
 }

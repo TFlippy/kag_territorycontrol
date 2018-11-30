@@ -146,15 +146,15 @@ void React(CBlob@ this)
 				this.getSprite().PlaySound("DrugLab_Create_Acidic.ogg", 1.00f, 1.00f);
 			}
 			
-			if (pressure > 15000 && heat > 750 && meat_blob !is null)
+			if (pressure > 1000 && heat > 300 && meat_blob !is null)
 			{
-				f32 count = Maths::Min(meat_count, pressure * 0.00025f);
+				f32 count = Maths::Min(meat_count, pressure * 0.001f);
 				
 				if (getNet().isServer())
 				{
 					meat_blob.server_SetQuantity(Maths::Max(meat_blob.getQuantity() - count * 0.25f, 0));
 					Material::createFor(this, "mat_methane", count * 0.75f);
-					Material::createFor(this, "mat_acid", count * 0.25f);
+					Material::createFor(this, "mat_acid", count * 0.50f);
 				}
 				this.getSprite().PlaySound("DrugLab_Create_Fart.ogg", 1.00f, 1.00f);
 			}
@@ -179,8 +179,8 @@ void React(CBlob@ this)
 				{
 					mithril_blob.server_SetQuantity(Maths::Max(mithril_blob.getQuantity() - 50, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 25, 0));
-					Material::createFor(this, "domino", 1 + XORRandom(2));
-					Material::createFor(this, "mat_mithrilenriched", XORRandom(3));
+					Material::createFor(this, "domino", 1 + XORRandom(5));
+					Material::createFor(this, "mat_mithrilenriched", XORRandom(5));
 					Material::createFor(this, "mat_fuel", XORRandom(25));
 				}
 				this.getSprite().PlaySound("DrugLab_Create_Solid.ogg", 1.00f, 1.00f);
@@ -199,7 +199,7 @@ void React(CBlob@ this)
 				this.getSprite().PlaySound("DrugLab_Create_Liquid.ogg", 1.00f, 1.00f);
 			}
 			
-			if (heat > 1500 && dirt_blob !is null && meat_blob !is null && hasAcid && dirt_count >= 50 && meat_count > 15 && acid_count >= 25)
+			if (heat > 1000 && dirt_blob !is null && meat_blob !is null && hasAcid && dirt_count >= 50 && meat_count > 15 && acid_count >= 25)
 			{
 				if (getNet().isServer())
 				{
@@ -207,7 +207,7 @@ void React(CBlob@ this)
 					meat_blob.server_SetQuantity(Maths::Max(meat_blob.getQuantity() - 15, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 25, 0));
 					
-					Material::createFor(this, "bobongo", 1 + XORRandom(2));
+					Material::createFor(this, "bobongo", 1 + XORRandom(5));
 					Material::createFor(this, "mat_methane", XORRandom(50));
 				}
 				this.getSprite().PlaySound("DrugLab_Create_Creamy.ogg", 1.00f, 1.00f);
@@ -251,7 +251,7 @@ void React(CBlob@ this)
 				{
 					dirt_blob.server_SetQuantity(Maths::Max(dirt_blob.getQuantity() - count, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - count * 0.25f, 0));
-					Material::createFor(this, "mat_sulphur", count * 0.50f);
+					Material::createFor(this, "mat_sulphur", count * 1.50f);
 				}
 				this.getSprite().PlaySound("DrugLab_Create_Acidic.ogg", 1.00f, 1.00f);
 			}
@@ -273,7 +273,7 @@ void React(CBlob@ this)
 				}
 			}
 			
-			if (pressure < 30000 && heat > 100 && heat < 1000 && hasAcid && hasMithril && acid_count >= 15 && mithril_count >= 5)
+			if (pressure < 25000 && heat > 100 && heat < 1000 && hasAcid && hasMithril && acid_count >= 15 && mithril_count >= 5)
 			{
 				if (getNet().isServer())
 				{

@@ -21,16 +21,6 @@ namespace CMap
 {
 	enum CustomTiles
 	{ 
-		tile_iron = 384,
-		tile_iron_d0,
-		tile_iron_d1,
-		tile_iron_d2,
-		tile_iron_d3,
-		tile_iron_d4,
-		tile_iron_d5,
-		tile_iron_d6,
-		tile_iron_d7,
-		tile_iron_d8,
 		tile_glass = 394,
 		tile_glass_v0,
 		tile_glass_v1,
@@ -48,6 +38,7 @@ namespace CMap
 		tile_glass_v13,
 		tile_glass_v14,
 		tile_glass_d0,
+		
 		tile_plasteel = 411,
 		tile_plasteel_d0,
 		tile_plasteel_d1,
@@ -64,14 +55,17 @@ namespace CMap
 		tile_plasteel_d12,
 		tile_plasteel_d13,
 		tile_plasteel_d14,
+		
 		tile_matter = 427,
 		tile_matter_d0,
 		tile_matter_d1,
 		tile_matter_d2,
+		
 		tile_brick_v0 = 431,
 		tile_brick_v1,
 		tile_brick_v2,
 		tile_brick_v3,
+		
 		tile_bglass = 435,
 		tile_bglass_v0,
 		tile_bglass_v1,
@@ -89,6 +83,7 @@ namespace CMap
 		tile_bglass_v13,
 		tile_bglass_v14,
 		tile_bglass_d0,
+		
 		tile_biron = 452,
 		tile_biron_u,
 		tile_biron_d,
@@ -102,6 +97,7 @@ namespace CMap
 		tile_biron_d6,
 		tile_biron_d7,
 		tile_biron_d8,
+		
 		tile_bplasteel = 465,
 		tile_bplasteel_v0,
 		tile_bplasteel_d0,
@@ -120,7 +116,81 @@ namespace CMap
 		tile_bplasteel_d13,
 		tile_bplasteel_d14,
 		tile_tnt = 482,
-		tile_concrete = 483,
+				
+		tile_rail_0 = 507,
+		tile_rail_1 = 508,
+		tile_rail_0_bg = 509,
+		tile_rail_1_bg = 510,
+		
+		tile_iron = 512,
+		tile_iron_v0,
+		tile_iron_v1,
+		tile_iron_v2,
+		tile_iron_v3,
+		tile_iron_v4,
+		tile_iron_v5,
+		tile_iron_v6,
+		tile_iron_v7,
+		tile_iron_v8,
+		tile_iron_v9,
+		tile_iron_v10,
+		tile_iron_v11,
+		tile_iron_v12,
+		tile_iron_v13,
+		tile_iron_v14,
+		
+		tile_iron_d0 = tile_iron + 16,
+		tile_iron_d1,
+		tile_iron_d2,
+		tile_iron_d3,
+		tile_iron_d4,
+		tile_iron_d5,
+		tile_iron_d6,
+		tile_iron_d7,
+		tile_iron_d8,
+		
+		tile_rustyiron = tile_iron_d0 + 10,
+		tile_rustyiron_d0,
+		tile_rustyiron_d1,
+		tile_rustyiron_d2,
+		tile_rustyiron_d3,
+		tile_rustyiron_d4,
+				
+		tile_reinforcedconcrete = 512 + 48,
+		tile_reinforcedconcrete_v0,
+		tile_reinforcedconcrete_v1,
+		tile_reinforcedconcrete_v2,
+		tile_reinforcedconcrete_v3,
+		tile_reinforcedconcrete_v4,
+		tile_reinforcedconcrete_v5,
+		tile_reinforcedconcrete_v6,
+		tile_reinforcedconcrete_v7,
+		tile_reinforcedconcrete_v8,
+		tile_reinforcedconcrete_v9,
+		tile_reinforcedconcrete_v10,
+		tile_reinforcedconcrete_v11,
+		tile_reinforcedconcrete_v12,
+		tile_reinforcedconcrete_v13,
+		tile_reinforcedconcrete_v14,
+		
+		tile_reinforcedconcrete_d0 = tile_reinforcedconcrete + 16,
+		tile_reinforcedconcrete_d1,
+		tile_reinforcedconcrete_d2,
+		tile_reinforcedconcrete_d3,
+		tile_reinforcedconcrete_d4,
+		tile_reinforcedconcrete_d5,
+		tile_reinforcedconcrete_d6,
+		tile_reinforcedconcrete_d7,
+		tile_reinforcedconcrete_d8,
+		tile_reinforcedconcrete_d9,
+		tile_reinforcedconcrete_d10,
+		tile_reinforcedconcrete_d11,
+		tile_reinforcedconcrete_d12,
+		tile_reinforcedconcrete_d13,
+		tile_reinforcedconcrete_d14,
+		tile_reinforcedconcrete_d15,
+			
+		tile_concrete = 512 + 96,
 		tile_concrete_v0,
 		tile_concrete_v1,
 		tile_concrete_v2,
@@ -136,20 +206,92 @@ namespace CMap
 		tile_concrete_v12,
 		tile_concrete_v13,
 		tile_concrete_v14,
-		tile_concrete_d0,
+		
+		tile_concrete_d0 = tile_concrete + 16,
 		tile_concrete_d1,
 		tile_concrete_d2,
 		tile_concrete_d3,
 		tile_concrete_d4,
 		tile_concrete_d5,
 		tile_concrete_d6,
-		tile_concrete_d7 = 506,
-		tile_rail_0 = 507,
-		tile_rail_1 = 508,
-		tile_rail_0_bg = 509,
-		tile_rail_1_bg = 510
+		tile_concrete_d7,
+
+		tile_mossyconcrete = tile_concrete_d0 + 10,
+		tile_mossyconcrete_d0,
+		tile_mossyconcrete_d1,
+		tile_mossyconcrete_d2,
+		tile_mossyconcrete_d3,
+		tile_mossyconcrete_d4,
+		
+		tile_bconcrete = 512 + 144,
+		tile_bconcrete_v0,
+		tile_bconcrete_v1,
+		tile_bconcrete_v2,
+		tile_bconcrete_v3,
+		tile_bconcrete_v4,
+		tile_bconcrete_v5,
+		tile_bconcrete_v6,
+		tile_bconcrete_v7,
+		tile_bconcrete_v8,
+		tile_bconcrete_v9,
+		tile_bconcrete_v10,
+		tile_bconcrete_v11,
+		tile_bconcrete_v12,
+		tile_bconcrete_v13,
+		tile_bconcrete_v14,
+		
+		tile_bconcrete_d0,
+		tile_bconcrete_d1,
+		tile_bconcrete_d2,
+		tile_bconcrete_d3,
+		tile_bconcrete_d4,
+		tile_bconcrete_d5,
+		tile_bconcrete_d6,
+		tile_bconcrete_d7,
+		
+		tile_mossybconcrete = tile_bconcrete_d0 + 10,
+		tile_mossybconcrete_d0,
+		tile_mossybconcrete_d1,
+		tile_mossybconcrete_d2,
+		tile_mossybconcrete_d3,
+		tile_mossybconcrete_d4,
 	};
 };
+
+bool isTileIron(TileType tile)
+{
+	return tile >= CMap::tile_iron && tile <= CMap::tile_iron_v14;
+}
+
+bool isTileBIron(TileType tile)
+{
+	return tile >= CMap::tile_biron && tile <= CMap::tile_biron_m;
+}
+
+bool isTileRustyIron(TileType tile)
+{
+	return tile >= CMap::tile_rustyiron && tile <= CMap::tile_rustyiron_d4;
+}
+
+bool isTileConcrete(TileType tile)
+{
+	return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_v14;
+}
+
+bool isTileBConcrete(TileType tile)
+{
+	return tile >= CMap::tile_bconcrete && tile <= CMap::tile_bconcrete_v14;
+}
+
+bool isTileMossyConcrete(TileType tile)
+{
+	return tile >= CMap::tile_mossyconcrete && tile <= CMap::tile_mossyconcrete_d4;
+}
+
+bool isTileMossyBConcrete(TileType tile)
+{
+	return tile >= CMap::tile_mossybconcrete && tile <= CMap::tile_mossybconcrete_d4;
+}
 
 void onInit(CMap@ this)
 {

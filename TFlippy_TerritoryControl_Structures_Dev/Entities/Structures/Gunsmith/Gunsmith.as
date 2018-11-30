@@ -74,9 +74,17 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Revolver", "$revolver$", "revolver", "A compact firearm for those with small pockets.\n\nUses Low Caliber Ammunition.");
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 40);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 40);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Bobby Gun", "$smg$", "smg", "A submachine gun.\n\nUses Low Caliber Ammunition.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 175);
 
 		s.customButton = true;
 		s.buttonwidth = 2;
@@ -86,9 +94,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Bolt Action Rifle", "$rifle$", "rifle", "A handy bolt action rifle.\n\nUses High Caliber Ammunition.");
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 60);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 75);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 
 		s.customButton = true;
 		s.buttonwidth = 2;
@@ -97,10 +103,8 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Bobby Gun", "$smg$", "smg", "A powerful submachine gun.\n\nUses Low Caliber Ammunition.");
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 2);
-		AddRequirement(s.requirements, "coin", "", "Coins", 125);
+		ShopItem@ s = addShopItem(this, "Lever Action Rifle", "$leverrifle$", "leverrifle", "A speedy lever action rifle.\n\nUses High Caliber Ammunition.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 250);
 
 		s.customButton = true;
 		s.buttonwidth = 2;

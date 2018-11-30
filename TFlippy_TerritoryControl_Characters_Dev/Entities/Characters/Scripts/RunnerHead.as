@@ -1,54 +1,56 @@
 // generic character head script
 
-#include "PixelOffsets.as"
+// TODO: fix double includes properly, added the following line temporarily to fix include issues
 #include "PaletteSwap.as"
+#include "PixelOffsets.as"
 #include "RunnerTextures.as"
+#include "Accolades.as"
 
 const s32 NUM_HEADFRAMES = 4;
 const s32 NUM_UNIQUEHEADS = 30;
 const int FRAMES_WIDTH = 8 * NUM_HEADFRAMES;
 
-//handling DLCs
+//handling Heads pack DLCs
 
-class HeadsDLC {
-	string filename;
-	bool do_teamcolour;
-	bool do_skincolour;
-
-	HeadsDLC(string file, bool team, bool skin) {
-		filename = file;
-		do_teamcolour = team;
-		do_skincolour = skin;
-	}
-};
-
-const array<HeadsDLC> dlcs = {
-	//vanilla
-	HeadsDLC("Entities/Characters/Sprites/Heads.png", true, true),
-	//flags of the world
-	HeadsDLC("Entities/Characters/Sprites/Heads2.png", false, false)
-};
-
-const int dlcs_count = dlcs.length;
-
-int get_dlc_number(int headIndex)
+int getHeadsPackIndex(int headIndex)
 {
 	if (headIndex > 255) {
 		if ((headIndex % 256) > NUM_UNIQUEHEADS) {
-			return Maths::Min(dlcs_count - 1, Maths::Floor(headIndex / 255.0f));
+			return Maths::Min(getHeadsPackCount() - 1, Maths::Floor(headIndex / 255.0f));
 		}
 	}
 	return 0;
 }
 
-int getHeadFrame(CBlob@ blob, int headIndex)
+bool doTeamColour(int packIndex)
+{
+	switch(packIndex) {
+		case 1: //FOTW
+			return false;
+	}
+	//otherwise
+	return true;
+}
+
+bool doSkinColour(int packIndex)
+{
+	switch(packIndex) {
+		case 1: //FOTW
+			return false;
+	}
+	//otherwise
+	return true;
+}
+
+int getHeadFrame(CBlob@ blob, int headIndex, bool default_pack = false)
 {
 	if(headIndex < NUM_UNIQUEHEADS)
 	{
 		return headIndex * NUM_HEADFRAMES;
 	}
 
-	if(headIndex == 255 || headIndex == NUM_UNIQUEHEADS)
+	//special heads logic for default heads pack
+	if(default_pack && (headIndex == 255 || headIndex == NUM_UNIQUEHEADS))
 	{
 		CRules@ rules = getRules();
 		bool holidayhead = false;
@@ -102,13 +104,11 @@ int getHeadFrame(CBlob@ blob, int headIndex)
 
 string getHeadTexture(int headIndex)
 {
-	return dlcs[get_dlc_number(headIndex)].filename;
+	return getHeadsPackByIndex(getHeadsPackIndex(headIndex)).filename;
 }
 
 void onPlayerInfoChanged(CSprite@ this)
 {
-	// LoadHead(this, this.getBlob().getHeadNum());
-	
 	CBlob@ blob = this.getBlob();
 	CPlayer@ ply = blob.getPlayer();
 	
@@ -126,28 +126,70 @@ void onPlayerInfoChanged(CSprite@ this)
 		}
 	}
 	
-	LoadHead(this, (blob.exists("override head") ? blob.get_u8("override head") : blob.getHeadNum()));
+	//LoadHead(this, (blob.exists("override head") ? blob.get_u8("override head") : blob.getHeadNum()));
+	if(blob.exists("override head"))
+	{
+		LoadHead(this,blob.get_u8("override head"));
+	}
+	else
+	{
+		LoadHead(this,blob.getHeadNum());
+	}
 }
 
 CSpriteLayer@ LoadHead(CSprite@ this, int headIndex)
 {
-	// print("load");
-
-	this.RemoveSpriteLayer("head");
-	// add head
-	HeadsDLC dlc = dlcs[get_dlc_number(headIndex)];
-	CSpriteLayer@ head = this.addSpriteLayer("head", dlc.filename, 16, 16,
-	                     (dlc.do_teamcolour ? this.getBlob().getTeamNum() : 0),
-	                     (dlc.do_skincolour ? this.getBlob().getSkinNum() : 0));
 	CBlob@ blob = this.getBlob();
 
-	// set defaults
-	headIndex = headIndex % 256; // DLC heads
-	s32 headFrame = getHeadFrame(blob, headIndex);
+	// strip old head
+	this.RemoveSpriteLayer("head");
 
-	print("" + headFrame);
-	
-	blob.set_s32("head index", headFrame);
+	// get dlc pack info
+	int headsPackIndex = getHeadsPackIndex(headIndex);
+	HeadsPack@ pack = getHeadsPackByIndex(headsPackIndex);
+	string texture_file = pack.filename;
+
+	bool override_frame = false;
+
+	//(has default head set)
+	bool defaultHead = (headIndex == 255 || headIndex == NUM_UNIQUEHEADS);
+	if(defaultHead)
+	{
+		//accolade custom head handling
+		//todo: consider pulling other custom head stuff out to here
+		CPlayer@ p = blob.getPlayer();
+		if (p !is null && !p.isBot())
+		{
+			Accolades@ acc = getPlayerAccolades(p.getUsername());
+			if (acc.hasCustomHead())
+			{
+				texture_file = "Sprites/" + acc.customHeadTexture + ".png";
+				headIndex = acc.customHeadIndex;
+				headsPackIndex = 0;
+				override_frame = true;
+			}
+		}
+	}
+	else
+	{
+		//not default head; do not use accolades data
+	}
+
+	//add new head
+	CSpriteLayer@ head = this.addSpriteLayer(
+		"head", texture_file, 16, 16,
+		(doTeamColour(headsPackIndex) ? this.getBlob().getTeamNum() : 0),
+		(doSkinColour(headsPackIndex) ? this.getBlob().getSkinNum() : 0)
+	);
+
+	//
+	headIndex = headIndex % 256; // wrap DLC heads into "pack space"
+
+	// figure out head frame
+	s32 headFrame = override_frame ?
+		(headIndex * NUM_HEADFRAMES) :
+		getHeadFrame(blob, headIndex, headsPackIndex == 0);
+
 	if (head !is null)
 	{
 		Animation@ anim = head.addAnimation("default", 0, false);
@@ -158,6 +200,11 @@ CSpriteLayer@ LoadHead(CSprite@ this, int headIndex)
 
 		head.SetFacingLeft(blob.isFacingLeft());
 	}
+
+	//setup gib properties
+	blob.set_s32("head index", headFrame);
+	blob.set_string("head texture", texture_file);
+
 	return head;
 }
 
@@ -178,10 +225,12 @@ void onGib(CSprite@ this)
 		Vec2f pos = blob.getPosition();
 		Vec2f vel = blob.getVelocity();
 		f32 hp = Maths::Min(Maths::Abs(blob.getHealth()), 2.0f) + 1.5;
-		makeGibParticle(getHeadTexture(blob.getHeadNum()),
-		                pos, vel + getRandomVelocity(90, hp , 30),
-		                framex, framey, Vec2f(16, 16),
-		                2.0f, 20, "/BodyGibFall", blob.getTeamNum());
+		makeGibParticle(
+			blob.get_string("head texture"),
+			pos, vel + getRandomVelocity(90, hp , 30),
+			framex, framey, Vec2f(16, 16),
+			2.0f, 20, "/BodyGibFall", blob.getTeamNum()
+		);
 	}
 }
 
@@ -207,10 +256,9 @@ void onTick(CSprite@ this)
 	CSpriteLayer@ head = this.getSpriteLayer("head");
 
 	// load head when player is set or it is AI
-	if ((head is null && (blob.getPlayer() !is null || (blob.getBrain() !is null && blob.getBrain().isActive()) || blob.getTickSinceCreated() > 3)) || blob.hasTag("update head"))
+	if (head is null && (blob.getPlayer() !is null || (blob.getBrain() !is null && blob.getBrain().isActive()) || blob.getTickSinceCreated() > 3))
 	{
-		@head = LoadHead(this, (blob.exists("override head") ? blob.get_u8("override head") : blob.getHeadNum()));
-		blob.Untag("update head");
+		@head = LoadHead(this, blob.getHeadNum());
 	}
 
 	if (head !is null)
@@ -234,20 +282,12 @@ void onTick(CSprite@ this)
 		}
 
 		offset = head_offset;
-		
+
 		// set the proper offset
 		Vec2f headoffset(this.getFrameWidth() / 2, -this.getFrameHeight() / 2);
 		headoffset += this.getOffset();
 		headoffset += Vec2f(-offset.x, offset.y);
 		headoffset += Vec2f(0, -2);
-		
-		bool attackHead = blob.hasTag("attack head");
-		
-		if (attackHead && blob.hasTag("mithrios"))
-		{
-			headoffset += Vec2f(XORRandom(16) - 8, XORRandom(16) - 8) / 16.00f;
-		}
-		
 		head.SetOffset(headoffset);
 
 		if (blob.hasTag("dead") || blob.hasTag("dead head"))
@@ -263,7 +303,7 @@ void onTick(CSprite@ this)
 					blob.Untag("cutthroat");
 			}
 		}
-		else if (attackHead)
+		else if (blob.hasTag("attack head"))
 		{
 			head.animation.frame = 1;
 		}
@@ -273,4 +313,3 @@ void onTick(CSprite@ this)
 		}
 	}
 }
-

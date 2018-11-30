@@ -169,7 +169,11 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 				}
 				else
 				{
-					if ((tile >= CMap::tile_iron && tile <= CMap::tile_iron_d8) || (tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || (tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14) || (tile >= CMap::tile_biron && tile <= CMap::tile_biron_d8))
+					if ((tile >= CMap::tile_iron && tile <= CMap::tile_iron_d8) || 
+						(tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || 
+						(tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14) || 
+						(tile >= CMap::tile_reinforcedconcrete_d5 && tile <= CMap::tile_reinforcedconcrete_d15) || 
+						(tile >= CMap::tile_biron && tile <= CMap::tile_biron_d8))
 					{
 						this.getSprite().PlaySound("/metal_stone.ogg");
 						sparks(tilepos, 1, 1);

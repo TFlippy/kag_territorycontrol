@@ -4,6 +4,7 @@
 #include "FireParticle.as";
 #include "canGrow.as";
 #include "MakeSeed.as";
+#include "CustomBlocks.as";
 
 // const Vec2f arm_offset = Vec2f(-2, -4);
 
@@ -13,6 +14,10 @@
 
 void onInit(CBlob@ this)
 {
+	//Adding awootism check in rain
+	this.addCommandID("removeAwootism");
+	//
+
 	this.getShape().SetStatic(true);
 	this.getCurrentScript().tickFrequency = 1;
 	
@@ -114,6 +119,8 @@ void onTick(CBlob@ this)
 	if (getNet().isClient())
 	{	
 		CBlob@ blob = getLocalPlayerBlob();
+		f32 fogHeightModifier = 0.00f;
+		
 		if (blob !is null)
 		{
 			Vec2f bpos = blob.getPosition();
@@ -132,8 +139,6 @@ void onTick(CBlob@ this)
 			{
 				f32 depth = Maths::Abs(bpos.y - hit.y) / 8.0f;
 				modifierTarget = 1.0f - Maths::Clamp(depth / 8.0f, 0.00f, 1);
-				
-				// print("underground: " + modifier);
 			}
 			else
 			{
@@ -141,8 +146,7 @@ void onTick(CBlob@ this)
 			}
 			
 			modifier = Lerp(modifier, modifierTarget, 0.10f);
-			
-			// print("" + modifier);
+			fogHeightModifier = 1.00f - (bpos.y / (map.tilemapheight * map.tilesize));
 			
 			if (getGameTime() % 5 == 0) ShakeScreen(Maths::Abs(wind) * 0.03f * modifier, 90, bpos);
 			
@@ -151,14 +155,35 @@ void onTick(CBlob@ this)
 		}
 		
 		
+		
 		f32 fogDarkness = Maths::Clamp(50 + (fog * 0.10f), 0, 255);
-		if (modifier > 0.01f) SetScreenFlash(Maths::Clamp(fog * modifier, 0, 255), fogDarkness, fogDarkness, fogDarkness);
+		if (modifier > 0.01f) SetScreenFlash(Maths::Clamp(Maths::Max(fog, 255 * fogHeightModifier * 1.20f) * modifier, 0, 255), fogDarkness, fogDarkness, fogDarkness);
 		
 		// print("" + modifier);
 		
 		// print("" + (fog * modifier));
 		
 		this.getShape().SetAngleDegrees(10 + sine);
+
+		//Awootism check
+		CPlayer@ player = getLocalPlayer();
+		if(player !is null)
+		{
+			if(player.hasTag("awootism"))
+			{
+				if(!map.rayCastSolidNoBlobs(blob.getPosition(), Vec2f(blob.getPosition().x,0)) || blob.isInWater())
+				{
+					CBitStream params;
+					params.write_u16(blob.getNetworkID());
+					params.write_u16(player.getNetworkID());
+					this.SendCommand(this.getCommandID("removeAwootism"),params);
+					client_AddToChat("You have been cured from awootism!", SColor(255, 255, 0, 0));
+					player.Untag("awootism");
+					blob.Tag("infectOver");
+				}
+			}
+		}
+		//End
 	}
 	
 	if (getNet().isServer())
@@ -189,9 +214,33 @@ void onTick(CBlob@ this)
 			}
 		}
 		
-		DecayStuff();
+		if (getGameTime() % 15 == 0) DecayStuff();
 	}
 }
+
+void onCommand(CBlob@ this,u8 cmd,CBitStream @params)
+{
+	if(cmd==this.getCommandID("removeAwootism")) 
+	{
+		u16 blob1,player1;
+
+		if(!params.saferead_u16(blob1)) {
+			return;
+		}
+		if(!params.saferead_u16(player1)) {
+			return;
+		}
+
+		CBlob@ ourBlob = getBlobByNetworkID(blob1);
+		CPlayer@ player = getPlayerByNetworkId(player1);
+
+		player.Untag("awootism");
+		player.Sync("awootism",false);
+		ourBlob.Tag("infectOver");
+		ourBlob.Sync("infectOver",false);
+	}
+}
+
 
 f32 Lerp(f32 v0, f32 v1, f32 t) 
 {
@@ -226,48 +275,51 @@ void DecayStuff()
 {
 	CMap@ map = getMap();
 	
+	// for (int i = 0; i < 1; i++)
+	{
+		Vec2f pos = Vec2f(XORRandom(map.tilemapwidth * map.tilesize), 0);
+		Vec2f hit;
+		
+		if (map.rayCastSolidNoBlobs(Vec2f(pos.x, 0), Vec2f(pos.x, map.tilemapheight * map.tilesize), hit))
+		{
+			TileType tile = map.getTile(hit).type;
+			if (isTileIron(tile))
+			{
+				map.server_SetTile(hit, CMap::tile_rustyiron + XORRandom(2));
+			}
+		}
+	}
+	
 	CBlob@[] plants;
 	getBlobsByTag("nature", @plants);
 	
 	if (plants !is null && plants.length > 0)
 	{
-		// print("" + plants.length);
-		
-		u32 count = Maths::Ceil(plants.length * 0.01f);
+		// u32 count = Maths::Ceil(plants.length * 0.5f); // lolz
+		u32 count = Maths::Ceil(plants.length * 0.035f); // lolz
 		if (getGameTime() % 150 == 0) print("rain iteration count: " + count + "/" + plants.length);
-		
+				
 		for (int i = 0; i < count; i++)
 		{
 			CBlob@ plant = plants[XORRandom(plants.length)];
 			
 			Vec2f pos = plant.getPosition();
 			Vec2f tilePos = Vec2f(pos.x, pos.y + 8);
-			// Vec2f offsetPos = Vec2f(tilePos.x + (XORRandom(10) - 5) * 8, tilePos.y + (XORRandom(6) - 3) * 8);
-			
-			// if (!map.isInWater(tilePos + Vec2f(0, -8))) return;
-			
 			uint16 tile = map.getTile(tilePos).type;
-			// uint16 offsetTile = map.getTile(offsetPos).type;
 						
 			if (true)
 			{
-				// print("ye" + tilePos.x);
-						
-				// Vec2f grassPos = tilePos + Vec2f(((3 - XORRandom(6)) * 8), ((3 - XORRandom(6)) * 8) - 8);
 				Vec2f grassPos = Vec2f(tilePos.x + ((5 - XORRandom(10)) * 8), tilePos.y + ((4 - XORRandom(8)) * 8));
 				TileType grassTileType = map.getTile(grassPos).type;
 
-				// Vec2f underGrassPos = grassPos + Vec2f(0, 8);
 				Vec2f underGrassPos = Vec2f(grassPos.x, grassPos.y + 8);
 				TileType underGrassTileType = map.getTile(underGrassPos).type;
 				
-				if (map.isTileSolid(underGrassTileType) && (map.isTileGround(underGrassTileType) || underGrassTileType == CMap::tile_castle_moss))
+				if (map.isTileSolid(underGrassTileType) && (map.isTileGround(underGrassTileType) || underGrassTileType == CMap::tile_castle_moss || isTileMossyConcrete(underGrassTileType)))
 				{
 					if (grassTileType == CMap::tile_empty)
 					{
-						// print("grew grass");
 						map.server_SetTile(grassPos, CMap::tile_grass + XORRandom(3));
-						// if (XORRandom(2) == 0 && blobs.length < 4) server_MakeSeed(tilePos + Vec2f(0, -8), seeds[XORRandom(seeds.length)]);
 					}
 					else if (map.isTileGrass(grassTileType))
 					{
@@ -276,8 +328,6 @@ void DecayStuff()
 					
 						if (blobs.length < 3) 
 						{
-							// print("grew seed");
-							// print("pos: [" + pos.x + ", " + pos.y + "]" + " grassPos: [" + grassPos.x + ", " + grassPos.y + "]" + " underGrassPos: [" + underGrassPos.x + ", " + underGrassPos.y + "]");
 							server_MakeSeed(grassPos, seeds[XORRandom(seeds.length)]);
 						}
 					}
@@ -286,87 +336,103 @@ void DecayStuff()
 				Vec2f offsetChainPos = Vec2f(grassPos.x + (XORRandom(2) - 1) * 8, grassPos.y + (XORRandom(2) - 1) * 8);
 				TileType offsetChainTileType = map.getTile(offsetChainPos).type;
 				
-				if (offsetChainTileType == CMap::tile_castle || offsetChainTileType == CMap::tile_castle_back)
+				if (offsetChainTileType == CMap::tile_castle)
 				{
-					if (map.isTileSolid(offsetChainTileType))
-					{
-						map.server_SetTile(offsetChainPos, CMap::tile_castle_moss);
-					}
-					else
-					{
-						map.server_SetTile(offsetChainPos, CMap::tile_castle_back_moss);
-					}
+					map.server_SetTile(offsetChainPos, CMap::tile_castle_moss);
 				}
-				// else if (map.isTileWood(offsetChainTileType))
-				// {
-					// map.server_DestroyTile(offsetChainPos, 0.5f);
-				// }
+				else if (offsetChainTileType == CMap::tile_castle_back)
+				{
+					map.server_SetTile(offsetChainPos, CMap::tile_castle_back_moss);
+				}
+				else if (isTileConcrete(offsetChainTileType))
+				{
+					map.server_SetTile(offsetChainPos, CMap::tile_mossyconcrete + XORRandom(2));
+				}
+				else if (isTileBConcrete(offsetChainTileType))
+				{
+					map.server_SetTile(offsetChainPos, CMap::tile_mossybconcrete + XORRandom(2));
+				}
+				else if (isTileIron(offsetChainTileType))
+				{
+					map.server_SetTile(offsetChainPos, CMap::tile_rustyiron + XORRandom(2));
+				}
 				
-				for (int j = 0; j < 5 + XORRandom(3); j++)
+				for (int j = 0; j < 4 + XORRandom(4); j++)
 				{
 					offsetChainPos = Vec2f(offsetChainPos.x + (XORRandom(4) - 2) * 8, offsetChainPos.y + (XORRandom(4) - 2) * 8);
 					offsetChainTileType = map.getTile(offsetChainPos).type;
 				
 					if (offsetChainTileType == CMap::tile_castle_back)
 					{
-						if (XORRandom(3) == 0) map.server_SetTile(offsetChainPos, CMap::tile_castle_back_moss); 
+						if (XORRandom(5) == 0) map.server_SetTile(offsetChainPos, CMap::tile_castle_back_moss); 
 						else
 						{
 							map.server_SetTile(offsetChainPos, 76 + XORRandom(2)); 
-						
-							// map.server_DestroyTile(offsetChainPos, XORRandom(10));
-							// print("" + offsetChainTileType = map.getTile(offsetChainPos).type);
-							// print("" + CMap::tile_castle_back);
 						}
 					}
 					else if (offsetChainTileType == CMap::tile_castle)
 					{
-						if (XORRandom(3) == 0) map.server_SetTile(offsetChainPos, CMap::tile_castle_moss);
+						if (XORRandom(5) == 0) map.server_SetTile(offsetChainPos, CMap::tile_castle_moss);
 						else
 						{
 							map.server_SetTile(offsetChainPos, 58 + XORRandom(6)); 
-						
-							// map.server_DestroyTile(offsetChainPos, XORRandom(10));
-							// print("" + offsetChainTileType = map.getTile(offsetChainPos).type);
-							// print("" + CMap::tile_castle);
 						}
 					}
-					else if (offsetChainTileType == CMap::tile_castle_back_moss)
+					else if (isTileConcrete(offsetChainTileType))
 					{
-						if (XORRandom(5) == 0)
+						if (XORRandom(5) == 0) map.server_SetTile(offsetChainPos, CMap::tile_concrete_d0 + XORRandom(3));
+						else
+						{
+							map.server_SetTile(offsetChainPos, CMap::tile_mossyconcrete + XORRandom(2)); 
+						}
+					}
+					else if (isTileBConcrete(offsetChainTileType))
+					{
+						if (XORRandom(5) == 0) map.server_SetTile(offsetChainPos,CMap::tile_bconcrete_d0 + XORRandom(3));
+						else
+						{
+							map.server_SetTile(offsetChainPos, CMap::tile_mossybconcrete + XORRandom(2)); 
+						}
+					}
+					else if (offsetChainTileType == CMap::tile_castle_back_moss || isTileMossyBConcrete(offsetChainTileType))
+					{
+						if (XORRandom(8) == 0)
 						{
 							if (map.isTileSolid(map.getTile(offsetChainPos + Vec2f(0, 8)).type))
 							{
-								CBlob@[] blobs;
-								map.getBlobsInRadius(offsetChainPos, 24, @blobs);
-							
-								if (blobs.length < 3) 
+								if (getTaggedBlobsInRadius(map, offsetChainPos, 24, "nature") < 3) 
 								{
 									server_MakeSeed(offsetChainPos, seeds[XORRandom(seeds.length)]);
 								}
 							}
 							else if (map.isTileSolid(map.getTile(offsetChainPos + Vec2f(0, -8)).type))
 							{
-								CBlob@[] blobs;
-								map.getBlobsInRadius(offsetChainPos, 12, @blobs);
-							
-								if (blobs.length == 0) 
+								if (getTaggedBlobsInRadius(map, offsetChainPos, 12, "nature") == 0) 
 								{
 									server_CreateBlob("ivy", -1, offsetChainPos + Vec2f(0, 16));
+								}
+							}
+							else
+							{
+								if (getTaggedBlobsInRadius(map, offsetChainPos, 24, "nature") == 0) 
+								{
+									server_CreateBlob("bush", -1, offsetChainPos);
+									
+									for (int k = 0; k < XORRandom(8); k++)
+									{
+										map.server_DestroyTile(Vec2f(offsetChainPos.x + (XORRandom(4) - 2) * 8, offsetChainPos.y + (XORRandom(4) - 2) * 8), 0.5f);
+									}
 								}
 							}
 						}
 					}
 					else if (offsetChainTileType == CMap::tile_wood_back)
 					{
-						if (XORRandom(6) == 0)
+						if (XORRandom(8) == 0)
 						{
 							if (map.isTileSolid(map.getTile(offsetChainPos + Vec2f(0, 8)).type))
-							{
-								CBlob@[] blobs;
-								map.getBlobsInRadius(offsetChainPos, 24, @blobs);
-							
-								if (blobs.length < 4) 
+							{ 
+								if (getTaggedBlobsInRadius(map, offsetChainPos, 24, "nature") < 4) 
 								{
 									server_CreateBlob("bush", -1, offsetChainPos);
 									
@@ -378,10 +444,7 @@ void DecayStuff()
 							}
 							else if (map.isTileSolid(map.getTile(offsetChainPos + Vec2f(0, -8)).type))
 							{
-								CBlob@[] blobs;
-								map.getBlobsInRadius(offsetChainPos, 12, @blobs);
-							
-								if (blobs.length == 0) 
+								if (getTaggedBlobsInRadius(map, offsetChainPos, 12, "nature") == 0) 
 								{
 									server_CreateBlob("ivy", -1, offsetChainPos + Vec2f(0, 16));
 									
@@ -393,10 +456,7 @@ void DecayStuff()
 							}
 							else
 							{
-								CBlob@[] blobs;
-								map.getBlobsInRadius(offsetChainPos, 24, @blobs);
-							
-								if (blobs.length == 0) 
+								if (getTaggedBlobsInRadius(map, offsetChainPos, 24, "nature") == 0) 
 								{
 									server_CreateBlob("bush", -1, offsetChainPos);
 									
@@ -415,11 +475,6 @@ void DecayStuff()
 							map.server_DestroyTile(Vec2f(offsetChainPos.x + (XORRandom(4) - 2) * 8, offsetChainPos.y + (XORRandom(4) - 2) * 8), 0.5f);
 						}
 					}
-					
-					// else if (!map.isTileGround(offsetChainTileType) && !map.isTileCastle(offsetChainTileType) && !map.isTileGrass(offsetChainTileType))
-					// {
-						// map.server_DestroyTile(offsetChainPos, 0.50f);
-					// }
 				}
 			}
 			else
@@ -428,4 +483,19 @@ void DecayStuff()
 			}
 		}
 	}
+}
+
+u32 getTaggedBlobsInRadius(CMap@ map, const Vec2f pos, const f32 radius, const string tag)
+{
+	CBlob@[] blobs;
+	map.getBlobsInRadius(pos, radius, @blobs);
+
+	u32 counter = 0;
+	
+	for (int i = 0; i < blobs.length; i++)
+	{
+		if (blobs[i].hasTag(tag)) counter++;
+	}
+
+	return counter;
 }

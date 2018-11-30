@@ -52,7 +52,6 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_grenade$", "Material_Grenade.png", Vec2f(8, 8), 0);
 		AddIconToken("$icon_bunkerbuster$", "Material_BunkerBuster.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_stunbomb$", "Material_StunBomb.png", Vec2f(16, 16), 0);
-		AddIconToken("$icon_clusterbomb$", "Material_ClusterBomb.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_guidedrocket$", "GuidedRocket.png", Vec2f(16, 24), 0);
 		AddIconToken("$icon_smokegrenade$", "SmokeGrenade.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_dynamite$", "Dynamite.png", Vec2f(8, 16), 0);
@@ -60,6 +59,7 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_fraggrenade$", "FragGrenade.png", Vec2f(8, 8), 0);
 		AddIconToken("$icon_flashgrenade$", "FlashGrenade.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_clusterbomb$", "Material_ClusterBomb.png", Vec2f(16, 24), 0);
+		AddIconToken("$icon_dirtybomb$", "Material_DirtyBomb.png", Vec2f(16, 16), 0);
 
 		// Metal
 		AddIconToken("$mat_copperingot$", "Material_CopperIngot.png", Vec2f(16, 16), 1);
@@ -121,6 +121,7 @@ void LoadDefaultGUI()
 		
 		// Gunsmith
 		AddIconToken("$rifle$", "Rifle.png", Vec2f(24, 8), 0);
+		AddIconToken("$leverrifle$", "LeverRifle.png", Vec2f(24, 8), 0);
 		AddIconToken("$smg$", "SMG.png", Vec2f(24, 8), 0);
 		AddIconToken("$revolver$", "Revolver.png", Vec2f(16, 8), 0);
 		AddIconToken("$icon_bazooka$", "Bazooka.png", Vec2f(16, 8), 0);
