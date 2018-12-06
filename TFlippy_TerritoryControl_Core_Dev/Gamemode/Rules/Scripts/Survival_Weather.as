@@ -27,7 +27,7 @@ void onTick(CRules@ this)
 			if (!this.get_bool("raining"))
 			{
 				CBlob@ rain = server_CreateBlob("rain", 255, Vec2f(0, 0));
-				rain.server_SetTimeToDie(length);
+				rain.server_SetTimeToDie(length / 30.00f);
 			}
 			
 			next_rain = time + length + XORRandom(40000);
