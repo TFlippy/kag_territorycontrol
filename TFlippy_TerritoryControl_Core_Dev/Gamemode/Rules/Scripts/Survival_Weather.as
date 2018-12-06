@@ -10,7 +10,7 @@ void onRestart(CRules@ this)
 	this.set_bool("raining", false);
 
 	u32 time = getGameTime();
-	next_rain = time + XORRandom(40000);
+	next_rain = time + XORRandom(75000);
 	
 	// print("Rain start: " + start_rain + "; Length: " + (end_rain - start_rain));
 }
@@ -30,7 +30,7 @@ void onTick(CRules@ this)
 				rain.server_SetTimeToDie(length / 30.00f);
 			}
 			
-			next_rain = time + length + XORRandom(40000);
+			next_rain = time + length + 10000 + XORRandom(75000);
 			// print("Rain start: " + start_rain + "; Length: " + (end_rain - start_rain));
 		}
 	}
