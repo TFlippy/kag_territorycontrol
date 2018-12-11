@@ -69,12 +69,6 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 		if (s !is null) sec.assignSeclev(player, s);
 	}
 
-	if(player.getUsername() == "digga")
-	{
-		player.Tag("awootism");
-		player.Sync("awootism",false);
-	}
-	
 	CBlob@[] sleepers;
 	getBlobsByTag("sleeper", @sleepers);
 	
@@ -207,8 +201,15 @@ void onPlayerDie( CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customDat
 	CBlob@ blob = victim.getBlob();
 	if(blob !is null) 
 	{
-		victim.set_string("classAtDeath",blob.getConfig());
-		victim.set_Vec2f("last death position",blob.getPosition());
+		if(!(blob.getName().find("corpse") != -1))
+		{			
+			victim.set_string("classAtDeath",blob.getConfig());
+			victim.set_Vec2f("last death position",blob.getPosition());
+		}
+		else
+		{
+			victim.set_Vec2f("last death position",blob.getPosition());
+		}
 	}
 	
 	// print(victim.getUsername() + " killed by " + attacker.getUsername());
@@ -309,12 +310,6 @@ void onTick(CRules@ this)
 							new_blob.setPosition(spawnPos);
 							new_blob.server_setTeamNum(team);
 							new_blob.server_SetPlayer(player);
-							if(player.hasTag("awootism"))
-							{
-								print("added!");
-								new_blob.AddScript('AwooootismSpread.as');
-							}
-							
 							// print("" + spawns[spawnIndex].getConfig());
 							// print("init " + new_blob.getHealth());
 							if (spawns[spawnIndex].getConfig() == "citadel")

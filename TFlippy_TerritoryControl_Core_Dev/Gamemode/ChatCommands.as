@@ -303,7 +303,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				}
 			}
 			
-			if(isCool || player.getUsername() == "digga")
+			if(isCool)
 			{
 				if(tokens[0]=="!awootism")
 				{
@@ -733,12 +733,3 @@ bool onClientProcessChat(CRules@ this,const string& in text_in,string& out text_
 
 	return true;
 }
-
-
-/*
-if(player.hasTag("awootism"))
-{
-	print("added!");
-	new_blob.AddScript('AwooootismSpread.as');
-}
-*/
