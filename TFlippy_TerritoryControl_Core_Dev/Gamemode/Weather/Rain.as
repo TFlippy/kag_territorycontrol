@@ -156,7 +156,7 @@ void onTick(CBlob@ this)
 		
 		
 		f32 fogDarkness = Maths::Clamp(50 + (fog * 0.10f), 0, 255);
-		if (modifier > 0.01f) SetScreenFlash(Maths::Clamp(Maths::Max(fog, 255 * fogHeightModifier * 1.20f) * modifier, 0, 255), fogDarkness, fogDarkness, fogDarkness);
+		if (modifier > 0.01f) SetScreenFlash(Maths::Clamp(Maths::Max(fog, 255 * fogHeightModifier * 1.20f) * modifier, 0, 190), fogDarkness, fogDarkness, fogDarkness);
 		
 		// print("" + modifier);
 		

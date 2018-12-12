@@ -13,7 +13,7 @@ const f32 inp_ratio = 0.50f;
 
 void onInit(CBlob@ this)
 {
-	this.Tag("aerial");
+	// this.Tag("aerial");
 	this.Tag("projectile");
 	this.Tag("explosive");
 	

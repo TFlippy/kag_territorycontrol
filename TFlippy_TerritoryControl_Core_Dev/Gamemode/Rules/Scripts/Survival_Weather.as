@@ -1,8 +1,11 @@
-u32 next_rain = 0;
+u32 next_rain = 1000;
 
 void onInit(CRules@ this)
 {
 	this.set_bool("raining", false);
+	
+	u32 time = getGameTime();
+	next_rain = time + 2500 + XORRandom(40000);
 }
 
 void onRestart(CRules@ this)
@@ -10,7 +13,6 @@ void onRestart(CRules@ this)
 	this.set_bool("raining", false);
 
 	u32 time = getGameTime();
-
 	next_rain = time + 2500 + XORRandom(40000);
 
 	// print("Rain start: " + start_rain + "; Length: " + (end_rain - start_rain));

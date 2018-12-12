@@ -169,7 +169,7 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Binoculars", "$icon_binoculars$", "binoculars", "Two telescopes glued together used for spying neighbours.");
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
-		AddRequirement(s.requirements, "tech", "tech_metallurgy", "Metallurgy", 1);
+		// AddRequirement(s.requirements, "tech", "tech_metallurgy", "Metallurgy", 1);
 
 		s.spawnNothing = true;
 	}

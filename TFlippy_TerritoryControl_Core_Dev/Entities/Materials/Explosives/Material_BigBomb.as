@@ -47,7 +47,12 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 bool canBePutInInventory(CBlob@ this, CBlob@ inventoryBlob)
 {
-	return !inventoryBlob.hasTag("human");
+	if (inventoryBlob.hasTag("human"))
+	{
+		if (inventoryBlob.isMyPlayer()) Sound::Play("NoAmmo");
+		return false;
+	}
+	else return true;
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)

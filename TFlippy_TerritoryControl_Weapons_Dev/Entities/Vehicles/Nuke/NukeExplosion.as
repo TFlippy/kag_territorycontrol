@@ -103,6 +103,17 @@ void DoExplosion(CBlob@ this)
 			CMap@ map = this.getMap();
 			const f32 flash_distance = this.get_f32("flash_distance");
 			
+			if (this.hasTag("reflash"))
+			{
+				CBlob@ localBlob = getLocalPlayerBlob();
+				if (localBlob !is null)
+				{
+					f32 flashMod = Maths::Sqrt(1.00f - ((localBlob.getPosition() - this.getPosition()).getLength() / flash_distance));
+					print("" + flashMod);
+					SetScreenFlash(255 * flashMod, 255, 255, 255, 1);
+				}
+			}
+			
 			for (int i = 0; i < 30; i++)
 			{
 				Vec2f dir = Vec2f(XORRandom(200) - 100, XORRandom(200) - 100);
