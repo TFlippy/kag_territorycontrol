@@ -154,7 +154,10 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 	else return false;
 }
 
-
+bool canBePutInInventory( CBlob@ this, CBlob@ inventoryBlob )
+{
+	return false;
+}
 
 
 

@@ -28,6 +28,7 @@ void onInit(CBlob@ this)
 	}
 
 	this.addCommandID("sleeper_set");
+	this.addCommandID("removeAwootism");
 	this.getCurrentScript().tickFrequency = 30;
 }
 
@@ -63,6 +64,24 @@ void onTick(CBlob@ this)
 	}
 	
 	// if (sleeping) print(this.getConfig() + " is sleeping");
+	CPlayer@ player = getLocalPlayer();
+	if(player !is null)
+	{
+		CMap@ map = getMap();
+		if(player.hasTag("awootism"))
+		{
+			if(!map.rayCastSolidNoBlobs(this.getPosition(), Vec2f(this.getPosition().x,0)) || this.isInWater())
+			{
+				CBitStream params;
+				params.write_u16(this.getNetworkID());
+				params.write_u16(player.getNetworkID());
+				this.SendCommand(this.getCommandID("removeAwootism"),params);
+				client_AddToChat("You have been cured from awootism!", SColor(255, 255, 0, 0));
+				player.Untag("awootism");
+				this.Tag("infectOver");
+			}
+		}
+	}
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -87,6 +106,25 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @bt)
 		sprite.SetEmitSoundPaused(!sleeping);
 		
 		print("Sleeper sync: " + sleeping);
+	}
+	else if(cmd==this.getCommandID("removeAwootism"))
+	{
+		u16 blob1,player1;
+
+		if(!bt.saferead_u16(blob1)) {
+			return;
+		}
+		if(!bt.saferead_u16(player1)) {
+			return;
+		}
+
+		CBlob@ ourBlob = getBlobByNetworkID(blob1);
+		CPlayer@ player = getPlayerByNetworkId(player1);
+
+		player.Untag("awootism");
+		player.Sync("awootism",false);
+		ourBlob.Tag("infectOver");
+		ourBlob.Sync("infectOver",false);
 	}
 }
 

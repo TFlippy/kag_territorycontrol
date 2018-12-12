@@ -37,6 +37,7 @@ void onInit(CBlob @ this)
 	}
 }
 
+
 bool BoulderHitMap(CBlob@ this, Vec2f worldPoint, int tileOffset, Vec2f velocity, f32 damage, u8 customData)
 {
 	//check if we've already hit this tile
@@ -83,7 +84,9 @@ bool BoulderHitMap(CBlob@ this, Vec2f worldPoint, int tileOffset, Vec2f velocity
 	}
 
 	if (velocity.LengthSquared() < 5)
+	{
 		stuck = true;
+	}
 
 	if (stuck)
 	{
@@ -121,6 +124,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		KillThis(this,point1);
 	}
 }
+
 void KillThis(CBlob@ this,Vec2f worldPoint){
 	if(getNet().isServer()){
 		CPlayer@ player=	this.getPlayer();
@@ -136,6 +140,7 @@ void KillThis(CBlob@ this,Vec2f worldPoint){
 		}
 	}
 }
+
 void onDie(CBlob@ this)
 {
 	this.getShape().SetVelocity(Vec2f(0.0f,-1.5f));
@@ -160,6 +165,7 @@ void onDie(CBlob@ this)
 		Sound::Play("Gore.ogg",this.getPosition(),1.0f);
 	}
 }
+
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
 	if (customData == Hitters::sword || customData == Hitters::arrow)
@@ -177,8 +183,30 @@ void onInit(CSprite@ this)
 {
 	
 }
-void onTick(CSprite@ this)
+
+void onTick(CBlob@ this)
 {
-	this.SetFacingLeft(this.getBlob().getVelocity().x<0.0f);
-	this.RotateBy(10.0f,Vec2f());
+	//stuck fix
+
+	if(this.isAttached()){
+		return;
+	}
+
+	if(this.getVelocity() == Vec2f(0,0))
+	{
+		if(isServer())
+		{
+			print("time to die");
+			this.server_Die();
+		}
+	}
+	else
+	{
+		CSprite@ sprite = this.getSprite();
+		if(sprite !is null)
+		{
+			sprite.SetFacingLeft(this.getVelocity().x<0.0f);
+			sprite.RotateBy(10.0f,Vec2f());
+		}
+	}
 }
