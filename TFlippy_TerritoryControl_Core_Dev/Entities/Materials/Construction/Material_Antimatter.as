@@ -16,53 +16,32 @@ void DoExplosion(CBlob@ this)
 		
 	if (getNet().isServer())
 	{
-		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
+		f32 size = Maths::Pow(quantity * 0.25f, 1.25f) * 25;
+	
+		CBlob@ boom = server_CreateBlobNoInit("antimatterexplosion");
 		boom.setPosition(this.getPosition());
-		boom.set_u8("boom_frequency", 6);
-		boom.set_u8("boom_start", 10);
-		boom.set_u8("boom_end", (Maths::Sqrt(quantity * 10) * 10));
-		boom.Tag("no mithril");
-		boom.Tag("no fallout");
-		boom.Tag("reflash");
-		boom.set_f32("flash_distance", 1024);
+		boom.set_u8("boom_frequency", 10);
+		boom.set_f32("boom_size", 0);
+		boom.set_u32("boom_increment", 2.00f);
+		boom.set_f32("boom_end", size);
+		boom.set_f32("flash_distance", size * 4.00f);
 		boom.Init();
 	
-		// for (int i = 0; i < quantity / 5; i++)
-		// {
-			// CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
-			// boom.setPosition(this.getPosition() + getRandomVelocity(0, i * 32, 360));
-			// boom.set_u8("boom_start", 10);
-			// boom.set_u8("boom_end", 15);
-			// boom.Tag("no mithril");
-			// boom.Tag("no fallout");
-			// boom.set_f32("flash_distance", 1024);
-			// boom.Init();
-		// }
+		// CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
+		// boom.setPosition(this.getPosition());
+		// boom.set_u8("boom_frequency", 6);
+		// boom.set_u8("boom_start", 10);
+		// boom.set_u8("boom_end", (Maths::Sqrt(quantity * 10) * 10));
+		// boom.Tag("no mithril");
+		// boom.Tag("no fallout");
+		// boom.Tag("reflash");
+		// boom.set_f32("flash_distance", 1024);
+		// boom.Init();
 	}
-		
-	// if (getNet().isServer())
-	// {
-		// for (int i = 0; i < (quantity / 5) + XORRandom(quantity / 5) ; i++)
-		// {
-			// CBlob@ blob = server_CreateBlob("fuelgas", -1, this.getPosition());
-			// blob.setVelocity(Vec2f(XORRandom(20) - 10, -XORRandom(10)));
-			// blob.server_SetTimeToDie(60 + XORRandom(60));
-		// }
-	// }
-	
+
 	this.server_Die();
 	this.getSprite().Gib();
 }
-
-// f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
-// {
-	// if (customData == Hitters::fire || customData == Hitters::burn)
-	// {
-		// DoExplosion(this);
-	// }
-
-	// return damage;
-// }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {

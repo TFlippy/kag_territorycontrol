@@ -18,10 +18,7 @@ string[] particles =
 void onInit(CBlob@ this)
 {
 	this.Tag("map_damage_dirt");
-	this.set_string("custom_explosion_sound", "Nuke_Kaboom");
-	
 	this.getShape().SetStatic(true);
-	
 	this.set_f32("map_damage_ratio", 0.125f);
 	
 	if (!this.exists("boom_frequency")) this.set_u8("boom_frequency", 3);
@@ -31,22 +28,14 @@ void onInit(CBlob@ this)
 	if (!this.exists("flash_delay")) this.set_u32("flash_delay", 0);
 	if (!this.exists("mithril_amount")) this.set_f32("mithril_amount", 150);
 	if (!this.exists("flash_distance")) this.set_f32("flash_distance", 2500);
+	if (!this.exists("custom_explosion_sound")) this.set_string("custom_explosion_sound", "Nuke_Kaboom");
 	
 	if (getNet().isClient())
 	{
 		Vec2f pos = getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos());
 		f32 distance = Maths::Abs(this.getPosition().x - pos.x) / 8;
 		sound_delay = (Maths::Abs(this.getPosition().x - pos.x) / 8) / (340 * 0.4f);
-		
-		// print("delay: " + sound_delay);
 	}
-	
-	// print("start: " + this.get_u8("boom_start"));
-	// print("end: " + this.get_u8("boom_end"));
-	
-	// this.SetLight(true);
-	// this.SetLightColor(SColor(255, 255, 255, 255));
-	// this.SetLightRadius(1024.5f);
 }
 
 void DoExplosion(CBlob@ this)
@@ -102,18 +91,7 @@ void DoExplosion(CBlob@ this)
 		{		
 			CMap@ map = this.getMap();
 			const f32 flash_distance = this.get_f32("flash_distance");
-			
-			if (this.hasTag("reflash"))
-			{
-				CBlob@ localBlob = getLocalPlayerBlob();
-				if (localBlob !is null)
-				{
-					f32 flashMod = Maths::Sqrt(1.00f - ((localBlob.getPosition() - this.getPosition()).getLength() / flash_distance));
-					print("" + flashMod);
-					SetScreenFlash(255 * flashMod, 255, 255, 255, 1);
-				}
-			}
-			
+		
 			for (int i = 0; i < 30; i++)
 			{
 				Vec2f dir = Vec2f(XORRandom(200) - 100, XORRandom(200) - 100);
@@ -136,6 +114,28 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 	}
+	
+	if (getNet().isClient())
+	{
+		if (this.hasTag("reflash"))
+		{
+			CBlob@ localBlob = getLocalPlayerBlob();
+			if (localBlob !is null)
+			{
+				const f32 dist = (localBlob.getPosition() - this.getPosition()).getLength();
+				const f32 flash_distance = this.get_f32("flash_distance");
+
+				// print("" + dist + " / " + flash_distance);
+				
+				if (dist <= flash_distance)
+				{
+					f32 flashMod = Maths::Sqrt(1.00f - (dist / flash_distance));
+					// print("" + flashMod);
+					SetScreenFlash(255 * flashMod, 255, 255, 255, 1);
+				}
+			}
+		}
+	}
 }
 
 void onTick(CBlob@ this)
@@ -151,8 +151,23 @@ void onTick(CBlob@ this)
 	if (this.hasTag("dead")) return;
 
 	u32 ticks = this.getTickSinceCreated();
+	
+	if (getNet().isClient() && !this.hasTag("no flash") && ticks == this.get_u32("flash_delay")) 
+	{
+		CBlob@ localBlob = getLocalPlayerBlob();
+		if (localBlob !is null)
+		{
+			const f32 dist = (localBlob.getPosition() - this.getPosition()).getLength();
+			const f32 flash_distance = this.get_f32("flash_distance") * 5;
 
-	if (!this.hasTag("no flash") && ticks == this.get_u32("flash_delay")) SetScreenFlash(255, 255, 255, 255);
+			if (dist <= flash_distance)
+			{
+				f32 flashMod = Maths::Sqrt(1.00f - (dist / flash_distance));
+				print("" + flashMod);
+				SetScreenFlash(255 * Maths::Min(flashMod * 2, 1), 255, 255, 255, 5 * flashMod);
+			}
+		}
+	}
 	
 	if (ticks >= this.get_u32("boom_delay") && ticks % this.get_u8("boom_frequency") == 0 && this.get_u8("boom_start") < this.get_u8("boom_end"))
 	{
