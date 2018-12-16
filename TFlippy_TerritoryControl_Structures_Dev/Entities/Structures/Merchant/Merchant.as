@@ -91,7 +91,7 @@ void onInit(CBlob@ this)
 	// }
 
 	{
-		ShopItem@ s = addShopItem(this, "Sell Pumpkin (1)", "$COIN$", "coin-80", "Sell 1 pumpkin for 80 coins.");
+		ShopItem@ s = addShopItem(this, "Sell Pumpkin (1)", "$COIN$", "coin-200", "Sell 1 pumpkin for 200 coins.");
 		AddRequirement(s.requirements, "blob", "pumpkin", "Pumpkin", 1);
 		s.spawnNothing = true;
 	}
