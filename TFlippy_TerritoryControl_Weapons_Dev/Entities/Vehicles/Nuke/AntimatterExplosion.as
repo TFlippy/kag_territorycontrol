@@ -139,15 +139,15 @@ void onTick(CBlob@ this)
 		for (int i = 0; i < Maths::Pow(boom_size / 32, 2) * 0.01f; i++)
 		{
 			// Vec2f offset = getRandomVelocity(0, XORRandom(boom_size), 360);
-			Vec2f offset = getRandomVelocity(0, boom_size * 0.50f + ((boom_size - XORRandom(boom_size * 2)) * 0.125f), 360);
+			Vec2f offset = getRandomVelocity(0, boom_size + ((boom_size - XORRandom(boom_size * 2)) * 0.125f), 360);
 			// offset = Vec2f(offset.x, offset.y * 0.50f);
 			
 			f32 dist = (offset - this.getPosition()).getLength();
 			f32 dist_mod = 1.00f - (dist / boom_end);
 			
 			// MakeLightningParticle(this, offset, 4 + XORRandom(4), Maths::Min((boom_size / 32) + (XORRandom(100) * 0.01f), (boom_size / 256.00f) * dist_mod), 0.125f * dist_mod);
-			if (XORRandom(2) == 0) MakeLightningParticle(this, getRandomVelocity(0, (boom_size - XORRandom(boom_size * 2)) * 0.50f, 360), 4, Maths::Sqrt(boom_size / 32.00f), 0.20f);
-			MakeLightningParticle(this, offset, 4 + XORRandom(4), Maths::Min((boom_size / 32) + (XORRandom(100) * 0.01f), (boom_size / 256.00f) * dist_mod), 0.125f);
+			if (XORRandom(2) == 0) MakeLightningParticle(this, getRandomVelocity(0, (boom_size - XORRandom(boom_size * 2)), 360), 4, Maths::Sqrt(boom_size / 32.00f), 0.20f);
+			// MakeLightningParticle(this, offset, 4 + XORRandom(4), Maths::Min((boom_size / 32) + (XORRandom(100) * 0.01f), (boom_size / 256.00f) * dist_mod), 0.125f);
 			MakeExplosionParticle(this, offset + getRandomVelocity(0, XORRandom(48), 360), Vec2f(0, 0), 5 + XORRandom(3), particles[XORRandom(particles.length)]);
 		}
 		
@@ -169,7 +169,9 @@ void onTick(CBlob@ this)
 		CBlob@ localBlob = getLocalPlayerBlob();
 		if (localBlob !is null)
 		{
-			const f32 dist = (localBlob.getPosition() - this.getPosition()).getLength();
+			f32 dist = (localBlob.getPosition() - this.getPosition()).getLength();
+			dist = Maths::Max(dist - boom_size, 0);
+			
 			const f32 flash_distance = Maths::Min(this.get_f32("flash_distance"), 256);
 			
 			
@@ -184,14 +186,14 @@ void onTick(CBlob@ this)
 			
 			ShakeScreen(256, 128, this.getPosition());
 			
-			// print("" + sound_dist);
-			
 			if (ticks % 10 == 0)
 			{
-				const f32 sound_distance = Maths::Sqrt(this.get_f32("boom_size") * 3000.00f);
+				const f32 sound_distance = Maths::Sqrt(boom_size * 5000);
+				// print("" + dist + "/" + sound_distance);
+				
 				if (dist <= sound_distance)
 				{
-					f32 modifier = Maths::Sqrt(1.00f - (dist / sound_distance));
+					f32 modifier = 1.00f - Maths::Sqrt(dist / sound_distance);
 					
 					if (modifier > 0.01f)
 					{	
@@ -295,7 +297,7 @@ void MakeLightningParticle(CBlob@ this, const Vec2f pos, const f32 time, const f
 	CParticle@ p = ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(32, 32), 1, 0, true);
 	if (p !is null)
 	{
-		p.Z = 1000;
+		p.Z = 200;
 		p.animated = time;
 		p.growth = growth;
 		p.setRenderStyle(RenderStyle::additive);
@@ -307,6 +309,6 @@ void MakeExplosionParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const 
 	CParticle@ p = ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 2.8f + XORRandom(200) * 0.01f, time, XORRandom(100) * -0.00005f, true);
 	if (p !is null)
 	{
-		p.Z = 50;
+		p.Z = 300;
 	}
 }

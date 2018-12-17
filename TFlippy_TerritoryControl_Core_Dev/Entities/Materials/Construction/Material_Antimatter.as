@@ -20,9 +20,9 @@ void DoExplosion(CBlob@ this)
 	
 		CBlob@ boom = server_CreateBlobNoInit("antimatterexplosion");
 		boom.setPosition(this.getPosition());
-		boom.set_u8("boom_frequency", 10);
+		boom.set_u8("boom_frequency", 1);
 		boom.set_f32("boom_size", 0);
-		boom.set_u32("boom_increment", 8.00f);
+		boom.set_u32("boom_increment", 4.00f);
 		boom.set_f32("boom_end", size);
 		boom.set_f32("flash_distance", size * 4.00f);
 		boom.Init();
@@ -45,12 +45,20 @@ void DoExplosion(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (blob !is null ? !blob.isCollidable() : !solid) return;
-
-	f32 vellen = this.getOldVelocity().Length();
-
-	if (vellen > 5.0f)
+	if (getNet().isServer())
 	{
-		DoExplosion(this);
+		if (blob !is null ? !blob.isCollidable() : !solid) return;
+
+		f32 vellen = this.getOldVelocity().Length();
+
+		if (vellen > 5.0f)
+		{
+			this.server_Die();
+		}
 	}
+}
+
+void onDie(CBlob@ this)
+{
+	DoExplosion(this);
 }
