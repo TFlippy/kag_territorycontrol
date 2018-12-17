@@ -32,9 +32,10 @@ void onInit(CBlob@ this)
 		f32 distance = Maths::Abs(this.getPosition().x - pos.x) / 8;
 		sound_delay = (Maths::Abs(this.getPosition().x - pos.x) / 8) / (340 * 0.4f);
 		
+		f32 length = Maths::Abs(this.get_f32("boom_size") - this.get_f32("boom_end")) / this.get_u32("boom_increment");
 		for (int i = 0; i < (this.get_f32("boom_end") / 32); i++)
 		{
-			MakeLightningParticle(this, getRandomVelocity(0, XORRandom(100) * 0.01f, 360), 8, (XORRandom(200) * 0.01f), Maths::Min((this.get_f32("boom_end") / 32) * 0.25f, (XORRandom(50) * 0.01f) * 0.50f));
+			MakeLightningParticle(this, getRandomVelocity(0, XORRandom(100) * 0.01f, 360), Maths::Min(length, 8), (XORRandom(200) * 0.01f), Maths::Min((this.get_f32("boom_end") / 32) * 0.25f, (XORRandom(50) * 0.01f) * 0.50f));
 		}
 	}
 
@@ -43,28 +44,10 @@ void onInit(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
-	ShakeScreen(512, 128, this.getPosition());
-	
 	const f32 boom_size = this.get_f32("boom_size");
 	const f32 modifier = boom_size / this.get_f32("boom_end");
 	const f32 invModifier = 1.00f - modifier;
-	
-	// this.set_f32("map_damage_radius", 256.0f * modifier);
-	
-	// this.set_Vec2f("explosion_offset", Vec2f(0, 0));
-	// Explode(this, 256.0f * modifier, 192.0f * (1.00f - modifier));
-	
-	// print("" + modifier);
-	
-	
-	
-	// for (int i = 0; i < 1 + (4 * modifier); i++)
-	// {
-		// // this.set_Vec2f("explosion_offset", getRandomVelocity(0, 512 * modifier, 360));
-		// DestroyStuff(this, 512 * modifier, 8, this.getPosition());
-		// // Explode(this, 32.00f + (32.0f * modifier), 512 + (512.00f * modifier));
-	// }
-	
+		
 	if (getNet().isServer())
 	{			
 		server_DestroyStuff(this, boom_size, 10 + (25 * modifier), this.getPosition());
@@ -99,7 +82,8 @@ void server_DestroyStuff(CBlob@ this, f32 radius, u32 count, Vec2f pos)
 	{
 		f32 angle = XORRandom(360);
 		Vec2f a_pos = pos + Vec2f(Maths::Cos(angle), Maths::Sin(angle)) * (radius + XORRandom(32));
-
+		// a_pos = pos + Vec2f(a_pos.x, a_pos.y * 0.50f);
+		
 		CBlob@[] blobs;
 		if (map.getBlobsInRadius(a_pos, 64, @blobs))
 		{
@@ -152,22 +136,21 @@ void onTick(CBlob@ this)
 	
 	if (getNet().isClient())
 	{
-		if (ticks % 5 * invModifier == 0) 
+		for (int i = 0; i < Maths::Pow(boom_size / 32, 2) * 0.01f; i++)
 		{
-			for (int i = 0; i < Maths::Pow(boom_size / 32, 2); i++)
-			{
-				Vec2f pos = getRandomVelocity(0, XORRandom(boom_size), 360);
-				f32 dist = (pos - this.getPosition()).getLength();
-				f32 dist_mod = 1.00f - (dist / boom_end);
-				
-				MakeLightningParticle(this, pos, 4 + XORRandom(4), Maths::Min((boom_size / 32) + (XORRandom(100) * 0.01f), (boom_size / 256.00f) * dist_mod), 0.125f);
-				// MakeExplosionParticle(this, pos + getRandomVelocity(0, XORRandom(48), 360), Vec2f(0, 0), XORRandom(8) + 10, particles[XORRandom(particles.length)]);
-				MakeExplosionParticle(this, pos + getRandomVelocity(0, XORRandom(48), 360), Vec2f(0, 0), 5 + XORRandom(3), particles[XORRandom(particles.length)]);
-			}
+			// Vec2f offset = getRandomVelocity(0, XORRandom(boom_size), 360);
+			Vec2f offset = getRandomVelocity(0, boom_size * 0.50f + ((boom_size - XORRandom(boom_size * 2)) * 0.125f), 360);
+			// offset = Vec2f(offset.x, offset.y * 0.50f);
 			
+			f32 dist = (offset - this.getPosition()).getLength();
+			f32 dist_mod = 1.00f - (dist / boom_end);
 			
-			// MakeLightningParticle(this, Vec2f(0, 0), 4 + XORRandom(4), (boom_size / 32) + (XORRandom(100) * 0.01f), 0.125f + (XORRandom(100) * 0.0005f));
+			// MakeLightningParticle(this, offset, 4 + XORRandom(4), Maths::Min((boom_size / 32) + (XORRandom(100) * 0.01f), (boom_size / 256.00f) * dist_mod), 0.125f * dist_mod);
+			if (XORRandom(2) == 0) MakeLightningParticle(this, getRandomVelocity(0, (boom_size - XORRandom(boom_size * 2)) * 0.50f, 360), 4, Maths::Sqrt(boom_size / 32.00f), 0.20f);
+			MakeLightningParticle(this, offset, 4 + XORRandom(4), Maths::Min((boom_size / 32) + (XORRandom(100) * 0.01f), (boom_size / 256.00f) * dist_mod), 0.125f);
+			MakeExplosionParticle(this, offset + getRandomVelocity(0, XORRandom(48), 360), Vec2f(0, 0), 5 + XORRandom(3), particles[XORRandom(particles.length)]);
 		}
+		
 		
 		if (ticks % pulse_ticks == 0)
 		{
@@ -188,7 +171,8 @@ void onTick(CBlob@ this)
 		{
 			const f32 dist = (localBlob.getPosition() - this.getPosition()).getLength();
 			const f32 flash_distance = Maths::Min(this.get_f32("flash_distance"), 256);
-
+			
+			
 			// print("" + dist + " / " + flash_distance);
 			
 			if (dist <= flash_distance)
@@ -196,6 +180,25 @@ void onTick(CBlob@ this)
 				f32 flashMod = Maths::Sqrt(1.00f - (dist / flash_distance));
 				// print("" + flashMod);
 				SetScreenFlash(255 * flashMod, 255, 255, 255, 1);
+			}
+			
+			ShakeScreen(256, 128, this.getPosition());
+			
+			// print("" + sound_dist);
+			
+			if (ticks % 10 == 0)
+			{
+				const f32 sound_distance = Maths::Sqrt(this.get_f32("boom_size") * 3000.00f);
+				if (dist <= sound_distance)
+				{
+					f32 modifier = Maths::Sqrt(1.00f - (dist / sound_distance));
+					
+					if (modifier > 0.01f)
+					{	
+						// print("" + modifier);
+						Sound::Play("Antimatter_Kaboom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 2.0f - (0.2f * (1 - modifier)), modifier);
+					}
+				}
 			}
 		}
 	}

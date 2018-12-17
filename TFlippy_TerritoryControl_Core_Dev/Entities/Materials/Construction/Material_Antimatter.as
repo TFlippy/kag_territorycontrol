@@ -16,13 +16,13 @@ void DoExplosion(CBlob@ this)
 		
 	if (getNet().isServer())
 	{
-		f32 size = Maths::Pow(quantity * 0.25f, 1.25f) * 25;
+		f32 size = Maths::Pow(quantity * 0.25f, 1.50f) * 25;
 	
 		CBlob@ boom = server_CreateBlobNoInit("antimatterexplosion");
 		boom.setPosition(this.getPosition());
 		boom.set_u8("boom_frequency", 10);
 		boom.set_f32("boom_size", 0);
-		boom.set_u32("boom_increment", 2.00f);
+		boom.set_u32("boom_increment", 8.00f);
 		boom.set_f32("boom_end", size);
 		boom.set_f32("flash_distance", size * 4.00f);
 		boom.Init();

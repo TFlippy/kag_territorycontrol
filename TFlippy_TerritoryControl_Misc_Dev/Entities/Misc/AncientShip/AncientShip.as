@@ -105,6 +105,7 @@ void onInit(CBlob@ this)
 		MakeMat(this, this.getPosition(), "mat_lancerod", 50 + XORRandom(50));
 		MakeMat(this, this.getPosition(), "mat_matter", 50 + XORRandom(200));
 		MakeMat(this, this.getPosition(), "mat_plasteel", 25 + XORRandom(50));
+		MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(10));
 	}
 
 	this.inventoryButtonPos = Vec2f(6, 0);

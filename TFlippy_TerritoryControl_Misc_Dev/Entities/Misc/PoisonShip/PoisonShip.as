@@ -66,6 +66,7 @@ void onInit(CBlob@ this)
 		if (XORRandom(100) < 10)
 		{
 			CBlob@ blob = server_CreateBlob("oof", this.getTeamNum(), this.getPosition());
+			MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(50));
 			this.server_PutInInventory(blob);
 		}
 
@@ -90,6 +91,7 @@ void onInit(CBlob@ this)
 		MakeMat(this, this.getPosition(), "mat_plasteel", 25 + XORRandom(200));
 		MakeMat(this, this.getPosition(), "mat_mithril", 250 + XORRandom(750));
 		MakeMat(this, this.getPosition(), "mat_mithrilingot", 16 + XORRandom(32));
+		MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(10));
 	}
 
 	this.inventoryButtonPos = Vec2f(6, 0);
