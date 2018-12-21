@@ -20,21 +20,21 @@ void onRestart(CRules@ this)
 
 void onTick(CRules@ this)
 {
-	if (getNet().isServer())
-	{
-		u32 time = getGameTime();
-		if (time >= next_rain)
-		{
-			u32 length = 200 + XORRandom(250);
+	// if (getNet().isServer())
+	// {
+		// u32 time = getGameTime();
+		// if (time >= next_rain)
+		// {
+			// u32 length = 200 + XORRandom(250);
 
-			if (!this.get_bool("raining"))
-			{
-				CBlob@ rain = server_CreateBlob("rain", 255, Vec2f(0, 0));
-				rain.server_SetTimeToDie(length / 30.00f);
-			}
+			// if (!this.get_bool("raining"))
+			// {
+				// CBlob@ rain = server_CreateBlob("rain", 255, Vec2f(0, 0));
+				// rain.server_SetTimeToDie(length / 30.00f);
+			// }
 
-			next_rain = time + length + 10000 + XORRandom(75000);
-			// print("Rain start: " + start_rain + "; Length: " + (end_rain - start_rain));
-		}
-	}
+			// next_rain = time + length + 10000 + XORRandom(75000);
+			// // print("Rain start: " + start_rain + "; Length: " + (end_rain - start_rain));
+		// }
+	// }
 }
