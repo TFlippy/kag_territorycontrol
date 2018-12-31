@@ -488,7 +488,8 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 10);
-		AddRequirement(b.reqs, "blob", "bp_chickenassembler", "Blueprint (UPF Assembly Line)", 1);
+		AddRequirement(b.reqs, "tech", "tech_automation_advanced", "Technology (Advanced Automation)", 1);
+		// AddRequirement(b.reqs, "blob", "bp_automation_advanced", "Blueprint (Advanced Automation)", 1);
 		b.buildOnGround = true;
 		b.size.Set(56, 24);
 		blocks[2].push_back(b);

@@ -101,7 +101,7 @@ void onTick(CBlob@ this)
 			
 			if (XORRandom(100) < 15) 
 			{
-				server_CreateBlob("bp_chickenassembler", -1, this.getPosition());
+				server_CreateBlob("bp_automation_advanced", -1, this.getPosition());
 			}
 		}
 		

@@ -13,7 +13,7 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	CButton@ button = caller.CreateGenericButton(0, Vec2f(0, 0), this, this.getCommandID("study"), "Study");
+	CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("study"), "Study");
 	button.SetEnabled(!HasFakeTech(getRules(), this.get_string("tech_name"), caller.getTeamNum()));
 }
 
