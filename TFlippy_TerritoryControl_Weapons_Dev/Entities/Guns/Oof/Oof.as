@@ -242,7 +242,7 @@ void SpawnBoom(CBlob@ this, Vec2f pos)
 	boom.set_u8("boom_frequency", 5);
 	boom.set_f32("boom_size", 0);
 	boom.set_u32("boom_increment", 10.00f);
-	boom.set_f32("boom_end", 20);
+	boom.set_f32("boom_end", 30);
 	boom.set_f32("flash_distance", 128);
 	boom.set_u32("boom_delay", 5);
 	boom.set_u32("flash_delay", 5);

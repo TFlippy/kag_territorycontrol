@@ -35,7 +35,7 @@ void onInit(CBlob@ this)
 		f32 length = Maths::Abs(this.get_f32("boom_size") - this.get_f32("boom_end")) / this.get_u32("boom_increment");
 		for (int i = 0; i < (this.get_f32("boom_end") / 32); i++)
 		{
-			MakeLightningParticle(this, getRandomVelocity(0, XORRandom(100) * 0.01f, 360), Maths::Min(length, 8), (XORRandom(200) * 0.01f), Maths::Min((this.get_f32("boom_end") / 32) * 0.25f, (XORRandom(50) * 0.01f) * 0.50f));
+			MakeLightningParticle(this, getRandomVelocity(0, XORRandom(100) * 0.01f, 360), Maths::Min(1 + length, 8), (XORRandom(200) * 0.01f), Maths::Min((this.get_f32("boom_end") / 32) * 0.25f, (XORRandom(50) * 0.01f) * 0.50f));
 		}
 	}
 

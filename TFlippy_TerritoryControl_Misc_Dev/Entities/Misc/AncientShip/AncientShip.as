@@ -91,13 +91,22 @@ void onInit(CBlob@ this)
 		if (XORRandom(100) < 2)
 		{
 			CBlob@ blob = server_CreateBlob("oof", this.getTeamNum(), this.getPosition());
+			MakeMat(this, this.getPosition(), "mat_antimatter", 10 + XORRandom(25));
 			this.server_PutInInventory(blob);
 		}
 
 		if (XORRandom(100) < 25)
 		{
+			CBlob@ blob = server_CreateBlob("chargeblaster", this.getTeamNum(), this.getPosition());
+			this.server_PutInInventory(blob);
+
+			MakeMat(this, this.getPosition(), "mat_mithril", 50 + XORRandom(150));
+		}
+		
+		if (XORRandom(100) < 25)
+		{
 			CBlob@ blob = server_CreateBlob("mat_mithrilbomb", this.getTeamNum(), this.getPosition());
-			blob.server_SetQuantity(1 + XORRandom(4));
+			blob.server_SetQuantity(1 + XORRandom(2));
 			
 			this.server_PutInInventory(blob);
 		}

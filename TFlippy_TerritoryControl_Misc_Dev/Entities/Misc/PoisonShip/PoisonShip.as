@@ -66,7 +66,7 @@ void onInit(CBlob@ this)
 		if (XORRandom(100) < 10)
 		{
 			CBlob@ blob = server_CreateBlob("oof", this.getTeamNum(), this.getPosition());
-			MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(50));
+			MakeMat(this, this.getPosition(), "mat_antimatter", 10 + XORRandom(40));
 			this.server_PutInInventory(blob);
 		}
 
