@@ -179,6 +179,13 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", 140);
 		s.spawnNothing = true;
 	}
+	
+	if (rand.NextRanged(100) < 50)
+	{
+		ShopItem@ s = addShopItem(this, "Firejob", "$icon_firejob$", "firejob", "fucking tie it to your neck and launch it ya cunt");
+		AddRequirement(s.requirements, "coin", "", "Coins", 1500);
+		s.spawnNothing = true;
+	}
 }
 
 void onTick(CBlob@ this)
