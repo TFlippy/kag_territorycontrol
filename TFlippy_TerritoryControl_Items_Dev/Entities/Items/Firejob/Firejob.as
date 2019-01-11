@@ -147,11 +147,11 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 		
-		for (int i = 0; i < 5 + XORRandom(10); i++)
+		for (int i = 0; i < 3 + XORRandom(5); i++)
 		{
 			CBlob@ blob = server_CreateBlob("flame", -1, this.getPosition());
 			blob.setVelocity(getRandomVelocity(0, XORRandom(8), 360));
-			blob.server_SetTimeToDie(3 + XORRandom(10));
+			blob.server_SetTimeToDie(3 + XORRandom(5));
 		}
 	}
 	
