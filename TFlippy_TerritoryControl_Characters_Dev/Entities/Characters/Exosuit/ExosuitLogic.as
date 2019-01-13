@@ -140,7 +140,7 @@ void onTick(CBlob@ this)
 
 	u32 time = getGameTime();
 	
-	if (time % 15 == 0 && getNet().isServer())
+	if (time % 5 == 0 && getNet().isServer())
 	{	
 		this.server_Heal(0.125f);
 	}
@@ -174,7 +174,7 @@ void onTick(CBlob@ this)
 		
 	if (knocked > 0)
 	{
-		pressed_a1 = false;
+		// pressed_a1 = false;
 		pressed_a2 = false;
 		walking = false;
 		
@@ -268,7 +268,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case Hitters::stab:
 		case Hitters::sword:
 		case Hitters::fall:
-			damage *= 0.4f;
+			damage *= 0.40f;
 			break;
 	
 		case Hitters::explosion:
@@ -276,7 +276,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case Hitters::mine:
 		case Hitters::mine_special:
 		case Hitters::bomb:
-			damage *= 0.8f;
+			damage *= 0.80f;
 			this.getSprite().PlaySound("Exosuit_Hit.ogg", 1, 1);			
 			break;
 	
@@ -287,8 +287,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 		case Hitters::burn:
 		case Hitters::fire:
-		case Hitters::spikes:
-		case Hitters::builder:
 		case HittersTC::radiation:
 			damage = 0.00f;
 			break;
@@ -298,31 +296,70 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 			
 		default:
-			damage *= 0.60f;
+			damage *= 0.40f;
 			this.getSprite().PlaySound("Exosuit_Hit.ogg", 1, 1);		
 			break;
 	}
 
 	if (hitterBlob !is null && hitterBlob !is this && this.isKeyPressed(key_action1) && !this.hasTag("noLMB"))
 	{
+		f32 damage_received = 0;
+		f32 damage_reflected = 0;
+		
+		switch (customData)
+		{
+			case HittersTC::railgun_lance:
+			case HittersTC::hammer:
+			case Hitters::crush:
+			case Hitters::fall:
+				damage_received = damage * 0.50f;
+				break;
+		
+			case Hitters::spikes:
+			case Hitters::builder:
+			case Hitters::arrow:
+				damage_received = damage * 0.25f;
+				break;
+
+			case HittersTC::bullet_high_cal:
+			case HittersTC::electric:
+				damage_received = damage * 0.10f;
+				break;
+			
+			case HittersTC::shotgun:
+			case HittersTC::bullet_low_cal:
+				damage_received = damage * 0.05f;
+				break;
+			
+			default:
+				damage_received = 0.00f;
+				break;
+		}
+		
+		damage_reflected = Maths::Min(damage - damage_received, Maths::Max(this.getHealth(), 0));
+		
+		// print("base " + damage);
+		// print("received " + damage_received);
+		// print("reflecting " + damage_reflected);
+		
+		hitterBlob.setVelocity(hitterBlob.getVelocity() - (velocity * damage_reflected * 1.25f));
+		this.setVelocity(this.getVelocity() + (velocity * damage_reflected * 1.25f));
+		
+		SetKnocked(hitterBlob, 30.0f * damage_reflected);
+		SetKnocked(this, 30.0f * damage_reflected);
+	
 		if (getNet().isServer())
 		{
-			this.server_Hit(hitterBlob, worldPoint, velocity, damage, customData);
+			this.server_Hit(hitterBlob, worldPoint, velocity, damage_reflected, customData);
 		}
-
-		hitterBlob.setVelocity(hitterBlob.getVelocity() - (velocity * damage * 1.25f));
-		this.setVelocity(this.getVelocity() + (velocity * damage * 1.25f));
-		
-		SetKnocked(hitterBlob, 30.0f * damage);
-		SetKnocked(this, 20.0f * damage);
 	
 		if (getNet().isClient())
 		{
 			this.getSprite().PlaySound("Exosuit_Deflect.ogg", 1, 1);
 			if (this.isMyPlayer()) SetScreenFlash(100, 255, 255, 255);			
 		}
-
-		return 0.0f;
+		
+		return damage_received;
 	}
 	else
 	{
