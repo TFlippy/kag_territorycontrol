@@ -25,7 +25,7 @@ void onTick(CRules@ this)
 		u32 time = getGameTime();
 		if (time >= next_rain)
 		{
-			u32 length = 200 + XORRandom(250);
+			u32 length = (20 * 60 * 1) + XORRandom(20 * 60 * 5);
 
 			if (!this.get_bool("raining"))
 			{
