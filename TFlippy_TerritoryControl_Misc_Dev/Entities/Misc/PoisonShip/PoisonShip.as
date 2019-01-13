@@ -143,11 +143,12 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 				server_CreateBlob("drone", -1, this.getPosition() + getRandomVelocity(0, XORRandom(24), 360));
 			}			
 		}
+		
+		Sound::Play("PoisonShip_Siren.ogg");
+		ShakeScreen(80.0f, 32.00f, this.getPosition());
+		
 		this.Untag("drone inside");
 	}
-	
-	Sound::Play("PoisonShip_Siren.ogg");
-	ShakeScreen(80.0f, 32.00f, this.getPosition());
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

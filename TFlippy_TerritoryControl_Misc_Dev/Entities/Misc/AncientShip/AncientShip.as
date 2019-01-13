@@ -160,7 +160,7 @@ void onInit(CBlob@ this)
 		Sound::Play("AncientShip_Intro.ogg");
 
 		// client_AddToChat("A strange object has fallen out of the sky in the " + ((this.getPosition().x < getMap().tilemapwidth * 4) ? "west" : "east") + "!", SColor(255, 255, 0, 0));
-		client_AddToChat("A strange object has fallen out of the sky!", SColor(255, 255, 0, 0));
+		client_AddToChat("Various strange debris is falling out of the sky!", SColor(255, 255, 0, 0));
 	}
 }
 
