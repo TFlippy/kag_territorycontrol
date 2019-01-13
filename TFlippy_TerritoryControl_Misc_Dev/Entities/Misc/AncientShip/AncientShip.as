@@ -53,6 +53,12 @@ void onInit(CBlob@ this)
 			this.server_PutInInventory(blob);
 		}
 		
+		if (XORRandom(100) < 40)
+		{
+			CBlob@ blob = server_CreateBlob("chargepistol", this.getTeamNum(), this.getPosition());
+			this.server_PutInInventory(blob);
+		}
+		
 		if (XORRandom(100) < 25)
 		{
 			CBlob@ blob = server_CreateBlob("callahan", this.getTeamNum(), this.getPosition());
@@ -115,13 +121,20 @@ void onInit(CBlob@ this)
 		MakeMat(this, this.getPosition(), "mat_matter", 50 + XORRandom(200));
 		MakeMat(this, this.getPosition(), "mat_plasteel", 25 + XORRandom(50));
 		MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(10));
+		
+		this.set_u8("wreckage_count", 0);
+		this.set_u8("wreckage_count_max", 8 + XORRandom(12));
+	
+		Vec2f velocity = Vec2f((15 + XORRandom(5)) * (XORRandom(2) == 0 ? 1.00f : -1.00f), 5);
+		this.setVelocity(velocity);
+		this.set_Vec2f("wreckage_velocity", velocity);
 	}
 
 	this.inventoryButtonPos = Vec2f(6, 0);
 	
 	CMap@ map = getMap();
-	this.setPosition(Vec2f(this.getPosition().x, 0.0f));
-	this.setVelocity(Vec2f((15 + XORRandom(5)) * (XORRandom(2) == 0 ? 1.00f : -1.00f), 5));
+	this.setPosition(Vec2f((map.tilemapwidth * 8 * 0.50f) + (400 - XORRandom(800)), 0.0f));
+	
 	// this.getShape().SetGravityScale(0.0f);
 
 	if (getNet().isClient())
@@ -251,6 +264,30 @@ void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 
 void onTick(CBlob@ this)
 {
+	if (getNet().isServer() && XORRandom(100) < 2)
+	{
+		const u8 w_count = this.get_u8("wreckage_count");
+		const u8 w_count_max = this.get_u8("wreckage_count_max");
+		const Vec2f velocity = this.get_Vec2f("wreckage_velocity");
+		
+		if (w_count < w_count_max)
+		{
+			u32 width = getMap().tilemapwidth * 0.50f * 8;
+			CBlob@ blob = server_CreateBlob("ancientwreckage", -1, Vec2f(this.getPosition().x + ((width * 0.50f) - XORRandom(width)), 0));
+			if (blob !is null)
+			{
+				Vec2f vel = velocity;
+				vel.RotateBy(3 - XORRandom(6));
+				
+				blob.setVelocity(vel);
+				
+				this.add_u8("wreckage_count", 1);
+			}
+		}
+		
+		
+	}
+
 	if(this.getOldVelocity().Length() - this.getVelocity().Length() > 8.0f)
 	{
 		onHitGround(this);
@@ -278,7 +315,7 @@ void onTick(CBlob@ this)
 				Sound::Play("Nuke_Kaboom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 1.0f - (0.7f * (1 - modifier)), modifier);
 			}
 
-			this.getCurrentScript().tickFrequency = 30;
+			// this.getCurrentScript().tickFrequency = 30;
 		}
 	}
 }
