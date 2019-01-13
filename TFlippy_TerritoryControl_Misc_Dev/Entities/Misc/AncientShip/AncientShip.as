@@ -278,7 +278,7 @@ void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && XORRandom(200) == 0)
+	if (getNet().isServer() && XORRandom(100) == 0)
 	{
 		const u8 w_count = this.get_u8("wreckage_count");
 		const u8 w_count_max = this.get_u8("wreckage_count_max");
