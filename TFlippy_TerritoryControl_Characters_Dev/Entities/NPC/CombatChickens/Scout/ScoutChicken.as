@@ -16,7 +16,7 @@ void onInit(CBlob@ this)
 	this.set_f32("chaseDistance", 200);
 	this.set_f32("maxDistance", 400);
 	
-	this.set_f32("inaccuracy", 0.01f);
+	this.set_f32("inaccuracy", 0.025f);
 	this.set_u8("reactionTime", 20);
 	this.set_u8("attackDelay", 0);
 	this.set_bool("bomber", false);
