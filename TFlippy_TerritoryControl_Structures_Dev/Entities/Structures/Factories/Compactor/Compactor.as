@@ -20,12 +20,13 @@ void onInit(CBlob@ this)
 	this.set_string("compactor_resource_name", "");
 	
 	this.addCommandID("compactor_withdraw");
+	this.addCommandID("compactor_sync");
 }
 
-void onTick(CBlob@ this)
-{
-	client_UpdateName(this);
-}
+// void onTick(CBlob@ this)
+// {
+	// client_UpdateName(this);
+// }
 
 void client_UpdateName(CBlob@ this)
 {
@@ -47,8 +48,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		{
 			this.set_string("compactor_resource", blob.getConfig());
 			this.set_string("compactor_resource_name", blob.getInventoryName());
-			this.Sync("compactor_resource", false);
-			this.Sync("compactor_resource_name", false);
+			// this.Sync("compactor_resource", false);
+			// this.Sync("compactor_resource_name", false);
 			
 			compactor_resource = blob.getConfig();
 		}
@@ -58,11 +59,10 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 			if (getNet().isServer()) 
 			{
 				this.add_u32("compactor_quantity", blob.getQuantity());
-				this.Sync("compactor_quantity", false);
+				// this.Sync("compactor_quantity", false);
 				
 				blob.server_Die();
-				
-				// this.server_PutInInventory(blob);
+				server_Sync(this);
 			}
 			
 			if (getNet().isClient())
@@ -85,7 +85,21 @@ void GetButtonsFor( CBlob@ this, CBlob@ caller )
 	}
 }
 
-void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
+// KAG's CBlob.Sync() is nonfunctional shit
+void server_Sync(CBlob@ this)
+{
+	if (getNet().isServer())
+	{
+		CBitStream stream;
+		stream.write_string(this.get_string("compactor_resource_name"));
+		stream.write_string(this.get_string("compactor_resource"));
+		stream.write_u32(this.get_u32("compactor_quantity"));
+		
+		this.SendCommand(this.getCommandID("compactor_sync"), stream);
+	}
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 {
 	if (cmd == this.getCommandID("compactor_withdraw"))
 	{
@@ -110,28 +124,26 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 					{
 						this.set_string("compactor_resource", "");
 						this.set_string("compactor_resource_name", "");
-						this.Sync("compactor_resource", false);
-						this.Sync("compactor_resource_name", false);
+						
+						server_Sync(this);
 					}
 				}
 			}
-			
-			if (getNet().isClient())
-			{
-				
-			}
 		}
-		else
+	}
+	else if (cmd == this.getCommandID("compactor_sync"))
+	{
+		if (getNet().isClient())
 		{
-			if (getNet().isServer()) 
-			{
+			string name = params.read_string();
+			string config = params.read_string();
+			u32 quantity = params.read_u32();
 			
-			}
+			this.set_string("compactor_resource_name", name);
+			this.set_string("compactor_resource", config);
+			this.set_u32("compactor_quantity", quantity);
 			
-			if (getNet().isClient())
-			{
-			
-			}
+			client_UpdateName(this);
 		}
 	}
 }
@@ -157,10 +169,7 @@ void onDie(CBlob@ this)
 				blob.setVelocity(getRandomVelocity(0, XORRandom(400) * 0.01f, 360));
 			}
 		}
-	}
-	
-	if (getNet().isClient())
-	{
 		
+		server_Sync(this);
 	}
 }
