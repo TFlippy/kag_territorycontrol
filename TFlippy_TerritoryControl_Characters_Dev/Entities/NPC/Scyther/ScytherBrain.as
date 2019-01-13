@@ -240,6 +240,29 @@ void Move(CBrain@ this, CBlob@ blob, Vec2f pos)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
+	switch (customData)
+	{
+		case Hitters::stab:
+		case Hitters::sword:
+		case Hitters::fall:
+			damage *= 0.50f;
+			break;
+	
+		case Hitters::arrow:
+			damage *= 0.45f; 
+			break;
+
+		case Hitters::burn:
+		case Hitters::fire:
+		case HittersTC::radiation:
+			damage = 0.00f;
+			break;
+			
+		case HittersTC::electric:
+			damage = 5.00f;
+			break;
+	}
+
 	if (getNet().isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 50)
