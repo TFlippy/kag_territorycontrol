@@ -23,7 +23,7 @@ void onInit(CBlob@ this)
 
 	this.set_f32("map_damage_ratio", 1.0f);
 	this.set_bool("map_damage_raycast", true);
-	this.set_string("custom_explosion_sound", "AncientWreckage_Crash_" + (this.getNetworkID() % 3) + ".ogg");
+	// this.set_string("custom_explosion_sound", "AncientWreckage_Crash_" + (this.getNetworkID() % 3) + ".ogg");
 	this.Tag("map_damage_dirt");
 	this.Tag("map_destroy_ground");
 
@@ -35,15 +35,6 @@ void onInit(CBlob@ this)
 
 	if (getNet().isServer())
 	{		
-		if (XORRandom(100) < 50)
-		{
-			for (int i = 0; i < 1 + XORRandom(2); i++)
-			{
-				CBlob@ blob = server_CreateBlob("bobomax", this.getTeamNum(), this.getPosition());
-				this.server_PutInInventory(blob);
-			}
-		}
-
 		if (XORRandom(100) < 25)
 		{
 			CBlob@ blob = server_CreateBlob("chargepistol", this.getTeamNum(), this.getPosition());
@@ -56,15 +47,15 @@ void onInit(CBlob@ this)
 			this.server_PutInInventory(blob);
 		}
 		
-		if (XORRandom(100) < 10)
+		if (XORRandom(100) < 3)
 		{
-			MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(10));
+			MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(8));
 		}
 
-		MakeMat(this, this.getPosition(), "mat_lancerod", 5 + XORRandom(15));
-		MakeMat(this, this.getPosition(), "mat_matter", 25 + XORRandom(100));
-		MakeMat(this, this.getPosition(), "mat_plasteel", 25 + XORRandom(75));
-		MakeMat(this, this.getPosition(), "mat_mithril", 50 + XORRandom(200));
+		MakeMat(this, this.getPosition(), "mat_lancerod", 5 + XORRandom(10));
+		MakeMat(this, this.getPosition(), "mat_matter", 25 + XORRandom(50));
+		MakeMat(this, this.getPosition(), "mat_plasteel", 25 + XORRandom(50));
+		MakeMat(this, this.getPosition(), "mat_mithril", 25 + XORRandom(100));
 	}
 
 	this.inventoryButtonPos = Vec2f(0, 0);
@@ -106,7 +97,7 @@ void onTick(CBlob@ this)
 		this.Untag("explosive");
 	}
 
-	if (getNet().isClient() && this.getTickSinceCreated() < 60) MakeParticle(this, XORRandom(100) < 10 ? "LargeSmoke.png" : "Explosion.png");
+	if (getNet().isClient() && this.getTickSinceCreated() < 60) MakeParticle(this, XORRandom(100) < 10 ? "SmallSmoke" : "SmallExplosion");
 
 	if(this.hasTag("collided"))
 	{
@@ -144,7 +135,7 @@ void onHitGround(CBlob@ this)
 		if (getNet().isClient())
 		{
 			ShakeScreen(power * 400.0f, power * 100.0f, this.getPosition());
-			// SetScreenFlash(100, 255, 255, 255);
+			this.getSprite().PlaySound("AncientWreckage_Crash_" + (this.getNetworkID() % 3) + ".ogg", 1.00f, 0.50f + (XORRandom(100) * 0.30f));
 
 			Vec2f pos = getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos());
 			sound_delay = (Maths::Abs(this.getPosition().x - pos.x) / 8) / (340 * 0.4f);
@@ -154,7 +145,7 @@ void onHitGround(CBlob@ this)
 		this.Tag("collided");
 	}
 
-	f32 boomRadius = 32.0f * power;
+	f32 boomRadius = 24.0f * power;
 	this.set_f32("map_damage_radius", boomRadius);
 	Explode(this, boomRadius, 20.0f);
 
