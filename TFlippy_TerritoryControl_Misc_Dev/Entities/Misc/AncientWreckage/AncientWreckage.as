@@ -186,6 +186,8 @@ void onHitGround(CBlob@ this)
 		}
 
 		this.setVelocity(this.getOldVelocity() / 1.55f);
+		
+		// if (XORRandom(100) < 10) server_CreateBlob("falloutgas", this.getTeamNum(), this.getPosition());
 	}
 }
 

@@ -37,76 +37,75 @@ void onInit(CBlob@ this)
 	this.Tag("high weight");
 	this.Tag("scyther inside");
 
+	this.set_bool("shop available", false);
+	
 	this.server_setTeamNum(-1);
 
 	if (getNet().isServer())
 	{
-		if (XORRandom(100) < 75)
+		for (int i = 0; i < 5; i++)
 		{
-			CBlob@ blob = server_CreateBlob("chargerifle", this.getTeamNum(), this.getPosition());
-			this.server_PutInInventory(blob);
-		}
-
-		if (XORRandom(100) < 25)
-		{
-			CBlob@ blob = server_CreateBlob("chargerifle", this.getTeamNum(), this.getPosition());
-			this.server_PutInInventory(blob);
-		}
-		
-		if (XORRandom(100) < 40)
-		{
-			CBlob@ blob = server_CreateBlob("chargepistol", this.getTeamNum(), this.getPosition());
-			this.server_PutInInventory(blob);
-		}
-		
-		if (XORRandom(100) < 25)
-		{
-			CBlob@ blob = server_CreateBlob("callahan", this.getTeamNum(), this.getPosition());
-			this.server_PutInInventory(blob);
-		}
-		
-		if (XORRandom(100) < 25)
-		{
-			CBlob@ blob = server_CreateBlob("callahan", this.getTeamNum(), this.getPosition());
-			this.server_PutInInventory(blob);
-		}
-		
-		if (XORRandom(100) < 50)
-		{
-			for (int i = 0; i < 1 + XORRandom(4); i++)
+			if (XORRandom(100) < 35)
 			{
-				CBlob@ blob = server_CreateBlob("bobomax", this.getTeamNum(), this.getPosition());
+				CBlob@ blob = server_CreateBlob("chargerifle", this.getTeamNum(), this.getPosition());
 				this.server_PutInInventory(blob);
 			}
 		}
-
-		if (XORRandom(100) < 10)
+		
+		for (int i = 0; i < 6; i++)
 		{
-			CBlob@ blob = server_CreateBlob("chargelance", this.getTeamNum(), this.getPosition());
-			this.server_PutInInventory(blob);
-
-			MakeMat(this, this.getPosition(), "mat_lancerod", 50 + XORRandom(50));
+			if (XORRandom(100) < 50)
+			{
+				CBlob@ blob = server_CreateBlob("chargepistol", this.getTeamNum(), this.getPosition());
+				this.server_PutInInventory(blob);
+			}
 		}
 		
-		if (XORRandom(100) < 5)
+		for (int i = 0; i < 2; i++)
 		{
-			CBlob@ blob = server_CreateBlob("exosuititem", this.getTeamNum(), this.getPosition());
-			this.server_PutInInventory(blob);
+			if (XORRandom(100) < 25)
+			{
+				CBlob@ blob = server_CreateBlob("callahan", this.getTeamNum(), this.getPosition());
+				this.server_PutInInventory(blob);
+			}
 		}
 		
+		for (int i = 0; i < 2; i++)
+		{
+			if (XORRandom(100) < 10)
+			{
+				CBlob@ blob = server_CreateBlob("chargelance", this.getTeamNum(), this.getPosition());
+				this.server_PutInInventory(blob);
+
+				MakeMat(this, this.getPosition(), "mat_lancerod", 50 + XORRandom(50));
+			}
+		}
+		
+			for (int i = 0; i < 2; i++)
+		{
+			if (XORRandom(100) < 50)
+			{
+				CBlob@ blob = server_CreateBlob("chargeblaster", this.getTeamNum(), this.getPosition());
+				this.server_PutInInventory(blob);
+
+				MakeMat(this, this.getPosition(), "mat_mithril", 50 + XORRandom(150));
+			}
+		}
+		
+		for (int i = 0; i < 5; i++)
+		{
+			if (XORRandom(100) < 35)
+			{
+				CBlob@ blob = server_CreateBlob("exosuititem", this.getTeamNum(), this.getPosition());
+				this.server_PutInInventory(blob);
+			}
+		}
+			
 		if (XORRandom(100) < 2)
 		{
 			CBlob@ blob = server_CreateBlob("oof", this.getTeamNum(), this.getPosition());
 			MakeMat(this, this.getPosition(), "mat_antimatter", 10 + XORRandom(25));
 			this.server_PutInInventory(blob);
-		}
-
-		if (XORRandom(100) < 25)
-		{
-			CBlob@ blob = server_CreateBlob("chargeblaster", this.getTeamNum(), this.getPosition());
-			this.server_PutInInventory(blob);
-
-			MakeMat(this, this.getPosition(), "mat_mithril", 50 + XORRandom(150));
 		}
 		
 		if (XORRandom(100) < 25)
@@ -116,14 +115,24 @@ void onInit(CBlob@ this)
 			
 			this.server_PutInInventory(blob);
 		}
+	
+		if (XORRandom(100) < 50)
+		{
+			for (int i = 0; i < 1 + XORRandom(4); i++)
+			{
+				CBlob@ blob = server_CreateBlob("bobomax", this.getTeamNum(), this.getPosition());
+				this.server_PutInInventory(blob);
+			}
+		}
 
 		MakeMat(this, this.getPosition(), "mat_lancerod", 50 + XORRandom(50));
-		MakeMat(this, this.getPosition(), "mat_matter", 50 + XORRandom(200));
-		MakeMat(this, this.getPosition(), "mat_plasteel", 25 + XORRandom(50));
-		MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(10));
+		MakeMat(this, this.getPosition(), "mat_matter", 250 + XORRandom(1000));
+		MakeMat(this, this.getPosition(), "mat_plasteel", 250 + XORRandom(2000));
+		MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(15));
+		MakeMat(this, this.getPosition(), "mat_mithril", 50 + XORRandom(750));
 		
 		this.set_u8("wreckage_count", 0);
-		this.set_u8("wreckage_count_max", 8 + XORRandom(12));
+		this.set_u8("wreckage_count_max", 10 + XORRandom(20));
 	
 		Vec2f velocity = Vec2f((15 + XORRandom(5)) * (XORRandom(2) == 0 ? 1.00f : -1.00f), 5);
 		this.setVelocity(velocity);
@@ -172,17 +181,22 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 	{
 		if (getNet().isServer()) 
 		{
-			if (XORRandom(100) < 75)
+			for (int i = 0; i < 1 + XORRandom(2); i++)
 			{
-				server_CreateBlob("scyther", -1, this.getPosition());
-			}		
-			else
-			{
-				server_CreateBlob("centipede", -1, this.getPosition());
+				if (XORRandom(100) < 75)
+				{
+					server_CreateBlob("scyther", -1, this.getPosition());
+				}		
+				else
+				{
+					server_CreateBlob("centipede", -1, this.getPosition());
+				}
 			}
 		}
 		this.Untag("scyther inside");
 	}
+	
+	this.set_bool("shop available", true);
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -264,7 +278,7 @@ void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && XORRandom(100) < 2)
+	if (getNet().isServer() && XORRandom(200) == 0)
 	{
 		const u8 w_count = this.get_u8("wreckage_count");
 		const u8 w_count_max = this.get_u8("wreckage_count_max");
@@ -283,9 +297,7 @@ void onTick(CBlob@ this)
 				
 				this.add_u8("wreckage_count", 1);
 			}
-		}
-		
-		
+		}		
 	}
 
 	if(this.getOldVelocity().Length() - this.getVelocity().Length() > 8.0f)
@@ -300,9 +312,10 @@ void onTick(CBlob@ this)
 
 	if (getNet().isClient() && this.getTickSinceCreated() < 60) MakeParticle(this, XORRandom(100) < 10 ? "LargeSmoke.png" : "Explosion.png");
 
-	if(this.hasTag("collided"))
+	if (this.hasTag("collided"))
 	{
 		this.getShape().SetGravityScale(1.0f);
+		
 		if (!this.hasTag("sound_played") && getGameTime() > (sound_delay * getTicksASecond()))
 		{
 			this.Tag("sound_played");
@@ -380,6 +393,12 @@ void onHitGround(CBlob@ this)
 		//CBlob@ boulder = server_CreateBlob("boulder", this.getTeamNum(), this.getPosition());
 		//boulder.setVelocity(this.getOldVelocity());
 		//this.server_Die();
+		
+		for (int i = 0; i < 3; i++)
+		{
+			server_CreateBlob("falloutgas", this.getTeamNum(), this.getPosition() + getRandomVelocity(0, XORRandom(80), 360));
+		}
+		
 		this.setVelocity(this.getOldVelocity() / 1.55f);
 	}
 }
