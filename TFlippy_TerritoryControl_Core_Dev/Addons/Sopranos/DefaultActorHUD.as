@@ -141,33 +141,34 @@ void RenderUpkeepHUD(CBlob@ this)
 const string[] teamItems =
 {
 	"mat_wood",
-	"mat_stone",
-	"mat_hemp",
 	"mat_oil",
 	"mat_coal",
-	"mat_mithril",
-	"mat_mithrilingot",
 	"mat_steelingot",
-	"mat_lifesteelingot"
 	"mat_copperwire",
-	"mat_gear",
-	"mat_gunpowder",
-	"mat_gyromat",
-	"mat_ironplate",
-	"mat_pipe",
-	"mat_wheel"
+	"mat_plasteel",
+	"mat_sulphur",
+	"mat_meat",
+	"mat_fuel",
+	"mat_methane",
+	"mat_acid",
+	"mat_antimatter",
+	"mat_mithrilenriched"
 };
 const string[] teamOres =
 {
+	"mat_stone",
 	"mat_copper",
 	"mat_iron",
-	"mat_gold"
+	"mat_gold",
+	"mat_mithril"
 };
 const string[] teamIngots =
 {
+	"mat_concrete",
 	"mat_copperingot",
 	"mat_ironingot",
-	"mat_goldingot"
+	"mat_goldingot",
+	"mat_mithrilingot"
 };
 
 void RenderTeamInventoryHUD(CBlob@ this)
