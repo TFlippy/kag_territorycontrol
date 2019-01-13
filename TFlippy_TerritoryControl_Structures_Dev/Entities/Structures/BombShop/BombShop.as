@@ -52,7 +52,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "S.Y.L.W. 9000 (1)", "$icon_bigbomb$", "mat_bigbomb-1", "A really big bomb. Handle with care. It's indeed a large bomb.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 225);
+		AddRequirement(s.requirements, "coin", "", "Coins", 750);
 
 		s.customButton = true;
 		s.buttonwidth = 1;
