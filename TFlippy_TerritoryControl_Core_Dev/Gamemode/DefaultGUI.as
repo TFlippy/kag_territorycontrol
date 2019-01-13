@@ -16,6 +16,7 @@ void LoadDefaultGUI()
 		AddIconToken("$seed$", "Seed.png",Vec2f(8,8),0);
 		AddIconToken("$icon_cake$", "Cake.png", Vec2f(16, 8), 0);
 		AddIconToken("$icon_car$", "Icon_Car.png", Vec2f(16, 8), 0);
+		AddIconToken("$icon_kitten$", "Kitten.png", Vec2f(16, 16), 0);
 		
 		// Chicken Market
 		AddIconToken("$bobomax$", "Bobomax.png", Vec2f(8, 8), 0);
