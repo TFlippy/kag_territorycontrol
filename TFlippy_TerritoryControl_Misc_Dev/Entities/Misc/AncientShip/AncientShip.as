@@ -410,14 +410,14 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 	if (getNet().isServer())
 	{	
-		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_steelingot", (XORRandom(1)));
-		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_ironingot", (XORRandom(2)));
-		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_plasteel", (XORRandom(4)));
+		MakeMat(hitterBlob, worldPoint, "mat_steelingot", XORRandom(4));
+		MakeMat(hitterBlob, worldPoint, "mat_ironingot", XORRandom(6));
+		MakeMat(hitterBlob, worldPoint, "mat_plasteel", XORRandom(20));
 
 		if (XORRandom(100) < 70)
 		{
 			CBlob@ blob = server_CreateBlob("mat_matter", -1, this.getPosition());
-			blob.server_SetQuantity(5);
+			blob.server_SetQuantity(5 + XORRandom(30));
 			blob.setVelocity(Vec2f(100 - XORRandom(200), 100 - XORRandom(200)) / 25.0f);
 		}
 	}
