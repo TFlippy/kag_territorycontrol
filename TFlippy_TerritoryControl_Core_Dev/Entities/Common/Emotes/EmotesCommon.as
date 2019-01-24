@@ -1,50 +1,3 @@
-// //handy dandy frame lookup
-// namespace Emotes
-// {
-	// enum Emote_Indices
-	// {
-		// skull = 0,  //0
-		// blueflag,
-		// note,
-		// right,
-		// smile,
-		// redflag,
-		// flex,
-		// down,
-		// frown,
-		// troll,
-		// finger,		//10
-		// left,
-		// mad,
-		// archer,
-		// sweat,
-		// up,
-		// laugh,
-		// knight,
-		// question,
-		// thumbsup,
-		// wat,		//20
-		// builder,
-		// disappoint,
-		// thumbsdown,
-		// derp,
-		// ladder,
-		// attn,
-		// pickup,
-		// cry,
-		// wall,
-		// heart,		//30
-		// fire,
-		// check,
-		// cross,
-		// dots,
-		// cog,
-
-		// emotes_total,
-		// off
-	// };
-// }
-
 //handy dandy frame lookup
 namespace Emotes
 {
@@ -99,6 +52,7 @@ namespace Emotes
 		kiss,
 		pickup,
 		raised,
+		clap,
 
 		emotes_total,
 		off
@@ -150,7 +104,8 @@ namespace Emotes
 		"love",
 		"kiss",
 		"pickup",
-		"raised"
+		"raised",
+		"clap"
 	};
 }
 
@@ -161,38 +116,93 @@ void set_emote(CBlob@ this, u8 emote, int time)
 		emote = Emotes::off;
 	}
 
-	this.set_u8("emote", emote);
-	this.set_u32("emotetime", getGameTime() + time);
-	bool client = this.getPlayer() !is null && this.isMyPlayer();
-	this.Sync("emote", !client);
-	this.Sync("emotetime", !client);
+	CBitStream params;
+	params.write_u8(emote);
+	params.write_u32(getGameTime() + time);
 	
-	// if (emote < sounds.length && getGameTime() >= this.get_u32("next_emote_sound") && sounds[emote] != "")
-	// {
-		// if (getNet().isClient())
-		// {
-			// f32 pitch = this.getSexNum() == 0 ? 0.9f : 1.5f;
-			// if (this.exists("voice pitch")) pitch = this.get_f32("voice pitch");
-			
-			// this.getSprite().PlaySound(sounds[emote], 1.00f, pitch);
-		// }
-		
-		// this.set_u32("next_emote_sound", getGameTime() + 20);
-	// }
+	this.SendCommand(this.getCommandID("emote"), params);
+	
+	// this.set_u8("emote", emote);
+	// this.set_u32("emotetime", getGameTime() + time);
+	// bool client = this.getPlayer() !is null && this.isMyPlayer();
+	// this.Sync("emote", !client);
+	// this.Sync("emotetime", !client);
 }
 
 void set_emote(CBlob@ this, u8 emote)
-{
+{	
 	set_emote(this, emote, 90);
+
+	// if (this.isInInventory())
+	// {
+		// CBlob@ inventoryblob = this.getInventoryBlob();
+		// if (inventoryblob !is null && inventoryblob.getName() == "crate" && inventoryblob.exists("emote"))
+		// {
+			// CBitStream params;
+			// params.write_u8(emote);
+			// params.write_u32(getGameTime() + 90);
+			// inventoryblob.SendCommand(inventoryblob.getCommandID("emote"), params);
+			
+			// this.SendCommand(this.getCommandID("emote"), params);
+		// }
+	// }
+	// else
+	// {
+		// set_emote(this, emote, 90);
+	// }
 }
 
 bool is_emote(CBlob@ this, u8 emote = 255, bool checkBlank = false)
 {
 	u8 index = emote;
-	if (index == 255) index = this.get_u8("emote");
+	if (index == 255)
+		index = this.get_u8("emote");
 
 	u32 time = this.get_u32("emotetime");
 
 	return time > getGameTime() && index != Emotes::off && (!checkBlank || (index != Emotes::dots));
 }
 
+//helper - allow integer entries as well as name entries
+u8 read_emote(ConfigFile@ cfg, string name, u8 default_value)
+{
+	string attempt = cfg.read_string(name, "");
+	if (attempt != "")
+	{
+		//replace quoting and semicolon
+		//TODO: how do we not have a string lib for this?
+		string[] check_str = {";",   "\"", "\"",  "'",  "'"};
+		bool[] check_pos =   {false, true, false, true, false};
+		for(int i = 0; i < check_str.length; i++)
+		{
+			string check = check_str[i];
+			if(check_pos[i]) //check front
+			{
+				if(attempt.substr(0, 1) == check)
+				{
+					attempt = attempt.substr(1, attempt.size() - 1);
+				}
+			}
+			else //check back
+			{
+				if(attempt.substr(attempt.size() - 1, 1) == check)
+				{
+					attempt = attempt.substr(0, attempt.size() - 1);
+				}
+			}
+		}
+		//match
+		for(int i = 0; i < Emotes::names.length; i++)
+		{
+			if(attempt == Emotes::names[i])
+			{
+				return i;
+			}
+		}
+
+		//fallback to u8 read
+		u8 read_val = cfg.read_u8(name, default_value);
+		return read_val;
+	}
+	return default_value;
+}
