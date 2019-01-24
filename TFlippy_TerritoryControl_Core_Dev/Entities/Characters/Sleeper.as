@@ -101,20 +101,22 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @bt)
 		
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSound("MigrantSleep.ogg");
-		sprite.SetEmitSoundPaused(true);
 		sprite.SetEmitSoundVolume(0.5f);
 		sprite.SetEmitSoundPaused(!sleeping);
 		
 		print("Sleeper sync: " + sleeping);
 	}
-	else if(cmd==this.getCommandID("removeAwootism"))
+	else if (cmd == this.getCommandID("removeAwootism"))
 	{
-		u16 blob1,player1;
+		u16 blob1, player1;
 
-		if(!bt.saferead_u16(blob1)) {
+		if (!bt.saferead_u16(blob1)) 
+		{
 			return;
 		}
-		if(!bt.saferead_u16(player1)) {
+		
+		if (!bt.saferead_u16(player1)) 
+		{
 			return;
 		}
 
@@ -122,9 +124,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @bt)
 		CPlayer@ player = getPlayerByNetworkId(player1);
 
 		player.Untag("awootism");
-		player.Sync("awootism",false);
+		player.Sync("awootism", false);
 		ourBlob.Tag("infectOver");
-		ourBlob.Sync("infectOver",false);
+		ourBlob.Sync("infectOver", false);
 	}
 }
 
