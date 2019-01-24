@@ -14,7 +14,7 @@ string[] sounds =
 	"vo_look",		  					// down,
 	"vo_no",		  					// frown,
 	"vo_haha",		  					// troll,
-	"vo_idiot",		  					// finger,		//10
+	"vo_jerk",		  					// finger,		//10
 	"vo_look",		  					// left,
 	"vo_grrr",		  					// mad,
 	"vo_archer",		  				// archer,
@@ -40,6 +40,16 @@ string[] sounds =
 	"vo_okay",		  					// cool,
 	"",		  							// dots,
 	"",		  							// cog,
+	"vo_what",							// think
+	"vo_haha",							// laughcry,
+	"vo_lag",							// derp,
+	"vo_haha",							// awkward,
+	"vo_idiot"							// smug,       //40
+	"",									// love,
+	"",									// kiss,
+	"",									// pickup,
+	"vo_what",							// raised,
+	"",									// clap,
 	"",		  							// 
 	"",		  							// emotes_total,
 	"",		  							// off	
