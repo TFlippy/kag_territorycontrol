@@ -37,8 +37,7 @@ void onTick(CBrain@ this)
 	const bool can_repath = getGameTime() >= next_repath;
 	const bool can_search = getGameTime() >= next_search && target is null;
 	const f32 maxDistance = blob.get_f32("maxDistance");
-	
-	
+
 	bool stuck = false;
 	
 	if (this.getState() == 4)

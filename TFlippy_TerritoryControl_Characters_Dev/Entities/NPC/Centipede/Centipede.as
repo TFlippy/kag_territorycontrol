@@ -64,8 +64,11 @@ void onInit(CBlob@ this)
 		CBlob@ lance = server_CreateBlob("infernocannon", this.getTeamNum(), this.getPosition());
 		this.server_Pickup(lance);
 		
-		CBitStream stream;
-		lance.SendCommand(lance.getCommandID("cmd_gunReload"), stream);
+		if (lance.hasCommandID("cmd_gunReload"))
+		{
+			CBitStream stream;
+			lance.SendCommand(lance.getCommandID("cmd_gunReload"), stream);
+		}
 	}
 }
 
