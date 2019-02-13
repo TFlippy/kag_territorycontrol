@@ -140,6 +140,7 @@ void onPlayerInfoChanged(CSprite@ this)
 CSpriteLayer@ LoadHead(CSprite@ this, int headIndex)
 {
 	CBlob@ blob = this.getBlob();
+	CPlayer@ player = blob.getPlayer();
 
 	// strip old head
 	this.RemoveSpriteLayer("head");
@@ -176,11 +177,11 @@ CSpriteLayer@ LoadHead(CSprite@ this, int headIndex)
 	}
 
 	//add new head
-	CSpriteLayer@ head = this.addSpriteLayer(
-		"head", texture_file, 16, 16,
-		(doTeamColour(headsPackIndex) ? this.getBlob().getTeamNum() : 0),
-		(doSkinColour(headsPackIndex) ? this.getBlob().getSkinNum() : 0)
-	);
+	int team = doTeamColour(headsPackIndex) ? blob.getTeamNum() : 0;
+	int skin = doSkinColour(headsPackIndex) ? blob.getSkinNum() : 0;
+
+	//add new head
+	CSpriteLayer@ head = this.addSpriteLayer("head", texture_file, 16, 16, team, skin);
 
 	//
 	headIndex = headIndex % 256; // wrap DLC heads into "pack space"
@@ -204,6 +205,8 @@ CSpriteLayer@ LoadHead(CSprite@ this, int headIndex)
 	//setup gib properties
 	blob.set_s32("head index", headFrame);
 	blob.set_string("head texture", texture_file);
+	blob.set_s32("head team", team);
+	blob.set_s32("head skin", skin);
 
 	return head;
 }

@@ -25,7 +25,24 @@ void onPlayerInfoChanged(CSprite@ this)
 
 void LoadSprites(CSprite@ this)
 {
-	ensureCorrectRunnerTexture(this, "archer", "Archer");
+	int armour = PLAYER_ARMOUR_STANDARD;
+
+	CPlayer@ p = this.getBlob().getPlayer();
+
+	if(p !is null){
+		armour = p.getArmourSet();
+	}
+
+	switch(armour)
+	{
+		case PLAYER_ARMOUR_STANDARD:
+			ensureCorrectRunnerTexture(this, "archer", "Archer");
+		break;
+
+		case PLAYER_ARMOUR_CAPE:
+			ensureCorrectRunnerTexture(this, "archer_cape", "ArcherCape");
+		break;
+	}
 
 	string texname = getRunnerTextureName(this);
 
