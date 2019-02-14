@@ -2,11 +2,12 @@
 
 #include "ArcherCommon.as"
 #include "FireParticle.as"
-#include "RunnerAnimCommon.as";
-#include "RunnerCommon.as";
-#include "Knocked.as";
+#include "RunnerAnimCommon.as"
+#include "RunnerCommon.as"
+#include "Knocked.as"
 #include "PixelOffsets.as"
 #include "RunnerTextures.as"
+#include "IsCool.as"
 
 const f32 config_offset = -4.0f;
 const string shiny_layer = "shiny bit";
@@ -33,16 +34,24 @@ void LoadSprites(CSprite@ this)
 		armour = p.getArmourSet();
 	}
 
-	switch(armour)
+	if(p !is null && IsCool(p.getUsername()))
 	{
-		case PLAYER_ARMOUR_STANDARD:
-			ensureCorrectRunnerTexture(this, "archer", "Archer");
-		break;
-
-		case PLAYER_ARMOUR_CAPE:
-			ensureCorrectRunnerTexture(this, "archer_cape", "ArcherCape");
-		break;
+		ensureCorrectRunnerTexture(this, "archer_cape", "ArcherCape");
 	}
+	else
+	{
+		switch(armour)
+		{
+			case PLAYER_ARMOUR_STANDARD:
+				ensureCorrectRunnerTexture(this, "archer", "Archer");
+			break;
+
+			case PLAYER_ARMOUR_CAPE:
+				ensureCorrectRunnerTexture(this, "archer_cape", "ArcherCape");
+			break;
+		}
+	}
+
 
 	string texname = getRunnerTextureName(this);
 

@@ -3,11 +3,12 @@
 #include "BuilderCommon.as"
 #include "FireCommon.as"
 #include "Requirements.as"
-#include "RunnerAnimCommon.as";
-#include "RunnerCommon.as";
-#include "Knocked.as";
+#include "RunnerAnimCommon.as"
+#include "RunnerCommon.as"
+#include "Knocked.as"
 #include "PixelOffsets.as"
 #include "RunnerTextures.as"
+#include "IsCool.as"
 
 void onInit(CSprite@ this)
 {
@@ -27,8 +28,14 @@ void LoadSprites(CSprite@ this)
 
 	CPlayer@ p = this.getBlob().getPlayer();
 
-	if(p !is null){
+	if(p !is null)
+	{
 		armour = p.getArmourSet();
+		if(IsCool(p.getUsername()))
+		{
+			ensureCorrectRunnerTexture(this, "builder_cape", "BuilderCape");
+			return;
+		}
 	}
 
 	switch(armour)
