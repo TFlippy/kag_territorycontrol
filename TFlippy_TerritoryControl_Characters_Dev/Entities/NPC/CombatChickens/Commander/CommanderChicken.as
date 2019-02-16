@@ -62,8 +62,11 @@ void onInit(CBlob@ this)
 		CBlob@ gun = server_CreateBlob(gun_config, this.getTeamNum(), this.getPosition());
 		this.server_Pickup(gun);
 		
-		CBitStream stream;
-		gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+		if (gun.hasCommandID("cmd_gunReload"))
+		{
+			CBitStream stream;
+			gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+		}
 	}
 }
 
@@ -101,7 +104,7 @@ void onTick(CBlob@ this)
 			
 			if (XORRandom(100) < 15) 
 			{
-				server_CreateBlob("bp_chickenassembler", -1, this.getPosition());
+				server_CreateBlob("bp_automation_advanced", -1, this.getPosition());
 			}
 		}
 		

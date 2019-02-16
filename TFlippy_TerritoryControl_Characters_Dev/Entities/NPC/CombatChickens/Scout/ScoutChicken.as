@@ -16,7 +16,7 @@ void onInit(CBlob@ this)
 	this.set_f32("chaseDistance", 200);
 	this.set_f32("maxDistance", 400);
 	
-	this.set_f32("inaccuracy", 0.01f);
+	this.set_f32("inaccuracy", 0.025f);
 	this.set_u8("reactionTime", 20);
 	this.set_u8("attackDelay", 0);
 	this.set_bool("bomber", false);
@@ -134,8 +134,11 @@ void onInit(CBlob@ this)
 		CBlob@ gun = server_CreateBlob(gun_config, this.getTeamNum(), this.getPosition());
 		this.server_Pickup(gun);
 		
-		CBitStream stream;
-		gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+		if (gun.hasCommandID("cmd_gunReload"))
+		{
+			CBitStream stream;
+			gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+		}
 		
 		// CBrain@ brain = this.getBrain();
 		// if (brain !is null)

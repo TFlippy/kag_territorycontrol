@@ -449,12 +449,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (data == 0 && isLeader)
 						{
 							client_AddToChat(ply.getUsername() + " has resigned as the leader of the " + teamName + "!", teamColor);
+							printf(ply.getUsername() + " has resigned as the leader of the " + teamName);
+							
 							team_data.leader_name = "";
 						}
 						else if (data == 1 && team_data.leader_name == "")
 						{
 							team_data.leader_name = ply.getUsername();
 							client_AddToChat(ply.getUsername() + " has become the leader of " + teamName + "!", teamColor);
+							printf(ply.getUsername() + " has become the leader of " + teamName);
 						}
 						break;
 						
@@ -479,6 +482,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						{	
 							this.set_bool("base_demolition", data > 0);
 
+							printf(ply.getUsername() + " has " + (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName());
+							
 							if (getNet().isServer()) this.Sync("base_demolition", true);
 							if (getNet().isClient())
 							{
@@ -554,6 +559,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 				case 0:
 					if (isLeader)
 					{
+						string teamName = rules.getTeam(caller.getTeamNum()).getName();
+						printf(ply.getUsername() + " has been kicked out of the " + teamName + " by " + caller.getUsername());
+						
 						if (getNet().isServer())
 						{
 							ply.server_setTeamNum(100 + XORRandom(100));
@@ -562,8 +570,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						
 						if (getNet().isClient())
 						{
-							string teamName = rules.getTeam(caller.getTeamNum()).getName();
-						
 							client_AddToChat(ply.getUsername() + " has been kicked out of the " + teamName + " by " + caller.getUsername() + "!", teamColor);
 						}
 					}
@@ -597,6 +603,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					if (upkeep_gud && recruitment_enabled)
 					{
 						this.getSprite().PlaySound("party_join.ogg");
+						printf(p.getUsername() + " has joined " + getRules().getTeam(myTeam).getName());
 						
 						if (getNet().isServer())
 						{	

@@ -225,7 +225,7 @@ void GunTick(CBlob@ this)
 	CControls@ controls=	getControls();
 	if(player !is null){
 		if(getNet().isClient() && player.isMyPlayer()){
-			if(controls.isKeyJustPressed(KEY_KEY_R)) {
+			if(controls.isKeyJustPressed(KEY_KEY_R) && this.hasCommandID("cmd_gunReload")) {
 				CBitStream stream;
 				this.SendCommand(this.getCommandID("cmd_gunReload"),stream);
 			}
@@ -389,6 +389,9 @@ void Shoot(CBlob@ this)
 			if(getNet().isClient())
 			{
 				DrawLine(this.getSprite(), i, startPos,length / 32, jitter, this.isFacingLeft());
+		
+				// ParticleAnimated(CFileMatcher("SmallFire").getFirst(), startPos, Vec2f(0, 0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+				
 				ShakeScreen(Maths::Min(damage * count * 12, 150), 8, this.getPosition());	
 				
 				CPlayer@ ply = holder.getPlayer();
@@ -591,7 +594,7 @@ s32 TakeAmmo(CInventory@ inv,const string ammoType,s32 amount)
 // }
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if(cmd==this.getCommandID("cmd_gunReload")) {
+	if(this.hasCommandID("cmd_gunReload") && cmd == this.getCommandID("cmd_gunReload")) {
 		AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder= 			point.getOccupied();
 		if(holder is null) {

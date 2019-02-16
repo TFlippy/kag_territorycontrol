@@ -203,8 +203,11 @@ void onInit(CBlob@ this)
 		CBlob@ gun = server_CreateBlob(gun_config, this.getTeamNum(), this.getPosition());
 		this.server_Pickup(gun);
 		
-		CBitStream stream;
-		gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+		if (gun.hasCommandID("cmd_gunReload"))
+		{
+			CBitStream stream;
+			gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+		}
 		
 		// CBrain@ brain = this.getBrain();
 		// if (brain !is null)

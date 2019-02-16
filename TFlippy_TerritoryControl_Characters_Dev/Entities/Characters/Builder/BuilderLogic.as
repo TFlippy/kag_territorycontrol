@@ -10,7 +10,6 @@
 #include "Requirements.as"
 #include "BuilderHittable.as";
 #include "PlacementCommon.as";
-#include "Damage.as";
 //#include "LoaderUtilities.as";
 #include "ParticleSparks.as";
 #include "CustomBlocks.as";

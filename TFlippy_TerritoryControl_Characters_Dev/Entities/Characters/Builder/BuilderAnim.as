@@ -3,11 +3,12 @@
 #include "BuilderCommon.as"
 #include "FireCommon.as"
 #include "Requirements.as"
-#include "RunnerAnimCommon.as";
-#include "RunnerCommon.as";
-#include "Knocked.as";
+#include "RunnerAnimCommon.as"
+#include "RunnerCommon.as"
+#include "Knocked.as"
 #include "PixelOffsets.as"
 #include "RunnerTextures.as"
+#include "IsCool.as"
 
 void onInit(CSprite@ this)
 {
@@ -18,7 +19,36 @@ void onInit(CSprite@ this)
 
 void onPlayerInfoChanged(CSprite@ this)
 {
-	ensureCorrectRunnerTexture(this, "builder", "Builder");
+	LoadSprites(this);
+}
+
+void LoadSprites(CSprite@ this)
+{
+	int armour = PLAYER_ARMOUR_STANDARD;
+
+	CPlayer@ p = this.getBlob().getPlayer();
+
+	if(p !is null)
+	{
+		armour = p.getArmourSet();
+		if(IsCool(p.getUsername()))
+		{
+			ensureCorrectRunnerTexture(this, "builder_cape", "BuilderCape");
+			return;
+		}
+	}
+
+	switch(armour)
+	{
+		case PLAYER_ARMOUR_STANDARD:
+			ensureCorrectRunnerTexture(this, "builder", "Builder");
+		break;
+		
+		case PLAYER_ARMOUR_CAPE:
+			ensureCorrectRunnerTexture(this, "builder_cape", "BuilderCape");
+		break;
+	}
+
 }
 
 void onTick(CSprite@ this)

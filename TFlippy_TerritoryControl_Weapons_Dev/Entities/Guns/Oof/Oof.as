@@ -166,15 +166,15 @@ bool HasAmmo(CBlob@ this, bool take)
 		if( !(item is null) )
 		{
 			string itemName = item.getName();
-			if(itemName == "mat_mithril")
+			if(itemName == "mat_antimatter")
 			{
 				u32 quantity = item.getQuantity();
-				bool has = quantity >= 50;
+				bool has = quantity >= 1;
 				if (has)
 				{
 					if (take)
 					{
-						if (quantity >= 50) item.server_SetQuantity(quantity - 50);
+						if (quantity >= 1) item.server_SetQuantity(quantity - 1);
 						else
 						{
 							item.server_SetQuantity(0);
@@ -226,6 +226,8 @@ void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)
 
 void onAttach( CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint )
 {
+
+
 	CPlayer@ player = attached.getPlayer();
 	if (player !is null) this.SetDamageOwnerPlayer(player);
 
@@ -235,15 +237,14 @@ void onAttach( CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint )
 
 void SpawnBoom(CBlob@ this, Vec2f pos)
 {
-	CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
+	CBlob@ boom = server_CreateBlobNoInit("antimatterexplosion");
 	boom.setPosition(pos);
-	boom.set_u8("boom_start", 0);
-	boom.set_u8("boom_end", 4);
-	boom.set_f32("mithril_amount", 10);
+	boom.set_u8("boom_frequency", 5);
+	boom.set_f32("boom_size", 0);
+	boom.set_u32("boom_increment", 10.00f);
+	boom.set_f32("boom_end", 30);
 	boom.set_f32("flash_distance", 128);
 	boom.set_u32("boom_delay", 5);
 	boom.set_u32("flash_delay", 5);
-	boom.Tag("no fallout");
-	// boom.Tag("no flash");
 	boom.Init();
 }

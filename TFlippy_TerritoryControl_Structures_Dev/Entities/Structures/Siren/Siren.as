@@ -43,7 +43,7 @@ void onTick(CBlob@ this)
 		
 		for (int i = 0; i < blobs.length; i++)
 		{
-			if ((blobs[i].getPosition() - pos).LengthSquared() < (600.0f * 600.0f) && blobs[i].getTeamNum() != this.getTeamNum())
+			if ((blobs[i].getPosition() - pos).LengthSquared() < (1000.0f * 1000.0f) && blobs[i].getTeamNum() != this.getTeamNum())
 			{
 				if (this.get_bool("isActive")) return;
 			

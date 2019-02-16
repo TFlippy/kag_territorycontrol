@@ -16,6 +16,7 @@ void LoadDefaultGUI()
 		AddIconToken("$seed$", "Seed.png",Vec2f(8,8),0);
 		AddIconToken("$icon_cake$", "Cake.png", Vec2f(16, 8), 0);
 		AddIconToken("$icon_car$", "Icon_Car.png", Vec2f(16, 8), 0);
+		AddIconToken("$icon_kitten$", "Kitten.png", Vec2f(16, 16), 0);
 		
 		// Chicken Market
 		AddIconToken("$bobomax$", "Bobomax.png", Vec2f(8, 8), 0);
@@ -111,6 +112,7 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_suicidevest$", "SuicideVest.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_binoculars$", "Binoculars.png", Vec2f(16, 8), 0);
 		AddIconToken("$icon_firework$", "Firework.png", Vec2f(16, 24), 0);
+		AddIconToken("$icon_firejob$", "Firejob.png", Vec2f(16, 24), 0);
 		AddIconToken("$icon_hazmat$", "HazmatItem.png", Vec2f(16, 8), 0);
 		AddIconToken("$icon_mousetrap$", "MouseTrap.png", Vec2f(32, 16), 0);
 		AddIconToken("$icon_contrabass$", "Contrabass.png", Vec2f(8, 16), 0);

@@ -18,7 +18,7 @@ void onInit(CBlob@ this)
 		return;
 	}
 		
-	this.set_f32("hit dmg modifier", 5.0f);
+	this.set_f32("hit dmg modifier", 1.0f);//was 5.0
 	this.set_f32("map dmg modifier", 2.0f);
 	
 	this.set_u32("lastHornTime", 0.0f);
@@ -75,11 +75,36 @@ void onTick(CBlob@ this)
 bool Vehicle_canFire(CBlob@ this, VehicleInfo@ v, bool isActionPressed, bool wasActionPressed, u8 &out chargeValue) {return false;}
 void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused) {}
 
-void onCollision(CBlob@ this, CBlob@ blob, bool solid)
+void onCollision( CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1 )
 {
 	if (blob !is null)
 	{
 		TryToAttachCargo(this, blob);
+		if(solid)
+		{
+			f32 vel_thresh =  1.0f;
+			f32 dir_thresh =  0.25f;
+
+			const f32 vellen = this.getShape().vellen;
+			if (blob !is null && vellen > vel_thresh && blob.isCollidable())
+			{
+				Vec2f pos = this.getPosition();
+				Vec2f vel = this.getVelocity();
+				Vec2f other_pos = blob.getPosition();
+				Vec2f direction = other_pos - pos;
+				direction.Normalize();
+				vel.Normalize();
+				if (vel * direction > dir_thresh)
+				{
+					f32 power = vellen / 2;
+					if (this.getTeamNum() != blob.getTeamNum())
+					{
+						this.server_Hit(blob, point1, vel, power, Hitters::flying, false);
+						print(power + " aa");
+					}
+				}
+			}
+		}
 	}
 }
 

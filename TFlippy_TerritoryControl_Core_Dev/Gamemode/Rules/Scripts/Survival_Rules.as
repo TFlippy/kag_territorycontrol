@@ -69,12 +69,6 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 		if (s !is null) sec.assignSeclev(player, s);
 	}
 
-	if(player.getUsername() == "digga")
-	{
-		player.Tag("awootism");
-		player.Sync("awootism",false);
-	}
-	
 	CBlob@[] sleepers;
 	getBlobsByTag("sleeper", @sleepers);
 	
@@ -97,7 +91,6 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 				player.server_setCoins(sleeper.get_u16("sleeper_coins"));
 			
 				sleeper.server_SetPlayer(player);
-				
 				sleeper.set_bool("sleeper_sleeping", false);
 				sleeper.set_string("sleeper_name", "");
 				
@@ -195,20 +188,32 @@ void onPlayerChangedTeam(CRules@ this, CPlayer@ player, u8 oldteam, u8 newteam)
 
 }
 
-void onPlayerDie( CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData )
+void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData)
 {
-	if(victim is null)
+	if (victim is null)
 	{
 		return;
 	}
+	
+	string victimName = victim.getUsername() + " (team " + victim.getTeamNum() + ")";
+	string attackerName = attacker !is null ? (attacker.getUsername() + " (team " + attacker.getTeamNum() + ")") : "world";
+	
+	printf(victimName + " has been killed by " + attackerName + "; damage type: " + customData);
 	
 	victim.set_u32("respawn time", getGameTime() + 30 * (victim.getTeamNum() < this.getTeamsCount() ? 4 : 8));
 	
 	CBlob@ blob = victim.getBlob();
 	if(blob !is null) 
 	{
-		victim.set_string("classAtDeath",blob.getConfig());
-		victim.set_Vec2f("last death position",blob.getPosition());
+		if(!(blob.getName().find("corpse") != -1))
+		{			
+			victim.set_string("classAtDeath",blob.getConfig());
+			victim.set_Vec2f("last death position",blob.getPosition());
+		}
+		else
+		{
+			victim.set_Vec2f("last death position",blob.getPosition());
+		}
 	}
 	
 	// print(victim.getUsername() + " killed by " + attacker.getUsername());
@@ -245,13 +250,13 @@ void onTick(CRules@ this)
 	for (u8 i = 0; i < getPlayerCount(); i++)
 	{
 		CPlayer@ player = getPlayer(i);
-		if(player !is null)
+		if (player !is null)
 		{
 			CBlob@ blob = player.getBlob();
 			if (blob is null && player.get_u32("respawn time") <= gametime)
 			{
 				int team = player.getTeamNum();	
-				bool isNeutral = team > 100;
+				bool isNeutral = team >= 100;
 
 				// Civilized team spawning
 				if (!isNeutral) 
@@ -309,12 +314,6 @@ void onTick(CRules@ this)
 							new_blob.setPosition(spawnPos);
 							new_blob.server_setTeamNum(team);
 							new_blob.server_SetPlayer(player);
-							if(player.hasTag("awootism"))
-							{
-								print("added!");
-								new_blob.AddScript('AwooootismSpread.as');
-							}
-							
 							// print("" + spawns[spawnIndex].getConfig());
 							// print("init " + new_blob.getHealth());
 							if (spawns[spawnIndex].getConfig() == "citadel")
@@ -333,7 +332,7 @@ void onTick(CRules@ this)
 				// Bandit scum spawning
 				if (isNeutral) 
 				{ 
-					team = 101 + XORRandom(99);
+					team = 100 + XORRandom(100);
 					player.server_setTeamNum(team);
 
 					string blobType = "peasant";
@@ -496,8 +495,6 @@ void onTick(CRules@ this)
 
 void onInit(CRules@ this)
 {
-	sv_mapcycle_shuffle = true; // Who did that?
-	
 	CSecurity@ sec = getSecurity();
 	sec.unBan("TFlippy");
 	

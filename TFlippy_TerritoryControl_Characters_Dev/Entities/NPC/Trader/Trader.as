@@ -246,6 +246,11 @@ void onInit(CBlob@ this)
 		}
 	}
 	
+	if (getNet().isServer() && XORRandom(100) < 25)
+	{
+		server_CreateBlob("kitten", this.getTeamNum(), this.getPosition());
+	}
+	
 	//EnsureWantedList();
 }
 

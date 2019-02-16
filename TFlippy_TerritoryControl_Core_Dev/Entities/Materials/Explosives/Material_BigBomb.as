@@ -47,7 +47,12 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 bool canBePutInInventory(CBlob@ this, CBlob@ inventoryBlob)
 {
-	return !inventoryBlob.hasTag("human");
+	if (inventoryBlob.hasTag("human"))
+	{
+		if (inventoryBlob.isMyPlayer()) Sound::Play("NoAmmo");
+		return false;
+	}
+	else return true;
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
@@ -70,19 +75,38 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
 
 void DoExplosion(CBlob@ this)
 {
-	this.set_f32("map_damage_radius", 48.0f);
-	this.set_f32("map_damage_ratio", 0.4f);
-	f32 angle = this.get_f32("bomb angle");
+	// this.set_f32("map_damage_radius", 48.0f);
+	// this.set_f32("map_damage_ratio", 0.4f);
+	// f32 angle = this.get_f32("bomb angle");
 	
-	Explode(this, 48.0f, 50.0f);
-	
-	for (int i = 0; i < 4; i++) 
+	if (getNet().isServer())
 	{
-		Vec2f dir = getRandomVelocity(angle, 1, 40);
-		LinearExplosion(this, dir, 40.0f + XORRandom(64), 48.0f, 6, 0.5f, Hitters::explosion);
+		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
+		if (boom !is null)
+		{
+			boom.setPosition(this.getPosition());
+			boom.set_u8("boom_start", 0);
+			boom.set_u8("boom_end", 8);
+			boom.set_u8("boom_frequency", 1);
+			boom.set_u32("boom_delay", 0);
+			boom.set_u32("flash_delay", 0);
+			boom.Tag("no fallout");
+			boom.Tag("no flash");
+			boom.Tag("no mithril");
+			boom.Init();
+		}
 	}
 	
-		Vec2f pos = this.getPosition();
+	// Explode(this, 48.0f, 50.0f);
+	
+	// for (int i = 0; i < 4; i++) 
+	// {
+		// Vec2f dir = getRandomVelocity(angle, 1, 40);
+		// LinearExplosion(this, dir, 40.0f + XORRandom(64), 48.0f, 6, 0.5f, Hitters::explosion);
+	// }
+	
+	f32 angle = this.get_f32("bomb angle");
+	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 	
 	for (int i = 0; i < 80; i++)

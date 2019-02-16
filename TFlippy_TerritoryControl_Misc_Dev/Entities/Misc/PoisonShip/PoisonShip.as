@@ -66,6 +66,7 @@ void onInit(CBlob@ this)
 		if (XORRandom(100) < 10)
 		{
 			CBlob@ blob = server_CreateBlob("oof", this.getTeamNum(), this.getPosition());
+			MakeMat(this, this.getPosition(), "mat_antimatter", 10 + XORRandom(40));
 			this.server_PutInInventory(blob);
 		}
 
@@ -90,6 +91,7 @@ void onInit(CBlob@ this)
 		MakeMat(this, this.getPosition(), "mat_plasteel", 25 + XORRandom(200));
 		MakeMat(this, this.getPosition(), "mat_mithril", 250 + XORRandom(750));
 		MakeMat(this, this.getPosition(), "mat_mithrilingot", 16 + XORRandom(32));
+		MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(10));
 	}
 
 	this.inventoryButtonPos = Vec2f(6, 0);
@@ -141,11 +143,12 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 				server_CreateBlob("drone", -1, this.getPosition() + getRandomVelocity(0, XORRandom(24), 360));
 			}			
 		}
+		
+		Sound::Play("PoisonShip_Siren.ogg");
+		ShakeScreen(80.0f, 32.00f, this.getPosition());
+		
 		this.Untag("drone inside");
 	}
-	
-	Sound::Play("PoisonShip_Siren.ogg");
-	ShakeScreen(80.0f, 32.00f, this.getPosition());
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

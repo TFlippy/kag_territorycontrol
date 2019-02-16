@@ -94,6 +94,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_grinder$", "Grinder.png", Vec2f(40, 24), 0);
 	AddIconToken("$icon_stonepile$", "StonePile.png", Vec2f(24, 40), 3);
 	AddIconToken("$icon_packer$", "Packer.png", Vec2f(24, 16), 0);
+	AddIconToken("$icon_compactor$", "Compactor.png", Vec2f(24, 32), 0);
 	AddIconToken("$icon_inserter$", "Inserter.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_floater$", "Floater.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_treecapitator$", "Treecapitator.png", Vec2f(24, 8), 0);	
@@ -488,7 +489,8 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 10);
-		AddRequirement(b.reqs, "blob", "bp_chickenassembler", "Blueprint (UPF Assembly Line)", 1);
+		// AddRequirement(b.reqs, "tech", "tech_automation_advanced", "Technology (Advanced Automation)", 1);
+		AddRequirement(b.reqs, "blob", "bp_automation_advanced", "Blueprint (Advanced Automation)", 1);
 		b.buildOnGround = true;
 		b.size.Set(56, 24);
 		blocks[2].push_back(b);
@@ -664,6 +666,14 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		BuildBlock b(0, "ceilinglamp", "$icon_ceilinglamp$", "Ceiling Lamp\nIt's quite bright.\n\nCan be toggled by a Security Station.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 1);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 2);
+		blocks[3].push_back(b);
+	}
+	{
+		BuildBlock b(0, "compactor", "$icon_compactor$", "Compactor\nCan store enormous amounts of single resource.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 300);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 250);
+		b.buildOnGround = true;
+		b.size.Set(24, 32);
 		blocks[3].push_back(b);
 	}
 	

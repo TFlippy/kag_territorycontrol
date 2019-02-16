@@ -13,7 +13,7 @@ const f32 inp_ratio = 0.50f;
 
 void onInit(CBlob@ this)
 {
-	this.Tag("aerial");
+	// this.Tag("aerial");
 	this.Tag("projectile");
 	this.Tag("explosive");
 	
@@ -30,8 +30,8 @@ void onInit(CBlob@ this)
 		
 	// this.set_u32("no_explosion_timer", 0);
 	// this.set_u32("fuel_timer", 0);
-	this.set_f32("velocity", 5.0f);
-	this.set_Vec2f("direction", Vec2f(0, -1));
+	if (!this.exists("velocity")) this.set_f32("velocity", 5.0f);
+	if (!this.exists("direction")) this.set_Vec2f("direction", Vec2f(0, -1));
 	
 	this.getShape().SetRotationsAllowed(true);
 }

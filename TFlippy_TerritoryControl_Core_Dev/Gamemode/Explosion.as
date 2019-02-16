@@ -252,41 +252,12 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 				HitBlob(this, hit_blob, radius, damage, hitter, true, should_teamkill);
 			}
 		}
-		
-		// {
-			// f32 sqrRadius = radius * radius;
-		
-			// CBlob@[] blobs;
-			// map.getBlobsInRadius(pos, sqrRadius, @blobs);
-
-			// for (uint i = 0; i < blobs.length; i++)
-			// {
-				// CBlob@ hit_blob = blobs[i];
-				// if (hit_blob is this)
-					// continue;
-
-				// Vec2f dir = hit_blob - pos;
-				// f32 factor = 1.00f - Maths::Pow(dir).getLengthSquared(), 2);
-				// dir.Normalize();
-					
-				// hit_blob.AddForce(dir * damage * radius * factor);
-			// }
-		// }
 	}
 }
-
-// void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitBlob, u8 customData)
-// {
-	// if (customData == Hitters::bomb || customData == Hitters::water)
-	// {
-		// hitBlob.AddForce(velocity);
-	// }
-// }
 
 /**
  * Perform a linear explosion (a-la bomberman if in the cardinal directions)
  */
-
 void LinearExplosion(CBlob@ this, Vec2f _direction, f32 length, const f32 width,
                      const int max_depth, f32 damage, const u8 hitter, CBlob@[]@ blobs = null,
                      bool should_teamkill = true)

@@ -304,7 +304,7 @@ void onTick(CBlob@ this)
 					for(u32 i=0;i<hitInfos.length;i++) {
 						if(hitInfos[i].blob !is null) {	
 							CBlob@ blob=	hitInfos[i].blob;
-							if((blob.getConfig()=="knight" || blob.getConfig()=="archer" || blob.getConfig()=="trader") && blob.getTeamNum()!=this.getTeamNum() && !blob.hasTag("dead")) {
+							if(blob.hasTag("player") && blob.getTeamNum()!=this.getTeamNum() && !blob.hasTag("dead")) {
 								if(blob.getConfig()=="knight"){
 									if(blockAttack(blob,dir,0.0f)){
 										Sound::Play("Entities/Characters/Knight/ShieldHit.ogg",pos);
@@ -321,7 +321,7 @@ void onTick(CBlob@ this)
 										}
 									}
 								}
-								if(blob.getHealth()<=0.5f || IsKnocked(blob) || blob.getConfig()=="archer" || blob.getConfig()=="trader"){
+								if(blob.getHealth()<=1.0f || IsKnocked(blob) || blob.getConfig()=="archer" || blob.getConfig()=="trader"){
 									CPlayer@ player=blob.getPlayer();
 									if(player !is null){
 										CBlob@ newBlob=	server_CreateBlob("playercontainer",0,this.getPosition());
@@ -372,9 +372,79 @@ void onTick(CBlob@ this)
 				if(angle<0.0f){
 					angle+=360.0f;
 				}
-				string config=	this.get_string("grabbedEnemy");
+				string config =	this.get_string("grabbedEnemy");
 				Vec2f dir=Vec2f(1.0f,0.0f).RotateBy(angle);
-				CBlob@ blob=server_CreateBlob(config=="archer" ? "corpsearcher" : (config=="trader" ? "corpsetrader" : "corpseknight"),this.getTeamNum(),pos);
+				CBlob@ blob;
+				switch(stringToInt(config))
+				{
+					case -1232701324:
+					{
+						@blob = server_CreateBlob("corpseknight",this.getTeamNum(),pos);
+					}
+					break;
+
+					case -1772739846:
+					{
+						@blob = server_CreateBlob("corpsearcher",this.getTeamNum(),pos);
+					}
+					break;
+
+					case 1475757562:
+					{
+						@blob = server_CreateBlob("corpsetrader",this.getTeamNum(),pos);
+					}
+					break;
+
+					case 729018236:
+					{
+						@blob = server_CreateBlob("corpsehazmat",this.getTeamNum(),pos);
+					}
+					break;
+
+					case -2083399780:
+					{
+						@blob = server_CreateBlob("corpsebandit",this.getTeamNum(),pos);
+					}
+					break;
+
+					case 1217761244:
+					{
+						@blob = server_CreateBlob("corpseexo",this.getTeamNum(),pos);
+					}
+					break;
+
+					case -1785136247:
+					{
+						@blob = server_CreateBlob("corpsninja",this.getTeamNum(),pos);
+					}
+					break;
+
+					case -728220:
+					{
+						@blob = server_CreateBlob("corpsepeasent",this.getTeamNum(),pos);		
+					}
+					break;
+
+					case -1203370764:
+					{
+						@blob = server_CreateBlob("corpseroyalguard",this.getTeamNum(),pos);	
+					}
+					break;
+
+					case 384764821:
+					{
+						@blob = server_CreateBlob("corpseslave",this.getTeamNum(),pos); //todo		
+					}
+					break;
+
+
+					default:
+					{
+						@blob = server_CreateBlob("corpseknight",this.getTeamNum(),pos);
+					}
+					break;
+				}
+				
 				
 				AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
 				CBlob@ attachedBlob=	point.getOccupied();
@@ -614,7 +684,7 @@ void onDie(CBlob@ this)
 		return;
 	}
 	if(juggernaut.state==JuggernautStates::grabbed){
-		CBlob@ blob=			server_CreateBlob(this.get_string("grabbedEnemy"),0,this.getPosition());
+		CBlob@ blob= server_CreateBlob(this.get_string("grabbedEnemy"),this.getTeamNum(),this.getPosition());
 		if(blob !is null){
 			AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
 			if(point !is null){
@@ -958,4 +1028,16 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			ShakeScreen(vellen * 15.0f, vellen * 4.0f, this.getPosition());
 		}
 	}
+}
+
+
+
+int stringToInt(string inputString)
+{
+	string temp = "";
+	for(int a = 0; a < inputString.length(); a++)
+	{
+		temp += inputString[a];
+	}
+	return parseInt(temp);
 }

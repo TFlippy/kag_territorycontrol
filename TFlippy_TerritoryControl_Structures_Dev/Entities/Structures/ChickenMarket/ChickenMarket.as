@@ -115,7 +115,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "UPF Armored Car (1)", "$icon_armoredcar$", "armoredcar-500", "A light armored vehicle equipped with a tank cannon.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 2499);
+		AddRequirement(s.requirements, "coin", "", "Coins", 3000);
 		s.spawnNothing = true;
 	}
 	{

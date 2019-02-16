@@ -86,7 +86,6 @@ f32 modifierTarget = 1;
 void onTick(CBlob@ this)
 {
 	CMap@ map = getMap();
-	
 	if (getGameTime() >= nextWindShift)
 	{
 		windTarget = XORRandom(1000) - 500;
@@ -157,7 +156,7 @@ void onTick(CBlob@ this)
 		
 		
 		f32 fogDarkness = Maths::Clamp(50 + (fog * 0.10f), 0, 255);
-		if (modifier > 0.01f) SetScreenFlash(Maths::Clamp(Maths::Max(fog, 255 * fogHeightModifier * 1.20f) * modifier, 0, 255), fogDarkness, fogDarkness, fogDarkness);
+		if (modifier > 0.01f) SetScreenFlash(Maths::Clamp(Maths::Max(fog, 255 * fogHeightModifier * 1.20f) * modifier, 0, 190), fogDarkness, fogDarkness, fogDarkness);
 		
 		// print("" + modifier);
 		
@@ -167,11 +166,11 @@ void onTick(CBlob@ this)
 
 		//Awootism check
 		CPlayer@ player = getLocalPlayer();
-		if(player !is null)
+		if(player !is null && blob !is null)
 		{
 			if(player.hasTag("awootism"))
 			{
-				if(!map.rayCastSolidNoBlobs(blob.getPosition(), Vec2f(blob.getPosition().x,0)) || blob.isInWater())
+				if(!map.rayCastSolidNoBlobs(blob.getPosition(), Vec2f(blob.getPosition().x,0)))
 				{
 					CBitStream params;
 					params.write_u16(blob.getNetworkID());
@@ -297,7 +296,7 @@ void DecayStuff()
 	{
 		// u32 count = Maths::Ceil(plants.length * 0.5f); // lolz
 		u32 count = Maths::Ceil(plants.length * 0.035f); // lolz
-		if (getGameTime() % 150 == 0) print("rain iteration count: " + count + "/" + plants.length);
+		//if (getGameTime() % 150 == 0) print("rain iteration count: " + count + "/" + plants.length);
 				
 		for (int i = 0; i < count; i++)
 		{

@@ -26,7 +26,6 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 
 		map.server_DestroyTile(worldPoint, damage, this);
 
-		
 		if (this.exists("hitmap_chance") ? (XORRandom(100) < (this.get_f32("hitmap_chance") * 100.00f)) : true)
 		{
 			f32 multiplier = this.exists("mining_multiplier") ? this.get_f32("mining_multiplier") : 1.00f;

@@ -37,7 +37,7 @@ LootItem@[] c_items =
 	
 	// Misc
 	LootItem("foodcan", 2, 5, 500),
-	LootItem("bp_chickenassembler", 1, 0, 750),
+	LootItem("bp_automation_advanced", 1, 0, 750),
 	LootItem("phone", 1, 0, 750),
 	LootItem("scubagear", 1, 0, 400),
 	LootItem("ninjascroll", 1, 1, 250),
