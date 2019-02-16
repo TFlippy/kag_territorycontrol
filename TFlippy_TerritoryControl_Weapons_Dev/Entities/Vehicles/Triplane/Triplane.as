@@ -400,10 +400,10 @@ void TakeFuel(CBlob@ this, f32 amount)
 f32 GiveFuel(CBlob@ this, f32 amount, f32 modifier)
 {
 	f32 max_fuel = this.get_f32("max_fuel");
-	f32 remain = Maths::Max(0, s32(this.get_f32("fuel_count")) + s32(amount) - s32(max_fuel));
+	s32 fuel_consumed = (s32(max_fuel) - s32(this.get_f32("fuel_count"))) / modifier;
+	f32 remain = Maths::Max(0, s32(amount) - fuel_consumed);
 
-	this.set_f32("fuel_count", Maths::Max(0, Maths::Min(max_fuel, this.get_f32("fuel_count") + (amount * modifier))));	
-	this.Sync("fuel_count", true);
+	this.set_f32("fuel_count", Maths::Max(0, Maths::Min(max_fuel, this.get_f32("fuel_count") + ((amount - remain) * modifier))));
 	
 	// print("A: " + amount + "; R: " + remain);
 	return remain;
