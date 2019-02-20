@@ -16,14 +16,13 @@ void InitRespawnCommand(CBlob@ this)
 	this.addCommandID("class menu");
 }
 
-bool isInRadius(CBlob@ this, CBlob @caller)
+/*bool isInRadius(CBlob@ this, CBlob @caller)
 {
 	return ((this.getPosition() - caller.getPosition()).Length() < this.getRadius() * 2.0f + caller.getRadius());
-}
+}*/
 
 bool canChangeClass(CBlob@ this, CBlob@ blob)
 {
-
 	Vec2f tl, br, _tl, _br;
 	this.getShape().getBoundingRect(tl, br);
 	blob.getShape().getBoundingRect(_tl, _br);
@@ -31,7 +30,6 @@ bool canChangeClass(CBlob@ this, CBlob@ blob)
 	       && br.y > _tl.y
 	       && _br.x > tl.x
 	       && _br.y > tl.y;
-
 }
 
 // default classes
@@ -40,7 +38,7 @@ void InitClasses(CBlob@ this)
 	AddIconToken("$builder_class_icon$", "ClassIcons.png", Vec2f(32, 32), 0);
 	AddIconToken("$knight_class_icon$", "ClassIcons.png", Vec2f(32, 32), 1);
 	AddIconToken("$archer_class_icon$", "ClassIcons.png", Vec2f(32, 32), 2);
-	AddIconToken("$sapper_class_icon$", "ClassIcons.png", Vec2f(32, 32), 5);
+	// AddIconToken("$sapper_class_icon$", "ClassIcons.png", Vec2f(32, 32), 5);
 	
 	AddIconToken("$change_class$", "/GUI/InteractionIcons.png", Vec2f(32, 32), 12, 2);
 	
@@ -76,6 +74,7 @@ void onRespawnCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				// build menu for them
 				CBlob@ caller = getBlobByNetworkID(params.read_u16());
 				BuildRespawnMenuFor(this, caller);
+				this.set_bool("quick switch class", false);
 			}
 		}
 		break;
@@ -176,6 +175,7 @@ void PutInvInStorage(CBlob@ blob)
 {
 	CBlob@[] storages;
 	if (getBlobsByTag("storage", @storages))
+	{
 		for (uint step = 0; step < storages.length; ++step)
 		{
 			CBlob@ storage = storages[step];
@@ -185,4 +185,38 @@ void PutInvInStorage(CBlob@ blob)
 				return;
 			}
 		}
+	}
+}
+
+void CycleClass(CBlob@ this, CBlob@ blob)
+{
+	//get available classes
+	PlayerClass[]@ classes;
+	if (this.get("playerclasses", @classes))
+	{
+		CBitStream params;
+		PlayerClass @newclass;
+
+		//find current class
+		for (uint i = 0; i < classes.length; i++)
+		{
+			PlayerClass @pclass = classes[i];
+			if (pclass.name.toLower() == blob.getName())
+			{
+				//cycle to next class
+				@newclass = classes[(i + 1) % classes.length];
+				break;
+			}
+		}
+
+		if (newclass is null)
+		{
+			//select default class
+			@newclass = getDefaultClass(this);
+		}
+
+		//switch to class
+		write_classchange(params, blob.getNetworkID(), newclass.configFilename);
+		this.SendCommand(SpawnCmd::changeClass, params);
+	}
 }
