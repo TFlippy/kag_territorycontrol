@@ -187,14 +187,14 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		}
 	}
 	else if (blob.getName() == "mat_mithril" && blob.getQuantity() > 25)
+	{
+		ParticleZombieLightning(this.getPosition());
+		this.getSprite().PlaySound("/badger_pissed", 1.5f, 0.5f);
+		
+		if (getNet().isServer())
 		{
-			ParticleZombieLightning(this.getPosition());
-			this.getSprite().PlaySound("/badger_pissed", 1.5f, 0.5f);
-			
-			if (getNet().isServer())
-			{
-				CBlob@ bagel = server_CreateBlob("bagel", this.getTeamNum(), this.getPosition());
-				this.server_Die();
-			}
+			CBlob@ bagel = server_CreateBlob("bagel", this.getTeamNum(), this.getPosition());
+			this.server_Die();
 		}
+	}
 }
