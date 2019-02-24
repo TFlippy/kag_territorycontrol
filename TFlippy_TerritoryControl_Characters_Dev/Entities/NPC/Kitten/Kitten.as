@@ -124,3 +124,20 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
 	return blob !is null && (blob.isCollidable() && !blob.hasTag("player"));
 }
+
+void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
+{
+	if (blob is null) return;
+	if (this.hasTag("dead")) return;
+
+	if (blob.getName() == "mat_mithril" && blob.getQuantity() > 50)
+	{
+		ParticleZombieLightning(this.getPosition());
+		
+		if (getNet().isServer())
+		{
+			CBlob@ bagel = server_CreateBlob("pus", this.getTeamNum(), this.getPosition());
+			this.server_Die();
+		}
+	}
+}
