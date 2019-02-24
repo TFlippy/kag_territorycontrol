@@ -15,7 +15,7 @@ const GramophoneRecord@[] records =
 {
 	GramophoneRecord("A Man Who Resembles The Dark Side of Moon", "Disc_Moon.ogg"),
 	GramophoneRecord("Mountain King", "Disc_MountainKing.ogg"),
-	GramophoneRecord("Heroes", "Disc_Heroes.ogg"),
+	GramophoneRecord("Avignon", "Disc_Avignon.ogg"),
 	GramophoneRecord("Liberty Bell March", "Disc_LibertyBellMarch.ogg"),
 	GramophoneRecord("It is a Mystery", "Disc_Mystery.ogg"),
 	GramophoneRecord("No Hushing", "Disc_NoHushing.ogg"),
@@ -36,5 +36,7 @@ const GramophoneRecord@[] records =
 	GramophoneRecord("Tea for Two", "Disc_TeaForTwo.ogg"),
 	GramophoneRecord("7 Year Bitch", "Disc_7YearBitch.ogg"),
 	GramophoneRecord("Keep on Running", "Disc_KeepOnRunning.ogg"),
-	GramophoneRecord("Money", "Disc_Money.ogg")
+	GramophoneRecord("Money", "Disc_Money.ogg"),
+	GramophoneRecord("Big Iron", "Disc_BigIron.ogg"),
+	GramophoneRecord("Metallic Monks", "Disc_MetallicMonks.ogg")
 };
