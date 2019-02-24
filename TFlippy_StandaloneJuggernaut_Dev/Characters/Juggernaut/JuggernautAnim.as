@@ -107,7 +107,7 @@ void onInit(CSprite@ this)
 
 void onPlayerInfoChanged(CSprite@ this)
 {
-	ensureCorrectRunnerTexture(this, "exosuit", "Exosuit");
+	ensureCorrectRunnerTexture(this, "juggernaut", "Juggernaut");
 }
 
 void onTick(CSprite@ this)

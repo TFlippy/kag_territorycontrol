@@ -16,7 +16,7 @@ void onInit(CSprite@ this)
 
 void onPlayerInfoChanged(CSprite@ this)
 {
-	ensureCorrectRunnerTexture(this, "knight", "Knight");
+	ensureCorrectRunnerTexture(this, "slave", "Slave");
 }
 
 void onTick(CSprite@ this)
