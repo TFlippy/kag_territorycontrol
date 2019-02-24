@@ -65,7 +65,7 @@ void onRender(CSprite@ this)
 	if (!blob.isMyPlayer()) return;
 	
 	const int ticks = getGameTime() - blob.get_u32("mustard time");
-	const f32 mod = f32(blob.get_u8("mustard value") / 100.0f);
+	const f32 mod = f32(blob.get_u8("mustard value") / 35.0f);
 	
 	Driver@ driver = getDriver();
 	Vec2f screenSize(driver.getScreenWidth(), driver.getScreenHeight());
