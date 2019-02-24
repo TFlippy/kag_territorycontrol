@@ -17,6 +17,7 @@ LootItem@[] c_items =
 	LootItem("mat_pistolammo", 0, 60, 400),
 	LootItem("mat_shotgunammo", 0, 30, 400),
 	LootItem("mat_battery", 0, 100, 100),
+	LootItem("mat_grenade", 0, 8, 16),
 	
 	// Weapons
 	LootItem("amr", 1, 1, 100),
@@ -30,6 +31,7 @@ LootItem@[] c_items =
 	LootItem("carbine", 1, 1, 400),
 	LootItem("beagle", 1, 1, 400),
 	LootItem("autoshotgun", 1, 0, 197),
+	LootItem("sgl", 1, 0, 100),
 	LootItem("raygun", 0, 1, 179),
 	LootItem("rekt", 1, 0, 15),
 	LootItem("zatniktel", 1, 0, 20),
