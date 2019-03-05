@@ -64,10 +64,10 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "R.O.F.L.", "$icon_nuke$", "nuke", "A dangerous warhead stuffed in a cart. Since it's heavy, it can be only pushed around or picked up by balloons.");
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 20);
-		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 100);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
+		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 75);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100); // Cart!
-		AddRequirement(s.requirements, "coin", "", "Coins", 1250);
+		AddRequirement(s.requirements, "coin", "", "Coins", 750);
 
 		s.spawnNothing = true;
 	}
@@ -133,9 +133,9 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "L.O.L. Warhead (1)", "$icon_mininuke$", "mat_mininuke-1", "A miniature nuclear warhead. Can be used as L.O.L. Warhead Launcher ammunition. Detonates upon impact.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 500);
+		AddRequirement(s.requirements, "coin", "", "Coins", 300);
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 4);
-		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 25);
+		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 20);
 
 		s.spawnNothing = true;
 	}
