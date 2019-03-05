@@ -9,6 +9,7 @@
 // Tag: "change class sack inventory" - if you want players to have previous items stored in sack on class change
 // Tag: "change class store inventory" - if you want players to store previous items in this respawn blob
 
+bool enable_quickswap = false;
 #include "ClassSelectMenu.as"
 
 void InitRespawnCommand(CBlob@ this)
