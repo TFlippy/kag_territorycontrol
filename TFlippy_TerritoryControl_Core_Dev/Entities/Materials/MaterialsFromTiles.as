@@ -41,7 +41,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 				if (map.isTileThickStone(tile)){
 					MakeMat(this, worldPoint, "mat_stone", (10 + XORRandom(5)) * multiplier);
 					
-					if (depth < 0.90f && XORRandom(100) < 70) MakeMat(this, worldPoint, "mat_copper", (1 + XORRandom(10 * (1 - depth))) * multiplier);
+					if (depth < 0.90f && XORRandom(100) < 70) MakeMat(this, worldPoint, "mat_copper", (1 + XORRandom(3 * (1 - depth))) * multiplier);
 					if (depth < 0.60f && XORRandom(100) < 60) MakeMat(this, worldPoint, "mat_iron", (5 + XORRandom(8)) * multiplier);
 					if (depth < 0.10f && XORRandom(100) < 10) MakeMat(this, worldPoint, "mat_mithril", (2 + XORRandom(6)) * multiplier);
 					// if (depth < 0.20f && XORRandom(100) < 5) MakeMat(this, worldPoint, "mat_wilmet", (1 + XORRandom(3)) * multiplier);
@@ -49,7 +49,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 				else 
 				{
 					MakeMat(this, worldPoint, "mat_stone", (4 + XORRandom(4)) * multiplier);
-					if (depth > 0.40f && depth < 0.80f && XORRandom(100) < 50) MakeMat(this, worldPoint, "mat_copper", (2 + XORRandom(7 * (1 - depth))) * multiplier);
+					if (depth > 0.40f && depth < 0.80f && XORRandom(100) < 50) MakeMat(this, worldPoint, "mat_copper", (1 + XORRandom(2 * (1 - depth))) * multiplier);
 					if (depth < 0.60f && XORRandom(100) < 30) MakeMat(this, worldPoint, "mat_iron", (3 + XORRandom(6)) * multiplier);
 				}
 							
@@ -82,7 +82,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 			{
 				// MakeMat(this, worldPoint, "mat_sand", 2 * multiplier);
 				MakeMat(this, worldPoint, "mat_dirt", (1 + XORRandom(3)) * multiplier);
-				if (depth < 0.80f && XORRandom(100) < 10) MakeMat(this, worldPoint, "mat_copper", (1 + XORRandom(3)) * multiplier);
+				if (depth < 0.80f && XORRandom(100) < 10) MakeMat(this, worldPoint, "mat_copper", (1 + XORRandom(2)) * multiplier);
 				if (depth < 0.35f && XORRandom(100) < 60 * (1 - depth)) MakeMat(this, worldPoint, "mat_sulphur", (1 + XORRandom(5)) * multiplier * (1.3f - depth));
 			}
 			else if (tile >= CMap::tile_matter && tile <= CMap::tile_matter_d2)
