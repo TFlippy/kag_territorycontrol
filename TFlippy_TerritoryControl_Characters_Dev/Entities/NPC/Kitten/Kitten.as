@@ -1,4 +1,5 @@
 #include "AnimalConsts.as";
+#include "Hitters.as";
 
 //sprite
 void onInit(CSprite@ this)
@@ -100,7 +101,44 @@ void onTick(CBlob@ this)
 			this.Tag("dead");
 			// this.getCurrentScript().removeIfTag = "dead";
 		}
+		
+		if (this.isInInventory())
+		{
+			CBlob@ inventoryBlob = this.getInventoryBlob();
+			if (inventoryBlob !is null)
+			{
+				if (this.getTickSinceCreated() % 10 == 0)
+				{
+					if (getNet().isServer()) this.server_Hit(inventoryBlob, inventoryBlob.getPosition(), Vec2f(0, 0), 0.15f, Hitters::bite, true);
+					if (getNet().isClient()) 
+					{
+						if (XORRandom(3) == 0) 
+						{	
+							this.getSprite().PlaySound("Kitten_Hit_" + XORRandom(4), 1.00f, 1.0f);
+							this.set_u32("next screech", getGameTime() + 40);
+						}
+						if (inventoryBlob.hasTag("flesh"))
+						{
+							this.getSprite().PlaySound("Pus_Attack_" + XORRandom(3), 1.1f, 1.00f);
+							ParticleBloodSplat(inventoryBlob.getPosition(), true);
+						}
+					}
+				}
+			}
+		}
 	}
+}
+
+void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
+{
+	if (inventoryBlob is null) return;
+
+	CInventory@ inv = inventoryBlob.getInventory();
+
+	if (inv is null) return;
+
+	this.doTickScripts = true;
+	inv.doTickScripts = true;
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
