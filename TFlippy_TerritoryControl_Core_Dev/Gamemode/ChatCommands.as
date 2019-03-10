@@ -316,11 +316,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					params.write_u16(player.getNetworkID());	
 					this.SendCommand(this.getCommandID("endInfection"),params);
 				}
-			}
-			//For cool people only.
-			if(isCool)
-			{
-				if(tokens[0]=="!coins") 
+				else if(tokens[0]=="!coins") 
 				{
 					int amount=	tokens.length>=2 ? parseInt(tokens[1]) : 100;
 					player.server_setCoins(player.getCoins()+amount);
