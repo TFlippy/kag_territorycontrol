@@ -206,19 +206,6 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					}
 					return false;
 				}
-				else if(tokens[0]=="!playsound")
-				{
-					if(tokens.length!=2 || IsCool(tokens[1]))
-					{
-						return false;
-					}
-
-					CBitStream params;
-					params.write_string(tokens[1]);
-					this.SendCommand(this.getCommandID("playsound"),params);
-
-					return false;
-				}
 				else if(tokens[0]=="!mute") {
 					if(tokens.length!=3 || IsCool(tokens[1])){
 						return false;
@@ -331,12 +318,29 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				}
 			}
 			//For cool people only.
-			if(isCool){
-				if(tokens[0]=="!coins") {
+			if(isCool)
+			{
+				if(tokens[0]=="!coins") 
+				{
 					int amount=	tokens.length>=2 ? parseInt(tokens[1]) : 100;
 					player.server_setCoins(player.getCoins()+amount);
 					return false;
-				}else if(tokens[0]=="!removebot" || tokens[0]=="!kickbot") {
+				}
+				else if(tokens[0]=="!playsound")
+				{
+					if(tokens.length!=2 || IsCool(tokens[1]))
+					{
+						return false;
+					}
+
+					CBitStream params;
+					params.write_string(tokens[1]);
+					this.SendCommand(this.getCommandID("playsound"),params);
+
+					return false;
+				}
+				else if(tokens[0]=="!removebot" || tokens[0]=="!kickbot") 
+				{
 					int playersAmount=	getPlayerCount();
 					for(int i=0;i<playersAmount;i++){
 						CPlayer@ user=getPlayer(i);
@@ -348,7 +352,9 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 						}
 					}
 					return false;
-				}else if(tokens[0]=="!addbot" || tokens[0]=="!bot") {
+				}
+				else if(tokens[0]=="!addbot" || tokens[0]=="!bot") 
+				{
 					if(tokens.length<2){
 						return false;
 					}
@@ -364,7 +370,9 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					params.write_string(botDisplayName);
 					this.SendCommand(this.getCommandID("addbot"),params);
 					return false;
-				}else if(tokens[0]=="!crate") {
+				}
+				else if(tokens[0]=="!crate") 
+				{
 					if(tokens.length<2){
 						return false;
 					}
@@ -372,7 +380,9 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					string description = tokens.length > 2 ? tokens[2] : tokens[1];
 					server_MakeCrate(tokens[1],description,frame,-1,blob.getPosition());
 					return false;
-				}else if(tokens[0]=="!scroll") {
+				}
+				else if(tokens[0]=="!scroll")
+				{
 					if(tokens.length<2){
 						return false;
 					}
@@ -382,7 +392,9 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					}
 					server_MakePredefinedScroll(blob.getPosition(),s);
 					return false;
-				}else if(tokens[0]=="!disc") {
+				}
+				else if(tokens[0]=="!disc") 
+				{
 					if(tokens.length!=2){
 						return false;
 					}
