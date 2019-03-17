@@ -265,7 +265,7 @@ void onTick(CBlob@ this)
 			
 			if (modifier > 0.01f)
 			{	
-				Sound::Play("Antimatter_Kaboom_Big.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 2.0f - (0.2f * (1 - modifier)), modifier);
+				Sound::Play("Nuke_Kaboom_Big.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 2.0f - (0.2f * (1 - modifier)), modifier);
 			}
 		}
 	}
