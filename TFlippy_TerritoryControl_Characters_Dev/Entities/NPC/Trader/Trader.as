@@ -204,6 +204,11 @@ void onInit(CBlob@ this)
 			AddRequirement(s.requirements, "coin", "", "Coins", 100);
 			s.spawnNothing = true;
 		}
+		{
+			ShopItem@ s = addShopItem(this, "Lighter", "$icon_lighter$", "lighter", "Set a forest on fire!");
+			AddRequirement(s.requirements, "coin", "", "Coins", 100);
+			s.spawnNothing = true;
+		}
 	}
 		
 	// Nature Trader
@@ -414,6 +419,7 @@ void onHealthChange(CBlob@ this, f32 oldHealth)
 	if (this.getHealth() < 1.0f && !this.hasTag("dead"))
 	{
 		this.Tag("dead");
+		this.set_bool("shop available", false);
 		// this.server_SetTimeToDie(20);
 	}
 
