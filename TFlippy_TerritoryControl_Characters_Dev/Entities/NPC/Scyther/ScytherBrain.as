@@ -45,8 +45,8 @@ void onInit(CBlob@ this)
 	this.set_u32("nextAttack", 0);
 
 	this.set_f32("minDistance", 16);
-	this.set_f32("chaseDistance", 300);
-	this.set_f32("maxDistance", 500);
+	this.set_f32("chaseDistance", 100);
+	this.set_f32("maxDistance", 600);
 	
 	this.set_f32("inaccuracy", 0.00f);
 	this.set_u8("reactionTime", 0);
@@ -69,7 +69,7 @@ void onInit(CBlob@ this)
 	
 	if (getNet().isServer())
 	{
-		// this.server_setTeamNum(251);
+		this.server_setTeamNum(251);
 			
 		for (int i = 0; i < 2; i++)
 		{
@@ -94,8 +94,10 @@ void onTick(CBlob@ this)
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
 	{
-		moveVars.walkFactor *= 1.00f;
-		moveVars.jumpFactor *= 1.00f;
+		moveVars.walkFactor *= 1.50f;
+		moveVars.jumpFactor *= 1.50f;
+		moveVars.wallclimbing = true;
+		moveVars.wallsliding = true;
 	}
 
 	if (getNet().isClient())
@@ -116,117 +118,255 @@ void onTick(CBrain@ this)
 	
 	if (blob.getPlayer() !is null) return;
 	
-	// SearchTarget(this, false, true);
-	
 	const f32 chaseDistance = blob.get_f32("chaseDistance");
+	const f32 maxDistance = blob.get_f32("maxDistance");
+	
 	CBlob@ target = this.getTarget();
-	bool hasTarget = target !is null && !target.hasTag("dead");
-	
-	if (!hasTarget)
-	{
-		const bool raider = blob.get_bool("raider");
-		const Vec2f pos = blob.getPosition();
-	
-		CBlob@[] blobs;
-		getMap().getBlobsInRadius(blob.getPosition(), chaseDistance, @blobs);
-		u8 myTeam = blob.getTeamNum();
-		
-		for (int i = 0; i < blobs.length; i++)
-		{
-			CBlob@ b = blobs[i];
-			Vec2f bp = b.getPosition() - pos;
-			f32 d = bp.Length();
-			
-			if (b.getTeamNum() != myTeam && !b.hasTag("dead") && b.hasTag("human") && d <= chaseDistance)
-			{
-				this.SetTarget(b);
-				blob.set_u32("nextAttack", getGameTime() + blob.get_u8("attackDelay"));
-				return;
-			}
-		}
 
-		if (raider)
-		{
-			CBlob@ raid_target = getBlobByNetworkID(blob.get_u16("raid target"));
-			
-			if (raid_target !is null)
-			{
-				if (getGameTime() % 30 == 0) this.SetPathTo(raid_target.getPosition(), true);
-				Move(this, blob, this.getNextPathPosition());
-				blob.setAimPos(raid_target.getPosition());
-				
-				this.getCurrentScript().tickFrequency = 1;
-			}
-			else
-			{
-				CBlob@[] humans;
-				getBlobsByTag("flesh", @humans);
-			
-				if (humans.length > 0) 
-				{
-					blob.set_u16("raid target", humans[XORRandom(humans.length)].getNetworkID());
-				}
-			}
-		}
+	// print("" + target.getConfig());
+	
+	if (target is null)
+	{
+		this.SetTarget(FindTarget(this, maxDistance));
+		this.getCurrentScript().tickFrequency = 15;
 	}
-	else
+	
+	if (target !is null && target !is blob)
 	{			
+		// print("" + target.getConfig());
+	
 		this.getCurrentScript().tickFrequency = 1;
+		
+		// print("" + this.lowLevelMaxSteps);
 		
 		const f32 distance = (target.getPosition() - blob.getPosition()).Length();
 		const f32 minDistance = blob.get_f32("minDistance");
-		const f32 maxDistance = blob.get_f32("maxDistance");
 		
+		const bool visibleTarget = isVisible(blob, target);
+		const bool stuck = this.getState() == 4;
+		const bool target_attackable = target !is null && !(target.getTeamNum() == blob.getTeamNum() || target.hasTag("material"));
 		const bool lose = distance > maxDistance;
-		const bool chase = distance > chaseDistance;
-		const bool retreat = distance < minDistance;
-				
+		const bool chase = target_attackable && distance > minDistance;
+		const bool retreat = !target_attackable || ((distance < minDistance) && visibleTarget);
+		
+		// print("" + stuck);
+		
 		if (lose)
 		{
+			this.SetTarget(null);
+			this.getCurrentScript().tickFrequency = 15;
+			return;
+		}
+		
+		blob.setAimPos(target.getPosition());
+		
+		if (blob.get_u32("nextAttack") < getGameTime() && (stuck || (visibleTarget ? true : distance <= chaseDistance * 0.50f)))
+		{
+			blob.setKeyPressed(key_action1, true);
+		}
+		else
+		{
+			blob.setKeyPressed(key_action1, false);
+		}
+		
+		if (target_attackable && chase)
+		{
+			if (blob.getTickSinceCreated() % 90 == 0) this.SetPathTo(target.getPosition(), false);
+			// if (getGameTime() % 45 == 0) this.SetHighLevelPath(blob.getPosition(), target.getPosition());
+			// Move(this, blob, this.getNextPathPosition());
+			// print("chase")
+			
+			Vec2f dir = this.getNextPathPosition() - blob.getPosition();
+			dir.Normalize();
+			
+			if (distance > 256)
+			{
+				Move(this, blob, blob.getPosition() + dir * 24);
+			}
+			else 
+			{
+				Move(this, blob, target.getPosition());
+			}
+		}
+		else if (retreat)
+		{
+			DefaultRetreatBlob( blob, target );
+		}
+
+		// if (distance > chaseDistance)
+		// {
+			// this.SetTarget(FindTarget(this, maxDistance * 100.00f));
+		// }
+		
+		if (target.hasTag("dead"))
+		{
+			CPlayer@ targetPlayer = target.getPlayer();
+					
 			this.SetTarget(null);
 			this.getCurrentScript().tickFrequency = 30;
 			return;
 		}
-		
-		f32 jitter = blob.get_f32("inaccuracy");
-		Vec2f randomness = Vec2f((100 - XORRandom(200)) * jitter, (100 - XORRandom(200)) * jitter);
-		blob.setAimPos(target.getPosition() + randomness);
-	
-		if (blob.get_u32("nextAttack") < getGameTime())
-		{
-			AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
-			
-			if(point !is null) 
-			{
-				CBlob@ gun = point.getOccupied();
-				if(gun !is null) 
-				{
-					if (blob.get_u32("nextAttack") < getGameTime())
-					{							
-						blob.setKeyPressed(key_action1,true);
-						blob.set_u32("nextAttack", getGameTime() + blob.get_u8("attackDelay"));
-					}
-				}
-			}
-		}
-		
-		
-		if (chase)
-		{
-			if (getGameTime() % 30 == 0) this.SetPathTo(target.getPosition(), true);
-			// if (getGameTime() % 45 == 0) this.SetHighLevelPath(blob.getPosition(), target.getPosition());
-			Move(this, blob, this.getNextPathPosition());
-			// print("chase")
-		}
-		// else if (retreat)
-		// {
-			// DefaultRetreatBlob( blob, target );
-			// // print("retreat");
-		// }
 	}
-		
+	else
+	{
+		if (XORRandom(2) == 0) RandomTurn(blob);		
+	}
+
 	FloatInWater(blob); 
 } 
+
+CBlob@ FindTarget(CBrain@ this, f32 maxDistance)
+{
+	CBlob@ blob = this.getBlob();
+	const Vec2f pos = blob.getPosition();
+	
+	CBlob@[] blobs;
+	// getMap().getBlobsInRadius(blob.getPosition(), maxDistance, @blobs);
+
+	getBlobsByTag("flesh", @blobs);
+	const u8 myTeam = blob.getTeamNum();
+	
+	f32 distance = maxDistance;
+	u16 net_id = 0;
+	
+	
+	for (int i = 0; i < blobs.length; i++)
+	{
+		CBlob@ b = blobs[i];
+		Vec2f bp = b.getPosition() - pos;
+		f32 d = bp.Length();
+
+		if (d < distance && b.getTeamNum() != myTeam && !b.hasTag("dead") && !b.hasTag("invincible"))
+		{
+			distance = d;
+			net_id = b.getNetworkID();
+		}
+	}
+	
+	print("" + net_id);
+
+	return getBlobByNetworkID(net_id);
+}
+
+// void onTick(CBrain@ this)
+// {
+	// if (!getNet().isServer()) return;
+	
+	// CBlob@ blob = this.getBlob();
+	
+	// if (blob.getPlayer() !is null) return;
+	
+	// // SearchTarget(this, false, true);
+	
+	// const f32 chaseDistance = blob.get_f32("chaseDistance");
+	// CBlob@ target = this.getTarget();
+	// bool hasTarget = target !is null && !target.hasTag("dead");
+	
+	// if (!hasTarget)
+	// {
+		// const bool raider = blob.get_bool("raider");
+		// const Vec2f pos = blob.getPosition();
+	
+		// CBlob@[] blobs;
+		// getMap().getBlobsInRadius(blob.getPosition(), chaseDistance, @blobs);
+		// u8 myTeam = blob.getTeamNum();
+		
+		// for (int i = 0; i < blobs.length; i++)
+		// {
+			// CBlob@ b = blobs[i];
+			// Vec2f bp = b.getPosition() - pos;
+			// f32 d = bp.Length();
+			
+			// if (b.getTeamNum() != myTeam && !b.hasTag("dead") && b.hasTag("human") && d <= chaseDistance)
+			// {
+				// this.SetTarget(b);
+				// blob.set_u32("nextAttack", getGameTime() + blob.get_u8("attackDelay"));
+				// return;
+			// }
+		// }
+
+		// if (raider)
+		// {
+			// CBlob@ raid_target = getBlobByNetworkID(blob.get_u16("raid target"));
+			
+			// if (raid_target !is null)
+			// {
+				// if (getGameTime() % 30 == 0) this.SetPathTo(raid_target.getPosition(), true);
+				// Move(this, blob, this.getNextPathPosition());
+				// blob.setAimPos(raid_target.getPosition());
+				
+				// this.getCurrentScript().tickFrequency = 1;
+			// }
+			// else
+			// {
+				// CBlob@[] humans;
+				// getBlobsByTag("flesh", @humans);
+			
+				// if (humans.length > 0) 
+				// {
+					// blob.set_u16("raid target", humans[XORRandom(humans.length)].getNetworkID());
+				// }
+			// }
+		// }
+	// }
+	// else
+	// {			
+		// this.getCurrentScript().tickFrequency = 1;
+		
+		// const f32 distance = (target.getPosition() - blob.getPosition()).Length();
+		// const f32 minDistance = blob.get_f32("minDistance");
+		// const f32 maxDistance = blob.get_f32("maxDistance");
+		
+		// const bool lose = distance > maxDistance;
+		// const bool chase = distance > chaseDistance;
+		// const bool retreat = distance < minDistance;
+				
+		// if (lose)
+		// {
+			// this.SetTarget(null);
+			// this.getCurrentScript().tickFrequency = 30;
+			// return;
+		// }
+		
+		// f32 jitter = blob.get_f32("inaccuracy");
+		// Vec2f randomness = Vec2f((100 - XORRandom(200)) * jitter, (100 - XORRandom(200)) * jitter);
+		// blob.setAimPos(target.getPosition() + randomness);
+	
+		// if (blob.get_u32("nextAttack") < getGameTime())
+		// {
+			// AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
+			
+			// if(point !is null) 
+			// {
+				// CBlob@ gun = point.getOccupied();
+				// if(gun !is null) 
+				// {
+					// if (blob.get_u32("nextAttack") < getGameTime())
+					// {							
+						// blob.setKeyPressed(key_action1,true);
+						// blob.set_u32("nextAttack", getGameTime() + blob.get_u8("attackDelay"));
+					// }
+				// }
+			// }
+		// }
+		
+		
+		// if (chase)
+		// {
+			// if (getGameTime() % 30 == 0) this.SetPathTo(target.getPosition(), true);
+			// // if (getGameTime() % 45 == 0) this.SetHighLevelPath(blob.getPosition(), target.getPosition());
+			// Move(this, blob, this.getNextPathPosition());
+			// // print("chase")
+		// }
+		// // else if (retreat)
+		// // {
+			// // DefaultRetreatBlob( blob, target );
+			// // // print("retreat");
+		// // }
+	// }
+		
+	// FloatInWater(blob); 
+// } 
 
 void Move(CBrain@ this, CBlob@ blob, Vec2f pos)
 {
