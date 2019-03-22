@@ -151,6 +151,7 @@ void onTick(CBlob@ this)
 					m.set_u16("target", this.get_u16("target"));
 					m.set_f32("velocity", 10.00f);
 					m.server_setTeamNum(this.getTeamNum());
+					m.Tag("self_destruct");
 					m.Init();
 					
 					SetAmmo(this, ammo - 1);
