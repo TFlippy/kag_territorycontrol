@@ -382,8 +382,10 @@ void Shoot(CBlob@ this)
 			// print("Angle: " + angle + "; Jitter: " + jitter);
 		
 			HitInfo@[] hitInfos;
-			bool mapHit=getMap().rayCastSolid(startPos,endPos,hitPos);
-			length =(hitPos - startPos).Length();
+			bool mapHit=getMap().rayCastSolid(startPos,endPos, hitPos);
+			hitPos += dir * 0.01f;
+			
+			length = (hitPos - startPos).Length();
 			
 			bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f),length,this,@hitInfos);
 			if(getNet().isClient())
