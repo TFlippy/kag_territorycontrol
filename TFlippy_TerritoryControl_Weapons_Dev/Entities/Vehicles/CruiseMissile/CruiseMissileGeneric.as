@@ -61,6 +61,13 @@ void DoExplosion(CBlob@ this)
 		for (int i = 0; i < 40; i++)
 		{
 			map.server_setFireWorldspace(pos + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)) * 8, true);
+		}
+	}
+	
+	if (getNet().isClient())
+	{
+		for (int i = 0; i < 40; i++)
+		{
 			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(angle, XORRandom(400) * 0.01f, 70), particles[XORRandom(particles.length)]);
 		}
 	}
