@@ -36,8 +36,8 @@ void onTick(CBlob@ this)
 		
 		if (this.isMyPlayer())
 		{
-			CCamera@ cam = getCamera();
-			cam.targetDistance = 3.00f + ((1 + Maths::Sin(getGameTime() * 0.015f * level)) * 0.50f) * (level * level * 0.125f);
+			// CCamera@ cam = getCamera();
+			// cam.targetDistance = 3.00f + ((1 + Maths::Sin(getGameTime() * 0.015f * level)) * 0.50f) * (level * level * 0.125f);
 			
 			if (getGameTime() % 5 == 0) SetScreenFlash(50, 50, 25, 0);
 		}
