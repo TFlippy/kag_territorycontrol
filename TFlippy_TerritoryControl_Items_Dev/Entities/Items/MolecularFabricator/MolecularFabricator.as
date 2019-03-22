@@ -51,7 +51,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Deconstruct a Charge Lance", "$icon_matter_2$", "mat_matter-200", "Deconstruct 1 Charge Lance into 200 units of Amazing Technicolor Dust.");
+		ShopItem@ s = addShopItem(this, "Deconstruct a Charge Lance", "$icon_matter_2$", "mat_matter-500", "Deconstruct 1 Charge Lance into 500 units of Amazing Technicolor Dust.");
 		AddRequirement(s.requirements, "blob", "chargelance", "Charge Lance", 1);
 		// AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 20);
 		s.spawnNothing = true;
@@ -86,8 +86,8 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Reconstruct a Charge Lance", "$icon_chargelance$", "chargelance", "An extremely powerful rail-assisted handheld cannon.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 100);
-		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 35);
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 150);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 250);
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
 		s.spawnNothing = true;
 	}
@@ -130,9 +130,9 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Reconstruct 10 Metal Rods", "$mat_lancerod$", "mat_lancerod-10", "A bundle of 10 tungsten rods.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 20);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
+		ShopItem@ s = addShopItem(this, "Reconstruct 10 Metal Rods", "$mat_lancerod$", "mat_lancerod-10", "A bundle of 10 charge lance rods.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
 		s.spawnNothing = true;
 	}
 	{
