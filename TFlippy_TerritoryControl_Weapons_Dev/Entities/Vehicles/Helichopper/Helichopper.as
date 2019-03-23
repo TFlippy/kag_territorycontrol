@@ -432,6 +432,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (this.get_u16("ammoCount") > 0)
 		{
 			this.sub_u16("ammoCount", 1);
+			this.Sync("ammoCount", false);
+			
 			ShootGun(this, params.read_s32(), this.getSprite().getSpriteLayer("minigun"));
 		}
 	}
@@ -442,6 +444,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (this.get_u16("rocketCount") > 0)
 		{
 			this.sub_u16("rocketCount", 1);
+			this.Sync("rocketCount", false);
+			
 			shootRocket(this, params.read_s32(), target, this.getSprite().getSpriteLayer("rocketlauncher"));
 		}
 	}
@@ -472,6 +476,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			invo.server_RemoveItems("mat_sammissile", rocketCount);
 			this.add_u16("rocketCount", rocketCount);
 		}
+		
+		this.Sync("rocketCount", false);
 	}
 	else if(cmd == this.getCommandID("addAmmo"))
 	{
@@ -500,6 +506,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			invo.server_RemoveItems("mat_gatlingammo", ammoCount);
 			this.add_u16("ammoCount", ammoCount);
 		}
+		
+		this.Sync("ammoCount", false);
 	}
 	else if (cmd == this.getCommandID("load_fuel"))
 	{
