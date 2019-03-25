@@ -57,6 +57,7 @@ void onInit(CBlob@ this)
 		{
 			AttachmentPoint@ ap = aps[i];
 			ap.offsetZ = 10.0f;
+			ap.SetKeysToTake(key_action1 | key_action2 | key_action3);
 		}
 	}
 	
@@ -457,7 +458,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			return;
 		}
 		CBlob@ blob = getBlobByNetworkID(blobNum);
-		if(blob is null){return;}
+		if(blob is null) return;
 
 		CBlob@ attachedBlob = blob.getAttachments().getAttachedBlob("PICKUP");
 		if(attachedBlob !is null && attachedBlob.getName() == "mat_sammissile")
@@ -488,7 +489,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			return;
 		}
 		CBlob@ blob = getBlobByNetworkID(blobNum);
-		if(blob is null){return;}
+		if(blob is null) return;
 
 		CBlob@ attachedBlob = blob.getAttachments().getAttachedBlob("PICKUP");
 		if(attachedBlob !is null && attachedBlob.getName() == "mat_gatlingammo")
