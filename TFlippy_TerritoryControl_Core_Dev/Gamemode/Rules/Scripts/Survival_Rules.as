@@ -200,7 +200,27 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	
 	printf(victimName + " has been killed by " + attackerName + "; damage type: " + customData);
 	
-	victim.set_u32("respawn time", getGameTime() + 30 * (victim.getTeamNum() < this.getTeamsCount() ? 4 : 8));
+	u8 victimTeam = victim.getTeamNum();
+	s32 respawn_time = 30 * 4;
+	
+	if (victimTeam > 100) respawn_time += 30 * 4;
+	if (victimTeam < 7)
+	{
+		TeamData@ team_data;
+		GetTeamData(victimTeam, @team_data);
+
+		if (team_data != null)
+		{
+			u16 upkeep = team_data.upkeep;
+			u16 upkeep_cap = team_data.upkeep_cap;
+			f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+			
+			if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RESPAWN_TIME) respawn_time += 30 * 4;
+			if (upkeep_ratio >= UPKEEP_RATIO_BONUS_RESPAWN_TIME) respawn_time -= 30 * 2;
+		}
+	}
+	
+	victim.set_u32("respawn time", getGameTime() + respawn_time);
 	
 	CBlob@ blob = victim.getBlob();
 	if(blob !is null) 
@@ -419,74 +439,6 @@ void onTick(CRules@ this)
 							doChickenSpawn(player);
 						}
 					}
-				
-					// if (XORRandom(500) == 0)
-					// {
-						// doChickenSpawn(player);
-					// }
-					// else
-					// {
-						// team = 101 + XORRandom(99);
-						// player.server_setTeamNum(team);
-
-						// string blobType="peasant";
-						// if (player.isBot() && player.get_string("classAtDeath") != "")
-						// {
-							// blobType = player.get_string("classAtDeath");
-						// }
-						
-						// bool default_respawn = true;
-						
-						// if (player.get_u16("tavern_netid") != 0)
-						// {
-							// CBlob@ tavern = getBlobByNetworkID(player.get_u16("tavern_netid"));
-							// const bool isTavernOwner = tavern !is null && player.getUsername() == tavern.get_string("Owner");
-							
-							// if (tavern !is null && tavern.getConfig() == "tavern" && (player.getCoins() >= 20 || isTavernOwner))
-							// {
-								// printf("Respawning " + player.getUsername() + " at a tavern as team " + player.get_u8("tavern_team"));
-								
-								// CBlob@ new_blob = server_CreateBlob(blobType);
-								// if (new_blob !is null)
-								// {
-									// if (player.exists("tavern_team") && player.get_u8("tavern_team") != 255) team = player.get_u8("tavern_team");
-								
-									// new_blob.setPosition(tavern.getPosition());			
-									// new_blob.server_setTeamNum(team);
-									// new_blob.server_SetPlayer(player);
-									
-									// if (!isTavernOwner)
-									// {
-										// player.server_setCoins(player.getCoins() - 20);
-									
-										// CPlayer@ tavern_owner = getPlayerByUsername(tavern.get_string("Owner"));
-										// if (tavern_owner !is null)
-										// {
-											// tavern_owner.server_setCoins(tavern_owner.getCoins() + 20);
-										// }
-									// }
-									
-									// default_respawn = false;
-								// }
-							// }
-						// }
-						
-						// if (default_respawn)
-						// {
-							// if (doDefaultSpawn(player, blobType, team, false))
-							// {
-								
-							// }
-							// else 
-							// {
-								// if (!doChickenSpawn(player)) 
-								// {
-									// doDefaultSpawn(player, blobType, team, true);
-								// }
-							// }
-						// }
-					// }
-					
 				}
 			}
 		}
@@ -554,6 +506,7 @@ bool doChickenSpawn(CPlayer@ player)
 	CBlob@[] ruins;
 	getBlobsByName("chickencamp", @ruins);
 	getBlobsByName("chickenfortress", @ruins);
+	getBlobsByName("chickencitadel", @ruins);
 	getBlobsByName("chickencoop", @ruins);
 	
 	if (ruins.length > 0)
@@ -610,7 +563,7 @@ void Reset(CRules@ this)
 		if(p !is null)
 		{
 			p.set_u32("respawn time", getGameTime() + (30 * 1));
-			p.server_setCoins(Maths::Max(150, p.getCoins() * 0.5f)); // Half of your fortune is lost by spending it on drugs.
+			p.server_setCoins(Maths::Max(500, p.getCoins() * 0.50f)); // Half of your fortune is lost by spending it on drugs.
 			
 			// SetToRandomExistingTeam(this, p);
 			p.server_setTeamNum(100 + XORRandom(100));

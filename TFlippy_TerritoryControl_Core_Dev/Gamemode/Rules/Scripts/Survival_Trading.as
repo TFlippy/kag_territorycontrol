@@ -27,6 +27,8 @@ const int coinsOnBuildWorkshop = 20;
 
 const int warmupFactor = 3;
 
+const u32 MAX_COINS = 30000;
+
 //
 string cost_config_file = "tdm_vars.cfg";
 bool kill_traders_and_shops = false;
@@ -150,41 +152,81 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ killer, u8 customData)
 	if (victim !is null)
 	{
 		CBlob@ victimBlob = victim.getBlob();
+		
+		const u32 victim_coins = victim.getCoins();
+		
+		f32 reward_factor = 0.10f;
+		u32 dropped_coins = 0.00f;
 	
-		if (killer !is null)
+		const bool hasKiller = killer !is null;
+	
+		if (victim.getTeamNum() < 7)
+		{
+			TeamData@ team_data;
+			GetTeamData(victim.getTeamNum(), @team_data);
+		
+			if (team_data !is null)
+			{
+				u16 upkeep = team_data.upkeep;
+				u16 upkeep_cap = team_data.upkeep_cap;
+				f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+				
+				if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_COIN_DROP) reward_factor += 0.20f;
+			}
+		}
+	
+		if (hasKiller)
 		{
 			if (killer !is victim && killer.getTeamNum() != victim.getTeamNum())
 			{
-				u32 reward = victim.getCoins() * 0.1f;
-			
 				if (killer.getTeamNum() < 7)
 				{
 					TeamData@ team_data;
 					GetTeamData(killer.getTeamNum(), @team_data);
 				
-					if (team_data !is null && team_data.tax_enabled)
+					if (team_data !is null)
+					{
+						u16 upkeep = team_data.upkeep;
+						u16 upkeep_cap = team_data.upkeep_cap;
+						f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+					
+						if (upkeep_ratio <= UPKEEP_RATIO_BONUS_COIN_GAIN) reward_factor += 0.20f;
+					}
+				}
+			}
+		
+		}
+			
+		dropped_coins = victim_coins * reward_factor;
+			
+		if (hasKiller)
+		{
+			f32 killer_reward = dropped_coins;
+		
+			if (killer.getTeamNum() < 7)
+			{
+				TeamData@ team_data;
+				GetTeamData(killer.getTeamNum(), @team_data);
+			
+				if (team_data !is null)
+				{
+					if (team_data.tax_enabled)
 					{
 						CPlayer@ leader = getPlayerByUsername(team_data.leader_name);
 						if (leader !is null)
 						{
-							reward *= 0.50f;
-							leader.server_setCoins(leader.getCoins() + reward);
+							killer_reward *= 0.50f;
+							leader.server_setCoins(Maths::Clamp(leader.getCoins() + killer_reward, 0, MAX_COINS));
 						}
 					}
 				}
-			
-				if (!victim.hasTag("coin cheater"))
-				{
-					killer.server_setCoins(killer.getCoins() + reward);
-				}
 			}
+			
+			killer.server_setCoins(Maths::Clamp(killer.getCoins() + killer_reward, 0, MAX_COINS));
 		}
-		else if (!victim.hasTag("coin cheater") && victimBlob !is null) server_DropCoins(victimBlob.getPosition(), victim.getCoins() * 0.1f);
-
-		victim.Untag("coin cheater");
+		else if (victimBlob !is null) server_DropCoins(victimBlob.getPosition(), dropped_coins);
 		
-		u32 totalCoins = victim.getCoins() * 0.9f;
-		victim.server_setCoins(totalCoins);
+		victim.server_setCoins(Maths::Clamp(victim.getCoins() - dropped_coins, 0, MAX_COINS));
 	}
 }
 

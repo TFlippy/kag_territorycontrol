@@ -218,19 +218,32 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			TeamData@ team_data;
 			GetTeamData(this.getTeamNum(), @team_data);
 			
-			if (team_data !is null)
+			CPlayer@ ply = caller.getPlayer();
+			
+			if (team_data !is null && ply !is null)
 			{
 				// bool deserter = caller.getPlayer() !is null && caller.getPlayer().get_u32("teamkick_time") > getGameTime();
 				bool recruitment_enabled = team_data.recruitment_enabled;
-				bool upkeep_gud = team_data.upkeep + UPKEEP_COST_PLAYER < team_data.upkeep_cap;
+				bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
+				bool is_premium = true; //ply.getSupportTier() > 0; // TODO
+				
+				print("" + ply.getSupportTier());
+				
+				bool can_join = recruitment_enabled && upkeep_gud && is_premium;
 			
 				string msg = "";
-				if (!recruitment_enabled || !upkeep_gud) msg = "\n\nCannot join!\n" + (!recruitment_enabled ? "This faction is not accepting any new members.\n" : "") + (!upkeep_gud ? "Faction's upkeep is too high.\n" : "");
+				if (!can_join)
+				{
+					msg += "\n\nCannot join!\n";
+					if (!recruitment_enabled) msg += "This faction is not accepting any new members.\n";
+					if (!upkeep_gud) msg += "Faction's upkeep is too high.\n";
+					if (!is_premium) msg += "Factions are restricted to Premium accounts only.\n";
+				}				
 				
 				CBitStream params;
 				params.write_u16(caller.getNetworkID());
 				CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("button_join"), "Join the Faction" + msg, params);
-				button.SetEnabled(recruitment_enabled && upkeep_gud);
+				button.SetEnabled(can_join);
 			}
 		}
 		
@@ -599,8 +612,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					// bool deserter = p.get_u32("teamkick_time") > getGameTime();
 					bool upkeep_gud = team_data.upkeep + UPKEEP_COST_PLAYER <= team_data.upkeep_cap;
 					bool recruitment_enabled = team_data.recruitment_enabled;
+					bool is_premium = true;
 					
-					if (upkeep_gud && recruitment_enabled)
+					bool can_join = upkeep_gud && recruitment_enabled && is_premium;
+					
+					if (can_join)
 					{
 						this.getSprite().PlaySound("party_join.ogg");
 						printf(p.getUsername() + " has joined " + getRules().getTeam(myTeam).getName());

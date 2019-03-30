@@ -30,6 +30,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 		{
 			f32 multiplier = this.exists("mining_multiplier") ? this.get_f32("mining_multiplier") : 1.00f;
 			multiplier += Maths::Min(this.get_f32("bobonged"), 4);
+			multiplier += this.get_f32("team_mining_multiplier");
 			
 			f32 depth = 1 - ((worldPoint.y / 8) / map.tilemapheight);
 			

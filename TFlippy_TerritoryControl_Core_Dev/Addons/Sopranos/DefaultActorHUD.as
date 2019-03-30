@@ -98,43 +98,48 @@ void RenderUpkeepHUD(CBlob@ this)
 	if (team_data is null) return;
 	if (team_data.upkeep_cap == 0) return;
 	
+	f32 upkeep_ratio = f32(team_data.upkeep) / f32(team_data.upkeep_cap);
+	f32 upkeep_ratio_clamped = Maths::Max(0, Maths::Min(upkeep_ratio, 1));
 	
-	f32 upkeep_percentage = Maths::Max(0, Maths::Min(f32(team_data.upkeep) / f32(team_data.upkeep_cap), 1));
-	u8 color_green = u8(Maths::Min(510.0f * (1.00f - upkeep_percentage), 255));
-	u8 color_red = u8(Maths::Min(510.0f * upkeep_percentage, 255));
+	u8 color_green = u8(Maths::Min(510.0f * (1.00f - upkeep_ratio_clamped), 255));
+	u8 color_red = u8(Maths::Min(510.0f * upkeep_ratio_clamped, 255));
 	
 	GUI::SetFont("menu");
 	GUI::DrawText("Faction Upkeep: " + team_data.upkeep + " / " + team_data.upkeep_cap, Vec2f(scWidth - 352, 42), SColor(255, color_red, color_green, 0));
 	GUI::SetFont("");
-	// if (upkeep_percentage >= 0.65f) GUI::DrawText("Your upkeep is too high, build\nmore Quarters!" + (team_data.upkeep > team_data.upkeep_cap ? "\n\nNext player to die gets kicked!" : ""), Vec2f(scWidth - 352, 62 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
-	if (upkeep_percentage >= 0.65f) GUI::DrawText("Your upkeep is too high, build\nmore Quarters, Camps or Fortresses!" + (team_data.upkeep > team_data.upkeep_cap ? "\n\nYour faction cannot accept\nany more members!" : ""), Vec2f(scWidth - 352, 62 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
-	// if (upkeep_percentage >= 0.65f) GUI::DrawText("Your upkeep is too high, build\nmore Quarters!", Vec2f(scWidth - 352, 62 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
 	
+	string msg = "";
+		
+	if (upkeep_ratio >= 0.75f) msg += "Your upkeep is too high, build\nmore Quarters, Camps or Fortresses!\n";
+	else msg += "Your upkeep is balanced, therefore\nyour team will receive extra bonuses.";
 	
+	GUI::DrawText(msg, Vec2f(scWidth - 352, 62 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
 	
-	// GUI::SetFont("");
-	// if (upkeep_percentage >= 1) GUI::DrawText("Your upkeep is too high, build\nmore Farms or Quarters!\n\nNext player to die gets kicked!", Vec2f(scWidth - 352, 62 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
+	bool has_bonuses = false;
+	bool has_penalties = false;
 	
-	// getRules().GetTeamData(myTeam, @team_data);
+	if (upkeep_ratio < 1.00f)
+	{
+		string msg_bonuses = "Bonuses:\n";
+		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_COIN_GAIN) { msg_bonuses += "- Higher coin gain\n"; has_bonuses = true; }
+		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_MINING) { msg_bonuses += "- Increased mining yield\n"; has_bonuses = true; }
+		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_SPEED) { msg_bonuses += "- Increased movement speed\n"; has_bonuses = true; }
+		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_RESPAWN_TIME) { msg_bonuses += "- Reduced respawn time\n"; has_bonuses = true; }
+		
+		if (has_bonuses) GUI::DrawText(msg_bonuses, Vec2f(scWidth - 352, 90 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
+	}
 	
-	// this.get("team_list", @team_list);
-	// u8 maxTeams = team_list.length;
-	
-	// const u16 scWidth = getScreenWidth();
-	// f32 upkeep = memberCount * 10;
-	// f32 upkeep_cap = 
-	
-	// f32 upkeep_percentage = Maths::Max(0, Maths::Min(f32(upkeep) / f32(upkeep_cap), 1));
-	// u8 color_green = u8(Maths::Min(510.0f * (1.00f - upkeep_percentage), 255));
-	// u8 color_red = u8(Maths::Min(510.0f * upkeep_percentage, 255));
-	
-	// GUI::SetFont("menu");
-	// // GUI::DrawText("Modifier: " + upkeep_colormod, Vec2f(scWidth - 352, 42), SColor(255, 255, 0, 0));
-	// // GUI::DrawText("Green: " + color_green + "; Red: " + color_red, Vec2f(scWidth - 352, 82), SColor(255, 255, 0, 0));
-	// GUI::DrawText("Faction Upkeep: " + upkeep + " / " + upkeep_cap, Vec2f(scWidth - 352, 42), SColor(255, color_red, color_green, 0));
-	
-	// GUI::SetFont("");
-	// if (upkeep_percentage >= 1) GUI::DrawText("Your upkeep is too high, build\nmore Farms or Quarters!\n\nNext player to die gets kicked!", Vec2f(scWidth - 352, 62 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
+	if (upkeep_ratio > 1.00f)
+	{
+		string msg_penalties = "Penalties:\n";
+		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RECRUITMENT) { msg_penalties += "- Recruitment disabled\n"; has_penalties = true; }
+		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_COIN_DROP) { msg_penalties += "- Higher coin loss on death\n"; has_penalties = true; }
+		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RESPAWN_TIME) { msg_penalties += "- Increased respawn time\n"; has_penalties = true; }
+		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_STORAGE) { msg_penalties += "- Remote storage disabled\ndue to high upkeep!\n"; has_penalties = true; }
+		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_SPEED) { msg_penalties += "- Reduced movement speed!\n"; has_penalties = true; }
+		
+		if (has_penalties) GUI::DrawText(msg_penalties, Vec2f(scWidth - 352, 90 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
+	}
 }
 
 // Made by Merser (Mirsario)
@@ -154,6 +159,7 @@ const string[] teamItems =
 	"mat_antimatter",
 	"mat_mithrilenriched"
 };
+
 const string[] teamOres =
 {
 	"mat_stone",
@@ -162,6 +168,7 @@ const string[] teamOres =
 	"mat_gold",
 	"mat_mithril"
 };
+
 const string[] teamIngots =
 {
 	"mat_concrete",
@@ -171,29 +178,49 @@ const string[] teamIngots =
 	"mat_mithrilingot"
 };
 
+// Merser pls, fix your code formatting, it's unreadable and gives me conniptions
 void RenderTeamInventoryHUD(CBlob@ this)
 {
 	Vec2f hudPos = Vec2f(0, 0);
 
-	int playerTeam=	this.getTeamNum();
-	if(playerTeam>=0 && playerTeam<7)
+	int playerTeam = this.getTeamNum();
+	if (playerTeam < 7)
 	{
+		TeamData@ team_data;
+		GetTeamData(playerTeam, @team_data);
+	
 		CBlob@[] baseBlobs;
-		getBlobsByTag("remote_storage",@baseBlobs);
 		CBlob@[] itemsToShow;
 		int[] itemAmounts;
 		int[] jArray;
-		bool closeEnough=false;
 		
-		for(int i=0;i<baseBlobs.length;i++) 
+		bool closeEnough = false;
+		bool storageEnabled = false;
+		
+		if (team_data != null)
+		{
+			u16 upkeep = team_data.upkeep;
+			u16 upkeep_cap = team_data.upkeep_cap;
+			f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+			
+			storageEnabled = upkeep_ratio < UPKEEP_RATIO_PENALTY_STORAGE;
+		}
+		
+		getBlobsByTag("remote_storage", @baseBlobs);
+		
+		for (int i = 0; i < baseBlobs.length; i++) 
 		{
 			CBlob@ baseBlob=baseBlobs[i];
-			if(baseBlob.getTeamNum()!=playerTeam){
+			if (baseBlob.getTeamNum() != playerTeam)
+			{
 				continue;
 			}
-			if((baseBlob.getPosition()-this.getPosition()).Length()<250.0f){
-				closeEnough=true;
+			
+			if ((baseBlob.getPosition() - this.getPosition()).Length() < 250.0f)
+			{
+				closeEnough = true;
 			}
+			
 			CInventory@ inv=baseBlob.getInventory();
 			if (inv is null) return;
 			
@@ -216,13 +243,15 @@ void RenderTeamInventoryHUD(CBlob@ this)
 				jArray.push_back(-1);
 			}
 		}
-						
+
+		bool storageAccessible = closeEnough && storageEnabled;
+		
 		GUI::DrawIcon("GUI/jslot.png",0,					Vec2f(32,32),Vec2f((getScreenWidth()-54),8)+hudPos);
 		GUI::DrawIcon("Emblems.png",playerTeam,				Vec2f(32,32),Vec2f((getScreenWidth()-62),0)+hudPos);
 		GUI::DrawIcon("GUI/jslot.png",0,					Vec2f(32,32),Vec2f((getScreenWidth()-102),8)+hudPos);
-		GUI::DrawIcon("MenuItems.png",closeEnough ? 28 : 29,Vec2f(32,32),Vec2f((getScreenWidth()-110),0)+hudPos);
+		GUI::DrawIcon("MenuItems.png",storageAccessible ? 28 : 29,Vec2f(32,32),Vec2f((getScreenWidth()-110),0)+hudPos);
 		GUI::SetFont("menu");
-		GUI::DrawText("Remote access to team storages - ",Vec2f((getScreenWidth()-352),22)+hudPos,closeEnough ? SColor(255,0,255,0) : SColor(255,255,0,0));
+		GUI::DrawText("Remote access to team storages - ",Vec2f((getScreenWidth()-352),22)+hudPos,storageAccessible ? SColor(255,0,255,0) : SColor(255,255,0,0));
 		
 		int j=0;
 		//indian code, gotta repeat it two times
@@ -375,12 +404,6 @@ void RenderTeamInventoryHUD(CBlob@ this)
 			}
 			j++;
 		}
-		/*Vec2f itemPos=	Vec2f(getScreenWidth()-54,54+j*46)+hudPos;
-		GUI::DrawIcon("GUI/jslot.png",0,Vec2f(32,32),itemPos);
-		GUI::DrawIcon("Items/Materials/Raw/Material_Oil.png",0,Vec2f(16,16),itemPos+Vec2f(9,9));
-		int quantity=getRules().get_u32("team"+playerTeam+"_oilAmount");
-		int l=	int((""+quantity).get_length());
-		GUI::DrawText(""+quantity,itemPos+Vec2f(38-(l*8),26),SColor(255,255,255,255));*/
 	}
 }
 

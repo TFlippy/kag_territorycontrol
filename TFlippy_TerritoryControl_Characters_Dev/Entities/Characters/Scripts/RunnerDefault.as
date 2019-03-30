@@ -3,6 +3,7 @@
 #include "Knocked.as"
 #include "FireCommon.as"
 #include "Help.as"
+#include "Survival_Structs.as";
 
 void onInit(CBlob@ this)
 {
@@ -39,10 +40,38 @@ void onTick(CBlob@ this)
 				Vec2f pos = this.getPosition();
 				if (!getMap().rayCastSolidNoBlobs(Vec2f(pos.x, 0), pos))
 				{
-					moveVars.walkFactor *= 0.70f;
-					moveVars.jumpFactor *= 0.70f;
+					moveVars.walkFactor *= 0.95f;
+					moveVars.jumpFactor *= 0.90f;
 				}
 			}
+		}
+		
+		const u8 team = this.getTeamNum();
+		if (team < 7)
+		{
+			TeamData@ team_data;
+			GetTeamData(team, @team_data);
+			
+			u16 upkeep = team_data.upkeep;
+			u16 upkeep_cap = team_data.upkeep_cap;
+			f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+			
+			RunnerMoveVars@ moveVars;
+			if (this.get("moveVars", @moveVars))
+			{
+				if (upkeep_ratio <= UPKEEP_RATIO_BONUS_SPEED) 
+				{ 
+					moveVars.walkFactor *= 1.20f;
+					moveVars.jumpFactor *= 1.15f;
+				}
+				
+				if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_SPEED) 
+				{
+					moveVars.walkFactor *= 0.80f;
+					moveVars.jumpFactor *= 0.80f;
+				}
+			}
+		
 		}
 	}
 }

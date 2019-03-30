@@ -1,4 +1,5 @@
 #include "ResearchCommon.as"
+#include "Survival_Structs.as";
 #include "Requirements_Tech.as"
 
 string getButtonRequirementsText(CBitStream& inout bs,bool missing)
@@ -133,48 +134,79 @@ bool ReadRequirement(CBitStream &inout bs,string &out req,string &out blobName,s
 //upd this
 bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBitStream &inout missingBs)
 {
-	string req,blobName,friendlyName;
-	u16 quantity=0;
+	string req, blobName, friendlyName;
+	u16 quantity = 0;
 	missingBs.Clear();
 	bs.ResetBitIndex();
-	bool has=true;
+	bool has = true;
 
-	CBlob@ playerBlob=	(inv1 !is null ? (inv1.getBlob().getPlayer() !is null ? inv1.getBlob() :
-						(inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null)) :
-						(inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
-
+	CBlob@ playerBlob = (inv1 !is null ? (inv1.getBlob().getPlayer() !is null ? inv1.getBlob() : (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null)) : (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
 	CBlob@[] baseBlobs;
-	if(playerBlob !is null)
+	
+	bool storageEnabled = false;
+	
+	if (playerBlob !is null)
 	{
-		int playerTeam=	playerBlob.getTeamNum();
-		getBlobsByTag("remote_storage",@baseBlobs);
-		for(int i=0;i<baseBlobs.length;i++){
-			if(baseBlobs[i].getTeamNum()!=playerTeam)
+		int playerTeam = playerBlob.getTeamNum();
+
+		if (playerTeam < 7)
+		{
+			TeamData@ team_data;
+			GetTeamData(playerTeam, @team_data);
+
+			if (team_data != null)
 			{
-				baseBlobs.erase(i);
-				i--;
+				u16 upkeep = team_data.upkeep;
+				u16 upkeep_cap = team_data.upkeep_cap;
+				f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+				
+				storageEnabled = upkeep_ratio <= UPKEEP_RATIO_PENALTY_STORAGE;
 			}
 		}
-		bool canPass=false;
-		for(int i=0;i<baseBlobs.length;i++){
-			if((baseBlobs[i].getPosition()-playerBlob.getPosition()).Length()<250.0f){
-				canPass=true;
-				break;
+
+		if (storageEnabled)
+		{
+			getBlobsByTag("remote_storage", @baseBlobs);
+			for (int i = 0; i < baseBlobs.length; i++)
+			{
+				if (baseBlobs[i].getTeamNum() != playerTeam)
+				{
+					baseBlobs.erase(i);
+					i--;
+				}
 			}
-		}
-		if(!canPass){
-			baseBlobs.clear();
+			bool canPass = false;
+			for (int i = 0; i < baseBlobs.length; i++)
+			{
+				if ((baseBlobs[i].getPosition() - playerBlob.getPosition()).Length() < 250.0f)
+				{
+					canPass = true;
+					break;
+				}
+			}
+			
+			if (!canPass)
+			{
+				baseBlobs.clear();
+			}
 		}
 	}
 
-	while (!bs.isBufferEnd()) {
+	while (!bs.isBufferEnd()) 
+	{
 		ReadRequirement(bs,req,blobName,friendlyName,quantity);
 
 		if(req=="blob") {
 			int sum=(inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0)+(inv2 !is null ? inv2.getBlob().getBlobCount(blobName) : 0);
-			for(int i=0;i<baseBlobs.length;i++){
-				sum+=baseBlobs[i].getBlobCount(blobName);
+			
+			if (storageEnabled)
+			{
+				for (int i = 0; i< baseBlobs.length; i++)
+				{
+					sum += baseBlobs[i].getBlobCount(blobName);
+				}
 			}
+			
 			if(sum<quantity) {
 				AddRequirement(missingBs,req,blobName,friendlyName,quantity);
 				has=false;
@@ -240,20 +272,40 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 		return;
 	}
 
-	CBlob@ playerBlob=	(inv1 !is null ? (inv1.getBlob().getPlayer() !is null ? inv1.getBlob() :
-						(inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null)) :
-						(inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
+	CBlob@ playerBlob = (inv1 !is null ? (inv1.getBlob().getPlayer() !is null ? inv1.getBlob() : (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null)) : (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
 	CBlob@[] baseBlobs;
-	if(playerBlob !is null)
+	
+	bool storageEnabled = false;
+
+	if (playerBlob !is null)
 	{
-		int playerTeam=	playerBlob.getTeamNum();
-		getBlobsByTag("remote_storage",@baseBlobs);
-		for(int i=0;i<baseBlobs.length;i++)
+		int playerTeam = playerBlob.getTeamNum();
+		
+		if (playerTeam < 7)
 		{
-			if(baseBlobs[i].getTeamNum()!=playerTeam)
+			TeamData@ team_data;
+			GetTeamData(playerTeam, @team_data);
+
+			if (team_data != null)
 			{
-				baseBlobs.erase(i);
-				i--;
+				u16 upkeep = team_data.upkeep;
+				u16 upkeep_cap = team_data.upkeep_cap;
+				f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+				
+				storageEnabled = upkeep_ratio <= UPKEEP_RATIO_PENALTY_STORAGE;
+			}
+		}
+
+		if (storageEnabled)
+		{
+			getBlobsByTag("remote_storage", @baseBlobs);
+			for (int i = 0; i < baseBlobs.length; i++)
+			{
+				if (baseBlobs[i].getTeamNum() != playerTeam)
+				{
+					baseBlobs.erase(i);
+					i--;
+				}
 			}
 		}
 	}
@@ -286,18 +338,21 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 			
 			// print("pre loop taken " + taken);
 			
-			for (int i = 0; i < baseBlobs.length; i++)
+			if (storageEnabled)
 			{
-				// print("loop" + taken);
-			
-				if (taken >= quantity)
+				for (int i = 0; i < baseBlobs.length; i++)
 				{
-					break;
-				}
+					// print("loop" + taken);
 				
-				baseBlobs[i].TakeBlob(blobName, quantity - taken);
-				taken += Maths::Min(baseBlobs[i].getBlobCount(blobName), quantity - taken);
-				// print("loop taken " + taken);
+					if (taken >= quantity)
+					{
+						break;
+					}
+					
+					baseBlobs[i].TakeBlob(blobName, quantity - taken);
+					taken += Maths::Min(baseBlobs[i].getBlobCount(blobName), quantity - taken);
+					// print("loop taken " + taken);
+				}
 			}
 		}
 		else if(req=="coin") 
