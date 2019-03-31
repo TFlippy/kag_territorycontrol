@@ -2,6 +2,7 @@
 {
 	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
+	this.Tag("upf_base");
 	
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	

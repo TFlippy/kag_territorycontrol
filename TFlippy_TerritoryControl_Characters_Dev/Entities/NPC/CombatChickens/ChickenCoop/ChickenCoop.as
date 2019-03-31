@@ -2,6 +2,7 @@
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.Tag("builder always hit");
+	this.Tag("upf_base");
 	
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;

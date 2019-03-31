@@ -575,5 +575,5 @@ void Reset(CRules@ this)
 	this.set("players", @players);
 	this.SetCurrentState(GAME);
 	
-	server_CreateBlob("survival_music");
+	server_CreateBlob("tc_soundscapes");
 }
