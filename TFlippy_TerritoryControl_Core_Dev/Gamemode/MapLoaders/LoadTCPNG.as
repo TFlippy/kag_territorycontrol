@@ -47,6 +47,7 @@ namespace tc_colors
 		color_merchantchicken = 0xffbec728,
 		color_train = 0xff08b4b2,
 		color_sat = 0xff08ffb6,
+		color_helichopper = 0xff49ccca,
 		
 		color_pirategull = 0xffe4e6bb,
 		color_badger = 0xff5a5546,
@@ -116,6 +117,7 @@ class TCPNGLoader : PNGLoader
 				spawnBlob(map, "witchshack", offset, -1);
 				break;
 			}
+			
 			case tc_colors::color_pumpjack_neutral:
 			{
 				spawnBlob(map, "pumpjack", offset, -1);
@@ -127,12 +129,14 @@ class TCPNGLoader : PNGLoader
 				spawnBlob(map, "badger", offset, -1);
 				break;
 			}
+			
 			case tc_colors::color_chickencoop:
 			{
 				autotile(offset);
 				spawnBlob(map, "chickencoop", offset, -1);
 				break;
 			}
+			
 			case tc_colors::color_scoutchicken:
 			{
 				autotile(offset);
@@ -156,6 +160,7 @@ class TCPNGLoader : PNGLoader
 			
 				break;
 			}
+			
 			case tc_colors::color_lootchest:
 			{
 				map.SetTile(offset, CMap::tile_biron);
@@ -317,6 +322,12 @@ class TCPNGLoader : PNGLoader
 			{
 				autotile(offset);
 				spawnBlob(map, "sat", offset, 250);
+				break;
+			}
+			case tc_colors::color_helichopper:
+			{
+				CBlob@ blob = spawnBlob(map, "helichopper", offset, 250);
+				blob.setPosition(blob.getPosition() + Vec2f(0, 0));
 				break;
 			}
 			case tc_colors::color_train:
