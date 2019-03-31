@@ -145,77 +145,77 @@ void onInit(CBlob@ this)
 	if (rand.NextRanged(100) < 50)
 	{
 		ShopItem@ s = addShopItem(this, "honking shite", "$klaxon$", "klaxon", "throw it away");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(500));
+		AddRequirement(s.requirements, "coin", "", "Coins", 50 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 50)
 	{
 		ShopItem@ s = addShopItem(this, "big cuffs", "$shackles$", "shackles", "tie that fool up");
-		AddRequirement(s.requirements, "coin", "", "Coins",  rand.NextRanged(500));
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 50)
 	{
 		ShopItem@ s = addShopItem(this, "sticky stick", "$nightstick$", "nightstick", "a stick for beating up");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(150));
+		AddRequirement(s.requirements, "coin", "", "Coins", 50 + rand.NextRanged(150));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 50)
 	{
 		ShopItem@ s = addShopItem(this, "poppin shit", "$icon_firework$", "firework", "popping flying shit");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(200));
+		AddRequirement(s.requirements, "coin", "", "Coins", 75 + rand.NextRanged(200));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 50)
 	{
 		ShopItem@ s = addShopItem(this, "firejob", "$icon_firejob$", "firejob", "fucking tie it to your neck and launch it ya cunt");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(1500));
+		AddRequirement(s.requirements, "coin", "", "Coins", 250 + rand.NextRanged(1500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 30)
 	{
 		ShopItem@ s = addShopItem(this, "bitch", "$icon_trader$", "trader", "huh");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(2000));
+		AddRequirement(s.requirements, "coin", "", "Coins", 500 + rand.NextRanged(2000));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 5)
 	{
 		ShopItem@ s = addShopItem(this, "guy", "$icon_hobo$", "hobo", "fuck off");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(2000));
+		AddRequirement(s.requirements, "coin", "", "Coins", 200 + rand.NextRanged(2000));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 30)
 	{
 		ShopItem@ s = addShopItem(this, "fart can", "$icon_methane$", "mat_methane-25", "smells like shit");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(500));
+		AddRequirement(s.requirements, "coin", "", "Coins", 400 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 20)
 	{
 		ShopItem@ s = addShopItem(this, "nuke", "$icon_mininuke$", "mat_dirt-10", "get fucked");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(10000));
+		AddRequirement(s.requirements, "coin", "", "Coins", 1000 + rand.NextRanged(10000));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 20)
 	{
 		ShopItem@ s = addShopItem(this, "refined fart can", "$icon_fuel$", "mat_fuel-25", "smells worse than shit");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(1000));
+		AddRequirement(s.requirements, "coin", "", "Coins", 800 + rand.NextRanged(1000));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 20)
 	{
 		ShopItem@ s = addShopItem(this, "gae", "$icon_princess$", "princess", "found him hanging around the tannhauser gate");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(10000));
+		AddRequirement(s.requirements, "coin", "", "Coins", 69 + rand.NextRanged(10000));
 		s.spawnNothing = true;
 	}
 	
@@ -223,13 +223,13 @@ void onInit(CBlob@ this)
 	{
 		{
 			ShopItem@ s = addShopItem(this, "rocket prop whatever launcher", "$icon_rpc$", "rpc", "cut the shit");
-			AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(2500));
+			AddRequirement(s.requirements, "coin", "", "Coins", 250 + rand.NextRanged(2500));
 			s.spawnNothing = true;
 		}
 		
 		{
 			ShopItem@ s = addShopItem(this, "rocket prop whatever rocket", "$icon_sawrocket$", "mat_sawrocket-1", "rocket for launcher");
-			AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(550));
+			AddRequirement(s.requirements, "coin", "", "Coins", 10 + rand.NextRanged(550));
 			s.spawnNothing = true;
 		}
 	}
@@ -237,42 +237,42 @@ void onInit(CBlob@ this)
 	if (rand.NextRanged(100) < 25)
 	{
 		ShopItem@ s = addShopItem(this, "fun", "$icon_domino$", "domino", "hoyl shit");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(500));
+		AddRequirement(s.requirements, "coin", "", "Coins", 150 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 25)
 	{
 		ShopItem@ s = addShopItem(this, "speedo", "$icon_stim$", "stim", "speedy stuff you'll be fast like hedgehog");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(500));
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 25)
 	{
 		ShopItem@ s = addShopItem(this, "shite", "$icon_bobongo$", "bobongo", "stfu");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(500));
+		AddRequirement(s.requirements, "coin", "", "Coins", 125 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 25)
 	{
 		ShopItem@ s = addShopItem(this, "cat", "$icon_kitten$", "badger", "yea");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(500));
+		AddRequirement(s.requirements, "coin", "", "Coins", 50 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 25)
 	{
 		ShopItem@ s = addShopItem(this, "yellow mellow", "$icon_foof$", "foof", "pissssss");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(500));
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 3)
 	{
 		ShopItem@ s = addShopItem(this, "some retarded shite", "$icon_oof$", "oof", "it's a rake or some stuff now get the fuck out before i gouge your eyes out");
-		AddRequirement(s.requirements, "coin", "", "Coins", rand.NextRanged(1000));
+		AddRequirement(s.requirements, "coin", "", "Coins", 1 + rand.NextRanged(1000));
 		s.spawnNothing = true;
 	}
 	
