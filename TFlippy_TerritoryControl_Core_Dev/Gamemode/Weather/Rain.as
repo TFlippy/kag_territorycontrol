@@ -213,7 +213,7 @@ void onTick(CBlob@ this)
 			}
 		}
 		
-		if (getGameTime() % 15 == 0) DecayStuff();
+		if (getGameTime() % 10 == 0) DecayStuff();
 	}
 }
 
