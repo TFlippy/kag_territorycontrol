@@ -208,7 +208,7 @@ void GameMusicLogic(CBlob@ this, CMixer@ mixer)
 		GameMusicTag chosenAmbience = world_ambient_day;
 		GameMusicTag chosenMusic = world_none;
 	
-		bool isUnderground = map.rayCastSolid(pos, Vec2f(pos.x, pos.y - 60.0f));
+		bool isUnderground = map.rayCastSolid(pos, Vec2f(pos.x, pos.y - 128.0f));
 		bool isUPF = false;
 		bool isUrban = false;
 		bool isFaction = false;
@@ -370,7 +370,7 @@ void GameMusicLogic(CBlob@ this, CMixer@ mixer)
 			
 			case world_ambient_upf_bunker:
 				changeSoundscape(mixer, soundscape_upf_bunker, 1.0f, 3.0f);
-				next_soundscape = time + (150 + XORRandom(200));
+				next_soundscape = time + (90 + XORRandom(150));
 			break;
 			
 			case world_ambient_faction:
@@ -408,6 +408,8 @@ void changeMusic(CMixer@ mixer, GameMusicTag nextTrack, f32 fadeoutTime = 0.0f, 
 
 void changeAmbience(CMixer@ mixer, GameMusicTag nextTrack, f32 fadeoutTime = 0.0f, f32 fadeinTime = 0.0f)
 {
+	// if (nextTrack != currentAmbience) print("Changed ambience from " + currentAmbience + " to " + nextTrack);
+
 	if (!mixer.isPlaying(nextTrack))
 	{
 		for (u32 i = world_ambient_start + 1; i < world_ambient_end; i++) mixer.FadeOut(i, fadeoutTime);
