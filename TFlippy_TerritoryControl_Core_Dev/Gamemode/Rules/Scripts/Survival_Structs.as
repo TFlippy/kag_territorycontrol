@@ -63,7 +63,7 @@ shared class TeamData
 	{
 		team = inTeam;
 		upkeep = 0;
-		upkeep_cap = 0;
+		upkeep_cap = 10;
 		wealth = 0;
 		controlled_count = 0;
 		

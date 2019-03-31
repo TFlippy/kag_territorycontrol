@@ -52,26 +52,28 @@ void onTick(CBlob@ this)
 			TeamData@ team_data;
 			GetTeamData(team, @team_data);
 			
-			u16 upkeep = team_data.upkeep;
-			u16 upkeep_cap = team_data.upkeep_cap;
-			f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
-			
-			RunnerMoveVars@ moveVars;
-			if (this.get("moveVars", @moveVars))
+			if (team_data != null && team_data.upkeep_cap > 0)
 			{
-				if (upkeep_ratio <= UPKEEP_RATIO_BONUS_SPEED) 
-				{ 
-					moveVars.walkFactor *= 1.20f;
-					moveVars.jumpFactor *= 1.15f;
-				}
+				u16 upkeep = team_data.upkeep;
+				u16 upkeep_cap = team_data.upkeep_cap;
+				f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
 				
-				if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_SPEED) 
+				RunnerMoveVars@ moveVars;
+				if (this.get("moveVars", @moveVars))
 				{
-					moveVars.walkFactor *= 0.80f;
-					moveVars.jumpFactor *= 0.80f;
+					if (upkeep_ratio <= UPKEEP_RATIO_BONUS_SPEED) 
+					{ 
+						moveVars.walkFactor *= 1.20f;
+						moveVars.jumpFactor *= 1.15f;
+					}
+					
+					if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_SPEED) 
+					{
+						moveVars.walkFactor *= 0.80f;
+						moveVars.jumpFactor *= 0.80f;
+					}
 				}
 			}
-		
 		}
 	}
 }

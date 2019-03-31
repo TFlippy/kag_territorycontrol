@@ -135,8 +135,8 @@ void RenderUpkeepHUD(CBlob@ this)
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RECRUITMENT) { msg_penalties += "- Recruitment disabled\n"; has_penalties = true; }
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_COIN_DROP) { msg_penalties += "- Higher coin loss on death\n"; has_penalties = true; }
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RESPAWN_TIME) { msg_penalties += "- Increased respawn time\n"; has_penalties = true; }
-		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_STORAGE) { msg_penalties += "- Remote storage disabled\ndue to high upkeep!\n"; has_penalties = true; }
-		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_SPEED) { msg_penalties += "- Reduced movement speed!\n"; has_penalties = true; }
+		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_STORAGE) { msg_penalties += "- No Remote storage\n"; has_penalties = true; }
+		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_SPEED) { msg_penalties += "- Reduced movement speed\n"; has_penalties = true; }
 		
 		if (has_penalties) GUI::DrawText(msg_penalties, Vec2f(scWidth - 352, 90 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
 	}
