@@ -123,7 +123,7 @@ void onTick(CBlob@ this)
 		
 		f32 fuel = GetFuel(this);
 		
-		if ((this.get_u32("fireDelayGun") - shootDelay) <= getGameTime())
+		if ((this.get_u32("fireDelayGunSprite")) <= getGameTime())
 		{
 			sprite.getSpriteLayer("tracer").SetVisible(false);
 		}
@@ -176,13 +176,16 @@ void onTick(CBlob@ this)
 							minigun.ResetTransform();
 							minigun.RotateBy(clampedAngle, Vec2f(5 * flip_factor,1));
 							
-							if (pressed_m1)
+							if (pressed_m1 && isClient())
 							{
-								if (getGameTime() > this.get_u32("fireDelayGun"))
+								CBlob@ realPlayer = getLocalPlayerBlob();
+								if (getGameTime() > this.get_u32("fireDelayGun") && realPlayer !is null && realPlayer is hooman)
 								{
 									CBitStream params;
 									params.write_s32(this.get_f32("gunAngle"));
+									params.write_Vec2f(minigun.getWorldTranslation());
 									this.SendCommand(this.getCommandID("shoot"), params);
+									this.set_u32("fireDelayGun", getGameTime() + (shootDelay));
 								}
 							}
 						}
@@ -221,14 +224,17 @@ void onTick(CBlob@ this)
 							
 							if (pressed_m1)
 							{
-								if (getGameTime() > this.get_u32("fireDelayRocket"))
+								CBlob@ realPlayer = getLocalPlayerBlob();
+								if (getGameTime() > this.get_u32("fireDelayRocket") && realPlayer !is null && realPlayer is hooman)
 								{
 									CBlob@ target = getMap().getBlobAtPosition(aimPos);
 
 									CBitStream params;
 									params.write_u16(target !is null ? target.getNetworkID() : 0);
 									params.write_s32(this.get_f32("rocketAngle"));
+									params.write_Vec2f(rocket.getWorldTranslation());
 									this.SendCommand(this.getCommandID("shootRocket"), params);
+									this.set_u32("fireDelayRocket", getGameTime() + shootDelayRocket);
 								}
 							}
 						}
@@ -434,8 +440,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			this.sub_u16("ammoCount", 1);
 			this.Sync("ammoCount", true);
-			
-			ShootGun(this, params.read_s32(), this.getSprite().getSpriteLayer("minigun"));
+			f32 angle = params.read_s32();
+			ShootGun(this, angle, params.read_Vec2f());
 		}
 	}
 	else if(cmd == this.getCommandID("shootRocket"))
@@ -446,8 +452,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			this.sub_u16("rocketCount", 1);
 			this.Sync("rocketCount", true);
-			
-			shootRocket(this, params.read_s32(), target, this.getSprite().getSpriteLayer("rocketlauncher"));
+			f32 angle = params.read_s32();
+			shootRocket(this, angle, target, params.read_Vec2f());
 		}
 	}
 	else if(cmd == this.getCommandID("addRocket"))
@@ -636,7 +642,7 @@ void renderAmmo(CBlob@ blob, bool rocket)
 	GUI::DrawText(reqsText, upperleft + Vec2f(2, 1), color_white);
 }
 
-void ShootGun(CBlob@ this, f32 angle, CSpriteLayer@ gun)
+void ShootGun(CBlob@ this, f32 angle,Vec2f gunPos)
 {
 	bool flip = this.isFacingLeft();	
 	f32 sign = (flip ? -1 : 1);
@@ -646,7 +652,7 @@ void ShootGun(CBlob@ this, f32 angle, CSpriteLayer@ gun)
 	
 	Vec2f offset = miniGun_offset;
 	//offset.x *= -sign;
-	Vec2f realPos = (gun.getWorldTranslation());
+	Vec2f realPos = gunPos;
 	//print(gun.getWorldTranslation() + " ");
 	Vec2f startPos = realPos;
 	startPos.RotateBy(this.getAngleDegrees(),this.getPosition());
@@ -660,7 +666,7 @@ void ShootGun(CBlob@ this, f32 angle, CSpriteLayer@ gun)
 	
 	bool blobHit = getMap().getHitInfosFromRay(startPos, (angle + this.getAngleDegrees()) + (flip ? 180.0f : 0.0f), 400, this, @hitInfos);
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		DrawLine(this.getSprite(), offset, length / 32, angle, flip);
 		this.getSprite().PlaySound("Helichopper_Shoot.ogg", 1.00f, 1.00f);
@@ -669,7 +675,7 @@ void ShootGun(CBlob@ this, f32 angle, CSpriteLayer@ gun)
 		// getControls().setMousePosition(Vec2f(mousePos.x, mousePos.y - 10));
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blobHit)
 		{
@@ -702,7 +708,7 @@ void ShootGun(CBlob@ this, f32 angle, CSpriteLayer@ gun)
 		}
 	}
 	
-	this.set_u32("fireDelayGun", getGameTime() + shootDelay);
+	this.set_u32("fireDelayGunSprite", getGameTime() + (shootDelay + 1)); //shoot delay increased to compensate for cmd time
 }
 
 void DrawLine(CSprite@ this, Vec2f offset, f32 length, f32 angle, bool flip)
@@ -719,12 +725,12 @@ void DrawLine(CSprite@ this, Vec2f offset, f32 length, f32 angle, bool flip)
 }
 
 
-void shootRocket(CBlob@ this, f32 angle, CBlob@ target, CSpriteLayer@ rocket)
+void shootRocket(CBlob@ this, f32 angle, CBlob@ target, Vec2f gunPos)
 {		
 	Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
-	Vec2f startPos = rocket.getWorldTranslation();
+	Vec2f startPos = gunPos;
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ m = server_CreateBlobNoInit("sammissile");
 		m.setPosition(startPos);
@@ -735,18 +741,18 @@ void shootRocket(CBlob@ this, f32 angle, CBlob@ target, CSpriteLayer@ rocket)
 		m.Init();
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		for (int i = 1; i < 5; i++) {MakeParticle(this, -dir * i, "SmallExplosion");}
 		this.getSprite().PlaySound("Missile_Launch.ogg");
 	}	
 	
-	this.set_u32("fireDelayRocket", getGameTime() + shootDelayRocket);
+	//this.set_u32("fireDelayRocket", getGameTime() + shootDelayRocket);
 }
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (isServer()) return;
 
 	Vec2f offset = Vec2f(8, 0).RotateBy(this.getAngleDegrees());
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
@@ -856,6 +862,7 @@ void DoExplosion(CBlob@ this)
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
 	if (!getNet().isClient()) return;
+
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1 + XORRandom(200) * 0.01f, 2 + XORRandom(5), XORRandom(100) * -0.00005f, true);
 }
 
