@@ -475,7 +475,7 @@ void onDie(CBlob@ this)
 {
 	if (getNet().isServer())
 	{
-		server_DropCoins(this.getPosition(), XORRandom(50));
+		server_DropCoins(this.getPosition(), XORRandom(1500));
 	}
 }
 
