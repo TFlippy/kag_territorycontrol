@@ -115,7 +115,7 @@ void onTick(CBlob@ this)
 				if (this.getTickSinceCreated() % 15 == 0) 
 				{
 					blob.set_u16("pigger_bite_counter", blob.get_u16("pigger_bite_counter") + 1);
-					if (blob.get_u16("pigger_bite_counter") > 20)
+					if (blob.get_u16("pigger_bite_counter") > 7)
 					{
 						if (!blob.hasTag("pigger_pregnant")) 
 						{
