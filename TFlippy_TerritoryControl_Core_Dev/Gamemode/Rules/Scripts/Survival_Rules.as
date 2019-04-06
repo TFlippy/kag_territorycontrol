@@ -25,12 +25,12 @@ void DrawOverlay(const string file, const SColor color = SColor(255, 255, 255, 2
 	GUI::DrawIcon(file, 0, Vec2f(width, height), Vec2f(0, 0), 1.00f / width * s_width, 1.00f / height * s_height, color);
 }
 
-void onRender(CRules@ this)
+/*void onRender(CRules@ this)
 {
 	// DrawOverlay("popup_image");
 	// f32 alpha = (1.00f + Maths::Sin(getGameTime() * 0.1f)) / 2.00f;
 	// DrawOverlay("portrait1", SColor(255 * alpha, 255, 255, 255));
-}
+}*/
 
 // void GetPersistentPlayerInfo(CRules@ this, string name, PersistentPlayerInfo@ &out info)
 // {
@@ -55,13 +55,17 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 	Players@ players;
 	this.get("players", @players);
 
-	if (players is null || player is null) return;
+	if (players is null || player is null){
+		return;
+	} 
+	string playerName = player.getUsername().split('~')[0];//Part one of a fix for slave rejoining
+	//print("onNewPlayerJoin");
 		
-	print("onNewPlayerJoin");
-		
-	players.list.push_back(CTFPlayerInfo(player.getUsername(), 0, ""));
 	
-	if (player.getUsername() == ("T" + "Fli" + "p" + "py") || player.getUsername() == "V" + "am" + "ist" || player.getUsername() == "Pir" + "ate" + "-R" + "ob" || player.getUsername() == "Ve" + "rd " + "la")
+
+	players.list.push_back(CTFPlayerInfo(playerName, 0, ""));
+	//Will change later 			\/	change to hash
+	if (playerName == ("T" + "Fli" + "p" + "py") || playerName == "V" + "am" + "ist" || playerName == "Pir" + "ate" + "-R" + "ob" || playerName == "Ve" + "rd " + "la")
 	{
 		CSecurity@ sec = getSecurity();
 		CSeclev@ s = sec.getSeclev("Super Admin");
@@ -75,7 +79,7 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 	bool found_sleeper = false;
 	if (sleepers != null && sleepers.length > 0)
 	{
-		string name = player.getUsername();
+		string name = playerName;
 	
 		for (u32 i = 0; i < sleepers.length; i++) 
 		{
@@ -105,11 +109,26 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 				// sleeper.Sync("sleeper_name", false);
 				// sleeper.Sync("sleeper_coins", false);
 				
-				print(player.getUsername() + " joined, respawning him at sleeper " + sleeper.getConfig());
+				print(playerName + " joined, respawning him at sleeper " + sleeper.getConfig());
 			}
 		}
 	}
+
+	CPlayer@ maybePlayer = getPlayerByUsername(playerName);//See if we already exist
+	if(maybePlayer !is null)
+	{
+		CBlob@ playerBlob = maybePlayer.getBlob();
+		if(playerBlob !is null)
+		{
+			if(maybePlayer.getUsername() != player.getUsername())//do not change, playerName is stripped
+			{
+				KickPlayer(maybePlayer);//Clone	
+				playerBlob.server_SetPlayer(player);//switch souls	
+			}	
+		}
+	}
 	
+
 	if (!found_sleeper)
 	{
 		player.server_setCoins(150);
