@@ -291,15 +291,22 @@ void onTick(CBlob@ this)
 			this.Tag("dead");				
 			return;
 		}
-	
-		if (getGameTime() >= this.get_u32("nextTalk"))
+
+		if(isClient()){
+			if(!this.isOnScreen()){
+				return;
+			}
+		}
+
+		uint time = getGameTime();
+		if (time >= this.get_u32("nextTalk"))
 		{
-			this.set_u32("nextTalk", getGameTime() + (30 * 10) + XORRandom(30 * 20));
+			this.set_u32("nextTalk", time + (30 * 10) + XORRandom(30 * 20));
 			
 			u32 lastDanger = this.get_u32("lastDanger");
 			u16 dangerBlobNetID = this.get_u16("danger blob");
 			
-			bool danger = dangerBlobNetID > 0 && getGameTime() < (lastDanger + (30 * 30));
+			bool danger = dangerBlobNetID > 0 && time < (lastDanger + (30 * 30));
 			
 			string text = "";
 			if (danger)
@@ -309,7 +316,7 @@ void onTick(CBlob@ this)
 			}
 			else
 			{
-				if (getGameTime() - this.get_u32("lastDanger") < 30 * 60)
+				if (time - this.get_u32("lastDanger") < 30 * 60)
 				{
 					text = textsWon[XORRandom(textsWon.length())];
 				}
@@ -355,7 +362,7 @@ void onTick(CBlob@ this)
 			
 			if (target !is null)
 			{
-				if (this.get_u32("nextThrow") < getGameTime())
+				if (this.get_u32("nextThrow") < time)
 				{
 					if (XORRandom(100) < 2)
 					{
@@ -371,7 +378,7 @@ void onTick(CBlob@ this)
 							if (isAttached) this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.length())], 0.75f, 0.75f);
 						}
 					
-						if (getNet().isServer())
+						if (isServer())
 						{			
 							f32 dist = dir.Length();
 							dir.Normalize();
@@ -380,7 +387,7 @@ void onTick(CBlob@ this)
 							if (rock !is null)
 							{
 								rock.setVelocity((dir * 6.00f) + Vec2f(0, -3));
-								this.set_u32("nextThrow", getGameTime() + (isAttached ? 20 : (30 + XORRandom(90))));
+								this.set_u32("nextThrow", time + (isAttached ? 20 : (30 + XORRandom(90))));
 							}
 						}
 					}
@@ -523,6 +530,10 @@ void onTick(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
 
+	if(!blob.isOnScreen()){
+		return;
+	}
+	
 	if (blob.hasTag("dead"))
 	{
 		if (!this.isAnimation("dead")) this.PlaySound("trader_death.ogg", 1.00f, 0.75f);
