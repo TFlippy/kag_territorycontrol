@@ -33,14 +33,17 @@ void onTick(CBlob@ this)
 
 	if (getNet().isServer())
 	{
-		if (XORRandom(100) < 8)
+		if(getGameTime() % 30 == 0)
 		{
-			CBlob@[] chickens;
-			getBlobsByTag("combat chicken", @chickens);
-			
-			if (chickens.length < 8)
+			if (XORRandom(10) < 4)
 			{
-				CBlob@ blob = server_CreateBlob((XORRandom(100) < 75 ? "soldierchicken" : "scoutchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+				CBlob@[] chickens;
+				getBlobsByTag("combat chicken", @chickens);
+				
+				if (chickens.length < 8)
+				{
+					CBlob@ blob = server_CreateBlob((XORRandom(100) < 75 ? "soldierchicken" : "scoutchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+				}
 			}
 		}
 	}

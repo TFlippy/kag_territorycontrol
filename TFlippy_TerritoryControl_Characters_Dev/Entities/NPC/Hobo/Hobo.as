@@ -280,6 +280,8 @@ void onInit(CBlob@ this)
 	{
 		this.server_setTeamNum(-1);
 	}
+
+	this.getSprite().addSpriteLayer("isOnScreen");
 }
 
 void onTick(CBlob@ this)
@@ -293,7 +295,7 @@ void onTick(CBlob@ this)
 		}
 
 		if(isClient()){
-			if(!this.isOnScreen()){
+			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
 				return;
 			}
 		}
@@ -530,7 +532,7 @@ void onTick(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
 
-	if(!blob.isOnScreen()){
+	if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
 		return;
 	}
 	

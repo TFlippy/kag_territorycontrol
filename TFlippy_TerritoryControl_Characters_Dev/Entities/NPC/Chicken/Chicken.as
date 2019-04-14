@@ -25,6 +25,10 @@ void onTick(CSprite@ this)
 
 	if (!blob.hasTag("dead"))
 	{
+		if(!blob.isOnScreen()){
+			return;
+		}
+
 		f32 x = Maths::Abs(blob.getVelocity().x);
 		if (blob.isAttached())
 		{
@@ -131,6 +135,11 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onTick(CBlob@ this)
 {
+	if(isClient()){
+		if(!this.isOnScreen()){
+			return;
+		}
+	}
 	Vec2f vel=this.getVelocity();
 	if(vel.x!=0.0f){
 		this.SetFacingLeft(vel.x<0.0f ? true : false);
