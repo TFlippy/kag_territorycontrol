@@ -4,27 +4,16 @@ void onInit(CBlob@ this)
 {
 	//this.addCommandID("awootismStart");
 	//this.addCommandID("awootismInfected");
-	if(this is null)
+	if(this.hasTag("infectOver"))
 	{
-		warn("awootism blob is null");
-		
+		this.Untag("infectOver");
+		this.Sync("infectOver",false);
 	}
-	else if(this.getPlayer() is null)
-	{
-		warn("awoootism player is null");
-	}
-	else
-	{
-		if(this.hasTag("infectOver"))
-		{
-			this.Untag("infectOver");
-			this.Sync("infectOver",false);
-		}
-		this.getPlayer().Tag("awootism");
-		this.getPlayer().Sync("awootism",false);
-	}
+	this.Tag("awootism");
+	this.Sync("awootism",false);
 }
 
+//TODO change to CMD and cblob + CRules for perma
 
 void onCollision( CBlob@ this, CBlob@ blob, bool solid )
 {
@@ -34,34 +23,35 @@ void onCollision( CBlob@ this, CBlob@ blob, bool solid )
 		{
 			return;
 		}
-		CPlayer@ p = blob.getPlayer();
-		CPlayer@ tp = this.getPlayer();
-		if(p !is null && tp !is null)
-		{
-			if(!tp.hasTag("awootism"))
-			{
-				tp.Tag("awootism");
-				tp.Sync("awootism",false);
-			}
-			if(!p.hasTag("awootism"))
-			{
-				p.Tag("awootism");
-				p.Sync("awootism",false);
-				if(blob.hasTag("infectOver"))
-				{
-					blob.Untag("infectOver");
-					blob.Sync("infectOver",false);
-				}
-				else
-				{
-					blob.AddScript("AwooootismSpread.as");
-				}
 
-				string message = p.getCharacterName();
-				string infectGiver = tp.getCharacterName();
-				client_AddToChat(message +" has been infected by "+infectGiver, SColor(255, 255, 0, 0));
-				
+		CPlayer@ player = this.getPlayer();
+		CPlayer@ oPlayer = blob.getPlayer();
+		if(player is null || oPlayer is null){
+			return;
+		}
+		if(!blob.hasTag("awootism"))
+		{
+			blob.Tag("awootism");
+			blob.Sync("awootism",false);
+		}
+		if(!this.hasTag("awootism"))
+		{
+			this.Tag("awootism");
+			this.Sync("awootism",false);
+			if(blob.hasTag("infectOver"))
+			{
+				blob.Untag("infectOver");
+				blob.Sync("infectOver",false);
 			}
+			else
+			{
+				blob.AddScript("AwooootismSpread.as");
+			}
+			
+			string message = player.getCharacterName();
+			string infectGiver = oPlayer.getCharacterName();
+			client_AddToChat(message +" has been infected by "+infectGiver, SColor(255, 255, 0, 0));
+			
 		}
 	}
 }
@@ -103,4 +93,4 @@ void onCommand(CBlob@ this,u8 cmd,CBitStream @params)
 }*/
 
 
-// /rcon CBlob@ b = getPlayerByUsername('Vamist').getBlob(); b.AddScript('AwooootismSpread.as');
+// /rcon CBlob@ b = gebloblayerByUsername('Vamist').getBlob(); b.AddScript('AwooootismSpread.as');

@@ -44,7 +44,7 @@ void Reset(CRules@ this)
 
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 {
-	print("new ply");
+	//print("new ply");
 
 	if (getNet().isServer())
 	{

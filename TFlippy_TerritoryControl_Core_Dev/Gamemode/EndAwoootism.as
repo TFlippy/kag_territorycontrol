@@ -1,11 +1,5 @@
 //beep boop bap
 
-void onInit(CBlob@ this)
-{
-
-}
-
-
 void onTick(CBlob@ this)
 {
 	if(this.hasTag("endAwoo"))
@@ -26,11 +20,11 @@ void onTick(CBlob@ this)
 				b.Sync("infectOver",false);
 			}
 		}
-		if(p.hasTag("awootism"))
+		if(this.hasTag("awootism"))
 		{
 			infectList += '\n'+ p.getUsername();
-			p.Untag("awootism");
-			p.Sync("awootism",false);
+			this.Untag("awootism");
+			this.Sync("awootism",false);
 		}
 	}
 	client_AddToChat("The infection is over, here is the list of people who were infected when awootism ended!"+infectList, SColor(255, 255, 0, 0));

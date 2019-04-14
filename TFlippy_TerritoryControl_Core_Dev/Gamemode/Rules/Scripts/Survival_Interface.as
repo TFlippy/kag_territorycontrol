@@ -1,3 +1,5 @@
+#define CLIENT_ONLY
+
 //#include "TDM_Structs.as";
 #include "ScoreboardCommon.as";
 #include "Survival_Structs.as";
@@ -586,12 +588,6 @@ string getRank(CPlayer@ p, bool &out dev)
 	}
 	else if (contributors.find(username) != -1) return "Contributor";
 	else if (username == "vamist;") return "Glorious Server Host";
-	else if (username == "mrhobo;") return "Clan Leader";
-	else if (username == "turtlecake;") return "Clan Leader";
-	else if (username == "rhysdavid299;") return "Clan Leader";
-	else if (username == "agenthightower;") return "Clan Leader";
-	else if (username == "blackguy123;") return "Clan Leader";
-	else if (username == "mrpineapple;") return "Clan Leader";
 	else if (seclev != "Normal") seclev;
 	
 	return "";
