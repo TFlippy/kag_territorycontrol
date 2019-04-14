@@ -4,7 +4,7 @@
 #include "Requirements.as";
 #include "ShopCommon.as";
 
-string[] firstnames = 
+const string[] firstnames = 
 { 
 	"Kevin",
 	"Eughene",
@@ -23,7 +23,7 @@ string[] firstnames =
 	"Garry"
 };
 
-string[] surnames = 
+const string[] surnames = 
 { 
 	"Bobington",
 	"Culkin",
@@ -37,7 +37,7 @@ string[] surnames =
 	"Dump"
 };
 
-string[] soundsTalk = 
+const string[] soundsTalk = 
 { 
 	"MigrantHmm.ogg",
 	"drunk_fx2.ogg",
@@ -45,14 +45,14 @@ string[] soundsTalk =
 	"drunk_fx4.ogg"
 };
 
-string[] soundsDanger = 
+const string[] soundsDanger = 
 { 
 	"trader_scream_0.ogg",
 	"trader_scream_1.ogg",
 	"trader_scream_2.ogg"
 };
 
-string[] textsIdle = 
+const string[] textsIdle = 
 { 
 	"give me ya money 'itch",
 	"c'mere here ya shit",
@@ -76,7 +76,7 @@ string[] textsIdle =
 	"ill bash ye fookin 'ead in i sware on me mum"
 };
 
-string[] textsDanger = 
+const string[] textsDanger = 
 { 
 	"ya weenie 'lil shit",
 	"i'll get ya asshole",
@@ -97,7 +97,7 @@ string[] textsDanger =
 	"ill bash ye fookin ead in i sware on me mum"
 };
 
-string[] textsWon = 
+const string[] textsWon = 
 {
 	"put me 'ack ya shitbag",
 	"go to hell",
@@ -290,21 +290,6 @@ void onTick(CBlob@ this)
 		{
 			this.Tag("dead");				
 			return;
-		}
-	
-		if (getNet().isServer() && getGameTime() % 150 == 0)
-		{
-			const u8 myTeam = this.getTeamNum();
-
-			int count = getPlayerCount();
-			for (uint i = 0; i < count; i++)
-			{
-				CPlayer@ ply = getPlayer(i);
-				if (ply.getTeamNum() == myTeam)
-				{
-					if (ply !is null) ply.server_setCoins(ply.getCoins() + 3);
-				}
-			}
 		}
 	
 		if (getGameTime() >= this.get_u32("nextTalk"))
