@@ -6,6 +6,7 @@ void onInit(CSprite@ this)
 {
     this.ReloadSprites(0,0);
 	this.SetZ(-20.0f);
+	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
 }
 
 void onTick(CSprite@ this)
@@ -18,6 +19,9 @@ void onTick(CSprite@ this)
 	}
 	else
 	{
+		if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
 		f32 x = Maths::Abs(blob.getVelocity().x);
 
 		if (Maths::Abs(x) > 0.2f)
@@ -77,6 +81,11 @@ void onTick(CBlob@ this)
 {
 	if (!this.hasTag("dead"))
 	{
+		if(isClient()){
+			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+				return;
+			}
+		}
 		f32 x = this.getVelocity().x;		
 		if (Maths::Abs(x) > 1.0f)
 		{

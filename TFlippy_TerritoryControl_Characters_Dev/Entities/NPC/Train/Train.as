@@ -72,8 +72,8 @@ void onTick(CBlob@ this)
 {
 	CMap@ map = getMap();
 	CSprite@ sprite = this.getSprite();
-	const bool server = getNet().isServer();
-	const bool client = getNet().isClient();
+	const bool server = isServer();
+	const bool client = isClient();
 	
 	if (this.getPosition().x > (map.tilemapwidth + 256) * 8)
 	{

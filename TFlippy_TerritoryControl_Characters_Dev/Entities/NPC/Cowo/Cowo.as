@@ -10,7 +10,7 @@ const s16 MAD_TIME = 600;
 
 //sprite
 
-string[] screams = 
+const string[] screams = 
 {
 	"WraithDie.ogg",
 	"ScaredChicken03",
@@ -24,6 +24,7 @@ string[] screams =
 void onInit(CSprite@ this)
 {
 	this.ReloadSprites(0, 0); //always blue
+	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
 }
 
 void onTick(CSprite@ this)
@@ -32,6 +33,9 @@ void onTick(CSprite@ this)
 
 	if (!blob.hasTag("dead"))
 	{
+		if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
 		f32 x = blob.getVelocity().x;
 		if (Maths::Abs(x) > 0.2f)
 		{
@@ -108,6 +112,11 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 void onTick(CBlob@ this)
 {
 	if(!this.hasTag("dead")){
+		if(isClient()){
+			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+				return;
+			}
+		}
 		f32 x = this.getVelocity().x;
 
 		if (Maths::Abs(x) > 1.0f)

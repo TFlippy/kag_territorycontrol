@@ -62,10 +62,7 @@ void onInit(CBlob@ this)
 			this.server_Pickup(gun);
 		}
 	}
-	else
-	{
-		//this.getSprite().addSpriteLayer("Hi");
-	}
+
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -80,6 +77,7 @@ void onTick(CBlob@ this)
 			return;
 		}	
 	}
+
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
 	{
@@ -92,7 +90,7 @@ void onTick(CBlob@ this)
 		this.Tag("dead");
 		this.getSprite().PlaySound("Wilhelm.ogg", 1.8f, 1.8f);
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			server_DropCoins(this.getPosition(), Maths::Max(0, Maths::Min(this.get_u16("stolen coins"), 5000)));
 			CBlob@ carried = this.getCarriedBlob();
@@ -114,15 +112,6 @@ void onTick(CBlob@ this)
 		}
 		
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
-	}
-
-	if (isClient())
-	{
-		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
-		{
-			// this.getSprite().PlaySound("scoutchicken_vo_perish.ogg", 0.8f, 1.5f);
-			this.set_u32("next sound", getGameTime() + 100);
-		}
 	}
 }
 

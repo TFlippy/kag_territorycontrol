@@ -5,7 +5,7 @@ const u8 DEFAULT_PERSONALITY = AGGRO_BIT;
 void onInit(CSprite@ this)
 {
 	this.ReloadSprites(0, 0); //always blue
-	this.addSpriteLayer("isOnScreen");
+	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
 }
 
 void onTick(CSprite@ this)
@@ -132,15 +132,18 @@ void onTick(CBlob@ this)
 			{
 				f32 volume = Maths::Min(0.1f + Maths::Abs(vel.x) * 0.1f, 1.0f);
 				TileType tile = this.getMap().getTile(this.getPosition() + Vec2f(0.0f, this.getRadius() + 4.0f)).type;
-
-				if (this.getMap().isTileGroundStuff(tile))
+				if(isClient())
 				{
-					this.getSprite().PlaySound("/EarthStep", volume, 0.75f);
+					if (this.getMap().isTileGroundStuff(tile))
+					{
+						this.getSprite().PlaySound("/EarthStep", volume, 0.75f);
+					}
+					else
+					{
+						this.getSprite().PlaySound("/StoneStep", volume, 0.75f);
+					}
 				}
-				else
-				{
-					this.getSprite().PlaySound("/StoneStep", volume, 0.75f);
-				}
+				
 			}
 		}
 	}
