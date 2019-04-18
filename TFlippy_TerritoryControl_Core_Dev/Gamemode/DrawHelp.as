@@ -264,16 +264,14 @@ void onTick(CSprite@ this)
 
 			// inventory
 
-			if(inv !is null){
-				string lastitem;
-				for (int i = 0; i < inv.getItemsCount(); i++)
-				{
-					CBlob @b = inv.getItem(i);
+			string lastitem;
+			for (int i = 0; i < inv.getItemsCount(); i++)
+			{
+				CBlob @b = inv.getItem(i);
 
-					if (releasedInventory && isRecipientOfHelp(blob, b, "help switch"))
-					{
-						Done("done help switch", b.getName());
-					}
+				if (releasedInventory && isRecipientOfHelp(blob, b, "help switch"))
+				{
+					Done("done help switch", b.getName());
 				}
 			}
 
@@ -331,37 +329,37 @@ void onTick(CSprite@ this)
 
 		// seated
 
-		if (blob.isAttached())
-		{
-			AttachmentPoint@ gunner = blob.getAttachments().getAttachmentPointByName("GUNNER");
-			if (gunner !is null && gunner.getOccupied() !is null)
-			{
-				if (shouldDraw(blob, gunner.getOccupied(), "help GUNNER action"))
-				{
-					renderHelps.push_back(getHelpText(gunner.getOccupied(), "help GUNNER action"));
-				}
-				if (shouldDraw(blob, gunner.getOccupied(), "help hop out"))
-				{
-					renderHelps.push_back(getHelpText(gunner.getOccupied(), "help hop out"));
-				}
-			}
+		// if (blob.isAttached())
+		// {
+			// AttachmentPoint@ gunner = blob.getAttachments().getAttachmentPointByName("GUNNER");
+			// if (gunner !is null && gunner.getOccupied() !is null)
+			// {
+				// if (shouldDraw(blob, gunner.getOccupied(), "help GUNNER action"))
+				// {
+					// renderHelps.push_back(getHelpText(gunner.getOccupied(), "help GUNNER action"));
+				// }
+				// if (shouldDraw(blob, gunner.getOccupied(), "help hop out"))
+				// {
+					// renderHelps.push_back(getHelpText(gunner.getOccupied(), "help hop out"));
+				// }
+			// }
 
-			AttachmentPoint@ vehicle = blob.getAttachments().getAttachmentPointByName("DRIVER");
-			if (vehicle !is null && vehicle.getOccupied() !is null)
-			{
-				if (shouldDraw(blob, vehicle.getOccupied(), "help DRIVER movement"))
-				{
-					renderHelps.push_back(getHelpText(vehicle.getOccupied(), "help DRIVER movement"));
-				}
-				if (shouldDraw(blob, vehicle.getOccupied(), "help hop out"))
-				{
-					renderHelps.push_back(getHelpText(vehicle.getOccupied(), "help hop out"));
-				}
-			}
+			// AttachmentPoint@ vehicle = blob.getAttachments().getAttachmentPointByName("DRIVER");
+			// if (vehicle !is null && vehicle.getOccupied() !is null)
+			// {
+				// if (shouldDraw(blob, vehicle.getOccupied(), "help DRIVER movement"))
+				// {
+					// renderHelps.push_back(getHelpText(vehicle.getOccupied(), "help DRIVER movement"));
+				// }
+				// if (shouldDraw(blob, vehicle.getOccupied(), "help hop out"))
+				// {
+					// renderHelps.push_back(getHelpText(vehicle.getOccupied(), "help hop out"));
+				// }
+			// }
 
-		}
-		else
-		{
+		// }
+		// else
+		// {
 			// near
 
 			if (map !is null && map.getBlobsInRadius(blob.getPosition(), blob.getRadius() + HELP_DISTANCE, @blobsInRadius))
@@ -371,40 +369,35 @@ void onTick(CSprite@ this)
 					CBlob @b = blobsInRadius[i];
 					if (b !is blob && !wasAlreadyInList(blobsInRadius, i, b))
 					{
-						if (!b.isAttached() && (!b.hasTag("flesh") || b.hasTag("trader")))  // HACK
+						HelpText[]@ helps = getHelps(b);
+						if (helps !is null)
 						{
-							HelpText[]@ helps = getHelps(b);
-							if (helps !is null)
+							for (uint i = 0; i < helps.length; i++)
 							{
-								for (uint i = 0; i < helps.length; i++)
+								HelpText@ ht = helps[i];
+								if (ht.name != "help movement" && ht.name != "help putback" && ht.name != "help activate" && ht.name != "help throw" && ht.name != "help rotate" && ht.name != "help GUNNER action"  && ht.name != "help DRIVER movement" && ht.name != "help hop out" && shouldDraw(blob, b, ht))
 								{
-									HelpText@ ht = helps[i];
-									if (ht.name != "help movement" && ht.name != "help putback" && ht.name != "help activate" && ht.name != "help throw" && ht.name != "help rotate" && ht.name != "help GUNNER action"  && ht.name != "help DRIVER movement" && ht.name != "help hop out" 	  //HACK:
-									        && shouldDraw(blob, b, ht))
-									{
-										renderHelps.push_back(ht);
-									}
+									renderHelps.push_back(ht);
 								}
 							}
 						}
 					}
 				}
-			}
+			// }
 
 			// inventory
-			if(inv !is null){
-				for (int i = 0; i < inv.getItemsCount(); i++)
-				{
-					CBlob @b = inv.getItem(i);
-					if (shouldDraw(blob, b, "help activate"))
-					{
-						renderHelps.push_back(getHelpText(b, "help activate"));
-					}
 
-					if (shouldDraw(blob, b, "help switch"))
-					{
-						renderHelps.push_back(getHelpText(b, "help switch"));
-					}
+			for (int i = 0; i < inv.getItemsCount(); i++)
+			{
+				CBlob @b = inv.getItem(i);
+				if (shouldDraw(blob, b, "help activate"))
+				{
+					renderHelps.push_back(getHelpText(b, "help activate"));
+				}
+
+				if (shouldDraw(blob, b, "help switch"))
+				{
+					renderHelps.push_back(getHelpText(b, "help switch"));
 				}
 			}
 
@@ -443,8 +436,7 @@ void onTick(CSprite@ this)
 				for (uint i = 0; i < helps.length; i++)
 				{
 					HelpText@ ht = helps[i];
-					if (((ht.name != "help throw") || (carried !is null && !carried.hasTag("temp blob") && !carried.hasTag("activated")))
-					        && shouldDraw(blob, blob, ht))
+					if (((ht.name != "help throw") || (carried !is null && !carried.hasTag("temp blob") && !carried.hasTag("activated"))) && shouldDraw(blob, blob, ht))
 					{
 						renderHelps.push_back(ht);
 					}
@@ -486,13 +478,14 @@ void onRender(CSprite@ this)
 	if (g_videorecording)
 		return;
 
-	Vec2f offset(52.0f, getDriver().getScreenHeight() - 68.0f);
+	Vec2f offset(32.0f, getDriver().getScreenHeight() - 32.0f);
 
 	CBlob@ blob = this.getBlob();
 	if (u_showtutorial)
 	{
 		int count = 0;
 
+		
 		// render helps
 
 		const int size = renderHelps.size();
@@ -531,7 +524,7 @@ void onRender(CSprite@ this)
 		Vec2f upperleft = offset + Vec2f(-30.0f, -199.0f + bounce);
 		Vec2f lowerright = offset + Vec2f(170.0f, 0.0f + bounce);
 		GUI::SetFont("menu");
-		GUI::DrawText("$!!!$$GREEN$WATCH THESE FOR          .          GAMEPLAY HELP$GREEN$\n\n\n$KEY_ESC$ CHECK CONTROLS\n\n$KEY_F1$ HELP ON/OFF\n\n(click to remove this)\n\n      $DEFEND_THIS$", upperleft, lowerright, color_black, true, true, true);
+		GUI::DrawText(getTranslatedString("$!!!$$GREEN$WATCH THESE FOR          .          GAMEPLAY HELP$GREEN$\n\n\n$KEY_ESC$ CHECK CONTROLS\n\n$KEY_F1$ HELP ON/OFF\n\n(click to remove this)\n\n      $DEFEND_THIS$"), upperleft, lowerright, color_black, true, true, true);
 
 		if (getControls().mousePressed1)
 		{
@@ -551,30 +544,40 @@ void onRender(CSprite@ this)
 
 Vec2f DrawHelpText(const string &in text, Vec2f offset, f32 donePercent, const bool drawBackground, const bool drawGlow)
 {
-	if (text.size() == 0)
-		return Vec2f_zero;
+	if (text.size() == 0) return Vec2f_zero;
+	
 	//Vec2f pos = this.getScreenPos();
 	Vec2f pos = offset;
 	//f32 y = Maths::Max( 200, int(pos.y) );
 	f32 y = pos.y;
 	Vec2f dim;
-	GUI::SetFont("menu");	
+	GUI::SetFont("menu");
 	GUI::GetTextDimensions(text, dim);
-	Vec2f ul = Vec2f(pos.x - 50, y - 18.0f);
-	Vec2f lr = Vec2f(pos.x + 180.0f, y + 18.0f);
+	// Vec2f ul = Vec2f(pos.x - 50, y - 18.0f);
+	// Vec2f lr = Vec2f(pos.x + 220.0f, y + 24.0f);
+	
+	const f32 padding = 8;
+	
+	Vec2f ul = Vec2f(pos.x, pos.y - Maths::Max(dim.y, 24 + padding));
+	Vec2f lr = Vec2f(pos.x + dim.x, pos.y);
+	
+	Vec2f ul_p = ul + Vec2f(-padding, -padding);
+	Vec2f lr_p = lr + Vec2f(padding, padding);
+	
 	if (drawBackground)
 	{
 		if (!drawGlow)
 		{
-			GUI::DrawProgressBar(ul, lr, donePercent);
+			GUI::DrawProgressBar(ul_p, lr_p, donePercent);
 		}
 		else
 		{
-			GUI::DrawButtonHover(ul, lr);
+			GUI::DrawButtonHover(ul_p, lr_p);
 		}
 	}
-	GUI::DrawText(text, ul + Vec2f(5.0f, 6.0f), lr, color_white, false, false);
-	return dim;
+	GUI::DrawText(text, ul, lr, color_white, false, false);
+	
+	return Vec2f(ul_p.x - lr_p.x, ul_p.y - lr_p.y);
 }
 
 Vec2f DrawHelp(CBlob@ this, HelpText @ht, Vec2f offset)
@@ -584,11 +587,13 @@ Vec2f DrawHelp(CBlob@ this, HelpText @ht, Vec2f offset)
 
 	if (ht !is null)
 	{
+		f32 sine = Maths::Sin((getGameTime() / 8.00f)) * 5;
+	
 		const bool recipient = isRecipientOfHelp(this, ht);
-		ht.drawSize = DrawHelpText(recipient ? ht.text : ht.altText, Vec2f(offset.x * ht.fadeOut, offset.y), 0.0f, true, false);	// 1.0f - (ht.reduceAfterTimes == 0 ? 0.0f : float(ht.usedCount)/float(ht.reduceAfterTimes))
+		ht.drawSize = DrawHelpText(recipient ? ht.text : ht.altText, Vec2f(offset.x * ht.fadeOut, offset.y + sine), 0.0f, true, false);	// 1.0f - (ht.reduceAfterTimes == 0 ? 0.0f : float(ht.usedCount)/float(ht.reduceAfterTimes))
 		if (recipient || ht.altText.size() > 0)
 		{
-			offset.y -= 50.0f;
+			offset.y += ht.drawSize.y - 8;
 		}
 		return offset;
 	}
