@@ -340,6 +340,8 @@ void onRenderScoreboard(CRules@ this)
 			if (team_len > 0)
 			{
 				f32 stepheight = 20;
+				f32 base_offset = 850;
+				
 				Vec2f topleft(100, 200 + playerList_yOffset);
 				Vec2f bottomright(getScreenWidth() - 100, topleft.y + ((team_len + 3.5) * stepheight));
 				GUI::DrawPane(topleft, bottomright, SColor(0xffc0c0c0));
@@ -371,13 +373,14 @@ void onRenderScoreboard(CRules@ this)
 				{
 					GUI::DrawText("Team Name", Vec2f(topleft.x, topleft.y), SColor(0xffffffff));
 					GUI::DrawText("Leader", Vec2f(topleft.x + 250, topleft.y), SColor(0xffffffff));
-					GUI::DrawText("Members", Vec2f(bottomright.x - 750, topleft.y), SColor(0xffffffff));
-					GUI::DrawText("Upkeep", Vec2f(bottomright.x - 650, topleft.y), SColor(0xffffffff));
-					GUI::DrawText("Wealth", Vec2f(bottomright.x - 550, topleft.y), SColor(0xffffffff));
-					GUI::DrawText("Recruiting", Vec2f(bottomright.x - 450, topleft.y), SColor(0xffffffff));
-					GUI::DrawText("Murder Tax", Vec2f(bottomright.x - 350, topleft.y), SColor(0xffffffff));
-					GUI::DrawText("Lockdown", Vec2f(bottomright.x - 250, topleft.y), SColor(0xffffffff));
-					GUI::DrawText("Land Owned", Vec2f(bottomright.x - 150, topleft.y), SColor(0xffffffff));
+					GUI::DrawText("Members", Vec2f(bottomright.x 		- base_offset + 000, topleft.y), SColor(0xffffffff));
+					GUI::DrawText("Upkeep", Vec2f(bottomright.x  		- base_offset + 100, topleft.y), SColor(0xffffffff));
+					GUI::DrawText("Wealth", Vec2f(bottomright.x  		- base_offset + 200, topleft.y), SColor(0xffffffff));
+					GUI::DrawText("Recruitment", Vec2f(bottomright.x	- base_offset + 300, topleft.y), SColor(0xffffffff));
+					GUI::DrawText("Murder Tax", Vec2f(bottomright.x 	- base_offset + 450, topleft.y), SColor(0xffffffff));
+					GUI::DrawText("Slavery", Vec2f(bottomright.x 		- base_offset + 550, topleft.y), SColor(0xffffffff));
+					GUI::DrawText("Lockdown", Vec2f(bottomright.x 		- base_offset + 650, topleft.y), SColor(0xffffffff));
+					GUI::DrawText("Land Owned", Vec2f(bottomright.x 	- base_offset + 750, topleft.y), SColor(0xffffffff));
 				}
 
 				topleft.y += stepheight * 0.5f;
@@ -432,15 +435,16 @@ void onRenderScoreboard(CRules@ this)
 					}
 					else
 					{
-						GUI::DrawText(cTeam.getName(), topleft + Vec2f(0, 0), color);
-						GUI::DrawText(team.leader_name == "" ? "N/A" : team.leader_name, topleft + Vec2f(250, 0), color_gray);
-						GUI::DrawText("" + team.player_count, Vec2f(bottomright.x - 750, topleft.y), color_gray);
-						GUI::DrawText("" + team.upkeep + " / " + team.upkeep_cap, Vec2f(bottomright.x - 650, topleft.y), color_gray);
-						GUI::DrawText("" + team.wealth + " coins", Vec2f(bottomright.x - 550, topleft.y), color_gray);
-						GUI::DrawText(team.recruitment_enabled ? "Yes" : "No", Vec2f(bottomright.x - 450, topleft.y), color_gray);
-						GUI::DrawText(team.tax_enabled ? "Yes" : "No", Vec2f(bottomright.x - 350, topleft.y), color_gray);
-						GUI::DrawText(team.lockdown_enabled ? "Yes" : "No", Vec2f(bottomright.x - 250, topleft.y), color_gray);
-						GUI::DrawText("" + Maths::Round((f32(team.controlled_count) / f32(total_capturables)) * 100.00f) + "%", Vec2f(bottomright.x - 150, topleft.y), color_gray);
+						GUI::DrawText(cTeam.getName(), topleft + 																Vec2f(0, 0), color);
+						GUI::DrawText(team.leader_name == "" ? "N/A" : team.leader_name, topleft + 								Vec2f(250, 0), color_gray);
+						GUI::DrawText("" + team.player_count, 																	Vec2f(bottomright.x - base_offset + 000, topleft.y), color_gray);
+						GUI::DrawText("" + team.upkeep + " / " + team.upkeep_cap, 												Vec2f(bottomright.x - base_offset + 100, topleft.y), color_gray);
+						GUI::DrawText("" + team.wealth + " coins", 																Vec2f(bottomright.x - base_offset + 200, topleft.y), color_gray);
+						GUI::DrawText(team.recruitment_enabled ? (team.f2p_enabled ? "Premium + F2P" : "Premium") : "None",		Vec2f(bottomright.x - base_offset + 300, topleft.y), color_gray);
+						GUI::DrawText(team.tax_enabled ? "Yes" : "No", 															Vec2f(bottomright.x - base_offset + 450, topleft.y), color_gray);
+						GUI::DrawText(team.slavery_enabled ? "Yes" : "No", 														Vec2f(bottomright.x - base_offset + 550, topleft.y), color_gray);
+						GUI::DrawText(team.lockdown_enabled ? "Yes" : "No", 													Vec2f(bottomright.x - base_offset + 650, topleft.y), color_gray);
+						GUI::DrawText("" + Maths::Round((f32(team.controlled_count) / f32(total_capturables)) * 100.00f) + "%", Vec2f(bottomright.x - base_offset + 750, topleft.y), color_gray);
 					}
 
 				}

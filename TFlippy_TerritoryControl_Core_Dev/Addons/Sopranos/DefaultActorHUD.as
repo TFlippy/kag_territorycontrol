@@ -135,7 +135,7 @@ void RenderUpkeepHUD(CBlob@ this)
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RECRUITMENT) { msg_penalties += "- Recruitment disabled\n"; has_penalties = true; }
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_COIN_DROP) { msg_penalties += "- Higher coin loss on death\n"; has_penalties = true; }
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RESPAWN_TIME) { msg_penalties += "- Increased respawn time\n"; has_penalties = true; }
-		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_STORAGE) { msg_penalties += "- No Remote storage\n"; has_penalties = true; }
+		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_STORAGE && team_data.storage_enabled) { msg_penalties += "- No Remote storage\n"; has_penalties = true; }
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_SPEED) { msg_penalties += "- Reduced movement speed\n"; has_penalties = true; }
 		
 		if (has_penalties) GUI::DrawText(msg_penalties, Vec2f(scWidth - 352, 90 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
@@ -202,8 +202,9 @@ void RenderTeamInventoryHUD(CBlob@ this)
 			u16 upkeep = team_data.upkeep;
 			u16 upkeep_cap = team_data.upkeep_cap;
 			f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+			const bool faction_storage_enabled = team_data.storage_enabled;
 			
-			storageEnabled = upkeep_ratio < UPKEEP_RATIO_PENALTY_STORAGE;
+			storageEnabled = upkeep_ratio < UPKEEP_RATIO_PENALTY_STORAGE && faction_storage_enabled;
 		}
 		
 		getBlobsByTag("remote_storage", @baseBlobs);

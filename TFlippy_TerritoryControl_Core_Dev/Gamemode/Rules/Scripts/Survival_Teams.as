@@ -230,6 +230,19 @@ void onTick(CRules@ this)
 					team_list[team].controlled_count++;
 				}
 			}
+			
+			CBlob@[] slaves;
+			if (getBlobsByName("slave", @slaves))
+			{
+				for (u32 i = 0; i < slaves.length; i++)
+				{
+					CBlob@ blob = slaves[i];
+					u8 slaver_team = blob.get_u8("slaver_team");
+	
+					if (slaver_team > maxTeams) continue;
+					if (!blob.hasTag("dead")) team_list[slaver_team].upkeep += 50;
+				}
+			}
 				
 			if (getNet().isServer())
 			{

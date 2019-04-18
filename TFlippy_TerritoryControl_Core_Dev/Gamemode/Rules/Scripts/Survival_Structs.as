@@ -53,10 +53,16 @@ shared class TeamData
 	u16 controlled_count;
 	
 	string leader_name;
+	
 	bool recruitment_enabled;
 	bool lockdown_enabled;
 	bool tax_enabled;
 	bool storage_enabled;
+	bool f2p_enabled;
+	bool slavery_enabled;
+	bool reserved_1_enabled;
+	bool reserved_2_enabled;
+	
 	u16 player_count;
 	
 	void Setup(u8 inTeam)
@@ -91,6 +97,10 @@ shared class TeamData
 		if (lockdown_enabled) flags |= 1 << 1; 
 		if (tax_enabled) flags |= 1 << 2; 
 		if (storage_enabled) flags |= 1 << 3; 
+		if (f2p_enabled) flags |= 1 << 4; 
+		if (slavery_enabled) flags |= 1 << 5; 
+		if (reserved_1_enabled) flags |= 1 << 6; 
+		if (reserved_2_enabled) flags |= 1 << 7; 
 
 		stream.write_u8(flags);
 	}

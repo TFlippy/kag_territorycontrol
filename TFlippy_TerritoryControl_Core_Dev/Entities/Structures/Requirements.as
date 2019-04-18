@@ -159,8 +159,9 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 				u16 upkeep = team_data.upkeep;
 				u16 upkeep_cap = team_data.upkeep_cap;
 				f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+				const bool faction_storage_enabled = team_data.storage_enabled;
 				
-				storageEnabled = upkeep_ratio <= UPKEEP_RATIO_PENALTY_STORAGE;
+				storageEnabled = upkeep_ratio <= UPKEEP_RATIO_PENALTY_STORAGE && faction_storage_enabled;
 			}
 		}
 
@@ -291,8 +292,9 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 				u16 upkeep = team_data.upkeep;
 				u16 upkeep_cap = team_data.upkeep_cap;
 				f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+				const bool faction_storage_enabled = team_data.storage_enabled;
 				
-				storageEnabled = upkeep_ratio <= UPKEEP_RATIO_PENALTY_STORAGE;
+				storageEnabled = upkeep_ratio <= UPKEEP_RATIO_PENALTY_STORAGE && faction_storage_enabled;
 			}
 		}
 
