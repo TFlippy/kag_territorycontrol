@@ -3,6 +3,7 @@
 #include "Survival_Structs.as";
 #include "MaterialCommon.as";
 #include "Costs.as"
+#include "MakeMat.as";
 // #include "Knocked.as"
 
 shared class Players
@@ -106,6 +107,7 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 				// sleeper.Sync("sleeper_coins", false);
 				
 				print(player.getUsername() + " joined, respawning him at sleeper " + sleeper.getConfig());
+				break;
 			}
 		}
 	}
@@ -490,8 +492,14 @@ bool doDefaultSpawn(CPlayer@ player, string blobType, u8 team, bool ignoreDisabl
 				new_blob.setPosition(r.getPosition());			
 				new_blob.server_setTeamNum(team);
 				new_blob.server_SetPlayer(player);
+				
+				if (getGameTime() < 30 * 15)
+				{
+					MakeMat(new_blob, r.getPosition(), "mat_wood", 100);	
+					MakeMat(new_blob, r.getPosition(), "mat_stone", 75);	
+				}
 			}
-			
+
 			return true;
 		}
 		else return false;
