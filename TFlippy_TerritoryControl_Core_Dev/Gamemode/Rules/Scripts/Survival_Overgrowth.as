@@ -38,8 +38,9 @@ void DecayStuff()
 	
 	Vec2f tilePos = Vec2f(newPos, newLandY - 8);
 	Vec2f offsetPos = Vec2f(tilePos.x + (XORRandom(10) - 5) * 8, tilePos.y + (XORRandom(6) - 3) * 8);
+	Vec2f tilePosNeg8 = tilePos + Vec2f(0, -8);
 	
-	if (!map.isInWater(tilePos + Vec2f(0, -8))) return;
+	if (!map.isInWater(tilePosNeg8) return;
 	
 	uint16 tile = map.getTile(tilePos).type;
 	uint16 offsetTile = map.getTile(offsetPos).type;
@@ -49,14 +50,14 @@ void DecayStuff()
 	
 	if (map.isTileGround(tile))
 	{
-		if (map.getTile(tilePos + Vec2f(0, -8)).type == CMap::tile_empty)
+		if (map.getTile(tilePosNeg8).type == CMap::tile_empty)
 		{
-			map.server_SetTile(tilePos + Vec2f(0, -8), CMap::tile_grass + XORRandom(3));
-			if (XORRandom(2) == 0 && blobs.length < 4) server_MakeSeed(tilePos + Vec2f(0, -8), seeds[XORRandom(seeds.length)]);
+			map.server_SetTile(tilePosNeg8, CMap::tile_grass + XORRandom(3));
+			if (XORRandom(2) == 0 && blobs.length < 4) server_MakeSeed(tilePosNeg8, seeds[XORRandom(seeds.length)]);
 		}
 		else if (!map.isTileSolid(tilePos + Vec2f(0, -8)))
 		{
-			if (XORRandom(2) == 0 && blobs.length < 4) server_MakeSeed(tilePos + Vec2f(0, -8), seeds[XORRandom(3)]);
+			if (XORRandom(2) == 0 && blobs.length < 4) server_MakeSeed(tilePosNeg8, seeds[XORRandom(3)]);
 		}
 		
 		Vec2f offsetChainPos = Vec2f(offsetPos.x + (XORRandom(2) - 1) * 8, offsetPos.y + (XORRandom(2) - 1) * 8);

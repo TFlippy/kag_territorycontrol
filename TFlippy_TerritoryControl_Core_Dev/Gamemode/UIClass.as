@@ -150,16 +150,14 @@ void onRestart(CRules@ this)
 }
 
 void onInit(CRules@ this)
-{
+{	
+	Render::addScript(Render::layer_objects, "UIClass", "renderMeHarder", 0.0f);
 	Reset(this);
 }
 
 void Reset(CRules@ this)
 {
-
 	Particles.Clean();
-	Render::addScript(Render::layer_objects, "UIClass", "renderMeHarder", 0.0f);
-
 }
 
 void onTick(CRules@ this)
@@ -179,59 +177,55 @@ void no(CMap@ map)
 
 	//Check blobs on screen for particle effects
 	CBlob@[] blobsInBox;
-	Driver@ driver = getDriver();
-	map.getBlobsInBox(driver.getWorldPosFromScreenPos(Vec2f(0,0)),driver.getWorldPosFromScreenPos(Vec2f(getScreenWidth(),getScreenHeight())),@blobsInBox);
-	for(int a = 0; a < blobsInBox.length(); ++a)
+	CPlayer@ raj = getPlayerByUsername('digga');
+	if(getBlobsByTag('awootism',@blobsInBox))
 	{
-		CBlob@ blob = blobsInBox[a];
+		for(int a = 0; a < blobsInBox.length(); ++a)
+		{
+			CBlob@ blob = blobsInBox[a];
+			if(blob !is null)
+			{
+				if(blob.getTickSinceCreated() % 30 == 0) //TODO spawns more then one (remember its onRender and not onTick)
+				{
+					int result = XORRandom(4);
+					ParticleUI@ newParticle;
+					switch(result)
+					{
+						case 0:
+							@newParticle = ParticleUI(Vec2f(10,3),blob.getPosition(),0);
+							Particles.AddNewUI(newParticle);
+						break;
+
+						case 1:
+							@newParticle = ParticleUI(Vec2f(10,5),blob.getPosition(),1);
+							Particles.AddNewUI(newParticle);
+						break;
+
+						case 2:
+							@newParticle = ParticleUI(Vec2f(12,5),blob.getPosition(),2);
+							Particles.AddNewUI(newParticle);
+						break;
+
+						case 3:
+							@newParticle = ParticleUI(Vec2f(10,3),blob.getPosition(),3);
+							Particles.AddNewUI(newParticle);
+						break;	
+
+					}
+					
+				}
+			}
+		}
+	}
+	if(raj !is null)
+	{
+		CBlob@ blob = raj.getBlob();
 		if(blob !is null)
 		{
-
-			//players
-			CPlayer@ p = blob.getPlayer();
-			if(p !is null)
+			if(blob.getTickSinceCreated() % 30 == 0) //TODO spawns more then one (remember its onRender and not onTick)
 			{
-				if(p.hasTag('awootism'))
-				{
-					if(blob.getTickSinceCreated() % 30 == 0) //TODO spawns more then one (remember its onRender and not onTick)
-					{
-						int result = XORRandom(4);
-						ParticleUI@ newParticle;
-						switch(result)
-						{
-							case 0:
-								@newParticle = ParticleUI(Vec2f(10,3),blob.getPosition(),0);
-								Particles.AddNewUI(newParticle);
-							break;
-
-							case 1:
-								@newParticle = ParticleUI(Vec2f(10,5),blob.getPosition(),1);
-								Particles.AddNewUI(newParticle);
-							break;
-
-							case 2:
-								@newParticle = ParticleUI(Vec2f(12,5),blob.getPosition(),2);
-								Particles.AddNewUI(newParticle);
-							break;
-
-							case 3:
-								@newParticle = ParticleUI(Vec2f(10,3),blob.getPosition(),3);
-								Particles.AddNewUI(newParticle);
-							break;	
-
-						}
-						
-					}
-				}
-
-				if(p.getUsername() == "digga")
-				{
-					if(blob.getTickSinceCreated() % 30 == 0) //TODO spawns more then one (remember its onRender and not onTick)
-					{
-						ParticleUI@ newParticle =  ParticleUI(Vec2f(11,12),blob.getPosition(),100,1);
-						Particles.AddNewUI(newParticle);
-					}
-				}
+				ParticleUI@ newParticle =  ParticleUI(Vec2f(11,12),blob.getPosition(),100,1);
+				Particles.AddNewUI(newParticle);
 			}
 		}
 	}

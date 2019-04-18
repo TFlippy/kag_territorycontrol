@@ -76,6 +76,7 @@ class TCPNGLoader : PNGLoader
 
 	void handlePixel(const SColor &in pixel, int offset) override
 	{
+		
 		PNGLoader::handlePixel(pixel, offset);
 
 		switch (pixel.color)

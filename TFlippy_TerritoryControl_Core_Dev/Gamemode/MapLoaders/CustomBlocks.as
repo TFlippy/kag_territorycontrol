@@ -296,7 +296,9 @@ bool isTileMossyBConcrete(TileType tile)
 void onInit(CMap@ this)
 {
     this.legacyTileMinimap = false;
-    this.MakeMiniMap();
+	if(isServer()){
+    	this.MakeMiniMap();
+	}
 	
 	CRules@ rules = getRules();
 	rules.addCommandID("add_tile");

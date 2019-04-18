@@ -11,6 +11,7 @@
 
 void onInit(CBlob@ this)
 {
+	this.getSprite().addSpriteLayer("isOnScreen");
 	this.set_u32("nextAttack", 0);
 	this.set_u32("nextBomb", 0);
 	
@@ -224,6 +225,11 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
+	if(isClient()){
+		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
+	}
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
 	{
@@ -253,7 +259,7 @@ void onTick(CBlob@ this)
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
 		{
@@ -274,7 +280,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 50)
 		{
@@ -283,7 +289,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		

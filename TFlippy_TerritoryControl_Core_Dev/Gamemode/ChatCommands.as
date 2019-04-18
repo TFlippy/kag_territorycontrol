@@ -98,8 +98,8 @@ void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 			{
 				blob.Untag("infectOver");
 				blob.Sync("infectOver",false);
-				p.Tag("awootism");
-				p.Sync("awootism",false);
+				blob.Tag("awootism");
+				blob.Sync("awootism",false);
 			}
 			else
 			{

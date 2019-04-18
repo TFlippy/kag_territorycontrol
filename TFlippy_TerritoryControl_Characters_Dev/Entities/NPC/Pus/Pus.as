@@ -13,7 +13,7 @@
 
 void onInit( CBrain@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -49,7 +49,7 @@ void onInit(CBlob@ this)
 	this.set_bool("map_damage_raycast", true);
 	
 	this.set_f32("voice pitch", 1.75f);
-	
+	this.getSprite().addSpriteLayer("isOnScreen");
 	this.server_setTeamNum(231);
 }
 
@@ -60,7 +60,19 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
-	if (this.hasTag("dead")) return;
+	if (this.hasTag("dead")){ return;}
+
+	if (isClient())
+	{
+		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
+		{
+			this.getSprite().PlaySound("Pus_Idle_" + XORRandom(1) + ".ogg", 2.5f, 1.00f);
+			this.set_u32("next sound", getGameTime() + 350);
+		}
+		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
+	}
 
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
@@ -70,16 +82,7 @@ void onTick(CBlob@ this)
 		moveVars.swimspeed *= 2.00f;
 		moveVars.canVault = true;
 	}
-		
-	if (getNet().isClient())
-	{
-		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
-		{
-			this.getSprite().PlaySound("Pus_Idle_" + XORRandom(1) + ".ogg", 2.5f, 1.00f);
-			this.set_u32("next sound", getGameTime() + 350);
-		}
-	}
-		
+
 	if (this.isKeyPressed(key_action1) && getGameTime() > this.get_u32("next attack"))
 	{
 		Vec2f dir = this.getAimPos() - this.getPosition();
@@ -88,6 +91,7 @@ void onTick(CBlob@ this)
 		ClawHit(this, this.getPosition() + Vec2f(this.isFacingLeft() ? -16 : 16, XORRandom(16) - 8), dir, 4, Hitters::bite);
 		this.set_u32("next attack", getGameTime() + 6);
 	}
+	
 }
 
 void onDie(CBlob@ this)

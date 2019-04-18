@@ -44,7 +44,7 @@ void Reset(CRules@ this)
 
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 {
-	print("new ply");
+	//print("new ply");
 
 	if (getNet().isServer())
 	{
@@ -130,7 +130,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream@ stream)
 
 void server_SynchronizeTeams(CRules@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		TeamData[]@ team_list;
 		this.get("team_list", @team_list);

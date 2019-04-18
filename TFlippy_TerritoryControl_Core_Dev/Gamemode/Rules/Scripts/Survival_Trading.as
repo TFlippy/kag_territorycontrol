@@ -5,10 +5,10 @@
 
 #define SERVER_ONLY
 
-int coinsOnDamageAdd = 5;
-int coinsOnKillAdd = 25;
-int coinsOnDeathLose = 10;
-int min_coins = 50;
+const int coinsOnDamageAdd = 5;
+const int coinsOnKillAdd = 25;
+const int coinsOnDeathLose = 10;
+const int min_coins = 50;
 
 const int coinsOnDeathLosePercent = 20;
 const int coinsOnTKLose = 50;
@@ -30,7 +30,6 @@ const int warmupFactor = 3;
 const u32 MAX_COINS = 30000;
 
 //
-string cost_config_file = "tdm_vars.cfg";
 bool kill_traders_and_shops = false;
 
 void onBlobCreated(CRules@ this, CBlob@ blob)
@@ -90,6 +89,7 @@ void MakeTradeMenu(CBlob@ trader)
 
 void Reset(CRules@ this)
 {
+	/*
 	//load the coins vars now, good a time as any
 	if (this.exists("tdm_costs_config"))
 		cost_config_file = this.get_string("tdm_costs_config");
@@ -101,7 +101,7 @@ void Reset(CRules@ this)
 	coinsOnKillAdd = cfg.read_s32("coinsOnKillAdd", coinsOnKillAdd);
 	coinsOnDeathLose = cfg.read_s32("coinsOnDeathLose", coinsOnDeathLose);
 	min_coins = cfg.read_s32("minCoinsOnRestart", min_coins);
-
+	print(min_coins + " aa");
 	kill_traders_and_shops = !(cfg.read_bool("spawn_traders_ever", true));
 
 	if (kill_traders_and_shops)
@@ -115,8 +115,11 @@ void Reset(CRules@ this)
 		CPlayer@ player = getPlayer(i);
 		if (player is null) continue;
 
-		player.server_setCoins(Maths::Max(player.getCoins(), min_coins));
-	}
+		//player.server_setCoins(Maths::Max(player.getCoins(), min_coins));
+	}*/
+
+	//not needed ^
+	
 
 }
 
@@ -247,8 +250,9 @@ f32 onPlayerTakeDamage(CRules@ this, CPlayer@ victim, CPlayer@ attacker, f32 Dam
 void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 {
 	//only important on server
-	if (!getNet().isServer())
+	if (isServer()){
 		return;
+	}
 
 	if (cmd == getGameplayEventID(this))
 	{
@@ -283,18 +287,30 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 				{
 					g.params.ResetBitIndex();
 					string name = g.params.read_string();
+					switch(name.getHash())
+					{
+						case 804095823://wooden_platform hash
+						case 916369496://trap_block
+						case 439106706://spikes
+						{
+							coins = coinsOnBuild;
+						}
+						break;
 
-					if (name.findFirst("door") != -1 ||
-					        name == "wooden_platform" ||
-					        name == "trap_block" ||
-					        name == "spikes")
-					{
-						coins = coinsOnBuild;
+						case 954139509://building
+						{
+							coins = coinsOnBuildWorkshop;
+						}
+
+						default:
+						{
+							if(name.findFirst("door") != -1)
+							{
+								coins = coinsOnBuild;
+							}
+						}
 					}
-					else if (name == "building")
-					{
-						coins = coinsOnBuildWorkshop;
-					}
+
 				}
 
 				break;
