@@ -17,10 +17,10 @@ const string[] resources =
 
 const u8[] resourceYields =
 {
-	3,
-	2,
-	2,
-	5
+	6,
+	4,
+	4,
+	10
 };
 
 void onInit(CBlob@ this)
@@ -39,10 +39,6 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 300;
 	this.inventoryButtonPos = Vec2f(-8, 0);
 
-	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
-
-
-
 	this.set_Vec2f("shop offset", Vec2f(0,0));
 	this.set_Vec2f("shop menu size", Vec2f(4, 6));
 	this.set_string("shop description", "Gunsmith's Workshop");
@@ -55,8 +51,8 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "High Caliber Ammunition (5)", "$icon_rifleammo$", "mat_rifleammo-5", "Bullets for rifles. Effective against armored targets.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 45);
+		ShopItem@ s = addShopItem(this, "High Caliber Ammunition (10)", "$icon_rifleammo$", "mat_rifleammo-10", "Bullets for rifles. Effective against armored targets.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 90);
 
 		s.spawnNothing = true;
 	}
