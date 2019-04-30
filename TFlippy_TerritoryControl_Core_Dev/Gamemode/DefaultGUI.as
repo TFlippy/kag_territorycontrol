@@ -10,6 +10,8 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_tankshell$", "Material_TankShell.png", Vec2f(16, 16), 3);
 		
 		// Merchant
+		AddIconToken("$bp_automation_advanced$", "Blueprints.png", Vec2f(16, 16), 0);
+		AddIconToken("$bp_energetics$", "Blueprints.png", Vec2f(16, 16), 1);
 		AddIconToken("$bp_mechanist$", "Blueprints.png", Vec2f(16, 16), 2);
 		AddIconToken("$mat_goldingot$", "Material_GoldIngot.png", Vec2f(16, 16), 1);
 		AddIconToken("$musicdisc$", "MusicDisc.png", Vec2f(8, 8), 0);
@@ -158,6 +160,7 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_methane$", "Material_Methane.png", Vec2f(8, 16), 0);
 		AddIconToken("$icon_fuel$", "Material_Fuel.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_princess$", "Princess.png", Vec2f(24, 24), 0);
+		AddIconToken("$icon_beamtowertargeter$", "BeamTowerTargeter.png", Vec2f(8, 16), 0);
 
 		
 		// Drugs

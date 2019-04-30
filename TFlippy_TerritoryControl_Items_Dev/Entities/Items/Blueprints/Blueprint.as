@@ -3,13 +3,15 @@
 
 #include "TCTechs.as"
 
-// void onInit(CBlob@ this)
-// {
+void onInit(CBlob@ this)
+{
+	this.Tag("blueprint");
+
 	// this.addCommandID("study");
 	
 	// string tech = "tech_" + this.getConfig().substr(3);
 	// this.set_string("tech_name", tech);
-// }
+}
 
 // void GetButtonsFor(CBlob@ this, CBlob@ caller)
 // {

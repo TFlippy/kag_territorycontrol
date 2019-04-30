@@ -107,9 +107,14 @@ void onTick(CBlob@ this)
 			
 			if (XORRandom(100) < 25) server_CreateBlob("phone", -1, this.getPosition());
 			
-			if (XORRandom(100) < 15) 
+			if (XORRandom(100) < 60) 
 			{
 				server_CreateBlob("bp_automation_advanced", -1, this.getPosition());
+			}
+			
+			if (XORRandom(100) < 80) 
+			{
+				server_CreateBlob("bp_energetics", -1, this.getPosition());
 			}
 		}
 		
