@@ -53,7 +53,7 @@ void onTick(CBlob@ this)
 	f32 power = 0;
 
 	CBlob@ tower = getBlobByNetworkID(this.get_u16("tower_netid"));
-	if (tower !is null && !getMap().rayCastSolid(this.getPosition(), tower.getPosition() + Vec2f(0, -8)))
+	if (tower !is null && !getRules().get_bool("raining") && !getMap().rayCastSolid(this.getPosition(), tower.getPosition() + Vec2f(0, -8)))
 	{
 		power = Maths::Pow(Maths::Sin(getMap().getDayTime() * Maths::Pi), 6);
 	}
@@ -65,7 +65,7 @@ void onTick(CBlob@ this)
 		CSpriteLayer@ beam = this.getSprite().getSpriteLayer("beam");
 		if (beam !is null)
 		{
-			beam.SetVisible(true);
+			beam.SetVisible(power > 0);
 			beam.SetColor(SColor(255, 200 * power, 200 * power, 200 * power));
 		}
 	}
@@ -132,8 +132,6 @@ void Adjust(CBlob@ this)
 		}
 	}
 }
-
-
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {

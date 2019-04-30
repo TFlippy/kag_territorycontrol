@@ -227,7 +227,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 							bp.setPosition(this.getPosition());
 						}
 					}
-					else if (b.name == "beamtower" || b.name == "beamtowermirror")
+					else if (b.name == "beamtower")
 					{
 						CBlob@ bp = server_CreateBlob("bp_energetics", myTeam, this.getPosition());
 						 

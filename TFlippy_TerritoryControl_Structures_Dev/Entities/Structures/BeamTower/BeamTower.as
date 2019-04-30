@@ -22,12 +22,17 @@ void onInit(CBlob@ this)
 	this.sendonlyvisible = false;
 	
 	this.addCommandID("beam_fire");
+	this.addCommandID("beam_fire_signal");
 	
 	this.set_Vec2f("shop offset", Vec2f(0, 20));
 	this.set_Vec2f("shop menu size", Vec2f(1, 1));
 	this.set_string("shop description", "Solar Death Ray Tower");
 	this.set_u8("shop icon", 15);
 
+	this.set_bool("map_damage_raycast", true);
+	this.Tag("map_damage_dirt");
+	this.Tag("map_destroy_ground");
+	
 	{
 		ShopItem@ s = addShopItem(this, "Solar Death Ray Targeting Device", "$icon_beamtowertargeter$", "beamtowertargeter", "Targeting device for a Solar Death Ray Tower.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 400);
@@ -55,7 +60,7 @@ void onTick(CBlob@ this)
 {
 	if (isClient())
 	{
-		if (getGameTime() > this.get_u32("last_shoot_time"))
+		if (getGameTime() > (this.get_u32("last_shoot_time") + 2))
 		{
 			CSpriteLayer@ beam = this.getSprite().getSpriteLayer("beam");
 			if (beam !is null)
@@ -66,28 +71,10 @@ void onTick(CBlob@ this)
 	}
 }
 
-void Shoot(CBlob@ this, Vec2f dir)
+void Shoot(CBlob@ this, f32 power, Vec2f dir)
 {
 	if (getGameTime() >= (this.get_u32("last_shoot_time") + fire_delay))
-	{
-		u16 netid = this.getNetworkID();
-		f32 power = 0;
-
-		CBlob@[] blobs;
-		getBlobsByName("beamtowermirror", @blobs);
-
-		for (int i = 0; i < blobs.length; i++)
-		{
-			CBlob@ blob = blobs[i];
-			if (blob !is null)
-			{
-				if (blob.get_u16("tower_netid") == netid)
-				{
-					power += blob.get_f32("power");
-				}
-			}
-		}
-				
+	{				
 		if (power > 0.50f)
 		{
 			CMap@ map = getMap();
@@ -101,8 +88,6 @@ void Shoot(CBlob@ this, Vec2f dir)
 			
 			HitInfo@[] hitInfos;
 			map.getHitInfosFromRay(sourcePosition, -angle, dist, this, hitInfos);
-			
-			// print("" + hitInfos.length);
 			
 			if (hitInfos.length > 0)
 			{
@@ -118,9 +103,11 @@ void Shoot(CBlob@ this, Vec2f dir)
 					{
 						if (!blob.hasTag("invincible"))
 						{
-							f32 damage = power * (1.00f / Maths::Pow((hitInfo.distance / 512.00f) + 1, 2));
-							// print("damage: " + damage);
-							this.server_Hit(blob, blob.getPosition(), dir, damage * 20, Hitters::fire, true);
+							if (isServer())
+							{
+								f32 damage = power * (1.00f / Maths::Pow((hitInfo.distance / 1024.00f) + 1, 2));
+								this.server_Hit(blob, blob.getPosition(), dir, damage * 20, HittersTC::plasma, true);
+							}
 							
 							done = true;
 						}
@@ -138,7 +125,7 @@ void Shoot(CBlob@ this, Vec2f dir)
 				}
 			}
 	
-			f32 falloff = 1.00f / Maths::Pow((dist / 512.00f) + 1, 2);
+			f32 falloff = 1.00f / Maths::Pow((dist / 1024.00f) + 1, 2);
 			
 			f32 power_clamped = Maths::Clamp(power, 0, 1);
 			f32 power_falloff = power * falloff;
@@ -166,25 +153,23 @@ void Shoot(CBlob@ this, Vec2f dir)
 					this.set_f32("beam_scale", scale);
 					this.getSprite().PlaySound("BeamTower_Shoot.ogg", 1, 1);
 				}
+				
+				Sound::Play("ShockMine_explode.ogg", hitPosition, 0.50f, 1.50f);
 			}
 			
 			this.set_u32("last_shoot_time", getGameTime());
 			
-			this.set_string("custom_explosion_sound", "");
-			this.set_bool("map_damage_raycast", true);
+			
 			this.set_f32("map_damage_radius", power_falloff_sqrt * 16);
 			this.set_f32("map_damage_ratio", 0.50f);
 			this.set_Vec2f("explosion_offset", (hitPosition - this.getPosition()));
-			this.Tag("map_damage_dirt");
-			this.Tag("map_destroy_ground");
-				
+							
 			// print("base power: " + power + "; power falloff: " + power_falloff + "; clamped power: " + power_clamped + "; dist: " + dist + "; falloff: " + falloff);
 				
 			if (power_falloff > 0.50f)
 			{
 				Explode(this, power_falloff_sqrt * 16, power_falloff);
 			}
-			Sound::Play("ShockMine_explode.ogg", hitPosition, 0.50f, 1.50f);
 			
 			if (isServer())
 			{
@@ -199,15 +184,44 @@ void Shoot(CBlob@ this, Vec2f dir)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (cmd == this.getCommandID("beam_fire"))
+	if (cmd == this.getCommandID("beam_fire_signal"))
 	{		
-		Vec2f pos = params.read_Vec2f();
-		Vec2f dir = pos - (this.getPosition() + offset);
-		dir.Normalize();
-		
-		Shoot(this, dir);
-		
-		// print("" + pos);
+		if (isServer())
+		{
+			Vec2f pos = params.read_Vec2f();
+			Vec2f dir = pos - (this.getPosition() + offset);
+			dir.Normalize();
+			
+			u16 netid = this.getNetworkID();
+			f32 power = 0;
+
+			CBlob@[] blobs;
+			getBlobsByName("beamtowermirror", @blobs);
+
+			for (int i = 0; i < blobs.length; i++)
+			{
+				CBlob@ blob = blobs[i];
+				if (blob !is null)
+				{
+					if (blob.get_u16("tower_netid") == netid)
+					{
+						power += blob.get_f32("power");
+					}
+				}
+			}
+			
+			CBitStream stream;
+			stream.write_f32(power);
+			stream.write_Vec2f(dir);
+			this.SendCommand(this.getCommandID("beam_fire"), stream);
+		}
+	}
+	else if (cmd == this.getCommandID("beam_fire"))
+	{
+		f32 power = params.read_f32();
+		Vec2f dir = params.read_Vec2f();
+	
+		Shoot(this, power, dir);
 	}
 	else if (cmd == this.getCommandID("shop made item"))
 	{

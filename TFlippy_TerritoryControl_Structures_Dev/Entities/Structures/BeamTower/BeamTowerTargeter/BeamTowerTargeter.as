@@ -27,7 +27,7 @@ void onTick(CBlob@ this)
 					{
 						CBitStream stream;
 						stream.write_Vec2f(localBlob.getAimPos());
-						tower.SendCommand(tower.getCommandID("beam_fire"), stream);
+						tower.SendCommand(tower.getCommandID("beam_fire_signal"), stream);
 					}
 				}
 				else
