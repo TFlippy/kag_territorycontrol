@@ -1,38 +1,46 @@
 //Made by vamist
-#define SERVER_ONLY
 
 const string clan_configstr   = "../Cache/TC/ClanPlayerList.cfg";
 Clans clan;
 
 void onInit(CRules@ this)
 {
-    //Declare clans stuff (AS complains that its null 'randomly')
-    clan = Clans();
-    clan.UpdateClanList(this);
+    if(isServer())
+    {
+        clan = Clans();
+        clan.UpdateClanList(this);
+    }
 }
 
 void onRestart(CRules@ this)
 {
-    clan.UpdateClanList(this);
+    if(isServer())
+    {   
+        clan.UpdateClanList(this);
+    }
 }
 
 void onNewPlayerJoin( CRules@ this, CPlayer@ player )
 {
-    if(player !is null)
+    if(isServer())
     {
-       clan.userClanCheck(player,player.getUsername().toLower());
-    }
-    for(int a = 0; a < getPlayerCount(); a++)
-    {
-        CPlayer@ p = getPlayer(a);
-        if(p !is null)
+        if(player !is null)
         {
-            if(p.exists("clanData"))
+            clan.userClanCheck(this,player,player.getUsername().toLower());
+        }
+        for(int a = 0; a < getPlayerCount(); a++)
+        {
+            CPlayer@ p = getPlayer(a);
+            if(p !is null)
             {
-                p.SyncToPlayer("clanData",player);
+                if(this.exists("clanData"+p.getUsername().toLower()))
+                {
+                    this.SyncToPlayer("clanData"+p.getUsername().toLower(),player);
+                }
             }
         }
     }
+
 }
 
 class Clans
@@ -60,8 +68,9 @@ class Clans
     }
 
     //Clan if a player is in a clan, if so give them a property
-    void userClanCheck(CPlayer@ player, string userName)
+    void userClanCheck(CRules@ this,CPlayer@ player, string userName)
     {
+        print("checking!");
         /*  
         for(int a = 0; a < testUserList.length(); a++)
         {
@@ -77,37 +86,47 @@ class Clans
         }
         */
 
-
         if(bucketList.find(userName) != -1)
         {
-            player.set_string("clanData","Bucket Brotherhood");
-            player.Sync("clanData",true);
+            print("p a s s s");
+            this.set_string("clanData"+userName,"Bucket Brotherhood");
+            this.Sync("clanData"+userName,true);
         }
         else if(LuxList.find(userName) != -1)
         {
-            player.set_string("clanData","Metalon");
-            player.Sync("clanData",true);
+            print("bad");
+            this.set_string("clanData"+userName,"Metalon");
+            this.Sync("clanData"+userName,true);
         }
         else if(TclfList.find(userName) != -1)
         {
-            player.set_string("clanData","TC Liberation Front");
-            player.Sync("clanData",true);
+            print("meh");
+            this.set_string("clanData"+userName,"TC Liberation Front");
+            this.Sync("clanData"+userName,true);
         }
         else if(darkList.find(userName) != -1)
         {
-            player.set_string("clanData","DARK");
-            player.Sync("clanData",true);
+            print("no pls");
+            this.set_string("clanData"+userName,"DARK");
+            this.Sync("clanData"+userName,true);
         }
         else if(ivanList.find(userName) != -1)
         {
-            player.set_string("clanData","Invanists United");
-            player.Sync("clanData",true);
+            print("ok");
+            this.set_string("clanData"+userName,"Invanists United");
+            this.Sync("clanData"+userName,true);
         }
         else if(spekList.find(userName) != -1)
         {
-            player.set_string("clanData","Sepulka");
-            player.Sync("clanData",true);
+            print("hello world!");
+            this.set_string("clanData"+userName,"Sepulka");
+            this.Sync("clanData"+userName,true);
         }
+        else
+        {
+            print("not found in any!");
+        }
+
     }
 
     string returnStringList(string clanName)
