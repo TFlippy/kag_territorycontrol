@@ -239,11 +239,12 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 					else if(b.name == "banner")
 					{
 						CPlayer@ p = this.getPlayer();
-						if(p !is null)
+						CRules@ r = getRules();
+						if(p !is null && r !is null)
 						{
-							if(p.exists("clanData"))
+							if(r.exists("clanData"+p.getUsername().toLower()))
 							{
-								blockBlob.set_string("cData",p.get_string("clanData"));
+								blockBlob.set_string("cData",r.get_string("clanData"+p.getUsername().toLower()));
 								blockBlob.Sync("cData",false);
 							}
 						}
