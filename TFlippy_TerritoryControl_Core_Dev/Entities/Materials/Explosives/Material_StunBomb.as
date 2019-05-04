@@ -99,7 +99,7 @@ void DoExplosion(CBlob@ this)
 				f32 dist = dir.Length();
 				dir.Normalize();
 				
-				f32 mod = Maths::Clamp(1.00f - (len / 192), 0, 1);
+				f32 mod = Maths::Pow(Maths::Clamp(1.00f - (dist / 192), 0, 1),2);
 				blob.AddForce(dir * blob.getRadius() * 70 * mod * modifier);
 				SetKnocked(blob, 150 * mod);
 				
