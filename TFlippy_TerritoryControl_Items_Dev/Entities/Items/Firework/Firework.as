@@ -176,11 +176,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("offblast"))
 	{
 		if (this.hasTag("offblast")) return;
-		if (this.isInInventory())
-		{
-			DoExplosion(this);
-			return;
-		}
 		// this.setPosition(this.getPosition() + Vec2f(0, -32)); // Hack
 		this.setAngleDegrees(0);
 		Vec2f pos = this.getPosition();
@@ -199,6 +194,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		this.SetLight(true);
 		this.SetLightRadius(128.0f);
 		this.SetLightColor(SColor(255, 255, 100, 0));
+		if (this.isInInventory())
+		{
+			DoExplosion(this);
+			return;
+		}
 	}
 }
 
