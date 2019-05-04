@@ -14,7 +14,7 @@ void onInit(CBlob@ this) {
 
 	this.Tag("builder always hit");
 	this.Tag("ignore extractor");
-	this.Tag("smart storage");
+	this.Tag("smart_storage");
 	
 	dictionary inventory;
 	this.set("smart_inventory",inventory);
@@ -129,7 +129,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params) {
 }
 
 //returns amount of this resource in inventory
-u32 smart_storage_check(CBlob@ this, string iname) {
+u32 smart_Storage_Check(CBlob@ this, string iname) {
 	int64 ret;
 	dictionary@ inventory;
 	if(!this.get("smart_inventory", @inventory) || !inventory.get(iname,ret))
@@ -140,7 +140,7 @@ u32 smart_storage_check(CBlob@ this, string iname) {
 
 //!!!!! where to get maxquantity? create blob? <- for now just store in inventory
 //removes up to amount of this resource from inventory, returns how much it removed
-u32 smart_storage_remove(CBlob@ this, string iname, u32 amount) {
+u32 smart_Storage_Take(CBlob@ this, string iname, u32 amount) {
 	int64 am, mq;
 	dictionary@ inventory;
 	if(!this.get("smart_inventory", @inventory) || !inventory.get(iname,am) || am == 0) //last one should never happen
