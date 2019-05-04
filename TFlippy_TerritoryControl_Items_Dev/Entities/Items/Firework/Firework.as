@@ -176,7 +176,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("offblast"))
 	{
 		if (this.hasTag("offblast")) return;
-
+		if (this.isInInventory())
+		{
+			DoExplosion(this);
+			return;
+		}
 		// this.setPosition(this.getPosition() + Vec2f(0, -32)); // Hack
 		this.setAngleDegrees(0);
 		Vec2f pos = this.getPosition();
@@ -217,9 +221,3 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	
 	return damage;
 }
-
-
-
-
-
-			
