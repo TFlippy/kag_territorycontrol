@@ -133,7 +133,7 @@ void onTick(CBlob@ this)
 			
 			f32 dist = (b.getPosition() - this.getPosition()).LengthSquared();
 			
-			if (team != myTeam && dist < s_dist && b.hasTag("flesh") && !b.hasTag("dead"))
+			if (team != myTeam && dist < s_dist && b.hasTag("flesh") && !b.hasTag("dead") && isVisible(this, b))
 			{
 				s_dist = dist;
 				index = i;
@@ -166,7 +166,11 @@ void onTick(CBlob@ this)
 		int ammo = GetAmmo(this);
 		
 		CBlob@ t = getBlobByNetworkID(this.get_u16("target"));
-		if (t !is null && isVisible(this, t))
+		if (t is null || !isVisible(this, t) || ((t.getPosition() - this.getPosition()).LengthSquared() > 450.00f*450.00f)) //if blob doesn't exist or gone out of tracking range or LoS
+		{
+			this.set_u16("target", 0); //then reset targetting
+		}
+		else
 		{
 			if (ammo > 0 && this.get_u32("next_shoot") < getGameTime())
 			{
