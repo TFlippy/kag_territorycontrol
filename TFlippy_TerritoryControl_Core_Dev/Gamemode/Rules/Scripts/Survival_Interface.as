@@ -249,7 +249,7 @@ void onRenderScoreboard(CRules@ this)
 			string rank = getRank(p, dev);
 			s32 ping_in_ms = s32(p.getPing() * 1000.0f / 30.0f);
 			u16 coins = p.getCoins();
-			string clan = p.exists("clanData") ? p.get_string("clanData") : "";
+			string clan = this.exists("clanData"+p.getUsername().toLower()) ? this.get_string("clanData"+p.getUsername().toLower()) : "";
 
 			
 
