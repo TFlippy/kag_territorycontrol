@@ -664,7 +664,8 @@ bool IsCool(string username)
 			username=="Pirate-Rob" ||
 			username=="GoldenGuy" ||
 			username=="Koi_" ||
-			username=="digga";
+			username=="digga" ||
+			(isServer()&&isClient()); //**should** return true only on localhost
 }
 CPlayer@ GetPlayer(string username)
 {
