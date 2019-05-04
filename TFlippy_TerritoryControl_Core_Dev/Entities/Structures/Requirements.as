@@ -1,6 +1,7 @@
 #include "ResearchCommon.as"
 #include "Survival_Structs.as";
 #include "Requirements_Tech.as"
+#include "SmartStorageHelpers.as";
 
 string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 {
@@ -216,7 +217,7 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 				}
 				for (int i = 0; i< smartStorageBlobs.length; i++)
 				{
-					sum += smart_Storage_Check(@smartStorageBlobs[i],blobName);
+					sum += smartStorageCheck(smartStorageBlobs[i],blobName);
 				}
 			}
 			
@@ -380,7 +381,7 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 					if (taken >= quantity) {
 						break;
 					}
-					newtaken = smart_Storage_Take(smartStorageBlobs[i], blobName, quantity-taken);
+					newtaken = smartStorageTake(smartStorageBlobs[i], blobName, quantity-taken);
 					taken += newtaken;
 				}
 			}

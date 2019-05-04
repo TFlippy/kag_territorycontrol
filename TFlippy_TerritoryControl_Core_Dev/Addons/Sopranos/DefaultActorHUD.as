@@ -190,6 +190,7 @@ void RenderTeamInventoryHUD(CBlob@ this)
 		GetTeamData(playerTeam, @team_data);
 	
 		CBlob@[] baseBlobs;
+		CBlob@[] smartStorageBlobs;
 		CBlob@[] itemsToShow;
 		int[] itemAmounts;
 		int[] jArray;
@@ -208,7 +209,7 @@ void RenderTeamInventoryHUD(CBlob@ this)
 		}
 		
 		getBlobsByTag("remote_storage", @baseBlobs);
-		
+		getBlobsByTag("smart_storage", @smartStorageBlobs);
 		for (int i = 0; i < baseBlobs.length; i++) 
 		{
 			CBlob@ baseBlob=baseBlobs[i];
