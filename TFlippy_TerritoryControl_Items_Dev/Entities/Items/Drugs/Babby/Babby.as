@@ -21,8 +21,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 		if (caller !is null)
 		{
-			if (!caller.hasScript("Dominoed.as")) caller.AddScript("Dominoed.as");
-			caller.set_f32("dominoed", 5);
+			if (!caller.hasScript("Babbyed.as")) caller.AddScript("Babbyed.as");
+			caller.set_f32("babbyed", 5);
 			
 			if (getNet().isServer())
 			{

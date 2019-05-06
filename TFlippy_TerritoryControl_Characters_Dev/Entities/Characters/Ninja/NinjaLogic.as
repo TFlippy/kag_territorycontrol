@@ -130,8 +130,8 @@ void onTick(CBlob@ this)
 	const f32 side = (this.isFacingLeft() ? 1.0f : -1.0f);
 
 	bool swordState = isSwordState(ninja.state);
-	bool pressed_a1 = this.isKeyPressed(key_action1);
-	bool pressed_a2 = this.isKeyPressed(key_action2);
+	bool pressed_a1 = this.isKeyPressed(key_action1) && !(this.get_f32("babbyed") > 0);
+	bool pressed_a2 = this.isKeyPressed(key_action2) && !(this.get_f32("babbyed") > 0);
 	bool walking = (this.isKeyPressed(key_left) || this.isKeyPressed(key_right));
 
 	const bool myplayer = this.isMyPlayer();
@@ -170,8 +170,7 @@ void onTick(CBlob@ this)
 		if (ninja.swordTimer < 32)
 			ninja.swordTimer++;
 
-		if (ninja.state == NinjaStates::sword_drawn && !pressed_a1 &&
-		        !(this.isKeyJustReleased(key_action1) || ninja.swordTimer > 4) && delta > NinjaVars::resheath_time)
+		if (ninja.state == NinjaStates::sword_drawn && !pressed_a1 && !(this.isKeyJustReleased(key_action1) || ninja.swordTimer > 4) && delta > NinjaVars::resheath_time)
 		{
 			ninja.state = NinjaStates::normal;
 		}
