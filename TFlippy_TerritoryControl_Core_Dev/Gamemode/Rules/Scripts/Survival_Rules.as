@@ -4,6 +4,7 @@
 #include "MaterialCommon.as";
 #include "Costs.as"
 #include "MakeMat.as";
+#include "Logging.as";
 // #include "Knocked.as"
 
 shared class Players
@@ -138,6 +139,22 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 	// player.server_setCoins(150);
 }
 
+void onBlobCreated(CRules@ this, CBlob@ blob)
+{
+	if (!blob.hasTag("material"))
+	{
+		print_log(blob, "has been created");
+	}
+}
+
+void onBlobDie(CRules@ this, CBlob@ blob)
+{
+	if (!blob.hasTag("material"))
+	{
+		print_log(blob, "has been destroyed");
+	}
+}
+
 // void onBlobCreated(CRules@ this, CBlob@ blob)
 // {
 	// blob.AddScript("DisableInventoryCollisions");
@@ -218,7 +235,8 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	string victimName = victim.getUsername() + " (team " + victim.getTeamNum() + ")";
 	string attackerName = attacker !is null ? (attacker.getUsername() + " (team " + attacker.getTeamNum() + ")") : "world";
 
-	printf(victimName + " has been killed by " + attackerName + "; damage type: " + customData);
+	print_log(victim, "has been killed by " + attackerName + "; damage type: " + customData);
+	// printf(victimName + " has been killed by " + attackerName + "; damage type: " + customData);
 
 	u8 victimTeam = victim.getTeamNum();
 	s32 respawn_time = 30 * 4;
