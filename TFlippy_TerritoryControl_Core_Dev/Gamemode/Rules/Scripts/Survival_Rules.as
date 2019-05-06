@@ -141,7 +141,7 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 
 void onBlobCreated(CRules@ this, CBlob@ blob)
 {
-	if (!blob.hasTag("material"))
+	if (getGameTime() > 150 && !blob.hasTag("material"))
 	{
 		print_log(blob, "has been created");
 	}
@@ -149,7 +149,7 @@ void onBlobCreated(CRules@ this, CBlob@ blob)
 
 void onBlobDie(CRules@ this, CBlob@ blob)
 {
-	if (!blob.hasTag("material"))
+	if (getGameTime() > 150 && !blob.hasTag("material"))
 	{
 		print_log(blob, "has been destroyed");
 	}
