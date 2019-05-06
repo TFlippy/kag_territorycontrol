@@ -115,7 +115,7 @@ void onDie(CBlob@ this)
 			server_SpawnRandomItem(this, @c_items);
 		}
 
-		server_SpawnCoins(this, 500 + XORRandom(1000));
+		server_SpawnCoins(this, 250 + XORRandom(500));
 	}
 }
 
