@@ -174,5 +174,5 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
-	return byBlob !is this && (this.hasTag("migrant") || this.hasTag("dead") || (this.get_f32("babbyed") > 0));
+	return byBlob !is this && (this.hasTag("migrant") || this.hasTag("dead"));
 }
