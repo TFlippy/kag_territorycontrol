@@ -34,6 +34,7 @@ namespace tc_colors
 		color_chickencoop = 0xff964619,
 		color_scoutchicken = 0xffb96437,
 		color_lootchest = 0xffffd200,
+		color_lootchest_random = 0xffff8200,
 		color_bannerchicken = 0xffbe3838,
 		color_irondoor_chicken = 0xffcfbaba,
 		color_chickenmarket = 0xffdccb7b,
@@ -166,6 +167,16 @@ class TCPNGLoader : PNGLoader
 			{
 				map.SetTile(offset, CMap::tile_biron);
 				spawnBlob(map, "lootchest", offset, -1);
+				break;
+			}
+			
+			case tc_colors::color_lootchest_random:
+			{
+				if (XORRandom(100) < 50)
+				{
+					map.SetTile(offset, CMap::tile_biron);
+					spawnBlob(map, "lootchest", offset, -1);
+				}
 				break;
 			}
 			
