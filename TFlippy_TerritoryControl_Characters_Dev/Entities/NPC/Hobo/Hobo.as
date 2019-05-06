@@ -281,7 +281,7 @@ void onInit(CBlob@ this)
 		this.server_setTeamNum(-1);
 	}
 
-	this.getSprite().addSpriteLayer("isOnScreen");
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 }
 
 void onTick(CBlob@ this)

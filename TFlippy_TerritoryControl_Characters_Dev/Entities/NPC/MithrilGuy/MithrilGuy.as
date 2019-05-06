@@ -22,7 +22,7 @@ void onInit( CBrain@ this )
 void onInit(CBlob@ this)
 {
 	// this.Tag("npc");
-	this.getSprite().addSpriteLayer("isOnScreen");
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 	this.Tag("flesh");
 	this.Tag("dangerous");
 	this.Tag("map_damage_dirt");
