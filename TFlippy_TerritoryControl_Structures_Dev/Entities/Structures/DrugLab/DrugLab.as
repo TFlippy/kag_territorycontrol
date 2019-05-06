@@ -285,6 +285,18 @@ void React(CBlob@ this)
 				}
 				this.getSprite().PlaySound("DrugLab_Create_Solid.ogg", 1.00f, 1.00f);
 			}
+			
+			if (pressure < 20000 && heat > 100 && heat < 750 && hasAcid && hasCoal && acid_count >= 20 && coal_count >= 15)
+			{
+				if (getNet().isServer())
+				{
+					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 20, 0));
+					coal_blob.server_SetQuantity(Maths::Max(coal_blob.getQuantity() - 15, 0));
+					
+					Material::createFor(this, "babby", 1 + XORRandom(2));
+				}
+				this.getSprite().PlaySound("DrugLab_Create_Solid.ogg", 1.00f, 1.00f);
+			}
 		}	
 	}
 	
