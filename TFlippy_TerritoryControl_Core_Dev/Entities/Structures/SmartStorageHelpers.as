@@ -9,15 +9,14 @@ u32 smartStorageCheck(CBlob@ this, string iname)
 }
 
 
-//!!!!! where to get maxquantity? create blob? <- for now just store in inventory
 //removes up to amount of this resource from inventory, returns how much it removed
 u32 smartStorageTake(CBlob@ this, string iname, u32 amount)
 {
 	int64 am, mq;
+	dictionary@ mqd;
 	dictionary@ inventory;
-	if(!this.get("smart_inventory", @inventory) || !inventory.get(iname,am) || am == 0)
+	if(!this.get("smart_inventory", @inventory) || !this.get("smart_inventory_max_quantities",@mqd) || !mqd.get(iname,mq) || !inventory.get(iname,am) || am == 0)
 		return 0;
-	inventory.get(iname+"__max_quantity",mq);
 	u16 cur_quantity = this.get_u16("smart_storage_quantity");
 	u16 prevstacks = (am-1)/mq+1; //round up
 	if(amount >= am)

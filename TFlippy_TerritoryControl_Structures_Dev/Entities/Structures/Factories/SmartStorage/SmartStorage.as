@@ -16,7 +16,9 @@ void onInit(CBlob@ this) {
 	this.Tag("smart_storage");
 	
 	dictionary inventory;
+	dictionary max_quantities;
 	this.set("smart_inventory",inventory);
+	this.set("smart_inventory_max_quantities",max_quantities);
 	this.set_u16("smart_storage_quantity", 0);
 	this.addCommandID("smart_storage_sync");
 	this.addCommandID("smart_storage_debug");
@@ -64,7 +66,9 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid) {
 			return;
 		}
 		inventory.set(iname,held_resource_amount);
-		inventory.set(iname+"__max_quantity",maxquantity);
+		dictionary@ mq;
+		this.get("smart_inventory_max_quantities",@mq);
+		mq.set(iname,maxquantity);
 		server_Sync(this, iname, held_resource_amount, maxquantity, quantity);
 		if (getNet().isClient()) {
 			this.getSprite().PlaySound("bridge_open.ogg");
@@ -93,7 +97,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params) {
 			dictionary@ inventory;
 			this.get("smart_inventory", @inventory);
 			inventory.set(iname,new_amount);
-			inventory.set(iname+"__max_quantity",max_quantity);
+			
+			dictionary@ mq;
+			this.get("smart_inventory_max_quantities",@mq);
+			mq.set(iname,max_quantity);
+			
 			this.set_u16("smart_storage_quantity", new_quantity);
 			
 			client_UpdateName(this);
