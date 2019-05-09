@@ -698,7 +698,15 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(24, 32);
 		blocks[3].push_back(b);
 	}
-
+	{
+		BuildBlock b(0, "smartstorage", "$icon_compactor$", "Storage\nStores a lot of resources but is only accesible via remote storage.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 15);
+		b.buildOnGround = true;
+		b.size.Set(24, 32);
+		blocks[3].push_back(b);
+	}
 	
 	// {
 		// BuildBlock b(0, "floater", "$icon_floater$", "Floater\nActs as a supporting structure - useful for sky islands and bridges.");
