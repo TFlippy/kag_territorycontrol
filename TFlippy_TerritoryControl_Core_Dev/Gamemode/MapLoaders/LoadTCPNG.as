@@ -147,17 +147,17 @@ class TCPNGLoader : PNGLoader
 				if (rand < 15)
 				{
 					CBlob@ blob = spawnBlob(map, "heavychicken", offset, -1);
-					blob.set_bool("raider", false);
+					blob.set_bool("raider", XORRandom(100) < 10);
 				}
 				else if (rand < 50)
 				{
 					CBlob@ blob = spawnBlob(map, "soldierchicken", offset, -1);
-					blob.set_bool("raider", false);
+					blob.set_bool("raider", XORRandom(100) < 25);
 				}
 				else
 				{
 					CBlob@ blob = spawnBlob(map, "scoutchicken", offset, -1);
-					blob.set_bool("raider", false);
+					blob.set_bool("raider", XORRandom(100) < 50);
 				}
 			
 				break;
