@@ -143,110 +143,52 @@ void RenderUpkeepHUD(CBlob@ this)
 	}
 }
 
-const string[] teamItems =
-{
-	"mat_wood",
-	"mat_oil",
-	"mat_coal",
-	"mat_steelingot",
-	"mat_copperwire",
-	"mat_plasteel",
-	"mat_sulphur",
-	"mat_meat",
-	"mat_fuel",
-	"mat_methane",
-	"mat_acid",
-	"mat_antimatter",
-	"mat_mithrilenriched"
-};
+class GUI_Icon {
+	string cfg_name;
+	string icon_name;
+	u32 icon_frame_index;
+	GUI_Icon(string cfg_name, string icon_name, u32 icon_frame_index)
+	{
+		this.cfg_name=cfg_name;
+		this.icon_name=icon_name;
+		this.icon_frame_index=icon_frame_index;
+	}
+}
 
-const string[] teamItemsIN =
+const GUI_Icon@[] teamItems =
 {
-	"Materials.png",
-	"Material_Oil.png",
-	"Material_Coal.png",
-	"Material_SteelIngot.png",
-	"Material_CopperWire.png",
-	"Material_Plasteel.png",
-	"Material_Sulfur.png",
-	"Material_Meat.png",
-	"Material_Fuel.png",
-	"Material_Methane.png",
-	"Material_Acid.png",
-	"Material_Antimatter.png",
-	"Material_MithrilEnriched.png"
-};
-
-const int[] teamItemsIF =
-{
-	25,
-	0,
-	3,
-	3,
-	0,
-	0,
-	3,
-	3,
-	0,
-	0,
-	0,
-	0,
-	3,
+	GUI_Icon("mat_wood", "Materials.png",25),
+	GUI_Icon("mat_oil", "Material_Oil.png",0),
+	GUI_Icon("mat_coal", "Material_Coal.png",3),
+	GUI_Icon("mat_steelingot", "Material_SteelIngot.png",3),
+	GUI_Icon("mat_copperwire", "Material_CopperWire.png",0),
+	GUI_Icon("mat_plasteel", "Material_Plasteel.png",0),
+	GUI_Icon("mat_sulphur", "Material_Sulfur.png",3),
+	GUI_Icon("mat_meat", "Material_Meat.png",3),
+	GUI_Icon("mat_fuel", "Material_Fuel.png",0),
+	GUI_Icon("mat_methane", "Material_Methane.png",0),
+	GUI_Icon("mat_acid", "Material_Acid.png",0),
+	GUI_Icon("mat_antimatter", "Material_Antimatter.png",0),
+	GUI_Icon("mat_mithrilenriched", "Material_MithrilEnriched.png",3)
 };
 //teamOres.length === teamIngots.length
 //teamOres[i] -> teamIngots[i]
-const string[] teamOres =
+const GUI_Icon@[] teamOres =
 {
-	"mat_stone",
-	"mat_copper",
-	"mat_iron",
-	"mat_gold",
-	"mat_mithril"
+	GUI_Icon("mat_stone","Materials.png",24),
+	GUI_Icon("mat_copper","Material_Copper.png",3),
+	GUI_Icon("mat_iron","Material_Iron.png",3),
+	GUI_Icon("mat_gold","Materials.png",26),
+	GUI_Icon("mat_mithril","Material_Mithril.png",3)
 };
 
-const string[] teamOresIN =
+const GUI_Icon[] teamIngots =
 {
-	"Materials.png",
-	"Material_Copper.png",
-	"Material_Iron.png",
-	"Materials.png",
-	"Material_Mithril.png"
-};
-
-const int[] teamOresIF =
-{
-	24,
-	3,
-	3,
-	26,
-	3
-};
-
-const string[] teamIngots =
-{
-	"mat_concrete",
-	"mat_copperingot",
-	"mat_ironingot",
-	"mat_goldingot",
-	"mat_mithrilingot"
-};
-
-const string[] teamIngotsIN =
-{
-	"Material_Concrete.png",
-	"Material_CopperIngot.png",
-	"Material_IronIngot.png",
-	"Material_GoldIngot.png",
-	"Material_MithrilIngot.png"
-};
-
-const int[] teamIngotsIF =
-{
-	3,
-	3,
-	3,
-	3,
-	3
+	GUI_Icon("mat_concrete","Material_Concrete.png",3),
+	GUI_Icon("mat_copperingot","Material_CopperIngot.png",3),
+	GUI_Icon("mat_ironingot","Material_IronIngot.png",3),
+	GUI_Icon("mat_goldingot","Material_GoldIngot.png",3),
+	GUI_Icon("mat_mithrilingot","Material_MithrilIngot.png",3)
 };
 
 // Merser pls, fix your code formatting, it's unreadable and gives me conniptions
@@ -279,9 +221,9 @@ void RenderTeamInventoryHUD(CBlob@ this)
 	int64 buf = 0; //for dict
 	dictionary itemsToShow; // item -> amount
 	//init for more effective storage and checks
-	for(uint8 i=0;i<teamItems.length;i++) itemsToShow.set(teamItems[i],buf);
-	for(uint8 i=0;i<teamOres.length;i++) itemsToShow.set(teamOres[i],buf);
-	for(uint8 i=0;i<teamIngots.length;i++) itemsToShow.set(teamIngots[i],buf);
+	for(uint8 i=0;i<teamItems.length;i++) itemsToShow.set(teamItems[i].cfg_name,buf);
+	for(uint8 i=0;i<teamOres.length;i++) itemsToShow.set(teamOres[i].cfg_name,buf);
+	for(uint8 i=0;i<teamIngots.length;i++) itemsToShow.set(teamIngots[i].cfg_name,buf);
 	array<string>@ dkeys = itemsToShow.getKeys(); // to iterate over them later
 
 	CBlob@[] baseBlobs;
@@ -334,8 +276,8 @@ void RenderTeamInventoryHUD(CBlob@ this)
 	int drawn=0;	
 	for(int i=0;i<teamIngots.length;i++)
 	{
-		string oname = teamOres[i];
-		string iname = teamIngots[i];
+		string oname = teamOres[i].cfg_name;
+		string iname = teamIngots[i].cfg_name;
 		int64 omount;
 		int64 imount;
 		itemsToShow.get(oname,omount);
@@ -346,20 +288,20 @@ void RenderTeamInventoryHUD(CBlob@ this)
 		GUI::DrawIcon("GUI/jslot.png",2,Vec2f(32,32),itemPos+Vec2f(48,0));
 		GUI::DrawIcon("GUI/jslot.png",0,Vec2f(32,32),itemPos+Vec2f(96,0));
 		GUI::SetFont("menu");
-		GUI::DrawIcon(teamIngotsIN[i],teamIngotsIF[i],Vec2f(16,16),itemPos+Vec2f(96,0)+Vec2f(8,8));
+		GUI::DrawIcon(teamIngots[i].icon_name,teamIngots[i].icon_frame_index,Vec2f(16,16),itemPos+Vec2f(96,0)+Vec2f(8,8));
 		GUI::DrawText(""+imount,itemPos+Vec2f(38+96-(int((""+imount).get_length())*8),26),SColor(255,255,255,255));
-		GUI::DrawIcon(teamOresIN[i],teamOresIF[i],Vec2f(16,16),itemPos+Vec2f(8,8));
+		GUI::DrawIcon(teamOres[i].icon_name,teamOres[i].icon_frame_index,Vec2f(16,16),itemPos+Vec2f(8,8));
 		GUI::DrawText(""+omount,itemPos+Vec2f(38-(int((""+omount).get_length())*8),26),SColor(255,255,255,255));
 		drawn++;
 	}
 	for(int i=0;i<teamItems.length;i++)
 	{
-		string iname = teamItems[i];
+		string iname = teamItems[i].cfg_name;
 		itemsToShow.get(iname,buf);
 		if(buf==0) continue;
 		Vec2f itemPos=	Vec2f(getScreenWidth()-54,54+drawn*46)+hudPos;
 		GUI::DrawIcon("GUI/jslot.png",0,Vec2f(32,32),itemPos);
-		GUI::DrawIcon(teamItemsIN[i],teamItemsIF[i],Vec2f(16,16),itemPos+Vec2f(8,8));
+		GUI::DrawIcon(teamItems[i].icon_name,teamItems[i].icon_frame_index,Vec2f(16,16),itemPos+Vec2f(8,8));
 		GUI::SetFont("menu");
 		GUI::DrawText(""+buf,itemPos+Vec2f(38-(int((""+buf).get_length())*8),26),SColor(255,255,255,255));
 		drawn++;
