@@ -47,8 +47,6 @@ void onTick(CBlob@ this)
 						if (blob !is null && blob.hasTag("player") && blob.getTeamNum() != team)
 						{
 							f32 chance = 1.0f - (blob.getHealth() / blob.getInitialHealth());
-							if (blob.get_f32("babbyed") > 0) chance = 1.00f;
-							
 							print("" + chance);
 						
 							if ((chance > 0.50f && XORRandom(100) < chance * 80) || (blob.get_u8("knocked") > 15 && chance > 0.2f))

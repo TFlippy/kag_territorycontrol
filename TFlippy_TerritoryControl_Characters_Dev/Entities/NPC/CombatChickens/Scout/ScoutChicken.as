@@ -5,10 +5,11 @@
 #include "FireParticle.as"
 #include "FireCommon.as";
 #include "RunnerCommon.as";
+#include "CommonGun.as";
 
 void onInit(CBlob@ this)
 {
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen");
 	this.set_u32("nextAttack", 0);
 	this.set_u32("nextBomb", 0);
 	
@@ -43,13 +44,13 @@ void onInit(CBlob@ this)
 		string gun_config;
 		string ammo_config;
 		
-		switch(XORRandom(15))
+		switch(XORRandom(11))
 		{
 			case 0:
 			case 1:
 			case 2:
 				gun_config = "carbine";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "mat_pistolammo";
 				
 				this.set_u8("attackDelay", 3);
 				this.set_u8("reactionTime", 30);
@@ -111,20 +112,6 @@ void onInit(CBlob@ this)
 				
 				break;
 				
-			case 11:
-			case 12:
-			case 13:
-				gun_config = "pdw";
-				ammo_config = "mat_pistolammo";
-				
-				this.set_u8("attackDelay", 1);
-				this.set_u8("reactionTime", 30);
-				this.set_f32("chaseDistance", 100);
-				this.set_f32("minDistance", 8);
-				this.set_f32("maxDistance", 300);
-				
-				break;
-				
 			default:
 				gun_config = "fuger";
 				ammo_config = "mat_pistolammo";
@@ -169,15 +156,11 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
-	// if(isClient())
-	// {
-		// if (!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen())
-		// {
-			// return;
-		// }
-	// }
-	
-
+	if(isClient()){
+		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
+	}
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
 	{

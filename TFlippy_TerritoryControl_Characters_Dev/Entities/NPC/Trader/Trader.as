@@ -142,7 +142,7 @@ void onInit(CBlob@ this)
 	this.set_string("shop description", name + " the Trader");
 	this.setInventoryName(name + " the Trader");
 	this.set_u8("shop icon", 25);
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen");
 	
 	this.set_u32("lastDanger", 0);
 	

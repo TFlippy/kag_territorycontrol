@@ -38,3 +38,26 @@ void onTick(CBlob@ this)
 		}
 	}
 }
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+{
+	if (cmd == this.getCommandID("targeter_set_link"))
+	{
+		CBlob@ caller = getBlobByNetworkID(params.read_u16());
+		if (caller !is null)
+		{
+			CBlob@ carried = caller.getCarriedBlob();
+			if (carried !is null && carried.getConfig() == "securitycard")
+			{
+				if (this.get_u32("security_link_id") == 0)
+				{
+					this.set_u32("security_link_id", carried.get_u32("security_link_id"));
+				}
+				else if (this.get_u32("security_link_id") == carried.get_u32("security_link_id"))
+				{
+					this.set_u32("security_link_id", 0);
+				}
+			}
+		}
+	}
+}

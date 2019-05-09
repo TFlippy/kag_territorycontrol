@@ -5,9 +5,7 @@
 #include "FireParticle.as"
 #include "FireCommon.as";
 #include "RunnerCommon.as";
-#include "MakeCrate.as";
-
-u32 next_commander_event = 0; // getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
+#include "CommonGun.as";
 
 void onInit(CBlob@ this)
 {
@@ -24,11 +22,6 @@ void onInit(CBlob@ this)
 	this.set_bool("bomber", false);
 	this.set_bool("raider", false);
 	
-	// this.set_u32("next_event", getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
-	
-	next_commander_event = getGameTime(); // + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
-	this.addCommandID("commander_order_recon_squad");
-	
 	this.SetDamageOwnerPlayer(null);
 	
 	this.Tag("can open door");
@@ -40,7 +33,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 1;
 	
 	this.set_f32("voice pitch", 1.50f);
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen");
 	if (isServer())
 	{
 		this.set_u16("stolen coins", 850);
@@ -84,6 +77,11 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
+	if(isClient()){
+		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
+	}
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
 	{
@@ -123,39 +121,6 @@ void onTick(CBlob@ this)
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
 
-	if (isServer())
-	{
-		if (getGameTime() >= next_commander_event)
-		{
-			CBlob@[] bases;
-			getBlobsByTag("faction_base", @bases);
-			u16 base_netid = 0;
-		
-			if (bases.length > 0) 
-			{
-				CBlob@ base = bases[XORRandom(bases.length)];
-				if (base !is null)
-				{
-					next_commander_event = getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 20);
-					
-					f32 map_width = getMap().tilemapwidth * 8;
-					f32 initial_position_x = Maths::Clamp(base.getPosition().x + (80 - XORRandom(160)) * 8.00f, 256.00f, map_width - 256.00f);
-				
-					CBitStream stream;
-					stream.write_u16(base.getNetworkID());
-					this.SendCommand(this.getCommandID("commander_order_recon_squad"), stream);
-				
-					for (int i = 0; i < 4; i++)
-					{
-						CBlob@ blob = server_MakeCrateOnParachute("scoutchicken", "SpaceStar Ordering Recon Squad", 0, 250, Vec2f(initial_position_x + (64 - XORRandom(128)), XORRandom(32)));
-						blob.Tag("unpack on land");
-						blob.Tag("destroy on touch");
-					}
-				}
-			}
-		}
-	}
-	
 	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
@@ -192,23 +157,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	}
 	
 	return damage;
-}
-
-void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
-{
-	if (cmd == this.getCommandID("commander_order_recon_squad"))
-	{
-		CBlob@ target = getBlobByNetworkID(params.read_u16());
-		if (target !is null)
-		{
-			CTeam@ team = getRules().getTeam(target.getTeamNum());
-			if (team !is null)
-			{
-				client_AddToChat("An UPF Recon Squad has been called upon " + team.getName() + "'s " + target.getInventoryName() + "!", SColor(255, 255, 0, 0));
-				Sound::Play("ChickenMarch.ogg", target.getPosition(), 1.00f, 1.00f);
-			}
-		}
-	}
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)

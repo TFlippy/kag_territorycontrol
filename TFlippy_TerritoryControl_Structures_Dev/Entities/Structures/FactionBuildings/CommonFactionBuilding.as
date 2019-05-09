@@ -1,6 +1,5 @@
 #include "Survival_Structs.as";
 #include "Hitters.as";
-#include "Logging.as";
 
 const string raid_tag = "under raid";
 const u32[] teamcolours = {0xff0000ff, 0xffff0000, 0xff00ff00, 0xffff00ff, 0xffff6600, 0xff00ffff, 0xff6600ff, 0xff647160};
@@ -516,7 +515,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (data == 0 && isLeader)
 						{
 							client_AddToChat(ply.getUsername() + " has resigned as the leader of the " + teamName + "!", teamColor);
-							print_log(ply, "has resigned as the leader of the " + teamName);
+							printf(ply.getUsername() + " has resigned as the leader of the " + teamName);
 							
 							team_data.leader_name = "";
 						}
@@ -524,7 +523,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						{
 							team_data.leader_name = ply.getUsername();
 							client_AddToChat(ply.getUsername() + " has become the leader of " + teamName + "!", teamColor);
-							print_log(ply, "has become the leader of " + teamName);
+							printf(ply.getUsername() + " has become the leader of " + teamName);
 						}
 						break;
 						
@@ -533,7 +532,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (isLeader) 
 						{
 							team_data.recruitment_enabled = data > 0;
-							print_log(ply, "set Recruitment to " + (data > 0));
+							printf(ply.getUsername() + " [" + teamName + "]" + " set Recruitment to " + (data > 0));
 						}
 						break;
 						
@@ -541,7 +540,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (isLeader) 
 						{
 							team_data.lockdown_enabled = data > 0;
-							print_log(ply, "set Lockdown to " + (data > 0));
+							printf(ply.getUsername() + " [" + teamName + "]" + " set Lockdown to " + (data > 0));
 						}
 						break;
 						
@@ -549,7 +548,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (isLeader) 
 						{
 							team_data.tax_enabled = data > 0;
-							print_log(ply, "set Murder Tax to " + (data > 0));
+							printf(ply.getUsername() + " [" + teamName + "]" + " set Murder Tax to " + (data > 0));
 						}
 						break;
 						
@@ -557,7 +556,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (isLeader) 
 						{
 							team_data.storage_enabled = data > 0;
-							print_log(ply, "set Remote Storage to " + (data > 0));
+							printf(ply.getUsername() + " [" + teamName + "]" + " set Remote Storage to " + (data > 0));
 						}
 						break;
 						
@@ -565,7 +564,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (isLeader) 
 						{
 							team_data.f2p_enabled = data > 0;
-							print_log(ply, "set F2P Recruitment to " + (data > 0));
+							printf(ply.getUsername() + " [" + teamName + "]" + " set F2P Recruitment to " + (data > 0));
 						}
 						break;
 						
@@ -573,7 +572,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (isLeader) 
 						{
 							team_data.slavery_enabled = data > 0;
-							print_log(ply, "set Slavery to " + (data > 0));
+							printf(ply.getUsername() + " [" + teamName + "]" + " set Slavery to " + (data > 0));
 						}
 						break;
 						
@@ -581,7 +580,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (isLeader) 
 						{
 							team_data.reserved_1_enabled = data > 0;
-							print_log(ply, "set RESERVED1 to " + (data > 0));
+							printf(ply.getUsername() + " [" + teamName + "]" + " set RESERVED1 to " + (data > 0));
 						}
 						break;
 						
@@ -589,7 +588,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (isLeader) 
 						{
 							team_data.reserved_2_enabled = data > 0;
-							print_log(ply, "set RESERVED2 to " + (data > 0));
+							printf(ply.getUsername() + " [" + teamName + "]" + " set RESERVED2 to " + (data > 0));
 						}
 						break;
 
@@ -599,7 +598,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						{	
 							this.set_bool("base_demolition", data > 0);
 
-							print_log(ply, (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName());
+							printf(ply.getUsername() + " has " + (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName());
 							
 							if (getNet().isServer()) this.Sync("base_demolition", true);
 							if (getNet().isClient())

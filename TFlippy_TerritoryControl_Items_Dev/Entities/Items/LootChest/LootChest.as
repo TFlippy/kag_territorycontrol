@@ -1,15 +1,14 @@
 #include "LootSystem.as";
 
-const LootItem@[] c_items =
+LootItem@[] c_items =
 {
 	// Resources
-	LootItem("mat_stone", 0, 1000, 500),
-	LootItem("mat_wood", 0, 1000, 500),
-	LootItem("mat_copperingot", 0, 16, 400),
+	LootItem("mat_stone", 0, 1000, 1000),
+	LootItem("mat_wood", 0, 1000, 1000),
+	LootItem("mat_copperingot", 0, 64, 400),
 	LootItem("mat_ironingot", 0, 64, 500),
 	LootItem("mat_goldingot", 0, 64, 100),
-	LootItem("mat_steelingot", 0, 64, 400),
-	LootItem("mat_concrete", 200, 300, 700),
+	LootItem("mat_steelingot", 0, 64, 250),
 	LootItem("mat_mithrilingot", 0, 32, 50),
 	LootItem("mat_mithril", 0, 100, 250),
 	
@@ -28,7 +27,6 @@ const LootItem@[] c_items =
 	LootItem("assaultrifle", 1, 0, 750),
 	LootItem("fuger", 1, 2, 250),
 	LootItem("uzi", 1, 1, 198),
-	LootItem("pdw", 1, 1, 400),
 	LootItem("sar", 1, 1, 300),
 	LootItem("carbine", 1, 1, 400),
 	LootItem("beagle", 1, 1, 400),
@@ -42,7 +40,7 @@ const LootItem@[] c_items =
 	// Misc
 	LootItem("foodcan", 2, 5, 500),
 	LootItem("bp_automation_advanced", 1, 0, 1000),
-	LootItem("bp_energetics", 1, 0, 500),
+	LootItem("bp_energetics", 1, 0, 1000),
 	LootItem("phone", 1, 0, 750),
 	LootItem("scubagear", 1, 0, 400),
 	LootItem("ninjascroll", 1, 1, 250),
@@ -116,7 +114,7 @@ void onDie(CBlob@ this)
 			server_SpawnRandomItem(this, @c_items);
 		}
 
-		server_SpawnCoins(this, 250 + XORRandom(500));
+		server_SpawnCoins(this, 200 + XORRandom(300));
 	}
 }
 
