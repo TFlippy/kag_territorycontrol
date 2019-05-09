@@ -1,4 +1,5 @@
 #include "HittersTC.as";
+#include "RunnerCommon.as"
 
 string[] firstnames = 
 { 
