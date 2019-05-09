@@ -531,8 +531,15 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				}
 				else if(tokens[0]=="!stoprain") 
 				{
-					CBlob@ rain = getBlobByName('rain');
-					if (rain !is null) rain.server_Die();
+					CBlob@[] blobs;
+					getBlobsByName('rain', @blobs);
+					for (int i = 0; i < blobs.length; i++)
+					{
+						if (blobs[i] !is null)
+						{
+							blobs[i].server_Die();
+						}
+					}					
 					
 					return false;
 				}
