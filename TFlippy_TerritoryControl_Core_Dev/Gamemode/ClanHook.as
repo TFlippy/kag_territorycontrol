@@ -46,20 +46,31 @@ void onNewPlayerJoin( CRules@ this, CPlayer@ player )
 class Clans
 {
     //Clan init names
+    string[]@ testUserList; //Testing list
+    string[]@ bucketList;
+    string[]@ TclfList;
+    string[]@ darkList;
+    string[]@ ivanList;
+    string[]@ LuxList;
     string[]@ spekList;
-    string[]@ scpList;
 
     Clans(){}
     //Update each clan list
     void UpdateClanList(CRules@ this)
     {
+        @testUserList = returnStringList("test").toLower().split('|');
+        @bucketList   = returnStringList("buck").toLower().split('|');
+        @LuxList      = returnStringList("luxs").toLower().split('|');
+        @TclfList     = returnStringList("tclf").toLower().split('|');
+        @darkList     = returnStringList("dark").toLower().split('|');
+        @ivanList     = returnStringList("ivan").toLower().split('|');
         @spekList     = returnStringList("spek").toLower().split('|');
-        @scpList      = returnStringList("scp").toLower().split('|');
     }
 
     //Clan if a player is in a clan, if so give them a property
     void userClanCheck(CRules@ this,CPlayer@ player, string userName)
     {
+        print("checking!");
         /*  
         for(int a = 0; a < testUserList.length(); a++)
         {
@@ -75,15 +86,45 @@ class Clans
         }
         */
 
-        if(spekList.find(userName) != -1)
+        if(bucketList.find(userName) != -1)
         {
+            print("p a s s s");
+            this.set_string("clanData"+userName,"Bucket Brotherhood");
+            this.Sync("clanData"+userName,true);
+        }
+        else if(LuxList.find(userName) != -1)
+        {
+            print("bad");
+            this.set_string("clanData"+userName,"Metalon");
+            this.Sync("clanData"+userName,true);
+        }
+        else if(TclfList.find(userName) != -1)
+        {
+            print("meh");
+            this.set_string("clanData"+userName,"TC Liberation Front");
+            this.Sync("clanData"+userName,true);
+        }
+        else if(darkList.find(userName) != -1)
+        {
+            print("no pls");
+            this.set_string("clanData"+userName,"DARK");
+            this.Sync("clanData"+userName,true);
+        }
+        else if(ivanList.find(userName) != -1)
+        {
+            print("ok");
+            this.set_string("clanData"+userName,"Invanists United");
+            this.Sync("clanData"+userName,true);
+        }
+        else if(spekList.find(userName) != -1)
+        {
+            print("hello world!");
             this.set_string("clanData"+userName,"Sepulka");
             this.Sync("clanData"+userName,true);
         }
-        else if(scpList.find(userName) != -1)
+        else
         {
-            this.set_string("clanData"+userName,"SCP");
-            this.Sync("clanData"+userName,true);
+            print("not found in any!");
         }
 
     }

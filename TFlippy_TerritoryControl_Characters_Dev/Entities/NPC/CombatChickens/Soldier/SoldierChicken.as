@@ -5,6 +5,7 @@
 #include "FireParticle.as"
 #include "FireCommon.as";
 #include "RunnerCommon.as";
+#include "CommonGun.as";
 
 void onInit(CBlob@ this)
 {
@@ -32,7 +33,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 1;
 	
 	this.set_f32("voice pitch", 1.50f);
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen");
 	if (isServer())
 	{
 		this.set_u16("stolen coins", 250);
@@ -162,7 +163,7 @@ void onInit(CBlob@ this)
 				
 			default:
 				gun_config = "carbine";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "mat_pistolammo";
 				
 				this.set_u8("attackDelay", 2);
 				this.set_u8("reactionTime", 30);
@@ -205,6 +206,12 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
+	if(isClient()){
+		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}	
+	}
+
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
 	{

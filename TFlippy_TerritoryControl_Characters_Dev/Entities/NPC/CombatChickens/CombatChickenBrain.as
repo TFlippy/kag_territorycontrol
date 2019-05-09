@@ -2,20 +2,14 @@
 #include "Hitters.as";
 #include "RunnerCommon.as";
 
-const f32 cursor_lerp_speed = 0.50f;
-
-void onInit(CBrain@ this)
+void onInit( CBrain@ this )
 {
 	if (getNet().isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
-		
-		CBlob@ blob = this.getBlob();
-		
-		blob.set_u32("next_repath", 0);
-		blob.set_u32("next_search", 0);
-		// blob.set_bool("awaiting_repath", true);
+		this.getBlob().set_u32("next_repath", getGameTime() + XORRandom(30));
+		this.getBlob().set_u32("next_search", getGameTime() + XORRandom(30));
 		
 		// this.failtime_end = 15;
 		this.plannerSearchSteps = 25;
@@ -39,7 +33,6 @@ void onTick(CBrain@ this)
 	
 	const u32 next_repath = blob.get_u32("next_repath");
 	const u32 next_search = blob.get_u32("next_search");
-	const bool has_path = this.getHighPathSize() > 0;
 	
 	const bool can_repath = getGameTime() >= next_repath;
 	const bool can_search = getGameTime() >= next_search && target is null;
@@ -56,8 +49,6 @@ void onTick(CBrain@ this)
 	{
 		stuck = blob.get_bool("stuck");
 	}
-	
-	// print("" + (target == null));
 	
 	// print("" + stuck);
 	
@@ -79,8 +70,6 @@ void onTick(CBrain@ this)
 	// }
 	
 	// print("" + this.plannerSearchSteps);
-	
-	// print("" + next_search + "; " + getGameTime());
 	
 	if (target is null)
 	{	
@@ -116,28 +105,13 @@ void onTick(CBrain@ this)
 					this.getCurrentScript().tickFrequency = 1;
 					
 					// print("found");
-					break;
+					return;
 				}
 			}
-			
-			blob.set_u32("next_search", getGameTime() + XORRandom(90));
 		}
 
 		
 		// print(blob.getConfig() + stuck);
-		
-		// print("" + this.getPathSize());
-		
-		// print("" + this.getState());
-		// print("" + this.getPathPositionAtIndex(100));
-		
-		// if (this.getPathPositionAtIndex(100) == this.getNextPathPosition())
-		// {
-			// print("reached path end");
-		// }
-		
-		// const bool reached_path_end = this.getPathPositionAtIndex(100) == this.getNextPathPosition();
-		// if (reached_path_end) print("reached path end");
 		
 		if (raider)
 		{
@@ -145,45 +119,30 @@ void onTick(CBrain@ this)
 			if (raid_target !is null)
 			{
 				const f32 distance = (raid_target.getPosition() - blob.getPosition()).Length();
-				if (distance > 16)
+			
+				if (can_repath && distance > 16) 
 				{
-					const bool reached_path_end = this.getPathPositionAtIndex(100) == this.getNextPathPosition();
-					Vec2f dir;
-					
-					if (can_repath) 
-					{
-						this.SetPathTo(raid_target.getPosition(), false);
-						blob.set_u32("next_repath", getGameTime() + 60 + XORRandom(60));
-					}
-					
-					if (has_path && !reached_path_end)
-					{
-						dir = this.getNextPathPosition() - blob.getPosition();
-						dir.Normalize();
-						
-						blob.set_Vec2f("target_dir", dir);
-					}
-					else
-					{
-						dir = blob.get_Vec2f("target_dir");
-						dir.Normalize();
-					}
-									
-					Move(this, blob, blob.getPosition() + dir * 24);
-				
-					if (stuck)
-					{
-						const f32 minDistance = blob.get_f32("minDistance");
-						const f32 maxDistance = blob.get_f32("maxDistance");
-					
-						if (distance > minDistance && distance < maxDistance)
-						{
-							Attack(this, raid_target, false);
-						}
-					}
-					
-					this.getCurrentScript().tickFrequency = 1;
+					this.SetPathTo(raid_target.getPosition(), false);
+					blob.set_u32("next_repath", getGameTime() + 45 + XORRandom(45));
 				}
+				
+				Vec2f dir = this.getNextPathPosition() - blob.getPosition();
+				dir.Normalize();
+				
+				Move(this, blob, blob.getPosition() + dir * 24);
+			
+				if (stuck)
+				{
+					const f32 minDistance = blob.get_f32("minDistance");
+					const f32 maxDistance = blob.get_f32("maxDistance");
+				
+					if (distance > minDistance && distance < maxDistance)
+					{
+						Attack(this, raid_target, false);
+					}
+				}
+				
+				this.getCurrentScript().tickFrequency = 1;
 			}
 			else
 			{
@@ -211,6 +170,7 @@ void onTick(CBrain@ this)
 		const f32 distance = (target.getPosition() - blob.getPosition()).Length();
 		const f32 minDistance = blob.get_f32("minDistance");
 		
+
 		const bool visibleTarget = isVisible(blob, target);
 		
 		const bool target_attackable = !(target.getTeamNum() == blob.getTeamNum() || target.hasTag("material"));
@@ -242,9 +202,12 @@ void onTick(CBrain@ this)
 			if (can_repath) 
 			{	
 				this.SetPathTo(target.getPosition(), false);
-				blob.set_u32("next_repath", getGameTime() + 60 + XORRandom(30));
+				blob.set_u32("next_repath", getGameTime() + 15 + XORRandom(15));
 			}
-	
+			// if (getGameTime() % 45 == 0) this.SetHighLevelPath(blob.getPosition(), target.getPosition());
+			// Move(this, blob, this.getNextPathPosition());
+			// print("chase")
+			
 			Vec2f dir = this.getNextPathPosition() - blob.getPosition();
 			dir.Normalize();
 			
@@ -318,20 +281,7 @@ void Attack(CBrain@ this, CBlob@ target, bool useBombs)
 					
 					// print("jitter " + Maths::Sqrt(dist));
 					
-					// Vec2f randomness = Vec2f((100 - XORRandom(200)) * jitter, (100 - XORRandom(200)) * jitter);
-					Vec2f randomness = getRandomVelocity(0, (XORRandom(1000) * 0.001f) * jitter * 20.00f, 360);	
-				
-					// Vec2f currentCursorPos = this.getAimPos();
-					// Vec2f targetCursorPos = target.getPosition() + randomness;
-					
-					// targetPos = Vec2f(lerp(currentCursorPos.x, targetCursorPos.x, le)
-				
-					// Vec2f currentCursorPos = blob.getAimPos();
-					// Vec2f targetCursorPos = target.getPosition() + randomness;
-					
-					// targetCursorPos = Vec2f(lerp(currentCursorPos.x, targetCursorPos.x, cursor_lerp_speed), lerp(currentCursorPos.y, targetCursorPos.y, cursor_lerp_speed));
-				
-					// blob.setAimPos(targetCursorPos);
+					Vec2f randomness = Vec2f((100 - XORRandom(200)) * jitter, (100 - XORRandom(200)) * jitter);
 				
 					blob.setAimPos(target.getPosition() + randomness);
 					blob.setKeyPressed(key_action1, true);
@@ -363,17 +313,20 @@ void Attack(CBrain@ this, CBlob@ target, bool useBombs)
 	}
 }
 
+
 void Move(CBrain@ this, CBlob@ blob, Vec2f pos)
 {
 	Vec2f dir = blob.getPosition() - pos;
+	// f32 dist = dir.getLength();
+	
+	// dir.Normalize();
 
+	// print("DIR: x: " + dir.x + "; y: " + dir.y);
+
+	// if (dist > 16) blob.SetFacingLeft(dir.x > 0);
+	
 	blob.setKeyPressed(key_left, dir.x > 0);
 	blob.setKeyPressed(key_right, dir.x < 0);
 	blob.setKeyPressed(key_up, dir.y > 0);
 	blob.setKeyPressed(key_down, dir.y < 0);
-}
-
-f32 Lerp(f32 v0, f32 v1, f32 t) 
-{
-	return v0 + t * (v1 - v0);
 }

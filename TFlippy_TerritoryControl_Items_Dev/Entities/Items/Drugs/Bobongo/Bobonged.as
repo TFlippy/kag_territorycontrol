@@ -43,7 +43,7 @@ void onTick(CBlob@ this)
 		}
 					
 		this.setKeyPressed(key_action2, true);
-		this.set_f32("bobonged", Maths::Max(0, this.get_f32("bobonged") - (0.0002f)));
+		this.set_f32("bobonged", Maths::Max(0, this.get_f32("bobonged") - (0.0008f)));
 	}
 }
 

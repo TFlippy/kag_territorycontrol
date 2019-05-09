@@ -4,7 +4,6 @@
 #include "FireCommon.as"
 #include "Help.as"
 #include "Survival_Structs.as";
-#include "Logging.as";
 
 void onInit(CBlob@ this)
 {
@@ -137,12 +136,6 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	this.getSprite().PlaySound("/Pickup.ogg");
 
-	if (attached !is null)
-	{
-		// print_log(player.getUsername() + " (" + this.getConfig() + ", team " + this.getTeamNum() + ") has picked up " + attached.getConfig());
-		print_log(this, "has picked up " + attached.getConfig());
-	}
-	
 	if (getNet().isClient())
 	{
 		RemoveHelps(this, "help throw");
@@ -156,19 +149,9 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	this.server_DetachFrom( attached ); CRASHES*/
 }
 
-bool isDangerous(CBlob@ blob)
-{
-	return blob.hasTag("explosive") || blob.hasTag("isWeapon") || blob.hasTag("dangerous");
-}
-
 // set the Z back
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
-	if (detached !is null)
-	{
-		print_log(this, "has dropped " + detached.getConfig());
-	}
-
 	this.getSprite().SetZ(0.0f);
 }
 

@@ -167,72 +167,8 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 				default:
 					break;
 			}
-			
 			text_out = text_out.toLower().replace("c", "sh").replace("o", "hoh").replace("ing", "h...");
 		}
-	}
-	
-	if (player.getBlob() != null && player.getBlob().get_f32("babbyed") > 0)
-	{
-		switch(XORRandom(13))
-		{
-			case 0:
-				text_out += GetSmileys();
-				break;
-				
-			case 1:
-				text_out += " yay " + GetSmileys();
-				break;
-				
-			case 2:
-				text_out = "my " + GetFriends() + ", " + text_out + "!";
-				break;
-				
-			case 3:
-				text_out += " thanks!";
-				break;
-				
-			case 4:
-				text_out = GetSmileys() + " " + text_out + " " + GetSmileys();
-				break;
-				
-			case 5:
-				text_out = GetSmileys() + " ooooo " + text_out;
-				break;
-				
-			case 6:
-				text_out = "please " + GetSmileys() + " " + text_out + "? " + GetSmileys();
-				break;
-		
-			case 7:
-				text_out += " hehehehe";
-				break;
-				
-			case 8:
-				text_out += " thaaank " + GetSmileys();
-				break;
-				
-			case 9:
-				text_out += " yay";
-				break;
-			
-			case 10:
-				text_out += " " + GetSmileys();
-				break;
-				
-			case 11:
-				text_out += "!!!!!";
-				break;	
-				
-			case 12:
-				text_out = " hey everyone " + text_out + "!!!" + GetSmileys();
-				break;	
-				
-			default:
-				break;
-		}
-		
-		text_out = text_out.toLower().replace("z", "s").replace("y", "yy").replace("e", "ee");
 	}
 	
 	if (player.getUsername() == "Vamist" || player.getCharacterName() == "Vamist") 

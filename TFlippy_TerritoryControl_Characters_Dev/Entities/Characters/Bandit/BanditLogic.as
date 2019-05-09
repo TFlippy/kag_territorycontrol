@@ -127,8 +127,8 @@ void onTick(CBlob@ this)
 	const f32 side = (this.isFacingLeft() ? 1.0f : -1.0f);
 
 	bool swordState = isSwordState(knight.state);
-	bool pressed_a1 = this.isKeyPressed(key_action1) && !this.hasTag("noLMB") && !(this.get_f32("babbyed") > 0);
-	bool pressed_a2 = this.isKeyPressed(key_action2) && !(this.get_f32("babbyed") > 0);
+	bool pressed_a1 = this.isKeyPressed(key_action1) && !this.hasTag("noLMB");
+	bool pressed_a2 = this.isKeyPressed(key_action2);
 	bool walking = (this.isKeyPressed(key_left) || this.isKeyPressed(key_right));
 
 	const bool myplayer = this.isMyPlayer();
@@ -195,7 +195,8 @@ void onTick(CBlob@ this)
 		if (knight.swordTimer < 128)
 			knight.swordTimer++;
 
-		if (knight.state == KnightStates::sword_drawn && !pressed_a1 && !(this.isKeyJustReleased(key_action1) && !this.hasTag("noLMB")) && delta > KnightVars::resheath_time)
+		if (knight.state == KnightStates::sword_drawn && !pressed_a1 &&
+		       !(this.isKeyJustReleased(key_action1) && !this.hasTag("noLMB")) && delta > KnightVars::resheath_time)
 		{
 			knight.state = KnightStates::normal;
 		}
@@ -272,10 +273,12 @@ void onTick(CBlob@ this)
 				knight.state = KnightStates::sword_drawn;
 			}
 		}
-		else if (knight.state == KnightStates::sword_power || knight.state == KnightStates::sword_power_super)
+		else if (knight.state == KnightStates::sword_power ||
+		         knight.state == KnightStates::sword_power_super)
 		{
 			//setting double
-			if (knight.state == KnightStates::sword_power_super && ((this.isKeyJustPressed(key_action1) && !this.hasTag("noLMB")) && !this.hasTag("noLMB")))
+			if (knight.state == KnightStates::sword_power_super &&
+			        ((this.isKeyJustPressed(key_action1) && !this.hasTag("noLMB")) && !this.hasTag("noLMB")))
 			{
 				knight.doubleslash = true;
 			}

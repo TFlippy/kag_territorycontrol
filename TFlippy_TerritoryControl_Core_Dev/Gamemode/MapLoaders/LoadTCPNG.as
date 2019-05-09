@@ -34,7 +34,6 @@ namespace tc_colors
 		color_chickencoop = 0xff964619,
 		color_scoutchicken = 0xffb96437,
 		color_lootchest = 0xffffd200,
-		color_lootchest_random = 0xffff8200,
 		color_bannerchicken = 0xffbe3838,
 		color_irondoor_chicken = 0xffcfbaba,
 		color_chickenmarket = 0xffdccb7b,
@@ -147,17 +146,17 @@ class TCPNGLoader : PNGLoader
 				if (rand < 15)
 				{
 					CBlob@ blob = spawnBlob(map, "heavychicken", offset, -1);
-					blob.set_bool("raider", XORRandom(100) < 10);
+					blob.set_bool("raider", false);
 				}
 				else if (rand < 50)
 				{
 					CBlob@ blob = spawnBlob(map, "soldierchicken", offset, -1);
-					blob.set_bool("raider", XORRandom(100) < 25);
+					blob.set_bool("raider", false);
 				}
 				else
 				{
 					CBlob@ blob = spawnBlob(map, "scoutchicken", offset, -1);
-					blob.set_bool("raider", XORRandom(100) < 50);
+					blob.set_bool("raider", false);
 				}
 			
 				break;
@@ -167,16 +166,6 @@ class TCPNGLoader : PNGLoader
 			{
 				map.SetTile(offset, CMap::tile_biron);
 				spawnBlob(map, "lootchest", offset, -1);
-				break;
-			}
-			
-			case tc_colors::color_lootchest_random:
-			{
-				if (XORRandom(100) < 50)
-				{
-					map.SetTile(offset, CMap::tile_biron);
-					spawnBlob(map, "lootchest", offset, -1);
-				}
 				break;
 			}
 			

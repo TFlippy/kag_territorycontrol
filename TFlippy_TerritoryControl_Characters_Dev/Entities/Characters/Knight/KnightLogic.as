@@ -132,8 +132,8 @@ void onTick(CBlob@ this)
 	bool shieldState = isShieldState(knight.state);
 	bool specialShieldState = isSpecialShieldState(knight.state);
 	bool swordState = isSwordState(knight.state);
-	bool pressed_a1 = this.isKeyPressed(key_action1) && !this.hasTag("noLMB") && !(this.get_f32("babbyed") > 0);
-	bool pressed_a2 = this.isKeyPressed(key_action2) && !this.hasTag("noShielding") && !(this.get_f32("babbyed") > 0);
+	bool pressed_a1 = this.isKeyPressed(key_action1) && !this.hasTag("noLMB");
+	bool pressed_a2 = this.isKeyPressed(key_action2) && !this.hasTag("noShielding");
 	bool walking = (this.isKeyPressed(key_left) || this.isKeyPressed(key_right));
 
 	const bool myplayer = this.isMyPlayer();
