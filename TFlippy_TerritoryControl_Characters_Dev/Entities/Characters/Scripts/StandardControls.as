@@ -42,10 +42,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ owner = getBlobByNetworkID(params.read_netid());
 		CBlob@ pick = getBlobByNetworkID(params.read_netid());
 
-		if (owner !is null && pick !is null)
+		if (owner !is null && pick !is null && (this.get_f32("babbyed") > 0 ? !isDangerous(pick) : true))
 		{
-			if (!owner.server_PutInInventory(pick))
-				owner.server_Pickup(pick);
+			if (!owner.server_PutInInventory(pick)) owner.server_Pickup(pick);
 		}
 	}
 	else if (cmd == this.getCommandID("pickup"))
@@ -82,7 +81,7 @@ bool ClickGridMenu(CBlob@ this, int button)
 	CGridButton @gbutton;
 	CBlob @pickBlob = this.getCarriedBlob();
 
-	if (this.ClickGridMenu(button, gmenu, gbutton))   // button gets pressed here - thing get picked up
+	if ((this.get_f32("babbyed") > 0 ? !isDangerous(pickBlob) : true) && this.ClickGridMenu(button, gmenu, gbutton))   // button gets pressed here - thing get picked up
 	{
 		if (gmenu !is null)
 		{
@@ -187,7 +186,7 @@ void onTick(CBlob@ this)
 		{
 			if (isTap(this, 7))     // tap - put thing in inventory
 			{
-				if (carryBlob !is null && !carryBlob.hasTag("temp blob"))
+				if (carryBlob !is null && !carryBlob.hasTag("temp blob") && (this.get_f32("babbyed") > 0 ? !isDangerous(carryBlob) : true))
 				{
 					server_PutIn(this, this, carryBlob);
 				}
@@ -444,4 +443,8 @@ void ManageCamera(CBlob@ this)
 	camera.mouseFactor = 0.5f + scope_zoom; // doesn't affect soldat cam
 }
 
+bool isDangerous(CBlob@ blob)
+{
+	return (blob !is null ? (blob.hasTag("explosive") || blob.hasTag("isWeapon") || blob.hasTag("dangerous")) : false);
+}
 

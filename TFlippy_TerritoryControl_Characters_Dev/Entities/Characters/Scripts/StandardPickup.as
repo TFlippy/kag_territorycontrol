@@ -35,17 +35,8 @@ void onTick(CBlob@ this)
 	// drop / pickup / throw
 	if (this.isKeyJustPressed(key_pickup))
 	{
-		CBlob @carryBlob = this.getCarriedBlob();
+		CBlob@ carryBlob = this.getCarriedBlob();
 
-		/*if (isTap( this ))	tap pickup
-		{
-		CBlob@ carry = this.getCarriedBlob();
-		if (carry !is null)
-		{
-		server_PutIn( this, this, carry );
-		}
-		}
-		else*/
 		if (this.isAttached()) // default drop from attachment
 		{
 			int count = this.getAttachmentPointCount();
@@ -120,6 +111,11 @@ void onTick(CBlob@ this)
 	}
 }
 
+bool isDangerous(CBlob@ blob)
+{
+	return blob.hasTag("explosive") || blob.hasTag("isWeapon") || blob.hasTag("dangerous");
+}
+
 void GatherPickupBlobs(CBlob@ this)
 {
 	CBlob@[]@ pickupBlobs;
@@ -127,13 +123,15 @@ void GatherPickupBlobs(CBlob@ this)
 	pickupBlobs.clear();
 	CBlob@[] blobsInRadius;
 
+	bool isBabbyed = this.get_f32("babbyed") > 0;
+	
 	if (this.getMap().getBlobsInRadius(this.getPosition(), this.getRadius() + 50.0f, @blobsInRadius))
 	{
 		for (uint i = 0; i < blobsInRadius.length; i++)
 		{
-			CBlob @b = blobsInRadius[i];
+			CBlob@ b = blobsInRadius[i];
 
-			if (b.canBePickedUp(this))
+			if (b.canBePickedUp(this) && (isBabbyed ? !isDangerous(b) : true))
 			{
 				pickupBlobs.push_back(b);
 			}
