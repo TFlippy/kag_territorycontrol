@@ -115,7 +115,7 @@ void React(CBlob@ this)
 				{
 					oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - count, 0));
 					methane_blob.server_SetQuantity(Maths::Max(methane_blob.getQuantity() - count, 0));
-					Material::createFor(this, "mat_fuel", count);
+					Material::createFor(this, "mat_fuel", count * 1.50f);
 				}
 				this.getSprite().PlaySound("DrugLab_Create_Gas.ogg", 1.00f, 1.00f);
 			}
