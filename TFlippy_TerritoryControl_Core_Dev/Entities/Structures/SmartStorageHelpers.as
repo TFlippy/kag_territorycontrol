@@ -21,7 +21,7 @@ u32 smartStorageTake(CBlob@ this, string iname, u32 amount)
 	u16 prevstacks = (am-1)/mq+1; //round up
 	if(amount >= am)
 	{
-		print("Removing "+prevstacks);
+//		print("Removing "+prevstacks);
 		cur_quantity -= prevstacks;
 		//inventory.delete(iname); //bugged
 		amount -= am;
@@ -30,7 +30,7 @@ u32 smartStorageTake(CBlob@ this, string iname, u32 amount)
 	}
 	else
 	{
-		print("Here");
+//		print("Here");
 		am -= amount;
 		amount = 0;
 		inventory.set(iname, am);
