@@ -191,7 +191,6 @@ const GUI_Icon[] teamIngots =
 	GUI_Icon("mat_mithrilingot","Material_MithrilIngot.png",3)
 };
 
-// Merser pls, fix your code formatting, it's unreadable and gives me conniptions
 void RenderTeamInventoryHUD(CBlob@ this)
 {
 	Vec2f hudPos = Vec2f(0, 0);

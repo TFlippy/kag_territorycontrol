@@ -21,7 +21,7 @@ void onInit(CBlob@ this) {
 	this.set("smart_inventory_max_quantities",max_quantities);
 	this.set_u16("smart_storage_quantity", 0);
 	this.addCommandID("smart_storage_sync");
-	this.addCommandID("smart_storage_debug");
+	//this.addCommandID("smart_storage_debug");
 }
 
 void client_UpdateName(CBlob@ this) {
@@ -49,7 +49,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid) {
 			u16 prevstacks = (held_resource_amount-1)/maxquantity+1; //round up
 			held_resource_amount += amount;
 			if(prevstacks<(held_resource_amount-1)/maxquantity+1) quantity += 1; //round up again
-			print("Adding "+iname+":"+amount+", from "+prevstacks+" to "+((held_resource_amount-1)/maxquantity+1)+"->"+quantity);
+//			print("Adding "+iname+":"+amount+", from "+prevstacks+" to "+((held_resource_amount-1)/maxquantity+1)+"->"+quantity);
 			blob.server_Die();
 			this.set_u16("smart_storage_quantity", quantity);
 		} else if (quantity==capacity) {
@@ -76,7 +76,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid) {
 	}
 }
 
-void GetButtonsFor( CBlob@ this, CBlob@ caller ) {
+/*void GetButtonsFor( CBlob@ this, CBlob@ caller ) {
 	CBitStream params;
 	params.write_u16(caller.getNetworkID());
 
@@ -84,7 +84,7 @@ void GetButtonsFor( CBlob@ this, CBlob@ caller ) {
 	if (button_debug !is null) {
 		button_debug.SetEnabled(this.get_u16("smart_storage_quantity") > 0);
 	}
-}
+}*/
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream@ params) {
 	if (cmd == this.getCommandID("smart_storage_sync")) {
@@ -107,7 +107,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params) {
 			client_UpdateName(this);
 		}
 	}
-	else if (cmd == this.getCommandID("smart_storage_debug")) {
+/*	else if (cmd == this.getCommandID("smart_storage_debug")) {
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 		print("quantity: "+this.get_u16("smart_storage_quantity"));
 
@@ -120,7 +120,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params) {
 			inventory.get(toprint,am);
 			print(toprint+": "+am);
 		}
-	}
+	}*/
 }
 
 void onDie(CBlob@ this) {
