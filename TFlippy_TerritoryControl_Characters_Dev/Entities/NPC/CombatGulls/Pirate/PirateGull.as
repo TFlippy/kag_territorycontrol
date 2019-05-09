@@ -9,7 +9,7 @@
 
 void onInit(CBlob@ this)
 {
-	this.getSprite().addSpriteLayer("isOnScreen");
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 	this.set_f32("gib health", 0.0f);
 	this.set_u32("nextAttack", 0);
 	this.set_u32("nextBomb", 0);

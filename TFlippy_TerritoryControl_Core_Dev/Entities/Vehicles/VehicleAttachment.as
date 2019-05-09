@@ -19,7 +19,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		for (uint i = 0; i < aps.length; i++)
 		{
 			AttachmentPoint@ ap = aps[i];
-			if (ap.socket && (ap.name.findFirst("VEHICLE") != -1 || ap.name.findFirst("CARGO") != -1))
+			if (ap !is null && (ap.socket && (ap.name.findFirst("VEHICLE") != -1 || ap.name.findFirst("CARGO") != -1)))
 			{
 				CBlob@ occBlob = ap.getOccupied();
 				if (occBlob !is null) //detach button
@@ -40,7 +40,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ vehicle = getBlobByNetworkID(params.read_netid());
 		const u8 id = params.read_u8();
 		CAttachment@ att = this.getAttachments();
-		if (vehicle !is null)
+		if (vehicle !is null && att !is null)
 		{
 			this.server_AttachTo(vehicle, att.getAttachmentPointByID(id));
 		}
