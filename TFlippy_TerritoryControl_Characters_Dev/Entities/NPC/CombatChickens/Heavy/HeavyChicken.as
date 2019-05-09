@@ -7,7 +7,6 @@
 #include "FireCommon.as";
 #include "RunnerCommon.as";
 #include "BrainCommon.as";
-#include "CommonGun.as";
 
 void onInit(CBlob@ this)
 {
@@ -225,11 +224,6 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
-	if(isClient()){
-		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
-			return;
-		}
-	}
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
 	{

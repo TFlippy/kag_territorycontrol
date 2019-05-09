@@ -1,6 +1,6 @@
 #include "LootSystem.as";
 
-LootItem@[] c_items =
+const LootItem@[] c_items =
 {
 	// Resources
 	LootItem("mat_stone", 0, 1000, 500),
@@ -28,6 +28,7 @@ LootItem@[] c_items =
 	LootItem("assaultrifle", 1, 0, 750),
 	LootItem("fuger", 1, 2, 250),
 	LootItem("uzi", 1, 1, 198),
+	LootItem("pdw", 1, 1, 400),
 	LootItem("sar", 1, 1, 300),
 	LootItem("carbine", 1, 1, 400),
 	LootItem("beagle", 1, 1, 400),
