@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 	client_AddToChat("A rainstorm has formed! Heavy wind will now blow away aerial vehicles and promote plant growth.", SColor(255, 255, 0, 0));
 }
 
-const int spritesize = 128;
+const int spritesize = 512;
 f32 uvs;
 Vertex[] Rain_vs;
 Vertex[] Fog_vs;
