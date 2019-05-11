@@ -120,7 +120,7 @@ void onTick(CBlob@ this)
 		{
 			Vec2f bpos = blob.getPosition();
 			//Vec2f pos = Vec2f(int(bpos.x / spritesize) * spritesize, int(bpos.y / spritesize) * spritesize); 
-			rainpos = Vec2f(int(bpos.x / spritesize) * spritesize, int(bpos.y / spritesize) * spritesize);
+			rainpos = Vec2f(int(bpos.x / spritesize) * spritesize + (spritesize/2), int(bpos.y / spritesize) * spritesize + (spritesize/2));
 			this.setPosition(bpos);
 			uvMove = (uvMove - 1.0f/10.0f) % uvs;
 			
