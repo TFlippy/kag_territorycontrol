@@ -248,6 +248,7 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 	if(headname == "pumpkin")
 		playerblob.set_u8("override head", 101);
 
+	playerblob.setHeadNum((playerblob.getHeadNum()+1) % 3);
 	playerblob.Tag(headname);
 	playerblob.set_string("reload_script", headname);
 	playerblob.AddScript(headname+"_effect.as");
@@ -311,6 +312,7 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 		}
 	}
 	playerblob.set_u8("override head", playerblob.get_u8("last head"));
+	playerblob.setHeadNum((playerblob.getHeadNum()+1) % 3);
 	playerblob.set_string("equipment_head", "");
 	playerblob.RemoveScript(headname+"_effect.as");
 	playerblob.Tag("update head");
