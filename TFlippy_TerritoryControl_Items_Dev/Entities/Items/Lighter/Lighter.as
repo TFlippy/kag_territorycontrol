@@ -41,15 +41,17 @@ void onTick(CBlob@ this)
 				{
 					if ((pos - this.getPosition()).getLength() < 32)
 					{
-						CBlob@ blob = getMap().getBlobAtPosition(pos);
+						Vec2f actual_position;
+						if(!getMap().rayCastSolidNoBlobs(this.getPosition(), pos, actual_position)) actual_position = pos;
+						CBlob@ blob = getMap().getBlobAtPosition(actual_position);
 						
 						if (blob !is null)
 						{
-							this.server_Hit(blob, pos, Vec2f(0, 0), 0.25f, Hitters::fire, true);
+							this.server_Hit(blob, actual_position, Vec2f(0, 0), 0.25f, Hitters::fire, true);
 						}
 						else
 						{
-							getMap().server_setFireWorldspace(pos, true);
+							getMap().server_setFireWorldspace(actual_position, true);
 						}
 					}
 				}
