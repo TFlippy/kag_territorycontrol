@@ -107,138 +107,145 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				
 				for (u8 b = 0; b < bullet_count; b++)
 				{
-					f32 damage = damage_init;
-					bool done = false;
-					
 					Vec2f hit_pos = target_pos;
 					Vec2f dir = (target_pos - source_pos).RotateBy((random.NextFloat() - 0.50f) * spread);
 					f32 length = dir.getLength();
 					f32 angle = dir.getAngleDegrees();
 					dir.Normalize();
 			
-					if (!done)
+					if (server)
 					{
-						HitInfo@[] hitInfos_1;
-						map.getHitInfosFromRay(source_pos, -angle, length, this, @hitInfos_1);
-						if (hitInfos_1 !is null)
+						f32 damage = damage_init;
+						bool done = false;
+					
+						if (!done)
 						{
-							for (int i = 0; i < hitInfos_1.length; i++)
+							HitInfo@[] hitInfos_1;
+							map.getHitInfosFromRay(source_pos, -angle, length, this, @hitInfos_1);
+							if (hitInfos_1 !is null)
 							{
-								if (!done)
+								for (int i = 0; i < hitInfos_1.length; i++)
 								{
-									HitInfo@ hit = hitInfos_1[i];
-									if (hit !is null)
+									if (!done)
 									{
-										CBlob@ blob = hit.blob;
-										if (blob !is null)
+										HitInfo@ hit = hitInfos_1[i];
+										if (hit !is null)
 										{
-											if (blob.getTeamNum() != holder.getTeamNum() && (blob.isCollidable() || blob.hasTag("flesh")) && !blob.hasTag("invincible"))
+											CBlob@ blob = hit.blob;
+											if (blob !is null)
 											{
-												f32 health_before = blob.getHealth();
-												holder.server_Hit(blob, hit.hitpos, dir, damage, hitter_type, false);
-												
-												damage = Maths::Max(damage - health_before, 0);
-												if (damage <= 0) done = true;
+												if (blob.getTeamNum() != holder.getTeamNum() && (blob.isCollidable() || blob.hasTag("flesh")) && !blob.hasTag("invincible"))
+												{
+													f32 health_before = blob.getHealth();
+													holder.server_Hit(blob, hit.hitpos, dir, damage, hitter_type, false);
+													
+													damage = Maths::Max(damage - health_before, 0);
+													if (damage <= 0) done = true;
+												}
+											}
+											else
+											{
+												map.server_DestroyTile(hit.hitpos, damage);
+												done = true;
 											}
 										}
-										else
-										{
-											map.server_DestroyTile(hit.hitpos, damage);
-											done = true;
-										}
 									}
+									else break;
 								}
-								else break;
-							}
-						}
-					}
-					
-					if (!done)
-					{
-						CBlob@ blob = map.getBlobAtPosition(hit_pos);
-						if (blob !is null && blob.getTeamNum() != holder.getTeamNum() && !blob.hasTag("invincible"))
-						{
-							f32 health_before = blob.getHealth();
-							holder.server_Hit(blob, hit_pos, dir, damage, hitter_type, false);
-							
-							damage = Maths::Max(damage - health_before, 0);
-							if (damage <= 0) done = true;
-						}
-					}
-					
-					if (!done)
-					{
-						map.rayCastSolidNoBlobs(source_pos, target_pos, hit_pos);
-						
-						Tile tile = map.getTile(hit_pos);
-						if (tile.type != CMap::tile_empty)
-						{
-							if (server)
-							{
-								map.server_DestroyTile(hit_pos, damage);
-								done = true;
-							}
-						}
-					}
-					
-					if (!done)
-					{
-						HitInfo@[] hitInfos_2;
-						map.getHitInfosFromRay(hit_pos, -angle, length, this, @hitInfos_2);
-						if (hitInfos_2 !is null)
-						{
-							for (int i = 0; i < hitInfos_2.length; i++)
-							{
-								if (!done)
-								{
-									HitInfo@ hit = hitInfos_2[i];
-									if (hit !is null)
-									{
-										CBlob@ blob = hit.blob;
-										if (blob !is null)
-										{
-											if (blob.getTeamNum() != holder.getTeamNum() && (blob.isCollidable() || blob.hasTag("flesh")) && !blob.hasTag("invincible"))
-											{
-												f32 health_before = blob.getHealth();
-												holder.server_Hit(blob, hit.hitpos, dir, damage, hitter_type, false);
-												
-												damage = Maths::Max(damage - health_before, 0);
-												if (damage <= 0) done = true;
-											}
-										}
-										else
-										{
-											map.server_DestroyTile(hit.hitpos, damage);
-											done = true;
-										}
-									}
-								}
-								else break;
 							}
 						}
 						
-						hit_pos += (dir * length);
-					}
+						if (!done)
+						{
+							CBlob@ blob = map.getBlobAtPosition(hit_pos);
+							if (blob !is null && blob.getTeamNum() != holder.getTeamNum() && !blob.hasTag("invincible"))
+							{
+								f32 health_before = blob.getHealth();
+								holder.server_Hit(blob, hit_pos, dir, damage, hitter_type, false);
 								
-					if (!done)
-					{
-						CBlob@ blob = map.getBlobAtPosition(hit_pos);
-						if (blob !is null && blob.getTeamNum() != holder.getTeamNum() && !blob.hasTag("invincible"))
-						{
-							f32 health_before = blob.getHealth();
-							holder.server_Hit(blob, hit_pos, dir, damage, hitter_type, false);
-							
-							damage = Maths::Max(damage - health_before, 0);
-							if (damage <= 0) done = true;
+								damage = Maths::Max(damage - health_before, 0);
+								if (damage <= 0) done = true;
+							}
 						}
+						
+						if (!done)
+						{
+							map.rayCastSolidNoBlobs(source_pos, target_pos, hit_pos);
+							
+							Tile tile = map.getTile(hit_pos);
+							if (tile.type != CMap::tile_empty)
+							{
+								if (server)
+								{
+									map.server_DestroyTile(hit_pos, damage);
+									done = true;
+								}
+							}
+						}
+						
+						if (!done)
+						{
+							HitInfo@[] hitInfos_2;
+							map.getHitInfosFromRay(hit_pos, -angle, length, this, @hitInfos_2);
+							if (hitInfos_2 !is null)
+							{
+								for (int i = 0; i < hitInfos_2.length; i++)
+								{
+									if (!done)
+									{
+										HitInfo@ hit = hitInfos_2[i];
+										if (hit !is null)
+										{
+											CBlob@ blob = hit.blob;
+											if (blob !is null)
+											{
+												if (blob.getTeamNum() != holder.getTeamNum() && (blob.isCollidable() || blob.hasTag("flesh")) && !blob.hasTag("invincible"))
+												{
+													f32 health_before = blob.getHealth();
+													holder.server_Hit(blob, hit.hitpos, dir, damage, hitter_type, false);
+													
+													damage = Maths::Max(damage - health_before, 0);
+													if (damage <= 0) done = true;
+												}
+											}
+											else
+											{
+												map.server_DestroyTile(hit.hitpos, damage);
+												done = true;
+											}
+										}
+									}
+									else break;
+								}
+							}
+							
+							hit_pos += (dir * length);
+						}
+									
+						if (!done)
+						{
+							CBlob@ blob = map.getBlobAtPosition(hit_pos);
+							if (blob !is null && blob.getTeamNum() != holder.getTeamNum() && !blob.hasTag("invincible"))
+							{
+								f32 health_before = blob.getHealth();
+								holder.server_Hit(blob, hit_pos, dir, damage, hitter_type, false);
+								
+								damage = Maths::Max(damage - health_before, 0);
+								if (damage <= 0) done = true;
+							}
+						}
+					}
+					
+					// Bullet rendering stuff goes there
+					if (client)
+					{
+						
 					}
 				}
 							
 				if (client)
 				{
 					ShakeScreen(Maths::Sqrt(damage_init * 100), 10, this.getPosition());	
-					// if (length < 64) ShakeScreen(Maths::Sqrt(damage_init * 100) * 2, 10, hit_pos);	
-					// ShakeScreen(Maths::Min(damage * count * 12, 150), 8, hit_pos));	
 					Sound::Play(this.get_string("gun_shoot_sound"), source_pos, 1, 1);
 				}
 				
