@@ -58,7 +58,7 @@ void onInit(CBlob@ this)
 	CSprite@ sprite = this.getSprite();
 
 	this.set_f32("voice pitch", 0.80f);
-	this.set_f32("gib health", -8.00f);
+	this.set_f32("gib health", -20.00f);
 	this.getShape().SetRotationsAllowed(false);
 	this.getShape().getConsts().net_threshold_multiplier = 0.5f;
 	this.Tag("player");

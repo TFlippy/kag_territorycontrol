@@ -23,7 +23,7 @@ void onInit(CBlob@ this)
 	this.set_s8("charge_time", 0);
 	this.set_u8("charge_state", ArcherParams::not_aiming);
 	this.set_bool("has_arrow", false);
-	this.set_f32("gib health", -8.00f);
+	this.set_f32("gib health", -20.00f);
 	
 	this.Tag("player");
 	this.Tag("flesh");

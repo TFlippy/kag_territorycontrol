@@ -57,7 +57,7 @@ void onInit(CBlob@ this)
 
 	this.set("knightInfo", @knight);
 
-	this.set_f32("gib health", -8.00f);
+	this.set_f32("gib health", -20.00f);
 	addShieldVars(this, SHIELD_BLOCK_ANGLE, 2.0f, 5.0f);
 	knight_actorlimit_setup(this);
 	this.getShape().SetRotationsAllowed(false);

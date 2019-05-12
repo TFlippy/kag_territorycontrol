@@ -123,7 +123,7 @@ void onInit(CBlob@ this)
 	this.set_string("trader name", name);
 	
 	this.getShape().SetRotationsAllowed(false);
-	this.set_f32("gib health", -8.00f);
+	this.set_f32("gib health", -20.00f);
 	this.Tag("flesh");
 	this.Tag("migrant");
 	this.Tag("human");
