@@ -40,6 +40,8 @@ void onInit(CBlob@ this)
 	this.set_u32("gun_reload_time", 1);
 	this.set_Vec2f("gun_muzzle_offset", Vec2f(0, 0));
 	
+	this.set_f32("gun_recoil_current", 0);
+	
 	this.addCommandID("gun_shoot");
 	this.addCommandID("gun_reload");
 	
@@ -74,6 +76,11 @@ void onTick(CBlob@ this)
 	{
 		UpdateAngle(this);
 		
+		if (isClient())
+		{
+			this.set_f32("gun_recoil_current", lerp(this.get_f32("gun_recoil_current"), 0, 0.50f));
+		}
+		
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder =	point.getOccupied();
 		
@@ -88,11 +95,10 @@ void onTick(CBlob@ this)
 		
 		if ((point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) && !(holder.get_f32("babbyed") > 0)) 
 		{
-			print("pew");
-			
 			if (getGameTime() >= this.get_u32("gun_shoot_next"))
 			{
 				CBitStream stream;
+				stream.write_u32(getGameTime());
 				stream.write_Vec2f(this.getPosition());
 				stream.write_Vec2f(holder.getAimPos());
 				
@@ -119,13 +125,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				const bool client = isClient();
 			
 				const bool flip = this.isFacingLeft();
-			
-				Vec2f source_pos = params.read_Vec2f() + this.get_Vec2f("gun_muzzle_offset").RotateBy(this.getAngleDegrees() + (flip ? 180 : 0));				
+
+				u32 seed = params.read_u32();
+				Vec2f source_pos = params.read_Vec2f() - this.get_Vec2f("gun_muzzle_offset").RotateBy(this.getAngleDegrees() + (flip ? -180 : 0));				
 				Vec2f target_pos = params.read_Vec2f();				
-				u32 seed = (source_pos.x + target_pos.y) * (source_pos.y + target_pos.x);		
 				
 				Random@ random = Random(seed);
-				
 					
 				const f32 damage_init = 1.00f * this.get_f32("gun_damage_modifier");
 				const u8 hitter_type = this.get_u8("gun_hitter");
@@ -267,19 +272,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						}
 					}
 					
-					// Bullet rendering stuff goes there
 					if (client)
 					{
-						//Make new bullet
-						//Give it a start and end pos
-						//and the time
-						//AddBullet()
-						//AddBullet(Vec2f Startpos, Vec2f EndPos, SColor col = SColor(255,255,255,255), float x = 0.7, float y = 3)
-						
-						// AddBullet(source_pos, target_pos, SColor(255,255,255,255), 0.70f, 3.00f);
-						
-						createBullet(source_pos, hit_pos);
-						// createBullet(source_pos, target_pos);
+						createBullet(source_pos, hit_pos, SColor(255, 255, 255, 255), Vec2f(3.00f, 0.50f));
 					}
 				}
 							
@@ -298,6 +293,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							flash.SetVisible(true);
 						}
 					}
+					
+					this.set_f32("gun_recoil_current", 2);
 				}
 				
 				if (server)
@@ -331,13 +328,13 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint@ attachedPoint)
 {
 	attached.Tag("noLMB");
-	attached.Tag("noShielding");
+	attached.Tag("noRMB");
 }
 
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
 	detached.Untag("noLMB");
-	detached.Untag("noShielding");
+	detached.Untag("noRMB");
 }
 
 void UpdateAngle(CBlob@ this)
@@ -358,10 +355,18 @@ void UpdateAngle(CBlob@ this)
 			if (!holder.isFacingLeft()) mouseAngle += 180;
 
 			this.setAngleDegrees(-mouseAngle);
-
-			point.offset.x = (dir.x * 2 *(holder.isFacingLeft() ? 1.0f : -1.0f));
-			point.offset.y = -(dir.y);
+			this.getSprite().SetOffset(Vec2f(this.get_f32("gun_recoil_current"), 0));
+			
+			
+			// point.offset.x += 0.1f;
+			
+			// point.offset.x = (dir.x * 2 *(holder.isFacingLeft() ? 1.0f : -1.0f));
+			// point.offset.y = -(dir.y);
 		}
 	}
 }
 
+const float lerp(float v0, float v1, float t)
+{
+	return v0 + t * (v1 - v0);
+}

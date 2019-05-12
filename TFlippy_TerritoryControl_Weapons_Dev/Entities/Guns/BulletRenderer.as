@@ -44,8 +44,8 @@ void Render(int id)
 				const f32 x = bullet.currentPos.x;
 				const f32 y = bullet.currentPos.y;
 				
-				f32 size_x = 2.00f;
-				f32 size_y = 0.50f;
+				f32 size_x = bullet.size.x;
+				f32 size_y = bullet.size.y;
 				
 				Vec2f tl = Vec2f(x - size_x, y - size_y);
 				Vec2f tr = Vec2f(x - size_x, y + size_y);
