@@ -96,7 +96,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			
 				Vec2f source_pos = params.read_Vec2f();				
 				Vec2f target_pos = params.read_Vec2f();				
-				u32 seed = (source_pos.x + target_pos.y);			
+				u32 seed = (source_pos.x + target_pos.y) * (source_pos.y + target_pos.x);		
 				
 				Random@ random = Random(seed);
 				
