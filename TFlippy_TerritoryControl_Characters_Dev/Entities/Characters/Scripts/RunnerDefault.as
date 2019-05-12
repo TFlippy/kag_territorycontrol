@@ -158,7 +158,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 
 bool isDangerous(CBlob@ blob)
 {
-	return blob.hasTag("explosive") || blob.hasTag("isWeapon") || blob.hasTag("dangerous");
+	return blob.hasTag("explosive") || blob.hasTag("weapon") || blob.hasTag("dangerous");
 }
 
 // set the Z back

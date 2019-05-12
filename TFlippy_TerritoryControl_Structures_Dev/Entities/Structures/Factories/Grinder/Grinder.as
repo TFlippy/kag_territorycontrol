@@ -198,7 +198,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 		this.getSprite().PlaySound("SawLog.ogg", 0.8f, 1.0f);
 		kill = true;
 	}
-	else if (blob.hasTag("isWeapon"))
+	else if (blob.hasTag("weapon"))
 	{
 		if (getNet().isServer())
 		{

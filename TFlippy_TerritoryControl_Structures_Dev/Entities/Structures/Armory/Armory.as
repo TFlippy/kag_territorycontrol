@@ -130,7 +130,7 @@ void onTick(CBlob@ this)
 		{
 			CBlob@ blob = blobs[i];
 			
-			if ((blob.hasTag("isWeapon") || blob.hasTag("ammo")) && !blob.isAttached())
+			if ((blob.hasTag("weapon") || blob.hasTag("ammo")) && !blob.isAttached())
 			{
 				if (getNet().isClient() && this.getInventory().canPutItem(blob)) blob.getSprite().PlaySound("/PutInInventory.ogg");
 				if (getNet().isServer()) this.server_PutInInventory(blob);
@@ -142,7 +142,7 @@ void onTick(CBlob@ this)
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	CBlob@ carried = forBlob.getCarriedBlob();
-	return forBlob.isOverlapping(this) && (carried is null ? true : (carried.hasTag("isWeapon") || carried.hasTag("ammo")));
+	return forBlob.isOverlapping(this) && (carried is null ? true : (carried.hasTag("weapon") || carried.hasTag("ammo")));
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

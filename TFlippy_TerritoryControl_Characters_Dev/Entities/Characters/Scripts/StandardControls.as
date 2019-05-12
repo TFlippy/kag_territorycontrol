@@ -445,6 +445,6 @@ void ManageCamera(CBlob@ this)
 
 bool isDangerous(CBlob@ blob)
 {
-	return (blob !is null ? (blob.hasTag("explosive") || blob.hasTag("isWeapon") || blob.hasTag("dangerous")) : false);
+	return (blob !is null ? (blob.hasTag("explosive") || blob.hasTag("weapon") || blob.hasTag("dangerous")) : false);
 }
 

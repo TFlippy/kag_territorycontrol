@@ -105,7 +105,7 @@ void onBlobCreated(CRules@ this, CBlob@ blob)
 		SetHelp(blob, "help faction base", "", "Factions offer you and your teammates\nextra protection and technology.\nRemember to build Quarters to raise your upkeep limit!", "", 3);
 	}
 	
-	if (blob.hasTag("isWeapon"))
+	if (blob.hasTag("weapon"))
 	{
 		SetHelp(blob, "help gun", "", "Most guns require ammunition that\ncan be purchased at Gunsmith's Workshop.", "", 3);
 	}
