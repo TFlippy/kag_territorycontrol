@@ -94,7 +94,7 @@ void onInit(CBlob@ this)
 	this.getShape().SetRotationsAllowed(false);
 
 	//for flesh hit
-	this.set_f32("gib health", -0.0f);
+	this.set_f32("gib health", -8.00f);
 	this.Tag("flesh");
 
 	this.getShape().SetOffset(Vec2f(0, 6));

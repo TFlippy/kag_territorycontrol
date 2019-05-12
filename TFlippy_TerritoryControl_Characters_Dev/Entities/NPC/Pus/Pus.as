@@ -22,7 +22,7 @@ void onInit( CBrain@ this )
 
 void onInit(CBlob@ this)
 {
-	this.set_f32("gib health", -10.0f);
+	this.set_f32("gib health", -15.0f);
 
 	this.set_u32("nextAttack", 0);
 	this.set_u32("nextScream", 0);

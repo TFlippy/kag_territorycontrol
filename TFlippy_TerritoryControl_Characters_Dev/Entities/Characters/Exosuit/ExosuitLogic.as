@@ -57,7 +57,7 @@ void onInit(CBlob@ this)
 
 	this.set("knightInfo", @knight);
 
-	this.set_f32("gib health", -3.0f);
+	this.set_f32("gib health", -8.00f);
 	knight_actorlimit_setup(this);
 	this.getShape().SetRotationsAllowed(false);
 	this.getShape().getConsts().net_threshold_multiplier = 0.5f;
