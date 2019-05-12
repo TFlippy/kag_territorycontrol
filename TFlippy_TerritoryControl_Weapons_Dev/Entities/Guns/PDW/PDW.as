@@ -30,8 +30,9 @@ void onInit(CBlob@ this)
 	
 	this.set_u8("gun_shoot_delay", 3);
 	
-	this.set_u8("gun_bullet_count", 8);
-	this.set_f32("gun_bullet_spread", 10);
+	this.set_u8("gun_bullet_count", 1);
+	this.set_f32("gun_bullet_spread", 0);
+	this.set_Vec2f("gun_muzzle_offset", Vec2f(-8.0f, -0.50f));
 	
 	this.set_string("gun_shoot_sound", "PDW_Shoot");
 	
