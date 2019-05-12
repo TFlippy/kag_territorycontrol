@@ -193,57 +193,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 						blob.server_Die();
 					}
 					return false;
-				}else if(tokens[0]=="!kick") {
-					if(tokens.length!=2 || IsCool(tokens[1])){
-						return false;
-					}
-					CPlayer@ user=GetPlayer(tokens[1]);
-
-					if(user !is null) {
-						CBitStream params;
-						params.write_string(user.getUsername());
-						this.SendCommand(this.getCommandID("kickPlayer"),params);
-					}
-					return false;
 				}
-				else if(tokens[0]=="!mute") {
-					if(tokens.length!=3 || IsCool(tokens[1])){
-						return false;
-					}
-					CPlayer@ user=	GetPlayer(tokens[1]);
-					int muteTime=	parseInt(tokens[2]);
-
-					if(user !is null) {
-
-					}
-					return false;
-				}
-				// else if(tokens[0]=="!ban") {
-					// if(tokens.length<3 || IsCool(tokens[1])){
-						// return false;
-					// }
-					// string username=tokens[1];
-					// CPlayer@ user=	GetPlayer(tokens[1]);
-					// if(user !is null){
-						// username=user.getUsername();
-					// }
-					// int minutes=	parseInt(tokens[2])*60;
-					// string reason=	"";
-					// if(tokens.length>=4){
-						// for(int i=3;i<tokens.length;i++){
-							// if(i!=3){
-								// reason+=" ";
-							// }
-							// reason+=tokens[i];
-						// }
-					// }
-					// if(reason!=""){
-						// getSecurity().ban(username,minutes,reason);
-					// }else{
-						// getSecurity().ban(username,minutes);
-					// }
-					// return false;
-				// }
 				else if(tokens[0]=="!freeze") {
 					if(tokens.length!=2 || IsCool(tokens[1])){
 						return false;
