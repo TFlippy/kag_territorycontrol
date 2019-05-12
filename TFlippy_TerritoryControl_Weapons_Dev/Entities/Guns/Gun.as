@@ -128,7 +128,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 				u32 seed = params.read_u32();
 				Vec2f source_pos = params.read_Vec2f() - this.get_Vec2f("gun_muzzle_offset").RotateBy(this.getAngleDegrees() + (flip ? -180 : 0));				
-				Vec2f target_pos = params.read_Vec2f();				
+				Vec2f target_pos_initial = params.read_Vec2f();				
 				
 				Random@ random = Random(seed);
 					
@@ -139,8 +139,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				
 				for (u8 b = 0; b < bullet_count; b++)
 				{
+					Vec2f target_pos = target_pos_initial + Vec2f(spread * (random.NextFloat() - 0.50f), spread * (random.NextFloat() - 0.50f));
 					Vec2f hit_pos = target_pos;
-					Vec2f dir = (target_pos - source_pos).RotateBy((random.NextFloat() - 0.50f) * spread);
+					Vec2f dir = (target_pos - source_pos);
 					f32 length = dir.getLength();
 					f32 angle = dir.getAngleDegrees();
 					dir.Normalize();
@@ -274,7 +275,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					
 					if (client)
 					{
-						createBullet(source_pos, hit_pos, SColor(255, 255, 255, 255), Vec2f(3.00f, 0.50f));
+						// #ff9d33 low cal
+						
+						// createBullet(source_pos, hit_pos, SColor(200, 100, 255, 240), Vec2f(6.00f, 0.75f));
+						createBullet(source_pos, hit_pos, SColor(255, 255, 150, 50), Vec2f(4.00f, 0.50f));
 					}
 				}
 							
