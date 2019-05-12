@@ -34,6 +34,7 @@ class SoundInfo
 //Raycast Gun Init
 void GunInitRaycast(CBlob@ this, bool isAutomatic, f32 fireDamage, f32 fireRange, u32 fireDelay, u32 clipSize, f32 ammoUsageFactor,u32 reloadTime,bool shotgunReload,u32 shotgunEndDelay, u8 bulletCount, f32 bulletJitter, string ammoItem, bool soundFireLoop, SoundInfo soundFire, SoundInfo soundReload, SoundInfo soundDelayed, u32 soundDelayedDelay, Vec2f lineOffset)
 {
+
 	AttachmentPoint@ ap=this.getAttachments().getAttachmentPointByName("PICKUP");
 	if(ap !is null) {
 		ap.SetKeysToTake(key_action1);
@@ -41,7 +42,7 @@ void GunInitRaycast(CBlob@ this, bool isAutomatic, f32 fireDamage, f32 fireRange
 	
 	this.getShape().SetRotationsAllowed(true);
 	this.Tag("no shitty rotation reset");
-	this.Tag("isWeapon");
+	this.Tag("weapon");
 	this.Tag("hopperable");
 	this.addCommandID("cmd_gunReload");
 	
@@ -90,16 +91,18 @@ void GunInitRaycast(CBlob@ this, bool isAutomatic, f32 fireDamage, f32 fireRange
 	this.set_Vec2f	("gun_lineOffset",			lineOffset);
 	this.set_bool	("gun_needsRelease",		false);
 }
+
 //Projectile gun init
 void GunInitProjectile(CBlob@ this,bool isAutomatic,string fireProj,f32 fireProjSpeed,u32 fireDelay,u32 clipSize,f32 ammoUsageFactor,u32 reloadTime,bool shotgunReload,u32 shotgunEndDelay,string ammoItem,bool soundFireLoop,SoundInfo soundFire,SoundInfo soundReload,SoundInfo soundDelayed,u32 soundDelayedDelay,Vec2f projOffset)
 {
+
 	AttachmentPoint@ ap=this.getAttachments().getAttachmentPointByName("PICKUP");
 	if(ap !is null) {
 		ap.SetKeysToTake(key_action1);
 	}
 	this.getShape().SetRotationsAllowed(true);
 	this.Tag("no shitty rotation reset");
-	this.Tag("isWeapon");
+	this.Tag("weapon");
 	this.Tag("hopperable");
 	if(this.hasCommandID("cmd_gunReload")){
 		print("ALREADY HAD COMMAND");
@@ -150,6 +153,7 @@ void GunInitProjectile(CBlob@ this,bool isAutomatic,string fireProj,f32 fireProj
 	this.set_Vec2f	("gun_lineOffset",			Vec2f(0.0f,0.0f));
 	this.set_bool	("gun_needsRelease",		false);
 }
+
 void GunTick(CBlob@ this)
 {
 	CSprite@ sprite=this.getSprite();
@@ -336,16 +340,19 @@ void GunTick(CBlob@ this)
 	}
 	holder.DisableKeys(key_action1);
 }
+
 void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)
 {
 	detached.Untag("noLMB");
 	detached.Untag("noShielding");
 }
+
 void PlayWeaponSound(CBlob@ this,string sound)
 {
 	u32 range=	this.get_u32(sound+"Range");
 	this.getSprite().PlaySound(this.get_string(sound)+(range>1 ? formatInt(XORRandom(range-1)+1,"")+".ogg" : ".ogg"),this.get_f32(sound+"Volume"),this.get_f32(sound+"Pitch"));
 }
+
 void Shoot(CBlob@ this)
 {
 	AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
@@ -419,7 +426,7 @@ void Shoot(CBlob@ this)
 							
 							if((blob.isCollidable() || blob.hasTag("flesh") || force_nonsolid) && (!blob.hasTag("invincible") && blob.getTeamNum() != holder.getTeamNum())) 
 							{
-								if (!blob.hasTag("isWeapon"))
+								if (!blob.hasTag("weapon"))
 								{
 									f32 dmg = damage*Maths::Max(0.1,falloff)*(blob.hasTag("door") ? 0.2f : 1.0f);
 									Vec2f dir = blob.getPosition() - this.getPosition();
@@ -662,6 +669,7 @@ void onInit(CSprite@ this)
 		}
 	}
 }
+
 void onTick(CSprite@ this)
 {
 	CBlob@ self=this.getBlob();
@@ -673,6 +681,7 @@ void onTick(CSprite@ this)
 		}
 	}
 }
+
 void UpdateAngle(CBlob@ this)
 {
 	AttachmentPoint@ point=this.getAttachments().getAttachmentPointByName("PICKUP");
@@ -700,6 +709,7 @@ void UpdateAngle(CBlob@ this)
 	point.offset.x=0 +(aim_vec.x*2*(holder.isFacingLeft() ? 1.0f : -1.0f));
 	point.offset.y=-(aim_vec.y);
 }
+
 void DrawLine(CSprite@ this, u8 index, Vec2f startPos, f32 length, f32 angleOffset, bool flip)
 {
 	CSpriteLayer@ tracer=this.getSpriteLayer("tracer" + index);
