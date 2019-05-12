@@ -1,6 +1,6 @@
 #include "Hitters.as";
 #include "HittersTC.as";
-#include "BulletHook.as";
+#include "BulletCommon.as";
 
 namespace AmmoType
 {
@@ -37,11 +37,35 @@ void onInit(CBlob@ this)
 	this.set_f32("gun_bullet_spread", 0);
 	
 	this.set_f32("gun_damage_modifier", 1);
-	
 	this.set_u32("gun_reload_time", 1);
+	this.set_Vec2f("gun_muzzle_offset", Vec2f(0, 0));
 	
 	this.addCommandID("gun_shoot");
 	this.addCommandID("gun_reload");
+	
+	if (isClient())
+	{
+		CSprite@ sprite = this.getSprite();
+		if (sprite !is null)
+		{
+			CSpriteLayer@ flash = sprite.addSpriteLayer("muzzle_flash", (this.exists("gun_muzzleflash_sprite") ? this.get_string("gun_muzzleflash_sprite") : "MuzzleFlash.png"), 16, 8, this.getTeamNum(), 0);
+			if (flash !is null)
+			{
+				Animation@ anim = flash.addAnimation("default", 1, false);
+				anim.AddFrame(0);
+				anim.AddFrame(1);
+				anim.AddFrame(2);
+				anim.AddFrame(3);
+				anim.AddFrame(5);
+				anim.AddFrame(6);
+				anim.AddFrame(7);
+				flash.SetRelativeZ(1.0f);
+				flash.SetVisible(false);
+				// flash.setRenderStyle(RenderStyle::additive);
+				flash.SetOffset(this.get_Vec2f("gun_muzzle_offset") + Vec2f(-16, -1));
+			}
+		}
+	}
 }
 
 void onTick(CBlob@ this)
@@ -94,13 +118,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				const bool server = isServer();
 				const bool client = isClient();
 			
-				Vec2f source_pos = params.read_Vec2f();				
+				const bool flip = this.isFacingLeft();
+			
+				Vec2f source_pos = params.read_Vec2f() + this.get_Vec2f("gun_muzzle_offset").RotateBy(this.getAngleDegrees() + (flip ? 180 : 0));				
 				Vec2f target_pos = params.read_Vec2f();				
 				u32 seed = (source_pos.x + target_pos.y) * (source_pos.y + target_pos.x);		
 				
 				Random@ random = Random(seed);
 				
-				const bool flip = this.isFacingLeft();	
+					
 				const f32 damage_init = 1.00f * this.get_f32("gun_damage_modifier");
 				const u8 hitter_type = this.get_u8("gun_hitter");
 				const u8 bullet_count = this.get_u8("gun_bullet_count");
@@ -140,6 +166,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 													f32 health_before = blob.getHealth();
 													holder.server_Hit(blob, hit.hitpos, dir, damage, hitter_type, false);
 													
+													hit_pos = hit.hitpos;
 													damage = Maths::Max(damage - health_before, 0);
 													if (damage <= 0) done = true;
 												}
@@ -147,6 +174,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 											else
 											{
 												map.server_DestroyTile(hit.hitpos, damage);
+												hit_pos = hit.hitpos;
 												done = true;
 											}
 										}
@@ -205,12 +233,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 													f32 health_before = blob.getHealth();
 													holder.server_Hit(blob, hit.hitpos, dir, damage, hitter_type, false);
 													
+													hit_pos = hit.hitpos;
 													damage = Maths::Max(damage - health_before, 0);
 													if (damage <= 0) done = true;
 												}
 											}
 											else
 											{
+												hit_pos = hit.hitpos;
 												map.server_DestroyTile(hit.hitpos, damage);
 												done = true;
 											}
@@ -219,12 +249,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 									else break;
 								}
 							}
-							
-							hit_pos += (dir * length);
 						}
 									
 						if (!done)
 						{
+							hit_pos += (dir * length);
+							
 							CBlob@ blob = map.getBlobAtPosition(hit_pos);
 							if (blob !is null && blob.getTeamNum() != holder.getTeamNum() && !blob.hasTag("invincible"))
 							{
@@ -245,6 +275,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						//and the time
 						//AddBullet()
 						//AddBullet(Vec2f Startpos, Vec2f EndPos, SColor col = SColor(255,255,255,255), float x = 0.7, float y = 3)
+						
+						// AddBullet(source_pos, target_pos, SColor(255,255,255,255), 0.70f, 3.00f);
+						
+						createBullet(source_pos, hit_pos);
+						// createBullet(source_pos, target_pos);
 					}
 				}
 							
@@ -252,6 +287,17 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				{
 					ShakeScreen(Maths::Sqrt(damage_init * 100), 10, this.getPosition());	
 					Sound::Play(this.get_string("gun_shoot_sound"), source_pos, 1, 1);
+					
+					CSprite@ sprite = this.getSprite();
+					if (sprite !is null)
+					{
+						CSpriteLayer@ flash = sprite.getSpriteLayer("muzzle_flash");
+						if (flash !is null)
+						{
+							flash.SetFrameIndex(0);
+							flash.SetVisible(true);
+						}
+					}
 				}
 				
 				if (server)
