@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "HittersTC.as";
+#include "BulletHook.as";
 
 namespace AmmoType
 {
@@ -93,9 +94,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				const bool server = isServer();
 				const bool client = isClient();
 			
-				Vec2f source_pos = params.read_Vec2f();
-				Vec2f target_pos = params.read_Vec2f();
-				u32 seed = (source_pos.x + target_pos.y) * (source_pos.y + target_pos.x);
+				Vec2f source_pos = params.read_Vec2f();				
+				Vec2f target_pos = params.read_Vec2f();				
+				u32 seed = (source_pos.x + target_pos.y);			
 				
 				Random@ random = Random(seed);
 				
@@ -239,7 +240,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					// Bullet rendering stuff goes there
 					if (client)
 					{
-						
+						//Make new bullet
+						//Give it a start and end pos
+						//and the time
+						//AddBullet()
+						//AddBullet(Vec2f Startpos, Vec2f EndPos, SColor col = SColor(255,255,255,255), float x = 0.7, float y = 3)
 					}
 				}
 							
