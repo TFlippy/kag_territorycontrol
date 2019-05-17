@@ -155,7 +155,6 @@ void onRespawnCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 						if (caller.exists("knocked"))
 						{
-							// newBlob.set_u8("knocked", getKnocked(caller));
 							SetKnocked(newBlob, getKnocked(caller));
 							newBlob.Sync("knocked", true);
 						}

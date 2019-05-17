@@ -89,7 +89,6 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			}
 
 			SetKnocked(this, knockdown_time);
-			// this.set_u8("knocked", knockdown_time);
 		}
 	}
 }

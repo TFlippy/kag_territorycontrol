@@ -35,7 +35,6 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 			switch (counter)
 			{
 				case 0:
-					// blob.set_u8("knocked", 150);
 					SetKnocked(blob, 150);
 					this.getSprite().PlaySound("/Zatniktel_Hit.ogg", 0.5f, 1.0f);
 					break;
