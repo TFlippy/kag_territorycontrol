@@ -139,10 +139,13 @@ void onTick(CBlob@ this)
 	}
 
 	u32 time = getGameTime();
-	
-	if (time % 5 == 0 && getNet().isServer())
+	if (isServer() && time % 5 == 0)
 	{	
-		this.server_Heal(0.125f);
+		f32 maxHealth = this.getInitialHealth();
+		if (this.getHealth() < maxHealth)
+		{					
+			this.server_SetHealth(Maths::Min(this.getHealth() + 0.125f, maxHealth));
+		}
 	}
 	
 	Vec2f pos = this.getPosition();
