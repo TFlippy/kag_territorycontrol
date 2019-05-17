@@ -41,6 +41,7 @@ void onTick(CBlob@ this)
 				{
 					if ((pos - this.getPosition()).getLength() < 32)
 					{
+						getMap().rayCastSolidNoBlobs(this.getPosition(), pos, pos);
 						CBlob@ blob = getMap().getBlobAtPosition(pos);
 						
 						if (blob !is null)
