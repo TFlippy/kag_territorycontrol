@@ -47,7 +47,8 @@ const LootItem@[] c_items =
 	LootItem("scubagear", 1, 0, 400),
 	LootItem("ninjascroll", 1, 1, 250),
 	LootItem("flashlight", 1, 1, 400),
-	LootItem("juggernauthammer", 1, 1, 50)
+	LootItem("juggernauthammer", 1, 1, 50),
+	LootItem("gyromat", 1, 1, 300)
 };
 
 void onInit(CBlob@ this)
