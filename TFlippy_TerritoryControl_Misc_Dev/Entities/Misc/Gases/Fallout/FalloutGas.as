@@ -5,6 +5,7 @@ void onInit(CBlob@ this)
 {
 	this.Tag("smoke");
 	this.Tag("gas");
+	this.Tag("invincible");
 
 	// this.Tag("blocks spawn");
 	
