@@ -8,6 +8,8 @@ void onInit(CBlob@ this)
 {
 }
 
+const f32 health_increment = 0.125f;
+
 void onTick(CBlob@ this)
 {
 	if (this.hasTag("dead")) return;
@@ -19,7 +21,7 @@ void onTick(CBlob@ this)
 	{
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
-	else if (true_level <= 2)
+	else if (true_level <= 8)
 	{
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
@@ -28,14 +30,17 @@ void onTick(CBlob@ this)
 			moveVars.jumpFactor *= 1.15f;
 		}	
 				
-		if (this.getTickSinceCreated() % 10 == 0)
+		if (this.getTickSinceCreated() % 6 == 0)
 		{
-			f32 maxHealth = Maths::Ceil(this.getInitialHealth() * 1.50f);
+			f32 maxHealth = Maths::Ceil(this.getInitialHealth() * 5.00f);
 			if (this.getHealth() < maxHealth)
 			{				
 				if (getNet().isServer())
 				{
-					this.server_SetHealth(Maths::Min(this.getHealth() + 0.125f, maxHealth));
+					this.server_SetHealth(Maths::Min(this.getHealth() + health_increment, maxHealth));
+					this.set_f32("fiksed", Maths::Max(0, this.get_f32("fiksed") - health_increment));
+					
+					if (this.isMyPlayer()) this.getSprite().PlaySound("heart.ogg", 0.50f, 1.00f);
 				}
 				
 				if (getNet().isClient())
@@ -49,27 +54,18 @@ void onTick(CBlob@ this)
 		}	
 	}
 	else
-	{
-		RunnerMoveVars@ moveVars;
-		if (this.get("moveVars", @moveVars))
+	{	
+		if (getNet().isServer())
 		{
-			moveVars.walkFactor *= 0.75f;
-			moveVars.jumpFactor *= 0.50f;
-		}	
-				
-		if (this.getTickSinceCreated() % 20 == 0)
-		{
-			if (this.getHealth() > 0.50f)
-			{				
-				if (getNet().isServer())
-				{
-					this.server_Hit(this, this.getPosition(), Vec2f(0, 0), 0.25f, HittersTC::radiation, true);
-				}
-			}
-		}	
+			this.server_SetHealth(0.50f);
+			this.set_f32("fiksed", this.get_f32("fiksed") * 0.50f);
+		}
+		
+		SetKnocked(this, 90);
+		this.getSprite().PlaySound("drunk_fx4", 1.0f, this.getSexNum() == 0 ? 1.0f : 2.0f);	
 	}
 	
-	this.set_f32("fiksed", Maths::Max(0, this.get_f32("fiksed") - (0.0010f)));
+	// this.set_f32("fiksed", Maths::Max(0, this.get_f32("fiksed") - (0.0050f)));
 	
 	// print("" + true_level);
 	// print("" + (1.00f / (level)));
