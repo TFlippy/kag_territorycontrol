@@ -7,6 +7,7 @@
 #include "HittersTC.as";
 #include "ShieldCommon.as";
 #include "Help.as";
+#include "Knocked.as";
 #include "Requirements.as";
 #include "SplashWater.as"
 #include "ParticleSparks.as";
@@ -574,7 +575,7 @@ bool IsKnocked(CBlob@ blob)
 	if(!blob.exists("knocked")){
 		return false;
 	}
-	return blob.get_u8("knocked")>0;
+	return getKnocked(blob) > 0;
 }
 /*void DrawLine(CSprite@ this, u8 index, Vec2f startPos, f32 length, f32 angleOffset, bool flip)
 {

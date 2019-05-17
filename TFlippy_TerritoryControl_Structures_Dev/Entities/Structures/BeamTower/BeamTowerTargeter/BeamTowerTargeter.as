@@ -1,3 +1,5 @@
+#include "Knocked.as";
+
 void onInit(CBlob@ this)
 {
 	this.addCommandID("targeter_set_link");
@@ -10,7 +12,7 @@ void onTick(CBlob@ this)
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder = point.getOccupied();
 		
-		if (holder !is null && holder.get_u8("knocked") <= 0)
+		if (holder !is null && getKnocked(holder) <= 0)
 		{
 			CSprite@ sprite = this.getSprite();
 			const bool lmb = holder.isKeyJustPressed(key_action1) || point.isKeyPressed(key_action1);

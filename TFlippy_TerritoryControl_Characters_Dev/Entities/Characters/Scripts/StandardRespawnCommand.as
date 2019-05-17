@@ -11,6 +11,7 @@
 
 bool enable_quickswap = false;
 #include "ClassSelectMenu.as"
+#include "Knocked.as"
 
 void InitRespawnCommand(CBlob@ this)
 {
@@ -154,7 +155,7 @@ void onRespawnCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 						if (caller.exists("knocked"))
 						{
-							newBlob.set_u8("knocked", caller.get_u8("knocked"));
+							newBlob.set_u8("knocked", getKnocked(caller));
 							newBlob.Sync("knocked", true);
 						}
 

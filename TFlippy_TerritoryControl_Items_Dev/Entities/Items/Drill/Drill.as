@@ -1,6 +1,7 @@
 // Drill.as
 
 #include "Hitters.as";
+#include "Knocked.as";
 #include "BuilderHittable.as";
 #include "ParticleSparks.as";
 
@@ -176,7 +177,7 @@ void onTick(CBlob@ this)
 			sprite.PlaySound("DrillOverheat.ogg");
 		}
 
-		if (!(point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) || holder.get_u8("knocked") > 0)
+		if (!(point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) || getKnocked(holder) > 0)
 		{
 			this.set_bool(buzz_prop, false);
 			return;

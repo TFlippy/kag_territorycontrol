@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "HittersTC.as";
+#include "Knocked.as";
 
 void onInit(CBlob@ this)
 {
@@ -34,7 +35,7 @@ void onTick(CBlob@ this)
 			return;
 		}
 		
-		if (holder.get_u8("knocked") <= 0)
+		if (getKnocked(holder) <= 0)
 		{		
 			if (point.isKeyJustPressed(key_action1))
 			{

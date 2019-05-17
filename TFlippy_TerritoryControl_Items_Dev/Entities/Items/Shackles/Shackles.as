@@ -1,4 +1,5 @@
 #include "Hitters.as";
+#include "Knocked.as";
 #include "Survival_Structs.as";
 
 void onInit(CBlob@ this)
@@ -36,7 +37,7 @@ void onTick(CBlob@ this)
 		
 		if (point.isKeyJustPressed(key_action1))
 		{
-			if (slavery_enabled && getGameTime() >= this.get_u32("next attack") && holder.get_u8("knocked") <= 0)
+			if (slavery_enabled && getGameTime() >= this.get_u32("next attack") && getKnocked(holder) <= 0)
 			{
 				HitInfo@[] hitInfos;
 				if (getMap().getHitInfosFromArc(this.getPosition(), -(holder.getAimPos() - this.getPosition()).Angle(), 45, 16, this, @hitInfos))
@@ -51,7 +52,7 @@ void onTick(CBlob@ this)
 							
 							print("" + chance);
 						
-							if ((chance > 0.50f && XORRandom(100) < chance * 80) || (blob.get_u8("knocked") > 15 && chance > 0.2f))
+							if ((chance > 0.50f && XORRandom(100) < chance * 80) || (getKnocked(blob) > 15 && chance > 0.2f))
 							{
 								if (getNet().isClient())
 								{

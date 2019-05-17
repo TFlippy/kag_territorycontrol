@@ -3,6 +3,7 @@
 #include "Hitters.as";
 #include "BuilderHittable.as";
 #include "ParticleSparks.as";
+#include "Knocked.as";
 
 const f32 speed_thresh = 2.0f;
 const f32 speed_hard_thresh = 2.2f;
@@ -176,7 +177,7 @@ void onTick(CBlob@ this)
 			sprite.PlaySound("DrillOverheat.ogg");
 		}
 
-		if (!(point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) || holder.get_u8("knocked") > 0)
+		if (!(point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) || getKnocked(holder) > 0)
 		{
 			this.set_bool(buzz_prop, false);
 			return;
