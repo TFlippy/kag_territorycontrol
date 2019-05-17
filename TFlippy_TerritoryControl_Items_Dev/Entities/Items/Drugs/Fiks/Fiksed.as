@@ -23,16 +23,9 @@ void onTick(CBlob@ this)
 	}
 	else if (true_level <= 8)
 	{
-		RunnerMoveVars@ moveVars;
-		if (this.get("moveVars", @moveVars))
-		{
-			moveVars.walkFactor *= 1.15f;
-			moveVars.jumpFactor *= 1.15f;
-		}	
-				
 		if (this.getTickSinceCreated() % 6 == 0)
 		{
-			f32 maxHealth = Maths::Ceil(this.getInitialHealth() * 5.00f);
+			f32 maxHealth = Maths::Ceil(Maths::Min(this.getInitialHealth() * 3.00f, this.getInitialHealth() + 5));
 			if (this.getHealth() < maxHealth)
 			{				
 				if (getNet().isServer())
@@ -57,7 +50,7 @@ void onTick(CBlob@ this)
 	{	
 		if (getNet().isServer())
 		{
-			this.server_SetHealth(0.50f);
+			// this.server_SetHealth(0.50f);
 			this.set_f32("fiksed", this.get_f32("fiksed") * 0.50f);
 		}
 		
