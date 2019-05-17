@@ -1,16 +1,10 @@
-// Trader logic
-
 #include "RunnerCommon.as"
 #include "Help.as";
 #include "Hitters.as";
 #include "Requirements.as";
 #include "ShopCommon.as";
 
-//trader methods
-
-//blob
-
-string[] firstnames = 
+const string[] firstnames = 
 { 
 	"Kevin",
 	"Eughene",
@@ -29,7 +23,7 @@ string[] firstnames =
 	"Garry"
 };
 
-string[] surnames = 
+const string[] surnames = 
 { 
 	"Bobington",
 	"Culkin",
@@ -43,7 +37,7 @@ string[] surnames =
 	"Dump"
 };
 
-string[] soundsTalk = 
+const string[] soundsTalk = 
 { 
 	"MigrantHmm.ogg",
 	"drunk_fx2.ogg",
@@ -51,14 +45,14 @@ string[] soundsTalk =
 	"drunk_fx4.ogg"
 };
 
-string[] soundsDanger = 
+const string[] soundsDanger = 
 { 
 	"trader_scream_0.ogg",
 	"trader_scream_1.ogg",
 	"trader_scream_2.ogg"
 };
 
-string[] textsIdle = 
+const string[] textsIdle = 
 { 
 	"give me ya money 'itch",
 	"c'mere here ya shit",
@@ -82,7 +76,7 @@ string[] textsIdle =
 	"ill bash ye fookin 'ead in i sware on me mum"
 };
 
-string[] textsDanger = 
+const string[] textsDanger = 
 { 
 	"ya weenie 'lil shit",
 	"i'll get ya asshole",
@@ -103,7 +97,7 @@ string[] textsDanger =
 	"ill bash ye fookin ead in i sware on me mum"
 };
 
-string[] textsWon = 
+const string[] textsWon = 
 {
 	"put me 'ack ya shitbag",
 	"go to hell",
@@ -128,7 +122,6 @@ void onInit(CBlob@ this)
 	string name = firstnames[rand.NextRanged(firstnames.length)] + " " + surnames[rand.NextRanged(surnames.length)];
 	this.set_string("trader name", name);
 	
-	//no spinning
 	this.getShape().SetRotationsAllowed(false);
 	this.set_f32("gib health", -2.0f);
 	this.Tag("flesh");
@@ -136,16 +129,13 @@ void onInit(CBlob@ this)
 	this.Tag("human");
 	this.getBrain().server_SetActive(true);
 
-	//this.getCurrentScript().runFlags |= Script::tick_not_attached;
-	//this.getCurrentScript().runFlags |= Script::tick_moving;
-
 	this.set_u32("nextTalk", getGameTime() + XORRandom(60));
 	this.set_u32("nextFood", 0);
 	
 	this.addCommandID("traderChat");
 
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
-	this.set_Vec2f("shop menu size", Vec2f(2, 2));
+	this.set_Vec2f("shop menu size", Vec2f(3, 3));
 	this.set_string("shop description", name + " the Hobo");
 	this.setInventoryName(name + " the Hobo");
 	this.set_u8("shop icon", 25);
@@ -154,38 +144,144 @@ void onInit(CBlob@ this)
 
 	if (rand.NextRanged(100) < 50)
 	{
-		ShopItem@ s = addShopItem(this, "Honking Shite", "$klaxon$", "klaxon", "throw it away");
-		AddRequirement(s.requirements, "coin", "", "Coins", 417);
+		ShopItem@ s = addShopItem(this, "honking shite", "$klaxon$", "klaxon", "throw it away");
+		AddRequirement(s.requirements, "coin", "", "Coins", 50 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 50)
 	{
-		ShopItem@ s = addShopItem(this, "Big Cuffs", "$shackles$", "shackles", "tie that fool up");
-		AddRequirement(s.requirements, "coin", "", "Coins", 170);
+		ShopItem@ s = addShopItem(this, "big cuffs", "$shackles$", "shackles", "tie that fool up");
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 50)
 	{
-		ShopItem@ s = addShopItem(this, "Sticky Stick", "$nightstick$", "nightstick", "a stick for beating up");
-		AddRequirement(s.requirements, "coin", "", "Coins", 90);
+		ShopItem@ s = addShopItem(this, "sticky stick", "$nightstick$", "nightstick", "a stick for beating up");
+		AddRequirement(s.requirements, "coin", "", "Coins", 50 + rand.NextRanged(150));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 50)
 	{
-		ShopItem@ s = addShopItem(this, "Firework", "$icon_firework$", "firework", "popping flying shit");
-		AddRequirement(s.requirements, "coin", "", "Coins", 140);
+		ShopItem@ s = addShopItem(this, "poppin shit", "$icon_firework$", "firework", "popping flying shit");
+		AddRequirement(s.requirements, "coin", "", "Coins", 75 + rand.NextRanged(200));
 		s.spawnNothing = true;
 	}
 	
 	if (rand.NextRanged(100) < 50)
 	{
-		ShopItem@ s = addShopItem(this, "Firejob", "$icon_firejob$", "firejob", "fucking tie it to your neck and launch it ya cunt");
-		AddRequirement(s.requirements, "coin", "", "Coins", 1499);
+		ShopItem@ s = addShopItem(this, "firejob", "$icon_firejob$", "firejob", "fucking tie it to your neck and launch it ya cunt");
+		AddRequirement(s.requirements, "coin", "", "Coins", 250 + rand.NextRanged(1500));
 		s.spawnNothing = true;
 	}
+	
+	if (rand.NextRanged(100) < 30)
+	{
+		ShopItem@ s = addShopItem(this, "bitch", "$icon_trader$", "trader", "huh");
+		AddRequirement(s.requirements, "coin", "", "Coins", 500 + rand.NextRanged(2000));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 5)
+	{
+		ShopItem@ s = addShopItem(this, "guy", "$icon_hobo$", "hobo", "fuck off");
+		AddRequirement(s.requirements, "coin", "", "Coins", 200 + rand.NextRanged(2000));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 30)
+	{
+		ShopItem@ s = addShopItem(this, "fart can", "$icon_methane$", "mat_methane-25", "smells like shit");
+		AddRequirement(s.requirements, "coin", "", "Coins", 400 + rand.NextRanged(500));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 20)
+	{
+		ShopItem@ s = addShopItem(this, "nuke", "$icon_mininuke$", "mat_dirt-10", "get fucked");
+		AddRequirement(s.requirements, "coin", "", "Coins", 1000 + rand.NextRanged(10000));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 20)
+	{
+		ShopItem@ s = addShopItem(this, "refined fart can", "$icon_fuel$", "mat_fuel-25", "smells worse than shit");
+		AddRequirement(s.requirements, "coin", "", "Coins", 800 + rand.NextRanged(1000));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 20)
+	{
+		ShopItem@ s = addShopItem(this, "gae", "$icon_princess$", "princess", "found him hanging around the tannhauser gate");
+		AddRequirement(s.requirements, "coin", "", "Coins", 69 + rand.NextRanged(10000));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 20)
+	{
+		{
+			ShopItem@ s = addShopItem(this, "rocket prop whatever launcher", "$icon_rpc$", "rpc", "cut the shit");
+			AddRequirement(s.requirements, "coin", "", "Coins", 250 + rand.NextRanged(2500));
+			s.spawnNothing = true;
+		}
+		
+		{
+			ShopItem@ s = addShopItem(this, "rocket prop whatever rocket", "$icon_sawrocket$", "mat_sawrocket-1", "rocket for launcher");
+			AddRequirement(s.requirements, "coin", "", "Coins", 10 + rand.NextRanged(550));
+			s.spawnNothing = true;
+		}
+	}
+	
+	if (rand.NextRanged(100) < 25)
+	{
+		ShopItem@ s = addShopItem(this, "fun", "$icon_domino$", "domino", "hoyl shit");
+		AddRequirement(s.requirements, "coin", "", "Coins", 150 + rand.NextRanged(500));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 25)
+	{
+		ShopItem@ s = addShopItem(this, "speedo", "$icon_stim$", "stim", "speedy stuff you'll be fast like hedgehog");
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 25)
+	{
+		ShopItem@ s = addShopItem(this, "shite", "$icon_bobongo$", "bobongo", "stfu");
+		AddRequirement(s.requirements, "coin", "", "Coins", 125 + rand.NextRanged(500));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 25)
+	{
+		ShopItem@ s = addShopItem(this, "cat", "$icon_kitten$", "badger", "yea");
+		AddRequirement(s.requirements, "coin", "", "Coins", 50 + rand.NextRanged(500));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 25)
+	{
+		ShopItem@ s = addShopItem(this, "yellow mellow", "$icon_foof$", "foof", "pissssss");
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 3)
+	{
+		ShopItem@ s = addShopItem(this, "some retarded shite", "$icon_oof$", "oof", "it's a rake or some stuff now get the fuck out before i gouge your eyes out");
+		AddRequirement(s.requirements, "coin", "", "Coins", 1 + rand.NextRanged(1000));
+		s.spawnNothing = true;
+	}
+	
+	if (getNet().isServer())
+	{
+		this.server_setTeamNum(-1);
+	}
+
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 }
 
 void onTick(CBlob@ this)
@@ -194,45 +290,35 @@ void onTick(CBlob@ this)
 	{
 		if (this.getHealth() <= 0)
 		{
-			this.Tag("dead");			
+			this.Tag("dead");				
 			return;
 		}
-	
-		if (getNet().isServer() && getGameTime() % 150 == 0)
-		{
-			const u8 myTeam = this.getTeamNum();
 
-			int count = getPlayerCount();
-			for (uint i = 0; i < count; i++)
-			{
-				CPlayer@ ply = getPlayer(i);
-				if (ply.getTeamNum() == myTeam)
-				{
-					if (ply !is null) ply.server_setCoins(ply.getCoins() + 3);
-				}
+		if(isClient()){
+			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+				return;
 			}
 		}
-	
-		if (getGameTime() >= this.get_u32("nextTalk"))
+
+		uint time = getGameTime();
+		if (time >= this.get_u32("nextTalk"))
 		{
-			this.set_u32("nextTalk", getGameTime() + (30 * 10) + XORRandom(30 * 20));
+			this.set_u32("nextTalk", time + (30 * 10) + XORRandom(30 * 20));
 			
 			u32 lastDanger = this.get_u32("lastDanger");
 			u16 dangerBlobNetID = this.get_u16("danger blob");
 			
-			bool danger = dangerBlobNetID > 0 && getGameTime() < (lastDanger + (30 * 30));
+			bool danger = dangerBlobNetID > 0 && time < (lastDanger + (30 * 30));
 			
 			string text = "";
 			if (danger)
 			{
-				// this.set_u32("lastDanger", getGameTime());
-				
 				text = textsDanger[XORRandom(textsDanger.length())];
 				this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.length())], 0.75f, 0.75f);
 			}
 			else
 			{
-				if (getGameTime() - this.get_u32("lastDanger") < 30 * 60)
+				if (time - this.get_u32("lastDanger") < 30 * 60)
 				{
 					text = textsWon[XORRandom(textsWon.length())];
 				}
@@ -251,55 +337,59 @@ void onTick(CBlob@ this)
 			}
 		}
 		
-		// if (getNet().isServer())
-		{
-			CBlob@[] blobs;
-			getMap().getBlobsInRadius(this.getPosition(), 96, @blobs);
-			
-			int index = -1;
-			f32 s_dist = 900000.00f;
-			u8 myTeam = this.getTeamNum();
+		CBlob@[] blobs;
+		getMap().getBlobsInRadius(this.getPosition(), 96, @blobs);
+		
+		int index = -1;
+		f32 s_dist = 900000.00f;
+		u8 myTeam = this.getTeamNum();
 
-			for (int i = 0; i < blobs.length; i++)
-			{
-				CBlob@ b = blobs[i];
-				u8 team = b.getTeamNum();
-				
-				f32 dist = (b.getPosition() - this.getPosition()).LengthSquared();
-				
-				if (team != myTeam && dist < s_dist && b.hasTag("flesh") && !b.hasTag("dead"))
-				{
-					s_dist = dist;
-					index = i;
-				}
-			}
+		for (int i = 0; i < blobs.length; i++)
+		{
+			CBlob@ b = blobs[i];
+			u8 team = b.getTeamNum();
 			
-			if (index != -1)
+			f32 dist = (b.getPosition() - this.getPosition()).LengthSquared();
+			
+			if (team != myTeam && dist < s_dist && b.hasTag("flesh") && !b.hasTag("dead"))
 			{
-				CBlob@ target = blobs[index];
-				
-				if (target !is null)
+				s_dist = dist;
+				index = i;
+			}
+		}
+		
+		if (index != -1)
+		{
+			CBlob@ target = blobs[index];
+			
+			if (target !is null)
+			{
+				if (this.get_u32("nextThrow") < time)
 				{
-					if (this.get_u32("nextThrow") < getGameTime())
+					if (XORRandom(100) < 2)
 					{
-						if (XORRandom(100) < 2)
-						{
-							this.set_u32("nextTalk", 0);
+						this.set_u32("nextTalk", 0);
+					
+						Vec2f dir = target.getPosition() - this.getPosition();						
+						this.SetFacingLeft(dir.x < 0);
+					
+						bool isAttached = this.isAttached();
+					
+						if (getNet().isClient())
+						{	
+							if (isAttached) this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.length())], 0.75f, 0.75f);
+						}
+					
+						if (isServer())
+						{			
+							f32 dist = dir.Length();
+							dir.Normalize();
 						
-							Vec2f dir = target.getPosition() - this.getPosition();						
-							this.SetFacingLeft(dir.x < 0);
-						
-							if (getNet().isServer())
-							{			
-								f32 dist = dir.Length();
-								dir.Normalize();
-							
-								CBlob@ rock = server_CreateBlob("hobo_junk", this.getTeamNum(), this.getPosition());
-								if (rock !is null)
-								{
-									rock.setVelocity((dir * 6.00f) + Vec2f(0, -3));
-									this.set_u32("nextThrow", getGameTime() + 30 + XORRandom(90));
-								}
+							CBlob@ rock = server_CreateBlob("hobo_junk", this.getTeamNum(), this.getPosition());
+							if (rock !is null)
+							{
+								rock.setVelocity((dir * 6.00f) + Vec2f(0, -3));
+								this.set_u32("nextThrow", time + (isAttached ? 20 : (30 + XORRandom(90))));
 							}
 						}
 					}
@@ -358,6 +448,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			else
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
+				if (name == "oof" && getNet().isServer()) this.server_SetHealth(0.5f);
 				
 				if (blob is null) return;
 			   
@@ -378,7 +469,7 @@ void onDie(CBlob@ this)
 {
 	if (getNet().isServer())
 	{
-		server_DropCoins(this.getPosition(), XORRandom(50));
+		server_DropCoins(this.getPosition(), XORRandom(1500));
 	}
 }
 
@@ -404,6 +495,7 @@ void onHealthChange(CBlob@ this, f32 oldHealth)
 	if (this.getHealth() < 1.0f && !this.hasTag("dead"))
 	{
 		this.Tag("dead");
+		this.set_bool("shop available", false);
 		// this.server_SetTimeToDie(20);
 	}
 
@@ -417,28 +509,8 @@ void onHealthChange(CBlob@ this, f32 oldHealth)
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
-	// if (byBlob.getTeamNum() != this.getTeamNum()) return true;
-
-	// CBlob@[] blobsInRadius;
-	// if (this.getMap().getBlobsInRadius(this.getPosition(), 0.0f, @blobsInRadius))
-	// {
-		// for (uint i = 0; i < blobsInRadius.length; i++)
-		// {
-			// CBlob @b = blobsInRadius[i];
-			// if (b.getName() == "tradingpost")
-			// {
-				// return false;
-			// }
-		// }
-	// }
-	return false;
+	return true;
 }
-
-// bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
-// {
-	// // dont collide with people
-	// return false;
-// }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
@@ -451,17 +523,19 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
-	// this.set_u32("lastDanger", getGameTime() - (30 * 30));
-	this.set_u16("danger blob", 0);
+	this.set_u32("nextThrow", 0);
+	this.set_u32("lastDanger", 0);
+	if (attached !is null) this.set_u16("danger blob", attached.getNetworkID());
 }
-
-//sprite/anim update
 
 void onTick(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
-	// set dead animations
 
+	if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
+		return;
+	}
+	
 	if (blob.hasTag("dead"))
 	{
 		if (!this.isAnimation("dead")) this.PlaySound("trader_death.ogg", 1.00f, 0.75f);
@@ -476,18 +550,10 @@ void onTick(CSprite@ this)
 		{
 			this.SetFrameIndex(1);
 		}
-		//this.getCurrentScript().runFlags |= Script::remove_after_this;
-
+		
 		return;
 	}
 
-	// if (blob.hasTag("shoot wanted"))
-	// {
-		// this.SetAnimation("shoot");
-		// return;
-	// }
-
-	// set animations
 	Vec2f pos = blob.getPosition();
 	Vec2f aimpos = blob.getAimPos();
 	bool ended = this.isAnimationEnded();

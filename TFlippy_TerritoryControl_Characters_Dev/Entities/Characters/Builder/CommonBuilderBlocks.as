@@ -103,6 +103,8 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_chickenassembler$", "ChickenAssembler.png", Vec2f(56, 24), 0);
 	AddIconToken("$icon_securitystation$", "SecurityStation.png", Vec2f(24, 24), 0);	
 	AddIconToken("$icon_ceilinglamp$", "CeilingLamp.png", Vec2f(16, 8), 0);	
+	AddIconToken("$icon_beamtower$", "BeamTower.png", Vec2f(32, 96), 0);	
+	AddIconToken("$icon_beamtowermirror$", "BeamTowerMirror.png", Vec2f(16, 24), 0);	
 	
 	AddIconToken("$icon_1x5blastdoor$", "1x5BlastDoor.png", Vec2f(8, 40), 0);
 	
@@ -510,6 +512,24 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(40, 32);
 		blocks[2].push_back(b);
 	}
+	{
+		BuildBlock b(0, "oiltank", "$icon_oiltank$", "Oil Tank\nAutomatically collects oil from all of your team's pumpjacks.");
+		AddRequirement(b.reqs, "blob", "mat_wood","Wood", 250);
+		AddRequirement(b.reqs, "blob", "mat_ironingot","Iron Ingot", 2);
+		// AddRequirement(b.reqs, "blob", "mat_hemp", "Hemp", 20);
+		b.buildOnGround = true;
+		b.size.Set(32, 16);
+		blocks[2].push_back(b);
+	}	
+	{
+		BuildBlock b(0, "stonepile", "$icon_stonepile$", "Stone Silo\nAutomatically collects ores from all of your team's mines.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 300);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
+		b.buildOnGround = true;
+		b.size.Set(24, 40);
+		blocks[2].push_back(b);
+	}
+		
 		
 	BuildBlock[] page_3;
 	blocks.push_back(page_3);
@@ -536,6 +556,25 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_goldingot", "Gold Ingot", 2);
 		b.buildOnGround = true;
 		b.size.Set(24, 32);
+		blocks[3].push_back(b);
+	}
+	{
+		BuildBlock b(0, "beamtowermirror", "$icon_beamtowermirror$", "Solar Death Ray Mirror\nAim this at the Solar Death Ray Tower.");
+		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 10);
+		AddRequirement(b.reqs, "coin", "", "Coins", 500);
+		b.buildOnGround = true;
+		b.size.Set(16, 24);
+		blocks[3].push_back(b);
+	}
+	{
+		BuildBlock b(0, "beamtower", "$icon_beamtower$", " Solar Death Ray Tower\nSolar energy has never been so much fun!\n\nRequires Solar Death Ray Mirrors in order to function properly.");
+		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
+		AddRequirement(b.reqs, "blob", "mat_mithril", "Mithril", 100);
+		AddRequirement(b.reqs, "blob", "mat_battery", "Battery", 100);
+		AddRequirement(b.reqs, "coin", "", "Coins", 1000);
+		AddRequirement(b.reqs, "blob", "bp_energetics", "Blueprint (Energetics)", 1);
+		b.buildOnGround = true;
+		b.size.Set(24, 96);
 		blocks[3].push_back(b);
 	}
 	{
@@ -583,12 +622,12 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		// // b.size.Set(32, 16);
 		// blocks[3].push_back(b);
 	// }	
-	{
-		BuildBlock b(CMap::tile_tnt, "tnt_block", "$tnt_block$", "Explosives\nSet off by other explosions and fire.");
-		AddRequirement(b.reqs, "coin", "", "Coins", 50);
-		AddRequirement(b.reqs, "blob", "mat_sulphur", "Sulphur", 20);
-		blocks[3].push_back(b);
-	}
+	// {
+		// BuildBlock b(CMap::tile_tnt, "tnt_block", "$tnt_block$", "Explosives\nSet off by other explosions and fire.");
+		// AddRequirement(b.reqs, "coin", "", "Coins", 50);
+		// AddRequirement(b.reqs, "blob", "mat_sulphur", "Sulphur", 20);
+		// blocks[3].push_back(b);
+	// }
 	{
 		BuildBlock b(0, "metaldetector", "$icon_metaldetector$", "Danger Detector\nScans people passing through it for dangerous items, such as weapons, explosives or ill-tempered animals.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 8);
@@ -610,7 +649,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[3].push_back(b);
 	}
 	{
-		BuildBlock b(0, "mithrilbreeder", "$icon_mithrilbreeder$", "Mithril Breeder\nA small reactor used for mithril enrichment and synthesis using gold.\nBecomes more stable when submerged in deep water.\nCareless usage may result in an irradiated crater.");
+		BuildBlock b(0, "mithrilbreeder", "$icon_mithrilbreeder$", "Mithril Reactor\nA small reactor used for mithril enrichment and synthesis using gold.\nBecomes more stable when submerged in deep water.\nCareless usage may result in an irradiated crater.");
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
 		AddRequirement(b.reqs, "blob", "mat_mithril", "Mithril", 100);
 		AddRequirement(b.reqs, "blob", "mat_mithrilingot", "Mithril Ingot", 5);
@@ -627,23 +666,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(24, 40);
 		blocks[3].push_back(b);
 	}	
-	{
-		BuildBlock b(0, "oiltank", "$icon_oiltank$", "Oil Tank\nAutomatically collects oil from all of your team's pumpjacks.");
-		AddRequirement(b.reqs, "blob", "mat_wood","Wood", 250);
-		AddRequirement(b.reqs, "blob", "mat_ironingot","Iron Ingot", 2);
-		// AddRequirement(b.reqs, "blob", "mat_hemp", "Hemp", 20);
-		b.buildOnGround = true;
-		b.size.Set(32, 16);
-		blocks[3].push_back(b);
-	}	
-	{
-		BuildBlock b(0, "stonepile", "$icon_stonepile$", "Stone Silo\nAutomatically collects ores from all of your team's mines.");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 300);
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
-		b.buildOnGround = true;
-		b.size.Set(24, 40);
-		blocks[3].push_back(b);
-	}
 	{
 		BuildBlock b(0, "1x5blastdoor", "$icon_1x5blastdoor$", "Blast Door\nA large heavy blast door.\n\nCan be only opened by a Security Station.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 35);
@@ -676,6 +698,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(24, 32);
 		blocks[3].push_back(b);
 	}
+
 	
 	// {
 		// BuildBlock b(0, "floater", "$icon_floater$", "Floater\nActs as a supporting structure - useful for sky islands and bridges.");

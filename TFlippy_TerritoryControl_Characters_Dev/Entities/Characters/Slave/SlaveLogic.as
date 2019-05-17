@@ -9,10 +9,8 @@ void onInit(CBlob@ this)
 	this.Tag("flesh");
 	this.Tag("neutral");
 	this.Tag("human");
-	// this.Tag("ignore fall");
 	
 	this.set_Vec2f("inventory offset", Vec2f(0.0f, 0.0f));
-	
 	this.set_f32("mining_multiplier", 3.0f);
 	
 	if (getNet().isServer())

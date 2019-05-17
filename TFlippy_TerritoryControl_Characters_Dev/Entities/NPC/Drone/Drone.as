@@ -11,7 +11,7 @@
 
 const f32 altitude_goal = 250.00f;
 
-string[] particles = 
+const string[] particles = 
 {
 	"LargeSmoke",
 	"Explosion.png",
@@ -21,7 +21,7 @@ string[] particles =
 
 void onInit( CBrain@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -30,6 +30,7 @@ void onInit( CBrain@ this )
 
 void onInit(CBlob@ this)
 {
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 	this.set_u32("next sound", 0);
 
 	this.SetLight(true);
@@ -97,6 +98,12 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	if(isClient()){
+		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
+	}
+
 	CMap@ map = this.getMap();
 	Vec2f pos = this.getPosition();
 	Vec2f end;
@@ -133,6 +140,11 @@ void onTick(CBlob@ this)
 
 void onTick(CSprite@ this)
 {
+
+	if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
+		return;
+	}
+
 	CBlob@ blob = this.getBlob();
 	CSpriteLayer@ levitator = this.getSpriteLayer("levitator");
 
@@ -237,11 +249,11 @@ void Shoot(CBlob@ this)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (isClient()){ return;}
 	
 	CBlob@ blob = this.getBlob();
 	
-	if (blob.getPlayer() !is null) return;
+	if (blob.getPlayer() !is null){ return;}
 	
 	const f32 chaseDistance = blob.get_f32("chaseDistance");
 
@@ -360,7 +372,7 @@ void Move(CBrain@ this, CBlob@ blob, Vec2f pos)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 50)
 		{
@@ -369,7 +381,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		

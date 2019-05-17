@@ -36,14 +36,14 @@ void onTick(CBlob@ this)
 		
 		if (this.isMyPlayer())
 		{
-			CCamera@ cam = getCamera();
-			cam.targetDistance = 3.00f + ((1 + Maths::Sin(getGameTime() * 0.015f * level)) * 0.50f) * (level * level * 0.125f);
+			// CCamera@ cam = getCamera();
+			// cam.targetDistance = 3.00f + ((1 + Maths::Sin(getGameTime() * 0.015f * level)) * 0.50f) * (level * level * 0.125f);
 			
 			if (getGameTime() % 5 == 0) SetScreenFlash(50, 50, 25, 0);
 		}
 					
 		this.setKeyPressed(key_action2, true);
-		this.set_f32("bobonged", Maths::Max(0, this.get_f32("bobonged") - (0.0008f)));
+		this.set_f32("bobonged", Maths::Max(0, this.get_f32("bobonged") - (0.0002f)));
 	}
 }
 

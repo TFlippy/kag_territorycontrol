@@ -1,4 +1,5 @@
 #include "HittersTC.as";
+#include "RunnerCommon.as"
 
 string[] firstnames = 
 { 
@@ -41,7 +42,7 @@ void onInit(CBlob@ this)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (customData == HittersTC::radiation)
 		{

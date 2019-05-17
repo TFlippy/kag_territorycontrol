@@ -92,7 +92,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	}
 	{
 		BuildBlock b(0, "banditshack", "$banditshack$", "An Awful Rundown Bandit Shack\nGives you an option to become bandit scum.");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
 		b.buildOnGround = true;
 		b.size.Set(40, 32);

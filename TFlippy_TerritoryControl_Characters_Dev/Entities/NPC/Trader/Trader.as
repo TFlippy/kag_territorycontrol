@@ -10,7 +10,7 @@
 
 //blob
 
-string[] firstnames = 
+const string[] firstnames = 
 { 
 	"John",
 	"Harry",
@@ -27,7 +27,7 @@ string[] firstnames =
 	"Toot"
 };
 
-string[] surnames = 
+const string[] surnames = 
 { 
 	"Bobington",
 	"Goldman",
@@ -47,20 +47,20 @@ string[] surnames =
 	"Buckman"
 };
 
-string[] soundsTalk = 
+const string[] soundsTalk = 
 { 
 	"MigrantSayHello.ogg",
 	"MigrantSayFriend.ogg"
 };
 
-string[] soundsDanger = 
+const string[] soundsDanger = 
 { 
 	"trader_scream_0.ogg",
 	"trader_scream_1.ogg",
 	"trader_scream_2.ogg"
 };
 
-string[] textsIdle = 
+const string[] textsIdle = 
 { 
 	"Good morning!",
 	"What a nice day!",
@@ -82,7 +82,7 @@ string[] textsIdle =
 	"Are you a wizard?"
 };
 
-string[] textsDanger = 
+const string[] textsDanger = 
 { 
 	"I'm too young to die!",
 	"This is a nightmare!",
@@ -104,7 +104,7 @@ string[] textsDanger =
 	"SHIIIIIIIIIT"
 };
 
-string[] textsWon = 
+const string[] textsWon = 
 {
 	"Thank god!",
 	"You saved me!",
@@ -142,6 +142,7 @@ void onInit(CBlob@ this)
 	this.set_string("shop description", name + " the Trader");
 	this.setInventoryName(name + " the Trader");
 	this.set_u8("shop icon", 25);
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 	
 	this.set_u32("lastDanger", 0);
 	
@@ -204,6 +205,11 @@ void onInit(CBlob@ this)
 			AddRequirement(s.requirements, "coin", "", "Coins", 100);
 			s.spawnNothing = true;
 		}
+		{
+			ShopItem@ s = addShopItem(this, "Lighter", "$icon_lighter$", "lighter", "Set a forest on fire!");
+			AddRequirement(s.requirements, "coin", "", "Coins", 100);
+			s.spawnNothing = true;
+		}
 	}
 		
 	// Nature Trader
@@ -246,7 +252,7 @@ void onInit(CBlob@ this)
 		}
 	}
 	
-	if (getNet().isServer() && XORRandom(100) < 25)
+	if (isServer() && XORRandom(100) < 25)
 	{
 		server_CreateBlob("kitten", this.getTeamNum(), this.getPosition());
 	}
@@ -264,21 +270,11 @@ void onTick(CBlob@ this)
 			return;
 		}
 	
-		if (getNet().isServer() && getGameTime() % 150 == 0)
-		{
-			const u8 myTeam = this.getTeamNum();
-
-			int count = getPlayerCount();
-			for (uint i = 0; i < count; i++)
-			{
-				CPlayer@ ply = getPlayer(i);
-				if (ply.getTeamNum() == myTeam)
-				{
-					if (ply !is null) ply.server_setCoins(ply.getCoins() + 3);
-				}
+		if(isClient()){
+			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+				return;
 			}
 		}
-	
 		if (getGameTime() >= this.get_u32("nextTalk"))
 		{
 			this.set_u32("nextTalk", getGameTime() + (30 * 10) + XORRandom(30 * 20));
@@ -414,6 +410,7 @@ void onHealthChange(CBlob@ this, f32 oldHealth)
 	if (this.getHealth() < 1.0f && !this.hasTag("dead"))
 	{
 		this.Tag("dead");
+		this.set_bool("shop available", false);
 		// this.server_SetTimeToDie(20);
 	}
 

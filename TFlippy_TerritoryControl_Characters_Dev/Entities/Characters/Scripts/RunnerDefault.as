@@ -3,6 +3,8 @@
 #include "Knocked.as"
 #include "FireCommon.as"
 #include "Help.as"
+#include "Survival_Structs.as";
+#include "Logging.as";
 
 void onInit(CBlob@ this)
 {
@@ -39,8 +41,38 @@ void onTick(CBlob@ this)
 				Vec2f pos = this.getPosition();
 				if (!getMap().rayCastSolidNoBlobs(Vec2f(pos.x, 0), pos))
 				{
-					moveVars.walkFactor *= 0.70f;
-					moveVars.jumpFactor *= 0.70f;
+					moveVars.walkFactor *= 0.95f;
+					moveVars.jumpFactor *= 0.90f;
+				}
+			}
+		}
+		
+		const u8 team = this.getTeamNum();
+		if (team < 7)
+		{
+			TeamData@ team_data;
+			GetTeamData(team, @team_data);
+			
+			if (team_data != null && team_data.upkeep_cap > 0)
+			{
+				u16 upkeep = team_data.upkeep;
+				u16 upkeep_cap = team_data.upkeep_cap;
+				f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+				
+				RunnerMoveVars@ moveVars;
+				if (this.get("moveVars", @moveVars))
+				{
+					if (upkeep_ratio <= UPKEEP_RATIO_BONUS_SPEED) 
+					{ 
+						moveVars.walkFactor *= 1.20f;
+						moveVars.jumpFactor *= 1.15f;
+					}
+					
+					if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_SPEED) 
+					{
+						moveVars.walkFactor *= 0.80f;
+						moveVars.jumpFactor *= 0.80f;
+					}
 				}
 			}
 		}
@@ -105,6 +137,12 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	this.getSprite().PlaySound("/Pickup.ogg");
 
+	if (attached !is null)
+	{
+		// print_log(player.getUsername() + " (" + this.getConfig() + ", team " + this.getTeamNum() + ") has picked up " + attached.getConfig());
+		print_log(this, "has picked up " + attached.getConfig());
+	}
+	
 	if (getNet().isClient())
 	{
 		RemoveHelps(this, "help throw");
@@ -118,9 +156,19 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	this.server_DetachFrom( attached ); CRASHES*/
 }
 
+bool isDangerous(CBlob@ blob)
+{
+	return blob.hasTag("explosive") || blob.hasTag("isWeapon") || blob.hasTag("dangerous");
+}
+
 // set the Z back
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
+	if (detached !is null)
+	{
+		print_log(this, "has dropped " + detached.getConfig());
+	}
+
 	this.getSprite().SetZ(0.0f);
 }
 

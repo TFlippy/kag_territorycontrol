@@ -5,7 +5,10 @@
 #include "FireParticle.as"
 #include "FireCommon.as";
 #include "RunnerCommon.as";
-#include "CommonGun.as";
+#include "MakeCrate.as";
+
+u32 next_commander_event = 0; // getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
+bool dry_shot = true;
 
 void onInit(CBlob@ this)
 {
@@ -22,6 +25,11 @@ void onInit(CBlob@ this)
 	this.set_bool("bomber", false);
 	this.set_bool("raider", false);
 	
+	// this.set_u32("next_event", getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
+	
+	next_commander_event = getGameTime(); // + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
+	this.addCommandID("commander_order_recon_squad");
+	
 	this.SetDamageOwnerPlayer(null);
 	
 	this.Tag("can open door");
@@ -33,8 +41,8 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 1;
 	
 	this.set_f32("voice pitch", 1.50f);
-	
-	if (getNet().isServer())
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	if (isServer())
 	{
 		this.set_u16("stolen coins", 850);
 	
@@ -89,7 +97,7 @@ void onTick(CBlob@ this)
 		this.Tag("dead");
 		this.getSprite().PlaySound("Wilhelm.ogg", 1.8f, 1.8f);
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_SetPlayer(null);
 			server_DropCoins(this.getPosition(), Maths::Max(0, Maths::Min(this.get_u16("stolen coins"), 5000)));
@@ -102,16 +110,65 @@ void onTick(CBlob@ this)
 			
 			if (XORRandom(100) < 25) server_CreateBlob("phone", -1, this.getPosition());
 			
-			if (XORRandom(100) < 15) 
+			if (XORRandom(100) < 60) 
 			{
 				server_CreateBlob("bp_automation_advanced", -1, this.getPosition());
+			}
+			
+			if (XORRandom(100) < 80) 
+			{
+				server_CreateBlob("bp_energetics", -1, this.getPosition());
 			}
 		}
 		
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
 
-	if (getNet().isClient())
+	if (isServer())
+	{
+		if (getGameTime() >= next_commander_event)
+		{
+			CBlob@[] bases;
+			getBlobsByTag("faction_base", @bases);
+			u16 base_netid = 0;
+		
+			if (bases.length > 0) 
+			{
+				CBlob@ base = bases[XORRandom(bases.length)];
+				if (base !is null)
+				{
+					next_commander_event = getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 20);
+					if(dry_shot)
+					{
+						dry_shot = false;
+					}
+					else
+					{
+						f32 map_width = getMap().tilemapwidth * 8;
+						f32 initial_position_x = Maths::Clamp(base.getPosition().x + (80 - XORRandom(160)) * 8.00f, 256.00f, map_width - 256.00f);
+					
+						CBitStream stream;
+						stream.write_u16(base.getNetworkID());
+						this.SendCommand(this.getCommandID("commander_order_recon_squad"), stream);
+					
+						for (int i = 0; i < 4; i++)
+						{
+							CBlob@ blob = server_MakeCrateOnParachute("scoutchicken", "SpaceStar Ordering Recon Squad", 0, 250, Vec2f(initial_position_x + (64 - XORRandom(128)), XORRandom(32)));
+							blob.Tag("unpack on land");
+							blob.Tag("destroy on touch");
+						}
+					}
+				}
+			}
+			else
+			{
+				next_commander_event = getGameTime() + 2*((30 * 60 * 5) + XORRandom(30 * 60 * 20));
+				dry_shot = true;
+			}
+		}
+	}
+	
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
 		{
@@ -123,7 +180,7 @@ void onTick(CBlob@ this)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 50)
 		{
@@ -132,7 +189,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		
@@ -147,6 +204,23 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	}
 	
 	return damage;
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+{
+	if (cmd == this.getCommandID("commander_order_recon_squad"))
+	{
+		CBlob@ target = getBlobByNetworkID(params.read_u16());
+		if (target !is null)
+		{
+			CTeam@ team = getRules().getTeam(target.getTeamNum());
+			if (team !is null)
+			{
+				client_AddToChat("An UPF Recon Squad has been called upon " + team.getName() + "'s " + target.getInventoryName() + "!", SColor(255, 255, 0, 0));
+				Sound::Play("ChickenMarch.ogg", target.getPosition(), 1.00f, 1.00f);
+			}
+		}
+	}
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)

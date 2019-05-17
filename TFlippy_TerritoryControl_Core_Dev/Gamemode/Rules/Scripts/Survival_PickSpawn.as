@@ -120,7 +120,9 @@ void onTick(CRules@ this)
 			}
 		}
 	}*/
-
+	if(isServer()){
+		return;
+	}
 	CPlayer@ p = getLocalPlayer();
 
 	if (p is null || !p.isMyPlayer()) { return; }

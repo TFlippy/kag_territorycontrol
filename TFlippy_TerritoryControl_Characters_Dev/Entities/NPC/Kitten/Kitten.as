@@ -1,10 +1,12 @@
 #include "AnimalConsts.as";
+#include "Hitters.as";
 
 //sprite
 void onInit(CSprite@ this)
 {
     this.ReloadSprites(0,0);
 	this.SetZ(-20.0f);
+	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
 }
 
 void onTick(CSprite@ this)
@@ -17,6 +19,9 @@ void onTick(CSprite@ this)
 	}
 	else
 	{
+		if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
 		f32 x = Maths::Abs(blob.getVelocity().x);
 
 		if (Maths::Abs(x) > 0.2f)
@@ -76,6 +81,11 @@ void onTick(CBlob@ this)
 {
 	if (!this.hasTag("dead"))
 	{
+		if(isClient()){
+			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+				return;
+			}
+		}
 		f32 x = this.getVelocity().x;		
 		if (Maths::Abs(x) > 1.0f)
 		{
@@ -100,7 +110,44 @@ void onTick(CBlob@ this)
 			this.Tag("dead");
 			// this.getCurrentScript().removeIfTag = "dead";
 		}
+		
+		if (this.isInInventory())
+		{
+			CBlob@ inventoryBlob = this.getInventoryBlob();
+			if (inventoryBlob !is null)
+			{
+				if (this.getTickSinceCreated() % 10 == 0)
+				{
+					if (getNet().isServer()) this.server_Hit(inventoryBlob, inventoryBlob.getPosition(), Vec2f(0, 0), 0.15f, Hitters::bite, true);
+					if (getNet().isClient()) 
+					{
+						if (XORRandom(3) == 0) 
+						{	
+							this.getSprite().PlaySound("Kitten_Hit_" + XORRandom(4), 1.00f, 1.0f);
+							this.set_u32("next screech", getGameTime() + 40);
+						}
+						if (inventoryBlob.hasTag("flesh"))
+						{
+							this.getSprite().PlaySound("Pus_Attack_" + XORRandom(3), 1.1f, 1.00f);
+							ParticleBloodSplat(inventoryBlob.getPosition(), true);
+						}
+					}
+				}
+			}
+		}
 	}
+}
+
+void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
+{
+	if (inventoryBlob is null) return;
+
+	CInventory@ inv = inventoryBlob.getInventory();
+
+	if (inv is null) return;
+
+	this.doTickScripts = true;
+	inv.doTickScripts = true;
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
@@ -123,4 +170,21 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
 	return blob !is null && (blob.isCollidable() && !blob.hasTag("player"));
+}
+
+void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
+{
+	if (blob is null) return;
+	if (this.hasTag("dead")) return;
+
+	if (blob.getName() == "mat_mithril" && blob.getQuantity() > 50)
+	{
+		ParticleZombieLightning(this.getPosition());
+		
+		if (getNet().isServer())
+		{
+			CBlob@ bagel = server_CreateBlob("pus", this.getTeamNum(), this.getPosition());
+			this.server_Die();
+		}
+	}
 }

@@ -19,6 +19,8 @@ void onTick(CBrain@ this)
 	CBlob @blob = this.getBlob();
 	u32 gametime = ((getGameTime() / this.getCurrentScript().tickFrequency) + blob.getNetworkID()); //!
 
+	
+
 	// underwater!
 
 	if (blob.isInWater()) 

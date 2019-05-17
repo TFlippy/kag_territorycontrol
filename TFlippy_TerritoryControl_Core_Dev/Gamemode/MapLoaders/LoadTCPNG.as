@@ -34,6 +34,7 @@ namespace tc_colors
 		color_chickencoop = 0xff964619,
 		color_scoutchicken = 0xffb96437,
 		color_lootchest = 0xffffd200,
+		color_lootchest_random = 0xffff8200,
 		color_bannerchicken = 0xffbe3838,
 		color_irondoor_chicken = 0xffcfbaba,
 		color_chickenmarket = 0xffdccb7b,
@@ -47,6 +48,7 @@ namespace tc_colors
 		color_merchantchicken = 0xffbec728,
 		color_train = 0xff08b4b2,
 		color_sat = 0xff08ffb6,
+		color_helichopper = 0xff49ccca,
 		
 		color_pirategull = 0xffe4e6bb,
 		color_badger = 0xff5a5546,
@@ -75,6 +77,7 @@ class TCPNGLoader : PNGLoader
 
 	void handlePixel(const SColor &in pixel, int offset) override
 	{
+		
 		PNGLoader::handlePixel(pixel, offset);
 
 		switch (pixel.color)
@@ -116,6 +119,7 @@ class TCPNGLoader : PNGLoader
 				spawnBlob(map, "witchshack", offset, -1);
 				break;
 			}
+			
 			case tc_colors::color_pumpjack_neutral:
 			{
 				spawnBlob(map, "pumpjack", offset, -1);
@@ -127,12 +131,14 @@ class TCPNGLoader : PNGLoader
 				spawnBlob(map, "badger", offset, -1);
 				break;
 			}
+			
 			case tc_colors::color_chickencoop:
 			{
 				autotile(offset);
 				spawnBlob(map, "chickencoop", offset, -1);
 				break;
 			}
+			
 			case tc_colors::color_scoutchicken:
 			{
 				autotile(offset);
@@ -141,25 +147,36 @@ class TCPNGLoader : PNGLoader
 				if (rand < 15)
 				{
 					CBlob@ blob = spawnBlob(map, "heavychicken", offset, -1);
-					blob.set_bool("raider", false);
+					blob.set_bool("raider", XORRandom(100) < 10);
 				}
 				else if (rand < 50)
 				{
 					CBlob@ blob = spawnBlob(map, "soldierchicken", offset, -1);
-					blob.set_bool("raider", false);
+					blob.set_bool("raider", XORRandom(100) < 25);
 				}
 				else
 				{
 					CBlob@ blob = spawnBlob(map, "scoutchicken", offset, -1);
-					blob.set_bool("raider", false);
+					blob.set_bool("raider", XORRandom(100) < 50);
 				}
 			
 				break;
 			}
+			
 			case tc_colors::color_lootchest:
 			{
 				map.SetTile(offset, CMap::tile_biron);
 				spawnBlob(map, "lootchest", offset, -1);
+				break;
+			}
+			
+			case tc_colors::color_lootchest_random:
+			{
+				if (XORRandom(100) < 50)
+				{
+					map.SetTile(offset, CMap::tile_biron);
+					spawnBlob(map, "lootchest", offset, -1);
+				}
 				break;
 			}
 			
@@ -317,6 +334,12 @@ class TCPNGLoader : PNGLoader
 			{
 				autotile(offset);
 				spawnBlob(map, "sat", offset, 250);
+				break;
+			}
+			case tc_colors::color_helichopper:
+			{
+				CBlob@ blob = spawnBlob(map, "helichopper", offset, 250);
+				blob.setPosition(blob.getPosition() + Vec2f(0, 0));
 				break;
 			}
 			case tc_colors::color_train:

@@ -1,5 +1,6 @@
 #include "Survival_Structs.as";
 #include "Hitters.as";
+#include "Logging.as";
 
 const string raid_tag = "under raid";
 const u32[] teamcolours = {0xff0000ff, 0xffff0000, 0xff00ff00, 0xffff00ff, 0xffff6600, 0xff00ffff, 0xff6600ff, 0xff647160};
@@ -22,11 +23,33 @@ void onInit(CBlob@ this)
 	AddIconToken("$faction_become_leader$", "FactionIcons.png", Vec2f(16, 16), 0);
 	AddIconToken("$faction_resign_leader$", "FactionIcons.png", Vec2f(16, 16), 1);
 	AddIconToken("$faction_remove$", "FactionIcons.png", Vec2f(16, 16), 2);
-	AddIconToken("$faction_lock$", "FactionIcons.png", Vec2f(16, 16), 3);
-	AddIconToken("$faction_coin$", "FactionIcons.png", Vec2f(16, 16), 4);
-	AddIconToken("$faction_crate$", "FactionIcons.png", Vec2f(16, 16), 5);
-	AddIconToken("$faction_bed$", "FactionIcons.png", Vec2f(16, 16), 6);
-	AddIconToken("$faction_alarm$", "FactionIcons.png", Vec2f(16, 16), 7);
+	
+	AddIconToken("$faction_bed_true$", "FactionIcons.png", Vec2f(16, 16), 4);
+	AddIconToken("$faction_bed_false$", "FactionIcons.png", Vec2f(16, 16), 5);
+	
+	AddIconToken("$faction_lock_true$", "FactionIcons.png", Vec2f(16, 16), 6);
+	AddIconToken("$faction_lock_false$", "FactionIcons.png", Vec2f(16, 16), 7);
+	
+	AddIconToken("$faction_coin_true$", "FactionIcons.png", Vec2f(16, 16), 8);
+	AddIconToken("$faction_coin_false$", "FactionIcons.png", Vec2f(16, 16), 9);
+	
+	AddIconToken("$faction_crate_true$", "FactionIcons.png", Vec2f(16, 16), 10);
+	AddIconToken("$faction_crate_false$", "FactionIcons.png", Vec2f(16, 16), 11);
+	
+	AddIconToken("$faction_f2p_true$", "FactionIcons.png", Vec2f(16, 16), 12);
+	AddIconToken("$faction_f2p_false$", "FactionIcons.png", Vec2f(16, 16), 13);
+	
+	AddIconToken("$faction_slavery_true$", "FactionIcons.png", Vec2f(16, 16), 14);
+	AddIconToken("$faction_slavery_false$", "FactionIcons.png", Vec2f(16, 16), 15);
+	
+	AddIconToken("$faction_reserved1_true$", "FactionIcons.png", Vec2f(16, 16), 16);
+	AddIconToken("$faction_reserved1_false$", "FactionIcons.png", Vec2f(16, 16), 17);
+	
+	AddIconToken("$faction_reserved2_true$", "FactionIcons.png", Vec2f(16, 16), 18);
+	AddIconToken("$faction_reserved2_false$", "FactionIcons.png", Vec2f(16, 16), 19);
+	
+	AddIconToken("$faction_alarm_true$", "FactionIcons.png", Vec2f(16, 16), 20);
+	AddIconToken("$faction_alarm_false$", "FactionIcons.png", Vec2f(16, 16), 21);
 	
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Faction_Alarm.ogg");
@@ -218,19 +241,32 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			TeamData@ team_data;
 			GetTeamData(this.getTeamNum(), @team_data);
 			
-			if (team_data !is null)
+			CPlayer@ ply = caller.getPlayer();
+			
+			if (team_data !is null && ply !is null)
 			{
 				// bool deserter = caller.getPlayer() !is null && caller.getPlayer().get_u32("teamkick_time") > getGameTime();
 				bool recruitment_enabled = team_data.recruitment_enabled;
-				bool upkeep_gud = team_data.upkeep + UPKEEP_COST_PLAYER < team_data.upkeep_cap;
+				bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
+				bool is_premium = true; //ply.getSupportTier() > 0; // TODO
+				
+				print("" + ply.getSupportTier());
+				
+				bool can_join = recruitment_enabled && upkeep_gud && is_premium;
 			
 				string msg = "";
-				if (!recruitment_enabled || !upkeep_gud) msg = "\n\nCannot join!\n" + (!recruitment_enabled ? "This faction is not accepting any new members.\n" : "") + (!upkeep_gud ? "Faction's upkeep is too high.\n" : "");
+				if (!can_join)
+				{
+					msg += "\n\nCannot join!\n";
+					if (!recruitment_enabled) msg += "This faction is not accepting any new members.\n";
+					if (!upkeep_gud) msg += "Faction's upkeep is too high.\n";
+					if (!is_premium) msg += "Factions are restricted to Premium accounts only.\n";
+				}				
 				
 				CBitStream params;
 				params.write_u16(caller.getNetworkID());
 				CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("button_join"), "Join the Faction" + msg, params);
-				button.SetEnabled(recruitment_enabled && upkeep_gud);
+				button.SetEnabled(can_join);
 			}
 		}
 		
@@ -273,15 +309,21 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 				GetTeamData(this.getTeamNum(), @team_data);
 			
 				const bool isLeader = team_data.leader_name == myPly.getUsername();
+				
 				const bool recruitment_enabled = team_data.recruitment_enabled;
 				const bool tax_enabled = team_data.tax_enabled;
 				const bool storage_enabled = team_data.storage_enabled;
 				const bool lockdown_enabled = team_data.lockdown_enabled;
+				const bool f2p_enabled = team_data.f2p_enabled;
+				const bool slavery_enabled = team_data.slavery_enabled;
+				const bool reserved_1_enabled = team_data.lockdown_enabled;
+				const bool reserved_2_enabled = team_data.lockdown_enabled;
+				
 				const bool base_demolition = this.get_bool("base_demolition");
 				const bool base_alarm = this.get_bool("base_alarm");
 			
 				{
-					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(3, 3), "Faction Policies");
+					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 3), "Faction Policies");
 					if (menu !is null)
 					{
 						{
@@ -293,8 +335,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 								params.write_u8(0);
 								params.write_u8(0);
 							
-								CGridButton@ butt = menu.AddButton("$faction_resign_leader$", "Renounce Leadership", this.getCommandID("faction_menu_button"), Vec2f(3, 1), params);
-								butt.hoverText = "Renounce yourself as the leader of this faction, leaving a spot for someone more experienced.";
+								CGridButton@ butt = menu.AddButton("$faction_resign_leader$", "Renounce Leadership", this.getCommandID("faction_menu_button"), Vec2f(4, 1), params);
+								butt.hoverText = "Renounce yourself as the leader of this faction, leaving a spot for someone more competent.";
 								butt.SetEnabled(isLeader);
 							}
 							else
@@ -302,7 +344,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 								params.write_u8(0);
 								params.write_u8(1);
 							
-								CGridButton@ butt = menu.AddButton("$faction_become_leader$", "Claim Leadership", this.getCommandID("faction_menu_button"), Vec2f(3, 1), params);
+								CGridButton@ butt = menu.AddButton("$faction_become_leader$", "Claim Leadership", this.getCommandID("faction_menu_button"), Vec2f(4, 1), params);
 								butt.hoverText = "Claim leadership of this faction, giving yourself access to various management tools.";
 								butt.SetEnabled(team_data.leader_name == "");
 							}
@@ -314,8 +356,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							params.write_u8(1);
 							params.write_u8(recruitment_enabled ? 0 : 1);
 							
-							CGridButton@ butt = menu.AddButton("$faction_bed$", (recruitment_enabled ? "Disable" : "Enable") + " Recruitment", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							butt.hoverText = (recruitment_enabled ? "Disallows" : "Allows") + " new people joining your faction.";
+							CGridButton@ butt = menu.AddButton("$faction_bed_" + !recruitment_enabled + "$", (recruitment_enabled ? "Disable" : "Enable") + " Recruitment", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+							butt.hoverText = (recruitment_enabled ? "Disallows" : "Allows") + " new players to join your faction.";
 							butt.SetEnabled(isLeader);
 						}
 						
@@ -323,31 +365,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							CBitStream params;
 							params.write_u16(caller.getNetworkID());
 							params.write_u8(2);
-							params.write_u8(tax_enabled ? 0 : 1);
-							
-							CGridButton@ butt = menu.AddButton("$faction_coin$", (tax_enabled ? "Disable" : "Enable") + " 50% Murder Tax", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							butt.hoverText = (tax_enabled ? "Disallows" : "Allows") + " the leader to claim 50% of your teammates' coins obtained by killing enemies.";
-							butt.SetEnabled(isLeader);
-						}
-						
-						// {
-							// CBitStream params;
-							// params.write_u16(caller.getNetworkID());
-							// params.write_u8(3);
-							// params.write_u8(storage_enabled ? 0 : 1);
-							
-							// CGridButton@ butt = menu.AddButton("$faction_crate$", (storage_enabled ? "Disable" : "Enable") + " Remote Storage", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							// butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " remote storage.";
-							// butt.SetEnabled(isLeader);
-						// }
-						
-						{
-							CBitStream params;
-							params.write_u16(caller.getNetworkID());
-							params.write_u8(4);
 							params.write_u8(lockdown_enabled ? 0 : 1);
 							
-							CGridButton@ butt = menu.AddButton("$faction_lock$", (lockdown_enabled ? "Disable" : "Enable") + " Lockdown", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+							CGridButton@ butt = menu.AddButton("$faction_lock_" + !lockdown_enabled + "$", (lockdown_enabled ? "Disable" : "Enable") + " Lockdown", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 							butt.hoverText = (lockdown_enabled ? "Allows" : "Disallows") + " neutrals to pass through your doors.";
 							butt.SetEnabled(isLeader);
 						}
@@ -355,7 +375,54 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						{
 							CBitStream params;
 							params.write_u16(caller.getNetworkID());
+							params.write_u8(3);
+							params.write_u8(tax_enabled ? 0 : 1);
+							
+							CGridButton@ butt = menu.AddButton("$faction_coin_" + !tax_enabled + "$", (tax_enabled ? "Disable" : "Enable") + " 50% Murder Tax", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+							butt.hoverText = (tax_enabled ? "Disallows" : "Allows") + " the leader to claim 50% of your teammates' coins obtained by killing enemies.";
+							butt.SetEnabled(isLeader);
+						}
+						
+						{
+							CBitStream params;
+							params.write_u16(caller.getNetworkID());
+							params.write_u8(4);
+							params.write_u8(storage_enabled ? 0 : 1);
+							
+							CGridButton@ butt = menu.AddButton("$faction_crate_" + !storage_enabled + "$", (storage_enabled ? "Disable" : "Enable") + " Remote Storage", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+							butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " remote storage.";
+							butt.SetEnabled(isLeader);
+						}
+						
+						{
+							CBitStream params;
+							params.write_u16(caller.getNetworkID());
 							params.write_u8(5);
+							params.write_u8(f2p_enabled ? 0 : 1);
+							
+							CGridButton@ butt = menu.AddButton("$faction_f2p_" + !f2p_enabled + "$", (f2p_enabled ? "Disable" : "Enable") + " Free to Play Recruitment", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+							butt.hoverText = (f2p_enabled ? "Disallows" : "Allows") + " Free-to-Play players to join your faction.";
+							butt.SetEnabled(isLeader);
+						}
+						
+						{
+							CBitStream params;
+							params.write_u16(caller.getNetworkID());
+							params.write_u8(6);
+							params.write_u8(slavery_enabled ? 0 : 1);
+							
+							CGridButton@ butt = menu.AddButton("$faction_slavery_" + !slavery_enabled + "$", (storage_enabled ? "Disable" : "Enable") + " Slavery", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+							butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " usage of shackles on other players by your team members.";
+							butt.SetEnabled(isLeader);
+						}
+						
+						
+						
+						
+						{
+							CBitStream params;
+							params.write_u16(caller.getNetworkID());
+							params.write_u8(9);
 							params.write_u8(base_demolition ? 0 : 1);
 							
 							CGridButton@ butt = menu.AddButton("$faction_remove$", (base_demolition ? "Cancel" : "Commence") + " demolition of this building", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
@@ -366,10 +433,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						{
 							CBitStream params;
 							params.write_u16(caller.getNetworkID());
-							params.write_u8(6);
+							params.write_u8(10);
 							params.write_u8(base_alarm ? 0 : 1);
 							
-							CGridButton@ butt = menu.AddButton("$faction_alarm$", (base_alarm ? "Turn off" : "Turn on") + " the emergency mode.", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+							CGridButton@ butt = menu.AddButton("$faction_alarm_" + !base_alarm + "$", (base_alarm ? "Turn off" : "Turn on") + " the emergency mode.", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 							butt.hoverText = (base_alarm ? "Turns off" : "Turn on") + " the emergency mode, which alerts your team members and sets off the alarm.";
 							butt.SetEnabled(isLeader && this.get_bool("base_allow_alarm"));
 						}
@@ -389,7 +456,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					int yOffset = ((players.length - 1) * 24) - 48;
 					// print("" + yOffset);
 				
-					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(192.00f + 16.00f, yOffset), this, Vec2f(5, players.length), "Faction Member Management");
+					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(200.00f + 16.00f, yOffset), this, Vec2f(5, players.length), "Faction Member Management");
 					if (menu !is null)
 					{
 						{
@@ -449,7 +516,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (data == 0 && isLeader)
 						{
 							client_AddToChat(ply.getUsername() + " has resigned as the leader of the " + teamName + "!", teamColor);
-							printf(ply.getUsername() + " has resigned as the leader of the " + teamName);
+							print_log(ply, "has resigned as the leader of the " + teamName);
 							
 							team_data.leader_name = "";
 						}
@@ -457,32 +524,82 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						{
 							team_data.leader_name = ply.getUsername();
 							client_AddToChat(ply.getUsername() + " has become the leader of " + teamName + "!", teamColor);
-							printf(ply.getUsername() + " has become the leader of " + teamName);
+							print_log(ply, "has become the leader of " + teamName);
 						}
 						break;
 						
+						
 					case 1:
-						if (isLeader) team_data.recruitment_enabled = data > 0;
+						if (isLeader) 
+						{
+							team_data.recruitment_enabled = data > 0;
+							print_log(ply, "set Recruitment to " + (data > 0));
+						}
 						break;
 						
 					case 2:
-						if (isLeader) team_data.tax_enabled = data > 0;
+						if (isLeader) 
+						{
+							team_data.lockdown_enabled = data > 0;
+							print_log(ply, "set Lockdown to " + (data > 0));
+						}
 						break;
 						
 					case 3:
-						if (isLeader) team_data.storage_enabled = data > 0;
+						if (isLeader) 
+						{
+							team_data.tax_enabled = data > 0;
+							print_log(ply, "set Murder Tax to " + (data > 0));
+						}
 						break;
 						
 					case 4:
-						if (isLeader) team_data.lockdown_enabled = data > 0;
+						if (isLeader) 
+						{
+							team_data.storage_enabled = data > 0;
+							print_log(ply, "set Remote Storage to " + (data > 0));
+						}
 						break;
 						
 					case 5:
+						if (isLeader) 
+						{
+							team_data.f2p_enabled = data > 0;
+							print_log(ply, "set F2P Recruitment to " + (data > 0));
+						}
+						break;
+						
+					case 6:
+						if (isLeader) 
+						{
+							team_data.slavery_enabled = data > 0;
+							print_log(ply, "set Slavery to " + (data > 0));
+						}
+						break;
+						
+					case 7:
+						if (isLeader) 
+						{
+							team_data.reserved_1_enabled = data > 0;
+							print_log(ply, "set RESERVED1 to " + (data > 0));
+						}
+						break;
+						
+					case 8:
+						if (isLeader) 
+						{
+							team_data.reserved_2_enabled = data > 0;
+							print_log(ply, "set RESERVED2 to " + (data > 0));
+						}
+						break;
+
+						
+					case 9:
 						if (isLeader)
 						{	
 							this.set_bool("base_demolition", data > 0);
 
-							printf(ply.getUsername() + " has " + (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName());
+							print_log(ply, (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName());
 							
 							if (getNet().isServer()) this.Sync("base_demolition", true);
 							if (getNet().isClient())
@@ -497,7 +614,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						}
 						break;
 						
-					case 6:
+					case 10:
 						if (isLeader)
 						{	
 							this.set_bool("base_alarm_manual", data > 0);
@@ -599,8 +716,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					// bool deserter = p.get_u32("teamkick_time") > getGameTime();
 					bool upkeep_gud = team_data.upkeep + UPKEEP_COST_PLAYER <= team_data.upkeep_cap;
 					bool recruitment_enabled = team_data.recruitment_enabled;
+					bool is_premium = p.getOldGold();
 					
-					if (upkeep_gud && recruitment_enabled)
+					bool can_join = upkeep_gud && recruitment_enabled;
+					
+					if (can_join)
 					{
 						this.getSprite().PlaySound("party_join.ogg");
 						printf(p.getUsername() + " has joined " + getRules().getTeam(myTeam).getName());

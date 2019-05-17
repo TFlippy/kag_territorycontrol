@@ -265,7 +265,7 @@ void GunTick(CBlob@ this)
 		// }
 	// }
 	
-	if((point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) && !isHolderAttached) {
+	if((point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) && !isHolderAttached && !(holder.get_f32("babbyed") > 0)) {
 		if(!this.get_bool("gun_needsRelease") && getGameTime()>this.get_u32("gun_readyTime")) {
 			if(clip>=1){
 				clip-=1;
@@ -382,8 +382,10 @@ void Shoot(CBlob@ this)
 			// print("Angle: " + angle + "; Jitter: " + jitter);
 		
 			HitInfo@[] hitInfos;
-			bool mapHit=getMap().rayCastSolid(startPos,endPos,hitPos);
-			length =(hitPos - startPos).Length();
+			bool mapHit=getMap().rayCastSolid(startPos,endPos, hitPos);
+			hitPos += dir * 0.01f;
+			
+			length = (hitPos - startPos).Length();
 			
 			bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f),length,this,@hitInfos);
 			if(getNet().isClient())

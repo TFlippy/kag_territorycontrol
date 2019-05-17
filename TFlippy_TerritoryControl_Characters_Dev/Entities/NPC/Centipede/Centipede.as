@@ -95,7 +95,9 @@ void onTick(CBlob@ this)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (isClient()){
+		 return;
+	} 
 	
 	
 	CBlob@ blob = this.getBlob();

@@ -13,7 +13,7 @@
 
 void onInit( CBrain@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -22,6 +22,7 @@ void onInit( CBrain@ this )
 
 void onInit(CBlob@ this)
 {
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 	this.set_f32("gib health", -10.0f);
 
 	this.set_u32("nextAttack", 0);
@@ -63,7 +64,19 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
-	if (this.hasTag("dead")) return;
+	if (this.hasTag("dead")){ return;}
+
+	if(isClient()){
+		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
+		{
+			this.getSprite().PlaySound("Cuck_Idle_" + XORRandom(4) + ".ogg", 0.7f, 0.5f);
+			this.set_u32("next sound", getGameTime() + 350);
+		}
+		
+		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
+	}
 
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
@@ -72,14 +85,6 @@ void onTick(CBlob@ this)
 		moveVars.jumpFactor *= 1.50f;
 	}
 		
-	if (getNet().isClient())
-	{
-		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
-		{
-			this.getSprite().PlaySound("Cuck_Idle_" + XORRandom(4) + ".ogg", 0.7f, 0.5f);
-			this.set_u32("next sound", getGameTime() + 350);
-		}
-	}
 		
 	if (this.isKeyPressed(key_action1) && getGameTime() > this.get_u32("next attack"))
 	{
@@ -120,7 +125,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 	if (!this.hasTag("dead"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			if (getGameTime() > this.get_u32("next sound") - 130)
 			{
@@ -129,7 +134,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			}
 		}
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBrain@ brain = this.getBrain();
 			
@@ -145,8 +150,8 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)
 {
-	bool client = getNet().isClient();
-	bool server = getNet().isServer();
+	bool client = isClient();
+	bool server = isServer();
 	
 	Vec2f dir = worldPoint - this.getPosition();
 	f32 len = dir.getLength();

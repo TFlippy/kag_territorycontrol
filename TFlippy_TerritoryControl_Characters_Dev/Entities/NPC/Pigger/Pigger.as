@@ -10,6 +10,7 @@ void onInit(CSprite@ this)
 {
     this.ReloadSprites(0,0);
 	this.SetZ(-20.0f);
+	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
 }
 
 void onTick(CSprite@ this)
@@ -22,6 +23,9 @@ void onTick(CSprite@ this)
 	}
 	else
 	{
+		if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
 		f32 x = Maths::Abs(blob.getVelocity().x);
 
 		if (Maths::Abs(x) > 0.2f)
@@ -93,7 +97,12 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	if (!this.hasTag("dead"))
-	{	
+	{
+		if(isClient()){
+			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+				return;
+			}
+		}	
 		bool succ = false;
 	
 		u16 netid = this.get_u16("succ netid");
@@ -115,7 +124,7 @@ void onTick(CBlob@ this)
 				if (this.getTickSinceCreated() % 15 == 0) 
 				{
 					blob.set_u16("pigger_bite_counter", blob.get_u16("pigger_bite_counter") + 1);
-					if (blob.get_u16("pigger_bite_counter") > 20)
+					if (blob.get_u16("pigger_bite_counter") > 7)
 					{
 						if (!blob.hasTag("pigger_pregnant")) 
 						{
@@ -184,7 +193,7 @@ void onTick(CBlob@ this)
 		this.set_u16("succ netid", 0);
 	}
 		
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (XORRandom(500) == 0)
 		{

@@ -5,7 +5,6 @@
 #include "FireParticle.as"
 #include "FireCommon.as";
 #include "RunnerCommon.as";
-#include "CommonGun.as";
 
 void onInit(CBlob@ this)
 {
@@ -33,8 +32,8 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 1;
 	
 	this.set_f32("voice pitch", 1.50f);
-	
-	if (getNet().isServer())
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	if (isServer())
 	{
 		this.set_u16("stolen coins", 250);
 	
@@ -163,7 +162,7 @@ void onInit(CBlob@ this)
 				
 			default:
 				gun_config = "carbine";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "mat_rifleammo";
 				
 				this.set_u8("attackDelay", 2);
 				this.set_u8("reactionTime", 30);
@@ -232,20 +231,11 @@ void onTick(CBlob@ this)
 		
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
-
-	if (getNet().isClient())
-	{
-		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
-		{
-			// this.getSprite().PlaySound("scoutchicken_vo_perish.ogg", 0.8f, 1.5f);
-			this.set_u32("next sound", getGameTime() + 100);
-		}
-	}
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 50)
 		{
@@ -254,7 +244,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		

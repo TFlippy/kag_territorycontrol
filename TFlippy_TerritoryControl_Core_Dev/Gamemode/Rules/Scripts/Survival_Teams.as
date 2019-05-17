@@ -44,7 +44,7 @@ void Reset(CRules@ this)
 
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 {
-	print("new ply");
+	//print("new ply");
 
 	if (getNet().isServer())
 	{
@@ -130,7 +130,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream@ stream)
 
 void server_SynchronizeTeams(CRules@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		TeamData[]@ team_list;
 		this.get("team_list", @team_list);
@@ -228,6 +228,19 @@ void onTick(CRules@ this)
 					if (team > maxTeams) continue;
 										
 					team_list[team].controlled_count++;
+				}
+			}
+			
+			CBlob@[] slaves;
+			if (getBlobsByName("slave", @slaves))
+			{
+				for (u32 i = 0; i < slaves.length; i++)
+				{
+					CBlob@ blob = slaves[i];
+					u8 slaver_team = blob.get_u8("slaver_team");
+	
+					if (slaver_team > maxTeams) continue;
+					if (!blob.hasTag("dead")) team_list[slaver_team].upkeep += 50;
 				}
 			}
 				

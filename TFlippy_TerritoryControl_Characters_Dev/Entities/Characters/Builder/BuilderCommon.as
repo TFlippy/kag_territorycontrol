@@ -220,22 +220,31 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 				
 					if (b.name == "chickenassembler")
 					{
-						CBlob@ bp = server_CreateBlob("bp_assembler", myTeam, this.getPosition());
+						CBlob@ bp = server_CreateBlob("bp_automation_advanced", myTeam, this.getPosition());
 						 
 						if (!this.server_PutInInventory(bp))
 						{
 							bp.setPosition(this.getPosition());
 						}
 					}
-
-					if(b.name == "banner")
+					else if (b.name == "beamtower")
+					{
+						CBlob@ bp = server_CreateBlob("bp_energetics", myTeam, this.getPosition());
+						 
+						if (!this.server_PutInInventory(bp))
+						{
+							bp.setPosition(this.getPosition());
+						}
+					}
+					else if(b.name == "banner")
 					{
 						CPlayer@ p = this.getPlayer();
-						if(p !is null)
+						CRules@ r = getRules();
+						if(p !is null && r !is null)
 						{
-							if(p.exists("clanData"))
+							if(r.exists("clanData"+p.getUsername().toLower()))
 							{
-								blockBlob.set_string("cData",p.get_string("clanData"));
+								blockBlob.set_string("cData",r.get_string("clanData"+p.getUsername().toLower()));
 								blockBlob.Sync("cData",false);
 							}
 						}

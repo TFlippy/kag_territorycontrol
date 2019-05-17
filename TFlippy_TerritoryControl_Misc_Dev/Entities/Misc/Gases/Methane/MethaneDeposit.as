@@ -20,6 +20,7 @@ void onInit(CBlob@ this)
 	this.set_Vec2f("shop menu size",Vec2f(2,2));
 	this.set_string("shop description", "");
 	this.set_u8("shop icon", 15);
+	this.Tag(SHOP_AUTOCLOSE);
 	
 	{
 		ShopItem@ s = addShopItem(this, "Build a Methane Collector", "$icon_upgrade$", "methanecollector", "Build a methane collector that will automatically harvest methane and deposit it into constructed gas tanks.");

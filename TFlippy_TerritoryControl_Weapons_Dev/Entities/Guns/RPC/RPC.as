@@ -14,7 +14,7 @@ void onInit(CBlob@ this)
 		50,					//Weapon reload time
 		false,				//If true, gun will be reloaded like a shotgun
 		0,					//For shotguns: Additional delay to reload end
-		"mat_smallrocket",	//Ammo item blob name
+		"mat_sawrocket",	//Ammo item blob name
 		false,				//If true, firing sound will be looped until player stops firing
 		SoundInfo("RPC_Shoot",1,1.0f,1.00f),	//Sound to play when firing
 		SoundInfo("BazookaReload",1,1.0f,0.63f),//Sound to play when reloading

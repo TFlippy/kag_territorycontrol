@@ -7,10 +7,10 @@
 #include "FireCommon.as";
 #include "RunnerCommon.as";
 #include "BrainCommon.as";
-#include "CommonGun.as";
 
 void onInit(CBlob@ this)
 {
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 	this.set_u32("nextAttack", 0);
 	this.set_u32("nextBomb", 0);
 	
@@ -253,7 +253,7 @@ void onTick(CBlob@ this)
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
 		{
@@ -274,7 +274,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 50)
 		{
@@ -283,7 +283,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		

@@ -49,7 +49,7 @@ void onTick(CBlob@ this)
 				dist = dir.getLength();
 				dir.Normalize();
 			}
-			else
+			else if (this.hasTag("self_destruct"))
 			{
 				this.server_Die();
 			}

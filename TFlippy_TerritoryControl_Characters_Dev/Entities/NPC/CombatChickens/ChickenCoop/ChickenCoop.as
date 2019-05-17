@@ -2,6 +2,7 @@
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.Tag("builder always hit");
+	this.Tag("upf_base");
 	
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
@@ -47,12 +48,15 @@ void onTick(CBlob@ this)
 	
 	if (getNet().isServer())
 	{
-		CBlob@[] chickens;
-		getBlobsByTag("combat chicken", @chickens);
-		
-		if (chickens.length < 16)
+		if(getGameTime() % 10 == 0)
 		{
-			CBlob@ blob = server_CreateBlob((XORRandom(100) < 20 ? "soldierchicken" : "scoutchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+			CBlob@[] chickens;
+			getBlobsByTag("combat chicken", @chickens);
+			
+			if (chickens.length < 16)
+			{
+				CBlob@ blob = server_CreateBlob((XORRandom(100) < 20 ? "soldierchicken" : "scoutchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+			}
 		}
 	}
 }

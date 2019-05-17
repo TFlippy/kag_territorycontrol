@@ -109,7 +109,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	{
 		if (customData == HittersTC::radiation)
 		{
-			if (this.hasTag("human") && !this.hasTag("transformed") && this.getHealth() <= 0.125f && XORRandom(3) == 0)
+			if (this.hasTag("human") && !this.hasTag("transformed") && this.getHealth() <= 0.125f && XORRandom(2) == 0)
 			{
 				CBlob@ man = server_CreateBlob("mithrilman", this.getTeamNum(), this.getPosition());
 				if (this.getPlayer() !is null) man.server_SetPlayer(this.getPlayer());

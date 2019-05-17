@@ -11,7 +11,7 @@ const u32 materials_wait_warmup = 40; //seconds between free mats
 //property
 const string SPAWN_ITEMS_TIMER = "CTF SpawnItems:";
 
-string base_name() { return "tent"; }
+const string base_name = "tent";
 
 bool SetMaterials(CBlob@ blob,  const string &in name, const int quantity)
 {
@@ -231,20 +231,23 @@ void onInit(CRules@ this)
 
 void onTick(CRules@ this)
 {
-	if (!getNet().isServer())
-		return;
+	//extremely unoptimized
+	//move to player collision, if they touch x, give x mat
 
-	s32 gametime = getGameTime();
-
-	if ((gametime % 31) != 5)
+	if (isClient()){
 		return;
+	}
+
+	if ((getGameTime() % 31) != 5){
+		return;
+	}
 
 	Players@ players;
 	this.get("players", @players);
 	if (players !is null)
 	{
 		CBlob@[] spots;
-		getBlobsByName(base_name(), @spots);
+		getBlobsByName(base_name, @spots);
 		getBlobsByName("buildershop", @spots);
 		getBlobsByName("knightshop", @spots);
 		getBlobsByName("archershop", @spots);

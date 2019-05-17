@@ -39,20 +39,17 @@ void onTick(CBlob@ this)
 				
 				if (getNet().isServer())
 				{
-					if (XORRandom(100) < 25)
+					if ((pos - this.getPosition()).getLength() < 32)
 					{
-						if ((pos - this.getPosition()).getLength() < 32)
+						CBlob@ blob = getMap().getBlobAtPosition(pos);
+						
+						if (blob !is null)
 						{
-							CBlob@ blob = getMap().getBlobAtPosition(pos);
-							
-							if (blob !is null)
-							{
-								this.server_Hit(blob, pos, Vec2f(0, 0), 0.25f, Hitters::fire, true);
-							}
-							else
-							{
-								getMap().server_setFireWorldspace(pos, true);
-							}
+							this.server_Hit(blob, pos, Vec2f(0, 0), 0.25f, Hitters::fire, true);
+						}
+						else
+						{
+							getMap().server_setFireWorldspace(pos, true);
 						}
 					}
 				}

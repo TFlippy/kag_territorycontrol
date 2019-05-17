@@ -10,7 +10,7 @@
 
 void onInit( CBrain@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -19,9 +19,15 @@ void onInit( CBrain@ this )
 
 void onInit(CBlob@ this)
 {
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 	// this.Tag("npc");
 	this.Tag("flesh");
 	this.Tag("dangerous");
+	
+	this.Tag("map_damage_dirt");
+	this.Tag("map_destroy_ground");
+	this.set_f32("map_damage_ratio", 0.4f);
+	this.set_f32("map_damage_radius", 32.0f);
 	
 	this.SetLight(true);
 	this.SetLightRadius(16.0f);
@@ -42,8 +48,8 @@ void onTick(CBlob@ this)
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
 	{
-		moveVars.walkFactor *= 0.40f;
-		moveVars.jumpFactor *= 0.75f;
+		moveVars.walkFactor *= 0.60f;
+		moveVars.jumpFactor *= 0.85f;
 	}
 
 	// if (this.getHealth() < 1.0 && !this.hasTag("dead"))
@@ -67,16 +73,19 @@ void onTick(CBlob@ this)
 		// if (getNet().isServer() && this.getPlayer() !is null) this.server_SetPlayer(null);
 	// }
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
 		{
 			this.getSprite().PlaySound("MithrilMan_Scream_" + XORRandom(4) + ".ogg", 0.7f, 1.0f);
 			this.set_u32("next sound", getGameTime() + 210);
 		}
+		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (XORRandom(100) == 0)
 		{
@@ -98,7 +107,7 @@ void onTick(CBlob@ this)
 			// this.getSprite().PlaySound("geiger" + XORRandom(3) + ".ogg", 0.7f, 1.0f);
 		// }
 	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBlob@[] blobsInRadius;
 			if (this.getMap().getBlobsInRadius(this.getPosition(), 64, @blobsInRadius))
@@ -218,7 +227,7 @@ void onDie(CBlob@ this)
 	this.getSprite().PlaySound("MithrilMan_Scream_0.ogg", 1.0f, 1.0f);
 	this.getSprite().Gib();
 	
-	Explode(this, 32.0f, 4.0f);
+	Explode(this, 32.0f, 8.0f);
 	
 	if (getNet().isServer())
 	{
@@ -227,7 +236,7 @@ void onDie(CBlob@ this)
 			CBlob@ blob = server_CreateBlob("mat_mithril", this.getTeamNum(), this.getPosition());
 			if (blob !is null)
 			{
-				blob.server_SetQuantity(5 + XORRandom(10));
+				blob.server_SetQuantity(10 + XORRandom(35));
 				blob.setVelocity(Vec2f(4 - XORRandom(2), -2 - XORRandom(4)));
 			}
 		}

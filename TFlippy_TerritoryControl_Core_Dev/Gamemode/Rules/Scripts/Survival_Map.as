@@ -1,3 +1,5 @@
+#define SERVER_ONLY
+
 //#include "CustomBlocks.as";
 
 void onInit(CRules@ this)
@@ -19,7 +21,7 @@ void Reset(CRules@ this, CMap@ map)
 {
 	if (map !is null)
 	{
-		map.SetBorderFadeWidth(16);
+		map.SetBorderFadeWidth(16);	
 		
 		map.SetBorderColourTop(SColor(255, 0, 0, 0));
 		map.SetBorderColourLeft(SColor(255, 0, 0, 0));

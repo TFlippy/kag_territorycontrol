@@ -13,7 +13,7 @@ void onInit(CBlob@ this)
 
 void onAttach(CBlob@ this,CBlob@ attached,AttachmentPoint @attachedPoint)
 {
-	if (attachedPoint.name == "CARGO")
+	if (attachedPoint !is null && attachedPoint.name == "CARGO")
 	{
 		// Seems that this was causing crashes / freezes
 		// f32 width = attached.getShape().getWidth(), height = attached.getShape().getHeight();
@@ -36,7 +36,7 @@ void onAttach(CBlob@ this,CBlob@ attached,AttachmentPoint @attachedPoint)
 
 void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)
 {
-	if (attachedPoint.name == "CARGO")
+	if (attachedPoint !is null && attachedPoint.name == "CARGO")
 	{
 		// this.getShape().RemoveShape(1);
 		

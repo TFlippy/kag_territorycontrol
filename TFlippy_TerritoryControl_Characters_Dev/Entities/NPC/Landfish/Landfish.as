@@ -18,6 +18,7 @@ int g_layEggInterval = 0;
 void onInit(CSprite@ this)
 {
 	this.ReloadSprites(this.getBlob().getTeamNum(), 0);
+	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
 }
 
 void onTick(CSprite@ this)
@@ -26,6 +27,9 @@ void onTick(CSprite@ this)
 
 	if (!blob.hasTag("dead"))
 	{
+		if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
 		f32 x = Maths::Abs(blob.getVelocity().x);
 		if (blob.isAttached())
 		{
@@ -125,6 +129,11 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onTick(CBlob@ this)
 {
+	if(isClient()){
+		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}
+	}
 	f32 x = this.getVelocity().x;
 	if (Maths::Abs(x) > 1.0f)
 	{
@@ -173,7 +182,7 @@ void onTick(CBlob@ this)
 		g_lastSoundPlayedTime =  getGameTime();
 
 		// lay eggs
-		if (getNet().isServer())
+		if (isServer())
 		{
 			g_layEggInterval++;
 			if (g_layEggInterval % 13 == 0)

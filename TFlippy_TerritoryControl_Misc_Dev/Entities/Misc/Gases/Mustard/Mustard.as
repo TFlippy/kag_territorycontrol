@@ -17,7 +17,7 @@ void onInit(CBlob@ this)
 	if (!this.exists("toxicity")) this.set_f32("toxicity", 0.50f);
 	
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
-	this.server_SetTimeToDie(45 + XORRandom(60));
+	this.server_SetTimeToDie(60 + XORRandom(90));
 }
 
 void onTick(CBlob@ this)

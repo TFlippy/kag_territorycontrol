@@ -1,4 +1,5 @@
 #include "Hitters.as";
+#include "Survival_Structs.as";
 
 void onInit(CBlob@ this)
 {
@@ -20,19 +21,23 @@ void onTick(CBlob@ this)
 		CBlob@ holder = point.getOccupied();
 		
 		if (holder is null) return;
+		u8 team = holder.getTeamNum();
+		
+		TeamData@ team_data;
+		GetTeamData(team, @team_data);
 
-		if (this.get_u32("next attack") > getGameTime())
+		bool slavery_enabled = true;
+		
+		if (team_data != null)
 		{
-			if (point.isKeyJustPressed(key_action1) && holder.isMyPlayer()) Sound::Play("/NoAmmo");
-			return;
+			slavery_enabled = team_data.slavery_enabled;
+			// print("" + slavery_enabled);
 		}
 		
-		if (holder.get_u8("knocked") <= 0)
+		if (point.isKeyJustPressed(key_action1))
 		{
-			if (point.isKeyJustPressed(key_action1))
+			if (slavery_enabled && getGameTime() >= this.get_u32("next attack") && holder.get_u8("knocked") <= 0)
 			{
-				u8 team = holder.getTeamNum();
-				
 				HitInfo@[] hitInfos;
 				if (getMap().getHitInfosFromArc(this.getPosition(), -(holder.getAimPos() - this.getPosition()).Angle(), 45, 16, this, @hitInfos))
 				{
@@ -42,6 +47,8 @@ void onTick(CBlob@ this)
 						if (blob !is null && blob.hasTag("player") && blob.getTeamNum() != team)
 						{
 							f32 chance = 1.0f - (blob.getHealth() / blob.getInitialHealth());
+							if (blob.get_f32("babbyed") > 0) chance = 1.00f;
+							
 							print("" + chance);
 						
 							if ((chance > 0.50f && XORRandom(100) < chance * 80) || (blob.get_u8("knocked") > 15 && chance > 0.2f))
@@ -53,8 +60,9 @@ void onTick(CBlob@ this)
 								
 								if (getNet().isServer())
 								{
-									// CBlob@ slave = server_CreateBlob("slave", blob.getTeamNum(), blob.getPosition());
 									CBlob@ slave = server_CreateBlob("slave", holder.getTeamNum(), blob.getPosition());
+									slave.set_u8("slaver_team", holder.getTeamNum());
+									
 									if (slave !is null)
 									{
 										if (blob.getPlayer() !is null) slave.server_SetPlayer(blob.getPlayer());
@@ -79,7 +87,9 @@ void onTick(CBlob@ this)
 						}
 					}
 				}
-				
+			}
+			else
+			{
 				if (holder.isMyPlayer()) Sound::Play("/NoAmmo");
 			}
 		}

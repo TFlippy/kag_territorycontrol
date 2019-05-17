@@ -94,7 +94,7 @@ void onTick(CBlob@ this)
 		u8 fuel = GetFuel(this);
 		f32 modifier = f32(fuel) / 50.0f;
 		
-		this.getSprite().SetEmitSoundVolume(0.75f);
+		this.getSprite().SetEmitSoundVolume(0.45f);
 		this.getSprite().SetEmitSoundSpeed(0.75f + modifier * 0.35f);
 		
 		if (this.get_u32("next zap") > getGameTime()) return;

@@ -10,6 +10,8 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_tankshell$", "Material_TankShell.png", Vec2f(16, 16), 3);
 		
 		// Merchant
+		AddIconToken("$bp_automation_advanced$", "Blueprints.png", Vec2f(16, 16), 0);
+		AddIconToken("$bp_energetics$", "Blueprints.png", Vec2f(16, 16), 1);
 		AddIconToken("$bp_mechanist$", "Blueprints.png", Vec2f(16, 16), 2);
 		AddIconToken("$mat_goldingot$", "Material_GoldIngot.png", Vec2f(16, 16), 1);
 		AddIconToken("$musicdisc$", "MusicDisc.png", Vec2f(8, 8), 0);
@@ -47,6 +49,7 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_fragmine$", "FragMine.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_rocket$", "Rocket.png", Vec2f(24, 40), 0);
 		AddIconToken("$icon_smallrocket$", "Material_SmallRocket.png", Vec2f(8, 16), 0);
+		AddIconToken("$icon_sawrocket$", "Material_SawRocket.png", Vec2f(8, 24), 0);
 		AddIconToken("$icon_nuke$", "Nuke.png", Vec2f(40, 32), 0);
 		AddIconToken("$icon_claymore$", "Claymore.png", Vec2f(16, 16), 1);
 		AddIconToken("$icon_claymoreremote$", "ClaymoreRemote.png", Vec2f(8, 16), 0);
@@ -116,6 +119,8 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_hazmat$", "HazmatItem.png", Vec2f(16, 8), 0);
 		AddIconToken("$icon_mousetrap$", "MouseTrap.png", Vec2f(32, 16), 0);
 		AddIconToken("$icon_contrabass$", "Contrabass.png", Vec2f(8, 16), 0);
+		AddIconToken("$icon_lighter$", "Lighter.png", Vec2f(8, 8), 0);
+		AddIconToken("$icon_oof$", "Oof.png", Vec2f(40, 16), 0);
 		
 		// Fabricator
 		AddIconToken("$icon_hoverbike$", "Hoverbike.png", Vec2f(24, 16), 2);
@@ -127,6 +132,7 @@ void LoadDefaultGUI()
 		AddIconToken("$smg$", "SMG.png", Vec2f(24, 8), 0);
 		AddIconToken("$revolver$", "Revolver.png", Vec2f(16, 8), 0);
 		AddIconToken("$icon_bazooka$", "Bazooka.png", Vec2f(16, 8), 0);
+		AddIconToken("$icon_rpc$", "RPC.png", Vec2f(24, 16), 0);
 		AddIconToken("$icon_flamethrower$", "Flamethrower.png", Vec2f(16, 8), 0);
 		AddIconToken("$icon_shotgun$", "Shotgun.png", Vec2f(16, 8), 0);
 		AddIconToken("$icon_boomstick$", "Boomstick.png", Vec2f(24, 8), 0);
@@ -149,7 +155,19 @@ void LoadDefaultGUI()
 		// Misc
 		AddIconToken("$icon_cargocontainer$", "CargoContainer.png", Vec2f(64, 24), 0);
 		AddIconToken("$icon_armoredcar$", "ArmoredCar_Icon.png", Vec2f(48, 32), 0);
+		AddIconToken("$icon_trader$", "Trader.png", Vec2f(16, 16), 0);
+		AddIconToken("$icon_hobo$", "Hobo.png", Vec2f(16, 16), 0);
+		AddIconToken("$icon_methane$", "Material_Methane.png", Vec2f(8, 16), 0);
+		AddIconToken("$icon_fuel$", "Material_Fuel.png", Vec2f(16, 16), 0);
+		AddIconToken("$icon_princess$", "Princess.png", Vec2f(24, 24), 0);
+		AddIconToken("$icon_beamtowertargeter$", "BeamTowerTargeter.png", Vec2f(8, 16), 0);
 
+		
+		// Drugs
+		AddIconToken("$icon_domino$", "Domino.png", Vec2f(8, 8), 0);
+		AddIconToken("$icon_foof$", "Foof.png", Vec2f(8, 8), 0);
+		AddIconToken("$icon_stim$", "Stim.png", Vec2f(8, 16), 0);
+		AddIconToken("$icon_bobongo$", "Bobongo.png", Vec2f(8, 8), 0);
 	
 		// add color tokens
 		AddColorToken("$RED$", SColor(255, 105, 25, 5));

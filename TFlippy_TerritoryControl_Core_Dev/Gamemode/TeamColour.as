@@ -20,7 +20,7 @@ SColor getTeamColor(int team)
 
 		case 7: teamCol.set(0xffc4cfa1); break;
 
-		case 250: teamCol.set(0xff141414); break;
+		case 250: teamCol.set(0xff474c4a); break;
 		
 		default: teamCol.set(0xff888888);
 	}

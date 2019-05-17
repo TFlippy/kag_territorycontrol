@@ -8,6 +8,7 @@ const u8 DEFAULT_PERSONALITY = AGGRO_BIT;
 void onInit(CSprite@ this)
 {
 	this.ReloadSprites(0, 0); //always blue
+	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
 }
 
 void onTick(CSprite@ this)
@@ -16,6 +17,10 @@ void onTick(CSprite@ this)
 
 	if (!blob.hasTag("dead"))
 	{
+		if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}	
+
 		Vec2f vel=blob.getVelocity();
 		if(vel.x!=0.0f)
 		{
@@ -106,6 +111,12 @@ void onTick(CBlob@ this)
 {
 	if (!this.hasTag("dead"))
 	{
+		if(isClient()){
+			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+				return;
+			}
+		}
+
 		CMap@ map = getMap();
 			
 		if (this.getHealth() < 3.0)
@@ -153,13 +164,16 @@ void onTick(CBlob@ this)
 				f32 volume = Maths::Min(0.1f + Maths::Abs(vel.x) * 0.1f, 1.0f);
 				TileType tile = this.getMap().getTile(this.getPosition() + Vec2f(0.0f, this.getRadius() + 4.0f)).type;
 
-				if (this.getMap().isTileGroundStuff(tile))
+				if(isClient())
 				{
-					this.getSprite().PlaySound("/EarthStep", volume, 0.75f);
-				}
-				else
-				{
-					this.getSprite().PlaySound("/StoneStep", volume, 0.75f);
+					if (this.getMap().isTileGroundStuff(tile))
+					{
+						this.getSprite().PlaySound("/EarthStep", volume, 0.75f);
+					}
+					else
+					{
+						this.getSprite().PlaySound("/StoneStep", volume, 0.75f);
+					}	
 				}
 			}
 		}
@@ -211,9 +225,9 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
 {
-	if (blob is null) return;
-	if (this.hasTag("dead")) return;
-	if (this.get_u32("next bite") > getGameTime()) return;
+	if (blob is null || this.hasTag("dead") || this.get_u32("next bite") > getGameTime()){
+		return;
+	}
 		
 	if (blob.getConfig() != this.getConfig() && blob.hasTag("flesh"))
 	{

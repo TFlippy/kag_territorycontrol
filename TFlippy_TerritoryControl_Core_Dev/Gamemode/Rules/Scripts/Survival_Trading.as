@@ -5,10 +5,10 @@
 
 #define SERVER_ONLY
 
-int coinsOnDamageAdd = 5;
-int coinsOnKillAdd = 25;
-int coinsOnDeathLose = 10;
-int min_coins = 50;
+const int coinsOnDamageAdd = 5;
+const int coinsOnKillAdd = 25;
+const int coinsOnDeathLose = 10;
+const int min_coins = 50;
 
 const int coinsOnDeathLosePercent = 20;
 const int coinsOnTKLose = 50;
@@ -27,8 +27,9 @@ const int coinsOnBuildWorkshop = 20;
 
 const int warmupFactor = 3;
 
+const u32 MAX_COINS = 30000;
+
 //
-string cost_config_file = "tdm_vars.cfg";
 bool kill_traders_and_shops = false;
 
 void onBlobCreated(CRules@ this, CBlob@ blob)
@@ -88,6 +89,7 @@ void MakeTradeMenu(CBlob@ trader)
 
 void Reset(CRules@ this)
 {
+	/*
 	//load the coins vars now, good a time as any
 	if (this.exists("tdm_costs_config"))
 		cost_config_file = this.get_string("tdm_costs_config");
@@ -99,7 +101,7 @@ void Reset(CRules@ this)
 	coinsOnKillAdd = cfg.read_s32("coinsOnKillAdd", coinsOnKillAdd);
 	coinsOnDeathLose = cfg.read_s32("coinsOnDeathLose", coinsOnDeathLose);
 	min_coins = cfg.read_s32("minCoinsOnRestart", min_coins);
-
+	print(min_coins + " aa");
 	kill_traders_and_shops = !(cfg.read_bool("spawn_traders_ever", true));
 
 	if (kill_traders_and_shops)
@@ -113,8 +115,11 @@ void Reset(CRules@ this)
 		CPlayer@ player = getPlayer(i);
 		if (player is null) continue;
 
-		player.server_setCoins(Maths::Max(player.getCoins(), min_coins));
-	}
+		//player.server_setCoins(Maths::Max(player.getCoins(), min_coins));
+	}*/
+
+	//not needed ^
+	
 
 }
 
@@ -150,41 +155,81 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ killer, u8 customData)
 	if (victim !is null)
 	{
 		CBlob@ victimBlob = victim.getBlob();
+		
+		const u32 victim_coins = victim.getCoins();
+		
+		f32 reward_factor = 0.10f;
+		u32 dropped_coins = 0.00f;
 	
-		if (killer !is null)
+		const bool hasKiller = killer !is null;
+	
+		if (victim.getTeamNum() < 7)
+		{
+			TeamData@ team_data;
+			GetTeamData(victim.getTeamNum(), @team_data);
+		
+			if (team_data !is null)
+			{
+				u16 upkeep = team_data.upkeep;
+				u16 upkeep_cap = team_data.upkeep_cap;
+				f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+				
+				if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_COIN_DROP) reward_factor += 0.20f;
+			}
+		}
+	
+		if (hasKiller)
 		{
 			if (killer !is victim && killer.getTeamNum() != victim.getTeamNum())
 			{
-				u32 reward = victim.getCoins() * 0.1f;
-			
 				if (killer.getTeamNum() < 7)
 				{
 					TeamData@ team_data;
 					GetTeamData(killer.getTeamNum(), @team_data);
 				
-					if (team_data !is null && team_data.tax_enabled)
+					if (team_data !is null)
+					{
+						u16 upkeep = team_data.upkeep;
+						u16 upkeep_cap = team_data.upkeep_cap;
+						f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+					
+						if (upkeep_ratio <= UPKEEP_RATIO_BONUS_COIN_GAIN) reward_factor += 0.20f;
+					}
+				}
+			}
+		
+		}
+			
+		dropped_coins = victim_coins * reward_factor;
+			
+		if (hasKiller)
+		{
+			f32 killer_reward = dropped_coins;
+		
+			if (killer.getTeamNum() < 7)
+			{
+				TeamData@ team_data;
+				GetTeamData(killer.getTeamNum(), @team_data);
+			
+				if (team_data !is null)
+				{
+					if (team_data.tax_enabled)
 					{
 						CPlayer@ leader = getPlayerByUsername(team_data.leader_name);
 						if (leader !is null)
 						{
-							reward *= 0.50f;
-							leader.server_setCoins(leader.getCoins() + reward);
+							killer_reward *= 0.50f;
+							leader.server_setCoins(Maths::Clamp(leader.getCoins() + killer_reward, 0, MAX_COINS));
 						}
 					}
 				}
-			
-				if (!victim.hasTag("coin cheater"))
-				{
-					killer.server_setCoins(killer.getCoins() + reward);
-				}
 			}
+			
+			killer.server_setCoins(Maths::Clamp(killer.getCoins() + killer_reward, 0, MAX_COINS));
 		}
-		else if (!victim.hasTag("coin cheater") && victimBlob !is null) server_DropCoins(victimBlob.getPosition(), victim.getCoins() * 0.1f);
-
-		victim.Untag("coin cheater");
+		else if (victimBlob !is null) server_DropCoins(victimBlob.getPosition(), dropped_coins);
 		
-		u32 totalCoins = victim.getCoins() * 0.9f;
-		victim.server_setCoins(totalCoins);
+		victim.server_setCoins(Maths::Clamp(victim.getCoins() - dropped_coins, 0, MAX_COINS));
 	}
 }
 
@@ -205,8 +250,9 @@ f32 onPlayerTakeDamage(CRules@ this, CPlayer@ victim, CPlayer@ attacker, f32 Dam
 void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 {
 	//only important on server
-	if (!getNet().isServer())
+	if (isServer()){
 		return;
+	}
 
 	if (cmd == getGameplayEventID(this))
 	{
@@ -241,18 +287,30 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 				{
 					g.params.ResetBitIndex();
 					string name = g.params.read_string();
+					switch(name.getHash())
+					{
+						case 804095823://wooden_platform hash
+						case 916369496://trap_block
+						case 439106706://spikes
+						{
+							coins = coinsOnBuild;
+						}
+						break;
 
-					if (name.findFirst("door") != -1 ||
-					        name == "wooden_platform" ||
-					        name == "trap_block" ||
-					        name == "spikes")
-					{
-						coins = coinsOnBuild;
+						case 954139509://building
+						{
+							coins = coinsOnBuildWorkshop;
+						}
+
+						default:
+						{
+							if(name.findFirst("door") != -1)
+							{
+								coins = coinsOnBuild;
+							}
+						}
 					}
-					else if (name == "building")
-					{
-						coins = coinsOnBuildWorkshop;
-					}
+
 				}
 
 				break;

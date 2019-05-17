@@ -13,6 +13,7 @@
 //#include "LoaderUtilities.as";
 #include "ParticleSparks.as";
 #include "CustomBlocks.as";
+#include "Survival_Structs.as";
 
 
 
@@ -114,6 +115,32 @@ void onTick(CBlob@ this)
 		{
 			blob.Untag("temp blob");
 			blob.server_Die();
+		}
+	}
+	
+	if (getGameTime() % 30 == 0)
+	{
+		int playerTeam = this.getTeamNum();
+		if (playerTeam < 7)
+		{
+			TeamData@ team_data;
+			GetTeamData(playerTeam, @team_data);	
+			
+			if (team_data != null)
+			{
+				u16 upkeep = team_data.upkeep;
+				u16 upkeep_cap = team_data.upkeep_cap;
+				f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+				
+				if (upkeep_ratio <= UPKEEP_RATIO_BONUS_MINING)
+				{
+					this.set_f32("team_mining_multiplier", 1.00f);
+				}
+				else 
+				{
+					this.set_f32("team_mining_multiplier", 0.00f);
+				}
+			}
 		}
 	}
 }

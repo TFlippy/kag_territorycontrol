@@ -42,27 +42,14 @@ int GetRandomItem(const LootItem@[]@&in items)
 	int sum = 0;
 	for (int i = 0; i < items.length; i++)
 	{
-		// sum += parseInt(items[i][3]);
 		sum += items[i].weight;
 	}
 	
-	// if (sum == 0)
-	// {
-		// for (int i = 0; i < items.length; i++)
-		// {
-			// // sum += parseInt(items[i][3]);
-			// sum += items[i].weight;
-		// }
-
-		// printf("missing loot sum! sum is now " + sum);
-	// }
-
 	int rnd = XORRandom(sum);
 	int num = 0;
 
 	for (int i = 0; i < items.length; i++)
 	{
-		// u32 weight = parseInt(items[i][3]);
 		u32 weight = items[i].weight;
 
 		if (rnd <= (num + weight))

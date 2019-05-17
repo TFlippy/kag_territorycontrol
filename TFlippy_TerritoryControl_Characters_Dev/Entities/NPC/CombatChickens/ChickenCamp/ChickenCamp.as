@@ -2,6 +2,7 @@
 {
 	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
+	this.Tag("upf_base");
 	
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	
@@ -31,14 +32,17 @@ void onTick(CBlob@ this)
 
 	if (getNet().isServer())
 	{
-		if (XORRandom(100) < 8)
+		if(getGameTime() % 30 == 0)
 		{
-			CBlob@[] chickens;
-			getBlobsByTag("combat chicken", @chickens);
-			
-			if (chickens.length < 8)
+			if (XORRandom(10) < 4)
 			{
-				CBlob@ blob = server_CreateBlob((XORRandom(100) < 72 ? "scoutchicken" : "soldierchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+				CBlob@[] chickens;
+				getBlobsByTag("combat chicken", @chickens);
+				
+				if (chickens.length < 8)
+				{
+					CBlob@ blob = server_CreateBlob((XORRandom(100) < 72 ? "scoutchicken" : "soldierchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+				}
 			}
 		}
 	}
@@ -47,7 +51,6 @@ void onTick(CBlob@ this)
 void SetMinimap(CBlob@ this)
 {
 	this.SetMinimapOutsideBehaviour(CBlob::minimap_arrow);
-		
 	if (this.hasTag("minimap_large")) this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", this.get_u8("minimap_index"), Vec2f(16, 8));
 	else if (this.hasTag("minimap_small")) this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", this.get_u8("minimap_index"), Vec2f(8, 8));
 

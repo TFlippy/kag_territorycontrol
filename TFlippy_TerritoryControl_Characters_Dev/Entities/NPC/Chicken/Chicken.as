@@ -16,7 +16,7 @@ int g_layEggInterval = 0;
 void onInit(CSprite@ this)
 {
 	this.ReloadSprites(0, 0); //always blue
-
+	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
 }
 
 void onTick(CSprite@ this)
@@ -25,6 +25,10 @@ void onTick(CSprite@ this)
 
 	if (!blob.hasTag("dead"))
 	{
+		if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}	
+
 		f32 x = Maths::Abs(blob.getVelocity().x);
 		if (blob.isAttached())
 		{
@@ -131,6 +135,11 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onTick(CBlob@ this)
 {
+	if(isClient()){
+		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+			return;
+		}	
+	}
 	Vec2f vel=this.getVelocity();
 	if(vel.x!=0.0f){
 		this.SetFacingLeft(vel.x<0.0f ? true : false);
