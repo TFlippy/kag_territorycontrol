@@ -54,7 +54,8 @@ void onTick(CBlob@ this)
 							if (blob.getConfig() == "slave") knock = 45 + (1.0f - (blob.getHealth() / blob.getInitialHealth())) * (30 + XORRandom(50)) * 4.0f;
 							else knock = 35 + (1.0f - (blob.getHealth() / blob.getInitialHealth())) * (30 + XORRandom(50));
 						
-							blob.set_u8("knocked", knock);
+							// blob.set_u8("knocked", knock);
+							SetKnocked(blob, knock);
 							
 							// if (getNet().isClient())
 							// {
