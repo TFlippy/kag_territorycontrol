@@ -168,6 +168,7 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_foof$", "Foof.png", Vec2f(8, 8), 0);
 		AddIconToken("$icon_stim$", "Stim.png", Vec2f(8, 16), 0);
 		AddIconToken("$icon_bobongo$", "Bobongo.png", Vec2f(8, 8), 0);
+		AddIconToken("$icon_minidruglab$", "MiniDrugLab.png", Vec2f(24, 24), 0);
 	
 		// add color tokens
 		AddColorToken("$RED$", SColor(255, 105, 25, 5));
