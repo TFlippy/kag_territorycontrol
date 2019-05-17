@@ -65,6 +65,15 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_clusterbomb$", "Material_ClusterBomb.png", Vec2f(16, 24), 0);
 		AddIconToken("$icon_dirtybomb$", "Material_DirtyBomb.png", Vec2f(16, 16), 0);
 
+		AddIconToken("$mat_wood_1x$", "Materials.png", Vec2f(16, 16), 9);
+		AddIconToken("$mat_wood_10x$", "Materials.png", Vec2f(16, 16), 25);
+		
+		AddIconToken("$mat_stone_1x$", "Materials.png", Vec2f(16, 16), 8);
+		AddIconToken("$mat_stone_10x$", "Materials.png", Vec2f(16, 16), 24);
+		
+		AddIconToken("$mat_goldingot_1x$", "Material_GoldIngot.png", Vec2f(16, 16), 1);
+		AddIconToken("$mat_goldingot_10x$", "Material_GoldIngot.png", Vec2f(16, 16), 3);
+		
 		// Metal
 		AddIconToken("$mat_copperingot$", "Material_CopperIngot.png", Vec2f(16, 16), 1);
 		AddIconToken("$mat_ironingot$", "Material_IronIngot.png", Vec2f(16, 16), 1);
