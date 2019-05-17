@@ -106,9 +106,9 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 	}
 	
-	if (player.getBlob() != null && player.getBlob().get_u16("drunk") > 0)
+	if (blob.get_u16("drunk") > 0)
 	{
-		if (XORRandom(100) < player.getBlob().get_u16("drunk") * 10)
+		if (XORRandom(100) < blob.get_u16("drunk") * 10)
 		{
 			switch(XORRandom(13))
 			{
@@ -172,7 +172,7 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 	}
 	
-	if (player.getBlob() != null && player.getBlob().get_f32("babbyed") > 0)
+	if (blob.get_f32("babbyed") > 0)
 	{
 		switch(XORRandom(13))
 		{
@@ -233,6 +233,16 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 		
 		text_out = text_out.toLower().replace("z", "s").replace("y", "yy").replace("e", "ee");
+	}
+	
+	f32 stim = blob.get_f32("stimed");
+	if (stim > 0)
+	{		
+		text_out = text_out.toUpper();
+		for (s32 i = 0; i < stim; i++)
+		{
+			text_out += '!';
+		}
 	}
 	
 	if (player.getUsername() == "Vamist" || player.getCharacterName() == "Vamist") 
