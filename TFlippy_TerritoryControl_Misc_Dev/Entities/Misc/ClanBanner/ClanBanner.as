@@ -1,5 +1,10 @@
 //aaaa
 
+void onInit(CBlob@ this)
+{
+	this.Tag("builder always hit");
+}
+
 void onTick(CBlob@ this)
 {
     if(isClient())
