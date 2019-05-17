@@ -2,6 +2,7 @@
 
 #include "Hitters.as";
 #include "Explosion.as";
+#include "Knocked.as";
 
 const u8 MINE_PRIMING_TIME = 45;
 
