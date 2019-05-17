@@ -35,11 +35,12 @@ void onTick(CBlob@ this)
 	}
 	
 	const bool isknocked = isKnocked(this);
-	const bool flying = this.get_u32("nextJetpack") > getGameTime();
+	u32 tmp = this.get_u32("nextJetpack");
+	const bool flying = tmp > getGameTime();
 	
 	if (!flying)
 	{
-		if (this.isKeyPressed(key_up) && !isknocked)
+		if (this.isKeyPressed(key_action3) && !isknocked)
 		{
 			Vec2f dir = this.getAimPos() - this.getPosition();
 			dir.Normalize();
@@ -53,15 +54,15 @@ void onTick(CBlob@ this)
 			this.set_u32("nextJetpack", getGameTime() + 90);
 		}
 	}
-	else if ((getGameTime() + 75) < this.get_u32("nextJetpack"))
-	{
+	else if ((getGameTime() + 75) < tmp)
 		makeSteamParticle(this, Vec2f(), XORRandom(100) < 30 ? ("SmallFire" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
-	}
+	else if(getGameTime() < tmp)
+		makeSteamParticle(this, Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.0015f * this.getRadius(),"SmallSteam",Vec2f(XORRandom(10)-5,XORRandom(10)-5)*0.2*this.getRadius());
 }
 
-void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
+void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam", const Vec2f displacement = Vec2f(0,0))
 {
 	if (!getNet().isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition(), vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition()+displacement, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
