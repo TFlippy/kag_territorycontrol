@@ -484,5 +484,5 @@ void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)
 	{
 		return;
 	}
-	Vehicle_onDetach(this,v,detached,attachedPoint);
+	Vehicle_onDetach(this, v, detached, attachedPoint);
 }
