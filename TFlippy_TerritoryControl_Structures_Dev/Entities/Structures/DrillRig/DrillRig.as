@@ -56,6 +56,8 @@ void onInit(CSprite@ this)
 
 void onTick(CBlob@ this)
 {
+	this.getCurrentScript().tickFrequency = 15 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+
 	if (getNet().isServer())
 	{
 		if (!this.get_bool("isActive")) return;
