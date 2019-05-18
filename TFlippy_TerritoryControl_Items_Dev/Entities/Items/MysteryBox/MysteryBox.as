@@ -57,7 +57,7 @@ LootItem@[] c_items =
 	LootItem("scubagear", 1, 0, 500),
 	LootItem("ninjascroll", 1, 1, 250),
 	LootItem("juggernauthammer", 1, 1, 50),
-	LootItem("gyromat", 1, 1, 250)
+	LootItem("gyromat", 1, 1, 500)
 };
 
 void onInit(CBlob@ this)
