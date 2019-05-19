@@ -38,6 +38,10 @@ bool ActivateBlob(CBlob@ this, CBlob@ blob, Vec2f pos, Vec2f vector, Vec2f vel)
 {
 	bool shouldthrow = true;
 	bool done = false;
+	if(this is null || blob is null)
+	{
+		return;
+	}
 
 	if (!blob.hasTag("activated") || blob.hasTag("dont deactivate"))
 	{

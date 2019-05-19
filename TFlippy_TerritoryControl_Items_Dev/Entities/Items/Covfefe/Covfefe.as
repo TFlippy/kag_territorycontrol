@@ -33,9 +33,10 @@ void onTick(CBlob@ this)
 	if (this.isAttached())
 	{
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null) { return;}
 		CBlob@ holder = point.getOccupied();
 		
-		if (holder is null) return;
+		if (holder is null) {return;}
 		
 		Vec2f pos = holder.getAimPos();
 		
@@ -50,10 +51,10 @@ void onTick(CBlob@ this)
 
 void onRender(CSprite@ this)
 {
-	if (this is null) return;
+	if (this is null) {return;}
 
 	AttachmentPoint@ ap = this.getBlob().getAttachments().getAttachmentPointByName("PICKUP");
-	if (ap is null) return;
+	if (ap is null) {return;}
 	
 	CBlob@ holder = ap.getOccupied();
 	

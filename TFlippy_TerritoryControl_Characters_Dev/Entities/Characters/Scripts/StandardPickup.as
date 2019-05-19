@@ -78,7 +78,7 @@ void onTick(CBlob@ this)
 			this.get("closest blobs", @closestBlobs);
 			closestBlobs.clear();
 			CBlob@ closest = getClosestBlob(this);
-			if (closest !is null)
+			if (closest !is null && this !is null)
 			{
 				closestBlobs.push_back(closest);
 				if (this.isKeyJustPressed(key_action1))	// pickup
@@ -97,7 +97,10 @@ void onTick(CBlob@ this)
 				this.get("closest blobs", @closestBlobs);
 				if (closestBlobs.length > 0)
 				{
-					server_Pickup(this, this, closestBlobs[0]);
+					if(closestBlob[0] !is null)
+					{
+						server_Pickup(this, this, closestBlobs[0]);
+					}
 				}
 			}
 			ClearPickupBlobs(this);

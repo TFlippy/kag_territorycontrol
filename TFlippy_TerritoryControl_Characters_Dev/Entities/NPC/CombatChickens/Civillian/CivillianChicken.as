@@ -59,7 +59,10 @@ void onInit(CBlob@ this)
 			this.server_PutInInventory(ammo);
 			
 			CBlob@ gun = server_CreateBlob(gun_config, this.getTeamNum(), this.getPosition());
-			this.server_Pickup(gun);
+			if(gun !is null)
+			{
+				this.server_Pickup(gun);
+			}
 		}
 	}
 

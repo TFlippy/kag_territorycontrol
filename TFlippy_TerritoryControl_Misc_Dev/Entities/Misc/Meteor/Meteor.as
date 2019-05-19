@@ -77,10 +77,13 @@ void onTick(CBlob@ this)
 		if(heat > 0)
 		{
 			AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-			CBlob@ holder = point.getOccupied();
-			if (holder !is null && XORRandom(3) == 0)
+			if(point !is null)
 			{
-				this.server_DetachFrom(holder);
+				CBlob@ holder = point.getOccupied();
+				if (holder !is null && XORRandom(3) == 0)
+				{
+					this.server_DetachFrom(holder);
+				}
 			}
 
 			if (this.isInWater())

@@ -25,9 +25,10 @@ void onTick(CBlob@ this)
 		UpdateAngle(this);
 	
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null) {return;}
 		CBlob@ holder = point.getOccupied();
 		
-		if (holder is null) return;
+		if (holder is null) {return;}
 
 		if (getKnocked(holder) <= 0)
 		{
@@ -113,11 +114,11 @@ void onTick(CBlob@ this)
 void UpdateAngle(CBlob@ this)
 {
 	AttachmentPoint@ point=this.getAttachments().getAttachmentPointByName("PICKUP");
-	if(point is null) return;
+	if(point is null) {return;}
 	
 	CBlob@ holder=point.getOccupied();
 	
-	if(holder is null) return;
+	if(holder is null) {return;}
 	
 	Vec2f aimpos=holder.getAimPos();
 	Vec2f pos=holder.getPosition();

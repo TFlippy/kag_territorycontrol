@@ -52,9 +52,10 @@ void onTick(CBlob@ this)
 		UpdateAngle(this);
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder = point.getOccupied();
 
-		if (holder is null) return;
+		if (holder is null) {return;}
 
 		if (getKnocked(holder) <= 0)
 		{

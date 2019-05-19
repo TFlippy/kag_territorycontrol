@@ -496,23 +496,26 @@ void onTick(CBlob@ this)
 				for (int i = 0; i < inv.getItemsCount(); i++)
 				{
 					CBlob@ item = inv.getItem(i);
-					const string itemname = item.getName();
-					if (!holding && bombTypeNames[bombType] == itemname)
+					if(item !is null)
 					{
-						if (bombType >= 2)
+						const string itemname = item.getName();
+						if (!holding && bombTypeNames[bombType] == itemname)
 						{
-							this.server_Pickup(item);
-							client_SendThrowOrActivateCommand(this);
-							thrown = true;
+							if (bombType >= 2)
+							{
+								this.server_Pickup(item);
+								client_SendThrowOrActivateCommand(this);
+								thrown = true;
+							}
+							else
+							{
+								CBitStream params;
+								params.write_u8(bombType);
+								this.SendCommand(this.getCommandID("get bomb"), params);
+								thrown = true;
+							}
+							break;
 						}
-						else
-						{
-							CBitStream params;
-							params.write_u8(bombType);
-							this.SendCommand(this.getCommandID("get bomb"), params);
-							thrown = true;
-						}
-						break;
 					}
 				}
 			}

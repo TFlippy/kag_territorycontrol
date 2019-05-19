@@ -157,9 +157,10 @@ void onTick(CBlob@ this)
 	{
 		this.getCurrentScript().runFlags &= ~(Script::tick_not_sleeping);
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder = point.getOccupied();
 
-		if (holder is null) return;
+		if (holder is null){return;}
 
 		// cool faster if holder is moving
 		if (heat > 0 && holder.getShape().vellen > 0.01f && getGameTime() % heat_cooldown_time == 0)

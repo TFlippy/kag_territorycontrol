@@ -165,8 +165,9 @@ void GunTick(CBlob@ this)
 		return;
 	}
 	AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
-	CBlob@ holder=			point.getOccupied();
-	//point.SetKeysToTake(key_action1); //this..... doesn't work........ serverside......
+	if(point is null){return;}
+		CBlob@ holder=			point.getOccupied();
+		//point.SetKeysToTake(key_action1); //this..... doesn't work........ serverside......
 	if(holder is null){
 		if(soundFireLoop){
 			sprite.SetEmitSoundPaused(true);
@@ -174,6 +175,7 @@ void GunTick(CBlob@ this)
 		}
 		return;
 	}
+	
 	CInventory@ inv=	holder.getInventory();
 	CPlayer@ player=	holder.getPlayer();
 	UpdateAngle(this);
@@ -349,6 +351,7 @@ void PlayWeaponSound(CBlob@ this,string sound)
 void Shoot(CBlob@ this)
 {
 	AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
+	if(point is null) {return;}
 	CBlob@ holder=			point.getOccupied();
 	
 	if(holder is null){
@@ -598,6 +601,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if(this.hasCommandID("cmd_gunReload") && cmd == this.getCommandID("cmd_gunReload")) {
 		AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder= 			point.getOccupied();
 		if(holder is null) {
 			return;

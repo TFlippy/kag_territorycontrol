@@ -329,9 +329,12 @@ void onTick(CBlob@ this)
 										if(newBlob !is null){
 											newBlob.server_SetPlayer(player);
 											AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
-											this.server_AttachTo(newBlob,point);
-											newBlob.server_setTeamNum(blob.getTeamNum());
-											player.server_setTeamNum(blob.getTeamNum());
+											if(point !is null)
+											{
+												this.server_AttachTo(newBlob,point);
+												newBlob.server_setTeamNum(blob.getTeamNum());
+												player.server_setTeamNum(blob.getTeamNum());	
+											}
 										}
 									}
 									blob.server_Die();
@@ -448,13 +451,16 @@ void onTick(CBlob@ this)
 				
 				
 				AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
-				CBlob@ attachedBlob=	point.getOccupied();
-				if(attachedBlob !is null){
-					CPlayer@ attachedPlayer=	attachedBlob.getPlayer();
-					if(attachedPlayer !is null){
-						blob.server_SetPlayer(attachedPlayer);
+				if(point !is null)
+				{
+					CBlob@ attachedBlob=	point.getOccupied();
+					if(attachedBlob !is null){
+						CPlayer@ attachedPlayer=	attachedBlob.getPlayer();
+						if(attachedPlayer !is null){
+							blob.server_SetPlayer(attachedPlayer);
+						}
+						attachedBlob.server_Die();
 					}
-					attachedBlob.server_Die();
 				}
 				if(blob !is null){
 					blob.setVelocity(dir*12.0f);
