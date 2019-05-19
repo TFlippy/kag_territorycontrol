@@ -97,7 +97,7 @@ void onTick(CBlob@ this)
 				this.get("closest blobs", @closestBlobs);
 				if (closestBlobs.length > 0)
 				{
-					if(closestBlob[0] !is null)
+					if(closestBlobs[0] !is null)
 					{
 						server_Pickup(this, this, closestBlobs[0]);
 					}
