@@ -24,6 +24,8 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		return true;
 	}
 
+	text_out = text_in;
+	
 	///////////Lol, well you found it, feel free to look around.
 	///////////If the lines here really annoy you, just send me a message.
 	///////////If you're bunnie, then: AHAHAHAH :P
@@ -335,7 +337,6 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
         }
         
 		text_out = emptyBOI;
-
 
 		if(XORRandom(5) > 2)
 		{
