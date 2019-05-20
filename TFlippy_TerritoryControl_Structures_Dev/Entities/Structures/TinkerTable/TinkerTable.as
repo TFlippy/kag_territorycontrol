@@ -78,13 +78,13 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", 666);
 		s.spawnNothing = true;
 	}
-	{
-		ShopItem@ s = addShopItem(this, "Autonomous Activator", "$icon_automat$", "automat", "A fish-operated contraption that uses anything in its tiny hands. May be only carried around when not holding anything.");
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 3);
-		AddRequirement(s.requirements, "blob", "fishy", "Fishy", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 350);
-		s.spawnNothing = true;
-	}
+	// {
+		// ShopItem@ s = addShopItem(this, "Autonomous Activator", "$icon_automat$", "automat", "A fish-operated contraption that uses anything in its tiny hands. May be only carried around when not holding anything.");
+		// AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 3);
+		// AddRequirement(s.requirements, "blob", "fishy", "Fishy", 1);
+		// AddRequirement(s.requirements, "coin", "", "Coins", 350);
+		// s.spawnNothing = true;
+	// }
 	{
 		ShopItem@ s = addShopItem(this, "Zapthrottle Gas Extractor", "$icon_gasextractor$", "gasextractor", "A handheld air pump commonly used for cleaning, martial arts and gas cloud extraction.\n\nLeft mouse: Pull\nRight mouse: Push");
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 2);
