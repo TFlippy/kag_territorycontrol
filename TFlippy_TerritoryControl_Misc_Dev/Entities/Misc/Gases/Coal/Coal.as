@@ -27,6 +27,8 @@ void onInit(CBlob@ this)
 	// this.getSprite().setRenderStyle(RenderStyle::additive);
 	this.getSprite().SetZ(10.0f);
 
+	this.set_string("custom_explosion_sound", "shockmine_explode.ogg");
+	this.set_bool("map_damage_raycast", true);
 	this.set_u8("custom_hitter", Hitters::explosion);
 
 	this.Tag("map_damage_dirt");
@@ -39,12 +41,24 @@ void onInit(CBlob@ this)
 
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
 
-	this.server_SetTimeToDie(10 + XORRandom(10));
+	this.server_SetTimeToDie(100 + XORRandom(100));
 }
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getPosition().y < 0) this.server_Die();
+	if (getNet().isServer())
+	{
+		if (this.getPosition().y < 0) 
+		{
+			this.server_Die();
+		}
+		else if (this.isOnGround())
+		{
+			this.server_Die();
+			CBlob@ blob = server_CreateBlob("mat_coal", -1, this.getPosition());
+			blob.server_SetQuantity(1 + XORRandom(6));
+		}
+	}
 }
 
 void DoExplosion(CBlob@ this)
@@ -79,7 +93,7 @@ void DoExplosion(CBlob@ this)
 	
 	if (getNet().isClient())
 	{
-		this.getSprite().PlaySound("shockmine_explode.ogg", 0.80f, 1.10f);
+		// this.getSprite().PlaySound("shockmine_explode.ogg", 0.80f, 1.10f);
 		ShakeScreen(100, 60, this.getPosition());
 	
 		for (int i = 0; i < 8; i++)
