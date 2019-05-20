@@ -139,7 +139,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				CBlob@ carried = caller.getCarriedBlob();
 	
-				if (carried !is null && carried.getConfig() == "automat") return;
+				if (carried !is null && this !is null && carried.getConfig() == "automat") return;
 	
 				if (!this.hasAttached())
 				{

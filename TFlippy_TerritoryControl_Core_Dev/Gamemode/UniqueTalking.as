@@ -170,7 +170,8 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 					break;
 			}
 			
-			text_out = text_out.toLower().replace("c", "sh").replace("o", "hoh").replace("ing", "h...");
+			text_out = text_out.toLower().replace("c", "sh").replace("ing", "h...");
+			text_out = tempReplace("o", "hoh",text_out);
 		}
 	}
 	
@@ -234,7 +235,9 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 				break;
 		}
 		
-		text_out = text_out.toLower().replace("z", "s").replace("y", "yy").replace("e", "ee");
+		text_out = text_out.toLower().replace("z", "s");
+		text_out = tempReplace("y", "yy",text_out);
+		text_out = tempReplace("e", "ee",text_out);
 	}
 	
 	f32 stim = blob.get_f32("stimed");
@@ -375,4 +378,25 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 	// if( player.getUsername() == "TFlippy" || player.getCharacterName() == "TFlippy")if(XORRandom(100) == 0)text_out = "[If you have any problems using your TFlipppy9000, please consult your local Pirate-Rob.]";
 	
 	return true;
+}
+
+
+string tempReplace(string letterToFind, string toReplaceItWith, string context)
+{
+	string temp = "";
+	for(int a = 0; a < context.length; a++)
+	{
+		string letter = context.substr(a,1);
+		
+		if(letter == letterToFind)
+		{
+			temp += toReplaceItWith;
+		}
+		else
+		{
+			temp += letter;
+		}
+
+	}
+	return temp;
 }

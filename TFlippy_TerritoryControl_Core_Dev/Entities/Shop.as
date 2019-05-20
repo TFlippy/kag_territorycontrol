@@ -200,7 +200,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					{
 						CBlob@ crate = server_MakeCrate(blobName, s.name, s.crate_icon, caller.getTeamNum(), caller.getPosition());
 
-						if (crate !is null)
+						if (crate !is null && caller !is null)
 						{
 							if (spawnToInventory && caller.canBePutInInventory(crate))
 							{
@@ -224,11 +224,17 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							{
 								if (!blob.canBePutInInventory(caller))
 								{
-									caller.server_Pickup(blob);
+									if(caller !is null && blob !is null)
+									{
+										caller.server_Pickup(blob);
+									}
 								}
 								else if (!callerInv.isFull())
 								{
-									caller.server_PutInInventory(blob);
+									if(caller !is null && blob !is null)
+									{
+										caller.server_PutInInventory(blob);
+									}
 								}
 								// Hack: Archer Shop can force Archer to drop Arrows.
 								else if (this.getName() == "archershop" && caller.getName() == "archer")
@@ -239,7 +245,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 									if (stacks > 1)
 									{
 										CBlob@ arrowStack = caller.server_PutOutInventory("mat_arrows");
-										if (arrowStack !is null)
+										if (arrowStack !is null && caller !is null)
 										{
 											if (arrowStack.getAttachments() !is null && arrowStack.getAttachments().getAttachmentPointByName("PICKUP") !is null)
 											{
@@ -250,6 +256,38 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 												arrowStack.setPosition(caller.getPosition());
 											}
 										}
+										if(caller !is null && blob !is null)
+										{
+											caller.server_PutInInventory(blob);
+										}
+									}
+									else if (pickable)
+									{
+										if(caller !is null && blob !is null){
+											caller.server_Pickup(blob);
+										}
+									}
+								}
+								else if (pickable)
+								{
+									if(caller !is null && blob !is null)
+									{
+										caller.server_Pickup(blob);
+									}
+									
+								}
+							}
+							else
+							{
+								CBlob@ carried = caller.getCarriedBlob();
+								if(caller !is null && blob !is null)
+								{
+									if (pickable)
+									{
+										caller.server_Pickup(blob);
+									}
+									else if (blob.canBePutInInventory(caller) && !callerInv.isFull())
+									{
 										caller.server_PutInInventory(blob);
 									}
 									else if (pickable)
@@ -257,26 +295,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 										caller.server_Pickup(blob);
 									}
 								}
-								else if (pickable)
-								{
-									caller.server_Pickup(blob);
-								}
-							}
-							else
-							{
-								CBlob@ carried = caller.getCarriedBlob();
-								if (carried is null && pickable)
-								{
-									caller.server_Pickup(blob);
-								}
-								else if (blob.canBePutInInventory(caller) && !callerInv.isFull())
-								{
-									caller.server_PutInInventory(blob);
-								}
-								else if (pickable)
-								{
-									caller.server_Pickup(blob);
-								}
+								
 							}
 							@newlyMade = blob;
 						}

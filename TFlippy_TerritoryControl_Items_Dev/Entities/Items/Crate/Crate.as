@@ -449,6 +449,7 @@ void onRender(CSprite@ this)
 	if (blob.isAttached())
 	{
 		AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null ){return;}
 
 		CBlob@ holder = point.getOccupied();
 
