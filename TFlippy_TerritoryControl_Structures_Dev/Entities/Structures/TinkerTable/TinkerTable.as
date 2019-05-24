@@ -130,7 +130,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Rocket Pack", "$icon_jetpack$", "jetpack", "A small rocket-propelled backpack.\nOccupies the Torso slot.\nPress W to jump!");
+		ShopItem@ s = addShopItem(this, "Rocket Pack", "$icon_jetpack$", "jetpack", "A small rocket-propelled backpack.\nOccupies the Torso slot.\nPress Space to jump!");
 		AddRequirement(s.requirements, "blob", "mat_smallrocket", "Small Rocket", 2);
 		AddRequirement(s.requirements, "blob", "mat_oil", "Oil", 50);
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
