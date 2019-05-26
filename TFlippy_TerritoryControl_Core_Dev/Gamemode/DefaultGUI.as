@@ -64,6 +64,7 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_flashgrenade$", "FlashGrenade.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_clusterbomb$", "Material_ClusterBomb.png", Vec2f(16, 24), 0);
 		AddIconToken("$icon_dirtybomb$", "Material_DirtyBomb.png", Vec2f(16, 16), 0);
+		AddIconToken("$badgerBomb$", "badgerBomb.png", Vec2f(32, 16), 0);
 
 		AddIconToken("$mat_wood_1x$", "Materials.png", Vec2f(16, 16), 9);
 		AddIconToken("$mat_wood_10x$", "Materials.png", Vec2f(16, 16), 25);

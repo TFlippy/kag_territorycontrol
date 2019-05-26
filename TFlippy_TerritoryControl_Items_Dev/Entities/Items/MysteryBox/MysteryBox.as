@@ -28,6 +28,7 @@ LootItem@[] c_items =
 	LootItem("rocket", 1, 0, 468),
 	LootItem("scoutchicken", 1, 1, 50),
 	LootItem("badger", 1, 3, 425),
+	LootItem("badgerbomb", 1, 3, 425),
 	LootItem("mat_oil", 0, 50, 720),
 	LootItem("mat_copperingot", 0, 25, 405),
 	LootItem("mat_ironingot", 0, 25, 358),

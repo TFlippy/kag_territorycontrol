@@ -105,6 +105,16 @@ void DoExplosion(CBlob@ this)
 				blob.AddForce(dir * force);
 				
 				
+				string temp = (dir * blob.getRadius() * 70 * mod * modifier) + '';
+				if(temp == "inf")
+				{
+					blob.AddForce(dir);
+				}
+				else
+				{
+					blob.AddForce(dir * blob.getRadius() * 70 * mod * modifier);
+				}
+				
 				SetKnocked(blob, 150 * mod);
 				
 				if (server && XORRandom(100) < 12 * modifier)
