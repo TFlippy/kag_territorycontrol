@@ -28,7 +28,7 @@ LootItem@[] c_items =
 	LootItem("rocket", 1, 0, 468),
 	LootItem("scoutchicken", 1, 1, 50),
 	LootItem("badger", 1, 3, 425),
-	LootItem("badgerbomb", 1, 3, 425),
+	LootItem("badgerbomb", 1, 3, 550),
 	LootItem("mat_oil", 0, 50, 720),
 	LootItem("mat_copperingot", 0, 25, 405),
 	LootItem("mat_ironingot", 0, 25, 358),
@@ -57,6 +57,7 @@ LootItem@[] c_items =
 	LootItem("infernalstone", 1, 0, 23),
 	LootItem("scubagear", 1, 0, 500),
 	LootItem("ninjascroll", 1, 1, 250),
+	LootItem("puntgun", 1, 1, 225),
 	LootItem("juggernauthammer", 1, 1, 50),
 	LootItem("gyromat", 1, 1, 500)
 };

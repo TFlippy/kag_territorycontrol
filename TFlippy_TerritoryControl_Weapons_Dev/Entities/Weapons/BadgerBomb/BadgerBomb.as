@@ -69,7 +69,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if(cmd == this.getCommandID("start"))
 	{
-		this.addCommandID("offblast");
 
 		this.set_f32("map_damage_ratio", 0.3f);
 		this.set_f32("map_damage_radius", 62.0f);
