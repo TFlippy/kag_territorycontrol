@@ -635,7 +635,7 @@ void onTick(CMovement@ this)
 					lim = moveVars.walkSpeedInAir;
 				}
 
-				lim *= moveVars.walkFactor * Maths::Abs(walkDirection.x) * (blob.exists("gyromat_acceleration") ? ((blob.get_f32("gyromat_acceleration")-1)*0.2+1) : 1);
+				lim *= moveVars.walkFactor * Maths::Abs(walkDirection.x) * (blob.exists("gyromat_acceleration") ? ((blob.get_f32("gyromat_acceleration")-1)*0.2f+1) : 1);
 			}
 
 			Vec2f stop_force;
@@ -677,7 +677,7 @@ void onTick(CMovement@ this)
 
 			if (!isknocked && ((absx < lim) || left && greater || right && !greater))
 			{
-				force *= moveVars.walkFactor * moveVars.overallScale * 30.0f * (blob.exists("gyromat_acceleration") ? ((blob.get_f32("gyromat_acceleration")-1)*0.2+1) : 1);
+				force *= moveVars.walkFactor * moveVars.overallScale * 30.0f * (blob.exists("gyromat_acceleration") ? ((blob.get_f32("gyromat_acceleration")-1)*0.2f+1) : 1);
 				if (Maths::Abs(force) > 0.01f)
 				{
 					blob.AddForce(walkDirection * force);
