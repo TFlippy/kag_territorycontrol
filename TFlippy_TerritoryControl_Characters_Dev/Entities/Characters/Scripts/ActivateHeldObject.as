@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 
 bool ActivateBlob(CBlob@ this, CBlob@ blob, Vec2f pos, Vec2f vector, Vec2f vel)
 {
-	bool shouldthrow = true;
+	bool shouldthrow = false;
 	bool done = false;
 	if(this is null || blob is null)
 	{
@@ -73,9 +73,10 @@ bool ActivateBlob(CBlob@ this, CBlob@ blob, Vec2f pos, Vec2f vector, Vec2f vel)
 				}
 			}
 		}
-	}
+	} else if(blob.hasTag("activated"))
+		shouldthrow = true;
 
-	//throw it if it's already lit or we cant light it
+	//throw it if it's already activated and not reactivatable
 	if (getNet().isServer() && !blob.hasTag("custom throw") && shouldthrow && this.getCarriedBlob() is blob)
 	{
 		DoThrow(this, blob, pos, vector, vel);
