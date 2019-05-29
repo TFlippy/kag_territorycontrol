@@ -43,7 +43,7 @@ void RecalculateGyromats(CBlob@ this)
 				CBlob@ item = inv.getItem(i);
 				if (item !is null && item.getConfig() == "gyromat")
 				{
-					acceleration += item.get_f32("gyromat_value");
+					acceleration += (item.get_f32("gyromat_value") - 1);
 				}
 			}
 			
