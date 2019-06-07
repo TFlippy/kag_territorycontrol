@@ -142,7 +142,7 @@ void PassVote(VoteObject@ vote)
 
 	if (vote.onvotepassed is null) return;
 
-	bool outcome = vote.current_no / vote.current_yes < (1 % vote.required_percent);//refixed
+	bool outcome = vote.current_yes> vote.required_percent*(vote.current_no+vote.current_yes);//jammer did it
 	client_AddToChat(getTranslatedString("--- Vote {OUTCOME}: {YESCOUNT} vs {NOCOUNT} (out of {MAXVOTES}) ---").replace("{OUTCOME}", getTranslatedString(outcome ? "passed" : "failed")).replace("{YESCOUNT}", vote.current_yes + "").replace("{NOCOUNT}", vote.current_no + "").replace("{MAXVOTES}", vote.maximum_votes + ""), vote_message_colour());
 	vote.onvotepassed.Pass(outcome);
 }
