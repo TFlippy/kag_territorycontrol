@@ -48,11 +48,7 @@ void onTick(CBlob@ this)
 	}
 	else
 	{	
-		if (getNet().isServer())
-		{
-			// this.server_SetHealth(0.50f);
-			this.set_f32("fiksed", this.get_f32("fiksed") * 0.50f);
-		}
+		this.set_f32("fiksed", this.get_f32("fiksed") * 0.50f);
 		
 		SetKnocked(this, 90);
 		this.getSprite().PlaySound("drunk_fx4", 1.0f, this.getSexNum() == 0 ? 1.0f : 2.0f);	
