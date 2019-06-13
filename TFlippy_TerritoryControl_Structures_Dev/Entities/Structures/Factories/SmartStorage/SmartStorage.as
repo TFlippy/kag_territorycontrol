@@ -9,6 +9,7 @@ const u16 capacity = 80; //"twice" the storage cache capacity
 void onInit(CBlob@ this) {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
+	this.getShape().SetOffset(Vec2f(-1.0,-3.0));
 	this.getCurrentScript().tickFrequency = 5;
 
 	this.Tag("builder always hit");
