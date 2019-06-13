@@ -95,6 +95,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_stonepile$", "StonePile.png", Vec2f(24, 40), 3);
 	AddIconToken("$icon_packer$", "Packer.png", Vec2f(24, 16), 0);
 	AddIconToken("$icon_compactor$", "Compactor.png", Vec2f(24, 32), 0);
+	AddIconToken("$icon_smartstorage$", "SmartStorage.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_inserter$", "Inserter.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_floater$", "Floater.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_treecapitator$", "Treecapitator.png", Vec2f(24, 8), 0);	
@@ -547,13 +548,13 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "smartstorage", "$icon_compactor$", "Storage\nStores a lot of resources but is only accessible via remote storage.");
+		BuildBlock b(0, "smartstorage", "$icon_smartstorage$", "Storage\nStores a lot of resources but is only accessible via remote storage.");
 		AddRequirement(b.reqs, "blob", "mat_copperingot", "Copper Ingot", 5);
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 10);
 		b.buildOnGround = true;
 		b.size.Set(24, 24);
-		blocks[3].push_back(b);
+		blocks[2].push_back(b);
 	}	
 		
 	BuildBlock[] page_3;
