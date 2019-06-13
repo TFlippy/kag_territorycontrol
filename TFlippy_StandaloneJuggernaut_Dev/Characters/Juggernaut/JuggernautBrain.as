@@ -3,6 +3,7 @@
 #define SERVER_ONLY
 
 #include "BrainCommon.as"
+#include "Knocked.as"
 #include "JuggernautCommon.as"
 
 
@@ -102,7 +103,7 @@ void AttackBlob(CBlob@ blob,CBlob @target)
 	
 	bool shouldGrab=	targetDistance<30.0f;
 	if(!target.isKeyPressed(key_action1)) {
-		shouldGrab=		shouldGrab && (target.get_u8("knocked")>0 || target.getHealth()<=1.25f && XORRandom(3)!=0);
+		shouldGrab=		shouldGrab && (getKnocked(target) > 0 || target.getHealth()<=1.25f && XORRandom(3)!=0);
 	}
 
 	if(shouldGrab) {

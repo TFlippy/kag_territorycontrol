@@ -24,6 +24,8 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		return true;
 	}
 
+	text_out = text_in;
+	
 	///////////Lol, well you found it, feel free to look around.
 	///////////If the lines here really annoy you, just send me a message.
 	///////////If you're bunnie, then: AHAHAHAH :P
@@ -106,9 +108,9 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 	}
 	
-	if (player.getBlob() != null && player.getBlob().get_u16("drunk") > 0)
+	if (blob.get_u16("drunk") > 0)
 	{
-		if (XORRandom(100) < player.getBlob().get_u16("drunk") * 10)
+		if (XORRandom(100) < blob.get_u16("drunk") * 10)
 		{
 			switch(XORRandom(13))
 			{
@@ -168,11 +170,12 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 					break;
 			}
 			
-			text_out = text_out.toLower().replace("c", "sh").replace("o", "hoh").replace("ing", "h...");
+			text_out = text_out.toLower().replace("c", "sh").replace("ing", "h...");
+			text_out = tempReplace("o", "hoh",text_out);
 		}
 	}
 	
-	if (player.getBlob() != null && player.getBlob().get_f32("babbyed") > 0)
+	if (blob.get_f32("babbyed") > 0)
 	{
 		switch(XORRandom(13))
 		{
@@ -232,7 +235,19 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 				break;
 		}
 		
-		text_out = text_out.toLower().replace("z", "s").replace("y", "yy").replace("e", "ee");
+		text_out = text_out.toLower().replace("z", "s");
+		text_out = tempReplace("y", "yy",text_out);
+		text_out = tempReplace("e", "ee",text_out);
+	}
+	
+	f32 stim = blob.get_f32("stimed");
+	if (stim > 0)
+	{		
+		text_out = text_out.toUpper();
+		for (s32 i = 0; i < stim; i++)
+		{
+			text_out += '!';
+		}
 	}
 	
 	if (player.getUsername() == "Vamist" || player.getCharacterName() == "Vamist") 
@@ -326,7 +341,6 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
         
 		text_out = emptyBOI;
 
-
 		if(XORRandom(5) > 2)
 		{
 			switch(XORRandom(6))
@@ -364,4 +378,25 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 	// if( player.getUsername() == "TFlippy" || player.getCharacterName() == "TFlippy")if(XORRandom(100) == 0)text_out = "[If you have any problems using your TFlipppy9000, please consult your local Pirate-Rob.]";
 	
 	return true;
+}
+
+
+string tempReplace(string letterToFind, string toReplaceItWith, string context)
+{
+	string temp = "";
+	for(int a = 0; a < context.length; a++)
+	{
+		string letter = context.substr(a,1);
+		
+		if(letter == letterToFind)
+		{
+			temp += toReplaceItWith;
+		}
+		else
+		{
+			temp += letter;
+		}
+
+	}
+	return temp;
 }

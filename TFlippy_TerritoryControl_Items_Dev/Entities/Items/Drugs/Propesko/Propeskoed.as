@@ -4,8 +4,6 @@
 #include "HittersTC.as";
 #include "MakeDustParticle.as";
 
-const f32 max_time = 3.00f;
-
 void onInit(CBlob@ this)
 {
 

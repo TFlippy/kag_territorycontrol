@@ -7,6 +7,7 @@
 #include "HittersTC.as";
 #include "ShieldCommon.as";
 #include "Help.as";
+#include "Knocked.as";
 #include "Requirements.as";
 #include "SplashWater.as"
 #include "ParticleSparks.as";
@@ -328,9 +329,12 @@ void onTick(CBlob@ this)
 										if(newBlob !is null){
 											newBlob.server_SetPlayer(player);
 											AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
-											this.server_AttachTo(newBlob,point);
-											newBlob.server_setTeamNum(blob.getTeamNum());
-											player.server_setTeamNum(blob.getTeamNum());
+											if(point !is null)
+											{
+												this.server_AttachTo(newBlob,point);
+												newBlob.server_setTeamNum(blob.getTeamNum());
+												player.server_setTeamNum(blob.getTeamNum());	
+											}
 										}
 									}
 									blob.server_Die();
@@ -447,13 +451,16 @@ void onTick(CBlob@ this)
 				
 				
 				AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
-				CBlob@ attachedBlob=	point.getOccupied();
-				if(attachedBlob !is null){
-					CPlayer@ attachedPlayer=	attachedBlob.getPlayer();
-					if(attachedPlayer !is null){
-						blob.server_SetPlayer(attachedPlayer);
+				if(point !is null)
+				{
+					CBlob@ attachedBlob=	point.getOccupied();
+					if(attachedBlob !is null){
+						CPlayer@ attachedPlayer=	attachedBlob.getPlayer();
+						if(attachedPlayer !is null){
+							blob.server_SetPlayer(attachedPlayer);
+						}
+						attachedBlob.server_Die();
 					}
-					attachedBlob.server_Die();
 				}
 				if(blob !is null){
 					blob.setVelocity(dir*12.0f);
@@ -574,7 +581,7 @@ bool IsKnocked(CBlob@ blob)
 	if(!blob.exists("knocked")){
 		return false;
 	}
-	return blob.get_u8("knocked")>0;
+	return getKnocked(blob) > 0;
 }
 /*void DrawLine(CSprite@ this, u8 index, Vec2f startPos, f32 length, f32 angleOffset, bool flip)
 {

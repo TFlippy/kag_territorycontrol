@@ -36,6 +36,8 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+
 	if (getNet().isServer())
 	{
 		CBlob@[] blobs;

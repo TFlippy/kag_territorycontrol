@@ -41,7 +41,7 @@ void onTick(CBlob@ this)
 		
 		this.set_f32("irradiation", irradiation);
 		
-		this.setInventoryName("Mithril Breeder\nIrradiation: " + Maths::Round(irradiation) + " / " + max_irradiation);
+		this.setInventoryName("Mithril Reactor\nIrradiation: " + Maths::Round(irradiation) + " / " + max_irradiation);
 		
 		if (irradiation > max_irradiation * 0.50f)
 		{

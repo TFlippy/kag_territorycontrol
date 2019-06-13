@@ -77,7 +77,7 @@ void onTick(CBlob@ this)
 void MakeParticle(CBlob@ this, float magnitude)
 {
 	if (!getNet().isClient()) return;
-	CParticle@ p = ParticleAnimated(CFileMatcher("FalloutGas").getFirst(), this.getPosition() + getRandomVelocity(0, magnitude, 360), Vec2f(), float(XORRandom(360)), 1.00f + (magnitude * (XORRandom(100) / 100.0f)), 3 + (3 * magnitude), -0.05f, false);
+	CParticle@ p = ParticleAnimated(CFileMatcher("FalloutGas.png").getFirst(), this.getPosition() + getRandomVelocity(0, magnitude, 360), Vec2f(), float(XORRandom(360)), 1.00f + (magnitude * (XORRandom(100) / 100.0f)), 3 + (3 * magnitude), -0.05f, false);
 	if (p !is null)
 	{
 		p.setRenderStyle(RenderStyle::additive);

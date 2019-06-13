@@ -5,6 +5,7 @@ void onInit(CBlob@ this)
 {
 	this.maxQuantity = 50;
 	this.Tag("dangerous");
+	this.Tag("mat_gas");
 }
 
 void DoExplosion(CBlob@ this)

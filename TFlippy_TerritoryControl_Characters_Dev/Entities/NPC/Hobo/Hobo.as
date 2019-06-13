@@ -94,7 +94,8 @@ const string[] textsDanger =
 	"damn right innit?",
 	"wanna fight ya cunt?",
 	"sit on ya arse",
-	"ill bash ye fookin ead in i sware on me mum"
+	"ill bash ye fookin ead in i sware on me mum",
+	"ow shid"
 };
 
 const string[] textsWon = 
@@ -135,7 +136,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("traderChat");
 
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
-	this.set_Vec2f("shop menu size", Vec2f(3, 3));
+	this.set_Vec2f("shop menu size", Vec2f(5, 3));
 	this.set_string("shop description", name + " the Hobo");
 	this.setInventoryName(name + " the Hobo");
 	this.set_u8("shop icon", 25);
@@ -274,6 +275,16 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "some retarded shite", "$icon_oof$", "oof", "it's a rake or some stuff now get the fuck out before i gouge your eyes out");
 		AddRequirement(s.requirements, "coin", "", "Coins", 1 + rand.NextRanged(1000));
 		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 40)
+	{
+		ShopItem@ s = addShopItem(this, "crackhead's chemistry kit", "$icon_minidruglab$", "minidruglab", "unstable pile of shit");
+		AddRequirement(s.requirements, "coin", "", "Coins", 250 + rand.NextRanged(1000));
+		s.spawnNothing = true;
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 2;
 	}
 	
 	if (getNet().isServer())
@@ -450,7 +461,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 				if (name == "oof" && getNet().isServer()) this.server_SetHealth(0.5f);
 				
-				if (blob is null) return;
+				if (blob is null || callerBlob is null) return;
 			   
 				if (!blob.canBePutInInventory(callerBlob))
 				{

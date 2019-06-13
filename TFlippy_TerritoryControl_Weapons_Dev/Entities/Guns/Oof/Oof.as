@@ -51,11 +51,12 @@ void onTick(CBlob@ this)
 		UpdateAngle(this);
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder = point.getOccupied();
 
 		if (holder is null) return;
 
-		if (holder.get_u8("knocked") <= 0)
+		if (getKnocked(holder) <= 0)
 		{
 			CSprite@ sprite = this.getSprite();
 			const bool lmb = holder.isKeyPressed(key_action1) || point.isKeyPressed(key_action1);

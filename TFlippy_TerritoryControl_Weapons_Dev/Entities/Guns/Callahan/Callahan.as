@@ -99,16 +99,19 @@ void onTick(CBlob@ this)
 				f32 factor = dist / radius;
 			
 				AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-				CBlob@ holder = point.getOccupied();
-				if (holder !is null)
+				if(point !is null)
 				{
-					CPlayer@ ply = holder.getPlayer();
-					if (ply !is null && ply.isMyPlayer())
+					CBlob@ holder = point.getOccupied();
+					if (holder !is null)
 					{
-						Vec2f spos = driver.getScreenPosFromWorldPos(bpos);
-						Vec2f sdir = (controls.getMouseScreenPos() - spos);
-					
-						controls.setMousePosition(controls.getMouseScreenPos() - (sdir * 0.75f));
+						CPlayer@ ply = holder.getPlayer();
+						if (ply !is null && ply.isMyPlayer())
+						{
+							Vec2f spos = driver.getScreenPosFromWorldPos(bpos);
+							Vec2f sdir = (controls.getMouseScreenPos() - spos);
+						
+							controls.setMousePosition(controls.getMouseScreenPos() - (sdir * 0.75f));
+						}
 					}
 				}
 

@@ -1,6 +1,7 @@
 #include "Hitters.as";
 #include "HittersTC.as";
 #include "MakeMat.as";
+#include "Knocked.as";
 
 f32 maxDistance = 400;
 const int mothrildelay = 6; //less value -> faster
@@ -41,11 +42,12 @@ void onTick(CBlob@ this)
 		UpdateAngle(this);
 	
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder = point.getOccupied();
 		
 		if (holder is null) return;
 
-		if (holder.get_u8("knocked") <= 0)
+		if (getKnocked(holder) <= 0)
 		{
 			CSprite@ sprite = this.getSprite();
 		

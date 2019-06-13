@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "HittersTC.as";
+#include "Knocked.as";
 
 void onInit(CBlob@ this)
 {
@@ -34,7 +35,7 @@ void onTick(CBlob@ this)
 			return;
 		}
 		
-		if (holder.get_u8("knocked") <= 0)
+		if (getKnocked(holder) <= 0)
 		{		
 			if (point.isKeyJustPressed(key_action1))
 			{
@@ -53,7 +54,7 @@ void onTick(CBlob@ this)
 							if (blob.getConfig() == "slave") knock = 45 + (1.0f - (blob.getHealth() / blob.getInitialHealth())) * (30 + XORRandom(50)) * 4.0f;
 							else knock = 35 + (1.0f - (blob.getHealth() / blob.getInitialHealth())) * (30 + XORRandom(50));
 						
-							blob.set_u8("knocked", knock);
+							SetKnocked(blob, knock);
 							
 							// if (getNet().isClient())
 							// {

@@ -165,8 +165,9 @@ void GunTick(CBlob@ this)
 		return;
 	}
 	AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
-	CBlob@ holder=			point.getOccupied();
-	//point.SetKeysToTake(key_action1); //this..... doesn't work........ serverside......
+	if(point is null){return;}
+		CBlob@ holder=			point.getOccupied();
+		//point.SetKeysToTake(key_action1); //this..... doesn't work........ serverside......
 	if(holder is null){
 		if(soundFireLoop){
 			sprite.SetEmitSoundPaused(true);
@@ -174,6 +175,7 @@ void GunTick(CBlob@ this)
 		}
 		return;
 	}
+	
 	CInventory@ inv=	holder.getInventory();
 	CPlayer@ player=	holder.getPlayer();
 	UpdateAngle(this);
@@ -349,6 +351,7 @@ void PlayWeaponSound(CBlob@ this,string sound)
 void Shoot(CBlob@ this)
 {
 	AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
+	if(point is null) {return;}
 	CBlob@ holder=			point.getOccupied();
 	
 	if(holder is null){
@@ -492,7 +495,7 @@ void DoRecoil(CBlob@ this, CBlob@ holder)
 	Driver@ driver = getDriver();
 
 	const f32 deg2rad = 3.14f / 180.0f;
-	const f32 modifier = this.get_f32("gun_fireDamage");
+	const f32 modifier = this.get_f32("gun_fireDamage") ;
 	const f32 dampener = ((holder.isKeyPressed(key_down) || this.isKeyPressed(key_down)) ? 0.05f : 1.00f);
 	
 	// print("" + dampener);
@@ -598,6 +601,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if(this.hasCommandID("cmd_gunReload") && cmd == this.getCommandID("cmd_gunReload")) {
 		AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder= 			point.getOccupied();
 		if(holder is null) {
 			return;
@@ -631,7 +635,7 @@ void StartReload(CBlob@ this,CInventory@ inv,string ammoItem,u32 clip,u32 clipSi
 		this.set_bool("gun_doReload",true);
 	}else{
 		//clipless shotgun-like reload
-		f32 takenAmmo=TakeAmmo(inv,ammoItem,1);
+		f32 takenAmmo=TakeAmmo(inv,ammoItem,this.get_f32("gun_ammoUsage"));
 		if(takenAmmo>0) {
 			this.set_u32("gun_readyTime",getGameTime()+this.get_u32("gun_reloadTime"));
 			this.set_u32("gun_ammoToGive",1);

@@ -96,7 +96,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @bt)
 		bool sleeping = bt.read_bool();
 		
 		this.set_bool("sleeper_sleeping", sleeping);
-		this.set_u8("knocked", 0);
+		SetKnocked(this, 0);
 		this.Untag("dazzled");
 		
 		CSprite@ sprite = this.getSprite();

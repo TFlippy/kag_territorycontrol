@@ -14,13 +14,7 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	// find blobs with seats
-	if (this.isKeyJustPressed(key_down) &&
-	        !this.isAttached() &&
-	        !this.isKeyPressed(key_action1) &&
-	        !this.isKeyPressed(key_action2) &&
-	        !this.isKeyPressed(key_action3) &&
-	        !this.isKeyPressed(key_left) &&
-	        !this.isKeyPressed(key_right))
+	if (this.isKeyJustPressed(key_down) && !this.isAttached() && !this.isKeyPressed(key_action1) && !this.isKeyPressed(key_action2) &&!this.isKeyPressed(key_action3) && !this.isKeyPressed(key_left) && !this.isKeyPressed(key_right))
 	{
 		CBlob@[] blobsInRadius;
 		this.getMap().getBlobsInRadius(this.getPosition(), this.getRadius() * 1.5f + 25.0f, @blobsInRadius);

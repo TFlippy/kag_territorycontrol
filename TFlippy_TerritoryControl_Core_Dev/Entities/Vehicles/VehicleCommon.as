@@ -882,29 +882,31 @@ void Vehicle_onAttach(CBlob@ this, VehicleInfo@ v, CBlob@ attached, AttachmentPo
 
 void Vehicle_onDetach(CBlob@ this, VehicleInfo@ v, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
-	if (attachedPoint.name == "MAG")
+	if (attachedPoint !is null && v !is null && detached !is null)
 	{
-		attachedPoint.offset = v.mag_offset;
-	}
-
-	// jump out - needs to be synced so do here
-
-	if (detached.hasTag("player") && attachedPoint.socket)
-	{
-
-		// Fires on detach. Blame Fuzzle.
-		if (attachedPoint.name == "GUNNER" && v.charge > 0)
+		if (attachedPoint.name == "MAG")
 		{
-			CBitStream params;
-			params.write_u16(detached.getNetworkID());
-			params.write_u8(v.charge);
-			this.SendCommand(this.getCommandID("fire"), params);
+			attachedPoint.offset = v.mag_offset;
 		}
 
-		detached.setPosition(detached.getPosition() + Vec2f(0.0f, -4.0f));
-		detached.setVelocity(v.out_vel);
-		detached.IgnoreCollisionWhileOverlapped(null);
-		this.IgnoreCollisionWhileOverlapped(null);
+		// jump out - needs to be synced so do here
+
+		if (detached.hasTag("player") && attachedPoint.socket)
+		{
+			if (attachedPoint.name == "GUNNER" && v.charge > 0)
+			{
+				CBitStream params;
+				params.write_u16(detached.getNetworkID());
+				params.write_u8(v.charge);
+				this.SendCommand(this.getCommandID("fire"), params);
+			}
+
+			detached.setPosition(detached.getPosition() + Vec2f(0.0f, -4.0f));
+			// detached.setVelocity(v.out_vel);
+			detached.setVelocity(Vec2f(0, 0));
+			detached.IgnoreCollisionWhileOverlapped(null);
+			this.IgnoreCollisionWhileOverlapped(null);
+		}
 	}
 }
 

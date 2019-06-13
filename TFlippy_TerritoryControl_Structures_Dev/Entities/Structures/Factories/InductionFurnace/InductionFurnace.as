@@ -48,6 +48,8 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+
 	for (int i = 0; i < 4; i++)
 	{
 		if (this.hasBlob(matNames[i], matRatio[i]))

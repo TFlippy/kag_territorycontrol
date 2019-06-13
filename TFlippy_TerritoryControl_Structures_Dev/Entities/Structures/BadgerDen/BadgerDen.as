@@ -162,7 +162,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 				
-				if (blob is null) return;
+				if (blob is null && callerBlob is null) return;
 			   
 				if (!blob.canBePutInInventory(callerBlob))
 				{

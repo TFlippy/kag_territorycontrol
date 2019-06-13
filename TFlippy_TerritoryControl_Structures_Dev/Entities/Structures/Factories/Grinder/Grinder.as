@@ -80,10 +80,6 @@ void onTick(CBlob@ this)
 		consts.collidable = true;
 	}
 
-
-	
-	// this.getCurrentScript().tickFrequency = 1;
-	
 	CBlob@[] blobs;
 	if (getMap().getBlobsInBox(this.getPosition() + Vec2f(-8, -3), this.getPosition() + Vec2f(8, 3), @blobs))
 	{

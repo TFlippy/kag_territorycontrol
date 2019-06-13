@@ -32,7 +32,7 @@ void onTick(CBlob@ this)
 {
 	if (getNet().isServer() && this.getPosition().y < 0) this.server_Die();
 
-	MakeParticle(this, "FalloutGas");
+	MakeParticle(this, "FalloutGas.png");
 	f32 radius = 128;
 
 	// SetScreenFlash(240, 16, 40, 8);	
