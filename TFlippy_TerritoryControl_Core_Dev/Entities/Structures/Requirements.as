@@ -178,8 +178,10 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 				}
 			}
 			getBlobsByTag("smart_storage", @smartStorageBlobs);
-			for (int i = 0; i< smartStorageBlobs.length; i++) {
-				if (smartStorageBlobs[i].getTeamNum() != playerTeam) {
+			for (int i = 0; i< smartStorageBlobs.length; i++)
+			{
+				if (smartStorageBlobs[i].getTeamNum() != playerTeam)
+				{
 					smartStorageBlobs.erase(i);
 					i--;
 				}
@@ -206,7 +208,8 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 	{
 		ReadRequirement(bs,req,blobName,friendlyName,quantity);
 
-		if(req=="blob") {
+		if(req=="blob")
+		{
 			int sum=(inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0)+(inv2 !is null ? inv2.getBlob().getBlobCount(blobName) : 0);
 			
 			if (storageEnabled)
@@ -225,7 +228,8 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 				AddRequirement(missingBs,req,blobName,friendlyName,quantity);
 				has=false;
 			}
-		}else if(req=="coin") 
+		}
+		else if(req=="coin") 
 		{
 			CPlayer@ player1=	inv1 !is null ? inv1.getBlob().getPlayer() : null;
 			CPlayer@ player2=	inv2 !is null ? inv2.getBlob().getPlayer() : null;
@@ -241,15 +245,19 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 			int teamNum=inv1.getBlob().getTeamNum();
 			int count=	0;
 			CBlob@[] blobs;
-			if(getBlobsByName(blobName,@blobs)) {
-				for(uint step=0; step<blobs.length; ++step) {
+			if(getBlobsByName(blobName,@blobs))
+			{
+				for(uint step=0; step<blobs.length; ++step)
+				{
 					CBlob@ blob=blobs[step];
-					if(blob.getTeamNum()==teamNum) {
+					if(blob.getTeamNum()==teamNum)
+					{
 						count++;
 					}
 				}
 			}
-			if((req=="no more" && count >= quantity) || (req=="no less" && count<quantity)) {
+			if((req=="no more" && count >= quantity) || (req=="no less" && count<quantity))
+			{
 				AddRequirement(missingBs,req,blobName,friendlyName,quantity);
 				has=false;
 			}
@@ -282,7 +290,8 @@ bool hasRequirements(CInventory@ inv,CBitStream &inout bs,CBitStream &inout miss
 
 void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs)
 {
-	if(!getNet().isServer()) {
+	if(!getNet().isServer())
+	{
 		return;
 	}
 
@@ -324,8 +333,10 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 				}
 			}
 			getBlobsByTag("smart_storage", @smartStorageBlobs);
-			for (int i = 0; i < smartStorageBlobs.length; i++) {
-				if (smartStorageBlobs[i].getTeamNum() != playerTeam) {
+			for (int i = 0; i < smartStorageBlobs.length; i++)
+			{
+				if (smartStorageBlobs[i].getTeamNum() != playerTeam)
+				{
 					smartStorageBlobs.erase(i);
 					i--;
 				}
@@ -377,8 +388,10 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 					// print("loop taken " + taken);
 				}
 				u32 newtaken;
-				for (int i = 0; i < smartStorageBlobs.length; i++) {
-					if (taken >= quantity) {
+				for (int i = 0; i < smartStorageBlobs.length; i++)
+				{
+					if (taken >= quantity)
+					{
 						break;
 					}
 					newtaken = smartStorageTake(smartStorageBlobs[i], blobName, quantity-taken);
