@@ -21,16 +21,13 @@ u32 smartStorageTake(CBlob@ this, string iname, u32 amount)
 	u16 prevstacks = (am-1)/mq+1; //round up
 	if(amount >= am)
 	{
-//		print("Removing "+prevstacks);
 		cur_quantity -= prevstacks;
-		//inventory.delete(iname); //bugged
 		amount -= am;
 		am = 0;
 		inventory.set(iname, am);
 	}
 	else
 	{
-//		print("Here");
 		am -= amount;
 		amount = 0;
 		inventory.set(iname, am);
@@ -42,8 +39,10 @@ u32 smartStorageTake(CBlob@ this, string iname, u32 amount)
 }
 
 // KAG's CBlob.Sync() is nonfunctional shit <- ???
-void server_Sync(CBlob@ this, string iname, u32 new_amount, u16 max_quantity, u16 new_quantity) {
-	if (getNet().isServer()) {
+void server_Sync(CBlob@ this, string iname, u32 new_amount, u16 max_quantity, u16 new_quantity)
+{
+	if (getNet().isServer())
+	{
 		CBitStream stream;
 		stream.write_string(iname);
 		stream.write_u32(new_amount);

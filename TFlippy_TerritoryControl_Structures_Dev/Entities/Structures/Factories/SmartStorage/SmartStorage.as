@@ -1,9 +1,11 @@
 #include "SmartStorageHelpers.as";
 
-void onInit(CSprite@ this) {
+void onInit(CSprite@ this)
+{
 	this.SetZ(-60);
 	CSpriteLayer@ indicator = this.addSpriteLayer("indicator","indicator.png", 5, 6);
-	if(indicator !is null) {
+	if(indicator !is null)
+	{
 		{
 			indicator.addAnimation("default", 0, false);
 			int[] frames = {0, 1, 2, 3, 4, 5, 6};
@@ -19,7 +21,8 @@ void onInit(CSprite@ this) {
 
 const u16 capacity = 80; //"twice" the storage cache capacity
 
-void onInit(CBlob@ this) {
+void onInit(CBlob@ this)
+{
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
 	this.getShape().SetOffset(Vec2f(-1.0,-3.0));
@@ -38,20 +41,25 @@ void onInit(CBlob@ this) {
 	//this.addCommandID("smart_storage_debug");
 }
 
-void client_UpdateName(CBlob@ this) {
-	if (getNet().isClient()) {
+void client_UpdateName(CBlob@ this)
+{
+	if (getNet().isClient())
+	{
 		this.setInventoryName("Smart storage\n(" + this.get_u16("smart_storage_quantity")*100.00f/capacity + "% full)");
 	}
 	CSpriteLayer@ indicator = this.getSprite().getSpriteLayer("indicator");
-	if(indicator !is null) {
+	if(indicator !is null)
+	{
 		indicator.SetFrameIndex(Maths::Ceil(this.get_u16("smart_storage_quantity")*6.0f/capacity));
 	}
 }
 
-void onCollision(CBlob@ this, CBlob@ blob, bool solid) {
+void onCollision(CBlob@ this, CBlob@ blob, bool solid)
+{
 	if (blob is null) return;
 	
-	if (!blob.isAttached() && (blob.hasTag("material") || blob.hasTag("hopperable"))) {
+	if (!blob.isAttached() && (blob.hasTag("material") || blob.hasTag("hopperable")))
+	{
 		dictionary@ inventory;
 		this.get("smart_inventory", @inventory);
 		u16 amount = blob.getQuantity();
@@ -60,56 +68,48 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid) {
 		int64 held_resource_amount;
 		u16 quantity = this.get_u16("smart_storage_quantity");
 		if(quantity<capacity) {
-			if(!inventory.get(iname,held_resource_amount) || held_resource_amount==0) {
+			if(!inventory.get(iname,held_resource_amount) || held_resource_amount==0)
+			{
 				held_resource_amount = 0;
 				quantity += 1;
 			}
 			u16 prevstacks = (held_resource_amount-1)/maxquantity+1; //round up
 			held_resource_amount += amount;
 			if(prevstacks<(held_resource_amount-1)/maxquantity+1) quantity += 1; //round up again
-//			print("Adding "+iname+":"+amount+", from "+prevstacks+" to "+((held_resource_amount-1)/maxquantity+1)+"->"+quantity);
 			blob.server_Die();
 			this.set_u16("smart_storage_quantity", quantity);
-		} else if (quantity==capacity) {
+		}
+		else if (quantity==capacity)
+		{
 			if(!inventory.get(iname,held_resource_amount)) held_resource_amount = 0;
 			int64 to_add = (maxquantity-held_resource_amount)%maxquantity;
 			if(to_add<0) to_add+=maxquantity;
-//			print("maxquantity: "+maxquantity);
-//			print("held_resource_amount: "+held_resource_amount);
-//			print("to_add: "+to_add);
-			if(amount<to_add) {
+			if(to_add==0) return;
+			if(amount<to_add)
+			{
 				held_resource_amount += amount;
 				blob.server_Die();
-			} else {
+			}
+			else
+			{
 				held_resource_amount += to_add;
 				blob.server_SetQuantity(amount-to_add);
 			}
-		} else {
-			return;
 		}
+		else return;
 		inventory.set(iname,held_resource_amount);
 		dictionary@ mq;
 		this.get("smart_inventory_max_quantities",@mq);
 		mq.set(iname,maxquantity);
 		server_Sync(this, iname, held_resource_amount, maxquantity, quantity);
-		if (getNet().isClient()) {
-			this.getSprite().PlaySound("bridge_open.ogg");
-		}
+		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
 }
 
-/*void GetButtonsFor( CBlob@ this, CBlob@ caller ) {
-	CBitStream params;
-	params.write_u16(caller.getNetworkID());
-
-	CButton@ button_debug = caller.CreateGenericButton(20, Vec2f(0, 0), this, this.getCommandID("smart_storage_debug"), "debug", params);
-	if (button_debug !is null) {
-		button_debug.SetEnabled(this.get_u16("smart_storage_quantity") > 0);
-	}
-}*/
-
-void onCommand(CBlob@ this, u8 cmd, CBitStream@ params) {
-	if (cmd == this.getCommandID("smart_storage_sync")) {
+void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
+{
+	if (cmd == this.getCommandID("smart_storage_sync"))
+	{
 		if (getNet().isClient())
 		{
 			string iname = params.read_string();
@@ -129,36 +129,27 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params) {
 			client_UpdateName(this);
 		}
 	}
-/*	else if (cmd == this.getCommandID("smart_storage_debug")) {
-		CBlob@ caller = getBlobByNetworkID(params.read_u16());
-		print("quantity: "+this.get_u16("smart_storage_quantity"));
-
-		dictionary@ inventory;
-		this.get("smart_inventory", @inventory);
-		array<string>@ kkeys=inventory.getKeys();
-		for(uint8 i=0; i<kkeys.length;i+=1) {
-			string toprint = kkeys[i];
-			int64 am;
-			inventory.get(toprint,am);
-			print(toprint+": "+am);
-		}
-	}*/
 }
 
-void onDie(CBlob@ this) {
+void onDie(CBlob@ this)
+{
 	u16 overall_quantity = this.get_u16("smart_storage_quantity");
-	if (getNet().isServer() && overall_quantity > 0) {
+	if (getNet().isServer() && overall_quantity > 0)
+	{
 		const u8 team = this.getTeamNum();
 		const Vec2f pos = this.getPosition();
 		dictionary@ inventory;
 		this.get("smart_inventory", @inventory);
 		array<string>@ inames = inventory.getKeys();
 		int64 cur_quantity;
-		for(uint8 i=0; i<inames.length;++i) {
+		for(uint8 i=0; i<inames.length;++i)
+		{
 			inventory.get(inames[i],cur_quantity);
-			while (cur_quantity > 0) {
+			while (cur_quantity > 0)
+			{
 				CBlob@ blob = server_CreateBlob(inames[i], team, pos);
-				if (blob !is null) {
+				if (blob !is null)
+				{
 					u32 quantity = Maths::Min(cur_quantity, blob.getMaxQuantity());
 					cur_quantity = Maths::Max(cur_quantity - quantity, 0);
 									
