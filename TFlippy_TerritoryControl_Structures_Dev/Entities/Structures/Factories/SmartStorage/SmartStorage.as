@@ -1,7 +1,20 @@
 #include "SmartStorageHelpers.as";
 
 void onInit(CSprite@ this) {
-	this.SetZ(-50);
+	this.SetZ(-60);
+	CSpriteLayer@ indicator = this.addSpriteLayer("indicator","indicator.png", 5, 6);
+	if(indicator !is null) {
+		{
+			indicator.addAnimation("default", 0, false);
+			int[] frames = {0, 1, 2, 3, 4, 5, 6};
+			indicator.animation.AddFrames(frames);
+		}
+		indicator.ScaleBy(Vec2f(0.95,0.95));
+		indicator.SetOffset(Vec2f(-5.3f,-2.3f));
+		indicator.SetRelativeZ(1);
+		indicator.SetVisible(true);
+		indicator.setRenderStyle(RenderStyle::normal);
+	}
 }
 
 const u16 capacity = 80; //"twice" the storage cache capacity
@@ -29,6 +42,10 @@ void client_UpdateName(CBlob@ this) {
 	if (getNet().isClient()) {
 		this.setInventoryName("Smart storage\n(" + this.get_u16("smart_storage_quantity")*100.00f/capacity + "% full)");
 	}
+	CSpriteLayer@ indicator = this.getSprite().getSpriteLayer("indicator");
+	if(indicator !is null) {
+		indicator.SetFrameIndex(Maths::Ceil(this.get_u16("smart_storage_quantity")*6.0f/capacity));
+	}
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid) {
@@ -55,7 +72,11 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid) {
 			this.set_u16("smart_storage_quantity", quantity);
 		} else if (quantity==capacity) {
 			if(!inventory.get(iname,held_resource_amount)) held_resource_amount = 0;
-			u16 to_add = (maxquantity-held_resource_amount)%maxquantity;
+			int64 to_add = (maxquantity-held_resource_amount)%maxquantity;
+			if(to_add<0) to_add+=maxquantity;
+//			print("maxquantity: "+maxquantity);
+//			print("held_resource_amount: "+held_resource_amount);
+//			print("to_add: "+to_add);
 			if(amount<to_add) {
 				held_resource_amount += amount;
 				blob.server_Die();
