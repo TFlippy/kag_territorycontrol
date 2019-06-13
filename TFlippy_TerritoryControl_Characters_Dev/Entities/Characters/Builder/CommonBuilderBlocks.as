@@ -548,11 +548,11 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	}
 	{
 		BuildBlock b(0, "smartstorage", "$icon_compactor$", "Storage\nStores a lot of resources but is only accessible via remote storage.");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
-		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 15);
+		AddRequirement(b.reqs, "blob", "mat_copperingot", "Copper Ingot", 5);
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
+		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 10);
 		b.buildOnGround = true;
-		b.size.Set(24, 32);
+		b.size.Set(24, 24);
 		blocks[3].push_back(b);
 	}	
 		
