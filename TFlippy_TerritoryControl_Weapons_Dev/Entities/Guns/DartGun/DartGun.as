@@ -36,67 +36,85 @@ void onTick(CBlob@ this)
 
 		if (holder is null) return;
 
+		bool error = false;
+		
 		if (getKnocked(holder) <= 0)
 		{
 			CSprite@ sprite = this.getSprite();
 
-			const bool lmb = holder.isKeyPressed(key_action1) || point.isKeyPressed(key_action1);
-			if (lmb && getGameTime() >= this.get_u32("nextShoot"))
+			const bool lmb = holder.isKeyJustPressed(key_action1) || point.isKeyJustPressed(key_action1);
+			if (lmb)
 			{
-				CBlob@ ammoBlob = GetAmmoBlob(this);
-				if (ammoBlob !is null)
+				if (getGameTime() >= this.get_u32("nextShoot"))
 				{
-					Vec2f aimDir = holder.getAimPos() - this.getPosition();
-					aimDir.Normalize();
-
-					Vec2f hitPos;
-					f32 length;
-					bool flip = this.isFacingLeft();
-					f32 angle =	this.getAngleDegrees();
-					Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
-					Vec2f startPos = this.getPosition();
-					Vec2f endPos = startPos + dir * maxDistance;
-
-					getMap().rayCastSolid(startPos, endPos, hitPos);
-
-					length = (hitPos - startPos).Length() + 8;
-					this.set_u32("nextShoot", getGameTime() + delay);
-
-					HitInfo@[] blobs;
-					if (getMap().getHitInfosFromRay(startPos, angle + (flip ? 180 : 0), maxDistance, holder, blobs))
+					CBlob@ ammoBlob = GetAmmoBlob(this);
+					if (ammoBlob !is null)
 					{
-						for (int i = 0; i < blobs.length; i++)
-						{
-							CBlob@ b = blobs[i].blob;
-							if (b !is null && b !is holder && b.hasTag("flesh"))
-							{
-								if (isServer())
-								{
-									this.server_Hit(b, b.getPosition(), dir, damage, Hitters::arrow, true);
-								
-									CBitStream stream;
-									stream.write_u16(b.getNetworkID());
-									ammoBlob.SendCommand(ammoBlob.getCommandID("consume"), stream);
-								}
+						Vec2f aimDir = holder.getAimPos() - this.getPosition();
+						aimDir.Normalize();
 
-								if (isClient())
+						Vec2f hitPos;
+						f32 length;
+						bool flip = this.isFacingLeft();
+						f32 angle =	this.getAngleDegrees();
+						Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
+						Vec2f startPos = this.getPosition();
+						Vec2f endPos = startPos + dir * maxDistance;
+
+						getMap().rayCastSolid(startPos, endPos, hitPos);
+
+						length = (hitPos - startPos).Length() + 8;
+						this.set_u32("nextShoot", getGameTime() + delay);
+
+						HitInfo@[] blobs;
+						if (getMap().getHitInfosFromRay(startPos, angle + (flip ? 180 : 0), maxDistance, holder, blobs))
+						{
+							for (int i = 0; i < blobs.length; i++)
+							{
+								CBlob@ b = blobs[i].blob;
+								if (b !is null && b !is holder && b.hasTag("flesh"))
 								{
-									Sound::Play("DartGun_Hit.ogg", b.getPosition(), 1.00f, 1.00f);
+									if (isServer())
+									{
+										this.server_Hit(b, b.getPosition(), dir, damage, Hitters::arrow, true);
+									
+										CBitStream stream;
+										stream.write_u16(b.getNetworkID());
+										ammoBlob.SendCommand(ammoBlob.getCommandID("consume"), stream);
+									}
+
+									if (isClient())
+									{
+										Sound::Play("DartGun_Hit.ogg", b.getPosition(), 1.00f, 1.00f);
+									}
+									
+									SetKnocked(b, 90);
+									length = blobs[i].distance + 8;
+									
+									break;
 								}
 								
-								SetKnocked(b, 90);
-								length = blobs[i].distance + 8;
-								
-								break;
 							}
-							
+						}
+
+						if (isClient())
+						{
+							sprite.PlaySound("DartGun_Shoot", 1.00f, 1.00f);
 						}
 					}
-
-					if (isClient())
-					{
-						sprite.PlaySound("DartGun_Shoot", 1.00f, 1.00f);
-					}
+					else error = true;
+				}
+				else error = true;
+			}
+		}
+		
+		if (error)
+		{
+			if (isClient())
+			{
+				if (holder.isMyPlayer())
+				{
+					this.getSprite().PlaySound("NoAmmo.ogg", 1, 1);
 				}
 			}
 		}

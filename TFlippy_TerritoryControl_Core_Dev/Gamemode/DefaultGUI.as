@@ -117,6 +117,7 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_scubagear$", "ScubaGear.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_radpill$", "Radpill.png", Vec2f(8, 8), 0);
 		AddIconToken("$icon_raygun$", "Raygun.png", Vec2f(24, 16), 0);
+		AddIconToken("$icon_dartgun$", "DartGun.png", Vec2f(32, 16), 0);
 		AddIconToken("$icon_jetpack$", "Jetpack.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_flippers$", "Flippers.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_minershelmet$", "MinersHelmet.png", Vec2f(16, 16), 0);
