@@ -21,7 +21,7 @@ void onInit(CBlob@ this)
 	if (!this.exists("boom_size")) this.set_f32("boom_size", 0);
 	if (!this.exists("boom_end")) this.set_f32("boom_end", 1024);
 	if (!this.exists("boom_delay")) this.set_u32("boom_delay", 10);
-	if (!this.exists("boom_increment")) this.set_u32("boom_increment", 2.00f);
+	if (!this.exists("boom_increment")) this.set_f32("boom_increment", 2.00f);
 	if (!this.exists("flash_delay")) this.set_u32("flash_delay", 0);
 	if (!this.exists("flash_distance")) this.set_f32("flash_distance", 2500);
 	if (!this.exists("custom_explosion_sound")) this.set_string("custom_explosion_sound", "Antimatter_Kaboom_Big");
@@ -32,7 +32,7 @@ void onInit(CBlob@ this)
 		f32 distance = Maths::Abs(this.getPosition().x - pos.x) / 8;
 		sound_delay = (Maths::Abs(this.getPosition().x - pos.x) / 8) / (340 * 0.4f);
 		
-		f32 length = Maths::Abs(this.get_f32("boom_size") - this.get_f32("boom_end")) / this.get_u32("boom_increment");
+		f32 length = Maths::Abs(this.get_f32("boom_size") - this.get_f32("boom_end")) / this.get_f32("boom_increment");
 		for (int i = 0; i < (this.get_f32("boom_end") / 32); i++)
 		{
 			MakeLightningParticle(this, getRandomVelocity(0, XORRandom(100) * 0.01f, 360), Maths::Min(1 + length, 8), (XORRandom(200) * 0.01f), Maths::Min((this.get_f32("boom_end") / 32) * 0.25f, (XORRandom(50) * 0.01f) * 0.50f));
@@ -225,7 +225,7 @@ void onTick(CBlob@ this)
 	if (ticks >= this.get_u32("boom_delay") && ticks % this.get_u8("boom_frequency") == 0 && this.get_f32("boom_size") < this.get_f32("boom_end"))
 	{
 		DoExplosion(this);
-		this.add_f32("boom_size", this.get_u32("boom_increment"));
+		this.add_f32("boom_size", this.get_f32("boom_increment"));
 		
 		// f32 modifier = 1.00f - (float(this.get_u8("boom_size")) / float(this.get_u8("boom_end")));
 		// this.SetLightRadius(1024.5f * modifier);
