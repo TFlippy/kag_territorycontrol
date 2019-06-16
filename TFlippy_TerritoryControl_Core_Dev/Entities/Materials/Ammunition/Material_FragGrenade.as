@@ -1,4 +1,4 @@
-void onIhit(CBlob@ this)
+void onInit(CBlob@ this)
 {
 	this.Tag("explosive");
 }
