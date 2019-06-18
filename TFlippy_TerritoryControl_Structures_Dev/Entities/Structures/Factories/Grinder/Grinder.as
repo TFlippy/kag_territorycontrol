@@ -162,13 +162,17 @@ void Blend(CBlob@ this, CBlob@ blob)
 			MakeMat(this, this.getPosition(), "mat_mithril", 	XORRandom(quantity * 0.05f));
 		}
 		
-		this.getSprite().PlaySound("rocks_explode" + (1 + XORRandom(2)) + ".ogg", 1.5f, 1.0f);
-		kill = true;
-		
-		if (XORRandom(100) < 75) 
+		if(isClient())
 		{
-			ParticleAnimated(CFileMatcher("Smoke.png").getFirst(), this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+			this.getSprite().PlaySound("rocks_explode" + (1 + XORRandom(2)) + ".ogg", 1.5f, 1.0f);
+			kill = true;
+			
+			if (XORRandom(100) < 75) 
+			{
+				ParticleAnimated(CFileMatcher("Smoke.png").getFirst(), this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+			}
 		}
+		
 	}
 	else if (blob.hasTag("flesh"))
 	{

@@ -817,9 +817,9 @@ void DoAttack(CBlob@ this,f32 damage,JuggernautInfo@ info,f32 arcDegrees,u8 type
 				if(dif < 30.0f) {
 					hasHitMap=	true;
 					
-					MakeDustParticle(tpos, "dust2.png");
 					
 					if(!getNet().isServer()) {
+						MakeDustParticle(tpos, "dust2.png");
 						continue;
 					}
 					if(map.getSectorAtPosition(tpos,"no build") !is null){

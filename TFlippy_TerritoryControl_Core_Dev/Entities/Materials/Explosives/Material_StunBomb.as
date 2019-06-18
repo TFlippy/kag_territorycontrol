@@ -76,13 +76,16 @@ void DoExplosion(CBlob@ this)
 	this.set_f32("map_damage_ratio", 0.01f);
 	
 	Explode(this, 32.0f + random, 0.2f);
-	
-	u8 len = particles.length;
-	for (int i = 0; i < 200 * modifier; i++) 
+	if(isClient())
 	{
-		Vec2f dir = getRandomVelocity(-angle, 8.5f * (XORRandom(100) * 0.01f), 100);
-		MakeParticle(this, dir, particles[XORRandom(len)]);
+		u8 len = particles.length;
+		for (int i = 0; i < 200 * modifier; i++) 
+		{
+			Vec2f dir = getRandomVelocity(-angle, 8.5f * (XORRandom(100) * 0.01f), 100);
+			MakeParticle(this, dir, particles[XORRandom(len)]);
+		}
 	}
+	
 	
 	Vec2f pos = this.getPosition() + this.get_Vec2f("explosion_offset");
 	

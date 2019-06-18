@@ -104,7 +104,7 @@ void DoExplosion(CBlob@ this)
 		// Vec2f dir = getRandomVelocity(angle, 1, 40);
 		// LinearExplosion(this, dir, 40.0f + XORRandom(64), 48.0f, 6, 0.5f, Hitters::explosion);
 	// }
-	
+	if(!isClient()){return;}
 	f32 angle = this.get_f32("bomb angle");
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
