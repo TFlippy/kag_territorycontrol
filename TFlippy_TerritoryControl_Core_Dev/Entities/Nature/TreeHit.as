@@ -3,7 +3,7 @@
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (customData != HittersTC::radiation && damage > 0.05f) //sound for all damage
+	if (customData != HittersTC::radiation && damage > 0.05f && isClient()) //sound for all damage
 	{
 		this.getSprite().PlayRandomSound("TreeChop");
 		makeGibParticle("GenericGibs", worldPoint, getRandomVelocity((this.getPosition() - worldPoint).getAngle(), 1.0f + damage, 90.0f) + Vec2f(0.0f, -2.0f),

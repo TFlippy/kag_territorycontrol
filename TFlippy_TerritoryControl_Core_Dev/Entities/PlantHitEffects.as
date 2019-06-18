@@ -19,20 +19,22 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				break;
 			
 			default:
-				if (hitterBlob !is this)
-				{
-					Sound::Play("/cut_grass", this.getPosition());
-				}
-
 				damage = Maths::Min(damage, 5);
-				
-				for (int i = 0; i < (damage + 1); ++i)
+				if(isClient())
 				{
-					makeGibParticle("GenericGibs",
-					                this.getPosition(), getRandomVelocity(-90, (Maths::Min(Maths::Max(0.5f, damage), 2.0f) * 4.0f) , 270),
-					                7, 3 + XORRandom(4), Vec2f(8, 8),
-					                1.0f, 0, "", 0);
+					if (hitterBlob !is this)
+					{
+						Sound::Play("/cut_grass", this.getPosition());
+					}
+					for (int i = 0; i < (damage + 1); ++i)
+					{
+						makeGibParticle("GenericGibs",
+										this.getPosition(), getRandomVelocity(-90, (Maths::Min(Maths::Max(0.5f, damage), 2.0f) * 4.0f) , 270),
+										7, 3 + XORRandom(4), Vec2f(8, 8),
+										1.0f, 0, "", 0);
+					}
 				}
+				
 
 				break;
 		}

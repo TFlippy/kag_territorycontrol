@@ -282,13 +282,16 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		}
 		else if (blob.getName() == "mat_mithril" && blob.getQuantity() > 25)
 		{
-			ParticleZombieLightning(this.getPosition());
-			this.getSprite().PlaySound("/BisonMad", 1.5f, 0.5f);
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBlob@ cowo = server_CreateBlob("cowo", this.getTeamNum(), this.getPosition());
 				this.server_Die();
+			}
+			else
+			{
+				ParticleZombieLightning(this.getPosition());
+				this.getSprite().PlaySound("/BisonMad", 1.5f, 0.5f);
 			}
 		}
 	}

@@ -69,8 +69,11 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 				{
 					map.server_DestroyTile(bpos, 1, this);
 				}
+				else
+				{
+					if (XORRandom(100) < 25) ParticleAnimated(CFileMatcher("SmallExplosion.png").getFirst(), bpos + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 2, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
+				}
 				
-				if (XORRandom(100) < 25) ParticleAnimated(CFileMatcher("SmallExplosion.png").getFirst(), bpos + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 2, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
 			}
 			
 			if (server)

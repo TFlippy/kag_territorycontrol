@@ -92,6 +92,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void onDie(CBlob@ this)
 {
+	if(!isClient()){return;}
 	this.getSprite().Gib();
 	Vec2f pos = this.getPosition();
 	Vec2f vel = this.getVelocity();

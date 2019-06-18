@@ -228,12 +228,14 @@ void onGib(CSprite@ this)
 		Vec2f pos = blob.getPosition();
 		Vec2f vel = blob.getVelocity();
 		f32 hp = Maths::Min(Maths::Abs(blob.getHealth()), 2.0f) + 1.5;
-		makeGibParticle(
-			blob.get_string("head texture"),
-			pos, vel + getRandomVelocity(90, hp , 30),
-			framex, framey, Vec2f(16, 16),
-			2.0f, 20, "/BodyGibFall", blob.getTeamNum()
-		);
+		if(isClient()){
+			makeGibParticle(
+				blob.get_string("head texture"),
+				pos, vel + getRandomVelocity(90, hp , 30),
+				framex, framey, Vec2f(16, 16),
+				2.0f, 20, "/BodyGibFall", blob.getTeamNum()
+			);
+		}
 	}
 }
 

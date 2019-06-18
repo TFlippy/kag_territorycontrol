@@ -364,8 +364,12 @@ void onTick(CMovement@ this)
 
 			if (dust)
 			{
-				Vec2f dust_pos = (Vec2f(right ? 4.0f : -4.0f, 0.0f) + pos);
-				MakeDustParticle(dust_pos, "Smoke.png");
+				if(isClient())
+				{
+					Vec2f dust_pos = (Vec2f(right ? 4.0f : -4.0f, 0.0f) + pos);
+					MakeDustParticle(dust_pos, "Smoke.png");
+				}
+				
 			}
 		}
 		else

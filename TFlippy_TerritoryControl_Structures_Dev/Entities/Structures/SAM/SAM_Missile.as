@@ -79,8 +79,13 @@ void onTick(CBlob@ this)
 		}
 		
 		this.set_Vec2f("direction", nDir);
+
+
+		if(isClient())
+		{
+			MakeParticle(this, -dir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
+		}
 		
-		MakeParticle(this, -dir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
 	}		
 	
 }
