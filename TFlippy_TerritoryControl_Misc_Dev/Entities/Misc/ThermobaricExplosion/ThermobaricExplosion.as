@@ -17,7 +17,7 @@ void onInit(CBlob@ this)
 	if (!this.exists("boom_size")) this.set_f32("boom_size", 0);
 	if (!this.exists("boom_end")) this.set_f32("boom_end", 256);
 	if (!this.exists("boom_delay")) this.set_u32("boom_delay", 15);
-	if (!this.exists("boom_increment")) this.set_u32("boom_increment", 4.00f);
+	if (!this.exists("boom_increment")) this.set_f32("boom_increment", 4.00f);
 	if (!this.exists("custom_explosion_sound")) this.set_string("custom_explosion_sound", "ThermobaricExplosion");
 	
 	if (getNet().isClient())
@@ -176,7 +176,7 @@ void onTick(CBlob@ this)
 	if (ticks >= this.get_u32("boom_delay") && ticks % this.get_u8("boom_frequency") == 0 && this.get_f32("boom_size") < this.get_f32("boom_end"))
 	{
 		DoExplosion(this);
-		this.add_f32("boom_size", this.get_u32("boom_increment"));
+		this.add_f32("boom_size", this.get_f32("boom_increment"));
 	}
 	
 	if (getNet().isClient())
