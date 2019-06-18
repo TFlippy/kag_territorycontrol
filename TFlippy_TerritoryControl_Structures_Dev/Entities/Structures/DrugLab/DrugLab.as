@@ -297,6 +297,24 @@ void React(CBlob@ this)
 				}
 			}
 			
+			if (heat > 2250 && hasOil && oil_count >= 25)
+			{
+				CBlob@ stim = inv.getItem("stim");
+				if (stim !is null)
+				{
+					if (getNet().isServer())
+					{
+						oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 25, 0));
+						stim.server_Die();
+						
+						Material::createFor(this, "rippio", 1 + XORRandom(2));
+					}
+					
+					ShakeScreen(100.0f, 15, this.getPosition());
+					this.getSprite().PlaySound("DrugLab_Create_Acidic.ogg", 1.00f, 1.00f);
+				}
+			}
+			
 			if (pressure < 25000 && heat > 100 && heat < 1000 && hasAcid && hasMithril && acid_count >= 15 && mithril_count >= 5)
 			{
 				if (getNet().isServer())

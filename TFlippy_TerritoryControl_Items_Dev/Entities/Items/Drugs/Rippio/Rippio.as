@@ -16,13 +16,13 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("consume"))
 	{
 		// this.getSprite().PlaySound("Huuu.ogg", 1.0f, 1.5f);
-		this.getSprite().PlaySound("uguu.ogg", 1.00f, 1.25f);
+		this.getSprite().PlaySound("Pus_Attack_0.ogg", 2.00f, 1.00f);
 
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 		if (caller !is null)
 		{
-			if (!caller.hasScript("Stimed.as")) caller.AddScript("Stimed.as");
-			caller.add_f32("stimed", 1);
+			if (!caller.hasScript("Rippioed.as")) caller.AddScript("Rippioed.as");
+			caller.set_f32("rippioed", caller.get_f32("rippioed") * 2.00f);
 			
 			if (getNet().isServer())
 			{
