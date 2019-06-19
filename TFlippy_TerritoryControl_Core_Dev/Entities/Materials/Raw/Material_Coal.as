@@ -6,7 +6,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 1;
 }
 
-const f32 dust_quantity = 6;
+const f32 dust_quantity = 20;
 
 void onTick(CBlob@ this)
 {
