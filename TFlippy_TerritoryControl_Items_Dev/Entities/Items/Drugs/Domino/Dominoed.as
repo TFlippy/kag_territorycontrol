@@ -3,6 +3,7 @@
 #include "Hitters.as";
 #include "HittersTC.as";
 #include "MakeDustParticle.as";
+#include "RgbStuff.as";
 
 const f32 max_time = 3.00f;
 
@@ -74,7 +75,7 @@ void onTick(CBlob@ this)
 		{
 			f32 invModifier = 1.00f - modifier;
 		
-			if (getKnocked(this) == 0 && XORRandom(500 * modifier) == 0)
+			if (getKnocked(this) == 0 && XORRandom(500 * modifier) <25 )
 			{
 				u8 knock = (30 + XORRandom(90)) * invModifier;
 			
@@ -93,8 +94,10 @@ void onTick(CBlob@ this)
 					
 					CCamera@ cam = getCamera();
 					cam.setRotation(rot);
-					
-					SetScreenFlash(255 * invModifier, XORRandom(3) * 25, 0, 0, 2 * invModifier);
+					int colTime = (getGameTime() % 100) * 5;
+					SColor col = RedToBlack(colTime,5 / invModifier);
+								
+					SetScreenFlash(255 * invModifier, col.getRed(), col.getGreen(), col.getBlue(), 2 * invModifier);
 					ShakeScreen(250.0f * invModifier, 1, this.getPosition());
 				}
 			}
@@ -118,7 +121,7 @@ void onTick(CBlob@ this)
 	
 		// print("" + modifier);
 		// print("" + level / max_time);
-		this.set_f32("dominoed", Maths::Max(0, this.get_f32("dominoed") - (0.0005f)));
+		//this.set_f32("dominoed", Maths::Max(0, this.get_f32("dominoed") - (0.0005f)));
 	}
 	
 	// print("" + true_level);
@@ -148,3 +151,24 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 	return damage;
 }
+
+SColor RedToBlack2(s16 time, f32 speed)
+{
+	float red = 0;
+	if(time > 255)
+	{
+		red = 255;
+		float rm = time * speed % 255;
+		red -= rm;
+	}
+	else
+	{
+		red = time * speed;
+	}
+	
+
+	return SColor(255,red,0,0);
+}
+
+
+
