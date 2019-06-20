@@ -24,10 +24,10 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getPosition().y < 0) this.server_Die();
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
+		if (this.getPosition().y < 0) {this.server_Die();}
 		Vec2f pos = this.getPosition();
 		CMap@ map = this.getMap();
 	
