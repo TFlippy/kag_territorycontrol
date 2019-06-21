@@ -47,8 +47,8 @@ class GunSettings
 		this.ammo_caliber = AmmoType::low_cal;
 		this.ammo_count_max = 20;
 		
-		this.bullet_count = 1.00f;
-		this.bullet_spread = 0;
+		this.bullet_count = 1;
+		this.bullet_spread = 0.00f;
 		
 		this.shake_modifier = 1.00f;
 		this.recoil_modifier = 1.00f;
