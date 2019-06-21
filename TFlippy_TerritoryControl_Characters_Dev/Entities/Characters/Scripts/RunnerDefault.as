@@ -139,8 +139,13 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 
 	if (attached !is null)
 	{
+		CRules@ r = getRules();
+		if(r.get_bool("log"))
+		{
+			print_log(this, "has picked up " + attached.getConfig());
+		}
 		// print_log(player.getUsername() + " (" + this.getConfig() + ", team " + this.getTeamNum() + ") has picked up " + attached.getConfig());
-		print_log(this, "has picked up " + attached.getConfig());
+		
 	}
 	
 	if (getNet().isClient())

@@ -15,7 +15,17 @@ void onInit(CRules@ this)
 	this.addCommandID("playsound");
 	this.addCommandID("startInfection");
 	this.addCommandID("endInfection");
+
+	if(isClient())
+	{
+		this.set_bool("log",false);//so no clients can get logs unless they do ~logging
+	}
+	if(isServer())
+	{
+		this.set_bool("log",true);//server always needs to log anyway
+	}
 }
+
 void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 {
 	/*ShakeScreen(64,32,tpBlob.getPosition());
@@ -744,6 +754,13 @@ bool onClientProcessChat(CRules@ this,const string& in text_in,string& out text_
 					}
 				}
 			}
+		}
+	}
+	else if(text_in=="~logging")//for some reasons ! didnt work
+	{
+		if(player.isRCON())
+		{
+			this.set_bool("log",!this.get_bool("log"));
 		}
 	}
 

@@ -9,16 +9,11 @@ void onInit(CBlob@ this)
 	this.SetFacingLeft(this.getNetworkID() % 2 == 0);
 }
 
-void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1, Vec2f point2)
-{
-
-}
-
 void onDie(CBlob@ this)
 {
 	this.getSprite().PlaySound("TreeDestruct.ogg", 1.0f, 1.0f);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < (5 + XORRandom(5)); i++)
 		{
@@ -33,17 +28,20 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 {
 	if (customData == Hitters::burn || customData == Hitters::fire) damage *= 0.05f;
 
-	if (getNet().isClient())
+	if (isClient())
 	{ 
 		this.getSprite().PlaySound("TreeChop" + (1 + XORRandom(3)) + ".ogg", 1.0f, 1.0f);
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (hitterBlob !is null)
 		{
-			MakeMat(hitterBlob, worldPoint, "mat_coal", 1 + XORRandom(3));	
-			MakeMat(hitterBlob, worldPoint, "mat_wood", 3 + XORRandom(10));	
+			if(hitterBlob.getName() != "acidgas")//way too stronk and ends up nuking the server with mat_coal
+			{
+				MakeMat(hitterBlob, worldPoint, "mat_coal", 1 + XORRandom(3));
+				MakeMat(hitterBlob, worldPoint, "mat_wood", 3 + XORRandom(10));	
+			}
 		}
 	}
 	

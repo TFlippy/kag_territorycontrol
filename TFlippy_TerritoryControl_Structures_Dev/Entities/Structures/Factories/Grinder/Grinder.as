@@ -10,7 +10,7 @@ void onInit(CSprite@ this)
 	this.SetEmitSoundVolume(0.3f);
 	this.SetEmitSoundSpeed(0.9f);
 	this.SetEmitSoundPaused(false);
-	
+	this.getCurrentScript().tickFrequency = 2;
 	CSpriteLayer@ chop_left = this.addSpriteLayer("chop_left", "/Saw.png", 16, 16);
 
 	if (chop_left !is null)
@@ -79,15 +79,21 @@ void onTick(CBlob@ this)
 		ShapeConsts@ consts = this.getShape().getConsts();
 		consts.collidable = true;
 	}
+	
 
 	CBlob@[] blobs;
-	if (getMap().getBlobsInBox(this.getPosition() + Vec2f(-8, -3), this.getPosition() + Vec2f(8, 3), @blobs))
+	if (getMap().getBlobsInRadius(this.getPosition()+Vec2f(0,-2) ,6.0f, @blobs))
 	{
 		for (uint i = 0; i < blobs.length; i++)
 		{
 			CBlob@ blob = blobs[i];
 			if (blob !is null)
 			{
+				if(blob.getName() == "grinder")
+				{
+					continue;
+				}
+
 				if (canSaw(this, blob))
 				{
 					Blend(this, blob);
@@ -101,6 +107,7 @@ void onTick(CBlob@ this)
 		}
 	}
 }
+
 
 void onTick(CSprite@ this)
 {
@@ -136,94 +143,112 @@ void Blend(CBlob@ this, CBlob@ blob)
 
 	bool kill = false;
 	const string name = blob.getName();
+	const int hash = name.getHash();
 	
-	if (name == "log")
-	{	
-		if (getNet().isServer())
-		{
-			MakeMat(this, this.getPosition(), "mat_wood", 60 + XORRandom(40));
-		}
-		
-		this.getSprite().PlaySound("SawLog.ogg", 0.8f, 0.9f);
-		kill = true;
-	}
-	else if (name == "mat_stone")
+	switch(hash)
 	{
-		if (getNet().isServer())
+		case 1062293841://log
 		{
-			u32 quantity = blob.getQuantity();
-		
-			MakeMat(this, this.getPosition(), "mat_stone", 		quantity * 0.50f + XORRandom(quantity * 0.25f));
-			MakeMat(this, this.getPosition(), "mat_concrete", 	quantity * 0.125f + XORRandom(quantity * 0.125f));
-			MakeMat(this, this.getPosition(), "mat_iron", 		XORRandom(quantity * 0.20f));
-			MakeMat(this, this.getPosition(), "mat_sulphur", 	XORRandom(quantity * 0.15f));
-			MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.03f));
-			MakeMat(this, this.getPosition(), "mat_gold",	 	XORRandom(quantity * 0.08f));
-			MakeMat(this, this.getPosition(), "mat_mithril", 	XORRandom(quantity * 0.05f));
-		}
-		
-		if(isClient())
-		{
-			this.getSprite().PlaySound("rocks_explode" + (1 + XORRandom(2)) + ".ogg", 1.5f, 1.0f);
-			kill = true;
-			
-			if (XORRandom(100) < 75) 
+			if (isServer())
 			{
-				ParticleAnimated(CFileMatcher("Smoke.png").getFirst(), this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+				MakeMat(this, this.getPosition(), "mat_wood", 60 + XORRandom(40));
+			}
+		
+			this.getSprite().PlaySound("SawLog.ogg", 0.8f, 0.9f);
+			kill = true;
+		}
+		break;
+
+		case 575725963://mat_stone
+		{
+			if (isServer())
+			{
+				u32 quantity = blob.getQuantity();
+			
+				MakeMat(this, this.getPosition(), "mat_stone", 		quantity * 0.50f + XORRandom(quantity * 0.25f));
+				MakeMat(this, this.getPosition(), "mat_concrete", 	quantity * 0.125f + XORRandom(quantity * 0.125f));
+				MakeMat(this, this.getPosition(), "mat_iron", 		XORRandom(quantity * 0.20f));
+				MakeMat(this, this.getPosition(), "mat_sulphur", 	XORRandom(quantity * 0.15f));
+				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.03f));
+				MakeMat(this, this.getPosition(), "mat_gold",	 	XORRandom(quantity * 0.08f));
+				MakeMat(this, this.getPosition(), "mat_mithril", 	XORRandom(quantity * 0.05f));
+			}
+		
+			if(isClient())
+			{
+				this.getSprite().PlaySound("rocks_explode" + (1 + XORRandom(2)) + ".ogg", 1.5f, 1.0f);
+				
+				if (XORRandom(100) < 75) 
+				{
+					ParticleAnimated(CFileMatcher("Smoke.png").getFirst(), this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+				}
+			}
+			kill = true;
+		}
+		break;
+
+		case 881918781://scythergib
+		{
+			if (isServer())
+			{
+				MakeMat(this, this.getPosition(), "mat_plasteel", 5 + XORRandom(20));
+				MakeMat(this, this.getPosition(), "mat_steelingot", 1 + XORRandom(3));
+				
+				
+			}
+			kill = true;
+		}
+		break;
+
+		case 336243301://steak
+		{
+
+			if (isServer())
+			{
+				MakeMat(this, this.getPosition(), "mat_meat", 20 + XORRandom(10));
+			}
+			
+			this.getSprite().PlaySound("SawLog.ogg", 0.8f, 1.0f);
+			kill = true;
+		}
+		break;
+
+		default:
+		{
+			if (blob.hasTag("flesh"))
+			{
+				if (getNet().isServer())
+				{
+					f32 amount = ((blob.getRadius() + XORRandom(blob.getMass() / 3.0f)) / blob.getInitialHealth()) * 0.35f;
+					amount += XORRandom(amount) * 0.50f;
+					
+					// print("" + amount);
+					
+					blob.setVelocity(Vec2f(1 - XORRandom(2), -0.25f));
+					
+					MakeMat(this, this.getPosition(), "mat_meat", amount);
+				}
+			}
+			else if (blob.hasTag("isWeapon"))
+			{
+				if (getNet().isServer())
+				{
+					MakeMat(this, this.getPosition(), "mat_iron", 20 + XORRandom(60));
+					MakeMat(this, this.getPosition(), "mat_wood", 10 + XORRandom(40));
+					
+					kill = true;
+				}
+			}
+			else
+			{
+				this.getSprite().PlaySound("ShieldHit.ogg");
+				sparks(blob.getPosition(), 1, 1);
+				blob.setVelocity(Vec2f(4 - XORRandom(8), -5));
 			}
 		}
-		
+		break;
 	}
-	else if (blob.hasTag("flesh"))
-	{
-		if (getNet().isServer())
-		{
-			f32 amount = ((blob.getRadius() + XORRandom(blob.getMass() / 3.0f)) / blob.getInitialHealth()) * 0.35f;
-			amount += XORRandom(amount) * 0.50f;
-			
-			// print("" + amount);
-			
-			blob.setVelocity(Vec2f(1 - XORRandom(2), -0.25f));
-			
-			MakeMat(this, this.getPosition(), "mat_meat", amount);
-		}
-	}
-	else if (blob.getConfig() == "steak")
-	{
-		if (getNet().isServer())
-		{
-			MakeMat(this, this.getPosition(), "mat_meat", 20 + XORRandom(10));
-		}
-		
-		this.getSprite().PlaySound("SawLog.ogg", 0.8f, 1.0f);
-		kill = true;
-	}
-	else if (blob.hasTag("isWeapon"))
-	{
-		if (getNet().isServer())
-		{
-			MakeMat(this, this.getPosition(), "mat_iron", 20 + XORRandom(60));
-			MakeMat(this, this.getPosition(), "mat_wood", 10 + XORRandom(40));
-			
-			kill = true;
-		}
-	}
-	else if (name == "scythergib")
-	{
-		if (getNet().isServer())
-		{
-			MakeMat(this, this.getPosition(), "mat_plasteel", 5 + XORRandom(20));
-			MakeMat(this, this.getPosition(), "mat_steelingot", 1 + XORRandom(3));
-			
-			kill = true;
-		}
-	}
-	else
-	{
-		this.getSprite().PlaySound("ShieldHit.ogg");
-		sparks(blob.getPosition(), 1, 1);
-		blob.setVelocity(Vec2f(4 - XORRandom(8), -5));
-	}
+	
 	
 	if (kill)
 	{
