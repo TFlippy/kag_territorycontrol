@@ -27,6 +27,10 @@ f32 onHit( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hit
 				ShakeScreen2(Maths::Min(damage * 10, 50), 15, this.getPosition());
 				break;
 		
+			case HittersTC::poison:
+			
+				break;
+		
 			default:
 				SetScreenFlash(90, 120, 0, 0);
 				ShakeScreen(15, 5, this.getPosition());

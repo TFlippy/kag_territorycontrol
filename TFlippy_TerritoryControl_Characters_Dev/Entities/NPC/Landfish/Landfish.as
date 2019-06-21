@@ -103,7 +103,10 @@ void onInit(CBlob@ this)
 	// attachment
 
 	AttachmentPoint@ att = this.getAttachments().getAttachmentPointByName("PICKUP");
-	att.SetKeysToTake(key_action1);
+	if(att !is null)
+	{
+		att.SetKeysToTake(key_action1);
+	}
 
 	// movement
 

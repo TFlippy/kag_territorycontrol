@@ -54,14 +54,18 @@ void onTick(CBlob@ this)
 		this.set_Vec2f("direction", nDir);
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-		CBlob@ holder = point.getOccupied();
-		
-		if (holder !is null)
+		if(point !is null)
 		{
-			holder.setVelocity(nDir * this.get_f32("velocity"));
+			CBlob@ holder = point.getOccupied();
+		
+			if (holder !is null)
+			{
+				holder.setVelocity(nDir * this.get_f32("velocity"));
+			}
 		}
 		
-		MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
+		
+		
 		
 		if (getNet().isServer())
 		{
@@ -69,6 +73,10 @@ void onTick(CBlob@ this)
 			{
 				this.server_Die();
 			}
+		}
+		else
+		{
+			MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
 		}
 	}		
 }

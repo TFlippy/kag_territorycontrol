@@ -39,7 +39,12 @@ void onTick(CBlob@ this)
 		dir.RotateBy(this.getAngleDegrees());
 					
 		this.setVelocity(dir * -this.get_f32("velocity") + Vec2f(0, this.getTickSinceCreated() > 5 ? XORRandom(50) / 100.0f : 0));
-		MakeParticle(this, -dir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
+		
+		if(isClient())
+		{
+			MakeParticle(this, -dir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
+		}
+		
 		
 		this.setAngleDegrees(-this.getVelocity().Angle() + 90);
 	}

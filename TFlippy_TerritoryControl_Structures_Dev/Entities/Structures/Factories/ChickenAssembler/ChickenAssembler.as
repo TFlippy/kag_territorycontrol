@@ -196,6 +196,8 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 
 void onTick(CBlob@ this)
 {
+	this.getCurrentScript().tickFrequency = 150 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+
 	int crafting = this.get_u8("crafting");
 
 	AssemblerItem[]@ items = getItems(this);

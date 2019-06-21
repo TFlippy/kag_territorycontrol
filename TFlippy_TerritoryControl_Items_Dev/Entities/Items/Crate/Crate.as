@@ -343,6 +343,7 @@ void ShowParachute(CBlob@ this)
 
 void HideParachute(CBlob@ this)
 {
+	if(!isClient()){return;}
 	CSprite@ sprite = this.getSprite();
 	CSpriteLayer@ parachute = sprite.getSpriteLayer("parachute");
 
@@ -364,6 +365,7 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 
 void onDie(CBlob@ this)
 {
+	if(!isClient()){return;}
 	HideParachute(this);
 	this.getSprite().Gib();
 	Vec2f pos = this.getPosition();
@@ -449,6 +451,7 @@ void onRender(CSprite@ this)
 	if (blob.isAttached())
 	{
 		AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null ){return;}
 
 		CBlob@ holder = point.getOccupied();
 

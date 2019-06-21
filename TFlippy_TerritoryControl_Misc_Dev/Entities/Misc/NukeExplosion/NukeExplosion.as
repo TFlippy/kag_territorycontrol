@@ -57,15 +57,6 @@ void DoExplosion(CBlob@ this)
 		Explode(this, 128.0f * modifier, 64.0f * (1 - modifier));
 	}
 	
-	for (int i = 0; i < 2; i++)
-	{
-		Vec2f d = getRandomVelocity(90, XORRandom(50) * 0.01f, 25);
-		d.y *= 0.20f;
-		
-		MakeParticle(this, Vec2f((XORRandom(60) - 30) * modifier * 20.00f, (XORRandom(40) - 20) * invModifier * 8.00f), d, XORRandom(8) + 10 * invModifier, particles[XORRandom(particles.length)]);
-		MakeParticle(this, Vec2f((XORRandom(40) - 20) * modifier * 12.00f, (XORRandom(30) - 15) * invModifier * 4.00f), d, XORRandom(20) + 20 * invModifier, particles[0]);
-	}
-	
 	if (getNet().isServer())
 	{	
 		if (!this.hasTag("no mithril"))
@@ -113,10 +104,7 @@ void DoExplosion(CBlob@ this)
 				}
 			}
 		}
-	}
-	
-	if (getNet().isClient())
-	{
+
 		if (this.hasTag("reflash"))
 		{
 			CBlob@ localBlob = getLocalPlayerBlob();
@@ -135,6 +123,19 @@ void DoExplosion(CBlob@ this)
 				}
 			}
 		}
+	}
+	else
+	{
+
+		for (int i = 0; i < 2; i++)
+		{
+			Vec2f d = getRandomVelocity(90, XORRandom(50) * 0.01f, 25);
+			d.y *= 0.20f;
+			
+			MakeParticle(this, Vec2f((XORRandom(60) - 30) * modifier * 20.00f, (XORRandom(40) - 20) * invModifier * 8.00f), d, XORRandom(8) + 10 * invModifier, particles[XORRandom(particles.length)]);
+			MakeParticle(this, Vec2f((XORRandom(40) - 20) * modifier * 12.00f, (XORRandom(30) - 15) * invModifier * 4.00f), d, XORRandom(20) + 20 * invModifier, particles[0]);
+		}
+	
 	}
 }
 

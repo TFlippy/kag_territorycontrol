@@ -35,10 +35,12 @@ void onInit(CBlob@ this)
 	this.SetLightColor(SColor(255, 255, 200, 0));
 	
 	ShakeScreen(64, 32, this.getPosition());
+	this.getSprite().SetAnimation(this.getSexNum() == 0 ? "male" : "female");
+	
+	if(!isClient()){return;}
 	ParticleZombieLightning(this.getPosition());
 	this.getSprite().PlaySound("MagicWand.ogg");
 	
-	this.getSprite().SetAnimation(this.getSexNum() == 0 ? "male" : "female");
 }
 
 void onSetPlayer(CBlob@ this, CPlayer@ player)
@@ -62,6 +64,7 @@ void onDie(CBlob@ this)
 	}
 
 	ShakeScreen(64, 32, this.getPosition());
+	if(!isClient()){return;}
 	ParticleZombieLightning(this.getPosition());
 	this.getSprite().PlaySound("SuddenGib.ogg", 0.9f, 1.0f);
 }

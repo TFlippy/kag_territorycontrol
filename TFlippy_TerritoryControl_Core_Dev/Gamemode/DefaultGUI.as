@@ -64,7 +64,17 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_flashgrenade$", "FlashGrenade.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_clusterbomb$", "Material_ClusterBomb.png", Vec2f(16, 24), 0);
 		AddIconToken("$icon_dirtybomb$", "Material_DirtyBomb.png", Vec2f(16, 16), 0);
+		AddIconToken("$badgerBomb$", "badgerBomb.png", Vec2f(32, 16), 0);
 
+		AddIconToken("$mat_wood_1x$", "Materials.png", Vec2f(16, 16), 9);
+		AddIconToken("$mat_wood_10x$", "Materials.png", Vec2f(16, 16), 25);
+		
+		AddIconToken("$mat_stone_1x$", "Materials.png", Vec2f(16, 16), 8);
+		AddIconToken("$mat_stone_10x$", "Materials.png", Vec2f(16, 16), 24);
+		
+		AddIconToken("$mat_goldingot_1x$", "Material_GoldIngot.png", Vec2f(16, 16), 1);
+		AddIconToken("$mat_goldingot_10x$", "Material_GoldIngot.png", Vec2f(16, 16), 3);
+		
 		// Metal
 		AddIconToken("$mat_copperingot$", "Material_CopperIngot.png", Vec2f(16, 16), 1);
 		AddIconToken("$mat_ironingot$", "Material_IronIngot.png", Vec2f(16, 16), 1);
@@ -107,6 +117,7 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_scubagear$", "ScubaGear.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_radpill$", "Radpill.png", Vec2f(8, 8), 0);
 		AddIconToken("$icon_raygun$", "Raygun.png", Vec2f(24, 16), 0);
+		AddIconToken("$icon_dartgun$", "DartGun.png", Vec2f(32, 16), 0);
 		AddIconToken("$icon_jetpack$", "Jetpack.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_flippers$", "Flippers.png", Vec2f(16, 16), 0);
 		AddIconToken("$icon_minershelmet$", "MinersHelmet.png", Vec2f(16, 16), 0);
@@ -168,6 +179,7 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_foof$", "Foof.png", Vec2f(8, 8), 0);
 		AddIconToken("$icon_stim$", "Stim.png", Vec2f(8, 16), 0);
 		AddIconToken("$icon_bobongo$", "Bobongo.png", Vec2f(8, 8), 0);
+		AddIconToken("$icon_minidruglab$", "MiniDrugLab.png", Vec2f(24, 24), 0);
 	
 		// add color tokens
 		AddColorToken("$RED$", SColor(255, 105, 25, 5));

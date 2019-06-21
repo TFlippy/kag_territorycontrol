@@ -28,6 +28,8 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+
+	if(!isClient()){return;}
 	f32 camX = this.get_f32("camX");
 	f32 camY = this.get_f32("camY");
 	f32 camZ = this.get_f32("camZ");
@@ -77,7 +79,11 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	getCamera().setRotation(0.0f, 0.0f, 0.0f);
+	if(isClient())
+	{
+		getCamera().setRotation(0.0f, 0.0f, 0.0f);
+	}
+	
 }
 
 /*void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)

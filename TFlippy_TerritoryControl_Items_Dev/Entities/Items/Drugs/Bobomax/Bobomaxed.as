@@ -1,5 +1,6 @@
 #include "Knocked.as";
 #include "RunnerCommon.as";
+#include "RgbStuff.as";
 
 const int max = 4;
 
@@ -38,8 +39,12 @@ void onTick(CBlob@ this)
 		f32 camZ = Maths::Sin(getGameTime() * 0.125f) * 2 * (level);
 
 		CCamera@ cam = getCamera();
+		int colTime = getGameTime() %360;
+		SColor col = HSVToRGB(colTime, 1.0f, 1.0f);
+		s8 alphaTime = Maths::Min(255, 255 * time);
 		cam.setRotation(camX, camY, camZ);
-		SetScreenFlash(255 * time, 150 + (XORRandom(4) * 25), 150 + (XORRandom(4) * 25), 150 + (XORRandom(4) * 25));
+		SetScreenFlash(alphaTime,col.getRed(), col.getGreen(), col.getBlue(),1);
+		//SetScreenFlash(255 * time, 150 + (XORRandom(4) * 25), 150 + (XORRandom(4) * 25), 150 + (XORRandom(4) * 25));
 		
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSound("/clown.ogg");
@@ -69,16 +74,16 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
+	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
 
-	if (getNet().isServer() && !this.hasTag("transformed"))
+	if (isServer() && !this.hasTag("transformed"))
 	{
 		server_CreateBlob("bobomax", this.getTeamNum(), this.getPosition());
 		CBlob@ man = server_CreateBlob("klaxon", this.getTeamNum(), this.getPosition());
 		this.Tag("transformed");
 	}
 
-	if (getNet().isClient() && this.isMyPlayer())
+	if (isClient() && this.isMyPlayer())
 	{
 		CCamera@ cam = getCamera();
 		cam.setRotation(0);

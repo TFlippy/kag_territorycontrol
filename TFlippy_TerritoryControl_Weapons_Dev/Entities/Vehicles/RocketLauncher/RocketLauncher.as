@@ -228,7 +228,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		if (blobHit) for (u32 i = 0; i < hitInfos.length; i++) this.server_Hit(hitInfos[i].blob, hitInfos[i].hitpos, Vec2f(0, 0), 1.0f, Hitters::fire, true);
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		for (int i = 1; i < 5; i++) MakeParticle(this, -dir * i, "SmallExplosion");
 		this.getSprite().PlaySound("KegExplosion", 1.0f, 0.8f);

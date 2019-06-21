@@ -21,6 +21,8 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	if(!isClient()){return;}
+
 	if (this.getSprite().isAnimation("fire"))
 	{
 		makeFireParticle(this.getPosition() + getRandomVelocity(90.0f, 3.0f, 90.0f));

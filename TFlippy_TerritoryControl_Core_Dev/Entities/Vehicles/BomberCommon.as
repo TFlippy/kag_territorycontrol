@@ -142,7 +142,7 @@ s32 getHeight(CBlob@ this)
 	{
 		return Maths::Max((point.y - pos.y - 16) / 8.00f, 0);
 	}
-	else return 0;
+	else return map.tilemapheight+50-pos.y/8;
 }
 
 void drawFuelCount(CBlob@ this)
@@ -484,5 +484,5 @@ void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)
 	{
 		return;
 	}
-	Vehicle_onDetach(this,v,detached,attachedPoint);
+	Vehicle_onDetach(this, v, detached, attachedPoint);
 }

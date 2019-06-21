@@ -115,18 +115,22 @@ void DoExplosion(CBlob@ this)
 		
 		LinearExplosion(this, dir, 16.0f + XORRandom(16) + (modifier * 8), 16 + XORRandom(24), 3, 2.00f, Hitters::explosion);
 	}
-	
-	Vec2f pos = this.getPosition();
-	CMap@ map = getMap();
-	
-	for (int i = 0; i < 35; i++)
+
+	if(isClient())
 	{
-		MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
+		Vec2f pos = this.getPosition();
+		CMap@ map = getMap();
+		
+		for (int i = 0; i < 35; i++)
+		{
+			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
+		}
+		
+		// this.Tag("exploded");
+		this.getSprite().Gib();
+		this.getSprite().PlaySound("Sulphur_Explode.ogg", 1.00f, 1.00f);
 	}
 	
-	// this.Tag("exploded");
-	this.getSprite().Gib();
-	this.getSprite().PlaySound("Sulphur_Explode.ogg", 1.00f, 1.00f);
 	
 	// if (getNet().isServer()) this.server_Die();
 }

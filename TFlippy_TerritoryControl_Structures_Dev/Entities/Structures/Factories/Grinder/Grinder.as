@@ -5,12 +5,12 @@
 void onInit(CSprite@ this)
 {
 	this.SetZ(10);
-	
+
 	this.SetEmitSound("Grinder_Loop.ogg");
 	this.SetEmitSoundVolume(0.3f);
 	this.SetEmitSoundSpeed(0.9f);
 	this.SetEmitSoundPaused(false);
-	
+	this.getCurrentScript().tickFrequency = 2;
 	CSpriteLayer@ chop_left = this.addSpriteLayer("chop_left", "/Saw.png", 16, 16);
 
 	if (chop_left !is null)
@@ -22,7 +22,7 @@ void onInit(CSprite@ this)
 		chop_left.SetRelativeZ(-1.0f);
 		chop_left.SetOffset(Vec2f(5.0f, -1.0f));
 	}
-	
+
 	CSpriteLayer@ chop_right = this.addSpriteLayer("chop_right", "/Saw.png", 16, 16);
 
 	if (chop_right !is null)
@@ -36,16 +36,16 @@ void onInit(CSprite@ this)
 	}
 }
 void onInit(CBlob@ this)
-{	
+{
 	this.Tag("builder always hit");
-	
+
 	this.getShape().SetOffset(Vec2f(0, 4));
-		
+
 	{
 		Vec2f offset(-24, 8);
-	
-		Vec2f[] shape = 
-		{ 
+
+		Vec2f[] shape =
+		{
 			Vec2f(0.0f, 0.0f) - offset,
 			Vec2f(8.0f, 0.0f) - offset,
 			Vec2f(8.0f, 24.0f) - offset,
@@ -53,12 +53,12 @@ void onInit(CBlob@ this)
 		};
 		this.getShape().AddShape(shape);
 	}
-	
+
 	{
 		Vec2f offset(8, 8);
-	
-		Vec2f[] shape = 
-		{ 
+
+		Vec2f[] shape =
+		{
 			Vec2f(0.0f, 0.0f) - offset,
 			Vec2f(8.0f, 0.0f) - offset,
 			Vec2f(8.0f, 24.0f) - offset,
@@ -66,7 +66,7 @@ void onInit(CBlob@ this)
 		};
 		this.getShape().AddShape(shape);
 	}
-	
+
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
 	this.getCurrentScript().tickFrequency = 5;
@@ -81,17 +81,19 @@ void onTick(CBlob@ this)
 	}
 
 
-	
-	// this.getCurrentScript().tickFrequency = 1;
-	
 	CBlob@[] blobs;
-	if (getMap().getBlobsInBox(this.getPosition() + Vec2f(-8, -3), this.getPosition() + Vec2f(8, 3), @blobs))
+	if (getMap().getBlobsInRadius(this.getPosition()+Vec2f(0,-2) ,6.0f, @blobs))
 	{
 		for (uint i = 0; i < blobs.length; i++)
 		{
 			CBlob@ blob = blobs[i];
 			if (blob !is null)
 			{
+				if(blob.getName() == "grinder")
+				{
+					continue;
+				}
+
 				if (canSaw(this, blob))
 				{
 					Blend(this, blob);
@@ -105,6 +107,7 @@ void onTick(CBlob@ this)
 		}
 	}
 }
+
 
 void onTick(CSprite@ this)
 {
@@ -127,10 +130,10 @@ bool canSaw(CBlob@ this, CBlob@ blob)
 
 		if (chop_left !is null) chop_left.animation.frame = 1;
 		if (chop_right !is null) chop_right.animation.frame = 1;
-		
+
 		sprite.SetAnimation("blood");
 	}
-	
+
 	return true;
 }
 
@@ -140,101 +143,123 @@ void Blend(CBlob@ this, CBlob@ blob)
 
 	bool kill = false;
 	const string name = blob.getName();
-	
-	if (name == "log")
-	{	
-		if (getNet().isServer())
-		{
-			MakeMat(this, this.getPosition(), "mat_wood", 60 + XORRandom(40));
-		}
-		
-		this.getSprite().PlaySound("SawLog.ogg", 0.8f, 0.9f);
-		kill = true;
-	}
-	else if (name == "mat_stone")
+	const int hash = name.getHash();
+
+	switch(hash)
 	{
-		if (getNet().isServer())
+		case 1062293841://log
 		{
-			u32 quantity = blob.getQuantity();
-		
-			MakeMat(this, this.getPosition(), "mat_stone", 		quantity * 0.50f + XORRandom(quantity * 0.25f));
-			MakeMat(this, this.getPosition(), "mat_concrete", 	quantity * 0.125f + XORRandom(quantity * 0.125f));
-			MakeMat(this, this.getPosition(), "mat_iron", 		XORRandom(quantity * 0.20f));
-			MakeMat(this, this.getPosition(), "mat_sulphur", 	XORRandom(quantity * 0.15f));
-			MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.03f));
-			MakeMat(this, this.getPosition(), "mat_gold",	 	XORRandom(quantity * 0.08f));
-			MakeMat(this, this.getPosition(), "mat_mithril", 	XORRandom(quantity * 0.05f));
-		}
-		
-		this.getSprite().PlaySound("rocks_explode" + (1 + XORRandom(2)) + ".ogg", 1.5f, 1.0f);
-		kill = true;
-		
-		if (XORRandom(100) < 75) 
-		{
-			ParticleAnimated(CFileMatcher("Smoke.png").getFirst(), this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
-		}
-	}
-	else if (blob.hasTag("flesh"))
-	{
-		if (getNet().isServer())
-		{
-			f32 amount = ((blob.getRadius() + XORRandom(blob.getMass() / 3.0f)) / blob.getInitialHealth()) * 0.35f;
-			amount += XORRandom(amount) * 0.50f;
-			
-			// print("" + amount);
-			
-			blob.setVelocity(Vec2f(1 - XORRandom(2), -0.25f));
-			
-			MakeMat(this, this.getPosition(), "mat_meat", amount);
-		}
-	}
-	else if (blob.getConfig() == "steak")
-	{
-		if (getNet().isServer())
-		{
-			MakeMat(this, this.getPosition(), "mat_meat", 20 + XORRandom(10));
-		}
-		
-		this.getSprite().PlaySound("SawLog.ogg", 0.8f, 1.0f);
-		kill = true;
-	}
-	else if (blob.hasTag("weapon"))
-	{
-		if (getNet().isServer())
-		{
-			MakeMat(this, this.getPosition(), "mat_iron", 20 + XORRandom(60));
-			MakeMat(this, this.getPosition(), "mat_wood", 10 + XORRandom(40));
-			
+			if (isServer())
+			{
+				MakeMat(this, this.getPosition(), "mat_wood", 60 + XORRandom(40));
+			}
+
+			this.getSprite().PlaySound("SawLog.ogg", 0.8f, 0.9f);
 			kill = true;
 		}
-	}
-	else if (name == "scythergib")
-	{
-		if (getNet().isServer())
+		break;
+
+		case 575725963://mat_stone
 		{
-			MakeMat(this, this.getPosition(), "mat_plasteel", 5 + XORRandom(20));
-			MakeMat(this, this.getPosition(), "mat_steelingot", 1 + XORRandom(3));
-			
+			if (isServer())
+			{
+				u32 quantity = blob.getQuantity();
+
+				MakeMat(this, this.getPosition(), "mat_stone", 		quantity * 0.50f + XORRandom(quantity * 0.25f));
+				MakeMat(this, this.getPosition(), "mat_concrete", 	quantity * 0.125f + XORRandom(quantity * 0.125f));
+				MakeMat(this, this.getPosition(), "mat_iron", 		XORRandom(quantity * 0.20f));
+				MakeMat(this, this.getPosition(), "mat_sulphur", 	XORRandom(quantity * 0.15f));
+				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.03f));
+				MakeMat(this, this.getPosition(), "mat_gold",	 	XORRandom(quantity * 0.08f));
+				MakeMat(this, this.getPosition(), "mat_mithril", 	XORRandom(quantity * 0.05f));
+			}
+
+			if(isClient())
+			{
+				this.getSprite().PlaySound("rocks_explode" + (1 + XORRandom(2)) + ".ogg", 1.5f, 1.0f);
+
+				if (XORRandom(100) < 75)
+				{
+					ParticleAnimated(CFileMatcher("Smoke.png").getFirst(), this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+				}
+			}
 			kill = true;
 		}
+		break;
+
+		case 881918781://scythergib
+		{
+			if (isServer())
+			{
+				MakeMat(this, this.getPosition(), "mat_plasteel", 5 + XORRandom(20));
+				MakeMat(this, this.getPosition(), "mat_steelingot", 1 + XORRandom(3));
+
+
+			}
+			kill = true;
+		}
+		break;
+
+		case 336243301://steak
+		{
+
+			if (isServer())
+			{
+				MakeMat(this, this.getPosition(), "mat_meat", 20 + XORRandom(10));
+			}
+
+			this.getSprite().PlaySound("SawLog.ogg", 0.8f, 1.0f);
+			kill = true;
+		}
+		break;
+
+		default:
+		{
+			if (blob.hasTag("flesh"))
+			{
+				if (getNet().isServer())
+				{
+					f32 amount = ((blob.getRadius() + XORRandom(blob.getMass() / 3.0f)) / blob.getInitialHealth()) * 0.35f;
+					amount += XORRandom(amount) * 0.50f;
+
+					// print("" + amount);
+
+					blob.setVelocity(Vec2f(1 - XORRandom(2), -0.25f));
+
+					MakeMat(this, this.getPosition(), "mat_meat", amount);
+				}
+			}
+			else if (blob.hasTag("isWeapon"))
+			{
+				if (getNet().isServer())
+				{
+					MakeMat(this, this.getPosition(), "mat_iron", 20 + XORRandom(60));
+					MakeMat(this, this.getPosition(), "mat_wood", 10 + XORRandom(40));
+
+					kill = true;
+				}
+			}
+			else
+			{
+				this.getSprite().PlaySound("ShieldHit.ogg");
+				sparks(blob.getPosition(), 1, 1);
+				blob.setVelocity(Vec2f(4 - XORRandom(8), -5));
+			}
+		}
+		break;
 	}
-	else
-	{
-		this.getSprite().PlaySound("ShieldHit.ogg");
-		sparks(blob.getPosition(), 1, 1);
-		blob.setVelocity(Vec2f(4 - XORRandom(8), -5));
-	}
-	
+
+
 	if (kill)
 	{
 		blob.Tag("sawed");
-	
+
 		CSprite@ s = blob.getSprite();
 		if (s !is null)
 		{
 			s.Gib();
 		}
-	
+
 		blob.server_SetHealth(-1.0f);
 		blob.server_Die();
 	}
@@ -248,7 +273,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 	// Vec2f bpos = blob.getPosition();
 
 	// if ((bpos.x > pos.x + 9) || (bpos.x < pos.x - 9) || bpos.y > pos.y) return;
-	
+
 	// if (canSaw(this, blob))
 	// {
 		// Blend(this, blob);

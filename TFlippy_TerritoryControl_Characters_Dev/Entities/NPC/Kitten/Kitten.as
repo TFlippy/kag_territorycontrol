@@ -179,12 +179,16 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 	if (blob.getName() == "mat_mithril" && blob.getQuantity() > 50)
 	{
-		ParticleZombieLightning(this.getPosition());
 		
-		if (getNet().isServer())
+		
+		if (isServer())
 		{
 			CBlob@ bagel = server_CreateBlob("pus", this.getTeamNum(), this.getPosition());
 			this.server_Die();
+		}
+		else
+		{
+			ParticleZombieLightning(this.getPosition());
 		}
 	}
 }

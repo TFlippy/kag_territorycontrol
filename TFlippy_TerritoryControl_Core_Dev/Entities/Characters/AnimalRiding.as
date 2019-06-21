@@ -68,7 +68,7 @@ void onTick(CBlob@ this)
 				}
 
 				// GET OUT
-				if (occ !is null && (ap.isKeyJustPressed(key_up) || (occ !is friend && (seattime + ridetime <= gametime) && this.getShape().vellen > 0.4f)))
+				if (occ !is null && this !is null && (ap.isKeyJustPressed(key_up) || (occ !is friend && (seattime + ridetime <= gametime) && this.getShape().vellen > 0.4f)))
 				{
 					this.server_DetachFrom(occ);
 					// pickup shark after done riding on land

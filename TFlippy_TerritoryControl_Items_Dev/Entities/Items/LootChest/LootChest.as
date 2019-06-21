@@ -47,7 +47,8 @@ const LootItem@[] c_items =
 	LootItem("scubagear", 1, 0, 400),
 	LootItem("ninjascroll", 1, 1, 250),
 	LootItem("flashlight", 1, 1, 400),
-	LootItem("juggernauthammer", 1, 1, 50)
+	LootItem("juggernauthammer", 1, 1, 50),
+	LootItem("gyromat", 1, 1, 300)
 };
 
 void onInit(CBlob@ this)
@@ -88,24 +89,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void onDie(CBlob@ this)
 {
-	CSprite@ sprite = this.getSprite();
-	if (sprite !is null)
-	{
-		sprite.PlaySound("ChestOpen.ogg", 3.0f);
-		sprite.Gib();
-
-		makeGibParticle(
-		sprite.getFilename(),               // file name
-		this.getPosition(),                 // position
-		getRandomVelocity(90, 2, 360),      // velocity
-		0,                                  // column
-		3,                                  // row
-		Vec2f(16, 16),                      // frame size
-		1.0f,                               // scale?
-		0,                                  // ?
-		"",                                 // sound
-		this.get_u8("team_color"));         // team number
-	}
 	
 	if (getNet().isServer())
 	{
@@ -117,6 +100,27 @@ void onDie(CBlob@ this)
 		}
 
 		server_SpawnCoins(this, 250 + XORRandom(500));
+	}
+	else
+	{
+		CSprite@ sprite = this.getSprite();
+		if (sprite !is null)
+		{
+			sprite.PlaySound("ChestOpen.ogg", 3.0f);
+			sprite.Gib();
+
+			makeGibParticle(
+			sprite.getFilename(),               // file name
+			this.getPosition(),                 // position
+			getRandomVelocity(90, 2, 360),      // velocity
+			0,                                  // column
+			3,                                  // row
+			Vec2f(16, 16),                      // frame size
+			1.0f,                               // scale?
+			0,                                  // ?
+			"",                                 // sound
+			this.get_u8("team_color"));         // team number
+		}
 	}
 }
 

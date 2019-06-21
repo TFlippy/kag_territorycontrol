@@ -279,7 +279,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				blob.server_setTeamNum(this.getTeamNum());
 				blob.Init();
 				
-				if (blob is null) return;
+				if (blob is null && callerBlob is null) return;
 
 				if (!blob.hasTag("vehicle"))
 				{

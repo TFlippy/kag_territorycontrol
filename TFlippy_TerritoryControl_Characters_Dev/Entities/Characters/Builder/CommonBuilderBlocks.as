@@ -112,6 +112,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$constructionyard$", "ConstructionYardIcon.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_camp$", "Camp.png", Vec2f(80, 24), 0);
 	AddIconToken("$icon_oiltank$","OilTank.png",Vec2f(32, 16),0);
+	AddIconToken("$icon_gastank$","GasTank.png",Vec2f(16, 24),0);
 	AddIconToken("$icon_druglab$","DrugLab.png",Vec2f(32, 40),0);
 	AddIconToken("$icon_banner$","ClanBanner.png",Vec2f(16, 32),0);
 	// AddIconToken("$icon_cargocontainer$", "CargoContainer.png", Vec2f(64, 24), 0);
@@ -529,6 +530,22 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(24, 40);
 		blocks[2].push_back(b);
 	}
+	{
+		BuildBlock b(0, "compactor", "$icon_compactor$", "Compactor\nCan store enormous amounts of single resource.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 300);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 250);
+		b.buildOnGround = true;
+		b.size.Set(24, 32);
+		blocks[2].push_back(b);
+	}
+	{
+		BuildBlock b(0, "gastank", "$icon_gastank$", "Gas Tank\nAutomatically collects gas from all of your team's gas collectors");
+		AddRequirement(b.reqs, "blob", "mat_ironingot","Iron Ingot", 15);
+		// AddRequirement(b.reqs, "blob", "mat_hemp", "Hemp", 20);
+		b.buildOnGround = true;
+		b.size.Set(16, 24);
+		blocks[2].push_back(b);
+	}
 		
 		
 	BuildBlock[] page_3;
@@ -690,14 +707,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 2);
 		blocks[3].push_back(b);
 	}
-	{
-		BuildBlock b(0, "compactor", "$icon_compactor$", "Compactor\nCan store enormous amounts of single resource.");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 300);
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 250);
-		b.buildOnGround = true;
-		b.size.Set(24, 32);
-		blocks[3].push_back(b);
-	}
+
 
 	
 	// {

@@ -79,14 +79,18 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		{
 			if (capped_damage > 1.0f)
 			{
-				ParticleBloodSplat(worldPoint, true);
+				if(isClient()){
+					ParticleBloodSplat(worldPoint, true);
+				}
 			}
 
 			if (capped_damage > 0.25f)
 			{
 				for (f32 count = 0.0f ; count < capped_damage; count += 0.5f)
 				{
-					ParticleBloodSplat(worldPoint + getRandomVelocity(0, 0.75f + capped_damage * 2.0f * XORRandom(2), 360.0f), false);
+					if(isClient()){
+						ParticleBloodSplat(worldPoint + getRandomVelocity(0, 0.75f + capped_damage * 2.0f * XORRandom(2), 360.0f), false);
+					}
 				}
 			}
 
@@ -100,29 +104,33 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					vel.y -= 1.5f * capped_damage;
 					
 					f32 mod = XORRandom(100) * 0.01f;
-					
+					if(isClient())
 					{
-						CParticle@ p = ParticleBlood(worldPoint, vel * -1.0f, SColor(255 - (40 * mod), 126 - (20 * mod), 0, 0));
-						if (p !is null)
+
 						{
-							p.timeout = 1 + XORRandom(60);
-							p.scale = 0.75f + mod;
-							p.fastcollision = true;
-							// p.stretches = true;
+							
+							CParticle@ p = ParticleBlood(worldPoint, vel * -1.0f, SColor(255 - (40 * mod), 126 - (20 * mod), 0, 0));
+							if (p !is null)
+							{
+								p.timeout = 1 + XORRandom(60);
+								p.scale = 0.75f + mod;
+								p.fastcollision = true;
+								// p.stretches = true;
+							}
+						}
+						
+						{
+							CParticle@ p = ParticleBlood(worldPoint, vel * 1.7f, SColor(255, 126, 0, 0));
+							if (p !is null)
+							{
+								p.timeout = 1 + XORRandom(60);
+								p.scale = 0.75f + mod;
+								p.fastcollision = true;
+								// p.stretches = true;
+							}
 						}
 					}
-					
-					{
-						CParticle@ p = ParticleBlood(worldPoint, vel * 1.7f, SColor(255, 126, 0, 0));
-						if (p !is null)
-						{
-							p.timeout = 1 + XORRandom(60);
-							p.scale = 0.75f + mod;
-							p.fastcollision = true;
-							// p.stretches = true;
-						}
-					}
-					
+						
 	// int16 alivetime
 					
 					// ParticleBlood(worldPoint, vel * 1.7f, SColor(255, 126, 0, 0));

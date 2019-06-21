@@ -10,21 +10,24 @@ const string[] matNames = {
 	"mat_copper",
 	"mat_iron",
 	"mat_gold",
-	"mat_ironingot"
+	"mat_ironingot",
+	"mat_wood"
 };
 
 const string[] matNamesResult = { 
 	"mat_copperingot",
 	"mat_ironingot",
 	"mat_goldingot",
-	"mat_steelingot"
+	"mat_steelingot",
+	"mat_coal"
 };
 
 const int[] matRatio = { 
 	10,
 	10,
 	25,
-	4
+	4,
+	20
 };
 
 void onInit(CBlob@ this)
@@ -39,22 +42,26 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	for (int i = 0; i < 4; i++)
+	this.getCurrentScript().tickFrequency = 45 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+
+	for (int i = 0; i < matNames.length; i++)
 	{
 		if (this.hasBlob(matNames[i], matRatio[i]))
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
-				CBlob @mat = server_CreateBlob(matNamesResult[i],-1,this.getPosition());
+				CBlob@ mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
 				mat.server_SetQuantity(2);
 				mat.Tag("justmade");
-				this.TakeBlob(matNames[i], matRatio[i]);
 				
-				if (i == 1) this.TakeBlob("mat_coal", 1);
+				this.TakeBlob(matNames[i], matRatio[i]);
 			}
 			
-			this.getSprite().PlaySound("ProduceSound.ogg");
-			this.getSprite().PlaySound("BombMake.ogg");
+			if (isClient())
+			{
+				this.getSprite().PlaySound("ProduceSound.ogg");
+				this.getSprite().PlaySound("BombMake.ogg");
+			}
 		}
 	}
 }
@@ -63,22 +70,23 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob is null) return;
 
-	if(blob.hasTag("justmade")){
+	if (blob.hasTag("justmade"))
+	{
 		blob.Untag("justmade");
 		return;
 	}
 	
-	for(int i = 0;i < 4; i += 1)
-	if (!blob.isAttached() && blob.hasTag("material") && blob.getName() == matNames[i])
+	if (!blob.isAttached() && blob.hasTag("material"))
 	{
-		if (getNet().isServer()) this.server_PutInInventory(blob);
-		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
-	}
-	
-	if (!blob.isAttached() && blob.hasTag("material") && blob.getName() == "mat_coal")
-	{
-		if (getNet().isServer()) this.server_PutInInventory(blob);
-		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
+		string config = blob.getConfig();
+		for (int i = 0; i < matNames.length; i++)
+		{
+			if (config == matNames[i])
+			{
+				if (isServer()) this.server_PutInInventory(blob);
+				if (isClient()) this.getSprite().PlaySound("bridge_open.ogg");
+			}
+		}
 	}
 }
 

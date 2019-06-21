@@ -7,7 +7,7 @@ s32 g_lastVoteCounter = 0;
 const float required_minutes = 10; //time you have to wait after joining w/o skip_votewait.
 
 s32 g_lastNextmapCounter = 0;
-const float required_minutes_nextmap = 10; //global nextmap vote cooldown
+const float required_minutes_nextmap = 30; //global nextmap vote cooldown
 
 const s32 VoteKickTime = 30 * 60 * 30; //ticks (30min default)
 const s32 VoteTeamKickNoTeamTime = 10 * 60 * 30; // 10 minutes
@@ -30,12 +30,12 @@ string g_kick_reason = kick_reason_string[kick_reason_griefer]; //default
 enum nextmap_reason
 {
 	nextmap_reason_ruined = 0,
-	nextmap_reason_stalemate,
 	nextmap_reason_bugged,
+	nextmap_reason_lag,
 	nextmap_reason_count,
 };
 
-string[] nextmap_reason_string = { "Map Ruined", "Stalemate", "Game Bugged" };
+string[] nextmap_reason_string = { "Map Ruined", "Game Bugged", "Server lagging"};
 
 //votekick and vote nextmap
 
@@ -61,7 +61,6 @@ void onInit(CRules@ this)
 	this.addCommandID(votenextmap_id);
 	this.addCommandID(voteteamkick_id);
 }
-
 
 void onRestart(CRules@ this)
 {
@@ -314,6 +313,7 @@ VoteObject@ Create_VoteNextmap(CPlayer@ byplayer, string reason)
 	vote.reason = reason;
 	vote.byuser = byplayer.getUsername();
 	vote.forcePassFeature = "nextmap";
+	vote.required_percent = 0.65f;
 
 	CalculateVoteThresholds(vote);
 

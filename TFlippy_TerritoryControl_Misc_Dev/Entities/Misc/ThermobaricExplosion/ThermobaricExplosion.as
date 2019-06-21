@@ -17,7 +17,7 @@ void onInit(CBlob@ this)
 	if (!this.exists("boom_size")) this.set_f32("boom_size", 0);
 	if (!this.exists("boom_end")) this.set_f32("boom_end", 256);
 	if (!this.exists("boom_delay")) this.set_u32("boom_delay", 15);
-	if (!this.exists("boom_increment")) this.set_u32("boom_increment", 4.00f);
+	if (!this.exists("boom_increment")) this.set_f32("boom_increment", 4.00f);
 	if (!this.exists("custom_explosion_sound")) this.set_string("custom_explosion_sound", "ThermobaricExplosion");
 	
 	if (getNet().isClient())
@@ -176,7 +176,7 @@ void onTick(CBlob@ this)
 	if (ticks >= this.get_u32("boom_delay") && ticks % this.get_u8("boom_frequency") == 0 && this.get_f32("boom_size") < this.get_f32("boom_end"))
 	{
 		DoExplosion(this);
-		this.add_f32("boom_size", this.get_u32("boom_increment"));
+		this.add_f32("boom_size", this.get_f32("boom_increment"));
 	}
 	
 	if (getNet().isClient())
@@ -196,6 +196,7 @@ void onTick(CBlob@ this)
 
 void MakeExplosionParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const f32 time, const string filename = "SmallSteam")
 {
+	if(!isClient()){return;}
 	CParticle@ p = ParticleAnimated(CFileMatcher(filename).getFirst(), pos, vel, float(XORRandom(360)), 2.8f + XORRandom(200) * 0.01f, time, XORRandom(100) * -0.00005f, true);
 	if (p !is null)
 	{
@@ -205,6 +206,7 @@ void MakeExplosionParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const 
 
 void MakeFuelParticle(CBlob@ this, const Vec2f pos, const f32 time, const f32 size, const f32 growth, const string filename = "FuelGas.png")
 {
+	if(!isClient()){return;}
 	CParticle@ p = ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(32, 32), 1, 0, true);
 	if (p !is null)
 	{

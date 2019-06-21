@@ -86,6 +86,7 @@ void DoExplosion(CBlob@ this)
 		LinearExplosion(this, dir, (4.0f + XORRandom(4) + (modifier * 8)) * vellen, 8 + XORRandom(8), 10 + XORRandom(vellen * 2), 10.0f, Hitters::explosion);
 	}
 	
+	if(!isClient()){return;}
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 	

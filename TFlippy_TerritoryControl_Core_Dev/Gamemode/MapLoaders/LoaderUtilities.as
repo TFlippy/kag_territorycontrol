@@ -1081,6 +1081,7 @@ void glasssparks(Vec2f at, int amount)															//
 							SColor(255, 79, 145, 167),											//
 							SColor(255, 48, 60, 65),											//
 							SColor(255, 21, 27, 30)};											//
+	if(!isClient()){return;}                                                                    //
 	for (int i = 0; i < amount; i++)															//
 	{																							//
 		Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);										//
@@ -1360,6 +1361,7 @@ bool isBConcreteTile(CMap@ map, Vec2f pos)												//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 void tntsparks(Vec2f at)																		//
 {																								//
+	if(!isClient()){return;}																    //
 	at += Vec2f(4, 0);																			//
 	for (int i = 0; i < 15; i++)																//
 	{																							//
@@ -1457,6 +1459,7 @@ void mattersparks(Vec2f at, int amount)
 						SColor(255, 229, 179, 255),	//pinky
 						SColor(255, 15, 20, 106),	//dark blue >:(
 						SColor(255, 12, 69, 16)};	//dark green >:(
+	if(!isClient()){return;}
 	for (int i = 0; i < amount; i++)
 	{
 		Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);

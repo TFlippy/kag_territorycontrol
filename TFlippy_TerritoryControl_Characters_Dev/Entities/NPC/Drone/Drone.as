@@ -424,10 +424,6 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 	
-	for (int i = 0; i < 16; i++)
-	{
-		MakeParticle(this, Vec2f( XORRandom(32) - 16, XORRandom(40) - 30), getRandomVelocity(-angle, XORRandom(250) * 0.01f, 25), particles[XORRandom(particles.length)]);
-	}
 	
 	if (getNet().isServer())
 	{
@@ -460,9 +456,17 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 	}
+	else
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			MakeParticle(this, Vec2f( XORRandom(32) - 16, XORRandom(40) - 30), getRandomVelocity(-angle, XORRandom(250) * 0.01f, 25), particles[XORRandom(particles.length)]);
+		}
+		SetScreenFlash(50, 255, 255, 255);
+		this.getSprite().Gib();
+	}
 	
-	SetScreenFlash(50, 255, 255, 255);
-	this.getSprite().Gib();
+	
 }
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")

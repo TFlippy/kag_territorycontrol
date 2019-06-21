@@ -131,12 +131,12 @@ void onTick(CBlob@ this)
 				f32 maxHealth = Maths::Ceil(blob.getInitialHealth() * 1.25f);
 				if (blob.getHealth() < maxHealth)
 				{				
-					if (getNet().isServer())
+					if (isServer())
 					{
 						blob.server_SetHealth(Maths::Min(blob.getHealth() + 0.125f, maxHealth));
 					}
 					
-					if (getNet().isClient())
+					if (isClient())
 					{
 						for (int i = 0; i < 4; i++)
 						{

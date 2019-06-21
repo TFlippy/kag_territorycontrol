@@ -2,6 +2,7 @@
 
 #include "Hitters.as";
 #include "Explosion.as";
+#include "Knocked.as";
 
 const u8 MINE_PRIMING_TIME = 45;
 
@@ -183,7 +184,7 @@ void onDie(CBlob@ this)
 				dir.Normalize();
 
 				target.setVelocity(dir * (8.0f + XORRandom(8)));
-				target.set_u8("knocked", 20);
+				SetKnocked(target, 20);
 				// this.server_Hit(target, this.getPosition(), Vec2f_zero, 1.0f, Hitters::water_stun, true);
 			}
 		}
