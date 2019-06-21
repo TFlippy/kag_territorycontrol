@@ -93,6 +93,7 @@ void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "Sm
 
 void makeSteamPuff(CBlob@ this, const f32 velocity = 1.0f, const int smallparticles = 10, const bool sound = true)
 {
+	if(!isClient()){return;}
 	if (sound)
 	{
 		this.getSprite().PlaySound("Steam.ogg");

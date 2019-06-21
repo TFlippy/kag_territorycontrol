@@ -65,7 +65,7 @@ void onTick(CBlob@ this)
 		}
 		
 		
-		MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
+		
 		
 		if (getNet().isServer())
 		{
@@ -73,6 +73,10 @@ void onTick(CBlob@ this)
 			{
 				this.server_Die();
 			}
+		}
+		else
+		{
+			MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
 		}
 	}		
 }

@@ -297,6 +297,24 @@ void React(CBlob@ this)
 				}
 			}
 			
+			if (heat > 2250 && hasOil && oil_count >= 25)
+			{
+				CBlob@ stim = inv.getItem("stim");
+				if (stim !is null)
+				{
+					if (getNet().isServer())
+					{
+						oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 25, 0));
+						stim.server_Die();
+						
+						Material::createFor(this, "rippio", 1 + XORRandom(2));
+					}
+					
+					ShakeScreen(100.0f, 15, this.getPosition());
+					this.getSprite().PlaySound("DrugLab_Create_Acidic.ogg", 1.00f, 1.00f);
+				}
+			}
+			
 			if (pressure < 25000 && heat > 100 && heat < 1000 && hasAcid && hasMithril && acid_count >= 15 && mithril_count >= 5)
 			{
 				if (getNet().isServer())
@@ -339,6 +357,21 @@ void React(CBlob@ this)
 				
 				ShakeScreen(60.0f, 90, this.getPosition());
 				this.getSprite().PlaySound("DrugLab_Create_Creamy.ogg", 1.00f, 1.00f);
+			}
+			
+			if (pressure > 40000 && heat > 2000 && hasOil && hasMithril && oil_count >= 25 && mithril_count >= 25)
+			{
+				if (getNet().isServer())
+				{
+					oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 15, 0));
+					mithril_blob.server_SetQuantity(Maths::Max(mithril_blob.getQuantity() - 5, 0));
+					
+					Material::createFor(this, "schisk", 1 + XORRandom(3));
+					Material::createFor(this, "bobomax", 1 + XORRandom(2));
+				}
+				
+				ShakeScreen(30.0f, 60, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Solid.ogg", 1.00f, 1.00f);
 			}
 		}	
 	}

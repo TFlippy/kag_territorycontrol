@@ -115,7 +115,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Sell Wood (2500)", "$COIN$", "coin-750", "Sell 2500 wood for 705 coins.");
+		ShopItem@ s = addShopItem(this, "Sell Wood (2500)", "$COIN$", "coin-750", "Sell 2500 wood for 750 coins.");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 2500);
 		s.spawnNothing = true;
 	}

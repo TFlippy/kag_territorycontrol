@@ -40,8 +40,12 @@ void onTick(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 	
-	this.set_u16("tick", this.get_u16("tick") + 1);
-	if (this.get_u16("tick") % 2 == 0) ParticleAnimated("Entities/Effects/Sprites/SmallSmoke1.png", pos + Vec2f(0, -4), Vec2f(0, 0.5f), 0.0f, 1.0f, 2, 0.0f, true);
+	u16 tick = this.add_u16("tick",1);
+	if(isClient())
+	{
+		if (tick % 2 == 0) ParticleAnimated("Entities/Effects/Sprites/SmallSmoke1.png", pos + Vec2f(0, -4), Vec2f(0, 0.5f), 0.0f, 1.0f, 2, 0.0f, true);
+	}
+	
 
 	TileType tile = map.getTile(pos).type;
 	if (!map.isTileGround(tile) && !map.isTileGroundStuff(tile)) map.server_DestroyTile(pos, 1.0f);

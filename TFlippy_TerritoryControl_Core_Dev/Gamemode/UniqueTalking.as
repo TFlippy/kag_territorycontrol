@@ -12,11 +12,95 @@ string GetFiller() { return w_filler[XORRandom(w_filler.length)]; }
 string GetFriends() { return w_friends[XORRandom(w_friends.length)]; }
 string GetSmileys() { return w_smileys[XORRandom(w_smileys.length)]; }
 
+bool onClientProcessChat(CRules@ this, const string &in text_in, string &out text_out, CPlayer@ player)
+{
+	text_out = text_in;
+	
+	CPlayer@ localPlayer = getLocalPlayer();
+	CBlob@ localBlob = getLocalPlayerBlob();
+	
+	if (localPlayer !is player && localBlob !is null && localPlayer !is null && localBlob.hasTag("schisked"))
+	{
+		string playerName = localPlayer.getCharacterName();
+	
+		// text_out = text_out.replace("you", playerName).replace("are", "is").replace(" she", playerName).replace(" he", playerName);
+
+		switch(XORRandom(10))
+		{
+			case 0:
+			{
+				text_out = playerName + ", " + text_out + ".";
+			}
+			break;
+			
+			case 1:
+			{
+				text_out = text_out + ". What do you say, " + playerName + "?";
+			}
+			break;
+			
+			case 2:
+			{
+				text_out = text_out + "??? What the fuck, " + playerName + "?";
+			}
+			break;
+			
+			case 3:
+			{
+				text_out = "\"" + text_out + "\", are you fucking kidding me, " + playerName + "?";
+			}
+			break;
+			
+			case 4:
+			{
+				text_out = "\"" + text_out + "\", are you fucking kidding me, " + playerName + "?";
+			}
+			break;
+			
+			case 5:
+			{
+				text_out = playerName + " said " + text_out;
+			}
+			break;
+			
+			case 6:
+			{
+				text_out = text_out + ", just like " + playerName;
+			}
+			break;
+			
+			case 7:
+			{
+				text_out = (playerName + "!!! " + text_out).toUpper();
+			}
+			break;
+			
+			case 8:
+			{
+				text_out = text_out + " " + playerName;
+			}
+			break;
+			
+			case 9:
+			{
+				text_out = text_out + ", except for " + playerName;
+			}
+			break;
+			
+			default:
+			{
+				text_out = playerName + ", " + text_out + ".";
+			}
+			break;
+		}
+	}
+	
+	return true;
+}
+
 bool onServerProcessChat(CRules@ this, const string& in text_in, string& out text_out, CPlayer@ player)
 {
-	if (player is null)
-		return true;
-
+	if (player is null) return true;
 	CBlob@ blob = player.getBlob();
 
 	if (blob is null)

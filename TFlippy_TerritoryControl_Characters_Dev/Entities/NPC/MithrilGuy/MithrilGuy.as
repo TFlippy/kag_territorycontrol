@@ -160,7 +160,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("mg_explode"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
@@ -169,14 +169,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		this.set_u32("next pigger", getGameTime() + 30 * 15);
 	
-		if (getNet().isClient())
+		if (isClient())
 		{
 			this.getSprite().PlaySound("FleshHit.ogg", 1.00f, 1.00f);
 			this.getSprite().PlaySound("Pigger_Pop_" + XORRandom(2), 1.00f, 1.00f);
 			ParticleBloodSplat(this.getPosition(), true);
 		}
 	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Hit(this, this.getPosition(), Vec2f(0, 0), 1.00f + (XORRandom(300) / 100.00f), Hitters::stab, true);
 			

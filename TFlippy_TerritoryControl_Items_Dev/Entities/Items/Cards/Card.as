@@ -28,6 +28,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	if(!isClient()){return;}
 	CShape@ shape = this.getShape();
 	this.getSprite().RotateBy(20, Vec2f());
 		
@@ -61,7 +62,7 @@ void onTick(CBlob@ this)
 
 void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.015625f * rad;
@@ -70,6 +71,7 @@ void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "Sm
 
 void makeSteamPuff(CBlob@ this, const f32 velocity = 1.0f, const int smallparticles = 10, const bool sound = true)
 {
+	if(!isClient()){return;}
 	if (sound)
 	{
 		this.getSprite().PlaySound("Steam.ogg");
@@ -255,6 +257,7 @@ void onDie(CBlob@ this)
 		}
 	}
 	
+	if(!isClient()){return;}
 	if(this.get_u8("type") == 1){
 		Vec2f vec = Vec2f(64,0);
 		for(int r = 0; r < 360; r += 10){

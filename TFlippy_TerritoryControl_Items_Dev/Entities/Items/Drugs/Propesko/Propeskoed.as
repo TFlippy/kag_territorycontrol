@@ -17,7 +17,7 @@ void onDie(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	if (this.hasTag("dead")) return;
-	this.add_f32("propeskoed", 0.0005f);
+	this.add_f32("propeskoed", 0.001f);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
@@ -52,7 +52,7 @@ void DoExplosion(CBlob@ this)
 		{
 			boom.setPosition(this.getPosition());
 			boom.set_u8("boom_start", 0);
-			boom.set_u8("boom_end", Maths::Ceil(Maths::Sqrt(this.get_f32("propeskoed"))));
+			boom.set_u8("boom_end", Maths::Ceil(Maths::Sqrt(this.get_f32("propeskoed")) * 2.00f));
 			boom.set_u8("boom_frequency", 1);
 			boom.set_u32("boom_delay", 0);
 			boom.set_u32("flash_delay", 0);

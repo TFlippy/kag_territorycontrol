@@ -31,10 +31,11 @@ enum nextmap_reason
 {
 	nextmap_reason_ruined = 0,
 	nextmap_reason_bugged,
+	nextmap_reason_lag,
 	nextmap_reason_count,
 };
 
-string[] nextmap_reason_string = { "Map Ruined", "Game Bugged" };
+string[] nextmap_reason_string = { "Map Ruined", "Game Bugged", "Server lagging"};
 
 //votekick and vote nextmap
 
@@ -312,7 +313,7 @@ VoteObject@ Create_VoteNextmap(CPlayer@ byplayer, string reason)
 	vote.reason = reason;
 	vote.byuser = byplayer.getUsername();
 	vote.forcePassFeature = "nextmap";
-	vote.required_percent = 0.75f;
+	vote.required_percent = 0.65f;
 
 	CalculateVoteThresholds(vote);
 

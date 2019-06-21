@@ -198,6 +198,18 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
+	{
+		ShopItem@ s = addShopItem(this, "Dart Gun", "$icon_dartgun$", "dartgun", "Dart Gun that can be used to remotely deliver drugs.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 6);
+		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", 50);
+		AddRequirement(s.requirements, "coin", "", "Coins", 500);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
 	// {
 		// ShopItem@ s = addShopItem(this, "Firework (1)", "$icon_firework$", "firework", "Celebrate the new year with this colorful rocket!");
 		// AddRequirement(s.requirements, "coin", "", "Coins", 50);

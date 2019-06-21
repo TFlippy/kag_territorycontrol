@@ -68,7 +68,7 @@ void DoExplosion(CBlob@ this)
 
 	this.set_f32("map_damage_radius", (32.0f + random.NextRanged(32)));
 	this.set_f32("map_damage_ratio", 0.25f);
-	Explode(this, 64.0f, 2.0f);
+	Explode(this, 40.0f, 1.2f);
 	
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
@@ -77,7 +77,7 @@ void DoExplosion(CBlob@ this)
 	{
 		CBlob@[] blobs;
 		
-		if (map.getBlobsInRadius(pos, 32.0f, @blobs))
+		if (map.getBlobsInRadius(pos, 15.0f, @blobs))
 		{
 			for (int i = 0; i < blobs.length; i++)
 			{		
@@ -96,7 +96,7 @@ void DoExplosion(CBlob@ this)
 		// this.getSprite().PlaySound("shockmine_explode.ogg", 0.80f, 1.10f);
 		ShakeScreen(100, 60, this.getPosition());
 	
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			MakeParticle(this, this.getPosition() + getRandomVelocity(0, random.NextRanged(6), 360), getRandomVelocity(0, random.NextRanged(3), 360), particles[XORRandom(particles.length)]);
 		}
@@ -120,7 +120,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case Hitters::keg:
 		case Hitters::mine:
 			this.Tag("lit");
-			this.server_SetTimeToDie(2.00f / 20.00f);
+			this.server_SetTimeToDie(0.1f);
 			return 0;
 			break;
 
@@ -155,5 +155,10 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
 	if (!getNet().isClient()) return;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), pos, vel, XORRandom(360), 1 + (XORRandom(100) * 0.02f), 2 + XORRandom(5), 0, true);
+	CParticle@ p = ParticleAnimated(CFileMatcher(filename).getFirst(), pos, vel, XORRandom(360), 1 + (XORRandom(100) * 0.02f), 2 + XORRandom(5), 0, true);
+	if(p !is null)
+	{
+		p.fastcollision = true;
+		p.bounce = 0.0f;
+	}
 }

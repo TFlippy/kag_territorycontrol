@@ -3,6 +3,7 @@
 #include "Requirements_Tech.as";
 #include "ShopCommon.as";
 
+
 void onInit(CBlob@ this)
 {
 	string configName = this.getConfig();
@@ -122,6 +123,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void onTick(CBlob@ this)
 {
+	if(!isClient()){return;}
 	u32 tick = this.getTickSinceCreated();
 	if (tick < 900 && getGameTime() % 10 == 0)
 	{

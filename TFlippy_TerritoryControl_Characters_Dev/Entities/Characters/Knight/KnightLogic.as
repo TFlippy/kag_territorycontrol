@@ -263,7 +263,9 @@ void onTick(CBlob@ this)
 							{
 								Vec2f velr = getRandomVelocity(!this.isFacingLeft() ? 70 : 110, 4.3f, 40.0f);
 								velr.y = -Maths::Abs(velr.y) + Maths::Abs(velr.x) / 3.0f - 2.0f - float(XORRandom(100)) / 100.0f;
-								ParticlePixel(pos, velr, SColor(255, 255, 255, 0), true);
+								if(isClient()){
+									ParticlePixel(pos, velr, SColor(255, 255, 255, 0), true);
+								}
 							}
 						}
 					}

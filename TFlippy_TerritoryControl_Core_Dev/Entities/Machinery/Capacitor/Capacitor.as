@@ -25,8 +25,9 @@ void SetCharge(CBlob@ this, u16 inValue)
 
 void onDie(CBlob@ this)
 {
-	ParticleZombieLightning(this.getPosition());
 	Explode(this, 5.0f, 3.0f);
+	if(!isClient()){return;}
+	ParticleZombieLightning(this.getPosition());
 	// CMap@ map = getMap();
 	
 	// for (int i = 0; i < 8; i++)
