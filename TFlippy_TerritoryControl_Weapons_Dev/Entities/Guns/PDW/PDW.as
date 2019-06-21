@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "HittersTC.as";
+#include "GunCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -28,16 +29,26 @@ void onInit(CBlob@ this)
 	// this.set_u8("gun_shoot_delay", 2);
 	
 	
-	this.set_u8("gun_shoot_delay", 3);
+	string[] shoot_sounds = { "pdw_shoot" };
 	
-	this.set_u8("gun_bullet_count", 1);
-	this.set_f32("gun_bullet_spread", 4);
-	this.set_Vec2f("gun_muzzle_offset", Vec2f(-8.0f, -0.50f));
+	GunSettings settings = GunSettings();
+	settings.shoot_sounds = shoot_sounds;
+	settings.shoot_delay = 3;
+	settings.ammo_count_max = 30;
+	settings.bullet_spread = 4.00f;
+	settings.muzzle_offset = Vec2f(-15.0f, -1.00f);
+	this.set("gun_settings", @settings);
 	
-	this.set_string("gun_shoot_sound", "PDW_Shoot");
+	// this.set_u8("gun_shoot_delay", 3);
+	
+	// this.set_u8("gun_bullet_count", 1);
+	// this.set_f32("gun_bullet_spread", 4);
+	// this.set_Vec2f("gun_muzzle_offset", Vec2f(-8.0f, -0.50f));
+	
+	// this.set_string("gun_shoot_sound", "PDW_Shoot");
 	
 	
-	this.set_u8("gun_hitter", HittersTC::bullet_low_cal);
+	// this.set_u8("gun_hitter", HittersTC::bullet_low_cal);
 }
 
 // void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
