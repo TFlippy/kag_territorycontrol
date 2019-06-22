@@ -147,6 +147,7 @@ void onTick(CBlob@ this)
 
 void SendHitCommand(CBlob@ this, CBlob@ blob, const Vec2f tilepos, const Vec2f attackVel, const f32 attack_power)
 {
+
 	CBitStream params;
 	params.write_netid(blob is null? 0 : blob.getNetworkID());
 	params.write_Vec2f(tilepos);
@@ -220,13 +221,30 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 	}
 	else
 	{
+
+		f32 attack_power_mod = 1.00f;
+		if (this.getTeamNum() < 7)
+		{
+			TeamData@ team_data;
+			GetTeamData(this.getTeamNum(), @team_data);
+	
+			if (team_data !is null)
+			{
+				u16 upkeep = team_data.upkeep;
+				u16 upkeep_cap = team_data.upkeep_cap;
+				f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+				print("test");
+			
+				if (upkeep_ratio <= UPKEEP_RATIO_BONUS_PICKAXE) attack_power_mod += 1.00f;
+			}
+		}
 		CBlob@ blob = getBlobByNetworkID(blobID);
 		if(blob !is null)
 		{
 			if (this.getConfig() == "builder")
 			{	
 				const bool teamHurt = !blob.hasTag("flesh") || blob.hasTag("dead");
-				this.server_Hit(blob, tilepos, attackVel, attack_power, Hitters::builder, teamHurt);
+				this.server_Hit(blob, tilepos, attackVel, attack_power*attack_power_mod, Hitters::builder, teamHurt);
 			}
 			else
 			{
@@ -238,7 +256,7 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 				else
 				{
 					const bool teamHurt = !blob.hasTag("flesh") || blob.hasTag("dead");
-					this.server_Hit(blob, tilepos, attackVel, attack_power, Hitters::builder, teamHurt);
+					this.server_Hit(blob, tilepos, attackVel, attack_power*attack_power_mod, Hitters::builder, teamHurt);
 				}
 			}
 		}

@@ -121,6 +121,7 @@ void RenderUpkeepHUD(CBlob@ this)
 	if (upkeep_ratio < 1.00f)
 	{
 		string msg_bonuses = "Bonuses:\n";
+		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_PICKAXE) { msg_bonuses += "- Increased Pickaxe Damage\n"; has_bonuses = true; }
 		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_COIN_GAIN) { msg_bonuses += "- Higher coin gain\n"; has_bonuses = true; }
 		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_MINING) { msg_bonuses += "- Increased mining yield\n"; has_bonuses = true; }
 		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_SPEED) { msg_bonuses += "- Increased movement speed\n"; has_bonuses = true; }
