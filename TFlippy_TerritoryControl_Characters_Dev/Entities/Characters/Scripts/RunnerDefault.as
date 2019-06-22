@@ -74,6 +74,30 @@ void onTick(CBlob@ this)
 						moveVars.jumpFactor *= 0.80f;
 					}
 				}
+
+				if (upkeep_ratio <= UPKEEP_RATIO_BONUS_HEALTH) 
+				{ 
+					//every minute  60*30
+					if (getGameTime() % (60*30) == 0)
+					{
+						f32 maxHealth = Maths::Ceil(this.getInitialHealth()*4.0f);
+						if (this.getHealth() < maxHealth)
+						{				
+							if (isServer())
+							{
+								this.server_SetHealth(Maths::Min(this.getHealth() + 0.125f, maxHealth));
+							}
+
+							if (isClient())
+							{
+								for (int i = 0; i < 4; i++)
+								{
+									ParticleAnimated("HealParticle.png", this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), Vec2f(0, f32(XORRandom(100) * -0.02f)) * 0.25f, 0, 0.5f, 10, 0, true);
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
