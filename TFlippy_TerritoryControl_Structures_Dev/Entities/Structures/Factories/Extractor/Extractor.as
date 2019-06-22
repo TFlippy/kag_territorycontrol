@@ -25,18 +25,20 @@ void onTick(CSprite@ this)
 	}
 }
 
+const uint default_tick_freq = 60;
+
 void onInit(CBlob@ this)
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
-	this.getCurrentScript().tickFrequency = 60;
+	this.getCurrentScript().tickFrequency = default_tick_freq;
 
 	this.Tag("builder always hit");
 }
 
 void onTick(CBlob@ this)
 {
-	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = Maths::Ceil(default_tick_freq / (this.exists("gyromat_acceleration")?this.get_f32("gyromat_acceleration"):1.0f));
 
 	if (getNet().isServer())
 	{

@@ -29,6 +29,8 @@ const u8[] resourceYields =
 	1
 };
 
+const uint default_tick_freq = 15;
+
 void onInit(CBlob@ this)
 {
 	this.getSprite().SetZ(-50); //background
@@ -36,7 +38,7 @@ void onInit(CBlob@ this)
 
 	this.Tag("builder always hit");
 	
-	this.getCurrentScript().tickFrequency = 15;
+	this.getCurrentScript().tickFrequency = default_tick_freq;
 	
 	this.set_bool("isActive", false);
 	this.addCommandID("sv_toggle");
@@ -56,8 +58,7 @@ void onInit(CSprite@ this)
 
 void onTick(CBlob@ this)
 {
-	this.getCurrentScript().tickFrequency = 15 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
-
+	this.getCurrentScript().tickFrequency = Maths::Ceil(default_tick_freq / (this.exists("gyromat_acceleration")?this.get_f32("gyromat_acceleration"):1.0f));
 	if (getNet().isServer())
 	{
 		if (!this.get_bool("isActive")) return;
