@@ -29,7 +29,7 @@ void onInit(CBlob@ this)
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(5, 6));
+	this.set_Vec2f("shop menu size", Vec2f(5, 7));
 	this.set_string("shop description", "Mechanist's Workshop");
 	this.set_u8("shop icon", 15);
 
@@ -206,6 +206,18 @@ void onInit(CBlob@ this)
 
 		s.customButton = true;
 		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Accelerated Gyromat Core Replacement", "$icon_gyromat$", "gyromat", "Replace this Accelerated Gyromat's core in hope to improve it.");
+		AddRequirement(s.requirements, "blob", "gyromat", "Gyromat", 1);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 20);
+		AddRequirement(s.requirements, "coin", "", "Coins", 400);
+
+		s.customButton = true;
+		s.buttonwidth = 1;
 		s.buttonheight = 1;
 
 		s.spawnNothing = true;

@@ -7,5 +7,5 @@ void onInit(CBlob@ this)
 	this.Tag("heavy weight");
 	this.set_f32("gyromat_value", acceleration);
 	
-	this.setInventoryName("Accelerated Gyromat\n" + Maths::Round(acceleration * 100.00f) + "% acceleration");
+	this.setInventoryName("Accelerated Gyromat\n+" + Maths::Round(acceleration * 100.00f) + "% speed");
 }

@@ -132,6 +132,7 @@ void LoadDefaultGUI()
 		AddIconToken("$icon_contrabass$", "Contrabass.png", Vec2f(8, 16), 0);
 		AddIconToken("$icon_lighter$", "Lighter.png", Vec2f(8, 8), 0);
 		AddIconToken("$icon_oof$", "Oof.png", Vec2f(40, 16), 0);
+		AddIconToken("$icon_gyromat$", "Gyromat.png", Vec2f(16, 16), 0);
 		
 		// Fabricator
 		AddIconToken("$icon_hoverbike$", "Hoverbike.png", Vec2f(24, 16), 2);
