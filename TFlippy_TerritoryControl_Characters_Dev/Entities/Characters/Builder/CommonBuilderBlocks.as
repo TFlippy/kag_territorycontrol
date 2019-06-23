@@ -98,7 +98,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_inserter$", "Inserter.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_floater$", "Floater.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_treecapitator$", "Treecapitator.png", Vec2f(24, 8), 0);	
-	AddIconToken("$icon_mithrilbreeder$", "MithrilBreeder.png", Vec2f(24, 24), 0);	
+	AddIconToken("$icon_mithrilreactor$", "MithrilReactor.png", Vec2f(24, 24), 0);	
 	AddIconToken("$icon_metaldetector$", "MetalDetector.png", Vec2f(24, 24), 0);	
 	AddIconToken("$icon_chickenassembler$", "ChickenAssembler.png", Vec2f(56, 24), 0);
 	AddIconToken("$icon_securitystation$", "SecurityStation.png", Vec2f(24, 24), 0);	
@@ -666,7 +666,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[3].push_back(b);
 	}
 	{
-		BuildBlock b(0, "mithrilbreeder", "$icon_mithrilbreeder$", "Mithril Reactor\nA small reactor used for mithril enrichment and synthesis using gold.\nBecomes more stable when submerged in deep water.\nCareless usage may result in an irradiated crater.");
+		BuildBlock b(0, "mithrilreactor", "$icon_mithrilreactor$", "Mithril Reactor\nA small reactor used for mithril enrichment and synthesis using gold.\nBecomes more stable when submerged in deep water.\nCareless usage may result in an irradiated crater.");
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
 		AddRequirement(b.reqs, "blob", "mat_mithril", "Mithril", 100);
 		AddRequirement(b.reqs, "blob", "mat_mithrilingot", "Mithril Ingot", 5);

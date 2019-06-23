@@ -10,7 +10,7 @@ void onInit(CBlob@ this)
 	CSprite@ sprite = this.getSprite();
 	if (sprite !is null)
 	{
-		sprite.SetEmitSound("MithrilBreeder_Loop2.ogg");
+		sprite.SetEmitSound("MithrilReactor_Loop.ogg");
 		sprite.SetEmitSoundVolume(0.25f);
 		sprite.SetEmitSoundSpeed(1.0f);
 		sprite.SetEmitSoundPaused(false);
@@ -24,7 +24,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (this.hasTag("dead")) return;
+	this.getCurrentScript().tickFrequency = 10 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 
 	CInventory@ inv = this.getInventory();
 	if (inv !is null)
