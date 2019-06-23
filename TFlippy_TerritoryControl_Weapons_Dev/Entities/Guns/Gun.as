@@ -315,7 +315,7 @@ void Shoot(CBlob@ this, CBlob@ holder, Vec2f source_pos, Vec2f target_pos_initia
 		Vec2f dir = (target_pos - source_pos);
 		dir.Normalize();
 		
-		ShakeScreen(dir * damage_init * 15.00f * settings.shake_modifier, 30, this.getPosition());
+		ShakeScreen(-dir * damage_init * 15.00f * settings.shake_modifier, 30, this.getPosition());
 		
 		CSprite@ sprite = this.getSprite();
 		if (sprite !is null)
