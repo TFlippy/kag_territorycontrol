@@ -144,10 +144,16 @@ void onTick(CBlob@ this)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (customData == Hitters::saw || customData == Hitters::sword || customData == Hitters::builder || customData == Hitters::stab)
+	switch (customData)
 	{
-		damage = 0.00f;
+		case Hitters::saw:
+		case Hitters::sword:
+		case Hitters::builder:
+		case Hitters::stab:
+		case Hitters::fall:
+			damage = 0.00f;
+			break;
 	}
-	
+
 	return damage;
 }
