@@ -106,6 +106,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				fuel_modifier = 3.00f * 5.00f;
 				isValid = true;
 			}
+			else if (fuel_name == "mat_methane")
+			{
+				fuel_modifier = 15.00f;
+				isValid = true;
+			}
 			else if (fuel_name == "mat_fuel")
 			{
 				fuel_modifier = 100.00f;

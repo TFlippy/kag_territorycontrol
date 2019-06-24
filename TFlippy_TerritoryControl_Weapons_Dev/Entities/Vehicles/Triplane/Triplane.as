@@ -427,19 +427,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			f32 fuel_modifier = 1.00f;
 			bool isValid = false;
 			
-			if (fuel_name == "mat_wood")
-			{
-				fuel_modifier = 1.00f;
-				isValid = true;
-			}
-			else if (fuel_name == "mat_coal")
-			{
-				fuel_modifier = 4.00f * 5.00f; // More coal than oil in a drum
-				isValid = true;
-			}
-			else if (fuel_name == "mat_oil")
+			if (fuel_name == "mat_oil")
 			{
 				fuel_modifier = 3.00f * 5.00f;
+				isValid = true;
+			}
+			else if (fuel_name == "mat_methane")
+			{
+				fuel_modifier = 15.00f;
 				isValid = true;
 			}
 			else if (fuel_name == "mat_fuel")
@@ -548,7 +543,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	if (carried !is null && this.get_f32("fuel_count") < this.get_f32("max_fuel"))
 	{
 		string fuel_name = carried.getConfig();
-		bool isValid = fuel_name == "mat_oil" || fuel_name == "mat_fuel";
+		bool isValid = fuel_name == "mat_oil" || fuel_name == "mat_methane" || fuel_name == "mat_fuel";
 		
 		if (isValid)
 		{
@@ -576,6 +571,6 @@ void onRender(CSprite@ this)
 		
 		GUI::SetFont("menu");
 		GUI::DrawTextCentered("This vehicle requires fuel to fly!", Vec2f(pos.x, pos.y + 85 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
-		GUI::DrawTextCentered("(Oil)", Vec2f(pos.x, pos.y + 105 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
+		GUI::DrawTextCentered("(Oil, Methane, Fuel)", Vec2f(pos.x, pos.y + 105 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
 	}
 }
