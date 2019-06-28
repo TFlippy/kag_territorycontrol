@@ -40,7 +40,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob is null) return;
 	
-	if (!blob.isAttached() && (blob.hasTag("material") || blob.hasTag("hopperable")))
+	if (!blob.isAttached() && !blob.hasTag("dead") && (blob.hasTag("material") || blob.hasTag("hopperable")))
 	{
 		string compactor_resource = this.get_string("compactor_resource");
 		
@@ -61,6 +61,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 				this.add_u32("compactor_quantity", blob.getQuantity());
 				// this.Sync("compactor_quantity", false);
 				
+				blob.Tag("dead");
 				blob.server_Die();
 				server_Sync(this);
 			}
