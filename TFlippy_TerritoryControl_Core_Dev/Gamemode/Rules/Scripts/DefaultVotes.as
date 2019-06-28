@@ -7,7 +7,7 @@ s32 g_lastVoteCounter = 0;
 const float required_minutes = 10; //time you have to wait after joining w/o skip_votewait.
 
 s32 g_lastNextmapCounter = 0;
-const float required_minutes_nextmap = 30; //global nextmap vote cooldown
+const float required_minutes_nextmap = 10; //global nextmap vote cooldown
 
 const s32 VoteKickTime = 30 * 60 * 30; //ticks (30min default)
 const s32 VoteTeamKickNoTeamTime = 10 * 60 * 30; // 10 minutes
