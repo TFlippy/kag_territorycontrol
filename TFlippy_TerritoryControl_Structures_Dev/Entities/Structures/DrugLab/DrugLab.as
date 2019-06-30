@@ -3,6 +3,7 @@
 #include "MakeMat.as";
 #include "MaterialCommon.as";
 #include "Explosion.as"; 
+#include "Logging.as";
 
 // A script by TFlippy
 
@@ -41,6 +42,21 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	else if (cmd == this.getCommandID("lab_add_heat"))
 	{
 		this.add_f32("heat", 100);
+		
+		CInventory@ inv = this.getInventory();
+		if (inv !is null)
+		{
+			const f32 mithril_count = inv.getCount("mat_mithril");
+			const f32 e_mithril_count = inv.getCount("mat_mithrilenriched");
+			const f32 methane_count = inv.getCount("mat_methane");
+			const f32 fuel_count = inv.getCount("mat_fuel");
+			const f32 acid_count = inv.getCount("mat_acid");
+			const f32 mustard_count = inv.getCount("mat_mustard");
+			const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
+			const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
+			
+			print_log(this, "Heat; P: " + pressure + "; H: " + heat);
+		}
 	}
 }
 
@@ -63,8 +79,6 @@ void React(CBlob@ this)
 {
 	if (getGameTime() >= this.get_u32("next_react"))
 	{
-		print("" + XORRandom(1));
-	
 		CInventory@ inv = this.getInventory();
 		if (inv !is null)
 		{
@@ -82,6 +96,8 @@ void React(CBlob@ this)
 			
 			const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
 			const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
+			
+			print_log(this, "React; P: " + pressure + "; H: " + heat);
 			
 			CBlob@ oil_blob = inv.getItem("mat_oil");
 			CBlob@ methane_blob = inv.getItem("mat_methane");
@@ -419,6 +435,7 @@ void onTick(CBlob@ this)
 			this.Tag("dead");
 			if (getNet().isServer())
 			{	
+				print_log(this, "Exploding due to overheating; P: " + pressure + "; H: " + heat);
 				this.server_Die();
 			}
 		}
