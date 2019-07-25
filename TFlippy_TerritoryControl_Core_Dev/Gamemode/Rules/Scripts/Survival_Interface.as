@@ -51,8 +51,9 @@ void onInit(CRules@ this)
 void onRestart(CRules@ this)
 {
 	CNet@ net = getNet();
+	CMap@ map = getMap();
 	serverIP = net.joined_ip;
-	mapName = getMap().getMapName();
+	mapName = map is null ? "Blame vamist, error" : getMap().getMapName();
 }
 
 void onRenderScoreboard(CRules@ this)
