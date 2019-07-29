@@ -560,6 +560,8 @@ const SColor c_glass = SColor(0xffbde6ed);
 const SColor c_iron = SColor(0xff879092);
 const SColor c_plasteel = SColor(0xff958a7c);
 const SColor c_concrete = SColor(0xffe4e0c4);
+const SColor c_bconcrete = SColor(0xffe4e0c4);
+const SColor c_reinforcedconcrete = SColor(0xffbcbbb3);
 
 SColor[] fire_colors = 
 {
@@ -652,6 +654,14 @@ void CalculateMinimapColour( CMap@ this, u32 offset, TileType type, SColor &out 
 		else if (type >= CMap::tile_concrete && type <= CMap::tile_concrete_d7)
 		{
 			col = c_concrete;
+		}
+		else if (type >= CMap::tile_bconcrete && type <= CMap::tile_bconcrete_d7)
+		{
+			col = c_bconcrete;
+		}
+		else if (type >= CMap::tile_reinforcedconcrete && type <= CMap::tile_reinforcedconcrete_d15)
+		{
+			col = c_reinforcedconcrete;
 		}
 		else
 		{
