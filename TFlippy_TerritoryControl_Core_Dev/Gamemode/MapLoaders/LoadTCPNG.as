@@ -71,6 +71,10 @@ namespace tc_colors
 		color_rail = 0xff777d84,
 		color_rail_bg = 0xff494d52,
 		
+		color_matter = 0xff50deb1,
+		color_plasteel = 0xffd1c59f,
+		color_plasteel_bg = 0xff6e6753,
+		
 		color_rustyiron = 0xff5f4f4f,
 		// color_rustyiron_bg = 0xff453535,
 		color_mossyconcrete = 0xff95aa7e,
@@ -285,6 +289,21 @@ class TCPNGLoader : PNGLoader
 			{
 				map.SetTile(offset, CMap::tile_biron);
 				spawnBlob(map, "iron_door", offset, 250, true);	
+				break;
+			}
+			case tc_colors::color_plastel:
+			{
+				map.SetTile(offset, CMap::tile_plasteel);
+				break;
+			}
+			case tc_colors::color_plastel_bg:
+			{
+				map.SetTile(offset, CMap::tile_bplasteel);
+				break;
+			}
+			case tc_colors::color_matter:
+			{
+				map.SetTile(offset, CMap::tile_matter);
 				break;
 			}
 			case tc_colors::color_chickenmarket:
