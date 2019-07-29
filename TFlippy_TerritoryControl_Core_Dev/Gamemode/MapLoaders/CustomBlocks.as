@@ -1,21 +1,21 @@
-void HandleCustomTile( CMap@ map, int offset, SColor pixel )
-{
-	// print("custom");
+// void HandleCustomTile( CMap@ map, int offset, SColor pixel )
+// {
+	// // print("custom");
 
-	// if (pixel == color_goo)
-	// {
-		// map.SetTile(offset, CMap::tile_goo );
-		// map.AddTileFlag( offset, Tile::SOLID | Tile::COLLISION );
+	// // if (pixel == color_goo)
+	// // {
+		// // map.SetTile(offset, CMap::tile_goo );
+		// // map.AddTileFlag( offset, Tile::SOLID | Tile::COLLISION );
 
-		// //map.AddTileFlag( offset, Tile::BACKGROUND );
-		// //map.AddTileFlag( offset, Tile::LADDER );
-		// //map.AddTileFlag( offset, Tile::LIGHT_PASSES );
-		// //map.AddTileFlag( offset, Tile::WATER_PASSES );
-		// //map.AddTileFlag( offset, Tile::FLAMMABLE );
-		// //map.AddTileFlag( offset, Tile::PLATFORM );
-		// //map.AddTileFlag( offset, Tile::LIGHT_SOURCE );
-	// }
-}
+		// // //map.AddTileFlag( offset, Tile::BACKGROUND );
+		// // //map.AddTileFlag( offset, Tile::LADDER );
+		// // //map.AddTileFlag( offset, Tile::LIGHT_PASSES );
+		// // //map.AddTileFlag( offset, Tile::WATER_PASSES );
+		// // //map.AddTileFlag( offset, Tile::FLAMMABLE );
+		// // //map.AddTileFlag( offset, Tile::PLATFORM );
+		// // //map.AddTileFlag( offset, Tile::LIGHT_SOURCE );
+	// // }
+// }
 
 namespace CMap
 {
@@ -293,14 +293,14 @@ bool isTileMossyBConcrete(TileType tile)
 	return tile >= CMap::tile_mossybconcrete && tile <= CMap::tile_mossybconcrete_d4;
 }
 
-void onInit(CMap@ this)
-{
-    this.legacyTileMinimap = false;
-	if(isServer()){
-    	this.MakeMiniMap();
-	}
+// void onInit(CMap@ this)
+// {
+    // this.legacyTileMinimap = false;
+	// if(isServer()){
+    	// this.MakeMiniMap();
+	// }
 	
-	CRules@ rules = getRules();
-	rules.addCommandID("add_tile");
-	rules.addCommandID("remove_tile");
-}
+	// CRules@ rules = getRules();
+	// rules.addCommandID("add_tile");
+	// rules.addCommandID("remove_tile");
+// }
