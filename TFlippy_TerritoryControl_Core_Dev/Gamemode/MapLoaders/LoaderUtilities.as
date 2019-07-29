@@ -244,8 +244,6 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_concrete_d4:
 			case CMap::tile_concrete_d5:
 			case CMap::tile_concrete_d6:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
 				return oldTileType + 1;
 
 			case CMap::tile_concrete_d7:
@@ -293,8 +291,6 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_iron_d5:
 			case CMap::tile_iron_d6:
 			case CMap::tile_iron_d7:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
 				return oldTileType + 1;
 
 			case CMap::tile_iron_d8:
@@ -724,6 +720,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_concrete_d5:
 			case CMap::tile_concrete_d6:
 			case CMap::tile_concrete_d7:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				OnConcreteTileHit(map, index);
 				break;
 
