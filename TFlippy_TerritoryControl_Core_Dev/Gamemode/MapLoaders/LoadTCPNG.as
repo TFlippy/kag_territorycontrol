@@ -65,6 +65,25 @@ namespace tc_colors
 		color_reinforced_concrete_bg = 0xff454642,
 		color_rail = 0xff777d84,
 		color_rail_bg = 0xff494d52,
+		
+		color_rustyiron = 0xff5f4f4f,
+		// color_rustyiron_bg = 0xff453535,
+		color_mossyconcrete = 0xff95aa7e,
+		color_mossyconcrete_bg = 0xff4d6340,
+		
+		color_damaged_iron = 0xff2f2f2f,
+		color_damaged_iron_bg = 0xff151515,
+		color_damaged_concrete = 0xff7d7a66,
+		color_damaged_concrete_bg = 0xff353328,
+		color_damaged_glass = 0xff3d6571,
+		color_damaged_glass_bg = 0xff2a4a53,
+		
+		color_damaged_reinforced_concrete = 0xff60625a,
+		// color_damaged_reinforced_concrete_bg = 0xff151612,
+		color_damaged_rustyiron = 0xff2f1f1f,
+		// color_damaged_rustyiron_bg = 0xff150505,
+		color_damaged_mossyconcrete = 0xff657a4e,
+		color_damaged_mossyconcrete_bg = 0xff1d3310,
 	};
 }
 
@@ -357,6 +376,146 @@ class TCPNGLoader : PNGLoader
 			case tc_colors::color_rail_bg:
 			{
 				map.SetTile(offset, CMap::tile_rail_0_bg);
+				break;
+			}
+			case tc_colors::color_rustyiron:
+			{
+				map.SetTile(offset, CMap::tile_rustyiron);
+				break;
+			}
+			// case tc_colors::color_rustyiron_bg:
+			// {
+				// map.SetTile(offset, CMap::tile_bconcrete);
+				// break;
+			// }
+			case tc_colors::color_mossyconcrete:
+			{
+				map.SetTile(offset, CMap::tile_mossyconcrete);
+				break;
+			}
+			case tc_colors::color_mossyconcrete_bg:
+			{
+				map.SetTile(offset, CMap::tile_mossybconcrete);
+				break;
+			}
+			
+			case tc_colors::color_damaged_iron:
+			{
+				switch (XORRandom(9))
+				{
+					case 0: map.SetTile(offset, CMap::tile_iron_d0); break;
+					case 1: map.SetTile(offset, CMap::tile_iron_d1); break;
+					case 2: map.SetTile(offset, CMap::tile_iron_d2); break;
+					case 3: map.SetTile(offset, CMap::tile_iron_d3); break;
+					case 4: map.SetTile(offset, CMap::tile_iron_d4); break;
+					case 5: map.SetTile(offset, CMap::tile_iron_d5); break;
+					case 6: map.SetTile(offset, CMap::tile_iron_d6); break;
+					case 7: map.SetTile(offset, CMap::tile_iron_d7); break;
+					case 8: map.SetTile(offset, CMap::tile_iron_d8); break;
+				}
+				break;
+			}
+			case tc_colors::color_damaged_iron_bg:
+			{
+				switch (XORRandom(9))
+				{
+					case 0: map.SetTile(offset, CMap::tile_biron_d0); break;
+					case 1: map.SetTile(offset, CMap::tile_biron_d1); break;
+					case 2: map.SetTile(offset, CMap::tile_biron_d2); break;
+					case 3: map.SetTile(offset, CMap::tile_biron_d3); break;
+					case 4: map.SetTile(offset, CMap::tile_biron_d4); break;
+					case 5: map.SetTile(offset, CMap::tile_biron_d5); break;
+					case 6: map.SetTile(offset, CMap::tile_biron_d6); break;
+					case 7: map.SetTile(offset, CMap::tile_biron_d7); break;
+					case 8: map.SetTile(offset, CMap::tile_biron_d8); break;
+				}
+				break;
+			}
+			case tc_colors::color_damaged_concrete:
+			{
+				switch (XORRandom(8))
+				{
+					case 0: map.SetTile(offset, CMap::tile_concrete_d0); break;
+					case 1: map.SetTile(offset, CMap::tile_concrete_d1); break;
+					case 2: map.SetTile(offset, CMap::tile_concrete_d2); break;
+					case 3: map.SetTile(offset, CMap::tile_concrete_d3); break;
+					case 4: map.SetTile(offset, CMap::tile_concrete_d4); break;
+					case 5: map.SetTile(offset, CMap::tile_concrete_d5); break;
+					case 6: map.SetTile(offset, CMap::tile_concrete_d6); break;
+					case 7: map.SetTile(offset, CMap::tile_concrete_d7); break;
+				}
+				break;
+			}
+			case tc_colors::color_damaged_concrete_bg:
+			{
+				switch (XORRandom(8))
+				{
+					case 0: map.SetTile(offset, CMap::tile_bconcrete_d0); break;
+					case 1: map.SetTile(offset, CMap::tile_bconcrete_d1); break;
+					case 2: map.SetTile(offset, CMap::tile_bconcrete_d2); break;
+					case 3: map.SetTile(offset, CMap::tile_bconcrete_d3); break;
+					case 4: map.SetTile(offset, CMap::tile_bconcrete_d4); break;
+					case 5: map.SetTile(offset, CMap::tile_bconcrete_d5); break;
+					case 6: map.SetTile(offset, CMap::tile_bconcrete_d6); break;
+					case 7: map.SetTile(offset, CMap::tile_bconcrete_d7); break;
+				}
+				break;
+			}
+			case tc_colors::color_damaged_reinforced_concrete:
+			{
+				switch (XORRandom(16))
+				{
+					case 0: map.SetTile(offset, CMap::tile_reinforcedconcrete_d0); break;
+					case 1: map.SetTile(offset, CMap::tile_reinforcedconcrete_d1); break;
+					case 2: map.SetTile(offset, CMap::tile_reinforcedconcrete_d2); break;
+					case 3: map.SetTile(offset, CMap::tile_reinforcedconcrete_d3); break;
+					case 4: map.SetTile(offset, CMap::tile_reinforcedconcrete_d4); break;
+					case 5: map.SetTile(offset, CMap::tile_reinforcedconcrete_d5); break;
+					case 6: map.SetTile(offset, CMap::tile_reinforcedconcrete_d6); break;
+					case 7: map.SetTile(offset, CMap::tile_reinforcedconcrete_d7); break;
+					case 8: map.SetTile(offset, CMap::tile_reinforcedconcrete_d8); break;
+					case 9: map.SetTile(offset, CMap::tile_reinforcedconcrete_d9); break;
+					case 10: map.SetTile(offset, CMap::tile_reinforcedconcrete_d10); break;
+					case 11: map.SetTile(offset, CMap::tile_reinforcedconcrete_d11); break;
+					case 12: map.SetTile(offset, CMap::tile_reinforcedconcrete_d12); break;
+					case 13: map.SetTile(offset, CMap::tile_reinforcedconcrete_d13); break;
+					case 14: map.SetTile(offset, CMap::tile_reinforcedconcrete_d14); break;
+					case 15: map.SetTile(offset, CMap::tile_reinforcedconcrete_d15); break;
+				}
+				break;
+			}
+			case tc_colors::color_damaged_mossyconcrete:
+			{
+				switch (XORRandom(5))
+				{
+					case 0: map.SetTile(offset, CMap::tile_mossyconcrete_d0); break;
+					case 1: map.SetTile(offset, CMap::tile_mossyconcrete_d1); break;
+					case 2: map.SetTile(offset, CMap::tile_mossyconcrete_d2); break;
+					case 3: map.SetTile(offset, CMap::tile_mossyconcrete_d3); break;
+					case 4: map.SetTile(offset, CMap::tile_mossyconcrete_d4); break;
+				}
+				break;
+			}
+			case tc_colors::color_damaged_mossyconcrete_bg:
+			{
+				switch (XORRandom(5))
+				{
+					case 0: map.SetTile(offset, CMap::tile_mossybconcrete_d0); break;
+					case 1: map.SetTile(offset, CMap::tile_mossybconcrete_d1); break;
+					case 2: map.SetTile(offset, CMap::tile_mossybconcrete_d2); break;
+					case 3: map.SetTile(offset, CMap::tile_mossybconcrete_d3); break;
+					case 4: map.SetTile(offset, CMap::tile_mossybconcrete_d4); break;
+				}
+				break;
+			}
+			case tc_colors::color_damaged_glass:
+			{
+				map.SetTile(offset, CMap::tile_glass_d0);
+				break;
+			}
+			case tc_colors::color_damaged_glass_bg:
+			{
+				map.SetTile(offset, CMap::tile_bglass_d0);
 				break;
 			}
 		};

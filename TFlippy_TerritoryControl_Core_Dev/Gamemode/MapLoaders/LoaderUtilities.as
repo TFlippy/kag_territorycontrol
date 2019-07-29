@@ -228,7 +228,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 				
 				map.server_SetTile(pos, CMap::tile_concrete_d0);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
 
 				for (u8 i = 0; i < 4; i++)
 				{
@@ -244,6 +244,8 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_concrete_d4:
 			case CMap::tile_concrete_d5:
 			case CMap::tile_concrete_d6:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
 				return oldTileType + 1;
 
 			case CMap::tile_concrete_d7:
@@ -274,7 +276,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 				
 				map.server_SetTile(pos, CMap::tile_iron_d0);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
 
 				for (u8 i = 0; i < 4; i++)
 				{
@@ -291,6 +293,8 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_iron_d5:
 			case CMap::tile_iron_d6:
 			case CMap::tile_iron_d7:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
 				return oldTileType + 1;
 
 			case CMap::tile_iron_d8:
@@ -686,7 +690,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				
 				concrete_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
@@ -709,8 +713,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_concrete_v13:
 			case CMap::tile_concrete_v14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
-				
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				break;
 				
 			case CMap::tile_concrete_d0:
@@ -765,7 +768,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_iron_v13:
 			case CMap::tile_iron_v14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				
 				break;
 
@@ -783,7 +786,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			
 			case CMap::tile_rustyiron:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				
 				break;
 				
@@ -801,7 +804,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				
 				reinforcedconcrete_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				
 				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
@@ -824,7 +827,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_reinforcedconcrete_v13:
 			case CMap::tile_reinforcedconcrete_v14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				break;
 				
 			case CMap::tile_reinforcedconcrete_d0:
@@ -843,6 +846,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_reinforcedconcrete_d13:
 			case CMap::tile_reinforcedconcrete_d14:
 			case CMap::tile_reinforcedconcrete_d15:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				OnConcreteTileHit(map, index);
 				break;
 			
@@ -856,6 +861,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_mossyconcrete_d2:
 			case CMap::tile_mossyconcrete_d3:
 			case CMap::tile_mossyconcrete_d4:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				OnConcreteTileHit(map, index);
 				break;
 			
@@ -888,7 +895,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_bconcrete_v13:
 			case CMap::tile_bconcrete_v14:
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
-				map.RemoveTileFlag( index, Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
 				break;
 
 			case CMap::tile_bconcrete_d0:
@@ -899,12 +906,14 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_bconcrete_d5:
 			case CMap::tile_bconcrete_d6:
 			case CMap::tile_bconcrete_d7:
+				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
+				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
 				OnBConcreteTileHit(map, index);
 				break;
 			
 			case CMap::tile_mossybconcrete:
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
-				map.RemoveTileFlag( index, Tile::LIGHT_SOURCE);
+				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
 				break;
 				
 			case CMap::tile_mossybconcrete_d0:
@@ -912,6 +921,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_mossybconcrete_d2:
 			case CMap::tile_mossybconcrete_d3:
 			case CMap::tile_mossybconcrete_d4:
+				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
+				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
 				OnBConcreteTileHit(map, index);
 				break;
 		}
