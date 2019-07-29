@@ -513,6 +513,18 @@ class TCPNGLoader : PNGLoader
 				}
 				break;
 			}
+			case tc_colors::color_damaged_rustyiron:
+			{
+				switch (XORRandom(5))
+				{
+					case 0: map.SetTile(offset, CMap::tile_rustyiron_d0); break;
+					case 1: map.SetTile(offset, CMap::tile_rustyiron_d1); break;
+					case 2: map.SetTile(offset, CMap::tile_rustyiron_d2); break;
+					case 3: map.SetTile(offset, CMap::tile_rustyiron_d3); break;
+					case 4: map.SetTile(offset, CMap::tile_rustyiron_d4); break;
+				}
+				break;
+			}
 			case tc_colors::color_damaged_glass:
 			{
 				map.SetTile(offset, CMap::tile_glass_d0);
@@ -730,6 +742,8 @@ bool onMapTileCollapse(CMap@ map, u32 offset)
 			rules.SendCommand(rules.getCommandID("remove_tile"), params);
 		}
 	}
+	
+	// print("collapse");
 	
 	return true;
 }
