@@ -779,13 +779,14 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_iron_d6:
 			case CMap::tile_iron_d7:
 			case CMap::tile_iron_d8:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				OnIronTileHit(map, index);
 				break;
 			
 			case CMap::tile_rustyiron:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
-				
 				break;
 				
 			case CMap::tile_rustyiron_d0:
@@ -793,6 +794,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_rustyiron_d2:
 			case CMap::tile_rustyiron_d3:
 			case CMap::tile_rustyiron_d4:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				OnIronTileHit(map, index);
 				break;
 			
