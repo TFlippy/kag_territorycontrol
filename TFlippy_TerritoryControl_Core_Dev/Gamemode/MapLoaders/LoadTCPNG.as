@@ -291,12 +291,12 @@ class TCPNGLoader : PNGLoader
 				spawnBlob(map, "iron_door", offset, 250, true);	
 				break;
 			}
-			case tc_colors::color_plastel:
+			case tc_colors::color_plasteel:
 			{
 				map.SetTile(offset, CMap::tile_plasteel);
 				break;
 			}
-			case tc_colors::color_plastel_bg:
+			case tc_colors::color_plasteel_bg:
 			{
 				map.SetTile(offset, CMap::tile_bplasteel);
 				break;
