@@ -43,6 +43,8 @@ void onInit(CBlob@ this)
 
 	SetHelp(this, "help self action2", "builder", "$Pick$Dig/Chop  $KEY_HOLD$$RMB$", "", 3);
 
+	this.set_u8("mining_hardness", 2);
+	
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	this.getCurrentScript().removeIfTag = "dead";
 }
@@ -181,40 +183,81 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 		
 			if (map.getSectorAtPosition(tilepos, "no build") is null)
 			{
-				if (this.getConfig() == "builder")
-				{	
+				u8 mining_hardness = this.get_u8("mining_hardness");
+				bool can_mine = true;
+				
+				if (mining_hardness < 3)
+				{
 					if ((tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || (tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14))
 					{
 						this.getSprite().PlaySound("/metal_stone.ogg");
 						sparks(tilepos, 1, 1);
-					}
-					else
-					{
-						this.server_HitMap(tilepos, attackVel, 1.0f, Hitters::builder);
+						can_mine = false;
 					}
 				}
-				else
+				
+				if (mining_hardness < 2)
 				{
-					if ((tile >= CMap::tile_iron && tile <= CMap::tile_iron_d8) || 
-						(tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || 
-						(tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14) || 
-						(tile >= CMap::tile_reinforcedconcrete_d5 && tile <= CMap::tile_reinforcedconcrete_d15) || 
-						(tile >= CMap::tile_biron && tile <= CMap::tile_biron_d8))
+					if ((tile >= CMap::tile_iron && tile <= CMap::tile_iron_d8) || (tile >= CMap::tile_reinforcedconcrete_d5 && tile <= CMap::tile_reinforcedconcrete_d15) || (tile >= CMap::tile_biron && tile <= CMap::tile_biron_d8))
 					{
 						this.getSprite().PlaySound("/metal_stone.ogg");
 						sparks(tilepos, 1, 1);
+						can_mine = false;
 					}
-					else if (this.getConfig() == "slave" && map.isTileCastle(tile))
+				}
+				
+				if (mining_hardness < 1)
+				{
+					if (map.isTileCastle(tile))
 					{
-						// this.getSprite().PlaySound("rock_hit" + (1 + XORRandom(3) + ".ogg"));
 						this.getSprite().PlaySound("build_wall2.ogg", 1.0f, 0.8f);
-						// sparks(tilepos, 1, 1);
+						can_mine = false;
 					}
-					else
+				}
+				
+				if (can_mine)
+				{
+					if (isServer())
 					{
 						this.server_HitMap(tilepos, attackVel, 1.0f, Hitters::builder);
 					}
 				}
+				
+			
+				// if (this.getConfig() == "builder")
+				// {	
+					// if ((tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || (tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14))
+					// {
+						// this.getSprite().PlaySound("/metal_stone.ogg");
+						// sparks(tilepos, 1, 1);
+					// }
+					// else
+					// {
+						// this.server_HitMap(tilepos, attackVel, 1.0f, Hitters::builder);
+					// }
+				// }
+				// else
+				// {
+					// if ((tile >= CMap::tile_iron && tile <= CMap::tile_iron_d8) || 
+						// (tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || 
+						// (tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14) || 
+						// (tile >= CMap::tile_reinforcedconcrete_d5 && tile <= CMap::tile_reinforcedconcrete_d15) || 
+						// (tile >= CMap::tile_biron && tile <= CMap::tile_biron_d8))
+					// {
+						// this.getSprite().PlaySound("/metal_stone.ogg");
+						// sparks(tilepos, 1, 1);
+					// }
+					// else if (this.getConfig() == "slave" && map.isTileCastle(tile))
+					// {
+						// // this.getSprite().PlaySound("rock_hit" + (1 + XORRandom(3) + ".ogg"));
+						// this.getSprite().PlaySound("build_wall2.ogg", 1.0f, 0.8f);
+						// // sparks(tilepos, 1, 1);
+					// }
+					// else
+					// {
+						// this.server_HitMap(tilepos, attackVel, 1.0f, Hitters::builder);
+					// }
+				// }
 			}
 		}
 	}

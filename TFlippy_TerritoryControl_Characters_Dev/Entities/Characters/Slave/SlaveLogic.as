@@ -23,6 +23,8 @@ void onInit(CBlob@ this)
 		ball.set_u16("slave_id", this.getNetworkID());
 		ball.Init();
 	}
+	
+	this.set_u8("mining_hardness", 0);
 }
 
 // void onTick(CBlob@ this)

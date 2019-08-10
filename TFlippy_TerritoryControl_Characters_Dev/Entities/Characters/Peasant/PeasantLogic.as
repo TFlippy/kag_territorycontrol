@@ -4,6 +4,8 @@ void onInit(CBlob@ this)
 {
 	this.Tag("neutral");
 	this.Tag("human");
+	
+	this.set_u8("mining_hardness", 1);
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
