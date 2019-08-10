@@ -60,7 +60,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 				if (XORRandom(200) == 0) 
 				{
 					CBlob@[] blobs;
-					getBlobsByName("methanefissure", @blobs);
+					getBlobsByName("methanedeposit", @blobs);
 					
 					if (blobs.length < 8)
 					{
