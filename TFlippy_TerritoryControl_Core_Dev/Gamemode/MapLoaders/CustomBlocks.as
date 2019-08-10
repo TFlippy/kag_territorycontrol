@@ -293,6 +293,16 @@ bool isTileMossyBConcrete(TileType tile)
 	return tile >= CMap::tile_mossybconcrete && tile <= CMap::tile_mossybconcrete_d4;
 }
 
+bool isTileGlass(TileType tile)
+{
+	return tile >= CMap::tile_glass && tile <= CMap::tile_glass_d0;
+}
+
+bool isTileBGlass(TileType tile)
+{
+	return tile >= CMap::tile_bglass && tile <= CMap::tile_bglass_d0;
+}
+
 // void onInit(CMap@ this)
 // {
     // this.legacyTileMinimap = false;

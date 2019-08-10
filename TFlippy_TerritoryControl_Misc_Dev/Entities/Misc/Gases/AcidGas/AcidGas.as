@@ -2,6 +2,7 @@
 #include "Hitters.as";
 #include "Explosion.as";
 #include "ArcherCommon.as";
+#include "CustomBlocks.as";
 
 void onInit(CBlob@ this)
 {
@@ -47,7 +48,12 @@ void onTick(CBlob@ this)
 		for (int i = 0; i < 10; i++)
 		{
 			Vec2f bpos = pos + Vec2f(XORRandom(32) - 16, XORRandom(32) - 16);
-			map.server_DestroyTile(bpos, 1, this);
+			TileType type = map.getTile(bpos).type;
+			
+			if (!isTileGlass(type) && !isTileBGlass(type))
+			{
+				map.server_DestroyTile(bpos, 1, this);
+			}
 		}
 	}
 }
