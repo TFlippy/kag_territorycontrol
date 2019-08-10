@@ -69,7 +69,7 @@ void onTick(CBlob@ this)
 			{
 				// if (b.getTeamNum() != this.getTeamNum() && (this.getTeamNum() == 255 ? (this.hasTag("can be captured by neutral") ? this.getTeamNum() < 8 : b.getTeamNum() < 8)))
 				// && (this.getTeamNum() == 255 && this.hasTag("can be captured by neutral") ? true : b.getTeamNum() < 8)
-				if (b.getTeamNum()!=this.getTeamNum() && (this.getTeamNum() == 255 && this.hasTag("can be captured by neutral") ? true : ((!b.hasTag("neutral") && b.getTeamNum() < 7) || (b.getTeamNum() == 250 && this.hasTag("faction_base")))))
+				if ((b.getTeamNum() != this.getTeamNum()) && ((this.getTeamNum() == 255 && this.hasTag("can be captured by neutral")) || ((!b.hasTag("neutral") && b.getTeamNum() < 7) || (b.getTeamNum() == 250 && this.hasTag("faction_base")))))
 				{
 					Vec2f bpos = b.getPosition();
 					if (bpos.x > pos.x - this.getWidth() / 1.0f && bpos.x < pos.x + this.getWidth() / 1.0f && bpos.y < pos.y + this.getHeight() / 1.0f && bpos.y > pos.y - this.getHeight() / 1.0f)
@@ -203,6 +203,7 @@ void onRender(CSprite@ this)
 	if (blob is null || !blob.hasTag(raid_tag))
 		return;
 
+	
 	Vec2f pos2d = getDriver().getScreenPosFromWorldPos(blob.getPosition() + Vec2f(0.0f, -blob.getHeight()));
 
 	s16 friendlyCount = blob.get_s16(friendly_prop);
