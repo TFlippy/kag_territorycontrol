@@ -92,6 +92,13 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
+	{
+		ShopItem@ s = addShopItem(this, "Engineer's Tools", "$engineertools$", "engineertools", "Engineer's Tools for real engineers.", true);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
+		AddRequirement(s.requirements, "coin", "", "Coins", 600);
+		
+		s.spawnNothing = true;
+	}
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

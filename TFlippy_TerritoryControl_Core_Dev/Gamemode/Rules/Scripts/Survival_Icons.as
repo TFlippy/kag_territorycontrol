@@ -1,4 +1,15 @@
+
 void onInit(CRules@ this)
+{
+	ReloadIcons(this);
+}
+
+void onReload(CRules@ this)
+{
+	ReloadIcons(this);
+}
+
+void ReloadIcons(CRules@ this)
 {
 	print("--- ADDING ICON TOKENS ----");
 
@@ -98,6 +109,7 @@ void onInit(CRules@ this)
 	AddIconToken("$table$", "Table.png", Vec2f(24, 16), 0);
 	AddIconToken("$chair$", "Chair.png", Vec2f(16, 24), 0);
 	AddIconToken("$jackolantern$", "JackOLantern.png", Vec2f(16, 16), 0);
+	AddIconToken("$engineertools$", "EngineerTools.png", Vec2f(16, 16), 0);
 
 	// Armory
 	AddIconToken("$royalarmor$", "RoyalArmor.png", Vec2f(16, 8), 0);
