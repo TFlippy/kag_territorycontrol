@@ -80,6 +80,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$concrete_block$", "World.png", Vec2f(8, 8), CMap::tile_concrete);
 	AddIconToken("$bconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_bconcrete);
 	AddIconToken("$reinforcedconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_reinforcedconcrete);
+	AddIconToken("$patreonshop$", "PatreonShop.png", Vec2f(40, 40), 0);
 	
 	AddIconToken("$icon_conveyor$", "Conveyor.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 0);
@@ -374,6 +375,15 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
 		b.buildOnGround = true;
 		b.size.Set(40, 24);
+		blocks[1].push_back(b);
+	}
+	{
+		BuildBlock b(0, "patreonshop", "$patreonshop$", "Gift Shop\nA special souvenir shop for\nVamistorio's Patreon supporters.\n\nUsable by anyone once built.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
+		AddRequirement(b.reqs, "coin", "", "Coins", 500);
+		b.buildOnGround = true;
+		b.size.Set(40, 40);
 		blocks[1].push_back(b);
 	}
 	{

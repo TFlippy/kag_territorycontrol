@@ -13,6 +13,14 @@ void ReloadIcons(CRules@ this)
 {
 	print("--- ADDING ICON TOKENS ----");
 
+	// Patreon
+	AddIconToken("$icon_crown$", "Crown_Icon.png", Vec2f(24, 24), 0);
+	AddIconToken("$icon_throne$", "Throne.png", Vec2f(16, 24), 0);
+	AddIconToken("$icon_sofa$", "Sofa.png", Vec2f(24, 24), 0);
+	AddIconToken("$icon_noisemaker$", "Noisemaker.png", Vec2f(24, 24), 0);
+	AddIconToken("$icon_badgerstatue$", "BadgerStatue.png", Vec2f(32, 32), 0);
+	AddIconToken("$icon_pigeonstatue$", "PigeonStatue.png", Vec2f(32, 32), 0);
+	
 	// TC Icons
 	// Components
 	AddIconToken("$mat_copperwire$", "Material_CopperWire.png", Vec2f(9, 11), 0);

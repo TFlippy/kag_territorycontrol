@@ -268,6 +268,15 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 		}
 	}
 	
+	if(headname == "crown")
+	{
+		CSpriteLayer@ crown = playerblob.getSprite().getSpriteLayer("crown");
+		if (crown !is null)
+		{
+			playerblob.getSprite().RemoveSpriteLayer("crown");
+		}
+	}
+	
 	if(headname == "militaryhelmet")
 	{
 		CSpriteLayer@ milhelmet = playerblob.getSprite().getSpriteLayer("milhelmet");
