@@ -13,7 +13,7 @@ void onInit(CBlob@ this)
 	this.getSprite().setRenderStyle(RenderStyle::additive);
 	this.getSprite().SetZ(10.0f);
 
-	if (!this.exists("acid_strength")) this.set_u16("acid_strength", 100);
+	if (!this.exists("acid_strength")) this.set_u16("acid_strength", 50);
 	if (!this.exists("toxicity")) this.set_f32("toxicity", 1.00f);
 	
 	this.SetMapEdgeFlags(CBlob::map_collide_sides);
@@ -32,6 +32,8 @@ void UpdateTickFrequency(CBlob@ this)
 
 void onTick(CBlob@ this)
 {	
+	if (this.getTickSinceCreated() < 2) return;
+
 	const bool server = isServer();
 	const bool client = isClient();
 
