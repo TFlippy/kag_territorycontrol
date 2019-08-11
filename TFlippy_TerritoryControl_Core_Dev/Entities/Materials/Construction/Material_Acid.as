@@ -19,8 +19,12 @@ void DoExplosion(CBlob@ this)
 	{
 		for (int i = 0; i < (quantity / 8) + XORRandom(quantity / 8) ; i++)
 		{
-			CBlob@ blob = server_CreateBlob("acidgas", -1, this.getPosition());
+			CBlob@ blob = server_CreateBlobNoInit("acidgas");
+			blob.server_setTeamNum(-1);
+			blob.setPosition(this.getPosition());
 			blob.setVelocity(Vec2f(XORRandom(16) - 8, -XORRandom(5)));
+			blob.set_u16("acid_strength", 100);
+			blob.Init();
 			blob.server_SetTimeToDie(30 + XORRandom(30));
 		}
 	}
