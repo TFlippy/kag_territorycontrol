@@ -29,7 +29,7 @@ void onInit(CBlob@ this)
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(5, 7));
+	this.set_Vec2f("shop menu size", Vec2f(5, 8));
 	this.set_string("shop description", "Mechanist's Workshop");
 	this.set_u8("shop icon", 15);
 
@@ -211,6 +211,29 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "Scorcher", "$icon_flamethrower$", "flamethrower", "A tool used for incinerating plants, buildings and people.\n\nUses Oil.");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Blazethrower", "$icon_blazethrower$", "blazethrower", "A Scorcher modification providing support for gaseous fuels.\n\nUses Fuel.");
+		AddRequirement(s.requirements, "blob", "flamethrower", "Scorcher", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 1000);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Accelerated Gyromat Core Replacement", "$icon_gyromat$", "gyromat", "Replace this Accelerated Gyromat's core in hope to improve it.");
 		AddRequirement(s.requirements, "blob", "gyromat", "Gyromat", 1);
 		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 20);
@@ -218,6 +241,18 @@ void onInit(CBlob@ this)
 
 		s.customButton = true;
 		s.buttonwidth = 1;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Acidthrower", "$icon_acidthrower$", "acidthrower", "A tool used for dissolving plants, buildings and people.\n\nUses Acid.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
+		AddRequirement(s.requirements, "coin", "", "Coins", 1250);
+
+
+		s.customButton = true;
+		s.buttonwidth = 2;
 		s.buttonheight = 1;
 
 		s.spawnNothing = true;

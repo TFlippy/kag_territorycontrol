@@ -121,29 +121,6 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Scorcher", "$icon_flamethrower$", "flamethrower", "A tool used for incinerating plants, buildings and people.\n\nUses Oil.");
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Blazethrower", "$icon_blazethrower$", "blazethrower", "A Scorcher modification providing support for gaseous fuels.\n\nUses Fuel.");
-		AddRequirement(s.requirements, "blob", "flamethrower", "Scorcher", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 1000);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}
-	{
 		ShopItem@ s = addShopItem(this, "Shotgun", "$icon_shotgun$", "shotgun", "A short-ranged weapon that deals devastating damage.\n\nUses Shotgun Shells.");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 70);
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 3);
