@@ -13,24 +13,60 @@ void onInit(CBlob@ this)
 	this.getSprite().setRenderStyle(RenderStyle::additive);
 	this.getSprite().SetZ(10.0f);
 
+	if (!this.exists("acid_strength")) this.set_u16("acid_strength", 100);
 	if (!this.exists("toxicity")) this.set_f32("toxicity", 1.00f);
 	
 	this.SetMapEdgeFlags(CBlob::map_collide_sides);
-	this.getCurrentScript().tickFrequency = 15 + XORRandom(30);
+	// this.getCurrentScript().tickFrequency = 15 + XORRandom(30);
+	UpdateTickFrequency(this);
 
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
 
 	this.server_SetTimeToDie(30);
 }
 
-void onTick(CBlob@ this)
+void UpdateTickFrequency(CBlob@ this)
 {
+	this.getCurrentScript().tickFrequency = 4;
+}
+
+void onTick(CBlob@ this)
+{	
+	const bool server = isServer();
+	const bool client = isClient();
+
+	Vec2f pos = this.getPosition();
+	s32 strength = this.get_u16("acid_strength");
 	
-	if (isServer())
+	if (strength > 0 && this.getPosition().y > 0 && !this.isInWater())
 	{
-		if (this.getPosition().y < 0) {this.server_Die();}
-		Vec2f pos = this.getPosition();
 		CMap@ map = this.getMap();
+			
+		bool hit = false;
+		Vec2f hit_position = this.getPosition();
+	
+		for (int i = 0; i < 10; i++)
+		{
+			Vec2f bpos = pos + Vec2f(XORRandom(32) - 16, XORRandom(32) - 16);
+			
+			TileType type = map.getTile(bpos).type;
+			
+			if (!isTileGlass(type) && !isTileBGlass(type) && type != CMap::tile_empty)
+			{
+				if (server)
+				{
+					map.server_DestroyTile(bpos, 1, this);
+				}
+				
+				strength -= 1;
+				
+				if (!hit)
+				{
+					hit_position = bpos;
+					hit = true;
+				}
+			}
+		}
 	
 		CBlob@[] blobsInRadius;
 		if (map.getBlobsInRadius(this.getPosition(), this.getRadius() * 2.5f, @blobsInRadius))
@@ -38,22 +74,48 @@ void onTick(CBlob@ this)
 			for (uint i = 0; i < blobsInRadius.length; i++)
 			{
 				CBlob@ blob = blobsInRadius[i];
-				if (!blob.hasTag("gas immune"))
+				if (!blob.hasTag("gas immune") && !blob.hasTag("gas"))
 				{
-					if (getNet().isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.25f, Hitters::burn);
+					// print("hit" + blob.getConfig());
+				
+					if (server) 
+					{
+						this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.40f, Hitters::burn);
+					}
+					
+					strength -= 1;
+					
+					if (!hit)
+					{
+						hit_position = blob.getPosition();
+						hit = true;
+					}
+				}
+			}
+		}
+				
+		if (hit)
+		{
+			if (client)
+			{
+				if (client)
+				{
+					this.getSprite().PlaySound("Steam", 1, 1);
+					MakeParticle(this, hit_position, Vec2f(0, -1), "LargeSmoke");
 				}
 			}
 		}
 		
-		for (int i = 0; i < 10; i++)
+		// print("" + strength);
+		
+		this.set_u16("acid_strength", Maths::Max(strength, 0));
+		UpdateTickFrequency(this);
+	}
+	else
+	{
+		if (server)
 		{
-			Vec2f bpos = pos + Vec2f(XORRandom(32) - 16, XORRandom(32) - 16);
-			TileType type = map.getTile(bpos).type;
-			
-			if (!isTileGlass(type) && !isTileBGlass(type))
-			{
-				map.server_DestroyTile(bpos, 1, this);
-			}
+			this.server_Die();
 		}
 	}
 }
@@ -66,4 +128,10 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
 	return 0;
+}
+
+void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
+{
+	if (!isClient()) return;
+	ParticleAnimated(CFileMatcher(filename).getFirst(), pos, vel, XORRandom(360), 1.25f, 1 + XORRandom(5), XORRandom(100) * -0.00005f, false);
 }
