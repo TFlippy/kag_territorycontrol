@@ -43,7 +43,8 @@ void onInit(CBlob@ this)
 
 	SetHelp(this, "help self action2", "builder", "$Pick$Dig/Chop  $KEY_HOLD$$RMB$", "", 3);
 
-	this.set_u8("mining_hardness", 2);
+	if (!this.exists("mining_hardness")) this.set_u8("mining_hardness", 2);
+	if (!this.exists("max_build_length")) this.set_f32("max_build_length", 4.00f);
 	
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	this.getCurrentScript().removeIfTag = "dead";
