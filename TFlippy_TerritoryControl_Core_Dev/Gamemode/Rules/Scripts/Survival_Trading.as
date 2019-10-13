@@ -236,21 +236,20 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ killer, u8 customData)
 
 // give coins for damage
 
-f32 onPlayerTakeDamage(CRules@ this, CPlayer@ victim, CPlayer@ attacker, f32 damageScale)
+f32 onPlayerTakeDamage(CRules@ this, CPlayer@ victim, CPlayer@ attacker, f32 DamageScale)
 {
 	if (attacker !is null && attacker !is victim)
 	{
 		CBlob@ blob = attacker.getBlob();
 	
-		if (blob !is null) attacker.server_setCoins(attacker.getCoins() + damageScale * coinsOnDamageAdd / this.attackdamage_modifier + (blob.getConfig() == "bandit" ? 10 : 0));
+		if (blob !is null) attacker.server_setCoins(attacker.getCoins() + DamageScale * coinsOnDamageAdd / this.attackdamage_modifier + (blob.getConfig() == "bandit" ? 10 : 0));
 	}
 
-	return damageScale;
+	return DamageScale;
 }
 
 void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 {
-	//only important on server
 	if (isServer())
 	{
 		if (cmd == getGameplayEventID(this))
@@ -283,7 +282,6 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 							case CMap::tile_plasteel: coins = 10; break;
 						}
 					}
-
 					break;
 
 					case GE_built_blob:
@@ -294,6 +292,11 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 						coins = coinsOnBuild;
 					}
 					break;
+				}
+
+				if (coins > 0)
+				{
+					p.server_setCoins(p.getCoins() + coins);
 				}
 			}
 		}
