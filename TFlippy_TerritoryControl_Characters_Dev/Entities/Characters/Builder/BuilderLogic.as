@@ -267,23 +267,23 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 		CBlob@ blob = getBlobByNetworkID(blobID);
 		if(blob !is null)
 		{
-			if (this.getConfig() == "builder")
-			{	
-				const bool teamHurt = !blob.hasTag("flesh") || blob.hasTag("dead");
-				this.server_Hit(blob, tilepos, attackVel, attack_power, Hitters::builder, teamHurt);
-			}
-			else
+			u8 mining_hardness = this.get_u8("mining_hardness");
+			bool can_mine = true;
+			
+			if (mining_hardness < 2)
 			{
 				if (blob.getName() == "iron_door")
 				{
 					this.getSprite().PlaySound("/metal_stone.ogg");
 					sparks(tilepos, 1, 1);
+					can_mine = false;
 				}
-				else
-				{
-					const bool teamHurt = !blob.hasTag("flesh") || blob.hasTag("dead");
-					this.server_Hit(blob, tilepos, attackVel, attack_power, Hitters::builder, teamHurt);
-				}
+			}
+			
+			if (can_mine)
+			{
+				const bool teamHurt = !blob.hasTag("flesh") || blob.hasTag("dead");
+				this.server_Hit(blob, tilepos, attackVel, attack_power, Hitters::builder, teamHurt);
 			}
 		}
 	}
