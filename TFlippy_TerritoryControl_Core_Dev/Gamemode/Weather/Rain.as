@@ -97,11 +97,11 @@ void onTick(CBlob@ this)
 	sine = (Maths::Sin((getGameTime() * 0.0125f)) * 8.0f);
 	Vec2f sineDir = Vec2f(0, 1).RotateBy(sine * 20);
 	
-	CBlob@[] blobs;
-	getBlobsByTag("aerial", @blobs);
-	for(u32 i = 0; i < blobs.length; i++)
+	CBlob@[] vehicles;
+	getBlobsByTag("aerial", @vehicles);
+	for (u32 i = 0; i < vehicles.length; i++)
 	{
-		CBlob@ blob = blobs[i];
+		CBlob@ blob = vehicles[i];
 		if (blob !is null)
 		{
 			Vec2f pos = blob.getPosition();
@@ -110,13 +110,13 @@ void onTick(CBlob@ this)
 			blob.AddForce(sineDir * blob.getRadius() * wind * 0.01f);
 		}
 	}
-	
+
 	if (getNet().isClient())
 	{	
 		CBlob@ blob = getLocalPlayerBlob();
 		fogHeightModifier = 0.00f;
 		
-		if (blob !is null)
+		if (blob !is null && uvs > 0)
 		{
 			Vec2f bpos = blob.getPosition();
 			//Vec2f pos = Vec2f(int(bpos.x / spritesize) * spritesize, int(bpos.y / spritesize) * spritesize); 
@@ -195,17 +195,21 @@ void onTick(CBlob@ this)
 			CBlob@ blob = server_CreateBlob("lightningbolt", -1, pos);
 		}	
 		
-		if (XORRandom(500) == 0)
+		if (XORRandom(25) == 0)
 		{
 			CBlob@[] blobs;
-			getBlobsByName("falloutgas", @blobs);
+			getBlobsByTag("gas", @blobs);
 			
 			if (blobs.length > 0)
 			{
 				CBlob@ b = blobs[XORRandom(blobs.length - 1)];
 				if (b !is null)
 				{
-					b.server_Die();
+					Vec2f pos = b.getPosition();
+					if (!map.rayCastSolidNoBlobs(Vec2f(pos.x, 0), pos))
+					{
+						b.server_Die();
+					}
 				}
 			}
 		}
