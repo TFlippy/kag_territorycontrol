@@ -45,6 +45,7 @@ void onInit(CBlob@ this)
 
 	if (!this.exists("mining_hardness")) this.set_u8("mining_hardness", 2);
 	if (!this.exists("max_build_length")) this.set_f32("max_build_length", 4.00f);
+	if (!this.exists("build delay")) this.set_u32("build delay", 4);
 	
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	this.getCurrentScript().removeIfTag = "dead";
