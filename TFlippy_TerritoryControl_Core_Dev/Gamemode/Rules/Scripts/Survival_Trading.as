@@ -2,6 +2,7 @@
 #include "Descriptions.as"
 #include "GameplayEvents.as"
 #include "Survival_Structs.as";
+#include "CustomBlocks.as";
 
 #define SERVER_ONLY
 
@@ -250,90 +251,100 @@ f32 onPlayerTakeDamage(CRules@ this, CPlayer@ victim, CPlayer@ attacker, f32 Dam
 void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 {
 	//only important on server
-	if (isServer()){
-		return;
-	}
-
-	if (cmd == getGameplayEventID(this))
+	if (isServer())
 	{
-		GameplayEvent g(params);
-
-		CPlayer@ p = g.getPlayer();
-		if (p !is null)
+		if (cmd == getGameplayEventID(this))
 		{
-			u32 coins = 0;
+			GameplayEvent g(params);
 
-			switch (g.getType())
+			CPlayer@ p = g.getPlayer();
+			if (p !is null)
 			{
-				case GE_built_block:
+				u32 coins = 0;
 
+				switch (g.getType())
 				{
-					g.params.ResetBitIndex();
-					u16 tile = g.params.read_u16();
-					if (tile == CMap::tile_castle)
-					{
-						coins = coinsOnBuild;
-					}
-					else if (tile == CMap::tile_wood)
-					{
-						coins = coinsOnBuildWood;
-					}
-				}
+					case GE_built_block:
 
-				break;
-
-				case GE_built_blob:
-
-				{
-					g.params.ResetBitIndex();
-					string name = g.params.read_string();
-					switch(name.getHash())
 					{
-						case 804095823://wooden_platform hash
-						case 916369496://trap_block
-						case 439106706://spikes
+						g.params.ResetBitIndex();
+						u16 tile = g.params.read_u16();
+						if (tile == CMap::tile_castle ||
+								tile == CMap::tile_iron ||
+								tile == CMap::tile_reinforcedconcrete ||
+								tile == CMap::tile_plasteel ||
+								tile == CMap::tile_concrete)
 						{
 							coins = coinsOnBuild;
 						}
-						break;
-
-						case 954139509://building
+						else if (tile == CMap::tile_wood)
 						{
-							coins = coinsOnBuildWorkshop;
-						}
-
-						default:
-						{
-							if(name.findFirst("door") != -1)
-							{
-								coins = coinsOnBuild;
-							}
+							coins = coinsOnBuildWood;
 						}
 					}
 
+					break;
+
+					case GE_built_blob:
+
+					{
+						g.params.ResetBitIndex();
+						string name = g.params.read_string();
+
+						if (name == "stone_door" ||
+								name == "trap_block" ||
+								name == "iron_platform" ||
+								name == "iron_door" ||
+								name == "plasteel_door" ||
+								name == "spikes")
+						{
+							coins = coinsOnBuild;
+						}
+						else if (name == "wooden_platform" ||
+									name == "wooden_door")
+						{
+							coins = coinsOnBuildWood;
+						}
+						else if (name == "building" ||
+									name == "bombshop" ||
+									name == "tinkertable" ||
+									name == "gunsmith" ||
+									name == "armory" ||
+									name == "buildershop" ||
+									name == "quarters")
+						{
+							coins = coinsOnBuildWorkshop;
+						}
+					}
+
+					break;
+
+					case GE_hit_vehicle:
+
+					{
+						g.params.ResetBitIndex();
+						f32 damage = g.params.read_f32();
+						coins = coinsOnHitSiege * damage;
+					}
+
+					break;
+
+					case GE_kill_vehicle:
+						coins = coinsOnKillSiege;
+						break;
+
+					case GE_captured_flag:
+						coins = coinsOnCapFlag;
+						break;
 				}
 
-				break;
+				if (coins > 0)
+				{
+					if (this.isWarmup())
+						coins /= warmupFactor;
 
-				case GE_hit_vehicle:
-					coins = coinsOnHitSiege;
-					break;
-
-				case GE_kill_vehicle:
-					coins = coinsOnKillSiege;
-					break;
-
-				case GE_captured_flag:
-					coins = coinsOnCapFlag;
-					break;
-			}
-
-			if (coins > 0)
-			{
-				if (this.isWarmup())
-					coins /= warmupFactor;
-
-				p.server_setCoins(p.getCoins() + coins);
+					p.server_setCoins(p.getCoins() + coins);
+				}
 			}
 		}
 	}
