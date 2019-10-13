@@ -147,10 +147,9 @@ void DoExplosion(CBlob@ this)
 	if (point !is null)
 	{
 		CBlob@ holder = point.getOccupied();
-	
 		if (holder !is null)
 		{
-			SetKnocked(holder, 150);
+			SetKnocked(holder, 90);
 		}
 	}
 	
