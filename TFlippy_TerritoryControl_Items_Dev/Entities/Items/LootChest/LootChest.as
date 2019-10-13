@@ -34,6 +34,7 @@ const LootItem@[] c_items =
 	LootItem("beagle", 1, 1, 400),
 	LootItem("autoshotgun", 1, 0, 197),
 	LootItem("sgl", 1, 0, 100),
+	LootItem("rpg", 1, 0, 150),
 	LootItem("raygun", 0, 1, 179),
 	LootItem("rekt", 1, 0, 15),
 	LootItem("zatniktel", 1, 0, 20),

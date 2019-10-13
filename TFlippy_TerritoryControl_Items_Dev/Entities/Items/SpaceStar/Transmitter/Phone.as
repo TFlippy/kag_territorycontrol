@@ -65,13 +65,13 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "UPF Weapon Package!", "$ss_guns$", "gun_package", "Assorted gun collection! Become a proud owner of UPF's best-selling armaments, now with a huge discount!");
-		AddRequirement(s.requirements, "coin", "", "Coins", 3399);
+		AddRequirement(s.requirements, "coin", "", "Coins", 2199);
 		
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "UPF Ammunition Package!", "$ss_ammo$", "ammo_package", "Surrounded by enemies? Dump some ammunition in them!");
-		AddRequirement(s.requirements, "coin", "", "Coins", 1199);
+		AddRequirement(s.requirements, "coin", "", "Coins", 899);
 		
 		s.spawnNothing = true;
 	}
@@ -183,7 +183,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					{
 						string gun_config;
 					
-						switch (XORRandom(14))
+						switch (XORRandom(15))
 						{
 							case 0:
 							{
@@ -266,6 +266,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							case 13:
 							{
 								gun_config = "sgl";
+							}
+							break;
+							
+							case 14:
+							{
+								gun_config = "rpg";
 							}
 							break;
 						}
