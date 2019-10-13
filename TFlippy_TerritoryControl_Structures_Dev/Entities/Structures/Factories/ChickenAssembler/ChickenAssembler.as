@@ -124,8 +124,25 @@ void onInit(CBlob@ this)
 		items.push_back(i);
 	}
 	
+		{
+		AssemblerItem i("cruisemissileacid", 1, "Acid Cruise Missile (1)");
+		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
+		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
+		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
+		AddRequirement(i.reqs, "blob", "mat_mustard", "Mustard Gas", 100);
+		items.push_back(i);
+	}
+	
+	{
+		AssemblerItem i("cruisemissilecluster", 1, "Cluster Cruise Missile (1)");
+		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
+		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
+		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
+		AddRequirement(i.reqs, "blob", "mat_clusterbomb", "Cluster Bomb", 1);
+		items.push_back(i);
+	}
+	
 	this.set("items", items);
-
 
 	this.set_TileType("background tile", CMap::tile_biron);
 	this.getShape().getConsts().mapCollisions = false;
@@ -158,7 +175,7 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 		{
 			if(caller.isMyPlayer())
 			{
-				CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 6), "Set Assembly");
+				CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 7), "Set Assembly");
 				if (menu !is null)
 				{
 					AssemblerItem[] items = getItems(this);

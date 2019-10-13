@@ -15,12 +15,12 @@ void DoExplosion(CBlob@ this)
 	if (getNet().isServer())
 	{
 		Vec2f velocity = this.getVelocity();
-		f32 angle = -velocity.getAngleDegrees() + 180.00f;
+		f32 angle = velocity.getAngleDegrees();
 	
-		f32 quantity = 150;
+		f32 quantity = 100;
 		for (int i = 0; i < (quantity / 2) ; i++)
 		{
-			CBlob@ blob = server_CreateBlob("mustard", -1, this.getPosition());
+			CBlob@ blob = server_CreateBlob("acidgas", -1, this.getPosition());
 			blob.setVelocity(velocity + Vec2f(20 - XORRandom(40), 5 - XORRandom(10)).RotateByDegrees(angle));
 		}
 	}
