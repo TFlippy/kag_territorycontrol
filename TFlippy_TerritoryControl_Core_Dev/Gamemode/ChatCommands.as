@@ -82,14 +82,23 @@ void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 			KickPlayer(player);
 		}
 	}
-	else if(cmd==this.getCommandID("playsound")) {
+	else if(cmd==this.getCommandID("playsound")) 
+	{
 		string soundname;
 
-		if(!params.saferead_string(soundname)) {
+		if(!params.saferead_string(soundname)) 
+		{
 			return;
 		}
-
-		Sound::Play(soundname + ".ogg");
+		
+		f32 volume = 1.00f;
+		f32 pitch = 1.00f;
+		
+		params.saferead_f32(volume);
+		params.saferead_f32(pitch);
+		
+		if (volume == 0.00f) Sound::Play(soundname);
+		else Sound::Play(soundname, getCamera().getPosition() + getRandomVelocity(0, 8, 360), volume, pitch);
 	}
 	else if(cmd==this.getCommandID("startInfection"))
 	{
@@ -334,14 +343,18 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				}
 				else if(tokens[0]=="!playsound")
 				{
-					if(tokens.length!=2 || IsCool(tokens[1]))
+					if (tokens.length < 2)
 					{
+						print("" + tokens.length);
 						return false;
 					}
 
 					CBitStream params;
 					params.write_string(tokens[1]);
-					this.SendCommand(this.getCommandID("playsound"),params);
+					params.write_f32(tokens.length > 2 ? parseFloat(tokens[2]) : 0.00f);
+					params.write_f32(tokens.length > 3 ? parseFloat(tokens[3]) : 1.00f);
+					
+					this.SendCommand(this.getCommandID("playsound"), params);
 
 					return false;
 				}
