@@ -224,42 +224,6 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 						this.server_HitMap(tilepos, attackVel, 1.0f, Hitters::builder);
 					}
 				}
-				
-			
-				// if (this.getConfig() == "builder")
-				// {	
-					// if ((tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || (tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14))
-					// {
-						// this.getSprite().PlaySound("/metal_stone.ogg");
-						// sparks(tilepos, 1, 1);
-					// }
-					// else
-					// {
-						// this.server_HitMap(tilepos, attackVel, 1.0f, Hitters::builder);
-					// }
-				// }
-				// else
-				// {
-					// if ((tile >= CMap::tile_iron && tile <= CMap::tile_iron_d8) || 
-						// (tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || 
-						// (tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14) || 
-						// (tile >= CMap::tile_reinforcedconcrete_d5 && tile <= CMap::tile_reinforcedconcrete_d15) || 
-						// (tile >= CMap::tile_biron && tile <= CMap::tile_biron_d8))
-					// {
-						// this.getSprite().PlaySound("/metal_stone.ogg");
-						// sparks(tilepos, 1, 1);
-					// }
-					// else if (this.getConfig() == "slave" && map.isTileCastle(tile))
-					// {
-						// // this.getSprite().PlaySound("rock_hit" + (1 + XORRandom(3) + ".ogg"));
-						// this.getSprite().PlaySound("build_wall2.ogg", 1.0f, 0.8f);
-						// // sparks(tilepos, 1, 1);
-					// }
-					// else
-					// {
-						// this.server_HitMap(tilepos, attackVel, 1.0f, Hitters::builder);
-					// }
-				// }
 			}
 		}
 	}
@@ -278,6 +242,16 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 					this.getSprite().PlaySound("/metal_stone.ogg");
 					sparks(tilepos, 1, 1);
 					can_mine = false;
+				}
+			}
+			
+			if (this.get_f32("babbyed") > 0)
+			{
+				can_mine = false;
+				this.getSprite().PlaySound("launcher_boing" + XORRandom(2), 0.5f, 1.7f);
+				if (this.isMyPlayer())
+				{		
+					ShakeScreen(16.0f, 12.00f, this.getPosition());
 				}
 			}
 			
