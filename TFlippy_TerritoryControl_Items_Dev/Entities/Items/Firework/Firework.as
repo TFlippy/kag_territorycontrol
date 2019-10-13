@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "Explosion.as";
+#include "Knocked.as"
 
 string[] particles = 
 {
@@ -140,6 +141,19 @@ void DoExplosion(CBlob@ this)
 		SColor c = SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255));
 		SetScreenFlash(100, c.getRed(), c.getGreen(), c.getBlue());		
 	}
+	
+
+	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+	if (point !is null)
+	{
+		CBlob@ holder = point.getOccupied();
+	
+		if (holder !is null)
+		{
+			SetKnocked(holder, 150);
+		}
+	}
+	
 	
 	this.Tag("dead");
 	this.getSprite().Gib();
