@@ -240,7 +240,7 @@ void SpawnBoom(CBlob@ this, Vec2f pos)
 {
 	CBlob@ boom = server_CreateBlobNoInit("antimatterexplosion");
 	boom.setPosition(pos);
-	boom.set_u8("boom_frequency", 5);
+	boom.set_u8("boom_frequency", 2);
 	boom.set_f32("boom_size", 0);
 	boom.set_f32("boom_increment", 10.00f);
 	boom.set_f32("boom_end", 30);
