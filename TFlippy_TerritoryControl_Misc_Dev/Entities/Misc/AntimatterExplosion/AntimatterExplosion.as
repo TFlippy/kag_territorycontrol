@@ -39,6 +39,8 @@ void onInit(CBlob@ this)
 		{
 			MakeLightningParticle(this, this.getPosition() + getRandomVelocity(0, XORRandom(100) * 0.01f, 360), Maths::Min(1 + length, 8), (XORRandom(200) * 0.01f), Maths::Min((this.get_f32("boom_end") / 32) * 0.25f, (XORRandom(50) * 0.01f) * 0.50f));
 		}
+		
+		// MakePulseParticle(this, Vec2f(0, 0), 1, 1 + (this.get_f32("boom_size") * 0.40f), 0.5f);
 	}
 
 	this.getCurrentScript().tickFrequency = 1;
@@ -213,7 +215,7 @@ void onTick(CBlob@ this)
 			
 			ShakeScreen(256, 128, this.getPosition());
 			
-			if (ticks % 4 == 0)
+			if (ticks % 10 == 0)
 			{
 				const f32 sound_distance = Maths::Sqrt(boom_size * 5000);
 				// print("" + dist + "/" + sound_distance);
@@ -221,12 +223,18 @@ void onTick(CBlob@ this)
 				if (dist <= sound_distance)
 				{
 					f32 modifier = Maths::Clamp(Maths::Sqrt(dist / sound_distance), 0.10f, 1.00f);
-					print("" + modifier);
+					// print("" + modifier);
 					
 					if (modifier > 0.01f)
 					{	
 						// print("" + modifier);
-						Sound::Play("Antimatter_Kaboom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), Maths::Max(2.0f - (0.2f * (1 - modifier)), 0.10f), Maths::Max((modifier * 0.80f) - (XORRandom(100) * 0.003f), 0.10f));
+						
+						f32 volume = Maths::Clamp(2.0f - (0.60f * (1 - modifier)), 0.25f, 0.70f);
+						f32 pitch = Maths::Clamp((modifier * 0.50f) - (XORRandom(100) * 0.003f), 0.50f, 1.00f);
+						
+						// print("volume: " + volume + "; pitch: " + pitch);
+						
+						Sound::Play("Antimatter_Kaboom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), volume, pitch);
 					}
 				}
 			}
@@ -289,7 +297,7 @@ void MakePulseParticle(CBlob@ this, const Vec2f pos, const f32 time, const f32 s
 {
 	if(!isClient()){return;}
 	
-	CParticle@ p = ParticleAnimated(CFileMatcher("falloff_invsqr.png").getFirst(),  this.getPosition() + pos, Vec2f(0, 0), 0, 0, 0, 0, true);
+	CParticle@ p = ParticleAnimated(CFileMatcher("AntimatterFlash.png").getFirst(), this.getPosition() + pos, Vec2f(0, 0), 0, 0, 0, 0, true);
 	if (p !is null)
 	{
 		p.Z = 100;
