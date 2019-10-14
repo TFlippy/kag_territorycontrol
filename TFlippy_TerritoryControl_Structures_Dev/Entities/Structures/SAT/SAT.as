@@ -12,7 +12,7 @@ void onInit(CBlob@ this)
 	this.set_f32("pickup_priority", 16.00f);
 	this.getShape().SetRotationsAllowed(false);
 	
-	this.getCurrentScript().tickFrequency = 5;
+	this.getCurrentScript().tickFrequency = 30;
 	// this.getCurrentScript().runFlags |= Script::tick_not_ininventory;
 	
 	this.getSprite().SetZ(20);
@@ -75,7 +75,7 @@ void onTick(CBlob@ this)
 			if (target.getNetworkID() != this.get_u16("target"))
 			{
 				this.getSprite().PlaySound("LWS_Found.ogg", 1.00f, 1.00f);
-				this.set_u32("nextAttack", getGameTime() + 60);
+				this.set_u32("nextAttack", getGameTime() + 60 + XORRandom(120));
 			}
 			
 			this.set_u16("target", target.getNetworkID());
