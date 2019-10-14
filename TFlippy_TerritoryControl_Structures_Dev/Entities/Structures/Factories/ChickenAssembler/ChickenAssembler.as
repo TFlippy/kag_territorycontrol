@@ -129,7 +129,7 @@ void onInit(CBlob@ this)
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
 		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
-		AddRequirement(i.reqs, "blob", "mat_mustard", "Mustard Gas", 100);
+		AddRequirement(i.reqs, "blob", "mat_acid", "Acid", 100);
 		items.push_back(i);
 	}
 	
