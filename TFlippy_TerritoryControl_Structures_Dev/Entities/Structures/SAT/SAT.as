@@ -5,10 +5,6 @@
 #include "Knocked.as";
 #include "VehicleAttachmentCommon.as"
 
-const f32 radius = 128.0f;
-const f32 damage = 5.00f;
-const u32 delay = 90;
-
 void onInit(CBlob@ this)
 {
 	this.Tag("builder always hit");
@@ -53,7 +49,7 @@ void onTick(CBlob@ this)
 	CMap@ map = getMap();
 
 	int index = -1;
-	f32 s_dist = 900000.00f;
+	f32 s_dist = 9000000.00f;
 	u8 myTeam = this.getTeamNum();
 
 	for (int i = 0; i < blobs.length; i++)
@@ -64,7 +60,7 @@ void onTick(CBlob@ this)
 		Vec2f delta = b.getPosition() - this.getPosition();
 		f32 dist = delta.LengthSquared();
 		
-		if (team != myTeam && (dist < 2000*2000) && (Maths::Abs(delta.x) > 300) && dist < s_dist)
+		if (team != myTeam && (dist < 2000*2000) && (Maths::Abs(delta.x) > 200) && dist < s_dist)
 		{
 			s_dist = dist;
 			index = i;
@@ -96,7 +92,7 @@ void onTick(CBlob@ this)
 	
 		f32 x = tpos.x / 8.00f;
 		f32 y = tpos.y / 8.00f;
-		f32 v = 32.00f;
+		f32 v = 40.00f;
 		f32 g = sv_gravity;
 		f32 sqrt = Maths::Sqrt((v*v*v*v) - (g*(g*(x*x) + 2.00f*y*(v*v))));
 		f32 ang = Maths::ATan(((v*v) + sqrt)/(g*x)); // * 57.2958f;
