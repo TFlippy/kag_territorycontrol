@@ -53,14 +53,14 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	{
-		ShopItem@ s = addShopItem(this, "Giga Drill Breaker", "$powerdrill$", "powerdrill", "A huge overpowered drill with a durable mithril head.");
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
-		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2);
+	// {
+		// ShopItem@ s = addShopItem(this, "Giga Drill Breaker", "$powerdrill$", "powerdrill", "A huge overpowered drill with a durable mithril head.");
+		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
+		// AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
+		// AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2);
 
-		s.spawnNothing = true;
-	}
+		// s.spawnNothing = true;
+	// }
 	// {
 		// ShopItem@ s = addShopItem(this, "Contrabass", "$contrabass$", "contrabass", "A musical instrument for the finest bards.");
 		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 60);
@@ -78,13 +78,13 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", 666);
 		s.spawnNothing = true;
 	}
-	// {
-		// ShopItem@ s = addShopItem(this, "Autonomous Activator", "$icon_automat$", "automat", "A fish-operated contraption that uses anything in its tiny hands. May be only carried around when not holding anything.");
-		// AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 3);
-		// AddRequirement(s.requirements, "blob", "fishy", "Fishy", 1);
-		// AddRequirement(s.requirements, "coin", "", "Coins", 350);
-		// s.spawnNothing = true;
-	// }
+	{
+		ShopItem@ s = addShopItem(this, "Autonomous Activator", "$icon_automat$", "automat", "A fish-operated contraption that uses anything in its tiny hands. May be only carried around when not holding anything.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 3);
+		AddRequirement(s.requirements, "blob", "fishy", "Fishy", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 350);
+		s.spawnNothing = true;
+	}
 	{
 		ShopItem@ s = addShopItem(this, "Zapthrottle Gas Extractor", "$icon_gasextractor$", "gasextractor", "A handheld air pump commonly used for cleaning, martial arts and gas cloud extraction.\n\nLeft mouse: Pull\nRight mouse: Push");
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 2);
@@ -203,6 +203,20 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 6);
 		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", 50);
 		AddRequirement(s.requirements, "coin", "", "Coins", 500);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Gauss Rifle", "$icon_gaussrifle$", "gaussrifle", "A modified toy used to kill people.\n\nUses Steel Ingots.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
+		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 50);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 10);
+		AddRequirement(s.requirements, "coin", "", "Coins", 850);
+
 
 		s.customButton = true;
 		s.buttonwidth = 2;
