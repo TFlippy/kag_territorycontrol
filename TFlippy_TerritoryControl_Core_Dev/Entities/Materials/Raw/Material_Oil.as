@@ -30,24 +30,22 @@ void DoExplosion(CBlob@ this)
 	this.getSprite().Gib();
 }
 
-f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+void onDie(CBlob@ this)
 {
-	if (customData == Hitters::fire || customData == Hitters::burn)
-	{
-		DoExplosion(this);
-	}
-
-	return damage;
+	DoExplosion(this);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (blob !is null ? !blob.isCollidable() : !solid) return;
-
-	f32 vellen = this.getOldVelocity().Length();
-
-	if (vellen > 5.0f)
+	if (isServer())
 	{
-		DoExplosion(this);
+		if (blob !is null ? !blob.isCollidable() : !solid) return;
+
+		f32 vellen = this.getOldVelocity().Length();
+
+		if (vellen > 5.0f)
+		{
+			this.server_Die();
+		}
 	}
 }
