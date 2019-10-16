@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "Explosion.as";
+#include "CustomBlocks.as";
 
 f32 sound_delay;
 
@@ -99,14 +100,44 @@ void DestroyStuff(CBlob@ this, f32 radius, u32 count, Vec2f pos)
 			if (server)
 			{
 				TileType t = map.getTile(b_pos).type;
-				if (t != CMap::tile_castle_d0 && t != CMap::tile_ground_d0 && (XORRandom(100) < 50 ? true : t != CMap::tile_ground_d1))
+				bool hit = true;
+				
+				if (XORRandom(100) > 10)
+				{
+					switch (t)
+					{
+						case CMap::tile_castle_d0:
+						case CMap::tile_ground_d0:
+						case CMap::tile_plasteel_d14:
+						case CMap::tile_bplasteel_d14:
+						case CMap::tile_biron_d8:
+						case CMap::tile_iron_d8:
+						case CMap::tile_rustyiron_d4:
+						case CMap::tile_reinforcedconcrete_d15:
+						case CMap::tile_concrete_d7:
+						case CMap::tile_mossyconcrete_d4:
+						case CMap::tile_bconcrete_d7:
+						case CMap::tile_mossybconcrete_d4:
+							hit = false;
+						break;						
+					}
+				}
+				
+				if (hit)
 				{
 					map.server_DestroyTile(b_pos, 1, this);
-				}
-				else
-				{
 					map.server_setFireWorldspace(b_pos, true);
 				}
+				
+				
+				// if (t != CMap::tile_castle_d0 && t != CMap::tile_ground_d0 && (XORRandom(100) < 50 ? true : t != CMap::tile_ground_d1))
+				// {
+					// map.server_DestroyTile(b_pos, 1, this);
+				// }
+				// else
+				// {
+					// map.server_setFireWorldspace(b_pos, true);
+				// }
 			}
 			
 			if (client)
