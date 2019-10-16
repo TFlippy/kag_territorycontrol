@@ -19,7 +19,7 @@ bool onClientProcessChat(CRules@ this, const string &in text_in, string &out tex
 	CPlayer@ localPlayer = getLocalPlayer();
 	CBlob@ localBlob = getLocalPlayerBlob();
 	
-	if (localPlayer !is player && localBlob !is null && localPlayer !is null && localBlob.hasTag("schisked"))
+	if (XORRandom(10) == 0 && localPlayer !is player && localBlob !is null && localPlayer !is null && localBlob.hasTag("schisked"))
 	{
 		string playerName = localPlayer.getCharacterName();
 	
