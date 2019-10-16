@@ -23,6 +23,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$faction_become_leader$", "FactionIcons.png", Vec2f(16, 16), 0);
 	AddIconToken("$faction_resign_leader$", "FactionIcons.png", Vec2f(16, 16), 1);
 	AddIconToken("$faction_remove$", "FactionIcons.png", Vec2f(16, 16), 2);
+	AddIconToken("$faction_enslave$", "FactionIcons.png", Vec2f(16, 16), 3);
 	
 	AddIconToken("$faction_bed_true$", "FactionIcons.png", Vec2f(16, 16), 4);
 	AddIconToken("$faction_bed_false$", "FactionIcons.png", Vec2f(16, 16), 5);
@@ -456,7 +457,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					int yOffset = ((players.length - 1) * 24) - 48;
 					// print("" + yOffset);
 				
-					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(200.00f + 16.00f, yOffset), this, Vec2f(5, players.length), "Faction Member Management");
+					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(200.00f + 40.00f, yOffset), this, Vec2f(6, players.length), "Faction Member Management");
 					if (menu !is null)
 					{
 						{
@@ -478,6 +479,17 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 									CGridButton@ butt = menu.AddButton("$faction_remove$", "Kick " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
 									butt.hoverText = "Remove " + ply.getUsername() + " from your faction.";
 									butt.SetEnabled(isLeader || ply.getUsername() == myPly.getUsername());
+								}
+								
+								{
+									CBitStream params;
+									params.write_u8(1);
+									params.write_u16(myPly.getNetworkID());
+									params.write_u16(ply.getNetworkID());
+							
+									CGridButton@ butt = menu.AddButton("$faction_enslave$", "Enslave " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
+									butt.hoverText = "Enslave " + ply.getUsername() + ".";
+									butt.SetEnabled(isLeader);
 								}
 							}
 						}
@@ -648,10 +660,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		CPlayer@ ply = getPlayerByNetworkId(player_netid);
 	
 		CRules@ rules = getRules();
-		
-		// print("" + player_netid);
-	
-		
 	
 		if (rules !is null && ply !is null && getRules() !is null && ply.getTeamNum() < 7)
 		{
@@ -688,6 +696,33 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (getNet().isClient())
 						{
 							client_AddToChat(ply.getUsername() + " has been kicked out of the " + teamName + " by " + caller.getUsername() + "!", teamColor);
+						}
+					}
+					break;
+					
+				case 1:
+					if (isLeader)
+					{
+						string teamName = rules.getTeam(caller.getTeamNum()).getName();
+						printf(ply.getUsername() + " has been enslaved by " + caller.getUsername());
+												
+						if (getNet().isServer())
+						{
+							CBlob@ playerBlob = ply.getBlob();
+							
+							CBlob@ slave = server_CreateBlob("slave", this.getTeamNum(), playerBlob !is null ? playerBlob.getPosition() : this.getPosition());
+							slave.set_u8("slaver_team", this.getTeamNum());
+							
+							if (slave !is null)
+							{
+								slave.server_SetPlayer(ply);
+								if (playerBlob !is null) playerBlob.server_Die();
+							}
+						}
+						
+						if (getNet().isClient())
+						{
+							client_AddToChat(ply.getUsername() + " has been enslaved by " + caller.getUsername() + "!", teamColor);
 						}
 					}
 					break;
