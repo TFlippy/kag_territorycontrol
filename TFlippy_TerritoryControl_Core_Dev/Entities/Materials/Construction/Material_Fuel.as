@@ -16,6 +16,11 @@ void DoExplosion(CBlob@ this)
 		f32 quantity = this.getQuantity();
 		if (quantity > 0)
 		{
+			if (isClient())
+			{
+				this.getSprite().PlaySound("gas_leak.ogg");
+			}
+		
 			if (isServer())
 			{
 				for (int i = 0; i < (quantity / 5) + XORRandom(quantity / 5) ; i++)
