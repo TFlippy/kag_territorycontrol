@@ -26,6 +26,7 @@ void onInit(CBlob@ this)
 	}
 	
 	this.set_u8("mining_hardness", 0);
+	this.getSprite().PlaySound("shackles_success.ogg", 1.25f, 1.00f);
 }
 
 // void onTick(CBlob@ this)

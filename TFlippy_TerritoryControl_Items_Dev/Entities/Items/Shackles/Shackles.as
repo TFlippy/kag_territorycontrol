@@ -55,10 +55,10 @@ void onTick(CBlob@ this)
 						
 							if ((chance > 0.50f && XORRandom(100) < chance * 80) || (getKnocked(blob) > 15 && chance > 0.2f))
 							{
-								if (getNet().isClient())
-								{
-									this.getSprite().PlaySound("shackles_success.ogg", 1.25f, 1.00f);
-								}
+								// if (getNet().isClient())
+								// {
+									// this.getSprite().PlaySound("shackles_success.ogg", 1.25f, 1.00f);
+								// }
 								
 								if (getNet().isServer())
 								{
