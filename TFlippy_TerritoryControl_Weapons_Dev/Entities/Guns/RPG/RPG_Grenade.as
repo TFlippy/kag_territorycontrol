@@ -7,7 +7,7 @@ string[] particles =
 	"Explosion.png"
 };
 
-const u32 fuel_timer_max = 30 * 8;
+const u32 fuel_timer_max = 30 * 0.75f;
 
 void onInit(CBlob@ this)
 {
