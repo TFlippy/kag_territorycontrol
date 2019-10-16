@@ -18,7 +18,7 @@ int g_layEggInterval = 0;
 void onInit(CSprite@ this)
 {
 	this.ReloadSprites(this.getBlob().getTeamNum(), 0);
-	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
+	this.addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 }
 
 void onTick(CSprite@ this)

@@ -49,7 +49,7 @@ void onInit(CBlob@ this)
 	this.set_bool("map_damage_raycast", true);
 	
 	this.set_f32("voice pitch", 1.75f);
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 1, 1);
 	this.server_setTeamNum(231);
 }
 

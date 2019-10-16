@@ -32,7 +32,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 1;
 	
 	this.set_f32("voice pitch", 1.50f);
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 	if (isServer())
 	{
 		this.set_u16("stolen coins", 250);

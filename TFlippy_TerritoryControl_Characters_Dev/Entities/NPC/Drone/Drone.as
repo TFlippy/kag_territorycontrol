@@ -30,7 +30,7 @@ void onInit( CBrain@ this )
 
 void onInit(CBlob@ this)
 {
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 	this.set_u32("next sound", 0);
 
 	this.SetLight(true);
