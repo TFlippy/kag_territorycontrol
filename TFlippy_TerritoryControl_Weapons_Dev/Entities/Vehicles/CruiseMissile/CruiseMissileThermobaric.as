@@ -18,8 +18,8 @@ void DoExplosion(CBlob@ this)
 		boom.setPosition(this.getPosition());
 		boom.set_u8("boom_frequency", 1);
 		boom.set_f32("boom_size", 0);
-		boom.set_f32("boom_end", 256);
-		boom.set_f32("boom_increment", 4.00f);
+		boom.set_f32("boom_end", 300);
+		boom.set_f32("boom_increment", 6.00f);
 		boom.Init();
 	}
 
