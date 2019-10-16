@@ -541,6 +541,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				{
 					if (remain == 0)
 					{
+						carried.Tag("dead");
 						carried.server_Die();
 					}
 					else
