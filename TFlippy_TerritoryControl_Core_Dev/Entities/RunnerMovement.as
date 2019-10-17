@@ -5,6 +5,8 @@
 #include "FallDamageCommon.as";
 #include "Knocked.as";
 
+const string fallscreamtag = "_fallingscream";
+
 void onInit(CMovement@ this)
 {
 	this.getCurrentScript().removeIfTag = "dead";
@@ -38,19 +40,30 @@ void onTick(CMovement@ this)
 
 	const bool isknocked = isKnocked(blob);
 
-	const bool is_client = getNet().isClient();
+	const bool is_client = isClient();
 
+	//cache
+	const bool on_ladder = blob.isOnLadder();
+	const bool on_ground = blob.isOnGround();
+	const bool in_water  = blob.isInWater();
+	const bool onground  = on_ground || on_ladder;
+	const bool on_wall   = blob.isOnWall();
+	const bool on_map    = blob.isOnMap();
+	const bool on_ceiling = blob.isOnCeiling();
+	const bool facing_left = blob.isFacingLeft();
+	const bool is_attached = blob.isAttached();
+
+	CSprite@ sprite = blob.getSprite();
 	CMap@ map = blob.getMap();
 	Vec2f vel = blob.getVelocity();
 	Vec2f pos = blob.getPosition();
 	CShape@ shape = blob.getShape();
 
 	const f32 vellen = shape.vellen;
-	const bool onground = blob.isOnGround() || blob.isOnLadder();
+
 
 	if (is_client && getGameTime() % 3 == 0)
 	{
-		const string fallscreamtag = "_fallingscream";
 		if (vel.y > 0.2f)
 		{
 			if (vel.y > BaseFallSpeed() * 1.8f && !blob.isInInventory())
@@ -94,7 +107,7 @@ void onTick(CMovement@ this)
 		}*/
 	}
 
-	if (onground || blob.isInWater())  //also reset when vaulting
+	if (onground || in_water)  //also reset when vaulting
 	{
 		moveVars.walljumped_side = Walljump::NONE;
 		moveVars.wallrun_start = pos.y;
@@ -103,7 +116,7 @@ void onTick(CMovement@ this)
 	}
 
 	// ladder - overrides other movement completely
-	if (blob.isOnLadder() && !blob.isAttached() && !blob.isOnGround() && !isknocked)
+	if (on_ladder && !is_attached && !on_ground && !isknocked)
 	{
 		shape.SetGravityScale(0.0f);
 		Vec2f ladderforce;
@@ -130,9 +143,9 @@ void onTick(CMovement@ this)
 
 		blob.AddForce(ladderforce * moveVars.overallScale * 100.0f);
 		//damp vel
-		Vec2f vel = blob.getVelocity();
-		vel *= 0.05f;
-		blob.setVelocity(vel);
+		Vec2f temp = vel;
+		temp *= 0.05f;
+		blob.setVelocity(temp);
 
 		moveVars.jumpCount = -1;
 		moveVars.fallCount = -1;
@@ -145,10 +158,8 @@ void onTick(CMovement@ this)
 	shape.getVars().onladder = false;
 
 	//swimming - overrides other movement partially
-	if (blob.isInWater() && !isknocked)
+	if (in_water && !isknocked)
 	{
-		CMap@ map = getMap();
-
 		const f32 swimspeed = moveVars.swimspeed;
 		const f32 swimforce = moveVars.swimforce;
 		const f32 edgespeed = moveVars.swimspeed * moveVars.swimEdgeScale;
@@ -175,11 +186,11 @@ void onTick(CMovement@ this)
 			// more push near ledge
 			if (vel.y > -(swimspeed * 3.3))
 			{
-				if (blob.isOnWall())
+				if (on_wall)
 				{
 					moveVars.jumpCount = 0;
 
-					if (blob.isOnMap())
+					if (on_map)
 					{
 						waterForce.y -= 2.0f;
 					}
@@ -210,7 +221,7 @@ void onTick(CMovement@ this)
 		waterForce *= swimforce * moveVars.overallScale;
 		blob.AddForce(waterForce);
 
-		if (!blob.isOnGround() && !blob.isOnLadder())
+		if (!on_ground && !on_ladder)
 		{
 			CleanUp(this, blob, moveVars);
 			return;				//done for swimming -----------------------
@@ -226,21 +237,19 @@ void onTick(CMovement@ this)
 
 	//walljumping, wall running and wall sliding
 
-	if (vel.y > 5.0f)
+	if (vel.y > 4.0f)
 	{
-		//moveVars.walljumped_side = Walljump::BOTH;
-	}
-	else if (vel.y > 4.0f)
-	{
-		if (moveVars.walljumped_side == Walljump::JUMPED_LEFT)
+		if (moveVars.walljumped_side == Walljump::JUMPED_LEFT){
 			moveVars.walljumped_side = Walljump::LEFT;
+		}
 
-		if (moveVars.walljumped_side == Walljump::JUMPED_RIGHT)
+		if (moveVars.walljumped_side == Walljump::JUMPED_RIGHT){
 			moveVars.walljumped_side = Walljump::RIGHT;
+		}
 	}
 
-	if (!blob.isOnCeiling() && !isknocked &&
-	        !blob.isOnLadder() && (up || left || right))  //key pressed
+	if (!on_ceiling && !isknocked &&
+	        !on_ladder && (up || left || right))  //key pressed
 	{
 		//check solid tiles
 		const f32 ts = map.tilesize;
@@ -264,10 +273,10 @@ void onTick(CMovement@ this)
 		}
 
 		//not checking blobs for this - perf
-		bool surface_above = map.isTileSolid(pos + Vec2f(y_ts, -x_ts)) || map.isTileSolid(pos + Vec2f(-y_ts, -x_ts));
-		bool surface_below = map.isTileSolid(pos + Vec2f(y_ts, x_ts)) || map.isTileSolid(pos + Vec2f(-y_ts, x_ts));
+		const bool surface_above = map.isTileSolid(pos + Vec2f(y_ts, -x_ts)) || map.isTileSolid(pos + Vec2f(-y_ts, -x_ts));
+		const bool surface_below = map.isTileSolid(pos + Vec2f(y_ts, x_ts)) || map.isTileSolid(pos + Vec2f(-y_ts, x_ts));
 
-		bool surface = surface_left || surface_right;
+		const bool surface = surface_left || surface_right;
 
 		const f32 slidespeed = 2.45f;
 
@@ -277,10 +286,10 @@ void onTick(CMovement@ this)
 		        !(left && right) &&									//do nothing if pressing both sides
 		        !onground)
 		{
-			bool wasNONE = (moveVars.walljumped_side == Walljump::NONE);
+			const bool wasNONE = (moveVars.walljumped_side == Walljump::NONE);
 
-			bool jumpedLEFT = (moveVars.walljumped_side == Walljump::JUMPED_LEFT);
-			bool jumpedRIGHT = (moveVars.walljumped_side == Walljump::JUMPED_RIGHT);
+			const bool jumpedLEFT = (moveVars.walljumped_side == Walljump::JUMPED_LEFT);
+			const bool jumpedRIGHT = (moveVars.walljumped_side == Walljump::JUMPED_RIGHT);
 
 			bool dust = false;
 
@@ -329,7 +338,7 @@ void onTick(CMovement@ this)
 
 							if (!set_contact)
 							{
-								blob.getSprite().PlayRandomSound("/StoneJump");
+								sprite.PlayRandomSound("/StoneJump");
 							}
 						}
 					}
@@ -387,7 +396,7 @@ void onTick(CMovement@ this)
 				Vec2f force;
 
 				Vec2f vel = blob.getVelocity();
-				if (vel.y >= slidespeed && (blob.isFacingLeft() ? groundNormal.x > 0 : groundNormal.x < 0))
+				if (vel.y >= slidespeed && (facing_left ? groundNormal.x > 0 : groundNormal.x < 0))
 				{
 					f32 temp = vel.y * 0.9f;
 					Vec2f new_vel(vel.x * 0.9f, temp < slidespeed ? slidespeed : temp);
@@ -397,7 +406,7 @@ void onTick(CMovement@ this)
 					{
 						if (!moveVars.wallsliding)
 						{
-							blob.getSprite().PlayRandomSound("/Scrape");
+							sprite.PlayRandomSound("/Scrape");
 						}
 
 						//falling for almost a second so add effects
@@ -407,7 +416,7 @@ void onTick(CMovement@ this)
 							if (gametime % (uint(Maths::Max(0, 7 - int(Maths::Abs(vel.y)))) + 3) == 0)
 							{
 								MakeDustParticle(pos, "/dust2.png");
-								blob.getSprite().PlayRandomSound("/Scrape");
+								sprite.PlayRandomSound("/Scrape");
 							}
 						}
 					}
@@ -425,10 +434,9 @@ void onTick(CMovement@ this)
 
 		// boost over corner
 		Vec2f groundNormal = blob.getGroundNormal();
-		bool onMap = blob.isOnMap();
-		bool canFreeVault = !onMap && moveVars.jumpCount < 5;
+		const bool canFreeVault = !on_map && moveVars.jumpCount < 5;
 		groundNormal.Normalize();
-		bool sidekeypressed = ((left && (groundNormal.x > 0.1f || canFreeVault)) ||
+		const bool sidekeypressed = ((left && (groundNormal.x > 0.1f || canFreeVault)) ||
 		                       (right && (groundNormal.x < -0.1f || canFreeVault)));
 
 		if (sidekeypressed)
@@ -498,11 +506,11 @@ void onTick(CMovement@ this)
 			Vec2f force = Vec2f(0, 0);
 			f32 side = 0.0f;
 
-			if (blob.isFacingLeft() && left)
+			if (facing_left && left)
 			{
 				side = -1.0f;
 			}
-			else if (!blob.isFacingLeft() && right)
+			else if (!facing_left && right)
 			{
 				side = 1.0f;
 			}
@@ -540,15 +548,15 @@ void onTick(CMovement@ this)
 
 			if (moveVars.jumpCount == 1 && is_client)
 			{
-				TileType tile = blob.getMap().getTile(blob.getPosition() + Vec2f(0.0f, blob.getRadius() + 4.0f)).type;
+				TileType tile = map.getTile(blob.getPosition() + Vec2f(0.0f, blob.getRadius() + 4.0f)).type;
 
-				if (blob.getMap().isTileGroundStuff(tile))
+				if (map.isTileGroundStuff(tile))
 				{
-					blob.getSprite().PlayRandomSound("/EarthJump");
+					sprite.PlayRandomSound("/EarthJump");
 				}
 				else
 				{
-					blob.getSprite().PlayRandomSound("/StoneJump");
+					sprite.PlayRandomSound("/StoneJump");
 				}
 			}
 		}
@@ -559,17 +567,19 @@ void onTick(CMovement@ this)
 	bool stop = true;
 	if (!onground)
 	{
-		if (isknocked)
+		if (isknocked){
 			stop = false;
-		else if (blob.hasTag("dont stop til ground"))
+		}
+		else if (blob.hasTag("dont stop til ground")){
 			stop = false;
+		}
 	}
 	else
 	{
 		blob.Untag("dont stop til ground");
 	}
 
-	bool left_or_right = (left || right);
+	const bool left_or_right = (left || right);
 	{
 		// carrying heavy
 		CBlob@ carryBlob = blob.getCarriedBlob();
@@ -587,8 +597,6 @@ void onTick(CMovement@ this)
 			}
 		}
 
-		bool facingleft = blob.isFacingLeft();
-		bool stand = blob.isOnGround() || blob.isOnLadder();
 		Vec2f walkDirection;
 		const f32 turnaroundspeed = 1.3f;
 		const f32 normalspeed = 1.0f;
@@ -600,7 +608,7 @@ void onTick(CMovement@ this)
 			{
 				walkDirection.x += turnaroundspeed;
 			}
-			else if (facingleft)
+			else if (facing_left)
 			{
 				walkDirection.x += backwardsspeed;
 			}
@@ -616,7 +624,7 @@ void onTick(CMovement@ this)
 			{
 				walkDirection.x -= turnaroundspeed;
 			}
-			else if (!facingleft)
+			else if (!facing_left)
 			{
 				walkDirection.x -= backwardsspeed;
 			}
@@ -644,7 +652,7 @@ void onTick(CMovement@ this)
 
 			Vec2f stop_force;
 
-			bool greater = vel.x > 0;
+			const bool greater = vel.x > 0;
 			f32 absx = greater ? vel.x : -vel.x;
 
 			if (moveVars.walljumped)
