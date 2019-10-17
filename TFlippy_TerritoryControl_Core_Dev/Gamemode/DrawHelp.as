@@ -1,4 +1,31 @@
-#include "Help.as";
+#define CLIENT_ONLY
+
+
+
+void onInit(CSprite@ this)
+{
+	this.getCurrentScript().runFlags |= Script::tick_myplayer;
+	this.getCurrentScript().removeIfTag = "dead";
+	//this.getCurrentScript().tickFrequency = 30;
+}
+
+void onRender(CSprite@ this)
+{
+	if (g_videorecording || !u_showtutorial)
+		return;
+
+	CBlob@ mouseBlob = getMap().getBlobAtPosition(getControls().getMouseWorldPos());
+	if (mouseBlob !is null && (!mouseBlob.hasTag("player") || mouseBlob.hasTag("migrant")))
+	{
+		Vec2f dimensions;
+		GUI::SetFont("menu");
+		GUI::GetTextDimensions(mouseBlob.getInventoryName(), dimensions);
+		GUI::DrawText(mouseBlob.getInventoryName(), getDriver().getScreenPosFromWorldPos(mouseBlob.getPosition() - Vec2f(0, -mouseBlob.getHeight() / 2)) - Vec2f(dimensions.x / 2, -8.0f), color_white);					//	mouseBlob.RenderForHUD( RenderStyle::outline_front );
+	}
+}
+
+
+/*#include "Help.as";
 
 #define CLIENT_ONLY
 
@@ -515,7 +542,7 @@ void onRender(CSprite@ this)
 			}
 		}
 	}
-
+	
 	// draw arrow for noobs
 
 	if (showHelpHelp)
@@ -686,3 +713,4 @@ bool shouldDraw(CBlob@ this, CBlob@ blob, const string &in helpName)
 
 	return shouldDraw(this, blob, help);
 }
+*/
