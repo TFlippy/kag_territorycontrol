@@ -138,8 +138,8 @@ void onRenderScoreboard(CRules@ this)
 		GUI::DrawText("General Rules and Notes", Vec2f(mid- 100,tl.y + 10), red);
 		GUI::DrawText("- Do not grief or sabotage your team, such as by wasting resources or stealing the leadership or kicking everyone out.", Vec2f(tO, tl.y + 30), white);
 		GUI::DrawText("- Intentionally crashing the server will result in a lengthy ban.", Vec2f(tO, tl.y + 45), white);
-		GUI::DrawText("- Do not spawn kill, or spawn block, they must have a way to escape thats possible.", Vec2f(tO, tl.y + 60), white);
-		GUI::DrawText("- Try not hoard too many slaves, general rule of thumb is only slave people for being a murder hobo.", Vec2f(tO, tl.y + 75), white);
+		GUI::DrawText("- Automated spawnkilling and spawnblocking is not allowed - neutrals must be able to leave their spawn.", Vec2f(tO, tl.y + 60), white);
+		GUI::DrawText("- Try not hoard too many slaves, general rule of thumb is to only slave people either for being a murderhobo or annoying.", Vec2f(tO, tl.y + 75), white);
 		GUI::DrawText("- Do not ruin the fun for other team members or the whole server.", Vec2f(tO,tl.y+90), white);
 	
 	}

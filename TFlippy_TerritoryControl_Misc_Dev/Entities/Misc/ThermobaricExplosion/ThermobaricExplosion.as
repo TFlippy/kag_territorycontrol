@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "Explosion.as";
+#include "CustomBlocks.as";
 
 f32 sound_delay;
 
@@ -50,9 +51,13 @@ void DestroyStuff(CBlob@ this, f32 radius, u32 count, Vec2f pos)
 	
 	f32 boom_size = this.get_f32("boom_size") * 1.25f;
 	f32 boom_size_sqr = boom_size * boom_size;
+	f32 boom_size_max = this.get_f32("boom_end");
+	f32 boom_progress = boom_size / boom_size_max;
 	
 	if (server)
 	{
+		f32 force_sign = boom_progress < 0.60f ? 1.00f : -0.50f;
+	
 		CBlob@[] blobs;
 		if (map.getBlobsInRadius(pos, boom_size * 2.00f, @blobs))
 		{
@@ -73,7 +78,7 @@ void DestroyStuff(CBlob@ this, f32 radius, u32 count, Vec2f pos)
 				
 					if (!map.rayCastSolid(pos, blob.getPosition()))
 					{
-						blob.AddForce(dir * Maths::Min(1000.0f, blob.getMass() * 1.50f));
+						blob.AddForce(dir * Maths::Min(1000.0f, blob.getMass() * 1.50f) * force_sign);
 						blob.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.125f, Hitters::crush);
 					}
 				}
@@ -81,37 +86,70 @@ void DestroyStuff(CBlob@ this, f32 radius, u32 count, Vec2f pos)
 		}
 	}
 	
-	for (u32 i = 0; i < count; i++)
+	if (boom_progress < 0.70f)
 	{
-		f32 angle = XORRandom(360);
-
-		Vec2f dir = Vec2f(Maths::Cos(angle), Maths::Sin(angle));
-		Vec2f start_pos = pos;
-		Vec2f target_pos = pos + dir * (radius + XORRandom(32));
-		Vec2f a_pos = target_pos;
-	
-		map.rayCastSolidNoBlobs(start_pos, target_pos, a_pos);
-
-		for (u32 j = 0; j < 10; j++)
+		for (u32 i = 0; i < count; i++)
 		{
-			Vec2f b_pos = a_pos + Vec2f(16 - XORRandom(32), 16 - XORRandom(32));
-			
-			if (server)
+			f32 angle = XORRandom(360);
+
+			Vec2f dir = Vec2f(Maths::Cos(angle), Maths::Sin(angle));
+			Vec2f start_pos = pos;
+			Vec2f target_pos = pos + dir * (radius + XORRandom(32));
+			Vec2f a_pos = target_pos;
+		
+			map.rayCastSolidNoBlobs(start_pos, target_pos, a_pos);
+
+			for (u32 j = 0; j < 10; j++)
 			{
-				TileType t = map.getTile(b_pos).type;
-				if (t != CMap::tile_castle_d0 && t != CMap::tile_ground_d0 && (XORRandom(100) < 50 ? true : t != CMap::tile_ground_d1))
+				Vec2f b_pos = a_pos + Vec2f(16 - XORRandom(32), 16 - XORRandom(32));
+				
+				if (server)
 				{
-					map.server_DestroyTile(b_pos, 1, this);
+					TileType t = map.getTile(b_pos).type;
+					bool hit = true;
+					
+					if (XORRandom(100) > 10)
+					{
+						switch (t)
+						{
+							case CMap::tile_castle_d0:
+							case CMap::tile_ground_d0:
+							case CMap::tile_plasteel_d14:
+							case CMap::tile_bplasteel_d14:
+							case CMap::tile_biron_d8:
+							case CMap::tile_iron_d8:
+							case CMap::tile_rustyiron_d4:
+							case CMap::tile_reinforcedconcrete_d15:
+							case CMap::tile_concrete_d7:
+							case CMap::tile_mossyconcrete_d4:
+							case CMap::tile_bconcrete_d7:
+							case CMap::tile_mossybconcrete_d4:
+								hit = false;
+							break;						
+						}
+					}
+					
+					if (hit)
+					{
+						map.server_DestroyTile(b_pos, 1, this);
+						map.server_setFireWorldspace(b_pos, true);
+					}
+					
+					
+					// if (t != CMap::tile_castle_d0 && t != CMap::tile_ground_d0 && (XORRandom(100) < 50 ? true : t != CMap::tile_ground_d1))
+					// {
+						// map.server_DestroyTile(b_pos, 1, this);
+					// }
+					// else
+					// {
+						// map.server_setFireWorldspace(b_pos, true);
+					// }
 				}
-				else
+				
+				if (client)
 				{
-					map.server_setFireWorldspace(b_pos, true);
+					if (j == 0 && XORRandom(100) < 25) MakeExplosionParticle(this, b_pos, Vec2f(0, 0), 5 + XORRandom(3), particles[XORRandom(particles.length)]);
 				}
-			}
-			
-			if (client)
-			{
-				if (j == 0 && XORRandom(100) < 25) MakeExplosionParticle(this, b_pos, Vec2f(0, 0), 5 + XORRandom(3), particles[XORRandom(particles.length)]);
 			}
 		}
 	}
