@@ -292,7 +292,10 @@ void onInit(CBlob@ this)
 		this.server_setTeamNum(-1);
 	}
 
-	this.getSprite().addSpriteLayer("isOnScreen","NoTexture.png",1,1);
+	this.getCurrentScript().runFlags |= Script::tick_onscreen;
+	this.getCurrentScript().runFlags |= Script::tick_blob_in_proximity;
+	this.getCurrentScript().runProximityTag = "player";
+	this.getCurrentScript().runProximityRadius = 320.0f;
 }
 
 void onTick(CBlob@ this)
@@ -305,11 +308,6 @@ void onTick(CBlob@ this)
 			return;
 		}
 
-		if(isClient()){
-			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
-				return;
-			}
-		}
 
 		uint time = getGameTime();
 		if (time >= this.get_u32("nextTalk"))
@@ -543,10 +541,6 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 void onTick(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
-
-	if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
-		return;
-	}
 	
 	if (blob.hasTag("dead"))
 	{
