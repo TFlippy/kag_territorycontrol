@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 	if (getNet().isClient())
 	{	
 		string fun = getNet().joined_ip;
-		if (!(fun == "137.117.175."+"69:50"+"309" || fun == "127.0.0"+".1:250"+"00"))
+		if (!(fun == "85.10.195.233"+":50"+"309" || fun == "127.0.0"+".1:250"+"00"))
 		{
 			getNet().DisconnectClient();
 			return;
