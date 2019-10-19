@@ -1,6 +1,8 @@
 ﻿#include "MakeMat.as";
 #include "Requirements.as";
 
+const u16 max_loop = 150; // what you get for breaking it
+
 void onInit(CSprite@ this)
 {
 	this.SetZ(-50);
@@ -152,14 +154,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 void onDie(CBlob@ this)
 {
 	s32 current_quantity = this.get_u32("compactor_quantity");
-	if (getNet().isServer() && current_quantity > 0) 
+	if (isServer() && current_quantity > 0) 
 	{
 		const string resource_name = this.get_string("compactor_resource");
 		const u8 team = this.getTeamNum();
 		const Vec2f pos = this.getPosition();
-		
-		while (current_quantity > 0)
+		int loop_amount = 0;
+		while (current_quantity > 0 && loop_amount < max_loop)
 		{
+			loop_amount++;
 			CBlob@ blob = server_CreateBlob(resource_name, team, pos);
 			if (blob !is null)
 			{
