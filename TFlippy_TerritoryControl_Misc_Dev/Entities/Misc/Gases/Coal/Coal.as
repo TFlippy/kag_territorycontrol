@@ -155,7 +155,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
 	if (!isClient()) return;
-	CParticle@ p = ParticleAnimated(CFileMatcher(filename).getFirst(), pos, vel, XORRandom(360), 1 + (XORRandom(100) * 0.02f), 2 + XORRandom(5), 0, true);
+	CParticle@ p = ParticleAnimated(filename, pos, vel, XORRandom(360), 1 + (XORRandom(100) * 0.02f), 2 + XORRandom(5), 0, true);
 	if(p !is null)
 	{
 		p.fastcollision = true;

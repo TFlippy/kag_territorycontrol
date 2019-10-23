@@ -42,7 +42,7 @@ void onTick(CBlob@ this)
 void onTick(CSprite@ this)
 {
 	if (!isClient()) return;
-	if (this.getBlob().getTickSinceCreated() % 2 == 0) ParticleAnimated(CFileMatcher("SmallFire").getFirst(), this.getBlob().getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), Vec2f(0, 0), 0, 1.0f, 2, 0.25f, false);
+	if (this.getBlob().getTickSinceCreated() % 2 == 0) ParticleAnimated("SmallFire", this.getBlob().getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), Vec2f(0, 0), 0, 1.0f, 2, 0.25f, false);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)

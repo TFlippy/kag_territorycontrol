@@ -185,7 +185,7 @@ void DoExplosion(CBlob@ this)
 			
 			f32 size = 3 + ((XORRandom(100) / 100.00f) * 2.00f);
 			// CParticle@ p = ParticleAnimated(CFileMatcher("Sparkle.png").getFirst(), ppos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(8, 8), 1, 0, true);
-			CParticle@ p = ParticleAnimated(CFileMatcher("pixel.png").getFirst(), ppos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(1, 1), 1, 0, true);
+			CParticle@ p = ParticleAnimated("pixel.png", ppos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(1, 1), 1, 0, true);
 			if (p !is null)
 			{
 				p.animated = 60 + XORRandom(120);
@@ -222,7 +222,7 @@ const f32 push_radius = 350.00f;
 
 void MakePulseParticle(CBlob@ this, const Vec2f pos, const f32 time, const f32 size, const f32 growth, const SColor color)
 {
-	CParticle@ p = ParticleAnimated(CFileMatcher("falloff_invsqr.png").getFirst(),  this.getPosition() + pos, Vec2f(0, 0), 0, 0, 0, 0, true);
+	CParticle@ p = ParticleAnimated("falloff_invsqr.png",  this.getPosition() + pos, Vec2f(0, 0), 0, 0, 0, 0, true);
 	if (p !is null)
 	{
 		p.Z = 100;
@@ -238,7 +238,7 @@ void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSt
 	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(0, 16).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void onDie(CBlob@ this)

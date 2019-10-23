@@ -97,7 +97,7 @@ void onDie(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	Vec2f vel = this.getVelocity();
 
-	string fname = CFileMatcher("/Crate.png").getFirst();
+	string fname = "Crate.png";
 	for (int i = 0; i < 4; i++)
 	{
 		CParticle@ temp = makeGibParticle(fname, pos, vel + getRandomVelocity(90, 1 , 120), 9, 2 + i, Vec2f(16, 16), 2.0f, 20, "Sounds/material_drop.ogg", 0);

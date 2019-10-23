@@ -309,7 +309,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 void MakeExplosionParticle(const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
 	if (!isClient()) return;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(8), 0, true);
+	ParticleAnimated(filename, pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(8), 0, true);
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

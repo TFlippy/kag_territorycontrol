@@ -193,7 +193,7 @@ void onTick(CBlob@ this)
 	{
 		this.getSprite().SetEmitSoundSpeed(0.5f + (this.get_f32("velocity") / SPEED_MAX * 0.4f) * (this.getVelocity().Length() * 0.15f));
 		
-		if (hmod < 0.7 && u32(getGameTime() % 20 * hmod) == 0) ParticleAnimated(CFileMatcher(smokes[XORRandom(smokes.length)]).getFirst(), this.getPosition(), Vec2f(0, 0), float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 3 + XORRandom(4), XORRandom(100) * -0.001f, true);
+		if (hmod < 0.7 && u32(getGameTime() % 20 * hmod) == 0) ParticleAnimated(smokes[XORRandom(smokes.length)], this.getPosition(), Vec2f(0, 0), float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 3 + XORRandom(4), XORRandom(100) * -0.001f, true);
 	}
 }
 
@@ -362,7 +362,7 @@ void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string fi
 {
 	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
 }
 
 void onAttach(CBlob@ this,CBlob@ attached,AttachmentPoint @attachedPoint)

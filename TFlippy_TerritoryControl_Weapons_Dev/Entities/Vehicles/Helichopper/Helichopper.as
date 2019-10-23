@@ -754,7 +754,7 @@ void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSt
 	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(8, 0).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void drawFuelCount(CBlob@ this)
@@ -862,7 +862,7 @@ void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string fi
 {
 	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1 + XORRandom(200) * 0.01f, 2 + XORRandom(5), XORRandom(100) * -0.00005f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1 + XORRandom(200) * 0.01f, 2 + XORRandom(5), XORRandom(100) * -0.00005f, true);
 }
 
 

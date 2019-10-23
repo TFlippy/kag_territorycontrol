@@ -438,7 +438,7 @@ void onRender(CSprite@ this)
 						{
 							if (blob.get_u16("hover netid") != b.getNetworkID())
 							{
-								Sound::Play(CFileMatcher("/select.ogg").getFirst());
+								Sound::Play("/select.ogg");
 							}
 
 							blob.set_u16("hover netid", b.getNetworkID());

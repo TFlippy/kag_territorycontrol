@@ -262,7 +262,7 @@ void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSt
 	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(8, 0).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)

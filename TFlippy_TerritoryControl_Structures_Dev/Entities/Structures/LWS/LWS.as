@@ -172,7 +172,7 @@ void onTick(CBlob@ this)
 			
 			if (isClient())
 			{
-				ParticleAnimated(CFileMatcher("LargeSmoke").getFirst(), t.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+				ParticleAnimated("LargeSmoke", t.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 			}
 		}
 	}

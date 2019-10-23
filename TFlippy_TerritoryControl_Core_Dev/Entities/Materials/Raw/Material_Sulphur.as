@@ -88,5 +88,5 @@ void MakeParticle(CBlob@ this, const Vec2f pos, const string filename = "SmallSt
 {
 	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, Vec2f(XORRandom(4) - 2, -XORRandom(8) - 2), float(XORRandom(360)), 1.0f, 4 + XORRandom(8), XORRandom(100) * 0.01f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, Vec2f(XORRandom(4) - 2, -XORRandom(8) - 2), float(XORRandom(360)), 1.0f, 4 + XORRandom(8), XORRandom(100) * 0.01f, true);
 }

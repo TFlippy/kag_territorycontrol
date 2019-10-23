@@ -85,7 +85,7 @@ void onTick(CBlob@ this)
 void MakeDustParticle(Vec2f pos, string file)
 {
 	if(!isClient()){return;}
-	CParticle@ temp = ParticleAnimated(CFileMatcher(file).getFirst(), pos, Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, false);
+	CParticle@ temp = ParticleAnimated(file, pos, Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, false);
 
 	if (temp !is null)
 	{

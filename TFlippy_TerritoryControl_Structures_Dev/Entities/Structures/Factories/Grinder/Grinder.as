@@ -180,7 +180,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 				
 				if (XORRandom(100) < 75) 
 				{
-					ParticleAnimated(CFileMatcher("Smoke.png").getFirst(), this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+					ParticleAnimated("Smoke.png", this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
 				}
 			}
 			kill = true;

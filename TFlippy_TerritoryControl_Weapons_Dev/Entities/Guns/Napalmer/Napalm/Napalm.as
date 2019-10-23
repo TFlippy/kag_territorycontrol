@@ -61,8 +61,8 @@ void onTick(CSprite@ this)
 	{
 		CBlob@ blob = this.getBlob();
 	
-		ParticleAnimated(CFileMatcher(XORRandom(100) < 50 ? "SmallFire.png" : "LargeFire.png").getFirst(), blob.getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 1, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
-		if (XORRandom(100) < 25 && (blob.getShape().isStatic() || blob.get_u16("attached_blob") > 0))ParticleAnimated(CFileMatcher("SmallExplosion.png").getFirst(), blob.getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 1, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, -0.1, false);
+		ParticleAnimated(XORRandom(100) < 50 ? "SmallFire.png" : "LargeFire.png", blob.getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 1, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
+		if (XORRandom(100) < 25 && (blob.getShape().isStatic() || blob.get_u16("attached_blob") > 0))ParticleAnimated("SmallExplosion.png", blob.getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 1, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, -0.1, false);
 	}
 }
 

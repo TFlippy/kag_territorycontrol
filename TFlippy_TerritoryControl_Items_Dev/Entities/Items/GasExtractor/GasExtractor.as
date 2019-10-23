@@ -141,7 +141,7 @@ void makeSteamParticle(CBlob@ this, Vec2f pos, const Vec2f vel)
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.04 * rad;
-	ParticleAnimated(CFileMatcher("MediumSteam").getFirst(), pos + random, vel, float(XORRandom(360)), 1.0f, 2, 0, false);
+	ParticleAnimated("MediumSteam", pos + random, vel, float(XORRandom(360)), 1.0f, 2, 0, false);
 }
 
 void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)

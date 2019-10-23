@@ -139,10 +139,10 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 {
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + smokeOffset, Vec2f(0, 0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + smokeOffset, Vec2f(0, 0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
-string[] loot_guns = 
+const string[] loot_guns = 
 { 
 	"amr",
 	"sniper",
@@ -152,7 +152,7 @@ string[] loot_guns =
 	"fuger"
 };
 
-string[] loot_building_resources = 
+const string[] loot_building_resources = 
 { 
 	"mat_stone",
 	"mat_concrete",
@@ -161,7 +161,7 @@ string[] loot_building_resources =
 	"mat_ironingot"
 };
 
-string[] loot_ores = 
+const string[] loot_ores = 
 { 
 	"mat_iron",
 	"mat_gold",
@@ -171,7 +171,7 @@ string[] loot_ores =
 	"mat_coal"
 };
 
-string[] loot_explosives = 
+const string[] loot_explosives = 
 { 
 	"mat_smallbomb",
 	"mat_mininuke",
@@ -179,13 +179,13 @@ string[] loot_explosives =
 	"mat_tankshell"
 };
 
-string[] loot_bling = 
+const string[] loot_bling = 
 { 
 	"mat_goldingot",
 	"mat_mithrilenriched"
 };
 
-string[] loot_food = 
+const string[] loot_food = 
 { 
 	"mat_meat"
 };

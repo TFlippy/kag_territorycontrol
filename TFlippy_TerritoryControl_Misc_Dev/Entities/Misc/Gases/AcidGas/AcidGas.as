@@ -135,5 +135,5 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
 	if (!isClient()) return;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), pos, vel, XORRandom(360), 1.25f, 1 + XORRandom(5), XORRandom(100) * -0.00005f, false);
+	ParticleAnimated(filename, pos, vel, XORRandom(360), 1.25f, 1 + XORRandom(5), XORRandom(100) * -0.00005f, false);
 }

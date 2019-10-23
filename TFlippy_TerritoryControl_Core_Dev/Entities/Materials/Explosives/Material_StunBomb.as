@@ -129,5 +129,5 @@ void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSt
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.015625f * rad;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 1 + XORRandom(2), -0.005f, true);
+	ParticleAnimated(filename, this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 1 + XORRandom(2), -0.005f, true);
 }

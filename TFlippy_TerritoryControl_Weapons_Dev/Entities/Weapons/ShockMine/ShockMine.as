@@ -207,5 +207,5 @@ void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "Sm
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(256) - 128, XORRandom(256) - 128) * 0.015625f * rad;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
