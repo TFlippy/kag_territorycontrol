@@ -32,7 +32,7 @@ void onInit(CBlob@ this)
 
 void client_UpdateName(CBlob@ this)
 {
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.setInventoryName("Compactor\n(" + this.get_u32("compactor_quantity") + " " + this.get_string("compactor_resource_name") + ")");
 	}
@@ -68,7 +68,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 				server_Sync(this);
 			}
 			
-			if (getNet().isClient())
+			if (isClient())
 			{
 				this.getSprite().PlaySound("bridge_open.ogg");
 			}
@@ -136,7 +136,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 	}
 	else if (cmd == this.getCommandID("compactor_sync"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			string name = params.read_string();
 			string config = params.read_string();

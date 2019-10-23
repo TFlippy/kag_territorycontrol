@@ -187,7 +187,7 @@ void onTick(CBlob@ this)
 			}
 		}
 		
-		if (getNet().isClient())
+		if (isClient())
 		{
 			CSpriteLayer@ laser = this.getSprite().getSpriteLayer("laser");
 			if (laser !is null)
@@ -227,7 +227,7 @@ void onTick(CSprite@ this)
 	CBlob@ blob = this.getBlob();
 	if (blob.get_bool("security_state"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{					
 			CBlob@ target = getBlobByNetworkID(blob.get_u16("target"));
 			if (target !is null)

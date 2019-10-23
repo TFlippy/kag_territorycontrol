@@ -55,7 +55,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			case HittersTC::radiation:
 				// All KAG players have a built-in Geiger counter.
 				showblood = false;
-				if (getNet().isClient() && this.isMyPlayer()) 
+				if (isClient() && this.isMyPlayer()) 
 				{
 					Sound::Play("geiger" + XORRandom(3) + ".ogg", this.getPosition(), 0.7f, 1.0f);
 				}

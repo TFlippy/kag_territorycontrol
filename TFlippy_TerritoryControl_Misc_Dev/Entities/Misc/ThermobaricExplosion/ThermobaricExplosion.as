@@ -21,7 +21,7 @@ void onInit(CBlob@ this)
 	if (!this.exists("boom_increment")) this.set_f32("boom_increment", 4.00f);
 	if (!this.exists("custom_explosion_sound")) this.set_string("custom_explosion_sound", "ThermobaricExplosion");
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		Vec2f pos = getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos());
 		f32 distance = Maths::Abs(this.getPosition().x - pos.x) / 8;
@@ -45,7 +45,7 @@ void DoExplosion(CBlob@ this)
 void DestroyStuff(CBlob@ this, f32 radius, u32 count, Vec2f pos)
 {
 	const bool server = isServer();
-	const bool client = getNet().isClient();
+	const bool client = isClient();
 
 	CMap@ map = getMap();
 	
@@ -173,7 +173,7 @@ void onTick(CBlob@ this)
 	const f32 modifier = boom_size / boom_end;
 	const f32 invModifier = 1.00f - modifier;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		for (int i = 0; i < Maths::Pow(boom_size / 32, 2) * 0.01f; i++)
 		{
@@ -217,7 +217,7 @@ void onTick(CBlob@ this)
 		this.add_f32("boom_size", this.get_f32("boom_increment"));
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (ticks > (sound_delay * 30) && !this.hasTag("sound_played"))
 		{

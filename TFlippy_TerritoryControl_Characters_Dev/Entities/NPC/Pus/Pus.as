@@ -122,7 +122,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 	if (!this.hasTag("dead"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			if (getGameTime() > this.get_u32("next sound") - 130)
 			{
@@ -147,7 +147,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void ClawHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)
 {
-	bool client = getNet().isClient();
+	bool client = isClient();
 	bool server = isServer();
 	
 	Vec2f dir = worldPoint - this.getPosition();

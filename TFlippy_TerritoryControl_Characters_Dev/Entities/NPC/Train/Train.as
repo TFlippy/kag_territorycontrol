@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 	
 	this.addCommandID("reset train");
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSoundVolume(10.0f);
@@ -195,7 +195,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("reset train"))
 	{
 		const bool server = isServer();
-		const bool client = getNet().isClient();
+		const bool client = isClient();
 	
 		this.setPosition(Vec2f(0, this.get_f32("train_y")));
 	

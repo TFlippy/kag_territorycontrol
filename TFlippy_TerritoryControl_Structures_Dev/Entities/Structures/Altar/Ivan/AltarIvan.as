@@ -203,7 +203,7 @@ void Zap(CBlob@ this, CBlob@ target)
 		this.server_Hit(target, target.getPosition(), dir, damage * (target.hasTag("explosive") ? 16.00f : 1.00f) , HittersTC::staff);
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().PlaySound("Ivan_Zap.ogg");
 		

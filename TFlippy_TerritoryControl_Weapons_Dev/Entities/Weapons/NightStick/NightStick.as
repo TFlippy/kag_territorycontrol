@@ -56,7 +56,7 @@ void onTick(CBlob@ this)
 						
 							SetKnocked(blob, knock);
 							
-							// if (getNet().isClient())
+							// if (isClient())
 							// {
 								// this.getSprite().PlaySound("nightstick_hit" + (1 + XORRandom(3)) + ".ogg", 0.9f, 0.8f);
 							// }

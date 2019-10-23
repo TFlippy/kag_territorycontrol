@@ -51,7 +51,7 @@ void onTick(CBlob@ this)
 				server_Irradiate(this, irradiation / 30000.00f * rmod, irradiation / 100.00f * rmod);
 			}
 			
-			if (getNet().isClient()) 
+			if (isClient()) 
 			{
 				ShakeScreen(20 * rmod, 100 * rmod, this.getPosition());	
 			}
@@ -66,7 +66,7 @@ void onTick(CBlob@ this)
 			}
 		}
 		
-		if (getNet().isClient())
+		if (isClient())
 		{
 			CSprite@ sprite = this.getSprite();
 			if (sprite !is null)

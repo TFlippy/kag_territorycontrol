@@ -31,7 +31,7 @@ void onTick(CBlob@ this)
 			{
 				if (this.get_u32("next attack") > getGameTime()) return;
 			
-				if (getNet().isClient())
+				if (isClient())
 				{
 					this.getSprite().PlaySound("drunk_fx3.ogg", 0.8f, 0.75f);
 					this.getSprite().SetAnimation("default");

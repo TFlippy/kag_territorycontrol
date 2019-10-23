@@ -384,7 +384,7 @@ void onTick(CBlob@ this)
 					
 						bool isAttached = this.isAttached();
 					
-						if (getNet().isClient())
+						if (isClient())
 						{	
 							if (isAttached) this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.length())], 0.75f, 0.75f);
 						}

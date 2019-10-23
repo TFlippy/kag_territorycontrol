@@ -72,7 +72,7 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 void onTick(CBlob@ this)
 {
 	const bool server = isServer();
-	const bool client = getNet().isClient();
+	const bool client = isClient();
 
 	const f32 kill_count = this.get_f32("kill_count");
 	
@@ -275,7 +275,7 @@ void onTick(CBlob@ this)
 				ShakeScreen(64, 32, startPos);
 				holder.AddForce(-aimDir * 100.00f);
 				
-				if (getNet().isClient())
+				if (isClient())
 				{
 					CSpriteLayer@ zap = this.getSprite().getSpriteLayer("zap");
 					if (zap !is null)

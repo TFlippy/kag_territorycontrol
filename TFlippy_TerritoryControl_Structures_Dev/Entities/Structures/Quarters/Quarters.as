@@ -283,7 +283,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint@ attachedPoint)
 
 	string texName = default_head_path;
 	CSprite@ attached_sprite = attached.getSprite();
-	if (attached_sprite !is null && getNet().isClient())
+	if (attached_sprite !is null && isClient())
 	{
 		attached_sprite.SetVisible(false);
 		attached_sprite.PlaySound("GetInVehicle.ogg");
@@ -304,7 +304,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint@ attachedPoint)
 		sprite.SetEmitSoundPaused(false);
 		sprite.RewindEmitSound();
 
-		if (getNet().isClient())
+		if (isClient())
 		{
 			CSpriteLayer@ bed_head = sprite.addSpriteLayer("bed head", texName, 16, 16, attached.getTeamNum(), attached.getSkinNum());
 			if (bed_head !is null)

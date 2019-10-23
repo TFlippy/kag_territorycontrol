@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 	if (!this.exists("flash_distance")) this.set_f32("flash_distance", 2500);
 	if (!this.exists("custom_explosion_sound")) this.set_string("custom_explosion_sound", "Nuke_Kaboom");
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		Vec2f pos = getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos());
 		f32 distance = Maths::Abs(this.getPosition().x - pos.x) / 8;
@@ -153,7 +153,7 @@ void onTick(CBlob@ this)
 
 	u32 ticks = this.getTickSinceCreated();
 	
-	if (getNet().isClient() && !this.hasTag("no flash") && ticks == this.get_u32("flash_delay")) 
+	if (isClient() && !this.hasTag("no flash") && ticks == this.get_u32("flash_delay")) 
 	{
 		CBlob@ localBlob = getLocalPlayerBlob();
 		if (localBlob !is null)
@@ -205,7 +205,7 @@ void onTick(CBlob@ this)
 		}
 	}
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (ticks > (sound_delay * 30) && !this.hasTag("sound_played"))
 		{
@@ -224,6 +224,6 @@ void onTick(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const f32 time, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 2.8f + XORRandom(100) * 0.01f, time, XORRandom(100) * -0.00005f, true);
 }

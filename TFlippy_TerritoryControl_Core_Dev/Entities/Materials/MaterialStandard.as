@@ -32,7 +32,7 @@ void onInit(CBlob@ this)
 
 	this.getShape().getVars().waterDragScale = 12.0f;
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		// Force inventory icon update
 		Material::updateFrame(this);
@@ -62,7 +62,7 @@ void onQuantityChange(CBlob@ this, int old)
     }
   }
 
-  if (getNet().isClient())
+  if (isClient())
   {
     Material::updateFrame(this);
   }

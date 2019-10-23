@@ -26,7 +26,7 @@ void onInit(CBlob@ this)
 	
 	// SetScreenFlash(255, 255, 255, 255);
 	
-	// if (getNet().isClient())
+	// if (isClient())
 	// {
 		// Vec2f pos = getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos());
 		// f32 distance = Maths::Abs(this.getPosition().x - pos.x) / 8;
@@ -58,7 +58,7 @@ void onTick(CBlob@ this)
 {
 	CMap@ map = getMap();
 	bool server = isServer();
-	bool client = getNet().isClient();
+	bool client = isClient();
 	
 	Vec2f top = Vec2f(this.getPosition().x, 0);
 	Vec2f bottom = Vec2f(this.getPosition().x, map.tilemapheight * 8);
@@ -114,7 +114,7 @@ void onTick(CBlob@ this)
 
 void makeSteamParticle(CBlob@ this, Vec2f pos, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.015625f * rad;

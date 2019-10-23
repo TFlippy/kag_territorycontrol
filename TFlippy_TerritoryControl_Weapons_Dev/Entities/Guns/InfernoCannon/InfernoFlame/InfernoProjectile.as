@@ -21,7 +21,7 @@ void onInit(CBlob@ this)
 
 void onTick(CSprite@ this)
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 	
 	this.RotateBy(20.0f, Vec2f());
 	ParticleAnimated(CFileMatcher("SmalLFire").getFirst(), this.getBlob().getPosition() + Vec2f(4 - XORRandom(8), 4 - XORRandom(8)), Vec2f(0, 0), 0, 1.0f + (XORRandom(100) * 0.01f), 2, 0.25f, false);
@@ -110,7 +110,7 @@ void DoExplosion(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1.0f + (XORRandom(100) * 0.01f), 1 + XORRandom(8), XORRandom(100) * -0.0001f, true);
 }

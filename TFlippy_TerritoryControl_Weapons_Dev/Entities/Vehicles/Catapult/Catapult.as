@@ -89,7 +89,7 @@ void onTick(CBlob@ this)
 			v.cooldown_time--;
 		}
 
-		if (getNet().isClient() && delay != 0) //only matters visually on client
+		if (isClient() && delay != 0) //only matters visually on client
 		{
 			//set the arm angle based on how long ago we fired
 			f32 rechargeRatio = (time_til_fire / delay);

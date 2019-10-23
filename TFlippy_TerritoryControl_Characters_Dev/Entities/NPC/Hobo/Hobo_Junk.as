@@ -131,7 +131,7 @@ void onDie(CBlob@ this)
 	this.getSprite().Gib();
 
 	u32 gametime = getGameTime();
-	if (getNet().isClient() && (gametime) > g_lastplayedsound + 3)
+	if (isClient() && (gametime) > g_lastplayedsound + 3)
 	{
 		g_lastplayedsound = gametime;
 		Sound::Play("/rock_hit", this.getPosition(), Maths::Min(Maths::Max(0.5f, this.getOldVelocity().Length()), 1.5f));

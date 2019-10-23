@@ -57,7 +57,7 @@ void onTick(CBlob@ this)
 
 void onTick(CSprite@ this)
 {
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CBlob@ blob = this.getBlob();
 	

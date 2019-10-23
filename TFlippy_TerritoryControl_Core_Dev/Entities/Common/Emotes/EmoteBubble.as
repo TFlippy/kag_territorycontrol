@@ -138,7 +138,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (emote < sounds.length && getGameTime() >= this.get_u32("next_emote_sound") && sounds[emote] != "")
 		{
-			if (getNet().isClient())
+			if (isClient())
 			{
 				f32 pitch = this.getSexNum() == 0 ? 0.9f : 1.5f;
 				if (this.exists("voice pitch")) pitch = this.get_f32("voice pitch");

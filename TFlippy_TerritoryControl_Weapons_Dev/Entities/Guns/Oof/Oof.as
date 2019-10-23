@@ -124,7 +124,7 @@ void onTick(CBlob@ this)
 				ShakeScreen(64, 32, startPos);
 				holder.AddForce(-aimDir * 400.00f);
 				
-				if (getNet().isClient())
+				if (isClient())
 				{
 					CSpriteLayer@ zap = this.getSprite().getSpriteLayer("zap");
 					if (zap !is null)

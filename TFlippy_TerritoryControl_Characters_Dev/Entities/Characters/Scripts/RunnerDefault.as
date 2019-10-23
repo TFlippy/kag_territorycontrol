@@ -81,12 +81,12 @@ void onTick(CBlob@ this)
 
 void onSetPlayer(CBlob@ this, CPlayer@ player)
 {
-	if (getNet().isClient() && this.isMyPlayer())
+	if (isClient() && this.isMyPlayer())
 	{
 		CCamera@ cam = getCamera();
 		cam.setRotation(0, 0, 0);
 		
-		if (getNet().isClient() && this.isMyPlayer()) 
+		if (isClient() && this.isMyPlayer()) 
 		{
 			if (getRules().get_bool("raining"))
 			{
@@ -148,7 +148,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 		
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		RemoveHelps(this, "help throw");
 

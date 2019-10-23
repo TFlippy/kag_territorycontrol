@@ -1173,7 +1173,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 
 void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 {
-	if (tile_new == CMap::tile_ground && getNet().isClient()) Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+	if (tile_new == CMap::tile_ground && isClient()) Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 
 	switch(tile_new)
 	{
@@ -1208,7 +1208,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
 				map.RemoveTileFlag( index, Tile::WATER_PASSES);
 				
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 			}
 				
@@ -1240,7 +1240,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 						
 			case CMap::tile_plasteel_d0:
@@ -1265,7 +1265,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 				
 			case CMap::tile_matter_d0:
@@ -1279,7 +1279,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_brick_v2:
 			case CMap::tile_brick_v3:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
 				
@@ -1288,7 +1288,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				Vec2f pos = map.getTileWorldPosition(index);
 				bglass_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES | Tile::LIGHT_SOURCE);
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
 			}
@@ -1344,7 +1344,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				
 				
 				
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
 			}
@@ -1354,7 +1354,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_biron_m:
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
 				
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 				
 			case CMap::tile_biron_d0:
@@ -1373,7 +1373,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				if((index / map.tilemapwidth + index % map.tilemapwidth) % 2 == 0) map.SetTile(index, CMap::tile_bplasteel_v0);
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
 				
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 						
 			case CMap::tile_bplasteel_d0:
@@ -1398,7 +1398,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES | Tile::FLAMMABLE);
 				map.RemoveTileFlag( index, Tile::LIGHT_SOURCE);
 				
-				if (getNet().isClient()) Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 				
 			case CMap::tile_concrete:
@@ -1409,7 +1409,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
 			}
@@ -1466,7 +1466,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
 			}
@@ -1528,7 +1528,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
 			}
@@ -1596,7 +1596,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::WATER_PASSES | Tile::LIGHT_PASSES);
 				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
 				
-				if (getNet().isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				
 				break;
 			}
@@ -1657,7 +1657,7 @@ void OnIronTileHit(CMap@ map, u32 index)
 	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);										
 	map.RemoveTileFlag( index, Tile::LIGHT_PASSES );											
 																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 																								
@@ -1670,7 +1670,7 @@ void OnBIronTileHit(CMap@ map, u32 index)
 {																								
 	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);			
 																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 																								
@@ -1681,7 +1681,7 @@ void OnBIronTileHit(CMap@ map, u32 index)
 																								
 void OnIronTileDestroyed(CMap@ map, u32 index)													
 {																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 																								
@@ -1758,7 +1758,7 @@ void OnGlassTileHit(CMap@ map, u32 index)
 {																								
 	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);					
 																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 																								
@@ -1771,7 +1771,7 @@ void OnBGlassTileHit(CMap@ map, u32 index)
 {																								
 	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES);								
 																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 																								
@@ -1782,7 +1782,7 @@ void OnBGlassTileHit(CMap@ map, u32 index)
 																								
 void OnGlassTileDestroyed(CMap@ map, u32 index)													
 {																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 																								
@@ -1905,7 +1905,7 @@ void OnPlasteelTileHit(CMap@ map, u32 index)
 	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);										
 	map.RemoveTileFlag( index, Tile::LIGHT_PASSES );											
 																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 																								
@@ -1917,7 +1917,7 @@ void OnBPlasteelTileHit(CMap@ map, u32 index)
 {																								
 	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);			
 																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 																								
@@ -1927,7 +1927,7 @@ void OnBPlasteelTileHit(CMap@ map, u32 index)
 																								
 void OnPlasteelTileDestroyed(CMap@ map, u32 index)												
 {																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 																								
@@ -1940,7 +1940,7 @@ void OnConcreteTileHit(CMap@ map, u32 index)
 	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);										
 	map.RemoveTileFlag( index, Tile::LIGHT_PASSES );											
 																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 		for (int i = 0; i < 3; i++)																
@@ -1959,7 +1959,7 @@ void OnBConcreteTileHit(CMap@ map, u32 index)
 {																								
 	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);			
 																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 		for (int i = 0; i < 3; i++)																
@@ -1976,7 +1976,7 @@ void OnBConcreteTileHit(CMap@ map, u32 index)
 																								
 void OnConcreteTileDestroyed(CMap@ map, u32 index)												
 {																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 		for (int i = 0; i < 15; i++)															
@@ -2125,7 +2125,7 @@ void OnTNTTileHit(CMap@ map, u32 index, f32 damage, bool onfire)
 	}																							
 	else																						
 	{																							
-		if (getNet().isClient())																
+		if (isClient())																
 		{																						
 			Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg",								
 				map.getTileWorldPosition(index), 1.0f, 1.0f);									
@@ -2139,7 +2139,7 @@ void OnMatterTileHit(CMap@ map, u32 index)
 	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);										
 	map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);						
 																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 		mattersparks(pos, 5);																	
@@ -2151,7 +2151,7 @@ void OnBrickTileHit(CMap@ map, u32 index)
 {																								
 	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);										
 																								
-	if (getNet().isClient())																	
+	if (isClient())																	
 	{ 																							
 		Vec2f pos = map.getTileWorldPosition(index);											
 																								
@@ -2170,7 +2170,7 @@ const Vec2f[] directions =
 
 void OnMatterTileDestroyed(CMap@ map, u32 index)
 {
-	if (getNet().isClient())
+	if (isClient())
 	{
 		Vec2f pos = map.getTileWorldPosition(index);
 		ParticleAnimated("MatterSmoke.png", pos+Vec2f(4, 4), Vec2f(0, -1), 0.0f, 1.0f, 3, 0.0f, false);

@@ -64,7 +64,7 @@ void onInit(CBlob@ this)
 	this.setPosition(Vec2f(this.getPosition().x, 0.0f));
 	this.setVelocity(Vec2f((15 + XORRandom(5)) * (XORRandom(2) == 0 ? 1.00f : -1.00f), 5));
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
 		sprite.SetFrameIndex(this.getNetworkID() % 4);
@@ -81,7 +81,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
@@ -97,7 +97,7 @@ void onTick(CBlob@ this)
 		this.Untag("explosive");
 	}
 
-	if (getNet().isClient() && this.getTickSinceCreated() < 60) MakeParticle(this, XORRandom(100) < 10 ? "SmallSmoke" : "SmallExplosion");
+	if (isClient() && this.getTickSinceCreated() < 60) MakeParticle(this, XORRandom(100) < 10 ? "SmallSmoke" : "SmallExplosion");
 
 	if(this.hasTag("collided"))
 	{
@@ -109,7 +109,7 @@ void onTick(CBlob@ this)
 			f32 modifier = 1.00f - (sound_delay / 3.0f);
 			print("modifier: " + modifier);
 
-			if (modifier > 0.01f && getNet().isClient())
+			if (modifier > 0.01f && isClient())
 			{
 				Sound::Play("methane_explode.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 1.0f - (0.7f * (1 - modifier)), modifier);
 			}
@@ -132,7 +132,7 @@ void onHitGround(CBlob@ this)
 
 	if(!this.hasTag("collided"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			ShakeScreen(power * 400.0f, power * 100.0f, this.getPosition());
 			this.getSprite().PlaySound("AncientWreckage_Crash_" + (this.getNetworkID() % 3) + ".ogg", 1.00f, 0.50f + (XORRandom(100) * 0.30f));

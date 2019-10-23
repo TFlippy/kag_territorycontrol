@@ -338,7 +338,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	if (isMat && !blob.isAttached() && blob.hasTag("material"))
 	{
 		if (isServer()) this.server_PutInInventory(blob);
-		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
+		if (isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
 }
 

@@ -605,7 +605,7 @@ void onTick(CBlob@ this)
 
 	// vvvvvvvvvvvvvv CLIENT-SIDE ONLY vvvvvvvvvvvvvvvvvvv
 
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	if (this.isInInventory()) return;
 

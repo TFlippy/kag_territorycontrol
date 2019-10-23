@@ -26,7 +26,7 @@ void onInit(CBlob@ this)
 	if (!this.exists("flash_distance")) this.set_f32("flash_distance", 2500);
 	if (!this.exists("custom_explosion_sound")) this.set_string("custom_explosion_sound", "Antimatter_Kaboom_Big");
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		Vec2f pos = getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos());
 		f32 distance = Maths::Abs(this.getPosition().x - pos.x) / 8;
@@ -132,7 +132,7 @@ void onTick(CBlob@ this)
 	
 	const bool dead = this.hasTag("dead");
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (ticks > (sound_delay * 30) && !this.hasTag("sound_played"))
 		{
@@ -156,7 +156,7 @@ void onTick(CBlob@ this)
 	const f32 modifier = boom_size / boom_end;
 	const f32 invModifier = 1.00f - modifier;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		const f32 fx_count = Maths::Pow(boom_size / 32, 2) * 0.01f;
 		const s32 max_width = map.tilemapwidth * map.tilesize;
@@ -241,7 +241,7 @@ void onTick(CBlob@ this)
 		}
 	}
 	
-	if (getNet().isClient() && !this.hasTag("no flash") && ticks == this.get_u32("flash_delay")) 
+	if (isClient() && !this.hasTag("no flash") && ticks == this.get_u32("flash_delay")) 
 	{
 		CBlob@ localBlob = getLocalPlayerBlob();
 		if (localBlob !is null)

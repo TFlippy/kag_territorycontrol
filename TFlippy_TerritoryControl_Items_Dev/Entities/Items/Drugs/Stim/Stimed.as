@@ -6,12 +6,12 @@
 
 void onInit(CBlob@ this)
 {
-	if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_stim.png");
+	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_stim.png");
 }
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
+	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
 }
 
 void onTick(CBlob@ this)
@@ -23,7 +23,7 @@ void onTick(CBlob@ this)
 	
 	if (true_level <= 0)
 	{
-		if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
+		if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
 	else

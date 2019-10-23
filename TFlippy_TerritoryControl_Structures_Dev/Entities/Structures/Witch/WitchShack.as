@@ -166,7 +166,7 @@ void onTick(CBlob@ this)
 						// blob.server_SetHealth(Maths::Min(blob.getHealth() + 0.125f, maxHealth));
 					// }
 					
-					// if (getNet().isClient() && blob.getHealth() < maxHealth)
+					// if (isClient() && blob.getHealth() < maxHealth)
 					// {
 						// for (int i = 0; i < 4; i++)
 						// {

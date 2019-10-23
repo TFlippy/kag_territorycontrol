@@ -13,7 +13,7 @@ void server_PutIn(CBlob@ this, CBlob@ picker, CBlob@ pickBlob)
 {
 	/*if(isServer()){
 		printf("[debug] server_PutIn called on server, blob is "+this.getName());
-	}else if(getNet().isClient()){
+	}else if(isClient()){
 		printf("[debug] server_PutIn called on client, blob is "+this.getName());
 	}*/
 	if(this is null){

@@ -290,7 +290,7 @@ void BomberHandling(CBlob@ this,VehicleInfo@ v)
 			if(inv !is null) {
 				u32 itemCount=	inv.getItemsCount();
 				
-				if(getNet().isClient()) {
+				if(isClient()) {
 					if(itemCount>0){ 
 						this.getSprite().PlaySound("bridge_open",1.0f,1.0f);
 					}else if(blob !is null && blob.isMyPlayer()){
@@ -380,7 +380,7 @@ void onCollision(CBlob@ this,CBlob@ blob,bool solid)
 {
 	float power=this.getOldVelocity().getLength();
 	if(power>1.5f &&(solid ||(blob !is null && blob.isCollidable() && blob.getTeamNum()!=this.getTeamNum() && this.doesCollideWithBlob(blob)))){
-		if(getNet().isClient()){
+		if(isClient()){
 			Sound::Play("WoodHeavyHit1.ogg",this.getPosition(),1.0f);
 		}
 		this.server_Hit(this,this.getPosition(),Vec2f(0,0),this.getAttachments().getAttachmentPointByName("FLYER") is null ? power*2.5f : power*0.6f,0,true);

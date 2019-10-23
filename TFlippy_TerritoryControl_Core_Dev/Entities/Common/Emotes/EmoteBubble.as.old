@@ -106,7 +106,7 @@ void onTick(CBlob@ blob)
 				
 				if (old_index != index && index < sounds.length && getGameTime() >= blob.get_u32("next_emote_sound") && sounds[index] != "")
 				{
-					if (getNet().isClient())
+					if (isClient())
 					{
 						f32 pitch = blob.getSexNum() == 0 ? 0.9f : 1.5f;
 						if (blob.exists("voice pitch")) pitch = blob.get_f32("voice pitch");

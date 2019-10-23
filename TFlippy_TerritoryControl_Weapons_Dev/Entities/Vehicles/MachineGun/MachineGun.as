@@ -212,7 +212,7 @@ u16 GetAmmo(CBlob@ this)
 
 void Shoot(CBlob@ this, f32 angle)
 {
-	if (getNet().isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
+	if (isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
 
 	angle = angle * (this.isFacingLeft() ? -1 : 1);
 	
@@ -231,7 +231,7 @@ void Shoot(CBlob@ this, f32 angle)
 	
 	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		DrawLine(this.getSprite(), startPos, length / 32, angle, this.isFacingLeft());
 		ShakeScreen(128, 48, hitPos);	

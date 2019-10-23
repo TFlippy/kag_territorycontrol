@@ -285,7 +285,7 @@ void onTick(CBlob@ this)
 	}
 	else if ((pressed_a1 || swordState) && !moveVars.wallsliding)   //no attacking during a slide
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			if (knight.swordTimer == KnightVars::slash_charge_level2)
 			{

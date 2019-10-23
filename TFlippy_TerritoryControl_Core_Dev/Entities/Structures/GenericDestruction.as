@@ -14,7 +14,7 @@ void onHealthChange(CBlob@ this, f32 health_old)
 	
 	sprite.animation.frame = newFrame;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (lastFrame != newFrame && this.hasTag("building"))
 		{		

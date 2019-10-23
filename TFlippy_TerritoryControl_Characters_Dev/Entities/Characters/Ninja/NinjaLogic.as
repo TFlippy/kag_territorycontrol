@@ -550,7 +550,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	
 	blob.setVelocity(dir * vellen * 0.8f);
 	
-	if (getNet().isClient()) this.getSprite().PlaySound("Ninja_Attack" + XORRandom(4), 0.75f, this.getSexNum() == 0 ? 1.0f : 2.0f);
+	if (isClient()) this.getSprite().PlaySound("Ninja_Attack" + XORRandom(4), 0.75f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 	if (isServer()) 
 	{
 		if (blob.hasTag("flesh") || blob.hasTag("wooden"))

@@ -103,7 +103,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (cmd == this.getCommandID("nuke_activate_cl"))
 		{
@@ -136,7 +136,7 @@ void onTick(CBlob@ this)
 			}
 		}
 	
-		if (getNet().isClient() && !this.hasTag("nuke_alarm"))
+		if (isClient() && !this.hasTag("nuke_alarm"))
 		{
 			if (time % 85 == 0)
 			{

@@ -75,7 +75,7 @@ void onTick(CBlob@ this)
 			this.server_Hit(this, this.getPosition(), Vec2f(0, 1), this.getInitialHealth() * 0.05f, Hitters::builder, true);
 		}
 		
-		if (getNet().isClient())
+		if (isClient())
 		{	
 			this.getSprite().PlaySound("/BuildingExplosion", 0.8f, 0.8f);
 			
@@ -614,7 +614,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							print_log(ply, (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName());
 							
 							if (isServer()) this.Sync("base_demolition", true);
-							if (getNet().isClient())
+							if (isClient())
 							{
 								client_AddToChat(ply.getUsername() + " has " + (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName() + "!", teamColor);
 								
@@ -632,7 +632,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							this.set_bool("base_alarm_manual", data > 0);
 							if (isServer()) this.Sync("base_alarm_manual", true);
 						
-							if (getNet().isClient())
+							if (isClient())
 							{
 								SetAlarm(this, data > 0);
 								
@@ -693,7 +693,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							if (ply.getBlob() !is null) ply.getBlob().server_Die();
 						}
 						
-						if (getNet().isClient())
+						if (isClient())
 						{
 							client_AddToChat(ply.getUsername() + " has been kicked out of the " + teamName + " by " + caller.getUsername() + "!", teamColor);
 						}
@@ -720,7 +720,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							}
 						}
 						
-						if (getNet().isClient())
+						if (isClient())
 						{
 							client_AddToChat(ply.getUsername() + " has been enslaved by " + caller.getUsername() + "!", teamColor);
 						}
@@ -775,7 +775,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 	}
 	
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (cmd == this.getCommandID("faction_captured"))
 		{

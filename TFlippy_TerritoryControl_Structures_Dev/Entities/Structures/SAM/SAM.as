@@ -176,7 +176,7 @@ void onTick(CSprite@ this)
 	CBlob@ blob = this.getBlob();
 	if (blob.get_bool("security_state"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{					
 			CBlob@ target = getBlobByNetworkID(blob.get_u16("target"));
 			if (target !is null)

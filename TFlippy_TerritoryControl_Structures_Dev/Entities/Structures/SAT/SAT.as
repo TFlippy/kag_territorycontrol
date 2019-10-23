@@ -117,7 +117,7 @@ void onTick(CBlob@ this)
 				blob.set_u32("primed_time", getGameTime() + 5);
 			}
 			
-			if (getNet().isClient())
+			if (isClient())
 			{
 				Vec2f screenPos = getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos());
 				Vec2f soundDir = screenPos - this.getPosition();

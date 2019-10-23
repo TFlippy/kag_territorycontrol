@@ -211,7 +211,7 @@ void onTick(CBlob@ this)
 			juggernaut.forceFatality=	false;
 			juggernaut.dontHitMore=		false;
 			
-			if(getNet().isClient()){
+			if(isClient()){
 				Sound::Play("/ArgLong",this.getPosition());
 			}
 		}
@@ -241,7 +241,7 @@ void onTick(CBlob@ this)
 			juggernaut.forceFatality=	false;
 			juggernaut.dontHitMore=		false;
 			
-			if(getNet().isClient()){
+			if(isClient()){
 				Sound::Play("/ArgLong",this.getPosition());
 				PlaySoundRanged(this,"SwingHeavy",4,1.0f,1.0f);
 			}
@@ -368,7 +368,7 @@ void onTick(CBlob@ this)
 			juggernaut.state=		JuggernautStates::throwing;
 			juggernaut.actionTimer=	0;
 			juggernaut.dontHitMore=	false;
-			if(getNet().isClient()){
+			if(isClient()){
 				Sound::Play("/ArgLong",this.getPosition());
 			}
 			if(isServer()){
@@ -472,7 +472,7 @@ void onTick(CBlob@ this)
 				//this.SendCommand(this.getCommandID("throw"));
 			}
 		}else if(pressed_rmb && this.isKeyJustPressed(key_action2) && !juggernaut.goFatality && this.get_string("grabbedEnemy")!="trader"){
-			/*if(getNet().isClient() && isMyPlayer){
+			/*if(isClient() && isMyPlayer){
 				CBitStream stream;
 				this.SendCommandOnlyServer(this.getCommandID("goFatality"),stream);
 			}*/
@@ -533,7 +533,7 @@ void onTick(CBlob@ this)
 				}
 			}
 		}
-		if(getNet().isClient()) {
+		if(isClient()) {
 			if(juggernaut.actionTimer==3){ //4
 				Sound::Play("ArgShort.ogg",pos,1.0f);
 			}else if(juggernaut.actionTimer==20){ //27
@@ -621,7 +621,7 @@ void onCommand(CBlob@ this,u8 cmd,CBitStream @stream)
 		juggernaut.attackDelay=15;
 		juggernaut.forceFatality=false;
 		juggernaut.goFatality=false;
-		if(getNet().isClient()){
+		if(isClient()){
 			
 			CSpriteLayer@ victim=this.getSprite().getSpriteLayer("victim");
 			if(victim !is null){
@@ -656,7 +656,7 @@ void onDie(CBlob@ this)
 {
 	// print("onDie");
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().PlaySound("Juggernaut_Death.ogg", 1.00f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 	}
@@ -747,7 +747,7 @@ void DoAttack(CBlob@ this,f32 damage,JuggernautInfo@ info,f32 arcDegrees,u8 type
 	bool hasHitBlob=	false;
 	bool hasHitMap=		false;
 	
-	bool client = getNet().isClient();
+	bool client = isClient();
 	bool server = isServer();
 	
 	if(isServer() && (blobPos-aimPos).Length()<=attack_distance*1.5f){
@@ -1008,7 +1008,7 @@ bool canHit(CBlob@ this,CBlob@ b)
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
 {
 	f32 vellen = this.getOldVelocity().Length();
-	bool client = getNet().isClient();
+	bool client = isClient();
 	bool server = isServer();
 	
 	if (solid && vellen > 5.00f)

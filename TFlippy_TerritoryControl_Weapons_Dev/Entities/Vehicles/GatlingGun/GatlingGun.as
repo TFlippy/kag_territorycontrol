@@ -207,7 +207,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 {
 	if (getGameTime() < this.get_u32("fireDelay")) return;
 
-	if (getNet().isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
+	if (isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
 	
 	f32 angle = this.getAngleDegrees() + Vehicle_getWeaponAngle(this, v);
 	angle = angle * (this.isFacingLeft() ? -1 : 1);
@@ -227,7 +227,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 	
 	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		DrawLine(this.getSprite(), startPos, length / 32, angle, this.isFacingLeft());
 		

@@ -68,7 +68,7 @@ void PackItems(CBlob@ this, CBlob@[] blobs)
 		}
 	}	
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().PlaySound("BombMake.ogg");
 	}
@@ -81,7 +81,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	if (!blob.isAttached() && (blob.hasTag("material") || blob.hasTag("hopperable")))
 	{
 		if (isServer()) this.server_PutInInventory(blob);
-		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
+		if (isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
 }
 
@@ -97,7 +97,7 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 {
 	if (cmd == this.getCommandID("menu"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{	
 			CBlob@ caller = getBlobByNetworkID(params.read_u16());
 			

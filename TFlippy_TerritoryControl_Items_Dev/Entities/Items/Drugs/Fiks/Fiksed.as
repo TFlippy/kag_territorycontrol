@@ -36,7 +36,7 @@ void onTick(CBlob@ this)
 					if (this.isMyPlayer()) this.getSprite().PlaySound("heart.ogg", 0.50f, 1.00f);
 				}
 				
-				if (getNet().isClient())
+				if (isClient())
 				{
 					for (int i = 0; i < 4; i++)
 					{

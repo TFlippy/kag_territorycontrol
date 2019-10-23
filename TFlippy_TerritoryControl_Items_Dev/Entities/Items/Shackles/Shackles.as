@@ -55,7 +55,7 @@ void onTick(CBlob@ this)
 						
 							if ((chance > 0.50f && XORRandom(100) < chance * 80) || (getKnocked(blob) > 15 && chance > 0.2f))
 							{
-								// if (getNet().isClient())
+								// if (isClient())
 								// {
 									// this.getSprite().PlaySound("shackles_success.ogg", 1.25f, 1.00f);
 								// }
@@ -79,7 +79,7 @@ void onTick(CBlob@ this)
 							{
 								this.set_u32("next attack", getGameTime() + 90);
 							
-								if (getNet().isClient())
+								if (isClient())
 								{
 									this.getSprite().PlaySound("shackles_fail.ogg", 0.80f, 1.00f);
 								}

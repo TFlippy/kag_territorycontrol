@@ -22,7 +22,7 @@ void onTick(CBlob@ this)
 {
 	if (this.isInWater())
 	{
-		if (!getNet().isClient()){ return;}
+		if (!isClient()){ return;}
 		makeSteamParticle(this, Vec2f(), XORRandom(100) > 50 ? "MediumSteam" : "SmallSteam");
 		// this.getSprite().PlaySound("Steam.ogg");
 		return;
@@ -57,7 +57,7 @@ void onTick(CBlob@ this)
 
 void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.015625f * rad;

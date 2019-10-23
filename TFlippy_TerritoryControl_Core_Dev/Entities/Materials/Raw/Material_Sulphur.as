@@ -52,7 +52,7 @@ void DoExplosion(CBlob@ this)
 	
 	print("" + modifier);
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().PlaySound("Sulphur_Explode.ogg", 1.00f, 1.00f);
 	
@@ -86,7 +86,7 @@ void onDie(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, Vec2f(XORRandom(4) - 2, -XORRandom(8) - 2), float(XORRandom(360)), 1.0f, 4 + XORRandom(8), XORRandom(100) * 0.01f, true);
 }

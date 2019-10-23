@@ -51,7 +51,7 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 		server_SynchronizeTeams(this);
 	}
 	
-	// if (getNet().isClient())
+	// if (isClient())
 	// {
 		// Synchronize(this);
 	// }
@@ -160,7 +160,7 @@ void server_SynchronizeTeams(CRules@ this)
 
 void onTick(CRules@ this)
 {
-	// if (getNet().isClient() && !isServer())
+	// if (isClient() && !isServer())
 	// {
 		// Synchronize(this);
 	// }

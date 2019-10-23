@@ -181,7 +181,7 @@ void Smite(CBlob@ this, CBlob@ target)
 		this.server_Hit(target, target.getPosition(), dir, 1000.00f, Hitters::fire);
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().PlaySound("DemonicBoing");
 		

@@ -52,7 +52,7 @@ void onTick(CBlob@ this)
 	bool canBreathe = !inWater && !gassed;
 	
 	const bool server = isServer();				
-	const bool client = getNet().isClient();				
+	const bool client = isClient();				
 
 	if (this.hasTag("bubblegem")) canBreathe = !canBreathe;
 	

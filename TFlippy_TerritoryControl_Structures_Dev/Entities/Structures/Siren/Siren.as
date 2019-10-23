@@ -83,7 +83,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (cmd == this.getCommandID("cl_toggle"))
 		{		

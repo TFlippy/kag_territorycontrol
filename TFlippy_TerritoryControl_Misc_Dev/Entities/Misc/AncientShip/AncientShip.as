@@ -146,7 +146,7 @@ void onInit(CBlob@ this)
 	
 	// this.getShape().SetGravityScale(0.0f);
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSoundVolume(0.5f);
@@ -271,7 +271,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
@@ -310,7 +310,7 @@ void onTick(CBlob@ this)
 		this.Untag("explosive");
 	}
 
-	if (getNet().isClient() && this.getTickSinceCreated() < 60) MakeParticle(this, XORRandom(100) < 10 ? "LargeSmoke.png" : "Explosion.png");
+	if (isClient() && this.getTickSinceCreated() < 60) MakeParticle(this, XORRandom(100) < 10 ? "LargeSmoke.png" : "Explosion.png");
 
 	if (this.hasTag("collided"))
 	{
@@ -323,7 +323,7 @@ void onTick(CBlob@ this)
 			f32 modifier = 1.00f - (sound_delay / 3.0f);
 			print("modifier: " + modifier);
 
-			if (modifier > 0.01f && getNet().isClient())
+			if (modifier > 0.01f && isClient())
 			{
 				Sound::Play("Nuke_Kaboom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 1.0f - (0.7f * (1 - modifier)), modifier);
 			}
@@ -346,7 +346,7 @@ void onHitGround(CBlob@ this)
 
 	if(!this.hasTag("collided"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			ShakeScreen(power * 400.0f, power * 100.0f, this.getPosition());
 			SetScreenFlash(100, 255, 255, 255);

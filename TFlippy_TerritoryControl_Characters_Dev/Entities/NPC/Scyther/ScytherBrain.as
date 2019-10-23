@@ -61,7 +61,7 @@ void onInit(CBlob@ this)
 	
 	this.getCurrentScript().tickFrequency = 30;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		client_AddToChat("A Scyther has arrived!", SColor(255, 255, 0, 0));
 		Sound::Play("scyther-intro.ogg");
@@ -103,7 +103,7 @@ void onTick(CBlob@ this)
 		moveVars.wallsliding = true;
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound"))
 		{
@@ -409,7 +409,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 50)
 		{
@@ -545,7 +545,7 @@ void DoExplosion(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1.8f + XORRandom(100) * 0.01f, 2 + XORRandom(6), XORRandom(100) * -0.00005f, true);
 }

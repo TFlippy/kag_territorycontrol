@@ -30,7 +30,7 @@ void onTick(CBlob@ this)
 			{
 				if (this.get_u32("next attack") > getGameTime()) return;
 			
-				if (getNet().isClient())
+				if (isClient())
 				{
 					this.getSprite().PlaySound("cancer" + XORRandom(4) + ".ogg", 2.0f, 0.60f + (XORRandom(100) / 200.00f));
 					this.getSprite().SetAnimation("play");

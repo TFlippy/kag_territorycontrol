@@ -225,7 +225,7 @@ void onDie(CBlob@ this)
 		
 		for (int i = 0; i < count; i++)
 		{
-			if (getNet().isClient())
+			if (isClient())
 			{
 				this.getSprite().PlaySound("Pigger_Gore.ogg", 0.3f, 0.9f);
 				ParticleBloodSplat(this.getPosition() + getRandomVelocity(0, radius, 360), true);

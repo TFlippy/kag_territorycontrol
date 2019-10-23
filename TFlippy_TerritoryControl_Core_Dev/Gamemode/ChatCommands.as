@@ -51,12 +51,12 @@ void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 		CBlob@ tpBlob=	getBlobByNetworkID(tpBlobId);
 		CBlob@ destBlob=	getBlobByNetworkID(destBlobId);
 		if(tpBlob !is null && destBlob !is null){
-			if(getNet().isClient()){
+			if(isClient()){
 				ShakeScreen(64,32,tpBlob.getPosition());
 				ParticleZombieLightning(tpBlob.getPosition());
 			}
 			tpBlob.setPosition(destBlob.getPosition());
-			if(getNet().isClient()){
+			if(isClient()){
 				ShakeScreen(64,32,destBlob.getPosition());
 				ParticleZombieLightning(destBlob.getPosition());
 			}

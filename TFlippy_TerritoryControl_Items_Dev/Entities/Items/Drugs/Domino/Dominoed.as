@@ -9,12 +9,12 @@ const f32 max_time = 3.00f;
 
 void onInit(CBlob@ this)
 {
-	if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_domino.png");
+	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_domino.png");
 }
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
+	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
 }
 
 void onTick(CBlob@ this)
@@ -31,7 +31,7 @@ void onTick(CBlob@ this)
 			this.server_Die();
 		}
 	
-		if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
+		if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
 	else
@@ -61,7 +61,7 @@ void onTick(CBlob@ this)
 						this.server_SetHealth(Maths::Min(this.getHealth() + 0.125f, maxHealth));
 					}
 					
-					if (getNet().isClient())
+					if (isClient())
 					{
 						for (int i = 0; i < 4; i++)
 						{
@@ -83,7 +83,7 @@ void onTick(CBlob@ this)
 				this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 			}
 			
-			if (getNet().isClient())
+			if (isClient())
 			{
 				if (this.isMyPlayer())
 				{

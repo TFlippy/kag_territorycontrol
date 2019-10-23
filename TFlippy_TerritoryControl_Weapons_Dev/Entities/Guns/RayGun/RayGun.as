@@ -87,7 +87,7 @@ void onTick(CBlob@ this)
 
 					CSpriteLayer@ gammalaser = this.getSprite().getSpriteLayer("gammalaser");
 
-					if (getNet().isClient())
+					if (isClient())
 					{					
 						if (gammalaser !is null)
 						{

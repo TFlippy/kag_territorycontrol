@@ -170,14 +170,14 @@ void onTick(CBlob@ this)
 				SetAmmo(this, ammo - 2);
 			}
 			
-			if (getNet().isClient())
+			if (isClient())
 			{
 				ParticleAnimated(CFileMatcher("LargeSmoke").getFirst(), t.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 			}
 		}
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CSpriteLayer@ laser = this.getSprite().getSpriteLayer("laser");
 		if (laser !is null)
@@ -207,7 +207,7 @@ void onTick(CSprite@ this)
 	this.SetFacingLeft(false);
 	CBlob@ blob = this.getBlob();
 	
-	if (getNet().isClient())
+	if (isClient())
 	{					
 		CBlob@ target = getBlobByNetworkID(blob.get_u16("target"));
 		if (target !is null)

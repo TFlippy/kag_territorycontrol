@@ -13,7 +13,7 @@ void onInit(CBlob@ this)
 	
 	if (!this.exists("teleporter_pair_netid"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			this.set_u16("teleporter_pair_netid", 0);
 		}
@@ -67,7 +67,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 	if (cmd == this.getCommandID("teleport"))
 	{
 		bool server = isServer();
-		bool client = getNet().isClient();
+		bool client = isClient();
 		
 		u16 caller_id = params.read_u16();
 		u16 teleporter_id = params.read_u16();
@@ -219,7 +219,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 				// boom.Init();
 			// }
 			
-			// if (getNet().isClient())
+			// if (isClient())
 			// {
 				// this.getSprite().PlaySound("MithrilBomb_Explode_old.ogg");
 			// }

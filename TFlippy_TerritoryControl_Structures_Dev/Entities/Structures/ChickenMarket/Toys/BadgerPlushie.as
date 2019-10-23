@@ -28,7 +28,7 @@ void onTick(CBlob@ this)
 			{
 				if (this.get_u32("next attack") > getGameTime()) return;
 			
-				if (getNet().isClient())
+				if (isClient())
 				{
 					this.getSprite().PlaySound("BadgerPlushie_Squeak" + XORRandom(2) + ".ogg", 0.8f, 0.9f + (XORRandom(100) * 0.002f));
 				}

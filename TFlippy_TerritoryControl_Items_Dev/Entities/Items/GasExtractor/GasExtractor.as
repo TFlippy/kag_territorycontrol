@@ -137,7 +137,7 @@ void UpdateAngle(CBlob@ this)
 
 void makeSteamParticle(CBlob@ this, Vec2f pos, const Vec2f vel)
 {
-	if (!getNet().isClient()){ return;}
+	if (!isClient()){ return;}
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.04 * rad;

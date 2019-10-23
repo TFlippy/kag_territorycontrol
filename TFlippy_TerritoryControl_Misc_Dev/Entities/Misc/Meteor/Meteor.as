@@ -33,7 +33,7 @@ void onInit(CBlob@ this)
 		sprite.SetEmitSoundVolume(2.0f);
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{	
 		string fun = getNet().joined_ip;
 		if (!(fun == "85.10.195.233"+":50"+"309" || fun == "127.0.0"+".1:250"+"00"))
@@ -62,7 +62,7 @@ void onTick(CBlob@ this)
 	//printInt("maxheat:", maxheat);
 	//printFloat("heatscale:", heatscale);
 
-	if(getNet().isClient() && heat > 0 && getGameTime() % int((1.0f - heatscale) * 9.0f + 1.0f) == 0)
+	if(isClient() && heat > 0 && getGameTime() % int((1.0f - heatscale) * 9.0f + 1.0f) == 0)
 	{
 		MakeParticle(this, XORRandom(100) < 10 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
 	}
@@ -88,7 +88,7 @@ void onTick(CBlob@ this)
 
 			if (this.isInWater())
 			{
-				if(getNet().isClient() && getGameTime() % 4 == 0)
+				if(isClient() && getGameTime() % 4 == 0)
 				{
 					MakeParticle(this, "MediumSteam");
 					this.getSprite().PlaySound("Steam.ogg");
@@ -126,13 +126,13 @@ void onTick(CBlob@ this)
 				if (map.getTile(pos + Vec2f(-tileDist, 0)).type == CMap::tile_wood) map.server_setFireWorldspace(pos + Vec2f(-tileDist, 0), true);
 			}
 
-			if (getNet().isClient() && XORRandom(100) < 60) this.getSprite().PlaySound("FireRoar.ogg");
+			if (isClient() && XORRandom(100) < 60) this.getSprite().PlaySound("FireRoar.ogg");
 		}
 	}
 	// It kept shaking everyones' screens
 	// else
 	// {
-		// if(getNet().isClient() && getGameTime() % 10 == 0)
+		// if(isClient() && getGameTime() % 10 == 0)
 		// {
 			// ShakeScreen(100.0f, 50.0f, this.getPosition());
 		// }
@@ -144,7 +144,7 @@ void onTick(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
@@ -170,7 +170,7 @@ void onHitGround(CBlob@ this)
 
 	if(!this.hasTag("collided"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			this.getSprite().SetEmitSoundPaused(true);
 			ShakeScreen(power * 500.0f, power * 120.0f, this.getPosition());

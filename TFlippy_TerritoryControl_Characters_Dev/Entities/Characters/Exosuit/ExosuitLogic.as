@@ -200,7 +200,7 @@ void onTick(CBlob@ this)
 		this.setPosition(hitPos);
 		this.setVelocity(-aimDir * (length / 12.0f));
 	
-		if(getNet().isClient())
+		if(isClient())
 		{
 			this.getSprite().PlaySound("Exosuit_Teleport.ogg", 1.0f, 1.0f);
 			this.getSprite().setRenderStyle(RenderStyle::additive);
@@ -356,7 +356,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			this.server_Hit(hitterBlob, worldPoint, velocity, damage_reflected, customData);
 		}
 	
-		if (getNet().isClient())
+		if (isClient())
 		{
 			this.getSprite().PlaySound("Exosuit_Deflect.ogg", 1, 1);
 			if (this.isMyPlayer()) SetScreenFlash(100, 255, 255, 255);			

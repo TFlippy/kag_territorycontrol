@@ -20,7 +20,7 @@ void onTick(CBlob@ this)
 		this.set_string("reload_script", "");
 	}
 
-	if(getNet().isClient() && this.get_u8("breath timer") == 2)
+	if(isClient() && this.get_u8("breath timer") == 2)
     {
         bool inhale = this.get_bool("inhale");
         this.getSprite().PlaySound("Sounds/gasp.ogg", 0.75f, inhale ? 0.8f : 0.75f);

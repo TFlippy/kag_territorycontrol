@@ -5,7 +5,7 @@ void onRender(CSprite@ this)
 	CBlob@ item=	blob.getCarriedBlob();	if(item is null){return;}
 	CPlayer@ player=blob.getPlayer();		if(player is null){return;}
 	
-	if(!player.isLocal() || !getNet().isClient()){
+	if(!player.isLocal() || !isClient()){
 		return;
 	}
 	

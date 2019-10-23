@@ -27,7 +27,7 @@ void onTick(CMovement@ this)
 
 	const bool isknocked = isKnocked(blob);
 
-	const bool is_client = getNet().isClient();
+	const bool is_client = isClient();
 
 	CMap@ map = blob.getMap();
 	Vec2f vel = blob.getVelocity();

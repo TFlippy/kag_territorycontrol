@@ -91,7 +91,7 @@ void DoExplosion(CBlob@ this)
 		}
 	}	
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		// this.getSprite().PlaySound("shockmine_explode.ogg", 0.80f, 1.10f);
 		ShakeScreen(100, 60, this.getPosition());
@@ -154,7 +154,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 	CParticle@ p = ParticleAnimated(CFileMatcher(filename).getFirst(), pos, vel, XORRandom(360), 1 + (XORRandom(100) * 0.02f), 2 + XORRandom(5), 0, true);
 	if(p !is null)
 	{

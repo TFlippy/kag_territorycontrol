@@ -22,7 +22,7 @@ void onInit(CBlob@ this)
 	this.SetLightRadius(64.0f);
 	this.SetLightColor(SColor(255, 150, 25, 0));
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSoundVolume(10.0f);
@@ -46,7 +46,7 @@ void onTick(CBlob@ this)
 {
 	CMap@ map = getMap();
 	// bool server = isServer();
-	// bool client = getNet().isClient();
+	// bool client = isClient();
 
 	// if (client) ShakeScreen(80, 50, this.getPosition());
 	this.setVelocity(Vec2f(4, 0));

@@ -60,7 +60,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		bool set = !getSawOn(this);
 		SetSawOn(this, set);
 
-		if (getNet().isClient()) //closed/opened gfx
+		if (isClient()) //closed/opened gfx
 		{
 			CSprite@ sprite = this.getSprite();
 
@@ -170,7 +170,7 @@ bool canSaw(CBlob@ this, CBlob@ blob)
 
 		if (dot > 0.8f)
 		{
-			if (getNet().isClient() && !g_kidssafe) //add blood gfx
+			if (isClient() && !g_kidssafe) //add blood gfx
 			{
 				CSprite@ sprite = this.getSprite();
 				CSpriteLayer@ chop = sprite.getSpriteLayer("chop");

@@ -849,7 +849,7 @@ void DoExplosion(CBlob@ this)
 		}
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		for (int i = 0; i < 40; i++)
 		{

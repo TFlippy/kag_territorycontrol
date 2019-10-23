@@ -125,7 +125,7 @@ void onTick(CBlob@ this)
 				{
 					u32 itemCount = inv.getItemsCount();
 					
-					if (getNet().isClient()) 
+					if (isClient()) 
 					{
 						if (itemCount > 0)
 						{ 
@@ -189,7 +189,7 @@ void onTick(CBlob@ this)
 	if (this.getVelocity().Length() > 1.50f && v > 0.25f) this.setAngleDegrees((this.isFacingLeft() ? 180 : 0) - this.getVelocity().Angle());
 	else this.setAngleDegrees(0);
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().SetEmitSoundSpeed(0.5f + (this.get_f32("velocity") / SPEED_MAX * 0.4f) * (this.getVelocity().Length() * 0.15f));
 		
@@ -222,7 +222,7 @@ void Shoot(CBlob@ this)
 	
 	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		DrawLine(this.getSprite(), startPos, length / 32, angleOffset, this.isFacingLeft());
 		this.getSprite().PlaySound("GatlingGun-Shoot0", 1.00f, 1.00f);
@@ -304,7 +304,7 @@ void onCollision(CBlob@ this,CBlob@ blob,bool solid)
 	float power = this.getOldVelocity().getLength();
 	if (power > 5.0f && blob == null)
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			Sound::Play("WoodHeavyHit1.ogg", this.getPosition(), 1.0f);
 		}
@@ -360,7 +360,7 @@ void DoExplosion(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
 }

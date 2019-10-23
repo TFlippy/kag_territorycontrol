@@ -9,7 +9,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 
 	CMap@ map = getMap();
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		TileType tile = map.getTile(worldPoint).type;
 		// hit bedrock

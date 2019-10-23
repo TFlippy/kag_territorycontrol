@@ -145,7 +145,7 @@ void Zap(CBlob@ this, CBlob@ target)
 		SetFuel(this, fuel - u8(Maths::Ceil(damage)));
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().PlaySound("energy_disintegrate_" + XORRandom(2) + ".ogg");
 		

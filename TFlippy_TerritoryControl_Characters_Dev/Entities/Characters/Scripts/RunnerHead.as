@@ -300,7 +300,7 @@ void onTick(CSprite@ this)
 			head.animation.frame = 2;
 
 			// sparkle blood if cut throat
-			if (getNet().isClient() && getGameTime() % 2 == 0 && blob.hasTag("cutthroat"))
+			if (isClient() && getGameTime() % 2 == 0 && blob.hasTag("cutthroat"))
 			{
 				Vec2f vel = getRandomVelocity(90.0f, 1.3f * 0.1f * XORRandom(40), 2.0f);
 				ParticleBlood(blob.getPosition() + Vec2f(this.isFacingLeft() ? headoffset.x : -headoffset.x, headoffset.y), vel, SColor(255, 126, 0, 0));

@@ -77,7 +77,7 @@ void Boom(CBlob@ this)
 	for (int i = 0; i < 24; i++)
 	{
 		if (isServer()) map.server_setFireWorldspace(this.getPosition() + getRandomVelocity(0, 8 + XORRandom(96), 360), true);
-		if (getNet().isClient() && XORRandom(100) < 25) MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(0, XORRandom(220) * 0.01f, 360), particles[XORRandom(particles.length)]);
+		if (isClient() && XORRandom(100) < 25) MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(0, XORRandom(220) * 0.01f, 360), particles[XORRandom(particles.length)]);
 	}
 	
 	
@@ -136,7 +136,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1 + (XORRandom(100) * 0.02f), 2 + XORRandom(3), XORRandom(100) * -0.00005f, true);
 }

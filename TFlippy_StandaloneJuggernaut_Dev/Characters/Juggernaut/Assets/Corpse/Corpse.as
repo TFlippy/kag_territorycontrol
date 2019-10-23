@@ -24,7 +24,7 @@ void onInit(CBlob @ this)
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	this.getCurrentScript().tickFrequency = 3;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (this.getName() == "corpsetrader")
 		{
@@ -145,7 +145,7 @@ void onDie(CBlob@ this)
 {
 	this.getShape().SetVelocity(Vec2f(0.0f,-1.5f));
 	this.getSprite().Gib();
-	if(getNet().isClient()){
+	if(isClient()){
 		for(int i=0;i<5;i++){
 			Vec2f pos=Vec2f(XORRandom(16)-8,XORRandom(16)-8);
 			if(pos.Length()>=8.0f){

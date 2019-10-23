@@ -417,7 +417,7 @@ void onTick(CBlob@ this)
 		
 		this.setInventoryName(this.get_string("inventory_name") + "\n\nPressure: " + Maths::Round(pressure) + " / " + max_pressure + "\nHeat: " + heat);
 				
-		if (getNet().isClient())
+		if (isClient())
 		{
 			CSprite@ sprite = this.getSprite();
 			if (sprite !is null)
@@ -443,7 +443,7 @@ void onTick(CBlob@ this)
 		{
 			const f32 rmod = (pressure - (max_pressure * 0.50f)) / (max_pressure * 0.50f);
 		
-			if (getNet().isClient()) 
+			if (isClient()) 
 			{
 				ShakeScreen(20 * rmod, 100 * rmod, this.getPosition());	
 			}

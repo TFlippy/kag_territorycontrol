@@ -170,7 +170,7 @@ void Zap(CBlob@ this, CBlob@ target)
 		SetFuel(this, Maths::Max(0, fuel - 5));
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{				
 		bool flip = this.isFacingLeft();
 	

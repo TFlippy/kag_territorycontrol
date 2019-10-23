@@ -111,7 +111,7 @@ void onTick(CBlob@ this)
 					}
 				}
 
-				if (getNet().isClient())
+				if (isClient())
 				{
 					CSpriteLayer@ zap = this.getSprite().getSpriteLayer("zap");
 					if (zap !is null)

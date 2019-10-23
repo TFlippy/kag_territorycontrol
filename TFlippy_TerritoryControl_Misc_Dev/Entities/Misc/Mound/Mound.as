@@ -110,7 +110,7 @@ void onTick(CBlob@ this)
 		moveVars.jumpFactor *= 0.75f;
 	}
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
 		{
@@ -118,7 +118,7 @@ void onTick(CBlob@ this)
 			this.set_u32("next sound", getGameTime() + 200);
 		}
 		
-		if (getNet().isClient())
+		if (isClient())
 		{
 			if (XORRandom(100) < 25) MakeParticle(this, 0.75f);
 		}
@@ -264,7 +264,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		this.set_u32("next pigger", getGameTime() + 30 * 15);
 	
-		if (getNet().isClient())
+		if (isClient())
 		{
 			this.getSprite().PlaySound("FleshHit.ogg", 1.00f, 1.00f);
 			this.getSprite().PlaySound("Pigger_Pop_" + XORRandom(2), 1.00f, 1.00f);
@@ -374,7 +374,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;			
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 100)
 		{
@@ -398,7 +398,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void MakeParticle(CBlob@ this, float magnitude)
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 	CParticle@ p = ParticleAnimated(CFileMatcher("FalloutGas.png").getFirst(), this.getPosition() + getRandomVelocity(0, magnitude * 32, 360), Vec2f(), float(XORRandom(360)), 1.00f + (magnitude * 2 * (XORRandom(100) / 100.0f)), 3 + (6 * magnitude), -0.05f, false);
 	if (p !is null)
 	{

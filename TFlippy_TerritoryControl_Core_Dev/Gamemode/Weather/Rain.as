@@ -45,7 +45,7 @@ void onInit(CSprite@ this)
 {
 	this.getConsts().accurateLighting = false;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.SetEmitSound("rain_loop.ogg");
 		this.SetEmitSoundPaused(false);
@@ -111,7 +111,7 @@ void onTick(CBlob@ this)
 		}
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{	
 		CBlob@ blob = getLocalPlayerBlob();
 		fogHeightModifier = 0.00f;

@@ -46,7 +46,7 @@ void onInit(CBlob@ this)
 	
 	this.getCurrentScript().tickFrequency = 1;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		client_AddToChat("A Centipede has arrived!", SColor(255, 255, 0, 0));
 		Sound::Play("scyther-intro.ogg");
@@ -86,7 +86,7 @@ void onTick(CBlob@ this)
 	
 	// print("t");
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound"))
 		{
@@ -253,7 +253,7 @@ void Move(CBrain@ this, CBlob@ blob, Vec2f pos)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 50)
 		{

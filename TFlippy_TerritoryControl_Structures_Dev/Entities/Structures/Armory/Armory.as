@@ -132,7 +132,7 @@ void onTick(CBlob@ this)
 			
 			if ((blob.hasTag("isWeapon") || blob.hasTag("ammo")) && !blob.isAttached())
 			{
-				if (getNet().isClient() && this.getInventory().canPutItem(blob)) blob.getSprite().PlaySound("/PutInInventory.ogg");
+				if (isClient() && this.getInventory().canPutItem(blob)) blob.getSprite().PlaySound("/PutInInventory.ogg");
 				if (isServer()) this.server_PutInInventory(blob);
 			}
 		}
