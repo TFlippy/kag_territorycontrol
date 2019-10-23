@@ -19,11 +19,11 @@ void print_log(CBlob@ blob, string text)
 			CPlayer@ player = blob.getPlayer();
 			if (player !is null)
 			{
-				print_log("<" + player.getUsername() + "; " + blob.getConfig() + "; team " + blob.getTeamNum() + "> " + text);
+				print_log("<" + player.getUsername() + "; " + blob.getName() + "; team " + blob.getTeamNum() + "> " + text);
 			}
 			else
 			{
-				print_log("<" + blob.getConfig() + "; team " + blob.getTeamNum() + "> " + text);
+				print_log("<" + blob.getName() + "; team " + blob.getTeamNum() + "> " + text);
 			}
 		}		
 	}
@@ -40,7 +40,7 @@ void print_log(CPlayer@ player, string text)
 			CBlob@ blob = player.getBlob();
 			if (blob !is null)
 			{
-				print_log("<" + player.getUsername() + "; " + blob.getConfig() + "; team " + player.getTeamNum() + "> " + text);
+				print_log("<" + player.getUsername() + "; " + blob.getName() + "; team " + player.getTeamNum() + "> " + text);
 			}
 			else
 			{

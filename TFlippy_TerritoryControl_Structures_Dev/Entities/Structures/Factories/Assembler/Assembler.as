@@ -285,10 +285,7 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 
 void onTick(CBlob@ this)
 {
-
-	int crafting = this.get_u8("crafting");
-
-	AssemblerItem item = getItems(this)[crafting];
+	AssemblerItem item = getItems(this)[this.get_u8("crafting")];
 	CInventory@ inv = this.getInventory();
 
 
@@ -303,8 +300,11 @@ void onTick(CBlob@ this)
 			server_TakeRequirements(inv, item.reqs);
 		}
 
-		this.getSprite().PlaySound("ProduceSound.ogg");
-		this.getSprite().PlaySound("BombMake.ogg");
+		if(isClient())
+		{
+			this.getSprite().PlaySound("ProduceSound.ogg");
+			this.getSprite().PlaySound("BombMake.ogg");
+		}
 	}
 }
 
@@ -313,12 +313,9 @@ void onTick(CBlob@ this)
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob is null) return;
-
-	int crafting = this.get_u8("crafting");
-
 	bool isMat = false;
 
-	AssemblerItem item = getItems(this)[crafting];
+	AssemblerItem item = getItems(this)[this.get_u8("crafting")];
 	CBitStream bs = item.reqs;
 	bs.ResetBitIndex();
 	string text, requiredType, name, friendlyName;
