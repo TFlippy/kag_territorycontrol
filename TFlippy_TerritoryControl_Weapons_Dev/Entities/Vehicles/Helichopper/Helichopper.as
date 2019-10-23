@@ -466,7 +466,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ blob = getBlobByNetworkID(blobNum);
 		if(blob is null) return;
 
-		CBlob@ attachedBlob = blob.getAttachments().getAttachedBlob("PICKUP");
+		CBlob@ attachedBlob = blob.getAttachments().getAttachmentPointByName("PICKUP").getOccupied();
 		if(attachedBlob !is null && attachedBlob.getName() == "mat_sammissile")
 		{
 			this.add_u16("rocketCount", attachedBlob.getQuantity());
@@ -479,7 +479,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if(rocketCount > 0)
 		{
-			print("bep");
 			invo.server_RemoveItems("mat_sammissile", rocketCount);
 			this.add_u16("rocketCount", rocketCount);
 		}
@@ -497,7 +496,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ blob = getBlobByNetworkID(blobNum);
 		if(blob is null) return;
 
-		CBlob@ attachedBlob = blob.getAttachments().getAttachedBlob("PICKUP");
+		CBlob@ attachedBlob = blob.getAttachments().getAttachmentPointByName("PICKUP").getOccupied();
 		if(attachedBlob !is null && attachedBlob.getName() == "mat_gatlingammo")
 		{
 			this.add_u16("ammoCount", attachedBlob.getQuantity());
@@ -509,7 +508,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if(ammoCount > 0)
 		{
-			print("bep");
 			invo.server_RemoveItems("mat_gatlingammo", ammoCount);
 			this.add_u16("ammoCount", ammoCount);
 		}

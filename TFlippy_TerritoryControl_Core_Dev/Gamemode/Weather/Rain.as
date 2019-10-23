@@ -44,18 +44,18 @@ Vertex[] Fog_vs;
 void onInit(CSprite@ this)
 {
 	
+	this.getConsts().accurateLighting = false;
 	if (isClient())
 	{
+		this.SetEmitSound("rain_loop.ogg");
+		this.SetEmitSoundPaused(false);
+		CMap@ map = getMap();
+		uvs = 2048.0f/f32(spritesize);
 		Vertex[] BigQuad = {
 			Vertex(-1024,	-1024, 	-800,	0,		0,		0x90ffffff),
 			Vertex(1024,	-1024,	-800,	uvs,	0,		0x90ffffff),
 			Vertex(1024,	1024,	-800,	uvs,	uvs,	0x90ffffff),
 			Vertex(-1024,	1024,	-800,	0,		uvs,	0x90ffffff)};
-		this.getConsts().accurateLighting = false;
-		this.SetEmitSound("rain_loop.ogg");
-		this.SetEmitSoundPaused(false);
-		CMap@ map = getMap();
-		uvs = 2048.0f/f32(spritesize);
 		Rain_vs = BigQuad;
 		BigQuad[0].z = BigQuad[1].z = BigQuad[2].z = BigQuad[3].z = 1500;
 		Fog_vs = BigQuad;
