@@ -9,7 +9,7 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	bool canChangeClass = caller.getName()= "engineer";
+	bool canChangeClass = caller.getName() == "engineer";
 
 	if(canChangeClass)
 	{
