@@ -306,7 +306,7 @@ void onTick(CBlob@ this)
 						if(hitInfos[i].blob !is null) {	
 							CBlob@ blob=	hitInfos[i].blob;
 							if(blob.hasTag("player") && blob.getTeamNum()!=this.getTeamNum() && !blob.hasTag("dead")) {
-								if(blob.getConfig()=="knight"){
+								if(blob.getName()=="knight"){
 									if(blockAttack(blob,dir,0.0f)){
 										Sound::Play("Entities/Characters/Knight/ShieldHit.ogg",pos);
 										sparks(pos,-dir.Angle(),Maths::Max(10.0f*0.05f,1.0f));
@@ -322,7 +322,7 @@ void onTick(CBlob@ this)
 										}
 									}
 								}
-								if(blob.getHealth()<=1.0f || IsKnocked(blob) || blob.getConfig()=="archer" || blob.getConfig()=="trader"){
+								if(blob.getHealth()<=1.0f || IsKnocked(blob) || blob.getName()=="archer" || blob.getName()=="trader"){
 									CPlayer@ player=blob.getPlayer();
 									if(player !is null){
 										CBlob@ newBlob=	server_CreateBlob("playercontainer",0,this.getPosition());
@@ -340,7 +340,7 @@ void onTick(CBlob@ this)
 									blob.server_Die();
 									
 									CBitStream stream;
-										stream.write_string(blob.getConfig());
+										stream.write_string(blob.getName());
 									this.SendCommand(this.getCommandID("grabbedSomeone"),stream);
 									juggernaut.state=JuggernautStates::grabbed;
 								}else{

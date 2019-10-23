@@ -37,7 +37,7 @@ void onTick(CBlob@ this)
 			CBlob@ b = blobs[i];
 			if (b !is null)
 			{
-				string bname = b.getConfig();
+				string bname = b.getName();
 			
 				if (b.hasTag("tree"))
 				{

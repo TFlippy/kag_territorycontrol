@@ -56,7 +56,7 @@ void onTick(CBlob@ this)
 					for (int i = 0; i < count; i++)
 					{
 						CBlob@ item = b.getInventory().getItem(i);
-						if (item !is null && this.hasBlob(item.getConfig(), 0) || this.hasBlob(item.getConfig(), 1))
+						if (item !is null && this.hasBlob(item.getName(), 0) || this.hasBlob(item.getName(), 1))
 						{
 							b.server_PutOutInventory(item);
 							item.setPosition(this.getPosition());
@@ -67,7 +67,7 @@ void onTick(CBlob@ this)
 					
 					// if (b.getInventory().getItemsCount() > 0)
 					// {
-						// // return !(this.hasBlob(blob.getConfig(), 0) || this.hasBlob(blob.getConfig(), 1));
+						// // return !(this.hasBlob(blob.getName(), 0) || this.hasBlob(blob.getName(), 1));
 					
 						// CBlob@ item = b.getInventory().getItem(0);
 

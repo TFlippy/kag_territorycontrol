@@ -86,7 +86,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 //function for blending things
 void Blend(CBlob@ this, CBlob@ tobeblended)
 {
-	if (this is tobeblended || tobeblended.hasTag("sawed") || tobeblended.hasTag("invincible") || !getSawOn(this) || tobeblended.getConfig() == "seed")
+	if (this is tobeblended || tobeblended.hasTag("sawed") || tobeblended.hasTag("invincible") || !getSawOn(this) || tobeblended.getName() == "seed")
 	{
 		return;
 	}

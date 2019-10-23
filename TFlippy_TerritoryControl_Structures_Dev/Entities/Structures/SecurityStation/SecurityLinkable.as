@@ -20,7 +20,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (caller !is null)
 		{
 			CBlob@ carried = caller.getCarriedBlob();
-			if (carried !is null && carried.getConfig() == "securitycard")
+			if (carried !is null && carried.getName() == "securitycard")
 			{
 				if (this.get_u32("security_link_id") == 0)
 				{
@@ -41,7 +41,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	if (this.getTeamNum() != 250)
 	{
 		CBlob@ carried = caller.getCarriedBlob();
-		if (carried !is null && carried.getConfig() == "securitycard")
+		if (carried !is null && carried.getName() == "securitycard")
 		{
 			CBitStream params;
 			params.write_u16(caller.getNetworkID());

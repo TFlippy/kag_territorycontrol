@@ -6,7 +6,7 @@
 
 void onInit(CBlob@ this)
 {
-	string configName = this.getConfig();
+	string configName = this.getName();
 
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
 	this.set_Vec2f("shop menu size", Vec2f(2, 2));

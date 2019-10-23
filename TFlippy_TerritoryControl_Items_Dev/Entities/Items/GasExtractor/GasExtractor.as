@@ -83,7 +83,7 @@ void onTick(CBlob@ this)
 										if (getNet().isServer())
 										{
 											blob.server_Die();
-											MakeMat(holder, this.getPosition(), "mat_" + blob.getConfig(), 1 + XORRandom(5));
+											MakeMat(holder, this.getPosition(), "mat_" + blob.getName(), 1 + XORRandom(5));
 										}
 									
 										sprite.PlaySound("/gasextractor_load.ogg");

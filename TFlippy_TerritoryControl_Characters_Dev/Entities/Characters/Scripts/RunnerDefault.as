@@ -142,9 +142,9 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 		CRules@ r = getRules();
 		if(r.get_bool("log"))
 		{
-			print_log(this, "has picked up " + attached.getConfig());
+			print_log(this, "has picked up " + attached.getName());
 		}
-		// print_log(player.getUsername() + " (" + this.getConfig() + ", team " + this.getTeamNum() + ") has picked up " + attached.getConfig());
+		// print_log(player.getUsername() + " (" + this.getName() + ") has picked up " + attached.getName()
 		
 	}
 	
@@ -171,7 +171,7 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
 	if (detached !is null)
 	{
-		print_log(this, "has dropped " + detached.getConfig());
+		print_log(this, "has dropped " + detached.getName());
 	}
 
 	this.getSprite().SetZ(0.0f);

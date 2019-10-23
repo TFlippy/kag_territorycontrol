@@ -27,7 +27,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	{
 		if (getNet().isServer())
 		{
-			if (blob.getConfig() == "tree_pine" || blob.getConfig() == "tree_bushy")
+			if (blob.getName() == "tree_pine" || blob.getName() == "tree_bushy")
 			{
 				CBlob@ tree = server_CreateBlob("crystaltree", this.getTeamNum(), blob.getPosition() + Vec2f(0, -32));
 				

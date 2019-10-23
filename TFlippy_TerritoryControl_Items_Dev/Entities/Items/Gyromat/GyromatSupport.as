@@ -8,7 +8,7 @@ void onAddToInventory(CBlob@ this, CBlob@ blob)
 {
 	if (blob !is null)
 	{
-		string config = blob.getConfig();
+		string config = blob.getName();
 		if (config == "gyromat")
 		{
 			RecalculateGyromats(this);
@@ -20,7 +20,7 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if (blob !is null)
 	{
-		string config = blob.getConfig();
+		string config = blob.getName();
 		if (config == "gyromat")
 		{
 			RecalculateGyromats(this);
@@ -41,7 +41,7 @@ void RecalculateGyromats(CBlob@ this)
 			for (s32 i = 0; i < count; i++)
 			{
 				CBlob@ item = inv.getItem(i);
-				if (item !is null && item.getConfig() == "gyromat")
+				if (item !is null && item.getName() == "gyromat")
 				{
 					acceleration += item.get_f32("gyromat_value");
 				}

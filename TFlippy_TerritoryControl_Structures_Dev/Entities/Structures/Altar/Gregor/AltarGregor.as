@@ -107,7 +107,7 @@ void onTick(CBlob@ this)
 			// if (caller !is null)
 			// {
 				// CInventory @inv = caller.getInventory();
-				// if (caller.getConfig() == "builder")
+				// if (caller.getName() == "builder")
 				// {
 					// CBlob@ carried = caller.getCarriedBlob();
 					// if (carried !is null)

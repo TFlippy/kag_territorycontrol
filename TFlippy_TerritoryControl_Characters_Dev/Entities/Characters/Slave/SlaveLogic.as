@@ -40,7 +40,7 @@ void onInit(CBlob@ this)
 	
 	// CBlob@ carried = this.getCarriedBlob();
 	
-	// if (carried !is null && carried.getConfig() == "slaveball")
+	// if (carried !is null && carried.getName() == "slaveball")
 	// {
 		// moveVars.jumpFactor *= 0.5f;
 		// moveVars.walkFactor *= 0.5f;
@@ -77,5 +77,5 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 // bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 // {
-	// return byBlob.getConfig() != "slave";
+	// return byBlob.getName() != "slave";
 // }

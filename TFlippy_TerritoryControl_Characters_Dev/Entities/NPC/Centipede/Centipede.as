@@ -185,7 +185,7 @@ void onTick(CBrain@ this)
 		Vec2f tpos = target.getPosition() - blob.getPosition();
 		blob.SetFacingLeft(tpos.x < 0);
 		
-		// print("" + target.getConfig());
+		// print("" + target.getName());
 		
 		// print("" + distance);
 		

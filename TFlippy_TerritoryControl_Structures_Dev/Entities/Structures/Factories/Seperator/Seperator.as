@@ -45,16 +45,13 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (blob is null) return;
-
-	if(blob.hasTag("player"))return;
+	if (blob is null || blob.hasTag("player")) return;
+	if (blob.getPosition().y > this.getPosition().y) return;
 	
-	bool filter = false;
-	
-	if (this.hasBlob(blob.getConfig(), 0) || this.hasBlob(blob.getConfig(), 1))
+	if (this.hasBlob(blob.getName(), 0))
 	{
 		blob.setVelocity(Vec2f(this.isFacingLeft() ? -1 : 1, -6));
-		this.getSprite().PlaySound("/launcher_boing" + XORRandom(2) + ".ogg", 0.5f, 0.9f);
+		if(isClient()) this.getSprite().PlaySound("/launcher_boing" + XORRandom(2) + ".ogg", 0.5f, 0.9f);
 	}
 	else if (Maths::Abs(blob.getVelocity().y) < 2.0f) blob.setVelocity(Vec2f(this.isFacingLeft() ? -1 : 1, -1.0f));
 }

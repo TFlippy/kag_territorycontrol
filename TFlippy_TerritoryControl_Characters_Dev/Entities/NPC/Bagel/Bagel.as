@@ -229,7 +229,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		return;
 	}
 		
-	if (blob.getConfig() != this.getConfig() && blob.hasTag("flesh"))
+	if (blob.getName() != this.getName() && blob.hasTag("flesh"))
 	{
 		const f32 vellen = this.getShape().vellen;
 		if (vellen > 0.1f)

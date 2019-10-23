@@ -48,15 +48,15 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		
 		if (getNet().isServer() && compactor_resource == "")
 		{
-			this.set_string("compactor_resource", blob.getConfig());
+			this.set_string("compactor_resource", blob.getName());
 			this.set_string("compactor_resource_name", blob.getInventoryName());
 			// this.Sync("compactor_resource", false);
 			// this.Sync("compactor_resource_name", false);
 			
-			compactor_resource = blob.getConfig();
+			compactor_resource = blob.getName();
 		}
 		
-		if (blob.getConfig() == compactor_resource)
+		if (blob.getName() == compactor_resource)
 		{
 			if (getNet().isServer()) 
 			{

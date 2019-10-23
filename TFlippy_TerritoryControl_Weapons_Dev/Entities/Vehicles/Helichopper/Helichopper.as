@@ -385,7 +385,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			CBlob@ carried = caller.getCarriedBlob();
 			if (carried !is null && this.get_f32("fuel_count") < this.get_f32("max_fuel"))
 			{
-				string fuel_name = carried.getConfig();
+				string fuel_name = carried.getName();
 				bool isValid = fuel_name == "mat_fuel";
 				
 				if (isValid)
@@ -523,7 +523,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (carried !is null)
 		{
-			string fuel_name = carried.getConfig();
+			string fuel_name = carried.getName();
 			f32 fuel_modifier = 1.00f;
 			bool isValid = false;
 			

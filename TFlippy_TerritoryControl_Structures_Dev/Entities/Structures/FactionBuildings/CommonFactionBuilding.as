@@ -237,7 +237,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (this.isOverlapping(caller))
 	{
-		if (caller.getTeamNum() >= 100 && caller.getTeamNum() < 200 && this.getTeamNum() < 100 && caller.getConfig() != "slave")
+		if (caller.getTeamNum() >= 100 && caller.getTeamNum() < 200 && this.getTeamNum() < 100 && caller.getName() != "slave")
 		{
 			TeamData@ team_data;
 			GetTeamData(this.getTeamNum(), @team_data);

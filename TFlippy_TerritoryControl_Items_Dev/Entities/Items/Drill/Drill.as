@@ -232,7 +232,7 @@ void onTick(CBlob@ this)
 				HitInfo@[] hitInfos;
 				if (map.getHitInfosFromArc((this.getPosition() - attackVel), -attackVel.Angle(), 30, distance, this, true, @hitInfos))
 				{
-					print("dril" + hitInfos.length);
+					//print("dril" + hitInfos.length);
 				
 					bool hit_ground = false;
 					for (uint i = 0; i < hitInfos.length; i++)

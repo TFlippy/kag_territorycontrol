@@ -43,7 +43,7 @@ void onTick(CBlob@ this)
 	
 		int counter = 0;
 	
-		for (int i = 0; i < blobs.length; i++) if (blobs[i].getConfig() == "methane") counter++;
+		for (int i = 0; i < blobs.length; i++) if (blobs[i].getName() == "methane") counter++;
 
 		if (counter < 8)
 		{

@@ -40,13 +40,12 @@ void onSetStatic(CBlob@ this, const bool isStatic)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return !(this.hasBlob(blob.getConfig(), 0) || this.hasBlob(blob.getConfig(), 1));
+	return !(this.hasBlob(blob.getName(), 0) || this.hasBlob(blob.getName(), 1));
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (blob is null) return;
-	if (blob.hasTag("player"))return;
+	if (blob is null || blob.hasTag("player")) return;
 	
 	if (Maths::Abs(blob.getVelocity().y) < 2.0f) blob.setVelocity(Vec2f(this.isFacingLeft() ? -1 : 1, -1.0f));
 }

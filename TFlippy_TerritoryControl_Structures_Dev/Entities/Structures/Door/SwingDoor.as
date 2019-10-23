@@ -167,7 +167,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 // this is such a pain - can't edit animations at the moment, so have to just carefully add destruction frames to the close animation >_>
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (hitterBlob.hasTag("neutral") && (this.getConfig() == "iron_door" || this.getConfig() == "plasteel_door"))
+	if (hitterBlob.hasTag("neutral") && (this.getName() == "iron_door" || this.getName() == "plasteel_door"))
 	{
 		damage = 0;
 	}

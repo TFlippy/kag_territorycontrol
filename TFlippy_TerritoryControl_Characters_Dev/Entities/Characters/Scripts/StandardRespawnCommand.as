@@ -130,7 +130,7 @@ void onRespawnCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						// set health to be same ratio
 						float healthratio = caller.getHealth() / caller.getInitialHealth();
 						
-						if (this.getConfig() == "citadel")
+						if (this.getName() == "citadel")
 						{
 							newBlob.server_SetHealth(Maths::Ceil(newBlob.getInitialHealth() * 1.50f));
 							// print("after " + new_blob.getHealth());

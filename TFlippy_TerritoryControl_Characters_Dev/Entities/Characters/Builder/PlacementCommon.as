@@ -313,7 +313,7 @@ f32 getMaxBuildDistance(CBlob@ this)
 void SetupBuildDelay(CBlob@ this)
 {
 	this.set_u32("build time", getGameTime());
-	// this.set_u32("build delay", this.getConfig() == "builder" ? 4 : 8);  // move this to builder init // okay
+	// this.set_u32("build delay", this.getName() == "builder" ? 4 : 8);  // move this to builder init // okay
 }
 
 bool isBuildDelayed(CBlob@ this)

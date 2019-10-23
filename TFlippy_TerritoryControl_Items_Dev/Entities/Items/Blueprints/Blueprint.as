@@ -9,7 +9,7 @@ void onInit(CBlob@ this)
 
 	// this.addCommandID("study");
 	
-	// string tech = "tech_" + this.getConfig().substr(3);
+	// string tech = "tech_" + this.getName().substr(3);
 	// this.set_string("tech_name", tech);
 }
 

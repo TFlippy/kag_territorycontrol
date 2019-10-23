@@ -336,7 +336,7 @@ void Pickaxe(CBlob@ this)
 				CBlob@ b = getBlobByNetworkID(hitdata.blobID);
 				if (b !is null)
 				{
-					SendHitCommand(this, b, (b.getPosition() + this.getPosition()) * 0.5f, attackVel, this.getConfig() == "builder" ? hit_damage : hit_damage * 0.50f);
+					SendHitCommand(this, b, (b.getPosition() + this.getPosition()) * 0.5f, attackVel, this.getName() == "builder" ? hit_damage : hit_damage * 0.50f);
 				}
 			}
 		}

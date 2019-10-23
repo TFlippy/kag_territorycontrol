@@ -72,7 +72,7 @@ int getHeadFrame(CBlob@ blob, int headIndex, bool default_pack = false)
 		//if nothing special set
 		if(!holidayhead)
 		{
-			string config = blob.getConfig();
+			string config = blob.getName();
 			if(config == "builder")
 			{
 				headIndex = NUM_UNIQUEHEADS;

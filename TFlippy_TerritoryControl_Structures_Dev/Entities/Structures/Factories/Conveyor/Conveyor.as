@@ -35,9 +35,8 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (blob is null) return;
+	if (blob is null || blob.hasTag("player")) return;
 	if (blob.getPosition().y > this.getPosition().y) return;
-	if (blob.hasTag("player")) return;
 	
 	if (Maths::Abs(blob.getVelocity().y) < 2.0f) blob.setVelocity(Vec2f(this.isFacingLeft() ? -1 : 1, -1.0f));
 }

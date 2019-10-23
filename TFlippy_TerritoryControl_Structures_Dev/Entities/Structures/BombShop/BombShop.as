@@ -238,7 +238,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 // void GetButtonsFor(CBlob@ this, CBlob@ caller)
 // {
-	// bool canChangeClass = caller.getConfig() != "sapper";
+	// bool canChangeClass = caller.getName() != "sapper";
 
 	// if(canChangeClass)
 	// {

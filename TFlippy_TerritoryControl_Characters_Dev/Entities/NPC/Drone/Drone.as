@@ -447,7 +447,7 @@ void DoExplosion(CBlob@ this)
 		{
 			CBlob@ b = trees[i];
 			
-			if (b.getConfig() == "tree_bushy" || b.getConfig() == "tree_pine")
+			if (b.getName() == "tree_bushy" || b.getName() == "tree_pine")
 			{
 				CBlob@ tree = server_CreateBlob("crystaltree", b.getTeamNum(), b.getPosition() + Vec2f(0, -32));
 					

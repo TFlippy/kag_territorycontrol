@@ -120,7 +120,7 @@ void onTick(CSprite@ this)
 
 bool canSaw(CBlob@ this, CBlob@ blob)
 {
-	if (this.getTickSinceCreated() < 90 || blob.hasTag("sawed") || blob.getShape().isStatic() || (blob.getConfig() == "mat_stone" ? false : blob.hasTag("invincible"))) return false;
+	if (this.getTickSinceCreated() < 90 || blob.hasTag("sawed") || blob.getShape().isStatic() || (blob.getName() == "mat_stone" ? false : blob.hasTag("invincible"))) return false;
 
 	if (blob.hasTag("flesh") && getNet().isClient() && !g_kidssafe)
 	{

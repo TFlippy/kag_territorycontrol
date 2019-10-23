@@ -78,7 +78,7 @@ void onTick(CBlob@ this)
 				CBlob@ blob = blobsInRadius[i];
 				if (!blob.hasTag("gas immune") && !blob.hasTag("gas"))
 				{
-					// print("hit" + blob.getConfig());
+					// print("hit" + blob.getName());
 				
 					if (server) 
 					{

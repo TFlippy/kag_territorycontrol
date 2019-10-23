@@ -58,7 +58,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 		
-		if (carried !is null && carried.getConfig() == "musicdisc")
+		if (carried !is null && carried.getName() == "musicdisc")
 		{
 			u8 track_id = carried.get_u8("track_id");
 			if (track_id < records.length)

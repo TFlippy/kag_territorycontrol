@@ -33,7 +33,7 @@ void onInit(CBlob@ this)
 {
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
 
-	if (this.getConfig() == "altar")
+	if (this.getName() == "altar")
 	{
 		this.set_Vec2f("shop menu size", Vec2f(6, 2));
 		this.set_string("shop description", "Select a Deity");
@@ -80,7 +80,7 @@ void onInit(CBlob@ this)
 
 // void GetButtonsFor(CBlob@ this, CBlob@ caller)
 // {
-	// if (this.getConfig() != "altar")
+	// if (this.getName() != "altar")
 	
 	// {
 	
@@ -96,7 +96,7 @@ void onInit(CBlob@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (this.getConfig() == "altar")
+	if (this.getName() == "altar")
 	{
 		if (getNet().isServer())
 		{

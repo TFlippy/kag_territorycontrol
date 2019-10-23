@@ -264,7 +264,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	CBlob@ carried = forBlob.getCarriedBlob();
-	return (carried is null ? true : carried.getConfig() == "mat_mithril");
+	return (carried is null ? true : carried.getName() == "mat_mithril");
 }
 
 u32 GetFuel(CBlob@ this)

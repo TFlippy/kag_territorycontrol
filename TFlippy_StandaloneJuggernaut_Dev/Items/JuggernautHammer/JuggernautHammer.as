@@ -12,7 +12,7 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	bool canChangeClass = caller.getConfig() != "juggernaut";
+	bool canChangeClass = caller.getName() != "juggernaut";
 
 	if (canChangeClass)
 	{

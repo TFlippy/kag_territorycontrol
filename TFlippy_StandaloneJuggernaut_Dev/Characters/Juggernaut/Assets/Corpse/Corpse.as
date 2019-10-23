@@ -26,7 +26,7 @@ void onInit(CBlob @ this)
 	
 	if (getNet().isClient())
 	{
-		if (this.getConfig() == "corpsetrader")
+		if (this.getName() == "corpsetrader")
 		{
 			this.getSprite().PlaySound("trader_death.ogg");
 		}

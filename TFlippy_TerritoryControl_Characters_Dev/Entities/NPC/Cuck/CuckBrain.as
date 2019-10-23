@@ -48,7 +48,7 @@ void onTick(CBrain@ this)
 	
 	CBlob@ target = this.getTarget();
 
-	// print("" + target.getConfig());
+	// print("" + target.getName());
 	
 	if (target is null)
 	{
@@ -58,7 +58,7 @@ void onTick(CBrain@ this)
 	
 	if (target !is null && target !is blob)
 	{			
-		// print("" + target.getConfig());
+		// print("" + target.getName());
 	
 		this.getCurrentScript().tickFrequency = 1;
 		

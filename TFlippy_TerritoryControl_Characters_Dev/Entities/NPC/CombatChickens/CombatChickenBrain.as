@@ -124,7 +124,7 @@ void onTick(CBrain@ this)
 		}
 
 		
-		// print(blob.getConfig() + stuck);
+		// print(blob.getName() + stuck);
 		
 		// print("" + this.getPathSize());
 		
@@ -202,7 +202,7 @@ void onTick(CBrain@ this)
 	
 	if (target !is null && target !is blob)
 	{			
-		// print("" + target.getConfig());
+		// print("" + target.getName());
 	
 		this.getCurrentScript().tickFrequency = 1;
 		

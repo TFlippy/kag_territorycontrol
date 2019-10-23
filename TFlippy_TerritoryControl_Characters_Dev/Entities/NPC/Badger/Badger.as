@@ -163,7 +163,7 @@ void MadAt(CBlob@ this, CBlob@ hitterBlob)
 	this.set_u8(personality_property, DEFAULT_PERSONALITY | AGGRO_BIT);
 	this.set_u8(state_property, MODE_TARGET);
 	
-	if (hitterBlob !is this && hitterBlob.getConfig() != this.getConfig()) this.set_netid(target_property, hitterBlob.getNetworkID());
+	if (hitterBlob !is this && hitterBlob.getName() != this.getName()) this.set_netid(target_property, hitterBlob.getNetworkID());
 }
 
 #include "Hitters.as";
@@ -179,7 +179,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	if (this.hasTag("dead")) return;
 	if (this.get_u32("next bite") > getGameTime()) return;
 		
-	if (blob.getConfig() != this.getConfig() && blob.hasTag("flesh"))
+	if (blob.getName() != this.getName() && blob.hasTag("flesh"))
 	{
 		const f32 vellen = this.getShape().vellen;
 		if (vellen > 0.1f)

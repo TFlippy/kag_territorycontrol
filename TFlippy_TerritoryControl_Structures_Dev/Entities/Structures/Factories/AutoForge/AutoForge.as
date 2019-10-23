@@ -78,7 +78,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	
 	if (!blob.isAttached() && blob.hasTag("material"))
 	{
-		string config = blob.getConfig();
+		string config = blob.getName();
 		for (int i = 0; i < matNames.length; i++)
 		{
 			if (config == matNames[i])

@@ -234,7 +234,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (blob !is null && getGameTime() >= this.get_u32("next attach") && this.get_u16("succ netid") == 0 && blob.hasTag("human") && !blob.hasTag("dead") && !this.hasTag("dead") && blob.getConfig() != "hazmat")
+	if (blob !is null && getGameTime() >= this.get_u32("next attach") && this.get_u16("succ netid") == 0 && blob.hasTag("human") && !blob.hasTag("dead") && !this.hasTag("dead") && blob.getName() != "hazmat")
 	{
 		this.set_u16("succ netid", blob.getNetworkID());
 		this.getSprite().PlaySound("Pigger_Pop_" + XORRandom(2), 1.00f, 1.00f);

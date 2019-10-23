@@ -173,7 +173,7 @@ void onTick(CBlob@ this)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	return forBlob.getConfig() == "extractor" || (forBlob.isOverlapping(this) && forBlob.getCarriedBlob() is null);
+	return forBlob.getName() == "extractor" || (forBlob.isOverlapping(this) && forBlob.getCarriedBlob() is null);
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

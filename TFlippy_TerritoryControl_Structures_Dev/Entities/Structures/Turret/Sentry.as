@@ -78,7 +78,7 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 	if (this.getTeamNum() != forBlob.getTeamNum()) return false;
 
 	CBlob@ carried = forBlob.getCarriedBlob();
-	return (carried is null ? true : carried.getConfig() == "mat_gatlingammo");
+	return (carried is null ? true : carried.getName() == "mat_gatlingammo");
 }
 
 u8 GetAmmo(CBlob@ this)

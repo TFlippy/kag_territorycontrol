@@ -145,7 +145,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	if (blob is null) return;
 	if (blob.hasTag("gas")) return;
 
-	if ((blob.getConfig() == "lantern" ? blob.isLight() : false) || blob.getConfig() == "fireplace" || (blob.getConfig() == "arrow" && blob.get_u8("arrow type") == ArrowType::fire))
+	if ((blob.getName() == "lantern" ? blob.isLight() : false) || blob.getName() == "fireplace" || (blob.getName() == "arrow" && blob.get_u8("arrow type") == ArrowType::fire))
 	{
 		this.Tag("lit");
 		this.server_Die();
