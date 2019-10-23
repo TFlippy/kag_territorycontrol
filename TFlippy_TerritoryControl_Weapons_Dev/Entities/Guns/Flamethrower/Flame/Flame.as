@@ -14,7 +14,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getTickSinceCreated() > 5) 
+	if (isServer() && this.getTickSinceCreated() > 5) 
 	{
 		// getMap().server_setFireWorldspace(this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), true);
 		
@@ -47,7 +47,7 @@ void onTick(CSprite@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (solid) 
 		{

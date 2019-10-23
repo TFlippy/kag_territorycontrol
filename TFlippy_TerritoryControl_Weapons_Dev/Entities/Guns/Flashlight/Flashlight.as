@@ -10,7 +10,7 @@ void onInit(CBlob@ this)
 	this.SetLightRadius(96.0f);
 	this.SetLightColor(SColor(255, 180, 230, 255));
 	
-	if (getNet().isServer())
+	if (isServer())
 	{		
 		CBlob@ blob = server_CreateBlobNoInit("flashlight_light");
 		blob.set_u16("remote_netid", this.getNetworkID());

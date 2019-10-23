@@ -12,7 +12,7 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 
 	if (map !is null)
 	{
-		bool is_server = getNet().isServer();
+		bool is_server = isServer();
 		Vec2f pos = this.getPosition() +
 		            Vec2f(this.isFacingLeft() ?
 		                  -splash_halfwidth * map.tilesize*splash_offset :

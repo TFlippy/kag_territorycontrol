@@ -46,7 +46,7 @@ void onTick(CBlob@ this)
 			const f32 rmod = (irradiation - (max_irradiation * 0.50f)) / (max_irradiation * 0.50f);
 			// print("" + rmod);
 		
-			if (getNet().isServer()) 
+			if (isServer()) 
 			{
 				server_Irradiate(this, irradiation / 30000.00f * rmod, irradiation / 100.00f * rmod);
 			}
@@ -60,7 +60,7 @@ void onTick(CBlob@ this)
 		if (irradiation > max_irradiation)
 		{
 			this.Tag("dead");
-			if (getNet().isServer())
+			if (isServer())
 			{	
 				this.server_Die();
 			}
@@ -76,7 +76,7 @@ void onTick(CBlob@ this)
 			}
 		}
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			f32 count = (mithril_count / 75) + (e_mithril_count / 25);
 			// print("" + count);
@@ -129,7 +129,7 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		boom.setPosition(this.getPosition());
@@ -149,7 +149,7 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 
 void server_Irradiate(CBlob@ this, const f32 damage, const f32 radius)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		// print("radius: " + radius + "; damage: " + damage);
 	

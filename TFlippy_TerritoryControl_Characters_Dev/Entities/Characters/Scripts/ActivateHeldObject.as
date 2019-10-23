@@ -65,7 +65,7 @@ bool ActivateBlob(CBlob@ this, CBlob@ blob, Vec2f pos, Vec2f vector, Vec2f vel)
 					}
                     
 					//if compatible
-					if (getNet().isServer() && blob.hasTag("activatable"))
+					if (isServer() && blob.hasTag("activatable"))
 					{
 						blob.SendCommand(blob.getCommandID("activate"));
 					}
@@ -77,7 +77,7 @@ bool ActivateBlob(CBlob@ this, CBlob@ blob, Vec2f pos, Vec2f vector, Vec2f vel)
 		shouldthrow = true;
 
 	//throw it if it's already activated and not reactivatable
-	if (getNet().isServer() && !blob.hasTag("custom throw") && shouldthrow && this.getCarriedBlob() is blob)
+	if (isServer() && !blob.hasTag("custom throw") && shouldthrow && this.getCarriedBlob() is blob)
 	{
 		DoThrow(this, blob, pos, vector, vel);
 		done = true;
@@ -118,7 +118,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if (carried !is null)
 		{
-			if (getNet().isServer() && !carried.hasTag("custom throw"))
+			if (isServer() && !carried.hasTag("custom throw"))
 			{
 				DoThrow(this, carried, pos, vector, vel);
 			}

@@ -83,7 +83,7 @@ void onRespawnCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		case SpawnCmd::changeClass:
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				// build menu for them
 				CBlob@ caller = getBlobByNetworkID(params.read_u16());

@@ -39,7 +39,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 {
 	if (customData == Hitters::fire || customData == Hitters::burn)
 	{
-		if (getNet().isServer()) this.server_Die();
+		if (isServer()) this.server_Die();
 	}
 
 	return damage;

@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getPosition().y < 0) this.server_Die();
+	if (isServer() && this.getPosition().y < 0) this.server_Die();
 }
 
 void Boom(CBlob@ this)
@@ -41,7 +41,7 @@ void Boom(CBlob@ this)
 	CMap@ map = getMap();
 	Vec2f pos = this.getPosition();
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 

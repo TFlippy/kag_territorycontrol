@@ -31,7 +31,7 @@ void onInit(CBlob@ this)
 		sprite.RewindEmitSound();
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		
 	}
@@ -45,7 +45,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 void onTick(CBlob@ this)
 {
 	CMap@ map = getMap();
-	// bool server = getNet().isServer();
+	// bool server = isServer();
 	// bool client = getNet().isClient();
 
 	// if (client) ShakeScreen(80, 50, this.getPosition());

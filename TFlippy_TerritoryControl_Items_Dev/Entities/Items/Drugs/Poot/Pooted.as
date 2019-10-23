@@ -114,7 +114,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	{
 		f32 vellen = this.getOldVelocity().Length();
 		bool client = getNet().isClient();
-		bool server = getNet().isServer();
+		bool server = isServer();
 		
 		if (solid && vellen > 5.00f / true_level)
 		{

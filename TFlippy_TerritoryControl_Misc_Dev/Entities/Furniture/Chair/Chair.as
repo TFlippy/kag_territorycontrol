@@ -18,7 +18,7 @@ void onTick(CBlob@ this)
 	{
 		if (ap.isKeyJustPressed(key_up))
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBlob@ pilot = ap.getOccupied();
 				if (pilot !is null)  pilot.server_DetachFrom(this);

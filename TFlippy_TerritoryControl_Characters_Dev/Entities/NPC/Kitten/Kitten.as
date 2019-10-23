@@ -118,7 +118,7 @@ void onTick(CBlob@ this)
 			{
 				if (this.getTickSinceCreated() % 10 == 0)
 				{
-					if (getNet().isServer()) this.server_Hit(inventoryBlob, inventoryBlob.getPosition(), Vec2f(0, 0), 0.15f, Hitters::bite, true);
+					if (isServer()) this.server_Hit(inventoryBlob, inventoryBlob.getPosition(), Vec2f(0, 0), 0.15f, Hitters::bite, true);
 					if (getNet().isClient()) 
 					{
 						if (XORRandom(3) == 0) 

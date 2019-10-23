@@ -23,7 +23,7 @@ void onDie(CBlob@ this)
 	{
 		TreeSegment@ segment = segments[i];
 
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (this.hasTag("burning"))
 			{

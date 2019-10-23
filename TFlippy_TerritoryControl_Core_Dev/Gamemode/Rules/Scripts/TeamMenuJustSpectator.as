@@ -25,7 +25,7 @@ void ShowTeamMenu(CRules@ this)
 	CBlob@ localBlob = local.getBlob();
 	if (localBlob !is null)
 	{
-		if (localBlob.getConfig() == "slave") show = false;
+		if (localBlob.getName() == "slave") show = false;
 	}
 	
 	if (show)
@@ -59,7 +59,7 @@ void ReadChangeTeam(CRules@ this, CBitStream @params, int team)
 {
 	CPlayer@ player = getPlayerByNetworkId(params.read_u16());
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (player.getTeamNum() <= 100)
 		{

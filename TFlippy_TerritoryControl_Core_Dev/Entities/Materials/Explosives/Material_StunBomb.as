@@ -65,7 +65,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
 
 void DoExplosion(CBlob@ this)
 {
-	const bool server = getNet().isServer();
+	const bool server = isServer();
 
 	f32 random = XORRandom(16);
 	f32 quantity = this.getQuantity();

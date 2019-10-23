@@ -46,7 +46,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (this.getPosition().y < 0) 
 		{
@@ -73,7 +73,7 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 		
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		

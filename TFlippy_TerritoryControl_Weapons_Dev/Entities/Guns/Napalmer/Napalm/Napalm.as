@@ -15,7 +15,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getTickSinceCreated() > 5) 
+	if (isServer() && this.getTickSinceCreated() > 5) 
 	{
 		// getMap().server_setFireWorldspace(this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), true);
 		
@@ -47,7 +47,7 @@ void onTick(CBlob@ this)
 		{
 			this.setPosition(blob.getPosition());
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.75f, Hitters::fire);
 			}
@@ -85,7 +85,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 // void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 // {
-	// bool server = getNet().isServer();
+	// bool server = isServer();
 	// if (solid) 
 	// {
 		// Vec2f pos = this.getPosition();

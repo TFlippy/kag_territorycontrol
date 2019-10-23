@@ -25,7 +25,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	}
 	else
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (blob.getName() == "tree_pine" || blob.getName() == "tree_bushy")
 			{

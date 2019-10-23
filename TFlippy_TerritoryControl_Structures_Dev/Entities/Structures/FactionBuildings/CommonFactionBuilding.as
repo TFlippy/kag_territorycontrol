@@ -70,7 +70,7 @@ void onTick(CBlob@ this)
 	
 	if (getGameTime() % 30 == 0 && this.get_bool("base_demolition"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Hit(this, this.getPosition(), Vec2f(0, 1), this.getInitialHealth() * 0.05f, Hitters::builder, true);
 		}
@@ -146,7 +146,7 @@ void onChangeTeam(CBlob@ this, const int oldTeam)
 	
 	if (oldTeamForts <= 0)
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBitStream bt;
 			bt.write_s32(newTeam);
@@ -205,7 +205,7 @@ void onDie(CBlob@ this)
 	
 	if (teamForts <= 0)
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBitStream bt;
 			bt.write_s32(team);
@@ -286,7 +286,7 @@ void SetAlarm(CBlob@ this, bool inState)
 	if (inState == this.get_bool("base_alarm")) return;
 
 	this.set_bool("base_alarm", inState);
-	if (getNet().isServer()) this.Sync("base_alarm", true);
+	if (isServer()) this.Sync("base_alarm", true);
 
 	this.SetLight(inState);
 							
@@ -613,7 +613,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 
 							print_log(ply, (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName());
 							
-							if (getNet().isServer()) this.Sync("base_demolition", true);
+							if (isServer()) this.Sync("base_demolition", true);
 							if (getNet().isClient())
 							{
 								client_AddToChat(ply.getUsername() + " has " + (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName() + "!", teamColor);
@@ -630,7 +630,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (isLeader)
 						{	
 							this.set_bool("base_alarm_manual", data > 0);
-							if (getNet().isServer()) this.Sync("base_alarm_manual", true);
+							if (isServer()) this.Sync("base_alarm_manual", true);
 						
 							if (getNet().isClient())
 							{
@@ -687,7 +687,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						string teamName = rules.getTeam(caller.getTeamNum()).getName();
 						printf(ply.getUsername() + " has been kicked out of the " + teamName + " by " + caller.getUsername());
 						
-						if (getNet().isServer())
+						if (isServer())
 						{
 							ply.server_setTeamNum(100 + XORRandom(100));
 							if (ply.getBlob() !is null) ply.getBlob().server_Die();
@@ -706,7 +706,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						string teamName = rules.getTeam(caller.getTeamNum()).getName();
 						printf(ply.getUsername() + " has been enslaved by " + caller.getUsername());
 												
-						if (getNet().isServer())
+						if (isServer())
 						{
 							CBlob@ playerBlob = ply.getBlob();
 							
@@ -760,7 +760,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						this.getSprite().PlaySound("party_join.ogg");
 						printf(p.getUsername() + " has joined " + getRules().getTeam(myTeam).getName());
 						
-						if (getNet().isServer())
+						if (isServer())
 						{	
 							p.server_setTeamNum(myTeam);
 							CBlob@ newPlayer = server_CreateBlob("builder", myTeam, blob.getPosition());

@@ -17,7 +17,7 @@
 	this.Tag("minimap_small");
 	this.set_u8("minimap_index", 27);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{	
 		this.server_setTeamNum(250);
 	
@@ -46,7 +46,7 @@ void onTick(CBlob@ this)
 {
 	SetMinimap(this);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if(getGameTime() % 10 == 0)
 		{
@@ -73,7 +73,7 @@ void SetMinimap(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_DropCoins(this.getPosition(), 1000 + XORRandom(1500));
 	}

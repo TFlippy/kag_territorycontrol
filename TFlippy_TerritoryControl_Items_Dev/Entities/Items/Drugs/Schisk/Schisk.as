@@ -23,7 +23,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			if (!caller.hasScript("Schisked.as")) caller.AddScript("schisked.as");
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 			}

@@ -131,7 +131,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			}
 		}
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBrain@ brain = this.getBrain();
 			
@@ -148,7 +148,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 void ClawHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)
 {
 	bool client = getNet().isClient();
-	bool server = getNet().isServer();
+	bool server = isServer();
 	
 	Vec2f dir = worldPoint - this.getPosition();
 	f32 len = dir.getLength();

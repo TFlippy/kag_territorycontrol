@@ -25,7 +25,7 @@ void onTick(CBlob@ this)
 	
 	if (true_level <= 0)
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}

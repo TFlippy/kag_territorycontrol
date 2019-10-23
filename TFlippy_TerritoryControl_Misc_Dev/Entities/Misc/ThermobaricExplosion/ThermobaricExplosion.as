@@ -44,7 +44,7 @@ void DoExplosion(CBlob@ this)
 
 void DestroyStuff(CBlob@ this, f32 radius, u32 count, Vec2f pos)
 {
-	const bool server = getNet().isServer();
+	const bool server = isServer();
 	const bool client = getNet().isClient();
 
 	CMap@ map = getMap();
@@ -159,7 +159,7 @@ void onTick(CBlob@ this)
 {
 	if (this.get_f32("boom_size") >= this.get_f32("boom_end")) 
 	{
-		if (getNet().isServer()) this.server_Die();
+		if (isServer()) this.server_Die();
 		this.Tag("dead");
 		
 		return;

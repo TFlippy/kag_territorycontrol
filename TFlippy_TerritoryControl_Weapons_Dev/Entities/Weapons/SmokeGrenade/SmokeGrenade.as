@@ -18,7 +18,7 @@ void onTick(CBlob@ this)
 {
 	if(this.hasTag("dead")) return;
 
-	if(getNet().isServer())
+	if(isServer())
 	{
 		server_CreateBlob("smokegas", -1, this.getPosition());
 	}

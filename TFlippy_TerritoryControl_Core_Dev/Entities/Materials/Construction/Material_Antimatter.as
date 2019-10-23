@@ -14,7 +14,7 @@ void DoExplosion(CBlob@ this)
 
 	f32 quantity = this.getQuantity();
 		
-	if (getNet().isServer())
+	if (isServer())
 	{
 		f32 size = Maths::Pow(quantity * 0.25f, 1.50f) * 25;
 	
@@ -45,7 +45,7 @@ void DoExplosion(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blob !is null ? !blob.isCollidable() : !solid) return;
 

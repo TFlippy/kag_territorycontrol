@@ -270,7 +270,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if (callerBlob is null) return;
 
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CPlayer@ ply = callerBlob.getPlayer();
 			if (ply !is null)

@@ -105,7 +105,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			// break;
 	// }
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (customData == HittersTC::radiation)
 		{
@@ -231,7 +231,7 @@ void onDie(CBlob@ this)
 				ParticleBloodSplat(this.getPosition() + getRandomVelocity(0, radius, 360), true);
 			}
 		
-			if (getNet().isServer())
+			if (isServer())
 			{
 				Vec2f vel = Vec2f(XORRandom(4) - 2, -2 - XORRandom(4));
 			

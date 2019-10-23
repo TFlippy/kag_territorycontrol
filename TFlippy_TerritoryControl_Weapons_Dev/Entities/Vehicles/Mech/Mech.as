@@ -90,7 +90,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("mech_give"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBlob@ caller = getBlobByNetworkID(params.read_u16());
 			
@@ -255,7 +255,7 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		boom.setPosition(this.getPosition());
@@ -275,7 +275,7 @@ void onDie(CBlob@ this)
 
 // void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 // {
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// if (blob !is null ? !blob.isCollidable() : !solid) return;
 

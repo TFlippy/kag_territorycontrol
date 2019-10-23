@@ -67,7 +67,7 @@ void onInit(CBlob@ this)
 	this.getShape().SetRotationsAllowed(true);
 	this.set_string("autograb blob", "mat_tankshell");
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ ammo = server_CreateBlob("mat_tankshell");
 		if (ammo !is null)
@@ -217,7 +217,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		VehicleInfo@ v;
 		if (!this.get("VehicleInfo", @v)) return;

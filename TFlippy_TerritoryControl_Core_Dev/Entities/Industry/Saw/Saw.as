@@ -94,7 +94,7 @@ void Blend(CBlob@ this, CBlob@ tobeblended)
 	//make plankfrom wooden stuff
 	if (tobeblended.getName() == "log")
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBlob @wood = server_CreateBlob("mat_wood", this.getTeamNum(), this.getPosition() + Vec2f(0, 12));
 			if (wood !is null)
@@ -203,7 +203,7 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 //we have contact!
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (blob is null || !getNet().isServer() ||
+	if (blob is null || !isServer() ||
 	        this.isAttached() || blob.isAttached() ||
 	        !getSawOn(this))
 	{

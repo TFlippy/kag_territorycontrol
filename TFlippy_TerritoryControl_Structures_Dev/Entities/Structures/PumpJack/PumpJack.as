@@ -81,7 +81,7 @@ void onTick(CSprite@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer()) 
+	if (isServer()) 
 	{
 		// if (!this.getInventory().isFull()) MakeMat(this, this.getPosition(), "mat_oil", XORRandom(3));
 	
@@ -152,7 +152,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			

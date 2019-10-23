@@ -132,7 +132,7 @@ void onTick(CBlob@ this)
 	{
 		this.server_Die();
 
-		if (getNet().isServer())
+		if (isServer())
 		{
 			float rad = f32(this.get_u8("created_blob_radius")) - this.getRadius();
 			CBlob@ b = server_CreateBlob(this.get_string("seed_grow_blobname"), -1, this.getPosition() + Vec2f(0, rad));

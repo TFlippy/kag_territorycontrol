@@ -53,7 +53,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 	this.set_TileType("buildtile", 0);
 
 	CBlob@ anotherBlob = inv.getItem(b.name);
-	if(getNet().isServer() && anotherBlob !is null && this !is null)
+	if(isServer() && anotherBlob !is null && this !is null)
 	{
 		this.server_Pickup(anotherBlob);
 		this.set_u8("buildblob", 255);
@@ -173,7 +173,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			SendGameplayEvent(createBuiltBlobEvent(this.getPlayer(), b.name));
 		}
 
-		if(getNet().isServer())
+		if(isServer())
 		{
 			if (b.name == "camp" && this.getTeamNum() >= 100)
 			{

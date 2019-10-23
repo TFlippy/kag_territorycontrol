@@ -12,7 +12,7 @@
 
 void onInit( CBrain@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -138,7 +138,7 @@ void onTick(CBlob@ this)
 	
 	this.SetFacingLeft(this.getVelocity().x < 0);
 	
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// if (XORRandom(100) == 0)
 		// {
@@ -192,7 +192,7 @@ void onTick(CBlob@ this)
 					f32 dist = dir.getLength();
 					dir.Normalize();
 
-					if (getNet().isServer())
+					if (isServer())
 					{
 						if (getGameTime() % 5 == 0) this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 0.50f, Hitters::crush, true);
 					}
@@ -214,7 +214,7 @@ void onTick(CBlob@ this)
 	
 	if (XORRandom(8) == 0) 
 	{	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			const f32 radius = 256.00f;
 		
@@ -255,7 +255,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("mg_explode"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
@@ -271,7 +271,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			ParticleBloodSplat(this.getPosition(), true);
 		}
 	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Hit(this, this.getPosition(), Vec2f(0, 0), 1.00f + (XORRandom(300) / 100.00f), Hitters::stab, true);
 			
@@ -301,7 +301,7 @@ void onDie(CBlob@ this)
 		}
 	}
 
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		// boom.setPosition(this.getPosition());
@@ -319,7 +319,7 @@ void onDie(CBlob@ this)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 
 	CBlob @blob = this.getBlob();
 	
@@ -383,7 +383,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		

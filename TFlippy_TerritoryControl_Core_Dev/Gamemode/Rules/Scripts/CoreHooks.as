@@ -17,7 +17,7 @@ void onInit(CRules@ this)
 
 void onTick(CRules@ this)
 {
-	if (!getNet().isServer())
+	if (!isServer())
 		return;
 
 	RulesCore@ core;
@@ -31,7 +31,7 @@ void onTick(CRules@ this)
 
 void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ killer, u8 customData)
 {
-	if (!getNet().isServer())
+	if (!isServer())
 		return;
 
 	RulesCore@ core;
@@ -45,7 +45,7 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ killer, u8 customData)
 
 void onPlayerRequestSpawn(CRules@ this, CPlayer@ player)
 {
-	if (!getNet().isServer())
+	if (!isServer())
 		return;
 
 	RulesCore@ core;
@@ -59,7 +59,7 @@ void onPlayerRequestSpawn(CRules@ this, CPlayer@ player)
 
 void onPlayerRequestTeamChange(CRules@ this, CPlayer@ player, u8 newteam)
 {
-	if (!getNet().isServer())
+	if (!isServer())
 		return;
 
 	if (!this.get_bool("managed teams"))
@@ -76,7 +76,7 @@ void onPlayerRequestTeamChange(CRules@ this, CPlayer@ player, u8 newteam)
 
 void onSetPlayer(CRules@ this, CBlob@ blob, CPlayer@ player)
 {
-	if (!getNet().isServer())
+	if (!isServer())
 		return;
 
 	RulesCore@ core;

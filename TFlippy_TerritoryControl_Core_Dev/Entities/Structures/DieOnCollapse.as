@@ -1,7 +1,7 @@
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point)
 {
-	if (getNet().isServer() && solid && !this.getShape().isStatic() && !this.isAttached())
+	if (isServer() && solid && !this.getShape().isStatic() && !this.isAttached())
 	{
 		if (this.getOldVelocity().y < 1.0f && !this.hasTag("can settle"))
 		{

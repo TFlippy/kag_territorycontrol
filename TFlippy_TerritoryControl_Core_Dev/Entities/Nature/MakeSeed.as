@@ -8,7 +8,7 @@
 
 CBlob@ server_MakeSeed(Vec2f atpos, string blobname, u16 growtime, u8 spriteIndex, u8 created_blob_radius)
 {
-	if (!getNet().isServer()) { return null; }
+	if (!isServer()) { return null; }
 
 	CBlob@ seed = server_CreateBlobNoInit("seed");
 

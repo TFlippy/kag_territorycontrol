@@ -37,7 +37,7 @@ void onTick(CBlob@ this)
 			MakeParticle(this, mag);
 		}
 	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_SetQuantity(this.getQuantity() - 1);
 		

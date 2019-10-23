@@ -98,7 +98,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		this.getSprite().PlaySound("/ConstructShort.ogg");
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBlob@ blob = server_CreateBlob(name, callerBlob.getTeamNum(), this.getPosition());
 			this.server_Die();

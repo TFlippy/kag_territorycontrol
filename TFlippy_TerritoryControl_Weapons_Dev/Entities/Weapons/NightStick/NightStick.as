@@ -61,7 +61,7 @@ void onTick(CBlob@ this)
 								// this.getSprite().PlaySound("nightstick_hit" + (1 + XORRandom(3)) + ".ogg", 0.9f, 0.8f);
 							// }
 							
-							if (getNet().isServer())
+							if (isServer())
 							{
 								holder.server_Hit(blob, blob.getPosition(), Vec2f(), 0.125f, HittersTC::staff, true);
 								holder.server_Hit(this, this.getPosition(), Vec2f(), 0.125f, HittersTC::staff, true);

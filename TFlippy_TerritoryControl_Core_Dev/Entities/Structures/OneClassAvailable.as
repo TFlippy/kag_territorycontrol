@@ -66,7 +66,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		this.Tag("dead");
 	
-		if (getNet().isServer()) 
+		if (isServer()) 
 		{
 			this.server_Die();
 		}

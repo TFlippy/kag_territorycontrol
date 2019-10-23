@@ -24,7 +24,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (!caller.hasScript("Fiksed.as")) caller.AddScript("Fiksed.as");
 			caller.add_f32("fiksed", 3.00f);
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 			}

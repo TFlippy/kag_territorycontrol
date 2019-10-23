@@ -258,7 +258,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		{
 			this.getSprite().PlaySound("/Eat.ogg");
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_SetHealth(this.getInitialHealth());
 				blob.server_Die();

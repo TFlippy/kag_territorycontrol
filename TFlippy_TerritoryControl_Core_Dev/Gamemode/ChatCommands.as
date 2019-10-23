@@ -203,7 +203,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 			//For at least moderators
 			if(isMod || isCool){
 				if(tokens[0]=="!admin") {
-					if(blob.getConfig()!="grandpa") {
+					if(blob.getName()!="grandpa") {
 						player.server_setTeamNum(-1);
 						CBlob@ newBlob = server_CreateBlob("grandpa",-1,blob.getPosition());
 						newBlob.server_SetPlayer(player);
@@ -292,7 +292,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					if(tpBlob !is null && tpDest !is null) {
 						CBlob@ destBlob=tpDest.getBlob();
 						if(destBlob !is null) {
-							if(isCool || blob.getConfig()=="grandpa"){
+							if(isCool || blob.getName()=="grandpa"){
 								CBitStream params;
 								params.write_u16(tpBlob.getNetworkID());
 								params.write_u16(destBlob.getNetworkID());
@@ -632,7 +632,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 		}
 		return false;
 	}else{
-		if(blob.getConfig()=="chicken"){
+		if(blob.getName()=="chicken"){
 			string[] messages={
 				"Bwak!!!",
 				"Coo-coo!!",
@@ -643,7 +643,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				"bwakwak, bwak!"
 			};
 			text_out=messages[XORRandom(messages.length)];
-		}else if(blob.getConfig()=="bison"){
+		}else if(blob.getName()=="bison"){
 			string[] messages={
 				"Moo...",
 				"moooooooo?",
@@ -744,7 +744,7 @@ bool onClientProcessChat(CRules@ this,const string& in text_in,string& out text_
 		// }
 	// }
 
-	if (text_in=="!debug" && !getNet().isServer())
+	if (text_in=="!debug" && !isServer())
 	{
 		// print all blobs
 		CBlob@[] all;

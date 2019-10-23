@@ -76,7 +76,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("box_unpack"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (this.hasTag("unpacked")) return;
 

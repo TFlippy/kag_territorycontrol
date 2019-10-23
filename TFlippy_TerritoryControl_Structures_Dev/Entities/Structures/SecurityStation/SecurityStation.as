@@ -10,7 +10,7 @@ void onInit(CBlob@ this)
 	this.getSprite().SetZ(-10.0f);
 	this.set_u32("security_link_id", u32(this.getNetworkID()));
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ card = server_CreateBlobNoInit("securitycard");
 		card.setPosition(this.getPosition());

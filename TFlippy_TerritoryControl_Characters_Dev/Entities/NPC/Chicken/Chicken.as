@@ -187,7 +187,7 @@ void onTick(CBlob@ this)
 		g_lastSoundPlayedTime =  getGameTime();
 
 		// lay eggs
-		if (getNet().isServer())
+		if (isServer())
 		{
 			g_layEggInterval++;
 			if (g_layEggInterval % 13 == 0)

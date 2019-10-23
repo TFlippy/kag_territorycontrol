@@ -76,7 +76,7 @@ void onInit(CBlob@ this)
 	this.set_u32("fireDelay", 0);
 	sprite.SetZ(10.0f);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ ammo = server_CreateBlob("mat_lancerod");
 		if (ammo !is null)
@@ -265,7 +265,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		// getControls().setMousePosition(Vec2f(mousePos.x, mousePos.y - 10));
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blobHit)
 		{
@@ -394,7 +394,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		boom.setPosition(this.getPosition());

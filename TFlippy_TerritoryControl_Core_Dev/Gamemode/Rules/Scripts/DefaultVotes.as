@@ -96,7 +96,7 @@ class VoteTeamKickFunctor : VoteFunctor
 		{
 			client_AddToChat("Team Votekick passed! " + kickplayer.getUsername() + " will be kicked out of your team.", vote_message_colour());
 
-			if (getNet().isServer())
+			if (isServer())
 			{
 				kickplayer.server_setTeamNum(XORRandom(100)+100);
 				kickplayer.set_u32("teamkick_time", getGameTime() + VoteTeamKickNoTeamTime);
@@ -171,7 +171,7 @@ class VoteKickFunctor : VoteFunctor
 		{
 			client_AddToChat("Votekick passed! " + kickplayer.getUsername() + " will be kicked out.", vote_message_colour());
 
-			if (getNet().isServer())
+			if (isServer())
 				BanPlayer(kickplayer, VoteKickTime); //30 minutes ban
 		}
 	}
@@ -222,7 +222,7 @@ class VoteKickLeaveFunctor : VotePlayerLeaveFunctor
 		if (player is kickplayer)
 		{
 			client_AddToChat(player.getUsername() + " left early, acting as if they were kicked.", vote_message_colour());
-			if (getNet().isServer())
+			if (isServer())
 			{
 				BanPlayer(player, VoteKickTime);
 			}
@@ -279,7 +279,7 @@ class VoteNextmapFunctor : VoteFunctor
 	{
 		if (outcome)
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				LoadNextMap();
 			}

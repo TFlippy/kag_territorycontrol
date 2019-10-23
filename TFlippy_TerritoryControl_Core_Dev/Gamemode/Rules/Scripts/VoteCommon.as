@@ -221,7 +221,7 @@ void Vote(VoteObject@ vote, CPlayer@ p, bool favour)
 			vote.current_no++;
 		}
 
-		if (CanPlayerVote(vote, getLocalPlayer()) || getNet().isServer()) //include all in server logs
+		if (CanPlayerVote(vote, getLocalPlayer()) || isServer()) //include all in server logs
 		{
 
 

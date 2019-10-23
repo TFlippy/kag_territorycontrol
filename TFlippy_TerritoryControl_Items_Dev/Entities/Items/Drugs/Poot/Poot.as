@@ -38,7 +38,7 @@ void onTick(CBlob@ this)
 					this.getSprite().SetAnimation("honk");
 				}
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					CBlob@ blob = server_CreateBlobNoInit("pootgas");
 					blob.setVelocity(Vec2f(holder.isFacingLeft() ? -3 : 3, 0));

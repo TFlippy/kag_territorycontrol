@@ -24,7 +24,7 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	CMap@ map = getMap();
-	bool server = getNet().isServer();
+	bool server = isServer();
 	bool client = getNet().isClient();
 	
 	Vec2f pos = Vec2f(this.getPosition().x, yPos);

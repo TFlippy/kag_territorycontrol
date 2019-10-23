@@ -40,7 +40,7 @@ void onInit(CBlob@ this)
 
 	this.server_setTeamNum(-1);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (XORRandom(100) < 75)
 		{
@@ -136,7 +136,7 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if (this.hasTag("drone inside"))
 	{
-		if (getNet().isServer()) 
+		if (isServer()) 
 		{
 			for (int i = 0; i < 4 + XORRandom(4); i++)
 			{
@@ -169,7 +169,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			
@@ -331,7 +331,7 @@ void onHitGround(CBlob@ this)
 	this.set_f32("map_damage_radius", boomRadius);
 	Explode(this, boomRadius, 20.0f);
 
-	if (getNet().isServer() && this.hasTag("gas inside"))
+	if (isServer() && this.hasTag("gas inside"))
 	{
 		CBlob@ gas = server_CreateBlob("falloutgas", -1, this.getPosition());
 		this.Untag("gas inside");
@@ -372,7 +372,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 {
 	// if (customData != Hitters::builder && customData != Hitters::drill) return 0.0f;
 
-	if (getNet().isServer())
+	if (isServer())
 	{	
 		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_steelingot", (XORRandom(2)));
 		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_ironingot", (XORRandom(3)));
@@ -391,7 +391,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		boom.setPosition(this.getPosition());

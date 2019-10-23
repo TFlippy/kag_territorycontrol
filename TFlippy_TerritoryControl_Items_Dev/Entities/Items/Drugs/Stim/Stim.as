@@ -24,7 +24,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (!caller.hasScript("Stimed.as")) caller.AddScript("Stimed.as");
 			caller.add_f32("stimed", 1);
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 			}

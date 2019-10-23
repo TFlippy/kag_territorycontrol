@@ -537,7 +537,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				u16 remain = GiveFuel(this, carried.getQuantity(), fuel_modifier);
 					
-				if (getNet().isServer())
+				if (isServer())
 				{
 					if (remain == 0)
 					{
@@ -805,7 +805,7 @@ void onDie(CBlob@ this)
 {
 	DoExplosion(this);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ wreck = server_CreateBlobNoInit("helichopperwreck");
 		wreck.setPosition(this.getPosition());
@@ -839,7 +839,7 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition() + this.get_Vec2f("explosion_offset").RotateBy(this.getAngleDegrees());
 	CMap@ map = getMap();
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < (5 + XORRandom(5)); i++)
 		{

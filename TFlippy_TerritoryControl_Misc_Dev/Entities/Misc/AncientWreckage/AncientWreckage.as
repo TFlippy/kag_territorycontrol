@@ -33,7 +33,7 @@ void onInit(CBlob@ this)
 
 	this.server_setTeamNum(-1);
 
-	if (getNet().isServer())
+	if (isServer())
 	{		
 		if (XORRandom(100) < 25)
 		{
@@ -149,7 +149,7 @@ void onHitGround(CBlob@ this)
 	this.set_f32("map_damage_radius", boomRadius);
 	Explode(this, boomRadius, 20.0f);
 
-	if(getNet().isServer())
+	if(isServer())
 	{
 		int radius = int(boomRadius / map.tilesize);
 		for(int x = -radius; x < radius; x++)
@@ -187,7 +187,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	if(customData != Hitters::builder && customData != Hitters::drill)
 		return 0.0f;
 
-	if (getNet().isServer())
+	if (isServer())
 	{	
 		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_steelingot", XORRandom(2));
 		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_ironingot", XORRandom(3));

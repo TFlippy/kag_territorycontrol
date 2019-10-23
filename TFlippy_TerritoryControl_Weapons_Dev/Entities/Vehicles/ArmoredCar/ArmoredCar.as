@@ -65,7 +65,7 @@ void onInit(CBlob@ this)
 	this.getShape().SetRotationsAllowed(true);
 	this.set_string("autograb blob", "mat_tankshell");
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ ammo = server_CreateBlob("mat_tankshell");
 		if (ammo !is null)
@@ -268,7 +268,7 @@ void onDie(CBlob@ this)
 		LinearExplosion(this, dir, 5.0f * 1 + loadedAmmo, 3.0f * 1 + loadedAmmo, 8, 8.0f, Hitters::explosion);
 	}
 
-	if (getNet().isServer())
+	if (isServer())
 	{		
 		CBlob@ blob = server_CreateBlob("armoredcarwreck", this.getTeamNum(), this.getPosition());
 	}
@@ -488,7 +488,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 // void onDie(CBlob@ this)
 // {
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// VehicleInfo@ v;
 		// if (!this.get("VehicleInfo", @v)) return;

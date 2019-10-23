@@ -231,7 +231,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			
@@ -266,7 +266,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					this.server_setTeamNum(callerPlayer.getTeamNum());
 					this.set_string("shop_owner", callerPlayer.getUsername());

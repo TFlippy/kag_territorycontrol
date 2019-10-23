@@ -31,7 +31,7 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ item = server_CreateBlob("bulletproofvest", this.getTeamNum(), this.getPosition());
 		if(item !is null) item.set_f32("health", this.get_f32("bpv_health"));

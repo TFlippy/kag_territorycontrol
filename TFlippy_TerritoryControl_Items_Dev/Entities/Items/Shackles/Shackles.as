@@ -60,7 +60,7 @@ void onTick(CBlob@ this)
 									// this.getSprite().PlaySound("shackles_success.ogg", 1.25f, 1.00f);
 								// }
 								
-								if (getNet().isServer())
+								if (isServer())
 								{
 									CBlob@ slave = server_CreateBlob("slave", holder.getTeamNum(), blob.getPosition());
 									slave.set_u8("slaver_team", holder.getTeamNum());

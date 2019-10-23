@@ -43,7 +43,7 @@ void onTick(CBlob@ this)
         this.getShape().SetRotationsAllowed(false);
  
         if (point.isKeyJustPressed(key_action1) || getKnocked(holder) > 0)
-        if(getNet().isServer()){
+        if(isServer()){
             CBlob @blob = server_CreateBlob("card", holder.getTeamNum(), this.getPosition());
             if (blob !is null)
             {

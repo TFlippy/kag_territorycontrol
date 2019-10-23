@@ -2,7 +2,7 @@ void onInit(CBlob@ this)
 {
 	this.addCommandID("use");
 	
-	if (getNet().isServer() && !this.exists("value")) this.set_u16("value", XORRandom(50000));
+	if (isServer() && !this.exists("value")) this.set_u16("value", XORRandom(50000));
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
@@ -41,7 +41,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			server_DropCoins(this.getPosition(), amount);
 			this.server_Die();

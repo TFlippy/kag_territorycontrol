@@ -24,7 +24,7 @@ void onTick(CBlob@ this)
 {
 	if (!this.getShape().isStatic()) return;
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CMap@ map = getMap();
 		

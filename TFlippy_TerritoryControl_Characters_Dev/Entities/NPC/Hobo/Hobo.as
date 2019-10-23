@@ -287,7 +287,7 @@ void onInit(CBlob@ this)
 		s.buttonheight = 2;
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_setTeamNum(-1);
 	}
@@ -338,7 +338,7 @@ void onTick(CBlob@ this)
 				}
 			}
 
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBitStream stream;
 				stream.write_string(text);
@@ -426,7 +426,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			
@@ -457,7 +457,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			else
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
-				if (name == "oof" && getNet().isServer()) this.server_SetHealth(0.5f);
+				if (name == "oof" && isServer()) this.server_SetHealth(0.5f);
 				
 				if (blob is null || callerBlob is null) return;
 			   
@@ -476,7 +476,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_DropCoins(this.getPosition(), XORRandom(1500));
 	}

@@ -204,7 +204,7 @@ void Shoot(CBlob@ this)
 			
 				// print("mod: " + mod + "; len: " + len);
 			
-				if (getNet().isServer())
+				if (isServer())
 				{
 					this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 1.00f * mod, Hitters::crush, true);
 				}
@@ -425,7 +425,7 @@ void DoExplosion(CBlob@ this)
 	CMap@ map = getMap();
 	
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < 4; i++)
 		{

@@ -53,7 +53,7 @@ void onTick(CBlob@ this)
 	{
 		if (this.hasBlob(matNames[i], matRatio[i]))
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBlob @mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
 				mat.server_SetQuantity(4);
@@ -81,13 +81,13 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	for(int i = 0;i < 4; i += 1)
 	if (!blob.isAttached() && blob.hasTag("material") && blob.getName() == matNames[i])
 	{
-		if (getNet().isServer()) this.server_PutInInventory(blob);
+		if (isServer()) this.server_PutInInventory(blob);
 		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
 	
 	if (!blob.isAttached() && blob.hasTag("material") && blob.getName() == "mat_coal")
 	{
-		if (getNet().isServer()) this.server_PutInInventory(blob);
+		if (isServer()) this.server_PutInInventory(blob);
 		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
 }

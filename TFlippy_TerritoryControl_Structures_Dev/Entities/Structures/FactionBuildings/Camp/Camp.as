@@ -125,7 +125,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			this.getSprite().PlaySound("/Construct.ogg");
 			this.getSprite().getVars().gibbed = true;
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBlob@ newBlob = server_CreateBlob("fortress", team, pos);
 				this.MoveInventoryTo(newBlob);
@@ -141,7 +141,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (cmd == this.getCommandID("sv_store"))
 		{

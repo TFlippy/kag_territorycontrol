@@ -24,7 +24,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (!caller.hasScript("Rippioed.as")) caller.AddScript("Rippioed.as");
 			caller.set_f32("rippioed", caller.get_f32("rippioed") * 2.00f);
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 			}

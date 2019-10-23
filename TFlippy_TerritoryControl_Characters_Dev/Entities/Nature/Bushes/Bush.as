@@ -24,7 +24,7 @@ void onInit(CSprite@ this)
 
 // void onDie(CBlob@ this)
 // {
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// for (int i = 0; i <= 1; i++)
 		// {

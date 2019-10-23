@@ -57,7 +57,7 @@ void DoExplosion(CBlob@ this)
 		Explode(this, 128.0f * modifier, 64.0f * (1 - modifier));
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{	
 		if (!this.hasTag("no mithril"))
 		{
@@ -143,7 +143,7 @@ void onTick(CBlob@ this)
 {
 	if (this.get_u8("boom_start") == this.get_u8("boom_end")) 
 	{
-		if (getNet().isServer()) this.server_Die();
+		if (isServer()) this.server_Die();
 		this.Tag("dead");
 		
 		return;
@@ -181,7 +181,7 @@ void onTick(CBlob@ this)
 	
 	if (!this.hasTag("no flash"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (ticks == 2)
 			{		

@@ -22,7 +22,7 @@ Random _r(0xca7a);
 
 void onInit(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_SetTimeToDie(4 + _r.NextRanged(2));
 	}
@@ -39,14 +39,14 @@ void onTick(CBlob@ this)
 
 	// chew through backwalls
 
-	bool isServer = getNet().isServer();
-	bool isClient = getNet().isClient();
+	const bool is_server = isServer();
+	const bool is_client = isClient();
 
 	if (vellen > 2.0f)
 	{
 		Vec2f pos = this.getPosition();
 
-		if (isClient && (getGameTime() + this.getNetworkID() * 31) % 19 == 0)
+		if (is_client && (getGameTime() + this.getNetworkID() * 31) % 19 == 0)
 		{
 			MakeDustParticle(pos, "Smoke.png");
 		}
@@ -67,19 +67,18 @@ void onTick(CBlob@ this)
 		}
 		else if (map.isTileSolid(tile))
 		{
-			if (!isServer)
+			if (!is_server)
 				this.getShape().SetStatic(true);
 		}
 
-		if (isServer)
+		if (is_server)
 		{
 			Pierce(this);
 		}
 	}
 	else
 	{
-		if (isServer)
-			this.server_Die();
+		if (is_server) this.server_Die();
 	}
 }
 
@@ -213,7 +212,7 @@ void Pierce(CBlob @this)
 
 	if (hit)
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			uint seed = (getGameTime() * (this.getNetworkID() * 997 + 1337));
 			Random@ r = Random(seed);

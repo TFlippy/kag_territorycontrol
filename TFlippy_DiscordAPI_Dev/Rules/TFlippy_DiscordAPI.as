@@ -12,7 +12,7 @@ void onInit(CRules@ this)
 
 void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 {
-	const bool server = getNet().isServer();
+	const bool server = isServer();
 	const bool client = getNet().isClient();
 	
 	bool success = false;

@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 	
 	this.set_f32("voice pitch", 0.50f);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.set_u16("stolen coins", 750);
 	
@@ -241,7 +241,7 @@ void onTick(CBlob@ this)
 		this.Tag("dead");
 		this.getSprite().PlaySound("Wilhelm.ogg", 1.8f, 1.8f);
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_SetPlayer(null);
 			server_DropCoins(this.getPosition(), Maths::Max(0, Maths::Min(this.get_u16("stolen coins"), 5000)));

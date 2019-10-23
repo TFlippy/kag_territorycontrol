@@ -46,7 +46,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	{
 		string compactor_resource = this.get_string("compactor_resource");
 		
-		if (getNet().isServer() && compactor_resource == "")
+		if (isServer() && compactor_resource == "")
 		{
 			this.set_string("compactor_resource", blob.getName());
 			this.set_string("compactor_resource_name", blob.getInventoryName());
@@ -58,7 +58,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		
 		if (blob.getName() == compactor_resource)
 		{
-			if (getNet().isServer()) 
+			if (isServer()) 
 			{
 				this.add_u32("compactor_quantity", blob.getQuantity());
 				// this.Sync("compactor_quantity", false);
@@ -91,7 +91,7 @@ void GetButtonsFor( CBlob@ this, CBlob@ caller )
 // KAG's CBlob.Sync() is nonfunctional shit
 void server_Sync(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBitStream stream;
 		stream.write_string(this.get_string("compactor_resource_name"));
@@ -111,7 +111,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		{
 			u32 current_quantity = this.get_u32("compactor_quantity");
 		
-			if (getNet().isServer() && current_quantity > 0) 
+			if (isServer() && current_quantity > 0) 
 			{
 				CBlob@ blob = server_CreateBlob(this.get_string("compactor_resource"), this.getTeamNum(), this.getPosition());
 				if (blob !is null)

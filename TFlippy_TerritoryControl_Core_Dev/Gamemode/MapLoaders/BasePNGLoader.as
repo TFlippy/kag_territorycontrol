@@ -40,7 +40,7 @@ class PNGLoader
 		@map = _map;
 		@map_random = Random();
 
-		if(!getNet().isServer())
+		if(!isServer())
 		{
 			SetupMap(0, 0);
 			SetupBackgrounds();

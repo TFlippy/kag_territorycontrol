@@ -197,7 +197,7 @@ void Zap(CBlob@ this, CBlob@ target)
 	SetKnocked(target, 90);
 	target.set_u32("next zap", getGameTime() + 5);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		f32 damage = 0.125f;
 		this.server_Hit(target, target.getPosition(), dir, damage * (target.hasTag("explosive") ? 16.00f : 1.00f) , HittersTC::staff);

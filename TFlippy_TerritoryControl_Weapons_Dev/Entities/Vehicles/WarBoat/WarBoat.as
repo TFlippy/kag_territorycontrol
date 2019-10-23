@@ -129,7 +129,7 @@ void onInit(CBlob@ this)
 	this.SetMinimapRenderAlways(true);
 
 	// mounted bow
-	if (getNet().isServer())// && hasTech( this, "mounted bow"))
+	if (isServer())// && hasTech( this, "mounted bow"))
 	{
 		CBlob@ bow = server_CreateBlob("mounted_bow");
 		if (bow !is null)

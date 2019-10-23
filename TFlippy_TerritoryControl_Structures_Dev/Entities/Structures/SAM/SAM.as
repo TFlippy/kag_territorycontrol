@@ -24,7 +24,7 @@ void onInit(CBlob@ this)
 	this.set_u16("target", 0);
 	this.set_u32("next_launch", 0);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (this.getTeamNum() == 250)
 		{
@@ -139,7 +139,7 @@ void onTick(CBlob@ this)
 			int ammo = GetAmmo(this);
 			if (ammo > 0)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					Vec2f dir = t.getPosition() - this.getPosition();
 					dir.Normalize();

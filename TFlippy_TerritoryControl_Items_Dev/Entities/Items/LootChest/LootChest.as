@@ -81,7 +81,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("chest_open"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
@@ -91,7 +91,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 void onDie(CBlob@ this)
 {
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (this.hasTag("opened")) return;
 

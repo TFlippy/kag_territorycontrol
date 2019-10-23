@@ -62,7 +62,7 @@ void onInit(CBlob@ this)
 	
 	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ ammo = server_CreateBlob("mat_smallrocket");
 		
@@ -216,7 +216,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 	Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
 	Vec2f startPos = this.getPosition() + Vec2f((this.isFacingLeft() ? -16 : 16), -3).RotateBy(angle);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ blob = server_CreateBlob("smallrocket", this.getTeamNum(), startPos);
 		blob.set_f32("velocity", 15.0f);

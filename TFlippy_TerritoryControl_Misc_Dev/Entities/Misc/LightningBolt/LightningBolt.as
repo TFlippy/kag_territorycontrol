@@ -13,7 +13,7 @@ void onInit(CBlob@ this)
 
 	this.set_Vec2f("strike pos", strikePos);
 
-	if(getNet().isServer())
+	if(isServer())
 	{
 		for(int i = 0; i < 4 + XORRandom(4); i++)
 		{

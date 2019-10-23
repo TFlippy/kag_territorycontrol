@@ -37,7 +37,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			
 			caller.add_f32("foofed", 1);
 
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 			}

@@ -4,7 +4,7 @@
 
 void onDie(CBlob@ this)
 {
-	if (!getNet().isServer()) return; //SERVER ONLY
+	if (!isServer()) return; //SERVER ONLY
 	if (this.hasTag("no drop") || this.hasTag("burning")) return;
 	
 	Vec2f pos = this.getPosition();

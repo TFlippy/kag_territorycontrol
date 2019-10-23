@@ -126,7 +126,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 }
 
 void KillThis(CBlob@ this,Vec2f worldPoint){
-	if(getNet().isServer()){
+	if(isServer()){
 		CPlayer@ player=	this.getPlayer();
 		if(player !is null){
 			CPlayer@ owner=		this.getDamageOwnerPlayer();

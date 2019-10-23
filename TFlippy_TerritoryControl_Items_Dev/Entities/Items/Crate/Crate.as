@@ -281,7 +281,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void Unpack(CBlob@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 
 	if (this.hasTag("unpacking")) return;
 
@@ -493,7 +493,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 	f32 vellen = this.getOldVelocity().Length();
 
-	if (getNet().isServer() && vellen > 5.0f)
+	if (isServer() && vellen > 5.0f)
 	{
 		Unpack(this);
 	}

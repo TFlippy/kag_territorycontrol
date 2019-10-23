@@ -70,7 +70,7 @@ void onTick(CBlob@ this)
 			// }
 		// }
 		
-		// if (getNet().isServer() && this.getPlayer() !is null) this.server_SetPlayer(null);
+		// if (isServer() && this.getPlayer() !is null) this.server_SetPlayer(null);
 	// }
 
 	if (isClient())
@@ -138,7 +138,7 @@ void onTick(CBlob@ this)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 
 	CBlob @blob = this.getBlob();
 	
@@ -214,7 +214,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("mg_explode"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
@@ -229,7 +229,7 @@ void onDie(CBlob@ this)
 	
 	Explode(this, 32.0f, 8.0f);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < 6; i++)
 		{
@@ -267,7 +267,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		

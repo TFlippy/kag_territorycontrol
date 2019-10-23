@@ -14,7 +14,7 @@ void onInit(CBlob@ this)
 	this.set_f32("mining_multiplier", 3.0f);
 	this.set_u32("build delay", 8);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_setTeamNum(150);
 		

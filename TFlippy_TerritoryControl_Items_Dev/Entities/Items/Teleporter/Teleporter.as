@@ -18,7 +18,7 @@ void onInit(CBlob@ this)
 			this.set_u16("teleporter_pair_netid", 0);
 		}
 	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBlob@ tp = server_CreateBlobNoInit("teleporter");
 			tp.server_setTeamNum(this.getTeamNum());
@@ -66,7 +66,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 {
 	if (cmd == this.getCommandID("teleport"))
 	{
-		bool server = getNet().isServer();
+		bool server = isServer();
 		bool client = getNet().isClient();
 		
 		u16 caller_id = params.read_u16();
@@ -204,7 +204,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		
 		// else
 		// {
-			// if (getNet().isServer())
+			// if (isServer())
 			// {
 				// used_mithril = mithril_count;
 			
@@ -314,7 +314,7 @@ void TakeFuel(CBlob@ this, s32 amount)
 
 // void TakeFuel(CBlob@ this, u32 amount)
 // {
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// CInventory@ inv = this.getInventory();
 		// if (inv != null)

@@ -21,7 +21,7 @@ void DoExplosion(CBlob@ this)
 	Vec2f velocity = this.getVelocity();
 	f32 angle = velocity.getAngleDegrees();
 
-	if (getNet().isServer())
+	if (isServer())
 	{	
 		for (int i = 0; i < 10 ; i++)
 		{

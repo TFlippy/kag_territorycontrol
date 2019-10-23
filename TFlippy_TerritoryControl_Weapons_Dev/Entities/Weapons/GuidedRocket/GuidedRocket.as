@@ -76,7 +76,7 @@ void onTick(CBlob@ this)
 					dir = Vec2f(0, -1);
 				}
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					if (distance < 8) this.server_Die();
 				}
@@ -176,7 +176,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	// if ((blob !is null ? !blob.isCollidable() : !solid)) return;
 	
-	if (getNet().isServer() && this.hasTag("offblast") && this.get_u32("no_explosion_timer") < getGameTime()) this.server_Die();
+	if (isServer() && this.hasTag("offblast") && this.get_u32("no_explosion_timer") < getGameTime()) this.server_Die();
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

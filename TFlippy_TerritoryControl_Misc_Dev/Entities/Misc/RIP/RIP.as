@@ -34,7 +34,7 @@ void onInit(CBlob@ this)
 	
 	
 	
-	// if(getNet().isServer())
+	// if(isServer())
 	// {
 		// CSprite@ sprite = this.getSprite();
 		// sprite.SetEmitSound("Rocket_Idle.ogg");
@@ -138,7 +138,7 @@ void onHitGround(CBlob@ this)
 	this.set_f32("map_damage_radius", boomRadius);
 	Explode(this, boomRadius, 20.0f);
 
-	if(getNet().isServer())
+	if(isServer())
 	{
 		int radius = int(boomRadius / map.tilesize);
 		for(int x = -radius; x < radius; x++)
@@ -171,7 +171,7 @@ void onHitGround(CBlob@ this)
 		this.setVelocity(this.getOldVelocity() / 1.55f);
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		boom.setPosition(this.getPosition());

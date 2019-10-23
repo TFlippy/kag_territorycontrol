@@ -135,7 +135,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	{
 		
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBlob@ bagel = server_CreateBlob("pigger", this.getTeamNum(), this.getPosition());
 			this.server_Die();

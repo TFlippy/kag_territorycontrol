@@ -196,7 +196,6 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 	while (!bs.isBufferEnd()) 
 	{
 		ReadRequirement(bs,req,blobName,friendlyName,quantity);
-
 		if(req=="blob") {
 			int sum=(inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0)+(inv2 !is null ? inv2.getBlob().getBlobCount(blobName) : 0);
 			
@@ -269,7 +268,7 @@ bool hasRequirements(CInventory@ inv,CBitStream &inout bs,CBitStream &inout miss
 
 void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs)
 {
-	if(!getNet().isServer()) {
+	if(!isServer()) {
 		return;
 	}
 
@@ -321,20 +320,21 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 		if (req == "blob") 
 		{
 			u16 taken = 0;
-			
 			// print("init taken  " + taken);
 			
 			if (inv1 !is null && taken < quantity) 
 			{
 				// taken += inv1.getBlob().TakeBlob(blobName, quantity);
-				inv1.getBlob().TakeBlob(blobName, quantity);
+				//inv1.getBlob().TakeBlob(blobName, quantity);
+				inv1.server_RemoveItems(blobName,quantity);
 				taken += Maths::Min(inv1.getBlob().getBlobCount(blobName), quantity - taken);
 			}
 			
 			if (inv2 !is null && taken < quantity) 
 			{
 				// taken += inv2.getBlob().TakeBlob(blobName, quantity - taken);
-				inv2.getBlob().TakeBlob(blobName, quantity - taken);
+				inv2.server_RemoveItems(blobName, quantity - taken);
+                                //inv2.getBlob().TakeBlob(blobName, quantity - taken);
 				taken += Maths::Min(inv2.getBlob().getBlobCount(blobName), quantity - taken);
 			}
 			
@@ -350,7 +350,6 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 					{
 						break;
 					}
-					
 					baseBlobs[i].TakeBlob(blobName, quantity - taken);
 					taken += Maths::Min(baseBlobs[i].getBlobCount(blobName), quantity - taken);
 					// print("loop taken " + taken);
@@ -383,3 +382,4 @@ void server_TakeRequirements(CInventory@ inv,CBitStream &inout bs)
 {
 	server_TakeRequirements(inv,null,bs);
 }
+

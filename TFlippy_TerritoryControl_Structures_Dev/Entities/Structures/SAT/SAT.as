@@ -110,7 +110,7 @@ void onTick(CBlob@ this)
 		
 		if (Maths::Round(angDeg) != 90 && this.get_u32("nextAttack") < getGameTime())
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBlob@ blob = server_CreateBlob("chickencannonshell", this.getTeamNum(), this.getPosition());
 				blob.setVelocity(-aimDir * v * 0.65f);

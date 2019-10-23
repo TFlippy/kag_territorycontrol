@@ -149,11 +149,11 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 		}
 	}
 
-	// if (getNet().isServer())
+	// if (isServer())
 	if (true)
 	{
 		//hit map if we're meant to
-		if (getNet().isServer() && map_damage_radius > 0.1f)
+		if (isServer() && map_damage_radius > 0.1f)
 		{
 			int tile_rad = int(map_damage_radius / map.tilesize) + 1;
 			f32 rad_thresh = map_damage_radius * map_damage_ratio;
@@ -283,7 +283,7 @@ void LinearExplosion(CBlob@ this, Vec2f _direction, f32 length, const f32 width,
 
 	pos += normal * -(halfwidth / tilesize + 1.0f);
 
-	bool isserver = getNet().isServer();
+	bool isserver = isServer();
 
 	int steps = int(length / tilesize);
 	int width_steps = int(width / tilesize);
@@ -495,7 +495,7 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 	//explosion particle
 	if (particles) makeSmallExplosionParticle(hit_blob_pos);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		//hit the object
 		this.server_Hit(hit_blob, hit_blob_pos,
@@ -545,11 +545,11 @@ void WorldExplode(Vec2f position, f32 radius, f32 damage, const string explosion
 		}
 	}
 
-	// if (getNet().isServer())
+	// if (isServer())
 	if (true)
 	{
 		//hit map if we're meant to
-		if (getNet().isServer() && map_damage_radius > 0.1f)
+		if (isServer() && map_damage_radius > 0.1f)
 		{
 			int tile_rad = int(map_damage_radius / map.tilesize) + 1;
 			f32 rad_thresh = map_damage_radius * map_damage_ratio;
@@ -654,7 +654,7 @@ bool WorldHitBlob(Vec2f position, CBlob@ hit_blob, f32 radius, f32 damage, const
 	//explosion particle
 	makeSmallExplosionParticle(hit_blob_pos);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		hit_blob.server_Hit(hit_blob, hit_blob_pos, Vec2f(), dam, hitter, true);
 	}

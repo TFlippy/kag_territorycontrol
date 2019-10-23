@@ -56,7 +56,7 @@ void onInit(CSprite@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (!this.get_bool("isActive")) return;
 	
@@ -71,7 +71,7 @@ void onTick(CBlob@ this)
 
 void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		TileType tile = getMap().getTile(worldPoint).type;
 		
@@ -89,7 +89,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_CreateBlob("drill", this.getTeamNum(), this.getPosition());
 	}
@@ -97,7 +97,7 @@ void onDie(CBlob@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (cmd == this.getCommandID("sv_toggle"))
 		{
@@ -141,6 +141,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	
 	CButton@ buttonEject = caller.CreateGenericButton(11, Vec2f(0, -8), this, this.getCommandID("sv_toggle"), (this.get_bool("isActive") ? "Turn Off" : "Turn On"), params);
 }
+
 void onAddToInventory( CBlob@ this, CBlob@ blob )
 {
 	if(blob.getName() != "gyromat") return;

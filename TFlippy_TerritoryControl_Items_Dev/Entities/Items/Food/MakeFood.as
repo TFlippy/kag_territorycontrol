@@ -1,6 +1,6 @@
 CBlob@ server_MakeFood(Vec2f atpos, const string &in name, const u8 spriteIndex)
 {
-	if (!getNet().isServer()) { return null; }
+	if (!isServer()) { return null; }
 
 	CBlob@ blob = server_CreateBlobNoInit("food");
 	if (blob !is null)

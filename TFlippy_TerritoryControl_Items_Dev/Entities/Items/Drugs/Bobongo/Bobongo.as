@@ -23,7 +23,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (!caller.hasScript("Bobonged.as")) caller.AddScript("Bobonged.as");
 			caller.add_f32("bobonged", 1);
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 			}

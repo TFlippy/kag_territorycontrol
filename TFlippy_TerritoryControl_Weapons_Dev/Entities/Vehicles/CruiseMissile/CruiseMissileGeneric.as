@@ -49,7 +49,7 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition() + this.get_Vec2f("explosion_offset").RotateBy(this.getAngleDegrees());
 	CMap@ map = getMap();
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < (5 + XORRandom(5)); i++)
 		{

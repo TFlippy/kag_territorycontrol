@@ -138,7 +138,7 @@ void onTick(CBlob@ this)
 					
 					if (itemCount > 0) 
 					{
-						if (getNet().isServer()) 
+						if (isServer()) 
 						{
 							CBlob@ item = inv.getItem(0);
 							u32 quantity = item.getQuantity();
@@ -230,7 +230,7 @@ void Shoot(CBlob@ this)
 		// getControls().setMousePosition(Vec2f(mousePos.x, mousePos.y - 10));
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blobHit)
 		{
@@ -445,7 +445,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				u16 remain = GiveFuel(this, carried.getQuantity(), fuel_modifier);
 					
-				if (getNet().isServer())
+				if (isServer())
 				{
 					if (remain == 0)
 					{

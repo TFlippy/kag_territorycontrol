@@ -27,7 +27,7 @@ void onInit(CBlob@ this)
 		// {
 			// GiveFakeTech(getRules(), this.get_string("tech_name"), this.getTeamNum());
 		
-			// if (getNet().isServer())
+			// if (isServer())
 			// {
 				// this.server_Die();
 			// }

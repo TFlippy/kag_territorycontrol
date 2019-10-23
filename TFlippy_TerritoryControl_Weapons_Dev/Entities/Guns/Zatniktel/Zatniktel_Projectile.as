@@ -41,22 +41,22 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 					
 				case 1:
 					blob.Tag("dead");
-					if (getNet().isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(), blob.getHealth() * 0.95f, HittersTC::magix);
+					if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(), blob.getHealth() * 0.95f, HittersTC::magix);
 					break;
 				
 				case 2:
 				default:
-					if (getNet().isServer()) blob.server_Die();
+					if (isServer()) blob.server_Die();
 					break;
 			
 			}
 		
 			blob.set_u8("zat counter", blob.get_u8("zat counter") + 1);
 			
-			if (getNet().isServer()) this.server_Die();
+			if (isServer()) this.server_Die();
 		}
 	}
-	else if (getNet().isServer()) this.server_Die();
+	else if (isServer()) this.server_Die();
 	{
 	
 	}

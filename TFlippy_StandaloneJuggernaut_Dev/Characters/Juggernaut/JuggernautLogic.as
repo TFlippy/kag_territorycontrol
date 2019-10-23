@@ -285,7 +285,7 @@ void onTick(CBlob@ this)
 			juggernaut.dontHitMore=		false;
 			juggernaut.attackDelay=		JuggernautVars::attackDelay*2;
 		}else{
-			if(getNet().isServer() && juggernaut.actionTimer<=(JuggernautVars::grabTime/4)*3 && juggernaut.dontHitMore==false){
+			if(isServer() && juggernaut.actionTimer<=(JuggernautVars::grabTime/4)*3 && juggernaut.dontHitMore==false){
 				//Grab
 				const float range=	26.0f; //36.0f originally
 				f32 angle=	juggernaut.attackRot;
@@ -371,7 +371,7 @@ void onTick(CBlob@ this)
 			if(getNet().isClient()){
 				Sound::Play("/ArgLong",this.getPosition());
 			}
-			if(getNet().isServer()){
+			if(isServer()){
 				f32 angle=	-((this.getAimPos()-pos).getAngleDegrees());
 				if(angle<0.0f){
 					angle+=360.0f;
@@ -484,7 +484,7 @@ void onTick(CBlob@ this)
 			juggernaut.goFatality=		false;
 			juggernaut.forceFatality=	false;
 			juggernaut.wasFacingLeft=	this.isFacingLeft();
-			if(getNet().isServer()) {
+			if(isServer()) {
 				this.SendCommand(this.getCommandID("goFatalityReal"));
 			}
 		}
@@ -513,7 +513,7 @@ void onTick(CBlob@ this)
 		if(juggernaut.actionTimer==46){ //62
 			// this.server_SetHealth(Maths::Min(this.getHealth()+3.75f,this.get_f32("realInitialHealth")));
 			
-			if(getNet().isServer()){
+			if(isServer()){
 				AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
 				if(point !is null){
 					CBlob@ attachedBlob=	point.getOccupied();
@@ -561,7 +561,7 @@ void onTick(CBlob@ this)
 			juggernaut.goFatality=		false;
 			juggernaut.forceFatality=	false;
 			this.Untag("invincible");
-			if(getNet().isServer()){
+			if(isServer()){
 				CBlob@ blob=	server_CreateBlob(this.get_string("grabbedEnemy")=="archer" ? "corpsestillarcher" : "corpsestill",0,this.getPosition());
 				blob.getSprite().SetFacingLeft(this.isFacingLeft());
 			}
@@ -569,7 +569,7 @@ void onTick(CBlob@ this)
 		juggernaut.actionTimer+=1;
 	}
 
-	if(juggernaut.state!=JuggernautStates::charging && juggernaut.state!=JuggernautStates::chargedAttack && getNet().isServer()) {
+	if(juggernaut.state!=JuggernautStates::charging && juggernaut.state!=JuggernautStates::chargedAttack && isServer()) {
 		juggernaut_clear_actor_limits(this);
 	}
 	if(extraSync) {
@@ -605,7 +605,7 @@ void onCommand(CBlob@ this,u8 cmd,CBitStream @stream)
 		return;
 	}
 	if(cmd==this.getCommandID("throw")){
-		if(getNet().isServer() || juggernaut.state==JuggernautStates::throwing){
+		if(isServer() || juggernaut.state==JuggernautStates::throwing){
 			return;
 		}
 		juggernaut.state=		JuggernautStates::throwing;
@@ -661,12 +661,12 @@ void onDie(CBlob@ this)
 		this.getSprite().PlaySound("Juggernaut_Death.ogg", 1.00f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_CreateBlob("juggernauthammer", this.getTeamNum(), this.getPosition());
 	}
 	
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// server_CreateBlob("royalarmor", this.getTeamNum(), this.getPosition());
 	
@@ -682,7 +682,7 @@ void onDie(CBlob@ this)
 		// boom.Init();
 	// }
 
-	if(!getNet().isServer())
+	if(!isServer())
 	{
 		return;
 	}
@@ -748,9 +748,9 @@ void DoAttack(CBlob@ this,f32 damage,JuggernautInfo@ info,f32 arcDegrees,u8 type
 	bool hasHitMap=		false;
 	
 	bool client = getNet().isClient();
-	bool server = getNet().isServer();
+	bool server = isServer();
 	
-	if(getNet().isServer() && (blobPos-aimPos).Length()<=attack_distance*1.5f){
+	if(isServer() && (blobPos-aimPos).Length()<=attack_distance*1.5f){
 		DamageWall(this,map,aimPos);
 	}
 
@@ -787,7 +787,7 @@ void DoAttack(CBlob@ this,f32 damage,JuggernautInfo@ info,f32 arcDegrees,u8 type
 				juggernaut_add_actor_limit(this,b);
 				if(!dontHitMore)
 				{
-					if(getNet().isServer()) {
+					if(isServer()) {
 						Vec2f velocity=	b.getPosition() - pos;
 						this.server_Hit(b,hi.hitpos,velocity,damage,type,true);  // server_Hit() is server-side only
 					}
@@ -818,7 +818,7 @@ void DoAttack(CBlob@ this,f32 damage,JuggernautInfo@ info,f32 arcDegrees,u8 type
 					hasHitMap=	true;
 					
 					
-					if(!getNet().isServer()) {
+					if(!isServer()) {
 						MakeDustParticle(tpos, "dust2.png");
 						continue;
 					}
@@ -909,7 +909,7 @@ void DamageWall(CBlob@ this,CMap@ map,Vec2f pos)
 }
 void DoGrab(CBlob@ this,f32 aimangle,f32 arcDegrees,JuggernautInfo@ info)
 {
-	if(!getNet().isServer()) {
+	if(!isServer()) {
 		return;
 	}
 	if(aimangle<0.0f) {
@@ -1009,7 +1009,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 {
 	f32 vellen = this.getOldVelocity().Length();
 	bool client = getNet().isClient();
-	bool server = getNet().isServer();
+	bool server = isServer();
 	
 	if (solid && vellen > 5.00f)
 	{

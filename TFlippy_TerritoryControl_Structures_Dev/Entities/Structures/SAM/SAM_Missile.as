@@ -73,7 +73,7 @@ void onTick(CBlob@ this)
 		this.setAngleDegrees(-nDir.getAngleDegrees() + 90);
 		this.setVelocity(nDir * this.get_f32("velocity"));
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (dist < 8) this.server_Die();
 		}

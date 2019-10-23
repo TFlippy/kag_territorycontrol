@@ -20,7 +20,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 		}
 	}
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		TileType tile = map.getTile(worldPoint).type;
 

@@ -48,7 +48,7 @@ u32 getCaptureSeconds(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 
 	bool reset_timer = true;
 	bool sync = false;
@@ -117,11 +117,11 @@ void onTick(CBlob@ this)
 
 			if (ticks <= 0)
 			{
-				if (this.hasTag(chicken_tag) && (this.getConfig() == "citadel" || this.getConfig() == "fortress" || this.getConfig() == "camp"))
+				if (this.hasTag(chicken_tag) && (this.getName() == "citadel" || this.getName() == "fortress" || this.getName() == "camp"))
 				{
-					if (getNet().isServer())
+					if (isServer())
 					{
-						CBlob@ base = server_CreateBlob("chicken" + this.getConfig(), 250, this.getPosition());
+						CBlob@ base = server_CreateBlob("chicken" + this.getName(), 250, this.getPosition());
 						base.server_SetHealth(this.getHealth());
 						
 						this.server_Die();
@@ -175,7 +175,7 @@ void onTick(CBlob@ this)
 	
 	// if(!this.hasTag("faction_base"))
 	// if(this.get_u16("last_friendly_visit")+30*60*3 < getGameTime()){
-		// if(getNet().isServer()){
+		// if(isServer()){
 			// this.server_setTeamNum(-1);
 		// }
 	// }

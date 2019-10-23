@@ -206,7 +206,7 @@ void onDie(CBlob@ this)
 		}
 	}
 
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		// boom.setPosition(this.getPosition());
@@ -224,7 +224,7 @@ void onDie(CBlob@ this)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 
 	CBlob @blob = this.getBlob();
 	
@@ -288,7 +288,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		

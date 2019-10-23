@@ -407,7 +407,7 @@ void Shoot(CBlob@ this)
 				}
 			}
 			
-			if(getNet().isServer()) 
+			if(isServer()) 
 			{
 				const bool force_nonsolid = this.exists("gun_force_nonsolid") && this.get_bool("gun_force_nonsolid");
 			
@@ -456,7 +456,7 @@ void Shoot(CBlob@ this)
 	else
 	{
 		//Fire a projectile
-		if(getNet().isServer()) 
+		if(isServer()) 
 		{
 			f32 angle =	this.getAngleDegrees();
 			Vec2f dir=		Vec2f((this.isFacingLeft() ? -1 : 1),0.0f).RotateBy(angle);

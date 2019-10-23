@@ -39,7 +39,7 @@ void onTick(CBlob@ this)
 					sparks(this.getPosition(), 1, 0.25f);
 				}
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					if ((pos - this.getPosition()).getLength() < 32)
 					{

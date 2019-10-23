@@ -93,7 +93,7 @@ void onTick(CBlob@ this)
 								hitBlobs = true;
 								hitPos = hitInfos[i].hitpos;
 								
-								if (getNet().isServer())
+								if (isServer())
 								{
 									SpawnBoom(this, hitPos);
 								}
@@ -110,7 +110,7 @@ void onTick(CBlob@ this)
 					{
 						CMap@ map = getMap();
 						
-						if (getNet().isServer())
+						if (isServer())
 						{
 							SpawnBoom(this, hitPos);
 						}

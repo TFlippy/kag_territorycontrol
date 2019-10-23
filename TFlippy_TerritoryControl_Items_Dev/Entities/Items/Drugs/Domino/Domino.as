@@ -24,7 +24,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (!caller.hasScript("Dominoed.as")) caller.AddScript("Dominoed.as");
 			caller.set_f32("dominoed", 5);
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 			}

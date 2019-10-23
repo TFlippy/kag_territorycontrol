@@ -7,7 +7,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (this.hasTag("has pumpkin"))
 		{

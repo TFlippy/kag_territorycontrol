@@ -1,6 +1,6 @@
 void onTick(CBlob@ this){
 
-	// if(getNet().isServer())
+	// if(isServer())
 	// if (getGameTime() % 30 == 0){
 	
 		// if(this.getInventoryBlob() !is null)

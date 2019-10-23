@@ -52,7 +52,7 @@ void DoExplosion(CBlob@ this)
 	const f32 modifier = boom_size / this.get_f32("boom_end");
 	const f32 invModifier = 1.00f - modifier;
 		
-	if (getNet().isServer())
+	if (isServer())
 	{			
 		server_DestroyStuff(this, boom_size, 10 + (25 * modifier), this.getPosition());
 	
@@ -126,7 +126,7 @@ void onTick(CBlob@ this)
 
 	if (this.get_f32("boom_size") >= this.get_f32("boom_end")) 
 	{
-		if (getNet().isServer() && ticks > 150) this.server_Die();
+		if (isServer() && ticks > 150) this.server_Die();
 		this.Tag("dead");
 	}
 	
@@ -269,7 +269,7 @@ void onTick(CBlob@ this)
 	
 	if (!this.hasTag("no flash"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (ticks == 2)
 			{		

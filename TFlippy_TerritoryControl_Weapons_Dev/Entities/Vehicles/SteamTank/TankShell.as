@@ -118,7 +118,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer() && getGameTime() >= this.get_u32("primed_time"))
+	if (isServer() && getGameTime() >= this.get_u32("primed_time"))
 	{
 		if (blob !is null && doesCollideWithBlob(this, blob)) this.server_Die();
 		else if (solid) this.server_Die();

@@ -25,7 +25,7 @@ void onInit(CBlob@ this)
 	this.setPosition(Vec2f(this.getPosition().x, 0.0f));
 	this.setVelocity(Vec2f(20.0f - XORRandom(4001) / 100.0f, 15.0f));
 
-	if(getNet().isServer())
+	if(isServer())
 	{
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSound("Rocket_Idle.ogg");
@@ -100,7 +100,7 @@ void onTick(CBlob@ this)
 				heat -= 1;
 			}
 
-			if (getNet().isServer() && XORRandom(100) < 70)
+			if (isServer() && XORRandom(100) < 70)
 			{
 				CMap@ map = getMap();
 				Vec2f pos = this.getPosition();
@@ -185,7 +185,7 @@ void onHitGround(CBlob@ this)
 	this.set_f32("map_damage_radius", boomRadius);
 	Explode(this, boomRadius, 20.0f);
 
-	if(getNet().isServer())
+	if(isServer())
 	{
 		int radius = int(boomRadius / map.tilesize);
 		for(int x = -radius; x < radius; x++)

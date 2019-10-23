@@ -113,7 +113,7 @@ void onTick(CBlob@ this)
 						
 							// print("mod: " + mod + "; len: " + len);
 						
-							if (getNet().isServer())
+							if (isServer())
 							{
 								this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 5.00f * mod, Hitters::crush, true);
 							}

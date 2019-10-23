@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		getMap().getBlobsInBox(this.getPosition() + Vec2f(48, -48), this.getPosition() + Vec2f(-48, 48), @blobs);
@@ -75,7 +75,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			this.getSprite().PlaySound("/Construct.ogg");
 			this.getSprite().getVars().gibbed = true;
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 				CBlob@ newBlob = server_CreateBlob("methanecollector", buyer.getTeamNum(), pos);

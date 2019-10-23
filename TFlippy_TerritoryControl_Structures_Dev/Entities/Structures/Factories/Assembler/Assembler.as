@@ -295,7 +295,7 @@ void onTick(CBlob@ this)
 	CBitStream missing;
 	if (hasRequirements(inv, item.reqs, missing))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBlob @mat = server_CreateBlob(item.resultname, this.getTeamNum(), this.getPosition());
 			mat.server_SetQuantity(item.resultcount);
@@ -337,7 +337,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 	if (isMat && !blob.isAttached() && blob.hasTag("material"))
 	{
-		if (getNet().isServer()) this.server_PutInInventory(blob);
+		if (isServer()) this.server_PutInInventory(blob);
 		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
 }

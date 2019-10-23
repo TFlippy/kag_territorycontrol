@@ -48,7 +48,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 1;
 	// this.getCurrentScript().runFlags |= Script::tick_attached;
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_CreateBlob("lightningbolt", -1, this.getPosition());
 	}
@@ -71,7 +71,7 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 
 void onTick(CBlob@ this)
 {
-	const bool server = getNet().isServer();
+	const bool server = isServer();
 	const bool client = getNet().isClient();
 
 	const f32 kill_count = this.get_f32("kill_count");
@@ -261,7 +261,7 @@ void onTick(CBlob@ this)
 					// {
 						// CMap@ map = getMap();
 						
-						// if (getNet().isServer())
+						// if (isServer())
 						// {
 							// // SpawnBoom(this, hitPos);
 						// }

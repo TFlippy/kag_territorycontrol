@@ -24,7 +24,7 @@ HarvestBlobPair[] pairs =
 
 void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitBlob, u8 customData)
 {
-	if (!getNet().isServer() || hitBlob is null)
+	if (!isServer() || hitBlob is null)
 		return;
 	
 	if (customData == Hitters::drill || customData == Hitters::builder)

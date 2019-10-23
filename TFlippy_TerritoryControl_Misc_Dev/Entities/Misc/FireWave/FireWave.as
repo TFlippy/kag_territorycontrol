@@ -49,7 +49,7 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	CMap@ map = getMap();
-	bool server = getNet().isServer();
+	bool server = isServer();
 	bool client = getNet().isClient();
 	
 	Vec2f top = Vec2f(this.getPosition().x, 0);
@@ -130,7 +130,7 @@ void makeSteamParticle(CBlob@ this, Vec2f pos, const Vec2f vel, const string fil
 		// Explode(this, 128.0f * modifier, 16.0f * (1 - modifier));
 	// }
 	
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// for (int i = 0; i < 3; i++)
 		// {
@@ -145,7 +145,7 @@ void makeSteamParticle(CBlob@ this, Vec2f pos, const Vec2f vel, const string fil
 // {
 	// if (this.get_u8("boom_start") == explosions_max) 
 	// {
-		// if (getNet().isServer()) this.server_Die();
+		// if (isServer()) this.server_Die();
 		// this.Tag("dead");
 		
 		// return;
@@ -165,7 +165,7 @@ void makeSteamParticle(CBlob@ this, Vec2f pos, const Vec2f vel, const string fil
 		// this.SetLightRadius(1024.5f * modifier);
 	// }
 	
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// if (ticks == 2)
 		// {

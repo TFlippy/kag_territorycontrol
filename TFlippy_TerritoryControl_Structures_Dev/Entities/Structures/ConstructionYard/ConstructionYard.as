@@ -240,14 +240,13 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("shop made item"))
 	{
 		this.getSprite().PlaySound("/ChaChing.ogg");
-		bool isServer = (getNet().isServer());
 		u16 caller, item;
 		if (!params.saferead_netid(caller) || !params.saferead_netid(item))
 		{
 			return;
 		}
 		string name = params.read_string();
-		if(isServer){
+		if(isServer()){
 			
 			if (name == "dinghy")
 			{

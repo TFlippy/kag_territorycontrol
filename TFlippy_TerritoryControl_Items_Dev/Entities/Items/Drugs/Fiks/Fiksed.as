@@ -28,7 +28,7 @@ void onTick(CBlob@ this)
 			f32 maxHealth = Maths::Ceil(Maths::Min(this.getInitialHealth() * 3.00f, this.getInitialHealth() + 5));
 			if (this.getHealth() < maxHealth)
 			{				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					this.server_SetHealth(Maths::Min(this.getHealth() + health_increment, maxHealth));
 					this.set_f32("fiksed", Maths::Max(0, this.get_f32("fiksed") - health_increment));

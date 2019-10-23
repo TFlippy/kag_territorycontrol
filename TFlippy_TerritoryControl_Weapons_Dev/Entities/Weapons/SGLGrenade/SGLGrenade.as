@@ -51,7 +51,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 {
 	if (this.hasTag("grenade collided") && blob !is null && blob.getTeamNum() != this.getTeamNum())
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}

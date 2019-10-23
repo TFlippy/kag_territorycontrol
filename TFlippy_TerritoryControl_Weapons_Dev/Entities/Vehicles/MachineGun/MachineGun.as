@@ -154,7 +154,7 @@ void onTick(CBlob@ this)
 		
 		if (ap.isKeyJustPressed(key_up))
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				gunner.server_DetachFrom(this);
 			}
@@ -237,7 +237,7 @@ void Shoot(CBlob@ this, f32 angle)
 		ShakeScreen(128, 48, hitPos);	
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blobHit)
 		{
@@ -303,7 +303,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			u16 remain = GiveAmmo(this, carried.getQuantity());
 			// this.Sync("ammo_count", false); // fuck this broken sync shit
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				if (remain == 0)
 				{

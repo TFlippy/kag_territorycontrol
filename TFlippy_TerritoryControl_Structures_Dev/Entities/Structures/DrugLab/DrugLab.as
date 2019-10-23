@@ -127,7 +127,7 @@ void React(CBlob@ this)
 			{
 				f32 count = Maths::Min(Maths::Min(methane_count, oil_count), pressure * 0.0002f);
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - count, 0));
 					methane_blob.server_SetQuantity(Maths::Max(methane_blob.getQuantity() - count, 0));
@@ -143,7 +143,7 @@ void React(CBlob@ this)
 				f32 count = Maths::Min(coal_count, pressure * 0.0002f);
 				print("coal");
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					coal_blob.server_SetQuantity(Maths::Max(coal_blob.getQuantity() - count, 0));
 					Material::createFor(this, "mat_oil", count);
@@ -157,7 +157,7 @@ void React(CBlob@ this)
 			{
 				f32 count = Maths::Min(Maths::Min(mustard_count, fuel_count), pressure * 0.00015f);
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					mustard_blob.server_SetQuantity(Maths::Max(mustard_blob.getQuantity() - count, 0));
 					fuel_blob.server_SetQuantity(Maths::Max(fuel_blob.getQuantity() - count, 0));
@@ -172,7 +172,7 @@ void React(CBlob@ this)
 			{
 				f32 count = Maths::Min(meat_count, pressure * 0.001f);
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					meat_blob.server_SetQuantity(Maths::Max(meat_blob.getQuantity() - count * 0.25f, 0));
 					Material::createFor(this, "mat_methane", count * 0.75f);
@@ -187,7 +187,7 @@ void React(CBlob@ this)
 			{
 				f32 count = Maths::Min(oil_count, pressure * 0.0004f);
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - count * 0.50f, 0));
 					Material::createFor(this, "mat_fuel", count * 0.75f);
@@ -201,7 +201,7 @@ void React(CBlob@ this)
 			
 			if (pressure > 25000 && heat > 1500 && hasMithril && hasAcid && mithril_count >= 50 && acid_count >= 25)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					mithril_blob.server_SetQuantity(Maths::Max(mithril_blob.getQuantity() - 50, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 25, 0));
@@ -216,7 +216,7 @@ void React(CBlob@ this)
 			
 			if (pressure > 25000 && heat > 400 && hasSulphur && hasAcid && sulphur_count >= 25 && acid_count >= 50)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					sulphur_blob.server_SetQuantity(Maths::Max(sulphur_blob.getQuantity() - 25, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 50, 0));
@@ -231,7 +231,7 @@ void React(CBlob@ this)
 			
 			if (heat > 1000 && dirt_blob !is null && meat_blob !is null && hasAcid && dirt_count >= 50 && meat_count > 15 && acid_count >= 25)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					dirt_blob.server_SetQuantity(Maths::Max(dirt_blob.getQuantity() - 50, 0));
 					meat_blob.server_SetQuantity(Maths::Max(meat_blob.getQuantity() - 15, 0));
@@ -247,7 +247,7 @@ void React(CBlob@ this)
 					
 			if (pressure > 40000 && heat > 700 && hasAcid && hasMethane && hasMithrilEnriched && hasMeat && acid_count > 25 && methane_count > 25 && e_mithril_count > 5 && meat_count > 10)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 25, 0));
 					methane_blob.server_SetQuantity(Maths::Max(methane_blob.getQuantity() - 25, 0));
@@ -265,7 +265,7 @@ void React(CBlob@ this)
 			
 			if (heat > 1500 && dirt_blob !is null && meat_blob !is null && hasAcid && dirt_count >= 50 && meat_count > 15 && acid_count >= 25)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					dirt_blob.server_SetQuantity(Maths::Max(dirt_blob.getQuantity() - 50, 0));
 					meat_blob.server_SetQuantity(Maths::Max(meat_blob.getQuantity() - 15, 0));
@@ -283,7 +283,7 @@ void React(CBlob@ this)
 			{
 				f32 count = Maths::Min(Maths::Min(dirt_count * 0.25f, acid_count), pressure * 0.00035f);
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					dirt_blob.server_SetQuantity(Maths::Max(dirt_blob.getQuantity() - count, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - count * 0.25f, 0));
@@ -299,7 +299,7 @@ void React(CBlob@ this)
 				CBlob@ bobomax = inv.getItem("bobomax");
 				if (bobomax !is null)
 				{
-					if (getNet().isServer())
+					if (isServer())
 					{
 						acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 25, 0));
 						oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 20, 0));
@@ -318,7 +318,7 @@ void React(CBlob@ this)
 				CBlob@ stim = inv.getItem("stim");
 				if (stim !is null)
 				{
-					if (getNet().isServer())
+					if (isServer())
 					{
 						oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 25, 0));
 						stim.server_Die();
@@ -333,7 +333,7 @@ void React(CBlob@ this)
 			
 			if (pressure < 25000 && heat > 100 && heat < 1000 && hasAcid && hasMithril && acid_count >= 15 && mithril_count >= 5)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 15, 0));
 					mithril_blob.server_SetQuantity(Maths::Max(mithril_blob.getQuantity() - 5, 0));
@@ -348,7 +348,7 @@ void React(CBlob@ this)
 			
 			if (pressure < 20000 && heat > 100 && heat < 750 && hasAcid && hasCoal && acid_count >= 20 && coal_count >= 15)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 20, 0));
 					coal_blob.server_SetQuantity(Maths::Max(coal_blob.getQuantity() - 15, 0));
@@ -362,7 +362,7 @@ void React(CBlob@ this)
 			
 			if (pressure < 100000 && heat > 500 && hasAcid && hasCoal && acid_count >= 25 && sulphur_count >= 100 && coal_count >= 10)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 25, 0));
 					sulphur_blob.server_SetQuantity(Maths::Max(sulphur_blob.getQuantity() - 100, 0));
@@ -377,7 +377,7 @@ void React(CBlob@ this)
 			
 			if (pressure > 40000 && heat > 2000 && hasOil && hasMithril && oil_count >= 25 && mithril_count >= 25)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 15, 0));
 					mithril_blob.server_SetQuantity(Maths::Max(mithril_blob.getQuantity() - 5, 0));
@@ -433,7 +433,7 @@ void onTick(CBlob@ this)
 		if (pressure > max_pressure)
 		{
 			this.Tag("dead");
-			if (getNet().isServer())
+			if (isServer())
 			{	
 				print_log(this, "Exploding due to overheating; P: " + pressure + "; H: " + heat);
 				this.server_Die();
@@ -453,7 +453,7 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer()) 
+	if (isServer()) 
 	{
 		for (int i = 0; i < 2; i++)
 		{

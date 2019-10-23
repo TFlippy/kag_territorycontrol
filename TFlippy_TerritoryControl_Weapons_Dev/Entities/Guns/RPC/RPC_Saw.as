@@ -46,7 +46,7 @@ void onTick(CBlob@ this)
 		
 		this.setAngleDegrees(-this.getVelocity().Angle() + 90);
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			u8 team = this.getTeamNum();
 		
@@ -72,7 +72,7 @@ void onTick(CBlob@ this)
 	}
 	else
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
@@ -119,7 +119,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		// CMap@ map = this.getMap();
 		

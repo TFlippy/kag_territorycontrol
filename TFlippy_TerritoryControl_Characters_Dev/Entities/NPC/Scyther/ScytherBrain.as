@@ -20,7 +20,7 @@ string[] particles =
 
 void onInit( CBrain@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -67,7 +67,7 @@ void onInit(CBlob@ this)
 		Sound::Play("scyther-intro.ogg");
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_setTeamNum(251);
 			
@@ -115,7 +115,7 @@ void onTick(CBlob@ this)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 	
 	CBlob@ blob = this.getBlob();
 	
@@ -253,7 +253,7 @@ CBlob@ FindTarget(CBrain@ this, f32 maxDistance)
 
 // void onTick(CBrain@ this)
 // {
-	// if (!getNet().isServer()) return;
+	// if (!isServer()) return;
 	
 	// CBlob@ blob = this.getBlob();
 	
@@ -418,7 +418,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		
@@ -438,7 +438,7 @@ void onDie(CBlob@ this)
 		DoExplosion(this);
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < 7; i++)
 		{

@@ -95,7 +95,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (this.getTickSinceCreated() > 10 && (solid ? true : (blob !is null && blob.isCollidable())))
 		{

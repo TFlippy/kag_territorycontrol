@@ -26,7 +26,7 @@ void onTick(CBlob@ this)
 	
 	if (true_level <= 0)
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
@@ -56,7 +56,7 @@ void onTick(CBlob@ this)
 				f32 maxHealth = Maths::Ceil(this.getInitialHealth() * 2.00f);
 				if (this.getHealth() < maxHealth)
 				{				
-					if (getNet().isServer())
+					if (isServer())
 					{
 						this.server_SetHealth(Maths::Min(this.getHealth() + 0.125f, maxHealth));
 					}

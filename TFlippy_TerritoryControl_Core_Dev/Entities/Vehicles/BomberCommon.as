@@ -87,7 +87,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (carried !is null)
 		{
-			string fuel_name = carried.getConfig();
+			string fuel_name = carried.getName();
 			f32 fuel_modifier = 1.00f;
 			bool isValid = false;
 			
@@ -121,7 +121,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				u16 remain = GiveFuel(this, carried.getQuantity(), fuel_modifier);
 					
-				if (getNet().isServer())
+				if (isServer())
 				{
 					if (remain == 0)
 					{
@@ -216,7 +216,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	CBlob@ carried = caller.getCarriedBlob();
 	if (carried !is null && this.get_f32("fuel_count") < this.get_f32("max_fuel"))
 	{
-		string fuel_name = carried.getConfig();
+		string fuel_name = carried.getName();
 		bool isValid = fuel_name == "mat_wood" || fuel_name == "mat_coal" || fuel_name == "mat_oil" || fuel_name == "mat_fuel";
 		
 		if (isValid)
@@ -298,7 +298,7 @@ void BomberHandling(CBlob@ this,VehicleInfo@ v)
 					}
 				}
 				if(itemCount>0) {
-					if(getNet().isServer()) {
+					if(isServer()) {
 						CBlob@ item=	inv.getItem(0);
 						u32 quantity=	item.getQuantity();
 

@@ -41,7 +41,7 @@ void onInit(CBlob@ this)
 	
 	this.server_setTeamNum(-1);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < 5; i++)
 		{
@@ -179,7 +179,7 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if (this.hasTag("scyther inside"))
 	{
-		if (getNet().isServer()) 
+		if (isServer()) 
 		{
 			for (int i = 0; i < 1 + XORRandom(2); i++)
 			{
@@ -217,7 +217,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			
@@ -278,7 +278,7 @@ void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && XORRandom(100) == 0)
+	if (isServer() && XORRandom(100) == 0)
 	{
 		const u8 w_count = this.get_u8("wreckage_count");
 		const u8 w_count_max = this.get_u8("wreckage_count_max");
@@ -363,7 +363,7 @@ void onHitGround(CBlob@ this)
 	this.set_f32("map_damage_radius", boomRadius);
 	Explode(this, boomRadius, 20.0f);
 
-	if(getNet().isServer())
+	if(isServer())
 	{
 		int radius = int(boomRadius / map.tilesize);
 		for(int x = -radius; x < radius; x++)
@@ -408,7 +408,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	if(customData != Hitters::builder && customData != Hitters::drill)
 		return 0.0f;
 
-	if (getNet().isServer())
+	if (isServer())
 	{	
 		MakeMat(hitterBlob, worldPoint, "mat_steelingot", XORRandom(4));
 		MakeMat(hitterBlob, worldPoint, "mat_ironingot", XORRandom(6));

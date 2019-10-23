@@ -28,7 +28,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 			caller.set_u8("radpilled", Maths::Min(caller.get_u8("radpilled") + 1, 250));
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 			}

@@ -15,7 +15,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("detonate"))
 	{
 		this.getSprite().PlaySound("mechanical_click.ogg", 4.0f);
-		if(getNet().isServer())
+		if(isServer())
 		{
 			CBlob@ blob = getBlobByNetworkID(params.read_u16());
 			if(blob is null) return;

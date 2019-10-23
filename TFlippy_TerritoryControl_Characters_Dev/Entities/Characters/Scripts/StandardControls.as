@@ -32,7 +32,7 @@ void onInit(CBlob@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (!getNet().isServer())                                // server only!
+	if (!isServer())                                // server only!
 	{
 		return;
 	}

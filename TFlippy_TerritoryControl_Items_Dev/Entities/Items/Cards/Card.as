@@ -97,15 +97,15 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		switch (this.get_u8("type"))
 		{
 			case 0:
-				if (getNet().isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0,0), 3.0f, HittersTC::magix);
+				if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0,0), 3.0f, HittersTC::magix);
 				break;
 				
 			case 1:
-				if (getNet().isServer()) blob.server_Heal(20);
+				if (isServer()) blob.server_Heal(20);
 				break;
 				
 			case 2:
-				if (getNet().isServer()) blob.server_Heal(20);
+				if (isServer()) blob.server_Heal(20);
 				break;
 				
 			case 3:
@@ -114,25 +114,25 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 				break;
 				
 			case 4:
-				if (getNet().isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0,0), 1.0f, Hitters::fire);
+				if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0,0), 1.0f, Hitters::fire);
 				break;
 				
 			case 5:
 				if (!solid && blob.hasTag("vehicle"))
 				{
 					ParticlesFromSprite(this.getSprite());
-					if (getNet().isServer()) blob.server_Heal(20);
+					if (isServer()) blob.server_Heal(20);
 				}
 				break;
 				
 			case 6:
-				if (getNet().isServer()) for (int i = 0; i < 4; i++) this.server_Hit(blob, blob.getPosition(), this.getVelocity()*20, 0.25, Hitters::nothing);
+				if (isServer()) for (int i = 0; i < 4; i++) this.server_Hit(blob, blob.getPosition(), this.getVelocity()*20, 0.25, Hitters::nothing);
 				makeSteamPuff(this);
 				break;
 		}
 	}
 	
-	if(solid || this.hasTag("collided"))if (getNet().isServer()) this.server_Die();
+	if(solid || this.hasTag("collided"))if (isServer()) this.server_Die();
 }
 
 string[] cog_names = {
@@ -148,7 +148,7 @@ void onDie(CBlob@ this)
 
 	CMap@ map = this.getMap();
 
-	if(getNet().isServer()){
+	if(isServer()){
 		
 		if(this.get_u8("type") == 1){
 			CBlob@[] blobs;
@@ -321,7 +321,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 {
-	if (!getNet().isServer())
+	if (!isServer())
 	{
 		return;
 	}

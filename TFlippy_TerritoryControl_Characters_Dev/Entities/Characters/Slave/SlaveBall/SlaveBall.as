@@ -64,7 +64,7 @@ void onTick(CBlob@ this)
 			// print("gud");
 			// slave.AddForce(dir * (distance / maxDistance) * 32);
 			
-			// if (getNet().isServer() && distance > maxDistance * 4) this.server_Hit(slave, slave.getPosition(), dir, (distance / maxDistance) * 0.1f, Hitters::crush, true);
+			// if (isServer() && distance > maxDistance * 4) this.server_Hit(slave, slave.getPosition(), dir, (distance / maxDistance) * 0.1f, Hitters::crush, true);
 		}
 		
 		if (isClient()) DrawLine(this.getSprite(), this.getPosition(), distance / 32, -dir.Angle(), true);

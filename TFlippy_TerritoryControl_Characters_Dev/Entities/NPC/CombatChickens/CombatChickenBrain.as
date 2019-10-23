@@ -6,7 +6,7 @@ const f32 cursor_lerp_speed = 0.50f;
 
 void onInit(CBrain@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -25,7 +25,7 @@ void onInit(CBrain@ this)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 	
 	CBlob@ blob = this.getBlob();
 	

@@ -12,7 +12,7 @@
 
 void onInit( CBrain@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -52,7 +52,7 @@ void onInit(CBlob@ this)
 		Sound::Play("scyther-intro.ogg");
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{	
 		for (int i = 0; i < 2; i++)
 		{
@@ -262,7 +262,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		if (brain !is null && hitterBlob !is null && (hitterBlob.hasTag("flesh") || hitterBlob.hasTag("npc")) && hitterBlob !is this)
@@ -276,7 +276,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		boom.setPosition(this.getPosition());

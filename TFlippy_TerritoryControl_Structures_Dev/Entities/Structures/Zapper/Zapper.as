@@ -164,7 +164,7 @@ void Zap(CBlob@ this, CBlob@ target)
 	SetKnocked(target, 60);
 	this.set_u32("next zap", getGameTime() + delay);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_Hit(target, target.getPosition(), Vec2f(0, 0), damage, HittersTC::electric, true);
 		SetFuel(this, Maths::Max(0, fuel - 5));

@@ -94,7 +94,7 @@ void DoExplosion(CBlob@ this)
 		// }
 	// }
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		

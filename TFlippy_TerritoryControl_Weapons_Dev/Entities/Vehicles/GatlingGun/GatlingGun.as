@@ -67,7 +67,7 @@ void onInit(CBlob@ this)
 	
 	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ ammo = server_CreateBlob("mat_gatlingammo");
 		if (ammo !is null)
@@ -235,7 +235,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		// getControls().setMousePosition(Vec2f(mousePos.x, mousePos.y - 10));
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blobHit)
 		{

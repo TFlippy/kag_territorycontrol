@@ -78,7 +78,7 @@ void onTick(CBlob@ this)
 		this.getSprite().PlaySound("Pigger_Gore", 0.50f, 1.00f);
 		this.getSprite().Gib();
 	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CPlayer@ ply = this.getPlayer();
 			this.server_Die();

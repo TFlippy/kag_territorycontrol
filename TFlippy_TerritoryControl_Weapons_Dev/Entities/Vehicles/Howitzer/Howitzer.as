@@ -59,7 +59,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 
 	// auto-load on creation
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ ammo = server_CreateBlob("mat_howitzershell");
 		if (ammo !is null)

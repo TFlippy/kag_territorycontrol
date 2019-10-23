@@ -43,7 +43,7 @@ void onTick(CBlob@ this)
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		const u32 ticks = this.getTickSinceCreated();
 		const u8 shotsSpawned = this.get_u8("shots spawned");

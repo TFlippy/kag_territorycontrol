@@ -68,7 +68,7 @@ void onTick(CBlob@ this)
 		
 		
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (getGameTime() >= this.get_u32("explosion_timer") || this.getPosition().y < 64) 
 			{
@@ -134,7 +134,7 @@ void DoExplosion(CBlob@ this)
 		}
 	}
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		f32 chance = this.get_f32("split_chance");
 		if (XORRandom(100) <= (chance * 100))
@@ -248,7 +248,7 @@ void onDie(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer() && this.getOldVelocity().y < -6 && this.hasTag("offblast") && blob is null && solid) this.server_Die();
+	if (isServer() && this.getOldVelocity().y < -6 && this.hasTag("offblast") && blob is null && solid) this.server_Die();
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

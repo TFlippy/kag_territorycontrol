@@ -60,7 +60,7 @@ void onTick(CBlob@ this)
 	bool controlled = false;
 
 	CBlob@ remote = getBlobByNetworkID(this.get_u16("remote_netid"));
-	if (remote !is null && remote.getConfig() == "covfefe")
+	if (remote !is null && remote.getName() == "covfefe")
 	{
 		controlled = true;
 	
@@ -84,7 +84,7 @@ void onTick(CBlob@ this)
 			this.setVelocity(dir * Maths::Clamp(len * 0.125f, -4, 4));
 			this.set_u8("mode", 0);
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				if (this.get_f32("fill") >= reproduce_threshold)
 				{
@@ -108,7 +108,7 @@ void onTick(CBlob@ this)
 	
 	if (mode == 0)
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			for (int x = 0; x < 3; x++)
 			{
@@ -135,7 +135,7 @@ void onTick(CBlob@ this)
 				switch (mode)
 				{
 					case 0:
-						if (getNet().isServer()) 
+						if (isServer()) 
 						{
 							this.server_Hit(b, b.getPosition(), Vec2f(0, 0), damage * (b.hasTag("flesh") ? 4.00f : 1.00f), HittersTC::nanobot, true);
 						}
@@ -149,7 +149,7 @@ void onTick(CBlob@ this)
 					case 2:
 						if (b.hasTag("flesh") || b.hasTag("nature"))
 						{
-							if (getNet().isServer()) this.server_Hit(b, b.getPosition(), Vec2f(0, 0), damage * 4.00f, HittersTC::nanobot, true);
+							if (isServer()) this.server_Hit(b, b.getPosition(), Vec2f(0, 0), damage * 4.00f, HittersTC::nanobot, true);
 							this.set_f32("fill", this.get_f32("fill") + damage);
 							hit = true;
 						}
@@ -157,7 +157,7 @@ void onTick(CBlob@ this)
 						{
 							if (b.getHealth() >= b.getInitialHealth()) break;
 						
-							if (getNet().isServer()) b.server_Heal(damage);
+							if (isServer()) b.server_Heal(damage);
 							this.set_f32("fill", this.get_f32("fill") - damage);
 							hit = true;
 						}
@@ -179,7 +179,7 @@ void onDie(CBlob@ this)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return blob.getConfig() == "nanobot";
+	return blob.getName() == "nanobot";
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)

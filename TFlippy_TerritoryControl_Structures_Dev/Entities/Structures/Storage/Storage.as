@@ -94,7 +94,7 @@ void onTick(CBlob@ this)
 
 void PickupOverlap(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		Vec2f tl, br;
 		this.getShape().getBoundingRect(tl, br);
@@ -129,7 +129,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (cmd == this.getCommandID("store inventory"))
 		{
@@ -280,7 +280,7 @@ void updateLayers(CBlob@ this, CBlob@ blob)
 		if (blobCount > 0)
 		{
 			AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("LANTERN");
-			if (getNet().isServer() && point.getOccupied() is null)
+			if (isServer() && point.getOccupied() is null)
 			{
 				CBlob@ lantern = server_CreateBlob("lantern");
 				if (lantern !is null)

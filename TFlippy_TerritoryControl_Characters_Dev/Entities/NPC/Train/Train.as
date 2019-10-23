@@ -39,7 +39,7 @@ void onInit(CBlob@ this)
 		sprite.RewindEmitSound();
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		Vec2f pos = this.getPosition();
 		CMap@ map = getMap();
@@ -59,7 +59,7 @@ void onInit(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer() && blob !is null && !blob.hasTag("train") && !blob.hasTag("nature"))
+	if (isServer() && blob !is null && !blob.hasTag("train") && !blob.hasTag("nature"))
 	{
 		if (blob.getPosition().x > this.getPosition().x + 24)
 		{
@@ -194,7 +194,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("reset train"))
 	{
-		const bool server = getNet().isServer();
+		const bool server = isServer();
 		const bool client = getNet().isClient();
 	
 		this.setPosition(Vec2f(0, this.get_f32("train_y")));

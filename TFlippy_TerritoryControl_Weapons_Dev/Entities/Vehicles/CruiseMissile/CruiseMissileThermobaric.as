@@ -12,7 +12,7 @@ void onDie(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("thermobaricexplosion");
 		boom.setPosition(this.getPosition());

@@ -60,7 +60,7 @@ void onTick(CBlob@ this)
 				// f32 maxHealth = Maths::Ceil(this.getInitialHealth() * 2.00f);
 				// if (this.getHealth() < maxHealth)
 				// {				
-					// if (getNet().isServer())
+					// if (isServer())
 					// {
 						// this.server_SetHealth(Maths::Min(this.getHealth() + 0.125f, maxHealth));
 					// }
@@ -154,7 +154,7 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ h
 	if (level > 1)
 	{
 		bool client = getNet().isClient();
-		bool server = getNet().isServer();
+		bool server = isServer();
 		
 		Vec2f dir = worldPoint - this.getPosition();
 		f32 len = dir.getLength();

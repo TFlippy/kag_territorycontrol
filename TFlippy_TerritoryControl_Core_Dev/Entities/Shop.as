@@ -78,8 +78,6 @@ bool isInRadius(CBlob@ this, CBlob @caller)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	bool isServer = getNet().isServer();
-
 	if (cmd == this.getCommandID("shop menu"))
 	{
 		if (this.hasTag("shop disabled"))
@@ -139,7 +137,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			//	return;
 			//}
 
-			if (!getNet().isServer()) { return; } //only do this on server
+			if (!isServer()) { return; } //only do this on server
 
 			bool tookReqs = false;
 

@@ -14,7 +14,7 @@ void onInit(CBlob@ this)
 {
 	// this.set_TileType("background tile", CMap::tile_castle_back);
 
-	// if (getNet().isServer()) this.server_setTeamNum(-1);
+	// if (isServer()) this.server_setTeamNum(-1);
 	this.Tag("respawn");
 	
 	this.getSprite().SetZ(-50); //background
@@ -136,7 +136,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			

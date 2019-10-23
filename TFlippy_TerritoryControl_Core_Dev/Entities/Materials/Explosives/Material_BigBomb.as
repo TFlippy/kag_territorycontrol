@@ -79,7 +79,7 @@ void DoExplosion(CBlob@ this)
 	// this.set_f32("map_damage_ratio", 0.4f);
 	// f32 angle = this.get_f32("bomb angle");
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		if (boom !is null)

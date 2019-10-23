@@ -182,7 +182,7 @@ void onTick(CBlob@ this)
 		//End
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CMap@ map = getMap();
 		u32 rand = XORRandom(1000);

@@ -13,7 +13,7 @@
 
 void onInit(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_setTeamNum(-1);
 
@@ -52,7 +52,7 @@ void onInit(CBlob@ this)
 
 void onQuantityChange(CBlob@ this, int old)
 {
-  if (getNet().isServer())
+  if (isServer())
   {
     // Kill 0-materials
     if (this.getQuantity() == 0)

@@ -80,7 +80,7 @@ void onTick(CBlob@ this)
 								{
 									if (blob.hasTag("gas") && !holder.getInventory().isFull())
 									{
-										if (getNet().isServer())
+										if (isServer())
 										{
 											blob.server_Die();
 											MakeMat(holder, this.getPosition(), "mat_" + blob.getName(), 1 + XORRandom(5));
@@ -91,7 +91,7 @@ void onTick(CBlob@ this)
 									else if (blob.canBePickedUp(holder) && !holder.getInventory().isFull())
 									{
 										sprite.PlaySound("/gasextractor_load.ogg");
-										if (getNet().isServer()) holder.server_PutInInventory(blob);
+										if (isServer()) holder.server_PutInInventory(blob);
 									}
 								}
 							}

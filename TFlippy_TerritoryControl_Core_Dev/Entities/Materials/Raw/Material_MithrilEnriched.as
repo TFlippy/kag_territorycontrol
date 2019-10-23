@@ -37,7 +37,7 @@ void onTick(CBlob@ this)
 			MakeParticle(this, mag * 2.00f);
 		}
 	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (XORRandom(100) < 25) this.server_SetQuantity(this.getQuantity() - 1);
 		

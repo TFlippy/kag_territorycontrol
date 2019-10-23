@@ -321,7 +321,7 @@ void onTick(CBlob@ this)
 			knight.swordTimer = 0;
 		}
 
-		if (knight.state == KnightStates::sword_drawn && getNet().isServer())
+		if (knight.state == KnightStates::sword_drawn && isServer())
 		{
 			knight_clear_actor_limits(this);
 		}
@@ -623,7 +623,7 @@ void onTick(CBlob@ this)
 		}
 	}
 
-	if (!swordState && getNet().isServer())
+	if (!swordState && isServer())
 	{
 		knight_clear_actor_limits(this);
 	}
@@ -643,7 +643,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			if (bombType == 0)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					CBlob @blob = server_CreateBlob("bomb", this.getTeamNum(), this.getPosition());
 					if (blob !is null && this !is null)
@@ -655,7 +655,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 			else if (bombType == 1)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					CBlob @blob = server_CreateBlob("waterbomb", this.getTeamNum(), this.getPosition());
 					if (blob !is null && this !is null)
@@ -759,7 +759,7 @@ bool isJab(f32 damage)
 
 void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, int deltaInt, KnightInfo@ info)
 {
-	if (!getNet().isServer())
+	if (!isServer())
 	{
 		return;
 	}

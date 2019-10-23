@@ -133,10 +133,10 @@ void onTick(CBlob@ this)
 						}
 					}
 				
-					if (getNet().isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.025f, Hitters::bite, true);
+					if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.025f, Hitters::bite, true);
 				}
 				
-				// if (getNet().isServer() && !blob.hasTag("transformed") && blob.hasTag("pigger_pregnant"))
+				// if (isServer() && !blob.hasTag("transformed") && blob.hasTag("pigger_pregnant"))
 				// {
 					// if (blob.getHealth() < 0.125f)
 					// {

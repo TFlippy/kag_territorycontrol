@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		// if (this.getMap().getBlobsInRadius(this.getPosition(), 32.0f, @blobs))

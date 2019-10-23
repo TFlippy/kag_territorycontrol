@@ -111,7 +111,7 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 				// sleeper.Sync("sleeper_name", false);
 				// sleeper.Sync("sleeper_coins", false);
 
-				print(playerName + " joined, respawning him at sleeper " + sleeper.getConfig());
+				print(playerName + " joined, respawning him at sleeper " + sleeper.getName());
 			}
 		}
 	}
@@ -164,9 +164,9 @@ void onPlayerLeave(CRules@ this, CPlayer@ player)
 {
 	CBlob@ blob = player.getBlob();
 
-	if (blob !is null) print(player.getUsername() + " left, leaving behind a sleeper " + blob.getConfig());
+	if (blob !is null) print(player.getUsername() + " left, leaving behind a sleeper " + blob.getName());
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blob !is null && blob.exists("sleeper_name"))
 		{
@@ -265,7 +265,7 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	{
 		if(!(blob.getName().find("corpse") != -1))
 		{
-			victim.set_string("classAtDeath",blob.getConfig());
+			victim.set_string("classAtDeath",blob.getName());
 			victim.set_Vec2f("last death position",blob.getPosition());
 		}
 		else
@@ -289,7 +289,7 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 			{
 				// Sound::Play("mysterious_perc_05.ogg");
 
-				if (getNet().isServer())
+				if (isServer())
 				{
 					CBlob@ blob = server_CreateBlob("demonicartifact", -1, attacker.getBlob().getPosition());
 					print("boo");
@@ -372,9 +372,9 @@ void onTick(CRules@ this)
 							new_blob.setPosition(spawnPos);
 							new_blob.server_setTeamNum(team);
 							new_blob.server_SetPlayer(player);
-							// print("" + spawns[spawnIndex].getConfig());
+							// print("" + spawns[spawnIndex].getName());
 							// print("init " + new_blob.getHealth());
-							if (spawns[spawnIndex].getConfig() == "citadel")
+							if (spawns[spawnIndex].getName() == "citadel")
 							{
 								new_blob.server_SetHealth(Maths::Ceil(new_blob.getInitialHealth() * 1.50f));
 								// print("after " + new_blob.getHealth());
@@ -411,7 +411,7 @@ void onTick(CRules@ this)
 						CBlob@ tavern = getBlobByNetworkID(player.get_u16("tavern_netid"));
 						const bool isTavernOwner = tavern !is null && player.getUsername() == tavern.get_string("Owner");
 
-						if (tavern !is null && tavern.getConfig() == "tavern" && (player.getCoins() >= 20 || isTavernOwner))
+						if (tavern !is null && tavern.getName() == "tavern" && (player.getCoins() >= 20 || isTavernOwner))
 						{
 							printf("Respawning " + player.getUsername() + " at a tavern as team " + player.get_u8("tavern_team"));
 
@@ -519,7 +519,7 @@ bool doDefaultSpawn(CPlayer@ player, string blobType, u8 team, bool ignoreDisabl
 		if (new_blob !is null)
 		{
 			CBlob@ r = spawns[XORRandom(spawns.length)];
-			if (r.getConfig() == "ruins" && team / r.get_u8("blob") == 255)
+			if (r.getName() == "ruins" && team / r.get_u8("blob") == 255)
 			{
 				return true;
 			}

@@ -41,7 +41,7 @@ void onTick(CBlob@ this)
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 		sleeping = false;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			server_DropCoins(this.getPosition(), this.get_u16("sleeper_coins"));
 			this.set_u16("sleeper_coins", 0);

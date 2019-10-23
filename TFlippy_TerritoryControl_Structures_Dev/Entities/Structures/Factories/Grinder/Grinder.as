@@ -97,7 +97,7 @@ void onTick(CBlob@ this)
 				if (canSaw(this, blob))
 				{
 					Blend(this, blob);
-					if (getNet().isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, -2), 2.00f, Hitters::saw, true);
+					if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, -2), 2.00f, Hitters::saw, true);
 				}
 				else if (blob.hasTag("material") ? !this.server_PutInInventory(blob) : true)
 				{
@@ -217,7 +217,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 		{
 			if (blob.hasTag("flesh"))
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					f32 amount = ((blob.getRadius() + XORRandom(blob.getMass() / 3.0f)) / blob.getInitialHealth()) * 0.35f;
 					amount += XORRandom(amount) * 0.50f;
@@ -231,7 +231,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 			}
 			else if (blob.hasTag("isWeapon"))
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					MakeMat(this, this.getPosition(), "mat_iron", 20 + XORRandom(60));
 					MakeMat(this, this.getPosition(), "mat_wood", 10 + XORRandom(40));

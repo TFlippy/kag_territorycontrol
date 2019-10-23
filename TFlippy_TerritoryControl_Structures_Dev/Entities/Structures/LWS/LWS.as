@@ -27,7 +27,7 @@ void onInit(CBlob@ this)
 	this.SetLightRadius(48.0f);
 	this.SetLightColor(SColor(255, 255, 0, 0));
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (this.getTeamNum() == 250)
 		{
@@ -163,7 +163,7 @@ void onTick(CBlob@ this)
 			f32 burn_time = this.get_f32("burn_time") + 1;
 			this.set_f32("burn_time", burn_time);
 		
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Hit(t, t.getPosition(), Vec2f(0, 0), 0.03f * burn_time * (t.hasTag("explosive") ? 20.00f : 1.00f), Hitters::fire, true);
 				

@@ -12,7 +12,7 @@ void onDie(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		Vec2f velocity = this.getVelocity();
 		f32 angle = -velocity.getAngleDegrees() + 180.00f;
