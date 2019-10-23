@@ -48,7 +48,6 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -97,4 +96,18 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	// return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
 	return forBlob !is null && forBlob.isOverlapping(this);
+}
+
+void onAddToInventory( CBlob@ this, CBlob@ blob )
+{
+	if(blob.getName() != "gyromat") return;
+
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+}
+
+void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
+{
+	if(blob.getName() != "gyromat") return;
+	
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

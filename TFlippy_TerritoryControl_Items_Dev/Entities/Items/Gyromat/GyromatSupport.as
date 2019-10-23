@@ -48,7 +48,6 @@ void RecalculateGyromats(CBlob@ this)
 			}
 			
 			this.set_f32("gyromat_acceleration", acceleration);
-			print("" + acceleration);
 		}
 	}
 }

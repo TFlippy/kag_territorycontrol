@@ -24,8 +24,6 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	this.getCurrentScript().tickFrequency = 10 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
-
 	CInventory@ inv = this.getInventory();
 	if (inv !is null)
 	{
@@ -185,4 +183,18 @@ void server_Irradiate(CBlob@ this, const f32 damage, const f32 radius)
 			}
 		}
 	}
+}
+
+void onAddToInventory( CBlob@ this, CBlob@ blob )
+{
+	if(blob.getName() != "gyromat") return;
+
+	this.getCurrentScript().tickFrequency = 10 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+}
+
+void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
+{
+	if(blob.getName() != "gyromat") return;
+	
+	this.getCurrentScript().tickFrequency = 10 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

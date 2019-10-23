@@ -285,7 +285,6 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 
 void onTick(CBlob@ this)
 {
-	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 
 	int crafting = this.get_u8("crafting");
 
@@ -353,4 +352,19 @@ AssemblerItem[] getItems(CBlob@ this)
 	AssemblerItem[] items;
 	this.get("items", items);
 	return items;
+}
+
+
+void onAddToInventory( CBlob@ this, CBlob@ blob )
+{
+	if(blob.getName() != "gyromat") return;
+
+	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+}
+
+void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
+{
+	if(blob.getName() != "gyromat") return;
+	
+	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

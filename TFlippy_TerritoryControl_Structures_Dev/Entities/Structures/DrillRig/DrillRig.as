@@ -56,8 +56,6 @@ void onInit(CSprite@ this)
 
 void onTick(CBlob@ this)
 {
-	this.getCurrentScript().tickFrequency = 15 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
-
 	if (getNet().isServer())
 	{
 		if (!this.get_bool("isActive")) return;
@@ -142,4 +140,17 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	params.write_bool(!this.get_bool("isActive"));
 	
 	CButton@ buttonEject = caller.CreateGenericButton(11, Vec2f(0, -8), this, this.getCommandID("sv_toggle"), (this.get_bool("isActive") ? "Turn Off" : "Turn On"), params);
+}
+void onAddToInventory( CBlob@ this, CBlob@ blob )
+{
+	if(blob.getName() != "gyromat") return;
+
+	this.getCurrentScript().tickFrequency = 15 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+}
+
+void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
+{
+	if(blob.getName() != "gyromat") return;
+	
+	this.getCurrentScript().tickFrequency = 15 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
