@@ -4,8 +4,9 @@
 
 const f32 BLOB_DAMAGE = 20.0f;
 const f32 MAP_DAMAGE = 10.0f;
+const f32 modifier = 1;
 
-string[] particles = 
+const string[] particles = 
 {
 	"LargeSmoke",
 	"Explosion.png"
@@ -49,10 +50,12 @@ void onTick(CBlob@ this)
 
 	this.setAngleDegrees(-angle + 90.0f);
 	
-		
-	f32 modifier = Maths::Max(0, this.getVelocity().y * 0.02f);
 	// this.getSprite().SetEmitSoundPaused(this.getVelocity().y < 0);
-	this.getSprite().SetEmitSoundVolume(Maths::Max(0, modifier));
+	if(isClient())
+	{
+		f32 modifier = Maths::Max(0, this.getVelocity().y * 0.02f);
+		this.getSprite().SetEmitSoundVolume(Maths::Max(0, modifier));
+	}
 }
 
 void Pierce(CBlob@ this, Vec2f velocity, const f32 angle)
@@ -138,7 +141,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void DoExplosion(CBlob@ this)
 {
-	f32 modifier = 1;
 	f32 angle = this.getOldVelocity().Angle();
 	// print("Modifier: " + modifier + "; Quantity: " + this.getQuantity());
 
@@ -147,7 +149,7 @@ void DoExplosion(CBlob@ this)
 	
 	Explode(this, 64.0f, 4.0f);
 	
-	for (int i = 0; i < 4; i++) 
+	for (int i = 0; i < XORRandom(4); i++) 
 	{
 		Vec2f dir = getRandomVelocity(angle, 1, 120);
 		dir.x *= 2;
@@ -158,10 +160,7 @@ void DoExplosion(CBlob@ this)
 
 	if(isClient())
 	{
-		Vec2f pos = this.getPosition();
-		CMap@ map = getMap();
-		
-		for (int i = 0; i < 35; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
 		}
@@ -174,6 +173,5 @@ void DoExplosion(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!isClient()) return;
 	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
 }
