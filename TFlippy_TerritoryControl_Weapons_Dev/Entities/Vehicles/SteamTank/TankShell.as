@@ -33,11 +33,13 @@ void onInit(CBlob@ this)
 
 	this.SetMapEdgeFlags(CBlob::map_collide_left | CBlob::map_collide_right);
 	this.sendonlyvisible = false;
-	
-	CSprite@ sprite = this.getSprite();
-	sprite.SetEmitSound("Shell_Whistle.ogg");
-	sprite.SetEmitSoundPaused(false);
-	sprite.SetEmitSoundVolume(0.0f);
+	if(isClient())
+	{
+		CSprite@ sprite = this.getSprite();
+		sprite.SetEmitSound("Shell_Whistle.ogg");
+		sprite.SetEmitSoundPaused(false);
+		sprite.SetEmitSoundVolume(0.0f);
+	}
 }
 
 void onTick(CBlob@ this)
@@ -46,7 +48,7 @@ void onTick(CBlob@ this)
 
 	Vec2f velocity = this.getVelocity();
 	angle = velocity.Angle();
-	Pierce(this, velocity, angle);
+	if(isServer()) Pierce(this, velocity, angle);
 
 	this.setAngleDegrees(-angle + 90.0f);
 	
@@ -71,7 +73,7 @@ void Pierce(CBlob@ this, Vec2f velocity, const f32 angle)
 	Vec2f tip_position = position + direction * 4.0f;
 	Vec2f tail_position = position + direction * -4.0f;
 
-	Vec2f[] positions =
+	const Vec2f[] positions =
 	{
 		position,
 		tip_position,
@@ -88,12 +90,7 @@ void Pierce(CBlob@ this, Vec2f velocity, const f32 angle)
 		{
 			onCollision(this, null, true);
 		}
-		
-		// if (map.isTileSolid(type))
-		// {
-			// const u32 offset = map.getTileOffset(temp_position);
-			// onCollision(this, null, true);
-		// }
+
 	}
 	
 	HitInfo@[] infos;
