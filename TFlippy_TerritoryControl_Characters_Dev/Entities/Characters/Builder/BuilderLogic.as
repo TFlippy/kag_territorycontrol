@@ -479,7 +479,7 @@ void SortHits(CBlob@ this, HitInfo@[]@ hitInfos, f32 damage, SortHitsParams@ p)
 			if (!p.justCheck && isUrgent(this, b))
 			{
 				p.hasHit = true;
-				SendHitCommand(this, hi.blob, hi.hitpos, hi.blob.getPosition() - p.pos, damage);
+				SendHitCommand(this, b, hi.hitpos, b.getPosition() - p.pos, damage);
 			}
 			else
 			{

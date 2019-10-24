@@ -173,13 +173,13 @@ void Pierce(CBlob @this)
 		for (uint i = 0; i < hitInfos.length; i++)
 		{
 			HitInfo@ hi = hitInfos[i];
-
-			if (hi.blob !is null) // blob
+			CBlob@ b = hi.blob;
+			if (b !is null) // blob
 			{
-				if (canHitBlob(this, hi.blob))
+				if (canHitBlob(this, b))
 				{
 					hit = true;
-					this.server_Hit(hi.blob, hi.hitpos, initVelocity, ROCK_DAMAGE, Hitters::cata_stones, true);
+					this.server_Hit(b, hi.hitpos, initVelocity, ROCK_DAMAGE, Hitters::cata_stones, true);
 				}
 			}
 			else //map

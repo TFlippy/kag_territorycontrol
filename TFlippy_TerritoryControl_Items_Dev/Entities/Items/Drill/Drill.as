@@ -239,26 +239,27 @@ void onTick(CBlob@ this)
 					{
 						HitInfo@ hi = hitInfos[i];
 						bool hit_constructed = false;
-						if (hi.blob !is null) // blob
+						CBlob@ b = hi.blob;
+						if (b !is null) // blob
 						{
 							//detect
-							const bool is_ground = hi.blob.hasTag("blocks sword") && !hi.blob.isAttached() && hi.blob.isCollidable();
+							const bool is_ground = b.hasTag("blocks sword") && !b.isAttached() && b.isCollidable();
 							if (is_ground)
 							{
 								hit_ground = true;
 							}
 
-							if (hi.blob.getTeamNum() == holder.getTeamNum() || hit_ground && !is_ground)
+							if (b.getTeamNum() == holder.getTeamNum() || hit_ground && !is_ground)
 							{
 								continue;
 							}
 							
 							
 
-							holder.server_Hit(hi.blob, hi.hitpos, attackVel, attack_dam, Hitters::drill);
+							holder.server_Hit(b, hi.hitpos, attackVel, attack_dam, Hitters::drill);
 							if (int(heat) > heat_max * 0.5f)
 							{
-								holder.server_Hit(hi.blob, hi.hitpos, attackVel, 1.0f, Hitters::drill);   //extra burn damage
+								holder.server_Hit(b, hi.hitpos, attackVel, 1.0f, Hitters::drill);   //extra burn damage
 							}
 							hitsomething = true;
 							hitblob = true;
