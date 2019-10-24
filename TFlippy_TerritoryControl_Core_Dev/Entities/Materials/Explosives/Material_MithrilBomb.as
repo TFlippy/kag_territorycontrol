@@ -80,7 +80,7 @@ void DoExplosion(CBlob@ this)
 	
 	Explode(this, 64.0f + random, 150.0f);
 
-	for (int i = 0; i < 10+XORRandom(7); i++) 
+	for (int i = 0; i < random i++) 
 	{
 		Vec2f dir = getRandomVelocity(angle, 1, 80);
 		LinearExplosion(this, dir, (16.0f + XORRandom(32) + (modifier * 8)) * vellen, 12 + XORRandom(8), 20 + XORRandom(vellen * 2), 50.0f, Hitters::explosion);
