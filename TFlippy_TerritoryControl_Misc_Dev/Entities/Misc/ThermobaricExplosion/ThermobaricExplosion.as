@@ -66,20 +66,21 @@ void DestroyStuff(CBlob@ this, f32 radius, u32 count, Vec2f pos)
 				CBlob@ blob = blobs[i];
 				if (blob !is null && blob !is this)
 				{
-					Vec2f dir = blob.getPosition() - pos;
+					Vec2f bpos = blob.getPosition();
+					Vec2f dir = bpos - pos;
 					f32 lenSqr = dir.LengthSquared();
 					dir.Normalize();
 				
 					if (lenSqr < (boom_size_sqr * 0.50f) && !blob.hasTag("invincible"))
 					{
-						map.server_setFireWorldspace(blob.getPosition(), true);
-						blob.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 8.0f, Hitters::fire);
+						map.server_setFireWorldspace(bpos, true);
+						blob.server_Hit(blob, bpos, Vec2f(0, 0), 8.0f, Hitters::fire);
 					}
 				
-					if (!map.rayCastSolid(pos, blob.getPosition()))
+					if (!map.rayCastSolid(pos, bpos))
 					{
 						blob.AddForce(dir * Maths::Min(1000.0f, blob.getMass() * 1.50f) * force_sign);
-						blob.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.125f, Hitters::crush);
+						blob.server_Hit(blob, bpos, Vec2f(0, 0), 0.125f, Hitters::crush);
 					}
 				}
 			}
@@ -175,7 +176,7 @@ void onTick(CBlob@ this)
 	
 	if (isClient())
 	{
-		for (int i = 0; i < Maths::Pow(boom_size / 32, 2) * 0.01f; i++)
+		/*for (int i = 0; i < Maths::Pow(boom_size / 32, 2) * 0.01f; i++)
 		{
 			// Vec2f offset = getRandomVelocity(0, boom_size + ((boom_size - XORRandom(boom_size * 2)) * 0.125f), 360);
 			
@@ -183,7 +184,7 @@ void onTick(CBlob@ this)
 			// f32 dist_mod = 1.00f - (dist / boom_end);
 			
 			// MakeExplosionParticle(this, offset + getRandomVelocity(0, XORRandom(48), 360), Vec2f(0, 0), 5 + XORRandom(3), particles[XORRandom(particles.length)]);
-		}
+		}*/
 			
 		CBlob@ localBlob = getLocalPlayerBlob();
 		if (localBlob !is null)
@@ -209,16 +210,8 @@ void onTick(CBlob@ this)
 				}
 			}
 		}
-	}
+
 		
-	if (ticks >= this.get_u32("boom_delay") && ticks % this.get_u8("boom_frequency") == 0 && this.get_f32("boom_size") < this.get_f32("boom_end"))
-	{
-		DoExplosion(this);
-		this.add_f32("boom_size", this.get_f32("boom_increment"));
-	}
-	
-	if (isClient())
-	{
 		if (ticks > (sound_delay * 30) && !this.hasTag("sound_played"))
 		{
 			this.Tag("sound_played");
@@ -230,6 +223,13 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
+		
+	if (ticks >= this.get_u32("boom_delay") && ticks % this.get_u8("boom_frequency") == 0 && this.get_f32("boom_size") < this.get_f32("boom_end"))
+	{
+		DoExplosion(this);
+		this.add_f32("boom_size", this.get_f32("boom_increment"));
+	}
+	
 }
 
 void MakeExplosionParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const f32 time, const string filename = "SmallSteam")
