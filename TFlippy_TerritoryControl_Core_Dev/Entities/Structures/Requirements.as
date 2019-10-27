@@ -325,17 +325,19 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 			if (inv1 !is null && taken < quantity) 
 			{
 				// taken += inv1.getBlob().TakeBlob(blobName, quantity);
-				//inv1.getBlob().TakeBlob(blobName, quantity);
-				inv1.server_RemoveItems(blobName,quantity);
-				taken += Maths::Min(inv1.getBlob().getBlobCount(blobName), quantity - taken);
+				CBlob@ invBlob = inv1.getBlob();
+				invBlob.TakeBlob(blobName, quantity);
+				//inv1.server_RemoveItems(blobName,quantity);
+				taken += Maths::Min(invBlob.getBlobCount(blobName), quantity - taken);
 			}
 			
 			if (inv2 !is null && taken < quantity) 
 			{
-				// taken += inv2.getBlob().TakeBlob(blobName, quantity - taken);
-				inv2.server_RemoveItems(blobName, quantity - taken);
-                                //inv2.getBlob().TakeBlob(blobName, quantity - taken);
-				taken += Maths::Min(inv2.getBlob().getBlobCount(blobName), quantity - taken);
+				//taken += inv2.getBlob().TakeBlob(blobName, quantity - taken);
+				//inv2.server_RemoveItems(blobName, quantity - taken);
+				CBlob@ invBlob = inv2.getBlob();
+            	invBlob.TakeBlob(blobName, quantity - taken);
+				taken += Maths::Min(invBlob.getBlobCount(blobName), quantity - taken);
 			}
 			
 			// print("pre loop taken " + taken);
