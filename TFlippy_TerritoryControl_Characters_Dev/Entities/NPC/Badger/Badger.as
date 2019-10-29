@@ -58,6 +58,8 @@ void onInit(CBlob@ this)
 	this.set_u32("next growl", 0);
 	this.set_u32("next bite", 0);
 	
+	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 1.00f);
+	
 	// this.getCurrentScript().removeIfTag = "dead";
 	
 	this.getBrain().server_SetActive(true);
@@ -101,17 +103,12 @@ void onTick(CBlob@ this)
 {
 	if (!this.hasTag("dead"))
 	{
-
-		if(isClient())
+		if (isClient())
 		{
 			if (this.get_u32("next growl") < getGameTime() && XORRandom(100) < 10) 
 			{
 				this.set_u32("next growl", getGameTime() + 100);
-				this.getSprite().PlaySound("badger_growl" + (1 + XORRandom(6)) + ".ogg", 1, 1 + XORRandom(100) / 400.0f);
-			}
-
-			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
-				return;
+				this.getSprite().PlaySound("badger_growl" + (1 + XORRandom(6)), 1, (1 + XORRandom(100) / 400.0f) * this.get_f32("voice pitch"));
 			}
 		}
 
@@ -121,9 +118,10 @@ void onTick(CBlob@ this)
 			this.setInventoryName("A Mangled Badger");
 		}
 	
-		Vec2f vel=this.getVelocity();
-		if(vel.x!=0.0f){
-			this.SetFacingLeft(vel.x<0.0f ? true : false);
+		Vec2f vel = this.getVelocity();
+		if (vel.x != 0.0f)
+		{
+			this.SetFacingLeft(vel.x < 0.0f);
 		}
 		
 		if (this.isOnGround() && (this.isKeyPressed(key_left) || this.isKeyPressed(key_right)))
@@ -193,7 +191,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			vel.Normalize();
 
 			this.getSprite().PlaySound("ZombieBite.ogg", 1.0f, 1.2f);
-			this.getSprite().PlaySound("badger_pissed.ogg", 1, 1 + XORRandom(100) / 400.0f);
+			this.getSprite().PlaySound("badger_pissed.ogg", 1, (1 + XORRandom(100) / 400.0f) * this.get_f32("voice pitch"));
 			this.server_Hit(blob, point1, vel, 0.70f, Hitters::bite, false);
 			
 			MadAt(this, blob);
