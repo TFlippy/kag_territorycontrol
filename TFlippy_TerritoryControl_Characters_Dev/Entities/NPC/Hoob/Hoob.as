@@ -137,8 +137,6 @@ void onInit(CBlob@ this)
 	{
 		this.server_setTeamNum(-1);
 	}
-
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 }
 
 void onTick(CBlob@ this)
@@ -154,14 +152,6 @@ void onTick(CBlob@ this)
 			return;
 		}
 
-		if(client)
-		{
-			if (!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen())
-			{
-				return;
-			}
-		}
-		
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
 		{
