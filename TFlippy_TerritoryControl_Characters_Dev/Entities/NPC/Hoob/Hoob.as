@@ -154,7 +154,7 @@ void onTick(CBlob@ this)
 			return;
 		}
 
-		if(isClient())
+		if(client)
 		{
 			if (!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen())
 			{
@@ -224,55 +224,61 @@ void onTick(CBlob@ this)
 			Vec2f dir = this.getAimPos() - this.getPosition();
 			dir.Normalize();
 			
-			print("attac");
-			
 			CBlob@ carried = this.getCarriedBlob();
 			if (carried is null)
 			{
 				CBlob@ blob = getMap().getBlobAtPosition(this.getAimPos());
 				if (blob !is null && blob !is this && !blob.hasTag("dead") && blob.hasTag("human")) 
 				{
-					this.server_Pickup(blob);
-					this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
+					if (client)
+					{
+						this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
+					}
+				
+					if (server)
+					{
+						this.server_Pickup(blob);
+					}
 				}
 			}
 			else if (carried !is null)
 			{
 				if (carried.getConfig() != "hoobballer")
-				{
-					CBlob@ baller = server_CreateBlob("hoobballer", carried.getTeamNum(), carried.getPosition());
-					this.server_Pickup(baller);
-					this.getSprite().PlaySound("Pus_Attack_2", 1.00f, 0.80f);
+				{					
+					if (client)
+					{
+						this.getSprite().PlaySound("Pus_Attack_2", 1.00f, 0.80f);
+						carried.getSprite().Gib();
+					}
 					
-					carried.getSprite().Gib();
-					carried.server_Die();
+					if (server)
+					{
+						CBlob@ baller = server_CreateBlob("hoobballer", carried.getTeamNum(), carried.getPosition());
+						this.server_Pickup(baller);
+						carried.server_Die();
+					}
 				}
 				else
 				{
-					this.DropCarried();
+					if (client)
+					{
+						this.getSprite().PlaySound("nightstick_hit2", 1.00f, 0.90f);
+					}
+				
+					if (server)
+					{
+						this.DropCarried();
+					}
 					
 					Vec2f dir = this.getAimPos() - this.getPosition();
 					dir.Normalize();
 					
-					carried.setVelocity(dir * 10.00f); //damp
+					carried.setVelocity(dir * 10.00f);
 				}
 			}
 			
 			this.set_u32("next attack", getGameTime() + 30);
 		}
-		
-		// int touchingBlobCount = this.getTouchingCount();
-		// if (touchingBlobCount > 0)
-		// {
-			// for (int i = 0; i < touchingBlobCount; i++)
-			// {
-				// CBlob@ blob = this.getTouchingByIndex(i);
-				// if (blob !is null)
-				// {
-					// print("" + blob.getConfig());
-				// }
-			// }
-		// }
 	}
 }
 
@@ -280,7 +286,8 @@ void Stomp(CBlob@ this, int count, f32 magnitude)
 {
 	bool client = isClient();
 	bool server = isServer();
-
+	CMap@ map = getMap();
+	
 	Vec2f worldPoint = this.getPosition() + Vec2f(0, 24);
 	
 	for (int i = 0; i < count; i++)
@@ -294,7 +301,7 @@ void Stomp(CBlob@ this, int count, f32 magnitude)
 		
 		if (server)
 		{
-			 getMap().server_DestroyTile(pos, 1);
+			map.server_DestroyTile(pos, 1);
 		}
 	}
 	
@@ -304,15 +311,18 @@ void Stomp(CBlob@ this, int count, f32 magnitude)
 		ShakeScreen(100.0f, 30.00f, this.getPosition());
 	}
 	
-	CBlob@[] blobsInRadius;
-	if (this.getMap().getBlobsInRadius(worldPoint, 24, @blobsInRadius))
+	if (server)
 	{
-		for (uint i = 0; i < blobsInRadius.length; i++)
+		CBlob@[] blobsInRadius;
+		if (this.getMap().getBlobsInRadius(worldPoint, 24, @blobsInRadius))
 		{
-			CBlob@ hitBlob = blobsInRadius[i];
-			if (hitBlob !is null && hitBlob !is this && hitBlob !is this.getCarriedBlob())
+			for (uint i = 0; i < blobsInRadius.length; i++)
 			{
-				if (server) this.server_Hit(hitBlob, worldPoint, this.getVelocity(), 5.00f, Hitters::crush, true);
+				CBlob@ hitBlob = blobsInRadius[i];
+				if (hitBlob !is null && hitBlob !is this && hitBlob !is this.getCarriedBlob())
+				{
+					this.server_Hit(hitBlob, worldPoint, this.getVelocity(), 5.00f, Hitters::crush, true);
+				}
 			}
 		}
 	}
@@ -382,7 +392,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		{
 			if (getGameTime() > this.get_u32("next sound") - 130)
 			{
-				this.getSprite().PlaySound("Cuck_Pain_" + XORRandom(3) + ".ogg", 1, 0.8f);
+				this.getSprite().PlaySound("Cuck_Pain_" + XORRandom(3), 1, 0.8f);
 				this.set_u32("next sound", getGameTime() + 150);
 			}
 		}
@@ -390,7 +400,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		if (isServer())
 		{
 			CBrain@ brain = this.getBrain();
-			
 			if (brain !is null && hitterBlob !is null)
 			{
 				if (hitterBlob.getTeamNum() != this.getTeamNum()) brain.SetTarget(hitterBlob);
@@ -405,7 +414,8 @@ void onTick(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
 
-	if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
+	if(!this.getSpriteLayer("isOnScreen").isOnScreen())
+	{
 		return;
 	}
 	
