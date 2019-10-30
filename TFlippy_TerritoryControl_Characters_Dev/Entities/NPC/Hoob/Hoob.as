@@ -404,11 +404,6 @@ void onTick(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
 
-	if(!this.getSpriteLayer("isOnScreen").isOnScreen())
-	{
-		return;
-	}
-	
 	if (blob.hasTag("dead"))
 	{
 		if (!this.isAnimation("dead")) this.PlaySound("trader_death.ogg", 1.00f, 0.75f);
