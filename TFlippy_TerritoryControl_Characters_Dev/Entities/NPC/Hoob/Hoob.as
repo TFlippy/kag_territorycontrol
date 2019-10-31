@@ -51,57 +51,51 @@ const string[] surnames =
 	"Boi"
 };
 
-const string[] soundsTalk = 
-{ 
-	"MigrantHmm.ogg",
-	"drunk_fx2.ogg",
-	"drunk_fx3.ogg",
-	"drunk_fx4.ogg"
-};
-
-const string[] soundsDanger = 
-{ 
-	"trader_scream_0.ogg",
-	"trader_scream_1.ogg",
-	"trader_scream_2.ogg"
-};
-
 const string[] textsIdle = 
 { 
-	"ima spit down yer throat",
-	"c'mere here ya shit",
-	"oi ya shite",
-	"so wanna fight huh?",
-	"gonna get ya weenie 'lil shitter",
-	"damn right innit yeh?",
-	"ill bash ye fookin 'ead in i sware on me mum"
+	"oof",
+	"rip",
+	"hmm",
+	"ugh",
+	"foof",
+	"fug",
+	"fusk",
+	"fusg",
+	"fff"
 };
 
 const string[] textsDanger = 
 { 
-	"ya weenie 'lil shit",
-	"i'll get ya asshole",
-	"gonna get ya weenie 'lil shitter",
-	"so wanna fight huh?",
-	"i'm gonna spit down yer throat",
-	"c'mere here ya shit",
-	"ill bash ye fookin ead in i sware on me mum",
-	"ya'll get turned into a tiny box",
-	"come at me"
+	"hi"
 };
 
 const string[] textsWon = 
 {
-	"gonna tear ya in half shitbag",
-	"ay give me ya stuff",
-	"aye, we did fuck him up",
-	"yar",
-	"arrrr",
-	"*gurgle*",
-	"ayy shit!",
-	"damn right innit?",
-	"wanna fight ya cunt?",
-	"sit on ya arse"
+	"bye"
+};
+
+
+const string[] sounds_idle = 
+{ 
+	"Hoob_Wheeze_0.ogg",
+	"Hoob_Wheeze_1.ogg",
+	"Hoob_Cough_0.ogg",
+	"Hoob_Cough_1.ogg"
+};
+
+const string[] sounds_pain = 
+{ 
+	"Hoob_Pain_0.ogg",
+	"Hoob_Pain_1.ogg",
+	"Hoob_Cough_1.ogg"
+};
+
+const string[] sounds_laugh = 
+{ 
+	"Hoob_Laugh_0.ogg",
+	"Hoob_Laugh_1.ogg",
+	"Hoob_Laugh_2.ogg",
+	"Hoob_Laugh_3.ogg"
 };
 
 void onInit(CBlob@ this)
@@ -109,9 +103,10 @@ void onInit(CBlob@ this)
 	Random@ rand = Random(this.getNetworkID());
 	string name = titles[rand.NextRanged(titles.length)] + " " + firstnames[rand.NextRanged(firstnames.length)] + " the " + surnames[rand.NextRanged(surnames.length)];
 	this.set_string("trader name", name);
+	this.setInventoryName(name);
 	
 	this.getShape().SetRotationsAllowed(false);
-	this.set_f32("gib health", -2.0f);
+	this.set_f32("gib health", -20.0f);
 	this.Tag("flesh");
 	this.Tag("migrant");
 	this.Tag("human");
@@ -129,6 +124,8 @@ void onInit(CBlob@ this)
 	this.set_f32("inaccuracy", 0.01f);
 	this.set_u8("reactionTime", 20);
 	this.set_u8("attackDelay", 0);
+	
+	this.set_f32("voice pitch", 0.60f);
 	
 	this.addCommandID("traderChat");
 	this.set_u32("lastDanger", 0);
@@ -148,7 +145,7 @@ void onTick(CBlob@ this)
 	
 		if (this.getHealth() <= 0)
 		{
-			this.Tag("dead");				
+			this.Tag("dead");		
 			return;
 		}
 
@@ -156,7 +153,7 @@ void onTick(CBlob@ this)
 		if (this.get("moveVars", @moveVars))
 		{
 			moveVars.walkFactor *= 2.00f;
-			moveVars.jumpFactor *= 4.50f;
+			moveVars.jumpFactor *= 6.00f;
 		}
 		
 		uint time = getGameTime();
@@ -165,26 +162,25 @@ void onTick(CBlob@ this)
 			this.set_u32("nextTalk", time + (30 * 5) + XORRandom(30 * 10));
 			
 			u32 lastDanger = this.get_u32("lastDanger");
-			u16 dangerBlobNetID = this.get_u16("danger blob");
-			
-			bool danger = dangerBlobNetID > 0 && time < (lastDanger + (30 * 30));
+			bool danger = time < (lastDanger + (30 * 5));
 			
 			string text = "";
 			if (danger)
 			{
 				text = textsDanger[XORRandom(textsDanger.length())];
-				this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.length())], 0.75f, 0.75f);
+				this.getSprite().PlaySound(sounds_idle[XORRandom(sounds_idle.length())], 0.75f, 0.75f);
 			}
 			else
 			{
 				if (time - this.get_u32("lastDanger") < 30 * 60)
 				{
 					text = textsWon[XORRandom(textsWon.length())];
+					this.getSprite().PlaySound(sounds_laugh[XORRandom(sounds_laugh.length())], 0.75f, 1.00f);
 				}
 				else
 				{
 					text = textsIdle[XORRandom(textsIdle.length())];
-					this.getSprite().PlaySound(soundsTalk[XORRandom(soundsTalk.length())], 0.75f, 1.00f);
+					this.getSprite().PlaySound(sounds_idle[XORRandom(sounds_idle.length())], 0.75f, 1.00f);
 				}
 			}
 
@@ -218,7 +214,7 @@ void onTick(CBlob@ this)
 			if (carried is null)
 			{
 				CBlob@ blob = getMap().getBlobAtPosition(this.getAimPos());
-				if (blob !is null && blob !is this && !blob.hasTag("dead") && blob.hasTag("human")) 
+				if (blob !is null && blob !is this && !blob.hasTag("dead") && blob.hasTag("human") && this.getDistanceTo(blob) < 32.00f && !getMap().rayCastSolid(this.getPosition(), blob.getPosition())) 
 				{
 					if (client)
 					{
@@ -229,6 +225,17 @@ void onTick(CBlob@ this)
 					{
 						this.server_Pickup(blob);
 					}
+					
+					this.set_u32("next attack", getGameTime() + 20);
+				}
+				else
+				{
+					Vec2f dir = this.getAimPos() - this.getPosition();
+					dir.Normalize();
+					
+					MegaHit(this, this.getPosition() + Vec2f(this.isFacingLeft() ? -16 : 16, XORRandom(16) - 8), dir, 4, Hitters::crush);
+					
+					this.set_u32("next attack", getGameTime() + 10);
 				}
 			}
 			else if (carried !is null)
@@ -247,6 +254,8 @@ void onTick(CBlob@ this)
 						this.server_Pickup(baller);
 						carried.server_Die();
 					}
+					
+					this.set_u32("next attack", getGameTime() + 20);
 				}
 				else
 				{
@@ -264,11 +273,99 @@ void onTick(CBlob@ this)
 					dir.Normalize();
 					
 					carried.setVelocity(dir * 10.00f);
+					
+					this.set_u32("next attack", getGameTime() + 20);
 				}
 			}
-			
-			this.set_u32("next attack", getGameTime() + 30);
 		}
+	}
+}
+
+void onTick(CSprite@ this)
+{
+	CBlob@ blob = this.getBlob();
+
+	if (blob.hasTag("dead"))
+	{
+		if (!this.isAnimation("dead")) this.PlaySound("Hoob_Death.ogg", 1.50f, 1.00f);
+		this.SetAnimation("dead");
+		
+		return;
+	}
+
+	Vec2f pos = blob.getPosition();
+	Vec2f aimpos = blob.getAimPos();
+
+	if (blob.isOnGround())
+	{
+		if ((blob.isKeyPressed(key_left) || blob.isKeyPressed(key_right)) || (blob.isOnLadder() && (blob.isKeyPressed(key_up) || blob.isKeyPressed(key_down))))
+		{
+			this.SetAnimation("walk");
+		}
+		else
+		{
+			this.SetAnimation("default");
+		}
+	}
+	else
+	{
+		this.SetAnimation("inair");
+	}
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+{
+	if (cmd == this.getCommandID("traderChat"))
+	{
+		this.Chat(params.read_string());
+	}
+}
+
+bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
+{
+	return false;
+}
+
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	switch (customData)
+	{
+		case HittersTC::radiation:
+			return 0;
+			break;
+	}
+
+	if (!this.hasTag("dead"))
+	{
+		if (isClient())
+		{
+			if (getGameTime() > this.get_u32("next sound"))
+			{
+				this.getSprite().PlaySound(sounds_pain[XORRandom(sounds_pain.length())], 0.75f, 1.00f);
+				this.set_u32("next sound", getGameTime() + 150);
+			}
+		}
+		
+		if (isServer())
+		{
+			CBrain@ brain = this.getBrain();
+			if (brain !is null && hitterBlob !is null)
+			{
+				if (hitterBlob.getTeamNum() != this.getTeamNum()) brain.SetTarget(hitterBlob);
+			}
+		}
+		
+		this.set_u32("lastDanger", getGameTime());
+	}
+		
+	return damage;
+}
+
+void onDie(CBlob@ this)
+{
+	if (getNet().isServer())
+	{
+		server_DropCoins(this.getPosition(), XORRandom(1500));
 	}
 }
 
@@ -282,7 +379,7 @@ void Stomp(CBlob@ this, int count, f32 magnitude)
 	
 	for (int i = 0; i < count; i++)
 	{
-		Vec2f pos = worldPoint + getRandomVelocity(0, XORRandom(32), 90);	
+		Vec2f pos = worldPoint + Vec2f(24 - XORRandom(48), -XORRandom(16));
 		
 		if (client && XORRandom(100) < 50)
 		{
@@ -318,129 +415,58 @@ void Stomp(CBlob@ this, int count, f32 magnitude)
 	}
 }
 
-void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)
 {
-	if (cmd == this.getCommandID("traderChat"))
-	{
-		this.Chat(params.read_string());
-	}
-}
-
-void onDie(CBlob@ this)
-{
-	if (getNet().isServer())
-	{
-		server_DropCoins(this.getPosition(), XORRandom(1500));
-	}
-}
-
-void onReload(CSprite@ this)
-{
-	this.getConsts().filename = "Hoob.png";
-}
-
-void onGib(CSprite@ this)
-{
-	CBlob@ blob = this.getBlob();
-	Vec2f pos = blob.getPosition();
-	Vec2f vel = blob.getVelocity();
-	vel.y -= 3.0f;
-	f32 hp = Maths::Min(Maths::Abs(blob.getHealth()), 2.0f) + 1.0;
-	if(!isClient()){return;}
-	CParticle@ Gib1 = makeGibParticle("Entities/Special/WAR/Trading/TraderGibs.png", pos, vel + getRandomVelocity(90, hp, 80), 0, 0, Vec2f(16, 16), 2.0f, 20, "/BodyGibFall");
-	CParticle@ Gib2 = makeGibParticle("Entities/Special/WAR/Trading/TraderGibs.png", pos, vel + getRandomVelocity(90, hp - 0.2, 80), 1, 0, Vec2f(16, 16), 2.0f, 20, "/BodyGibFall");
-	CParticle@ Gib3 = makeGibParticle("Entities/Special/WAR/Trading/TraderGibs.png", pos, vel + getRandomVelocity(90, hp, 80), 2, 0, Vec2f(16, 16), 2.0f, 0, "/BodyGibFall");
-}
-
-void onHealthChange(CBlob@ this, f32 oldHealth)
-{
-	if (this.getHealth() < 0)
-	{
-		this.getSprite().Gib();
-		this.server_Die();
-		return;
-	}
-}
-
-bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
-{
-	return false;
-}
-
-f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
-{
-	switch (customData)
-	{
-		case HittersTC::radiation:
-			return 0;
-			break;
-	}
-
-	if (!this.hasTag("dead"))
-	{
-		if (isClient())
-		{
-			if (getGameTime() > this.get_u32("next sound") - 130)
-			{
-				this.getSprite().PlaySound("Cuck_Pain_" + XORRandom(3), 1, 0.8f);
-				this.set_u32("next sound", getGameTime() + 150);
-			}
-		}
-		
-		if (isServer())
-		{
-			CBrain@ brain = this.getBrain();
-			if (brain !is null && hitterBlob !is null)
-			{
-				if (hitterBlob.getTeamNum() != this.getTeamNum()) brain.SetTarget(hitterBlob);
-			}
-		}
-	}
-		
-	return damage;
-}
-
-void onTick(CSprite@ this)
-{
-	CBlob@ blob = this.getBlob();
-
-	if (blob.hasTag("dead"))
-	{
-		if (!this.isAnimation("dead")) this.PlaySound("trader_death.ogg", 1.00f, 0.75f);
-
-		this.SetAnimation("dead");
-
-		if (blob.isOnGround())
-		{
-			this.SetFrameIndex(0);
-		}
-		else
-		{
-			this.SetFrameIndex(1);
-		}
-		
-		return;
-	}
-
-	Vec2f pos = blob.getPosition();
-	Vec2f aimpos = blob.getAimPos();
-	bool ended = this.isAnimationEnded();
-
-	bool danger = getGameTime() < (blob.get_u32("lastDanger") + (30 * 30));
+	bool client = isClient();
+	bool server = isServer();
 	
-	if ((blob.isKeyPressed(key_left) || blob.isKeyPressed(key_right)) || (blob.isOnLadder() && (blob.isKeyPressed(key_up) || blob.isKeyPressed(key_down))))
+	Vec2f dir = worldPoint - this.getPosition();
+	f32 len = dir.getLength();
+	dir.Normalize();
+	f32 angle = dir.Angle();
+	
+	int count = 10.00f;
+	
+	for (int i = 0; i < count; i++)
 	{
-		if (danger)
+		Vec2f pos = worldPoint + getRandomVelocity(0, XORRandom(32), 90);	
+		
+		if (client && XORRandom(100) < 50)
 		{
-			this.SetAnimation("dangerwalk");
+			MakeDustParticle(pos, "dust2.png");
 		}
-		else
+		
+		if (server)
 		{
-			this.SetAnimation("walk");
+			 getMap().server_DestroyTile(pos, damage);
+			// this.server_HitMap(pos, dir, damage, Hitters::crush);
 		}
 	}
-	else if (ended)
+	
+	if (client)
 	{
-		this.SetAnimation("default");
+		f32 magnitude = damage;
+		this.getSprite().PlaySound("FallBig" + (XORRandom(5) + 1), 1.00f, 1.00f);
+		ShakeScreen(magnitude * 10.0f, magnitude * 8.0f, this.getPosition());
+	}
+	
+	CBlob@[] blobsInRadius;
+	if (this.getMap().getBlobsInRadius(worldPoint + (dir * Maths::Min(len, 24)), 24, @blobsInRadius))
+	{
+		for (uint i = 0; i < blobsInRadius.length; i++)
+		{
+			CBlob@ hitBlob = blobsInRadius[i];
+			if (hitBlob !is null && hitBlob !is this)
+			{
+				if (server) this.server_Hit(hitBlob, worldPoint, velocity, 0.50f, customData, true);
+				if (client) this.getSprite().PlaySound("nightstick_hit" + (1 + XORRandom(3)) + ".ogg", 0.9f, 0.65f);
+				
+				f32 mass = hitBlob.getMass();
+				hitBlob.AddForce(dir * Maths::Min(400.0f, mass * 5.00f));
+			}
+		}
 	}
 }
+
+
+

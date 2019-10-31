@@ -85,7 +85,7 @@ void onTick(CBrain@ this)
 		
 		blob.setAimPos(target.getPosition());
 		
-		if (blob.get_u32("nextAttack") < getGameTime() && visibleTarget && distance <= 32)
+		if (blob.get_u32("nextAttack") < getGameTime() && (stuck || (visibleTarget ? distance <= 32 : true)))
 		{
 			blob.setKeyPressed(key_action1, true);
 		}

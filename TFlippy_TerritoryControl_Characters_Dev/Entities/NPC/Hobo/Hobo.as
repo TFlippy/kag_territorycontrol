@@ -582,3 +582,22 @@ void onTick(CSprite@ this)
 		this.SetAnimation("default");
 	}
 }
+
+void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
+{
+	if (blob is null) return;
+	if (this.hasTag("dead")) return;
+
+	if (blob.getName() == "mat_mithrilenriched" && blob.getQuantity() > 5)
+	{
+		if (isServer())
+		{
+			CBlob@ bagel = server_CreateBlob("hoob", this.getTeamNum(), this.getPosition());
+			this.server_Die();
+		}
+		else
+		{
+			ParticleZombieLightning(this.getPosition());
+		}
+	}
+}
