@@ -62,13 +62,17 @@ void onTick(CBrain@ this)
 	
 		this.getCurrentScript().tickFrequency = 1;
 		
+		Vec2f oldPosition = blob.getOldPosition();
+		Vec2f currentPosition = blob.getPosition();
+		Vec2f targetPosition = target.getPosition();
+		
 		// print("" + this.lowLevelMaxSteps);
 		
-		const f32 distance = (target.getPosition() - blob.getPosition()).Length();
+		const f32 distance = (targetPosition - currentPosition).Length();
 		const f32 minDistance = blob.get_f32("minDistance");
 		
 		const bool visibleTarget = isVisible(blob, target);
-		const bool stuck = this.getState() == 4;
+		const bool stuck = this.getState() == 4 || (oldPosition - currentPosition).getLengthSquared() < 1.00f;
 		const bool target_attackable = target !is null && !(target.getTeamNum() == blob.getTeamNum() || target.hasTag("material"));
 		const bool lose = distance > maxDistance;
 		const bool chase = target_attackable && distance > minDistance;
@@ -83,34 +87,29 @@ void onTick(CBrain@ this)
 			return;
 		}
 		
-		blob.setAimPos(target.getPosition());
+		blob.setAimPos(targetPosition);
+		blob.setKeyPressed(key_action1, visibleTarget);
+		blob.setKeyPressed(key_action2, stuck);
 		
-		if (blob.get_u32("nextAttack") < getGameTime() && (stuck || (visibleTarget ? distance <= 32 : true)))
-		{
-			blob.setKeyPressed(key_action1, true);
-		}
-		else
-		{
-			blob.setKeyPressed(key_action1, false);
-		}
+		// print("" + stuck + "; " + blob.isKeyPressed(key_action2));
 		
 		if (target_attackable && chase)
 		{
-			if (blob.getTickSinceCreated() % 90 == 0) this.SetPathTo(target.getPosition(), true);
+			if (blob.getTickSinceCreated() % 90 == 0) this.SetPathTo(targetPosition, true);
 			// if (getGameTime() % 45 == 0) this.SetHighLevelPath(blob.getPosition(), target.getPosition());
 			// Move(this, blob, this.getNextPathPosition());
 			// print("chase")
 			
-			Vec2f dir = this.getNextPathPosition() - blob.getPosition();
+			Vec2f dir = this.getNextPathPosition() - currentPosition;
 			dir.Normalize();
 			
 			if (distance > 64 && !visibleTarget)
 			{
-				Move(this, blob, blob.getPosition() + dir * 24);
+				Move(this, blob, currentPosition + dir * 24);
 			}
 			else 
 			{
-				Move(this, blob, target.getPosition());
+				Move(this, blob, targetPosition);
 			}
 		}
 		else if (retreat)

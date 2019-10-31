@@ -205,77 +205,84 @@ void onTick(CBlob@ this)
 			}
 		}
 		
-		if (this.isKeyPressed(key_action1) && getGameTime() > this.get_u32("next attack"))
+		if (getGameTime() > this.get_u32("next attack"))
 		{
-			Vec2f dir = this.getAimPos() - this.getPosition();
-			dir.Normalize();
-			
-			CBlob@ carried = this.getCarriedBlob();
-			if (carried is null)
+			if (this.isKeyPressed(key_action1))
 			{
-				CBlob@ blob = getMap().getBlobAtPosition(this.getAimPos());
-				if (blob !is null && blob !is this && !blob.hasTag("dead") && blob.hasTag("human") && this.getDistanceTo(blob) < 32.00f && !getMap().rayCastSolid(this.getPosition(), blob.getPosition())) 
-				{
-					if (client)
-					{
-						this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
-					}
+				Vec2f dir = this.getAimPos() - this.getPosition();
+				dir.Normalize();
 				
-					if (server)
-					{
-						this.server_Pickup(blob);
-					}
-					
-					this.set_u32("next attack", getGameTime() + 20);
-				}
-				else
+				CBlob@ carried = this.getCarriedBlob();
+				if (carried is null)
 				{
-					Vec2f dir = this.getAimPos() - this.getPosition();
-					dir.Normalize();
+					CBlob@ blob = getMap().getBlobAtPosition(this.getAimPos());
+					if (blob !is null && blob !is this && !blob.hasTag("dead") && blob.hasTag("human") && this.getDistanceTo(blob) < 32.00f && !getMap().rayCastSolid(this.getPosition(), blob.getPosition())) 
+					{
+						if (client)
+						{
+							this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
+						}
 					
-					MegaHit(this, this.getPosition() + Vec2f(this.isFacingLeft() ? -16 : 16, XORRandom(16) - 8), dir, 4, Hitters::crush);
+						if (server)
+						{
+							this.server_Pickup(blob);
+						}
+						
+						this.set_u32("next attack", getGameTime() + 20);
+					}
+				}
+				else if (carried !is null)
+				{
+					if (carried.getConfig() != "hoobballer")
+					{					
+						if (client)
+						{
+							this.getSprite().PlaySound("Pus_Attack_2", 1.00f, 0.80f);
+							carried.getSprite().Gib();
+						}
+						
+						if (server)
+						{
+							CBlob@ baller = server_CreateBlob("hoobballer", carried.getTeamNum(), carried.getPosition());
+							this.server_Pickup(baller);
+							carried.server_Die();
+						}
+						
+						this.set_u32("next attack", getGameTime() + 20);
+					}
+					else
+					{
+						if (client)
+						{
+							this.getSprite().PlaySound("nightstick_hit2", 1.00f, 0.90f);
+						}
 					
-					this.set_u32("next attack", getGameTime() + 10);
+						if (server)
+						{
+							this.DropCarried();
+						}
+						
+						Vec2f dir = this.getAimPos() - this.getPosition();
+						dir.Normalize();
+						
+						carried.setVelocity(dir * 10.00f);
+						
+						this.set_u32("next attack", getGameTime() + 20);
+					}
 				}
 			}
-			else if (carried !is null)
+			
+			if (this.isKeyPressed(key_action2))
 			{
-				if (carried.getConfig() != "hoobballer")
-				{					
-					if (client)
-					{
-						this.getSprite().PlaySound("Pus_Attack_2", 1.00f, 0.80f);
-						carried.getSprite().Gib();
-					}
-					
-					if (server)
-					{
-						CBlob@ baller = server_CreateBlob("hoobballer", carried.getTeamNum(), carried.getPosition());
-						this.server_Pickup(baller);
-						carried.server_Die();
-					}
-					
-					this.set_u32("next attack", getGameTime() + 20);
-				}
-				else
-				{
-					if (client)
-					{
-						this.getSprite().PlaySound("nightstick_hit2", 1.00f, 0.90f);
-					}
+				Vec2f dir = this.getAimPos() - this.getPosition();
+				f32 length = dir.getLength();
+				dir.Normalize();
 				
-					if (server)
-					{
-						this.DropCarried();
-					}
-					
-					Vec2f dir = this.getAimPos() - this.getPosition();
-					dir.Normalize();
-					
-					carried.setVelocity(dir * 10.00f);
-					
-					this.set_u32("next attack", getGameTime() + 20);
-				}
+				Vec2f hitPos = this.getPosition() + (dir * Maths::Min(16.00f, length));
+				getMap().rayCastSolid(this.getPosition(), hitPos, hitPos);
+				
+				MegaHit(this, hitPos, dir, 4, Hitters::crush);
+				this.set_u32("next attack", getGameTime() + 10);
 			}
 		}
 	}
@@ -417,6 +424,8 @@ void Stomp(CBlob@ this, int count, f32 magnitude)
 
 void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)
 {
+	print("megahit");
+
 	bool client = isClient();
 	bool server = isServer();
 	
@@ -425,13 +434,17 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 custo
 	dir.Normalize();
 	f32 angle = dir.Angle();
 	
-	int count = 10.00f;
+	int count = 20;
 	
 	for (int i = 0; i < count; i++)
 	{
-		Vec2f pos = worldPoint + getRandomVelocity(0, XORRandom(32), 90);	
+		Vec2f offset = getRandomVelocity(0, XORRandom(len * 2), 90);
+		// offset.y *= 3.00f;
+		offset = offset.RotateBy(-angle);
 		
-		if (client && XORRandom(100) < 50)
+		Vec2f pos = worldPoint - offset - (dir * 8.00f);	
+		
+		if (client && XORRandom(100) < 10)
 		{
 			MakeDustParticle(pos, "dust2.png");
 		}
@@ -448,23 +461,6 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 custo
 		f32 magnitude = damage;
 		this.getSprite().PlaySound("FallBig" + (XORRandom(5) + 1), 1.00f, 1.00f);
 		ShakeScreen(magnitude * 10.0f, magnitude * 8.0f, this.getPosition());
-	}
-	
-	CBlob@[] blobsInRadius;
-	if (this.getMap().getBlobsInRadius(worldPoint + (dir * Maths::Min(len, 24)), 24, @blobsInRadius))
-	{
-		for (uint i = 0; i < blobsInRadius.length; i++)
-		{
-			CBlob@ hitBlob = blobsInRadius[i];
-			if (hitBlob !is null && hitBlob !is this)
-			{
-				if (server) this.server_Hit(hitBlob, worldPoint, velocity, 0.50f, customData, true);
-				if (client) this.getSprite().PlaySound("nightstick_hit" + (1 + XORRandom(3)) + ".ogg", 0.9f, 0.65f);
-				
-				f32 mass = hitBlob.getMass();
-				hitBlob.AddForce(dir * Maths::Min(400.0f, mass * 5.00f));
-			}
-		}
 	}
 }
 
