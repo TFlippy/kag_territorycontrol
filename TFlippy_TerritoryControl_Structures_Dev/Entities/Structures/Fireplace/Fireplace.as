@@ -6,7 +6,7 @@
 void onInit(CBlob@ this)
 {
 	// this.getShape().getConsts().mapCollisions = false;
-	this.getShape().getConsts().rotates = false;
+	this.getShape().getConsts().rotates = true;
 	this.getCurrentScript().tickFrequency = 9;
 	this.getSprite().SetEmitSound("CampfireSound.ogg");
 	this.getSprite().SetAnimation("fire");
