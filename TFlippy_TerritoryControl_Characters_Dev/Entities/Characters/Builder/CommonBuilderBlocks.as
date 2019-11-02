@@ -108,6 +108,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_beamtowermirror$", "BeamTowerMirror.png", Vec2f(16, 24), 0);	
 	
 	AddIconToken("$icon_1x5blastdoor$", "1x5BlastDoor.png", Vec2f(8, 40), 0);
+	AddIconToken("$icon_barricade$", "Barricade.png", Vec2f(8, 24), 0);
 	
 	AddIconToken("$markettable$", "MarketTable.png", Vec2f(16, 16), 3);
 	AddIconToken("$constructionyard$", "ConstructionYardIcon.png", Vec2f(16, 16), 0);
@@ -664,7 +665,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[3].push_back(b);
 	}	
 	{
-		BuildBlock b(0, "banner", "$icon_banner$", "Clan Banner\nIf your in a TC Clan, the clan banner will appear");
+		BuildBlock b(0, "banner", "$icon_banner$", "Clan Banner\nSpecial banner for those who are in a clan.");
 		AddRequirement(b.reqs, "coin", "", "Coins", 150);
 		b.size.Set(16, 32);
 		blocks[3].push_back(b);
@@ -717,6 +718,13 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 2);
 		blocks[3].push_back(b);
 	}
+	// {
+		// BuildBlock b(0, "barricade", "$icon_barricade$", "Barricade\neee");
+		// AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 100);
+		// AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 10);
+		// b.size.Set(8, 24);
+		// blocks[3].push_back(b);
+	// }
 
 
 	

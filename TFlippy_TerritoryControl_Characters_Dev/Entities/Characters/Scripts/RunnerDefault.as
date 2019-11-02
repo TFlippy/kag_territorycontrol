@@ -181,3 +181,9 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	return byBlob !is this && (this.hasTag("migrant") || this.hasTag("dead"));
 }
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return (forBlob !is this) && ((getKnocked(this) > 0) || (this.get_f32("babbyed") > 0) || (this.isKeyPressed(key_down)) || (this.getPlayer() is null));
+}
+
