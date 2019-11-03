@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 	if (!this.exists("flash_distance")) this.set_f32("flash_distance", 2500);
 	if (!this.exists("custom_explosion_sound")) this.set_string("custom_explosion_sound", "Nuke_Kaboom");
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		Vec2f pos = getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos());
 		f32 distance = Maths::Abs(this.getPosition().x - pos.x) / 8;
@@ -57,16 +57,7 @@ void DoExplosion(CBlob@ this)
 		Explode(this, 128.0f * modifier, 64.0f * (1 - modifier));
 	}
 	
-	for (int i = 0; i < 2; i++)
-	{
-		Vec2f d = getRandomVelocity(90, XORRandom(50) * 0.01f, 25);
-		d.y *= 0.20f;
-		
-		MakeParticle(this, Vec2f((XORRandom(60) - 30) * modifier * 20.00f, (XORRandom(40) - 20) * invModifier * 8.00f), d, XORRandom(8) + 10 * invModifier, particles[XORRandom(particles.length)]);
-		MakeParticle(this, Vec2f((XORRandom(40) - 20) * modifier * 12.00f, (XORRandom(30) - 15) * invModifier * 4.00f), d, XORRandom(20) + 20 * invModifier, particles[0]);
-	}
-	
-	if (getNet().isServer())
+	if (isServer())
 	{	
 		if (!this.hasTag("no mithril"))
 		{
@@ -113,10 +104,7 @@ void DoExplosion(CBlob@ this)
 				}
 			}
 		}
-	}
-	
-	if (getNet().isClient())
-	{
+
 		if (this.hasTag("reflash"))
 		{
 			CBlob@ localBlob = getLocalPlayerBlob();
@@ -136,13 +124,26 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 	}
+	else
+	{
+
+		for (int i = 0; i < 2; i++)
+		{
+			Vec2f d = getRandomVelocity(90, XORRandom(50) * 0.01f, 25);
+			d.y *= 0.20f;
+			
+			MakeParticle(this, Vec2f((XORRandom(60) - 30) * modifier * 20.00f, (XORRandom(40) - 20) * invModifier * 8.00f), d, XORRandom(8) + 10 * invModifier, particles[XORRandom(particles.length)]);
+			MakeParticle(this, Vec2f((XORRandom(40) - 20) * modifier * 12.00f, (XORRandom(30) - 15) * invModifier * 4.00f), d, XORRandom(20) + 20 * invModifier, particles[0]);
+		}
+	
+	}
 }
 
 void onTick(CBlob@ this)
 {
 	if (this.get_u8("boom_start") == this.get_u8("boom_end")) 
 	{
-		if (getNet().isServer()) this.server_Die();
+		if (isServer()) this.server_Die();
 		this.Tag("dead");
 		
 		return;
@@ -152,7 +153,7 @@ void onTick(CBlob@ this)
 
 	u32 ticks = this.getTickSinceCreated();
 	
-	if (getNet().isClient() && !this.hasTag("no flash") && ticks == this.get_u32("flash_delay")) 
+	if (isClient() && !this.hasTag("no flash") && ticks == this.get_u32("flash_delay")) 
 	{
 		CBlob@ localBlob = getLocalPlayerBlob();
 		if (localBlob !is null)
@@ -180,7 +181,7 @@ void onTick(CBlob@ this)
 	
 	if (!this.hasTag("no flash"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (ticks == 2)
 			{		
@@ -204,7 +205,7 @@ void onTick(CBlob@ this)
 		}
 	}
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (ticks > (sound_delay * 30) && !this.hasTag("sound_played"))
 		{
@@ -223,6 +224,6 @@ void onTick(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const f32 time, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 2.8f + XORRandom(100) * 0.01f, time, XORRandom(100) * -0.00005f, true);
+	if (!isClient()) return;
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 2.8f + XORRandom(100) * 0.01f, time, XORRandom(100) * -0.00005f, true);
 }

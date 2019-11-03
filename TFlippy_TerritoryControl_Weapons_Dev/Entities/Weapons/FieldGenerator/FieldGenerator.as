@@ -55,7 +55,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	CBlob@ carried = forBlob.getCarriedBlob();
-	return (carried is null ? true : carried.getConfig() == "mat_mithril");
+	return (carried is null ? true : carried.getName() == "mat_mithril");
 }
 
 u8 GetFuel(CBlob@ this)
@@ -100,7 +100,7 @@ void onTick(CBlob@ this)
 			CBlob@ b = blobsInRadius[i];
 			u8 team = b.getTeamNum();
 			
-			if (team != myTeam && (((b.hasTag("explosive") && b.getVelocity().y > 5) || b.hasTag("flesh") || b.getConfig() == "nanobot")))
+			if (team != myTeam && (((b.hasTag("explosive") && b.getVelocity().y > 5) || b.hasTag("flesh") || b.getName() == "nanobot")))
 			{
 				f32 dist = (b.getPosition() - this.getPosition()).Length();
 				if (dist < s_dist)
@@ -134,18 +134,18 @@ void Zap(CBlob@ this, CBlob@ target)
 	SetKnocked(target, 90);
 	target.set_u32("next zap", getGameTime() + 5);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		f32 damage = target.getInitialHealth() * 0.75f;
 		this.server_Hit(target, target.getPosition(), dir, damage * (target.hasTag("explosive") ? 16.00f : 1.00f) , HittersTC::forcefield);
 		
-		if (target.getConfig() == "nanobot") target.server_Die();
+		if (target.getName() == "nanobot") target.server_Die();
 		
 		// print("damage: " + u8(Maths::Ceil(damage)));
 		SetFuel(this, fuel - u8(Maths::Ceil(damage)));
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().PlaySound("energy_disintegrate_" + XORRandom(2) + ".ogg");
 		

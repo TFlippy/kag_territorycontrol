@@ -62,7 +62,7 @@ void onInit(CBlob@ this)
 	
 	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ ammo = server_CreateBlob("mat_smallrocket");
 		
@@ -216,7 +216,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 	Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
 	Vec2f startPos = this.getPosition() + Vec2f((this.isFacingLeft() ? -16 : 16), -3).RotateBy(angle);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ blob = server_CreateBlob("smallrocket", this.getTeamNum(), startPos);
 		blob.set_f32("velocity", 15.0f);
@@ -228,7 +228,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		if (blobHit) for (u32 i = 0; i < hitInfos.length; i++) this.server_Hit(hitInfos[i].blob, hitInfos[i].hitpos, Vec2f(0, 0), 1.0f, Hitters::fire, true);
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		for (int i = 1; i < 5; i++) MakeParticle(this, -dir * i, "SmallExplosion");
 		this.getSprite().PlaySound("KegExplosion", 1.0f, 0.8f);
@@ -259,10 +259,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(8, 0).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)

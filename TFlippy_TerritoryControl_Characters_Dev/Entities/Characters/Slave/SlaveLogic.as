@@ -12,8 +12,9 @@ void onInit(CBlob@ this)
 	
 	this.set_Vec2f("inventory offset", Vec2f(0.0f, 0.0f));
 	this.set_f32("mining_multiplier", 3.0f);
+	this.set_u32("build delay", 8);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_setTeamNum(150);
 		
@@ -23,6 +24,9 @@ void onInit(CBlob@ this)
 		ball.set_u16("slave_id", this.getNetworkID());
 		ball.Init();
 	}
+	
+	this.set_u8("mining_hardness", 0);
+	this.getSprite().PlaySound("shackles_success.ogg", 1.25f, 1.00f);
 }
 
 // void onTick(CBlob@ this)
@@ -36,7 +40,7 @@ void onInit(CBlob@ this)
 	
 	// CBlob@ carried = this.getCarriedBlob();
 	
-	// if (carried !is null && carried.getConfig() == "slaveball")
+	// if (carried !is null && carried.getName() == "slaveball")
 	// {
 		// moveVars.jumpFactor *= 0.5f;
 		// moveVars.walkFactor *= 0.5f;
@@ -73,5 +77,5 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 // bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 // {
-	// return byBlob.getConfig() != "slave";
+	// return byBlob.getName() != "slave";
 // }

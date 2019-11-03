@@ -74,7 +74,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (cmd == this.getCommandID("nuke_activate_sv"))
 		{
@@ -103,7 +103,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (cmd == this.getCommandID("nuke_activate_cl"))
 		{
@@ -121,7 +121,7 @@ void onTick(CBlob@ this)
 	{
 		u32 time = getGameTime();
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (time > this.get_u32("nuke_boomtime"))
 			{
@@ -136,7 +136,7 @@ void onTick(CBlob@ this)
 			}
 		}
 	
-		if (getNet().isClient() && !this.hasTag("nuke_alarm"))
+		if (isClient() && !this.hasTag("nuke_alarm"))
 		{
 			if (time % 85 == 0)
 			{

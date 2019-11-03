@@ -36,8 +36,12 @@ void onInit(CBlob@ this)
 
 bool ActivateBlob(CBlob@ this, CBlob@ blob, Vec2f pos, Vec2f vector, Vec2f vel)
 {
-	bool shouldthrow = true;
+	bool shouldthrow = false;
 	bool done = false;
+	if(this is null || blob is null)
+	{
+		return done;
+	}
 
 	if (!blob.hasTag("activated") || blob.hasTag("dont deactivate"))
 	{
@@ -61,7 +65,7 @@ bool ActivateBlob(CBlob@ this, CBlob@ blob, Vec2f pos, Vec2f vector, Vec2f vel)
 					}
                     
 					//if compatible
-					if (getNet().isServer() && blob.hasTag("activatable"))
+					if (isServer() && blob.hasTag("activatable"))
 					{
 						blob.SendCommand(blob.getCommandID("activate"));
 					}
@@ -69,10 +73,11 @@ bool ActivateBlob(CBlob@ this, CBlob@ blob, Vec2f pos, Vec2f vector, Vec2f vel)
 				}
 			}
 		}
-	}
+	} else if(blob.hasTag("activated"))
+		shouldthrow = true;
 
-	//throw it if it's already lit or we cant light it
-	if (getNet().isServer() && !blob.hasTag("custom throw") && shouldthrow && this.getCarriedBlob() is blob)
+	//throw it if it's already activated and not reactivatable
+	if (isServer() && !blob.hasTag("custom throw") && shouldthrow && this.getCarriedBlob() is blob)
 	{
 		DoThrow(this, blob, pos, vector, vel);
 		done = true;
@@ -113,7 +118,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if (carried !is null)
 		{
-			if (getNet().isServer() && !carried.hasTag("custom throw"))
+			if (isServer() && !carried.hasTag("custom throw"))
 			{
 				DoThrow(this, carried, pos, vector, vel);
 			}

@@ -188,7 +188,7 @@ void onTunnelCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		        && (this.getPosition() - caller.getPosition()).getLength() < (this.getRadius() + caller.getRadius()) * 2.0f &&
 		        doesFitAtTunnel(this, caller, tunnel))
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBitStream params;
 				params.write_u16(caller.getNetworkID());

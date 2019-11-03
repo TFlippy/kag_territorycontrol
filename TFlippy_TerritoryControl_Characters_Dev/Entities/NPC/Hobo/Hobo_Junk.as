@@ -22,7 +22,7 @@ Random _r(0xca7a);
 
 void onInit(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_SetTimeToDie(4 + _r.NextRanged(2));
 	}
@@ -39,14 +39,14 @@ void onTick(CBlob@ this)
 
 	// chew through backwalls
 
-	bool isServer = getNet().isServer();
-	bool isClient = getNet().isClient();
+	const bool is_server = isServer();
+	const bool is_client = isClient();
 
 	if (vellen > 2.0f)
 	{
 		Vec2f pos = this.getPosition();
 
-		if (isClient && (getGameTime() + this.getNetworkID() * 31) % 19 == 0)
+		if (is_client && (getGameTime() + this.getNetworkID() * 31) % 19 == 0)
 		{
 			MakeDustParticle(pos, "Smoke.png");
 		}
@@ -67,25 +67,25 @@ void onTick(CBlob@ this)
 		}
 		else if (map.isTileSolid(tile))
 		{
-			if (!isServer)
+			if (!is_server)
 				this.getShape().SetStatic(true);
 		}
 
-		if (isServer)
+		if (is_server)
 		{
 			Pierce(this);
 		}
 	}
 	else
 	{
-		if (isServer)
-			this.server_Die();
+		if (is_server) this.server_Die();
 	}
 }
 
 void MakeDustParticle(Vec2f pos, string file)
 {
-	CParticle@ temp = ParticleAnimated(CFileMatcher(file).getFirst(), pos, Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, false);
+	if(!isClient()){return;}
+	CParticle@ temp = ParticleAnimated(file, pos, Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, false);
 
 	if (temp !is null)
 	{
@@ -131,7 +131,7 @@ void onDie(CBlob@ this)
 	this.getSprite().Gib();
 
 	u32 gametime = getGameTime();
-	if (getNet().isClient() && (gametime) > g_lastplayedsound + 3)
+	if (isClient() && (gametime) > g_lastplayedsound + 3)
 	{
 		g_lastplayedsound = gametime;
 		Sound::Play("/rock_hit", this.getPosition(), Maths::Min(Maths::Max(0.5f, this.getOldVelocity().Length()), 1.5f));
@@ -173,13 +173,13 @@ void Pierce(CBlob @this)
 		for (uint i = 0; i < hitInfos.length; i++)
 		{
 			HitInfo@ hi = hitInfos[i];
-
-			if (hi.blob !is null) // blob
+			CBlob@ b = hi.blob;
+			if (b !is null) // blob
 			{
-				if (canHitBlob(this, hi.blob))
+				if (canHitBlob(this, b))
 				{
 					hit = true;
-					this.server_Hit(hi.blob, hi.hitpos, initVelocity, ROCK_DAMAGE, Hitters::cata_stones, true);
+					this.server_Hit(b, hi.hitpos, initVelocity, ROCK_DAMAGE, Hitters::cata_stones, true);
 				}
 			}
 			else //map
@@ -212,7 +212,7 @@ void Pierce(CBlob @this)
 
 	if (hit)
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			uint seed = (getGameTime() * (this.getNetworkID() * 997 + 1337));
 			Random@ r = Random(seed);

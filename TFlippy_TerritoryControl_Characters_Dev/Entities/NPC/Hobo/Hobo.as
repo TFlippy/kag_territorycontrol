@@ -94,7 +94,8 @@ const string[] textsDanger =
 	"damn right innit?",
 	"wanna fight ya cunt?",
 	"sit on ya arse",
-	"ill bash ye fookin ead in i sware on me mum"
+	"ill bash ye fookin ead in i sware on me mum",
+	"ow shid"
 };
 
 const string[] textsWon = 
@@ -135,7 +136,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("traderChat");
 
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
-	this.set_Vec2f("shop menu size", Vec2f(3, 3));
+	this.set_Vec2f("shop menu size", Vec2f(5, 3));
 	this.set_string("shop description", name + " the Hobo");
 	this.setInventoryName(name + " the Hobo");
 	this.set_u8("shop icon", 25);
@@ -276,12 +277,25 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	
-	if (getNet().isServer())
+	if (rand.NextRanged(100) < 40)
+	{
+		ShopItem@ s = addShopItem(this, "crackhead's chemistry kit", "$icon_minidruglab$", "minidruglab", "unstable pile of shit");
+		AddRequirement(s.requirements, "coin", "", "Coins", 250 + rand.NextRanged(1000));
+		s.spawnNothing = true;
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 2;
+	}
+	
+	if (isServer())
 	{
 		this.server_setTeamNum(-1);
 	}
 
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getCurrentScript().runFlags |= Script::tick_onscreen;
+	this.getCurrentScript().runFlags |= Script::tick_blob_in_proximity;
+	this.getCurrentScript().runProximityTag = "player";
+	this.getCurrentScript().runProximityRadius = 320.0f;
 }
 
 void onTick(CBlob@ this)
@@ -294,11 +308,6 @@ void onTick(CBlob@ this)
 			return;
 		}
 
-		if(isClient()){
-			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
-				return;
-			}
-		}
 
 		uint time = getGameTime();
 		if (time >= this.get_u32("nextTalk"))
@@ -329,7 +338,7 @@ void onTick(CBlob@ this)
 				}
 			}
 
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBitStream stream;
 				stream.write_string(text);
@@ -375,7 +384,7 @@ void onTick(CBlob@ this)
 					
 						bool isAttached = this.isAttached();
 					
-						if (getNet().isClient())
+						if (isClient())
 						{	
 							if (isAttached) this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.length())], 0.75f, 0.75f);
 						}
@@ -417,7 +426,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			
@@ -448,9 +457,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			else
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
-				if (name == "oof" && getNet().isServer()) this.server_SetHealth(0.5f);
+				if (name == "oof" && isServer()) this.server_SetHealth(0.5f);
 				
-				if (blob is null) return;
+				if (blob is null || callerBlob is null) return;
 			   
 				if (!blob.canBePutInInventory(callerBlob))
 				{
@@ -467,7 +476,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_DropCoins(this.getPosition(), XORRandom(1500));
 	}
@@ -485,6 +494,7 @@ void onGib(CSprite@ this)
 	Vec2f vel = blob.getVelocity();
 	vel.y -= 3.0f;
 	f32 hp = Maths::Min(Maths::Abs(blob.getHealth()), 2.0f) + 1.0;
+	if(!isClient()){return;}
 	CParticle@ Gib1 = makeGibParticle("Entities/Special/WAR/Trading/TraderGibs.png", pos, vel + getRandomVelocity(90, hp, 80), 0, 0, Vec2f(16, 16), 2.0f, 20, "/BodyGibFall");
 	CParticle@ Gib2 = makeGibParticle("Entities/Special/WAR/Trading/TraderGibs.png", pos, vel + getRandomVelocity(90, hp - 0.2, 80), 1, 0, Vec2f(16, 16), 2.0f, 20, "/BodyGibFall");
 	CParticle@ Gib3 = makeGibParticle("Entities/Special/WAR/Trading/TraderGibs.png", pos, vel + getRandomVelocity(90, hp, 80), 2, 0, Vec2f(16, 16), 2.0f, 0, "/BodyGibFall");
@@ -531,10 +541,6 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 void onTick(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
-
-	if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
-		return;
-	}
 	
 	if (blob.hasTag("dead"))
 	{
@@ -574,5 +580,24 @@ void onTick(CSprite@ this)
 	else if (ended)
 	{
 		this.SetAnimation("default");
+	}
+}
+
+void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
+{
+	if (blob is null) return;
+	if (this.hasTag("dead")) return;
+
+	if (blob.getName() == "mat_mithrilenriched" && blob.getQuantity() > 5)
+	{
+		if (isServer())
+		{
+			CBlob@ bagel = server_CreateBlob("hoob", this.getTeamNum(), this.getPosition());
+			this.server_Die();
+		}
+		else
+		{
+			ParticleZombieLightning(this.getPosition());
+		}
 	}
 }

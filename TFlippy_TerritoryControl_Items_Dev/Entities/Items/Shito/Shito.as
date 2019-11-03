@@ -37,7 +37,7 @@ void onTick(CBlob@ this)
 // {
 	// // print("packing");
 	
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// CBlob@ crate = server_CreateBlobNoInit("packercrate");
 
@@ -54,7 +54,7 @@ void onTick(CBlob@ this)
 		// }
 	// }	
 	
-	// if (getNet().isClient())
+	// if (isClient())
 	// {
 		// this.getSprite().PlaySound("BombMake.ogg");
 	// }
@@ -71,8 +71,8 @@ void onDie(CBlob@ this)
 
 	// if (!blob.isAttached() && (blob.hasTag("material") || blob.hasTag("hopperable")))
 	// {
-		// if (getNet().isServer()) this.server_PutInInventory(blob);
-		// if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
+		// if (isServer()) this.server_PutInInventory(blob);
+		// if (isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	// }
 // }
 
@@ -88,7 +88,7 @@ void onDie(CBlob@ this)
 // {
 	// if (cmd == this.getCommandID("menu"))
 	// {
-		// if (getNet().isClient())
+		// if (isClient())
 		// {	
 			// CBlob@ caller = getBlobByNetworkID(params.read_u16());
 			

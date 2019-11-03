@@ -9,7 +9,7 @@ void onInit(CBlob@ this)
 
 	// this.addCommandID("study");
 	
-	// string tech = "tech_" + this.getConfig().substr(3);
+	// string tech = "tech_" + this.getName().substr(3);
 	// this.set_string("tech_name", tech);
 }
 
@@ -27,7 +27,7 @@ void onInit(CBlob@ this)
 		// {
 			// GiveFakeTech(getRules(), this.get_string("tech_name"), this.getTeamNum());
 		
-			// if (getNet().isServer())
+			// if (isServer())
 			// {
 				// this.server_Die();
 			// }

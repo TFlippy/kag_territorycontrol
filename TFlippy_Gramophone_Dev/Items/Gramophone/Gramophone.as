@@ -47,7 +47,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (current_track_id != 255)
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBlob@ disc = server_CreateBlobNoInit("musicdisc");
 				disc.setPosition(this.getPosition() + Vec2f(0, -4));
@@ -58,14 +58,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 		
-		if (carried !is null && carried.getConfig() == "musicdisc")
+		if (carried !is null && carried.getName() == "musicdisc")
 		{
 			u8 track_id = carried.get_u8("track_id");
 			if (track_id < records.length)
 			{
 				this.set_u8("track_id", track_id);
 			
-				if (getNet().isServer()) 
+				if (isServer()) 
 				{
 					carried.server_Die();
 				}
@@ -107,7 +107,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	CBlob@ carried = caller.getCarriedBlob();
 
 	u8 track_id = this.get_u8("track_id");
-	bool insert = carried !is null && carried.getConfig() == "musicdisc";
+	bool insert = carried !is null && carried.getName() == "musicdisc";
 	bool eject = carried is null && track_id != 255;
 
 	CBitStream params;

@@ -2,6 +2,7 @@
 
 #include "Hitters.as";
 #include "Explosion.as";
+#include "Knocked.as";
 
 const u8 MINE_PRIMING_TIME = 45;
 
@@ -46,7 +47,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if(getNet().isServer())
+	if(isServer())
 	{
 		u8 timer = this.get_u8(MINE_TIMER);
 		timer++;
@@ -118,7 +119,7 @@ void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
-	if(getNet().isServer())
+	if(isServer())
 	{
 		this.Tag(MINE_PRIMING);
 		this.set_u8(MINE_TIMER, 0);
@@ -127,7 +128,7 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 
 void onThisRemoveFromInventory(CBlob@ this, CBlob@ inventoryBlob)
 {
-	if(getNet().isServer() && !this.isAttached())
+	if(isServer() && !this.isAttached())
 	{
 		this.Tag(MINE_PRIMING);
 		this.set_u8(MINE_TIMER, 0);
@@ -146,7 +147,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if(getNet().isServer() && blob !is null)
+	if(isServer() && blob !is null)
 	{
 		if(this.get_u8(MINE_STATE) == PRIMED && explodeOnCollideWithBlob(this, blob))
 		{
@@ -168,7 +169,7 @@ void onDie(CBlob@ this)
 		// makeSteamParticle(this, Vec2f(), "SmallSteam");
 	// }
 
-	if(getNet().isServer() && this.hasTag("exploding"))
+	if(isServer() && this.hasTag("exploding"))
 	{
 		CBlob@[] blobs;
 		Vec2f pos = this.getPosition();
@@ -183,7 +184,7 @@ void onDie(CBlob@ this)
 				dir.Normalize();
 
 				target.setVelocity(dir * (8.0f + XORRandom(8)));
-				target.set_u8("knocked", 20);
+				SetKnocked(target, 20);
 				// this.server_Hit(target, this.getPosition(), Vec2f_zero, 1.0f, Hitters::water_stun, true);
 			}
 		}
@@ -202,9 +203,9 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(256) - 128, XORRandom(256) - 128) * 0.015625f * rad;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }

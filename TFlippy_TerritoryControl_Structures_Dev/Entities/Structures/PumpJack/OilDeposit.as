@@ -59,7 +59,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			this.getSprite().PlaySound("/Construct.ogg");
 			this.getSprite().getVars().gibbed = true;
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 				CBlob@ newBlob = server_CreateBlob("pumpjack", buyer.getTeamNum(), pos);

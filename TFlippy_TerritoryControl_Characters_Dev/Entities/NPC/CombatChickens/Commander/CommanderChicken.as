@@ -8,6 +8,7 @@
 #include "MakeCrate.as";
 
 u32 next_commander_event = 0; // getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
+bool dry_shot = true;
 
 void onInit(CBlob@ this)
 {
@@ -40,7 +41,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 1;
 	
 	this.set_f32("voice pitch", 1.50f);
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 	if (isServer())
 	{
 		this.set_u16("stolen coins", 850);
@@ -67,12 +68,14 @@ void onInit(CBlob@ this)
 		}
 		
 		CBlob@ gun = server_CreateBlob(gun_config, this.getTeamNum(), this.getPosition());
-		this.server_Pickup(gun);
-		
-		if (gun.hasCommandID("cmd_gunReload"))
+		if(gun !is null)
 		{
-			CBitStream stream;
-			gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+			this.server_Pickup(gun);
+			if (gun.hasCommandID("cmd_gunReload"))
+			{
+				CBitStream stream;
+				gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+			}
 		}
 	}
 }
@@ -137,21 +140,32 @@ void onTick(CBlob@ this)
 				if (base !is null)
 				{
 					next_commander_event = getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 20);
-					
-					f32 map_width = getMap().tilemapwidth * 8;
-					f32 initial_position_x = Maths::Clamp(base.getPosition().x + (80 - XORRandom(160)) * 8.00f, 256.00f, map_width - 256.00f);
-				
-					CBitStream stream;
-					stream.write_u16(base.getNetworkID());
-					this.SendCommand(this.getCommandID("commander_order_recon_squad"), stream);
-				
-					for (int i = 0; i < 4; i++)
+					if(dry_shot)
 					{
-						CBlob@ blob = server_MakeCrateOnParachute("scoutchicken", "SpaceStar Ordering Recon Squad", 0, 250, Vec2f(initial_position_x + (64 - XORRandom(128)), XORRandom(32)));
-						blob.Tag("unpack on land");
-						blob.Tag("destroy on touch");
+						dry_shot = false;
+					}
+					else
+					{
+						f32 map_width = getMap().tilemapwidth * 8;
+						f32 initial_position_x = Maths::Clamp(base.getPosition().x + (80 - XORRandom(160)) * 8.00f, 256.00f, map_width - 256.00f);
+					
+						CBitStream stream;
+						stream.write_u16(base.getNetworkID());
+						this.SendCommand(this.getCommandID("commander_order_recon_squad"), stream);
+					
+						for (int i = 0; i < 4; i++)
+						{
+							CBlob@ blob = server_MakeCrateOnParachute("scoutchicken", "SpaceStar Ordering Recon Squad", 0, 250, Vec2f(initial_position_x + (64 - XORRandom(128)), XORRandom(32)));
+							blob.Tag("unpack on land");
+							blob.Tag("destroy on touch");
+						}
 					}
 				}
+			}
+			else
+			{
+				next_commander_event = getGameTime() + 2*((30 * 60 * 5) + XORRandom(30 * 60 * 20));
+				dry_shot = true;
 			}
 		}
 	}

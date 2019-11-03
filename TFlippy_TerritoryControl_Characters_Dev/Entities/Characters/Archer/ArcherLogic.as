@@ -605,7 +605,7 @@ void onTick(CBlob@ this)
 
 	// vvvvvvvvvvvvvv CLIENT-SIDE ONLY vvvvvvvvvvvvvvvvvvv
 
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	if (this.isInInventory()) return;
 
@@ -819,7 +819,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			int r = 0;
 			for (int i = 0; i < ArcherParams::legolas_arrows_volley; i++)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					CBlob@ arrow = CreateArrow(this, arrowPos, arrowVel, arrowType);
 					if (i > 0 && arrow !is null)
@@ -846,7 +846,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 		else
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CreateArrow(this, arrowPos, arrowVel, arrowType);
 			}
@@ -1058,7 +1058,7 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 			// fletch arrow
 			if (hitBlob.hasTag("tree"))	// make arrow from tree
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					CBlob@ mat_arrows = server_CreateBlob("mat_arrows", this.getTeamNum(), this.getPosition());
 					if (mat_arrows !is null)

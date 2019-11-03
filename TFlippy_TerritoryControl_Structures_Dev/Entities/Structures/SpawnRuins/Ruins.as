@@ -40,7 +40,7 @@ void onTick(CBlob@ this)
 	{
 		CBlob@ b = blobs[i];
 		
-		if ((blobs[i].getPosition() - pos).LengthSquared() < (256.0f * 256.0f))
+		if ((b.getPosition() - pos).LengthSquared() < (256.0f * 256.0f))
 		{
 			if (b.hasTag("faction_base"))
 			{
@@ -58,24 +58,27 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
-
-	if (this.get_bool("isActive") != active)
+	
+	if(isClient())
 	{
-		this.getSprite().SetFrameIndex(active ? 0 : 1);
-		
-		if (!active)
+		if (this.get_bool("isActive") != active)
 		{
-			this.getSprite().PlaySound("/BuildingExplosion", 0.8f, 0.8f);
-				
-			Vec2f pos = this.getPosition() - Vec2f((this.getWidth() / 2) - 8, (this.getHeight() / 2) - 8);
+			this.getSprite().SetFrameIndex(active ? 0 : 1);
 			
-			for (int y = 0; y < this.getHeight(); y += 16)
+			if (!active)
 			{
-				for (int x = 0; x < this.getWidth(); x += 16)
+				this.getSprite().PlaySound("/BuildingExplosion", 0.8f, 0.8f);
+					
+				Vec2f pos = this.getPosition() - Vec2f((this.getWidth() / 2) - 8, (this.getHeight() / 2) - 8);
+				
+				for (int y = 0; y < this.getHeight(); y += 16)
 				{
-					if (XORRandom(100) < 75) 
+					for (int x = 0; x < this.getWidth(); x += 16)
 					{
-						ParticleAnimated(CFileMatcher("Smoke.png").getFirst(), pos + Vec2f(x + (8 - XORRandom(16)), y + (8 - XORRandom(16))), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+						if (XORRandom(100) < 75) 
+						{
+							ParticleAnimated("Smoke.png", pos + Vec2f(x + (8 - XORRandom(16)), y + (8 - XORRandom(16))), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+						}
 					}
 				}
 			}

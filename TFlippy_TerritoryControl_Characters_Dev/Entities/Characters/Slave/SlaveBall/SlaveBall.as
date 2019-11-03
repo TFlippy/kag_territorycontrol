@@ -48,7 +48,7 @@ void onTick(CBlob@ this)
 {
 	CBlob@ slave = getBlobByNetworkID(this.get_u16("slave_id"));
 	
-	if (slave !is null && slave.getConfig() == "slave")
+	if (slave !is null && slave.getName() == "slave")
 	{		
 		Vec2f dir = (this.getPosition() - slave.getPosition());
 		f32 distance = dir.Length();
@@ -64,15 +64,15 @@ void onTick(CBlob@ this)
 			// print("gud");
 			// slave.AddForce(dir * (distance / maxDistance) * 32);
 			
-			// if (getNet().isServer() && distance > maxDistance * 4) this.server_Hit(slave, slave.getPosition(), dir, (distance / maxDistance) * 0.1f, Hitters::crush, true);
+			// if (isServer() && distance > maxDistance * 4) this.server_Hit(slave, slave.getPosition(), dir, (distance / maxDistance) * 0.1f, Hitters::crush, true);
 		}
 		
-		if (getNet().isClient()) DrawLine(this.getSprite(), this.getPosition(), distance / 32, -dir.Angle(), true);
+		if (isClient()) DrawLine(this.getSprite(), this.getPosition(), distance / 32, -dir.Angle(), true);
 	}
 	else
 	{
-		this.getSprite().getSpriteLayer("chain").SetVisible(false);
-		if (getNet().isServer()) this.server_Die();
+		if (isServer()) this.server_Die();
+		if (isClient()) this.getSprite().getSpriteLayer("chain").SetVisible(false);
 	}
 }
 
@@ -83,7 +83,7 @@ bool canBePutInInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
-	return byBlob.getConfig() != "slave";
+	return byBlob.getName() != "slave";
 }
 
 void DrawLine(CSprite@ this, Vec2f startPos, f32 length, f32 angle, bool flip)

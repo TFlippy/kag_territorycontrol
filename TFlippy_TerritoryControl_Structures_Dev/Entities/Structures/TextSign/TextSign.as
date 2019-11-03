@@ -29,7 +29,7 @@ void onInit(CSprite@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (cmd == this.getCommandID("write"))
 		{

@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "ParticleSparks.as";
+#include "Knocked.as";
 
 void onInit(CBlob@ this)
 {
@@ -20,27 +21,29 @@ void onTick(CBlob@ this)
 	if (this.isAttached())
 	{
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder = point.getOccupied();
 		
-		if (holder is null) return;
+		if (holder is null){return;}
 
-		if (holder.get_u8("knocked") <= 0)
+		if (getKnocked(holder) <= 0)
 		{
 			if (holder.isKeyPressed(key_action1) || point.isKeyPressed(key_action1))
 			{
 				if (this.get_u32("next attack") > getGameTime()) return;
 				Vec2f pos = holder.getAimPos();
 			
-				if (getNet().isClient())
+				if (isClient())
 				{
 					this.getSprite().PlaySound("Lighter_Use", 1.00f, 0.90f + (XORRandom(100) * 0.30f));
 					sparks(this.getPosition(), 1, 0.25f);
 				}
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					if ((pos - this.getPosition()).getLength() < 32)
 					{
+						getMap().rayCastSolidNoBlobs(this.getPosition(), pos, pos);
 						CBlob@ blob = getMap().getBlobAtPosition(pos);
 						
 						if (blob !is null)

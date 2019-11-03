@@ -9,7 +9,7 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	bool canChangeClass = caller.getConfig() != "royalguard";
+	bool canChangeClass = caller.getName() != "royalguard";
 
 	if(canChangeClass)
 	{

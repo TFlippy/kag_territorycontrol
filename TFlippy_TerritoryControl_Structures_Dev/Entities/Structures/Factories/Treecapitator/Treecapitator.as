@@ -24,7 +24,7 @@ void onTick(CBlob@ this)
 {
 	if (!this.getShape().isStatic()) return;
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CMap@ map = getMap();
 		
@@ -37,7 +37,7 @@ void onTick(CBlob@ this)
 			CBlob@ b = blobs[i];
 			if (b !is null)
 			{
-				string bname = b.getConfig();
+				string bname = b.getName();
 			
 				if (b.hasTag("tree"))
 				{

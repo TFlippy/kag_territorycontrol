@@ -385,7 +385,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			CBlob@ carried = caller.getCarriedBlob();
 			if (carried !is null && this.get_f32("fuel_count") < this.get_f32("max_fuel"))
 			{
-				string fuel_name = carried.getConfig();
+				string fuel_name = carried.getName();
 				bool isValid = fuel_name == "mat_fuel";
 				
 				if (isValid)
@@ -466,7 +466,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ blob = getBlobByNetworkID(blobNum);
 		if(blob is null) return;
 
-		CBlob@ attachedBlob = blob.getAttachments().getAttachedBlob("PICKUP");
+		CBlob@ attachedBlob = blob.getAttachments().getAttachmentPointByName("PICKUP").getOccupied();
 		if(attachedBlob !is null && attachedBlob.getName() == "mat_sammissile")
 		{
 			this.add_u16("rocketCount", attachedBlob.getQuantity());
@@ -479,7 +479,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if(rocketCount > 0)
 		{
-			print("bep");
 			invo.server_RemoveItems("mat_sammissile", rocketCount);
 			this.add_u16("rocketCount", rocketCount);
 		}
@@ -497,7 +496,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ blob = getBlobByNetworkID(blobNum);
 		if(blob is null) return;
 
-		CBlob@ attachedBlob = blob.getAttachments().getAttachedBlob("PICKUP");
+		CBlob@ attachedBlob = blob.getAttachments().getAttachmentPointByName("PICKUP").getOccupied();
 		if(attachedBlob !is null && attachedBlob.getName() == "mat_gatlingammo")
 		{
 			this.add_u16("ammoCount", attachedBlob.getQuantity());
@@ -509,7 +508,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if(ammoCount > 0)
 		{
-			print("bep");
 			invo.server_RemoveItems("mat_gatlingammo", ammoCount);
 			this.add_u16("ammoCount", ammoCount);
 		}
@@ -523,7 +521,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (carried !is null)
 		{
-			string fuel_name = carried.getConfig();
+			string fuel_name = carried.getName();
 			f32 fuel_modifier = 1.00f;
 			bool isValid = false;
 			
@@ -537,10 +535,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				u16 remain = GiveFuel(this, carried.getQuantity(), fuel_modifier);
 					
-				if (getNet().isServer())
+				if (isServer())
 				{
 					if (remain == 0)
 					{
+						carried.Tag("dead");
 						carried.server_Die();
 					}
 					else
@@ -752,10 +751,10 @@ void shootRocket(CBlob@ this, f32 angle, CBlob@ target, Vec2f gunPos)
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (isServer()) return;
+	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(8, 0).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void drawFuelCount(CBlob@ this)
@@ -804,7 +803,7 @@ void onDie(CBlob@ this)
 {
 	DoExplosion(this);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ wreck = server_CreateBlobNoInit("helichopperwreck");
 		wreck.setPosition(this.getPosition());
@@ -838,7 +837,7 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition() + this.get_Vec2f("explosion_offset").RotateBy(this.getAngleDegrees());
 	CMap@ map = getMap();
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < (5 + XORRandom(5)); i++)
 		{
@@ -848,7 +847,7 @@ void DoExplosion(CBlob@ this)
 		}
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		for (int i = 0; i < 40; i++)
 		{
@@ -861,9 +860,9 @@ void DoExplosion(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1 + XORRandom(200) * 0.01f, 2 + XORRandom(5), XORRandom(100) * -0.00005f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1 + XORRandom(200) * 0.01f, 2 + XORRandom(5), XORRandom(100) * -0.00005f, true);
 }
 
 

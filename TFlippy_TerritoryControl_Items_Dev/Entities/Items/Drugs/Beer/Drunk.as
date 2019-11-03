@@ -25,7 +25,7 @@ void onTick(CBlob@ this)
 		this.getSprite().PlaySound("drunk_fx" + XORRandom(5), 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (this.isMyPlayer())
 		{
@@ -45,7 +45,7 @@ void onTick(CBlob@ this)
 	
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 		
-		if (getNet().isClient() && this.isMyPlayer())
+		if (isClient() && this.isMyPlayer())
 		{
 			CCamera@ cam = getCamera();
 			cam.setRotation(0);
@@ -55,7 +55,7 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isClient() && this.isMyPlayer())
+	if (isClient() && this.isMyPlayer())
 	{
 		CCamera@ cam = getCamera();
 		cam.setRotation(0);

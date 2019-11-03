@@ -60,12 +60,12 @@ void onTick(CBlob@ this)
 				// f32 maxHealth = Maths::Ceil(this.getInitialHealth() * 2.00f);
 				// if (this.getHealth() < maxHealth)
 				// {				
-					// if (getNet().isServer())
+					// if (isServer())
 					// {
 						// this.server_SetHealth(Maths::Min(this.getHealth() + 0.125f, maxHealth));
 					// }
 					
-					// if (getNet().isClient())
+					// if (isClient())
 					// {
 						// for (int i = 0; i < 4; i++)
 						// {
@@ -87,7 +87,7 @@ void onTick(CBlob@ this)
 				// this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 			// }
 			
-			// if (getNet().isClient())
+			// if (isClient())
 			// {
 				// if (this.isMyPlayer())
 				// {
@@ -153,8 +153,8 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ h
 	
 	if (level > 1)
 	{
-		bool client = getNet().isClient();
-		bool server = getNet().isServer();
+		bool client = isClient();
+		bool server = isServer();
 		
 		Vec2f dir = worldPoint - this.getPosition();
 		f32 len = dir.getLength();

@@ -1,6 +1,8 @@
 ﻿#include "MakeMat.as";
 #include "Requirements.as";
 
+const u16 max_loop = 150; // what you get for breaking it
+
 void onInit(CSprite@ this)
 {
 	this.SetZ(-50);
@@ -30,7 +32,7 @@ void onInit(CBlob@ this)
 
 void client_UpdateName(CBlob@ this)
 {
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.setInventoryName("Compactor\n(" + this.get_u32("compactor_quantity") + " " + this.get_string("compactor_resource_name") + ")");
 	}
@@ -40,32 +42,33 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob is null) return;
 	
-	if (!blob.isAttached() && (blob.hasTag("material") || blob.hasTag("hopperable")))
+	if (!blob.isAttached() && !blob.hasTag("dead") && (blob.hasTag("material") || blob.hasTag("hopperable")))
 	{
 		string compactor_resource = this.get_string("compactor_resource");
 		
-		if (getNet().isServer() && compactor_resource == "")
+		if (isServer() && compactor_resource == "")
 		{
-			this.set_string("compactor_resource", blob.getConfig());
+			this.set_string("compactor_resource", blob.getName());
 			this.set_string("compactor_resource_name", blob.getInventoryName());
 			// this.Sync("compactor_resource", false);
 			// this.Sync("compactor_resource_name", false);
 			
-			compactor_resource = blob.getConfig();
+			compactor_resource = blob.getName();
 		}
 		
-		if (blob.getConfig() == compactor_resource)
+		if (blob.getName() == compactor_resource)
 		{
-			if (getNet().isServer()) 
+			if (isServer()) 
 			{
 				this.add_u32("compactor_quantity", blob.getQuantity());
 				// this.Sync("compactor_quantity", false);
 				
+				blob.Tag("dead");
 				blob.server_Die();
 				server_Sync(this);
 			}
 			
-			if (getNet().isClient())
+			if (isClient())
 			{
 				this.getSprite().PlaySound("bridge_open.ogg");
 			}
@@ -88,7 +91,7 @@ void GetButtonsFor( CBlob@ this, CBlob@ caller )
 // KAG's CBlob.Sync() is nonfunctional shit
 void server_Sync(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBitStream stream;
 		stream.write_string(this.get_string("compactor_resource_name"));
@@ -108,7 +111,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		{
 			u32 current_quantity = this.get_u32("compactor_quantity");
 		
-			if (getNet().isServer() && current_quantity > 0) 
+			if (isServer() && current_quantity > 0) 
 			{
 				CBlob@ blob = server_CreateBlob(this.get_string("compactor_resource"), this.getTeamNum(), this.getPosition());
 				if (blob !is null)
@@ -133,7 +136,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 	}
 	else if (cmd == this.getCommandID("compactor_sync"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			string name = params.read_string();
 			string config = params.read_string();
@@ -151,14 +154,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 void onDie(CBlob@ this)
 {
 	s32 current_quantity = this.get_u32("compactor_quantity");
-	if (getNet().isServer() && current_quantity > 0) 
+	if (isServer() && current_quantity > 0) 
 	{
 		const string resource_name = this.get_string("compactor_resource");
 		const u8 team = this.getTeamNum();
 		const Vec2f pos = this.getPosition();
-		
-		while (current_quantity > 0)
+		int loop_amount = 0;
+		while (current_quantity > 0 && loop_amount < max_loop)
 		{
+			loop_amount++;
 			CBlob@ blob = server_CreateBlob(resource_name, team, pos);
 			if (blob !is null)
 			{

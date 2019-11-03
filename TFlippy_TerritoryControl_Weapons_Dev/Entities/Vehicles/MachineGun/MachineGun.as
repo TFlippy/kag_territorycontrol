@@ -154,7 +154,7 @@ void onTick(CBlob@ this)
 		
 		if (ap.isKeyJustPressed(key_up))
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				gunner.server_DetachFrom(this);
 			}
@@ -212,7 +212,7 @@ u16 GetAmmo(CBlob@ this)
 
 void Shoot(CBlob@ this, f32 angle)
 {
-	if (getNet().isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
+	if (isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
 
 	angle = angle * (this.isFacingLeft() ? -1 : 1);
 	
@@ -231,13 +231,13 @@ void Shoot(CBlob@ this, f32 angle)
 	
 	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		DrawLine(this.getSprite(), startPos, length / 32, angle, this.isFacingLeft());
 		ShakeScreen(128, 48, hitPos);	
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blobHit)
 		{
@@ -284,7 +284,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	CBitStream params;
 	CBlob@ carried = caller.getCarriedBlob();
 	
-	if (this.get_u16("ammo_count") < max_ammo && carried !is null && carried.getConfig() == ammo_blob)
+	if (this.get_u16("ammo_count") < max_ammo && carried !is null && carried.getName() == ammo_blob)
 	{
 		params.write_netid(caller.getNetworkID());
 		CButton@ button = caller.CreateGenericButton("$" + ammo_blob + "$", Vec2f(0, 0), this, this.getCommandID("load_ammo"), "Load " + carried.getInventoryName() + "\n(" + this.get_u16("ammo_count") + " / " + max_ammo + ")", params);
@@ -298,12 +298,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ caller = getBlobByNetworkID(params.read_netid());
 		CBlob@ carried = caller.getCarriedBlob();
 		
-		if (carried !is null && carried.getConfig() == ammo_blob)
+		if (carried !is null && carried.getName() == ammo_blob)
 		{
 			u16 remain = GiveAmmo(this, carried.getQuantity());
 			// this.Sync("ammo_count", false); // fuck this broken sync shit
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				if (remain == 0)
 				{

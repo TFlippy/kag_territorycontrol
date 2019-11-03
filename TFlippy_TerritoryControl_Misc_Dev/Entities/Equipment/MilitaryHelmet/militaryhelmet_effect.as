@@ -65,7 +65,7 @@ void onTick(CBlob@ this)
  
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ item = server_CreateBlob("militaryhelmet", this.getTeamNum(), this.getPosition());
 		if (item !is null)

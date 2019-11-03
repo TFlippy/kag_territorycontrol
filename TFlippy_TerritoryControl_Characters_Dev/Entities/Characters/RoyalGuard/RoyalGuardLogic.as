@@ -267,7 +267,10 @@ void onTick(CBlob@ this)
 							{
 								Vec2f velr = getRandomVelocity(!this.isFacingLeft() ? 70 : 110, 4.3f, 40.0f);
 								velr.y = -Maths::Abs(velr.y) + Maths::Abs(velr.x) / 3.0f - 2.0f - float(XORRandom(100)) / 100.0f;
-								ParticlePixel(pos, velr, SColor(255, 255, 255, 0), true);
+								if(isClient()){
+									ParticlePixel(pos, velr, SColor(255, 255, 255, 0), true);
+								}
+								
 							}
 						}
 					}
@@ -287,7 +290,7 @@ void onTick(CBlob@ this)
 	}
 	else if ((pressed_a1 || swordState) && !moveVars.wallsliding)   //no attacking during a slide
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			if (knight.swordTimer == KnightVars::slash_charge_level2)
 			{
@@ -323,7 +326,7 @@ void onTick(CBlob@ this)
 			knight.swordTimer = 0;
 		}
 
-		if (knight.state == KnightStates::sword_drawn && getNet().isServer())
+		if (knight.state == KnightStates::sword_drawn && isServer())
 		{
 			knight_clear_actor_limits(this);
 		}
@@ -496,23 +499,26 @@ void onTick(CBlob@ this)
 				for (int i = 0; i < inv.getItemsCount(); i++)
 				{
 					CBlob@ item = inv.getItem(i);
-					const string itemname = item.getName();
-					if (!holding && bombTypeNames[bombType] == itemname)
+					if(item !is null)
 					{
-						if (bombType >= 2)
+						const string itemname = item.getName();
+						if (!holding && bombTypeNames[bombType] == itemname)
 						{
-							this.server_Pickup(item);
-							client_SendThrowOrActivateCommand(this);
-							thrown = true;
+							if (bombType >= 2)
+							{
+								this.server_Pickup(item);
+								client_SendThrowOrActivateCommand(this);
+								thrown = true;
+							}
+							else
+							{
+								CBitStream params;
+								params.write_u8(bombType);
+								this.SendCommand(this.getCommandID("get bomb"), params);
+								thrown = true;
+							}
+							break;
 						}
-						else
-						{
-							CBitStream params;
-							params.write_u8(bombType);
-							this.SendCommand(this.getCommandID("get bomb"), params);
-							thrown = true;
-						}
-						break;
 					}
 				}
 			}
@@ -622,7 +628,7 @@ void onTick(CBlob@ this)
 		}
 	}
 
-	if (!swordState && getNet().isServer())
+	if (!swordState && isServer())
 	{
 		knight_clear_actor_limits(this);
 	}
@@ -644,7 +650,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			if (bombType == 0)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					CBlob @blob = server_CreateBlob("bomb", this.getTeamNum(), this.getPosition());
 					if (blob !is null)
@@ -656,7 +662,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 			else if (bombType == 1)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					CBlob @blob = server_CreateBlob("waterbomb", this.getTeamNum(), this.getPosition());
 					if (blob !is null)
@@ -798,7 +804,7 @@ bool isJab(f32 damage)
 
 void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, int deltaInt, KnightInfo@ info)
 {
-	if (!getNet().isServer())
+	if (!isServer())
 	{
 		return;
 	}
@@ -1258,5 +1264,5 @@ bool canHit(CBlob@ this, CBlob@ b)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer()) server_CreateBlob("royalarmor", this.getTeamNum(), this.getPosition());
+	if (isServer()) server_CreateBlob("royalarmor", this.getTeamNum(), this.getPosition());
 }

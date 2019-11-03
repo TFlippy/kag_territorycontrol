@@ -24,7 +24,7 @@ void onInit(CBlob@ this)
 	this.set_u16("target", 0);
 	this.set_u32("next_launch", 0);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (this.getTeamNum() == 250)
 		{
@@ -62,7 +62,7 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 	if (this.getTeamNum() != forBlob.getTeamNum()) return false;
 
 	CBlob@ carried = forBlob.getCarriedBlob();
-	return (carried is null ? true : carried.getConfig() == "mat_sammissile");
+	return (carried is null ? true : carried.getName() == "mat_sammissile");
 }
 
 u8 GetAmmo(CBlob@ this)
@@ -139,7 +139,7 @@ void onTick(CBlob@ this)
 			int ammo = GetAmmo(this);
 			if (ammo > 0)
 			{
-				if (getNet().isServer())
+				if (isServer())
 				{
 					Vec2f dir = t.getPosition() - this.getPosition();
 					dir.Normalize();
@@ -176,7 +176,7 @@ void onTick(CSprite@ this)
 	CBlob@ blob = this.getBlob();
 	if (blob.get_bool("security_state"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{					
 			CBlob@ target = getBlobByNetworkID(blob.get_u16("target"));
 			if (target !is null)

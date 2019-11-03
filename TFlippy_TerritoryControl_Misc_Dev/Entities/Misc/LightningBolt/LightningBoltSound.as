@@ -3,7 +3,7 @@ void onInit(CBlob@ this)
 	this.getShape().SetStatic(true);
 	this.server_SetTimeToDie(10);
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CBlob@ localBlob = getLocalPlayerBlob();
 		if (localBlob !is null)
@@ -20,7 +20,7 @@ void onTick(CBlob@ this)
 {
 	if (this.hasTag("sound_played")) return;
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		int time = this.getTickSinceCreated();
 		f32 distance = this.get_f32("distance");

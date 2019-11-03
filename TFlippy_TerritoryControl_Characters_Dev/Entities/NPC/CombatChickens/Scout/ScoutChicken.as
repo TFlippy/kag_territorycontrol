@@ -8,7 +8,7 @@
 
 void onInit(CBlob@ this)
 {
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 	this.set_u32("nextAttack", 0);
 	this.set_u32("nextBomb", 0);
 	
@@ -146,12 +146,15 @@ void onInit(CBlob@ this)
 		}
 		
 		CBlob@ gun = server_CreateBlob(gun_config, this.getTeamNum(), this.getPosition());
-		this.server_Pickup(gun);
-		
-		if (gun.hasCommandID("cmd_gunReload"))
+		if(gun !is null)
 		{
-			CBitStream stream;
-			gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+			this.server_Pickup(gun);
+		
+			if (gun.hasCommandID("cmd_gunReload"))
+			{
+				CBitStream stream;
+				gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+			}
 		}
 		
 		// CBrain@ brain = this.getBrain();

@@ -4,7 +4,7 @@
 
 void onInit( CBrain@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -37,7 +37,7 @@ CBlob@ FindTarget(CBrain@ this, f32 maxDistance)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 	
 	CBlob@ blob = this.getBlob();
 	
@@ -48,7 +48,7 @@ void onTick(CBrain@ this)
 	
 	CBlob@ target = this.getTarget();
 
-	// print("" + target.getConfig());
+	// print("" + target.getName());
 	
 	if (target is null)
 	{
@@ -58,7 +58,7 @@ void onTick(CBrain@ this)
 	
 	if (target !is null && target !is blob)
 	{			
-		// print("" + target.getConfig());
+		// print("" + target.getName());
 	
 		this.getCurrentScript().tickFrequency = 1;
 		

@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "Explosion.as";
+#include "Knocked.as"
 
 string[] particles = 
 {
@@ -54,21 +55,29 @@ void onTick(CBlob@ this)
 		this.set_Vec2f("direction", nDir);
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-		CBlob@ holder = point.getOccupied();
-		
-		if (holder !is null)
+		if(point !is null)
 		{
-			holder.setVelocity(nDir * this.get_f32("velocity"));
+			CBlob@ holder = point.getOccupied();
+		
+			if (holder !is null)
+			{
+				holder.setVelocity(nDir * this.get_f32("velocity"));
+			}
 		}
 		
-		MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
 		
-		if (getNet().isServer())
+		
+		
+		if (isServer())
 		{
 			if (getGameTime() >= this.get_u32("explosion_timer") || this.getPosition().y < 64) 
 			{
 				this.server_Die();
 			}
+		}
+		else
+		{
+			MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
 		}
 	}		
 }
@@ -133,23 +142,35 @@ void DoExplosion(CBlob@ this)
 		SetScreenFlash(100, c.getRed(), c.getGreen(), c.getBlue());		
 	}
 	
+
+	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+	if (point !is null)
+	{
+		CBlob@ holder = point.getOccupied();
+		if (holder !is null)
+		{
+			SetKnocked(holder, 90);
+		}
+	}
+	
+	
 	this.Tag("dead");
 	this.getSprite().Gib();
 }
 
 void MakeExplosionParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(8), 0, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(8), 0, true);
 }
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(0, 16).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void onDie(CBlob@ this)
@@ -159,7 +180,7 @@ void onDie(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer() && this.getOldVelocity().y < -6 && this.hasTag("offblast") && blob is null && solid) this.server_Die();
+	if (isServer() && this.getOldVelocity().y < -6 && this.hasTag("offblast") && blob is null && solid) this.server_Die();
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

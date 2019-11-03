@@ -8,7 +8,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (!getNet().isServer() || getGameTime() < 60) return;
+	if (!isServer() || getGameTime() < 60) return;
 
 	if (this.getShape().getCurrentSupport() < 0.001f)
 	{

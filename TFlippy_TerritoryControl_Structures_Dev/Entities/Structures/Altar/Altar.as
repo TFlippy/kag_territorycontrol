@@ -33,7 +33,7 @@ void onInit(CBlob@ this)
 {
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
 
-	if (this.getConfig() == "altar")
+	if (this.getName() == "altar")
 	{
 		this.set_Vec2f("shop menu size", Vec2f(6, 2));
 		this.set_string("shop description", "Select a Deity");
@@ -80,7 +80,7 @@ void onInit(CBlob@ this)
 
 // void GetButtonsFor(CBlob@ this, CBlob@ caller)
 // {
-	// if (this.getConfig() != "altar")
+	// if (this.getName() != "altar")
 	
 	// {
 	
@@ -96,9 +96,9 @@ void onInit(CBlob@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (this.getConfig() == "altar")
+	if (this.getName() == "altar")
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (cmd == this.getCommandID("shop made item"))
 			{
@@ -112,7 +112,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				this.getSprite().PlaySound("/Construct.ogg");
 				this.getSprite().getVars().gibbed = true;
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					CBlob@ newBlob = server_CreateBlob(data, team, pos);
 					this.server_Die();

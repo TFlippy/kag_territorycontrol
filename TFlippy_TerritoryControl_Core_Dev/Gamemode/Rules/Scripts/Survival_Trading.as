@@ -2,6 +2,7 @@
 #include "Descriptions.as"
 #include "GameplayEvents.as"
 #include "Survival_Structs.as";
+#include "CustomBlocks.as";
 
 #define SERVER_ONLY
 
@@ -241,7 +242,7 @@ f32 onPlayerTakeDamage(CRules@ this, CPlayer@ victim, CPlayer@ attacker, f32 Dam
 	{
 		CBlob@ blob = attacker.getBlob();
 	
-		if (blob !is null) attacker.server_setCoins(attacker.getCoins() + DamageScale * coinsOnDamageAdd / this.attackdamage_modifier + (blob.getConfig() == "bandit" ? 10 : 0));
+		if (blob !is null) attacker.server_setCoins(attacker.getCoins() + DamageScale * coinsOnDamageAdd / this.attackdamage_modifier + (blob.getName() == "bandit" ? 10 : 0));
 	}
 
 	return DamageScale;
@@ -249,91 +250,54 @@ f32 onPlayerTakeDamage(CRules@ this, CPlayer@ victim, CPlayer@ attacker, f32 Dam
 
 void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 {
-	//only important on server
-	if (isServer()){
-		return;
-	}
-
-	if (cmd == getGameplayEventID(this))
+	if (isServer())
 	{
-		GameplayEvent g(params);
-
-		CPlayer@ p = g.getPlayer();
-		if (p !is null)
+		if (cmd == getGameplayEventID(this))
 		{
-			u32 coins = 0;
+			GameplayEvent g(params);
 
-			switch (g.getType())
+			CPlayer@ p = g.getPlayer();
+			if (p !is null)
 			{
-				case GE_built_block:
+				u32 coins = 0;
 
+				switch (g.getType())
 				{
-					g.params.ResetBitIndex();
-					u16 tile = g.params.read_u16();
-					if (tile == CMap::tile_castle)
+					case GE_built_block:
 					{
+						g.params.ResetBitIndex();
+						u16 tile = g.params.read_u16();
+						
+						switch (tile)
+						{
+							case CMap::tile_wood: coins = 2; break;
+							
+							case CMap::tile_castle:
+							case CMap::tile_concrete: coins = 4; break;
+							
+							case CMap::tile_iron: coins = 6; break;
+							
+							case CMap::tile_reinforcedconcrete: coins = 8; break;
+							
+							case CMap::tile_plasteel: coins = 10; break;
+						}
+					}
+					break;
+
+					case GE_built_blob:
+					{
+						g.params.ResetBitIndex();
+						string name = g.params.read_string();
+
 						coins = coinsOnBuild;
 					}
-					else if (tile == CMap::tile_wood)
-					{
-						coins = coinsOnBuildWood;
-					}
+					break;
 				}
 
-				break;
-
-				case GE_built_blob:
-
+				if (coins > 0)
 				{
-					g.params.ResetBitIndex();
-					string name = g.params.read_string();
-					switch(name.getHash())
-					{
-						case 804095823://wooden_platform hash
-						case 916369496://trap_block
-						case 439106706://spikes
-						{
-							coins = coinsOnBuild;
-						}
-						break;
-
-						case 954139509://building
-						{
-							coins = coinsOnBuildWorkshop;
-						}
-
-						default:
-						{
-							if(name.findFirst("door") != -1)
-							{
-								coins = coinsOnBuild;
-							}
-						}
-					}
-
+					p.server_setCoins(p.getCoins() + coins);
 				}
-
-				break;
-
-				case GE_hit_vehicle:
-					coins = coinsOnHitSiege;
-					break;
-
-				case GE_kill_vehicle:
-					coins = coinsOnKillSiege;
-					break;
-
-				case GE_captured_flag:
-					coins = coinsOnCapFlag;
-					break;
-			}
-
-			if (coins > 0)
-			{
-				if (this.isWarmup())
-					coins /= warmupFactor;
-
-				p.server_setCoins(p.getCoins() + coins);
 			}
 		}
 	}

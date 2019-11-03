@@ -175,13 +175,13 @@ void Smite(CBlob@ this, CBlob@ target)
 	SetKnocked(target, 90);
 	target.set_u32("next smite", getGameTime() + 30);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		f32 damage = target.getInitialHealth() * 0.75f;
 		this.server_Hit(target, target.getPosition(), dir, 1000.00f, Hitters::fire);
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().PlaySound("DemonicBoing");
 		

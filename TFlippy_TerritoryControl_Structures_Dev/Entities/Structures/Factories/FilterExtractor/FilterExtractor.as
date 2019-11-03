@@ -37,7 +37,8 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		// if (this.getMap().getBlobsInRadius(this.getPosition(), 32.0f, @blobs))
@@ -54,7 +55,7 @@ void onTick(CBlob@ this)
 					for (int i = 0; i < count; i++)
 					{
 						CBlob@ item = b.getInventory().getItem(i);
-						if (item !is null && this.hasBlob(item.getConfig(), 0) || this.hasBlob(item.getConfig(), 1))
+						if (item !is null && this.hasBlob(item.getName(), 0) || this.hasBlob(item.getName(), 1))
 						{
 							b.server_PutOutInventory(item);
 							item.setPosition(this.getPosition());
@@ -65,7 +66,7 @@ void onTick(CBlob@ this)
 					
 					// if (b.getInventory().getItemsCount() > 0)
 					// {
-						// // return !(this.hasBlob(blob.getConfig(), 0) || this.hasBlob(blob.getConfig(), 1));
+						// // return !(this.hasBlob(blob.getName(), 0) || this.hasBlob(blob.getName(), 1));
 					
 						// CBlob@ item = b.getInventory().getItem(0);
 
@@ -76,4 +77,19 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
+}
+
+
+void onAddToInventory( CBlob@ this, CBlob@ blob )
+{
+	if(blob.getName() != "gyromat") return;
+
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+}
+
+void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
+{
+	if(blob.getName() != "gyromat") return;
+	
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

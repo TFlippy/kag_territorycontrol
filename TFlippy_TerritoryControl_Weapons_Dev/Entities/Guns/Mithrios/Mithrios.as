@@ -48,7 +48,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 1;
 	// this.getCurrentScript().runFlags |= Script::tick_attached;
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_CreateBlob("lightningbolt", -1, this.getPosition());
 	}
@@ -71,8 +71,8 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 
 void onTick(CBlob@ this)
 {
-	const bool server = getNet().isServer();
-	const bool client = getNet().isClient();
+	const bool server = isServer();
+	const bool client = isClient();
 
 	const f32 kill_count = this.get_f32("kill_count");
 	
@@ -134,11 +134,12 @@ void onTick(CBlob@ this)
 		UpdateAngle(this);
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null) {return;}
 		CBlob@ holder = point.getOccupied();
 
 		if (holder is null) return;
 
-		if (holder.get_u8("knocked") <= 0)
+		if (getKnocked(holder) <= 0)
 		{
 			CSprite@ sprite = this.getSprite();
 			
@@ -186,7 +187,7 @@ void onTick(CBlob@ this)
 								
 								if (client)
 								{
-									ParticleAnimated(CFileMatcher("SmallExplosion.png").getFirst(), blob.getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 2, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
+									ParticleAnimated("SmallExplosion.png", blob.getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 2, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
 								}
 								
 								mod /= 2.00f;
@@ -222,7 +223,7 @@ void onTick(CBlob@ this)
 							
 							if (client)
 							{
-								ParticleAnimated(CFileMatcher("SmallExplosion.png").getFirst(), bpos + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 2, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
+								ParticleAnimated("SmallExplosion.png", bpos + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 2, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
 							}
 						}
 						
@@ -260,7 +261,7 @@ void onTick(CBlob@ this)
 					// {
 						// CMap@ map = getMap();
 						
-						// if (getNet().isServer())
+						// if (isServer())
 						// {
 							// // SpawnBoom(this, hitPos);
 						// }
@@ -274,7 +275,7 @@ void onTick(CBlob@ this)
 				ShakeScreen(64, 32, startPos);
 				holder.AddForce(-aimDir * 100.00f);
 				
-				if (getNet().isClient())
+				if (isClient())
 				{
 					CSpriteLayer@ zap = this.getSprite().getSpriteLayer("zap");
 					if (zap !is null)

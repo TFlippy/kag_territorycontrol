@@ -20,7 +20,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getPosition().y < 0) this.server_Die();
+	if (isServer() && this.getPosition().y < 0) this.server_Die();
 	
 	CBlob@[] blobsInRadius;
 	if (this.getMap().getBlobsInRadius(this.getPosition(), this.getRadius() * 1.5f, @blobsInRadius))
@@ -35,7 +35,7 @@ void onTick(CBlob@ this)
 			
 				// blob.set_u8("mustard value", Maths::Clamp(blob.get_u8("mustard value") + 1, 0, 64));
 			
-				// if (getNet().isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.0625f, Hitters::burn);
+				// if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.0625f, Hitters::burn);
 			
 				// if (!blob.hasTag("mustarded"))
 				// {

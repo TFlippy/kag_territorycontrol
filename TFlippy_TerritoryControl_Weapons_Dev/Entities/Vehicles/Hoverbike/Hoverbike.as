@@ -85,7 +85,7 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		boom.setPosition(this.getPosition());
@@ -105,7 +105,7 @@ void onDie(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blob !is null ? !blob.isCollidable() : !solid) return;
 

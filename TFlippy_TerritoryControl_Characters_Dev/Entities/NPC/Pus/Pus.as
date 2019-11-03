@@ -49,7 +49,7 @@ void onInit(CBlob@ this)
 	this.set_bool("map_damage_raycast", true);
 	
 	this.set_f32("voice pitch", 1.75f);
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 1, 1);
 	this.server_setTeamNum(231);
 }
 
@@ -122,7 +122,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 	if (!this.hasTag("dead"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			if (getGameTime() > this.get_u32("next sound") - 130)
 			{
@@ -131,7 +131,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			}
 		}
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBrain@ brain = this.getBrain();
 			
@@ -147,8 +147,8 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void ClawHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)
 {
-	bool client = getNet().isClient();
-	bool server = getNet().isServer();
+	bool client = isClient();
+	bool server = isServer();
 	
 	Vec2f dir = worldPoint - this.getPosition();
 	f32 len = dir.getLength();

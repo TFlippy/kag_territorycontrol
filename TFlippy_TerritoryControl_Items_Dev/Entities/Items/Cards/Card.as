@@ -28,6 +28,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	if(!isClient()){return;}
 	CShape@ shape = this.getShape();
 	this.getSprite().RotateBy(20, Vec2f());
 		
@@ -61,15 +62,16 @@ void onTick(CBlob@ this)
 
 void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.015625f * rad;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void makeSteamPuff(CBlob@ this, const f32 velocity = 1.0f, const int smallparticles = 10, const bool sound = true)
 {
+	if(!isClient()){return;}
 	if (sound)
 	{
 		this.getSprite().PlaySound("Steam.ogg");
@@ -95,15 +97,15 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		switch (this.get_u8("type"))
 		{
 			case 0:
-				if (getNet().isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0,0), 3.0f, HittersTC::magix);
+				if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0,0), 3.0f, HittersTC::magix);
 				break;
 				
 			case 1:
-				if (getNet().isServer()) blob.server_Heal(20);
+				if (isServer()) blob.server_Heal(20);
 				break;
 				
 			case 2:
-				if (getNet().isServer()) blob.server_Heal(20);
+				if (isServer()) blob.server_Heal(20);
 				break;
 				
 			case 3:
@@ -112,25 +114,25 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 				break;
 				
 			case 4:
-				if (getNet().isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0,0), 1.0f, Hitters::fire);
+				if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0,0), 1.0f, Hitters::fire);
 				break;
 				
 			case 5:
 				if (!solid && blob.hasTag("vehicle"))
 				{
 					ParticlesFromSprite(this.getSprite());
-					if (getNet().isServer()) blob.server_Heal(20);
+					if (isServer()) blob.server_Heal(20);
 				}
 				break;
 				
 			case 6:
-				if (getNet().isServer()) for (int i = 0; i < 4; i++) this.server_Hit(blob, blob.getPosition(), this.getVelocity()*20, 0.25, Hitters::nothing);
+				if (isServer()) for (int i = 0; i < 4; i++) this.server_Hit(blob, blob.getPosition(), this.getVelocity()*20, 0.25, Hitters::nothing);
 				makeSteamPuff(this);
 				break;
 		}
 	}
 	
-	if(solid || this.hasTag("collided"))if (getNet().isServer()) this.server_Die();
+	if(solid || this.hasTag("collided"))if (isServer()) this.server_Die();
 }
 
 string[] cog_names = {
@@ -146,7 +148,7 @@ void onDie(CBlob@ this)
 
 	CMap@ map = this.getMap();
 
-	if(getNet().isServer()){
+	if(isServer()){
 		
 		if(this.get_u8("type") == 1){
 			CBlob@[] blobs;
@@ -255,6 +257,7 @@ void onDie(CBlob@ this)
 		}
 	}
 	
+	if(!isClient()){return;}
 	if(this.get_u8("type") == 1){
 		Vec2f vec = Vec2f(64,0);
 		for(int r = 0; r < 360; r += 10){
@@ -318,7 +321,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 {
-	if (!getNet().isServer())
+	if (!isServer())
 	{
 		return;
 	}

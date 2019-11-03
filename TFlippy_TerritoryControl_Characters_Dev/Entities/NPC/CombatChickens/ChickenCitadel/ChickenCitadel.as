@@ -20,7 +20,7 @@
 	sprite.SetEmitSoundPaused(false);
 	sprite.SetEmitSoundVolume(0.5f);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -33,7 +33,7 @@ void onTick(CBlob@ this)
 {
 	SetMinimap(this);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if(getGameTime() % 30 == 0)
 		{
@@ -63,7 +63,7 @@ void SetMinimap(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_DropCoins(this.getPosition(), 1000 + XORRandom(500));
 	}

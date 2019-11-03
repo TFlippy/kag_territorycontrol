@@ -14,6 +14,7 @@ const string[] seed_sprites =
 	"Entities/Natural/Seed/Seed.png",  //bush
 	"Entities/Natural/Seed/Seed.png",  //flowers
 	"Entities/Natural/Seed/Seed.png",  //pumpkin
+	"Entities/Natural/Seed/Seed.png",  //protopopov
 };
 
 // names of seeds
@@ -26,7 +27,8 @@ const string[] seed_names =
 	"Grain",       //grains
 	"Bush seed",    //bush
 	"Flower seed",   //flowers
-	"Pumpkin seed"   //flowers
+	"Pumpkin seed",   //flowers
+	"Protopopov seed"   //flowers
 };
 
 const u32 OPT_TICK = 31;
@@ -130,7 +132,7 @@ void onTick(CBlob@ this)
 	{
 		this.server_Die();
 
-		if (getNet().isServer())
+		if (isServer())
 		{
 			float rad = f32(this.get_u8("created_blob_radius")) - this.getRadius();
 			CBlob@ b = server_CreateBlob(this.get_string("seed_grow_blobname"), -1, this.getPosition() + Vec2f(0, rad));
@@ -144,10 +146,16 @@ void onTick(CBlob@ this)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (customData == Hitters::saw || customData == Hitters::sword || customData == Hitters::builder || customData == Hitters::stab)
+	switch (customData)
 	{
-		damage = 0.00f;
+		case Hitters::saw:
+		case Hitters::sword:
+		case Hitters::builder:
+		case Hitters::stab:
+		case Hitters::fall:
+			damage = 0.00f;
+			break;
 	}
-	
+
 	return damage;
 }

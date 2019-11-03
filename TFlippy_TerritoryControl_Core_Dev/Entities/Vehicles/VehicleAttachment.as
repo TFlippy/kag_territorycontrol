@@ -35,7 +35,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (getNet().isServer() && cmd == this.getCommandID("attach vehicle"))
+	if (isServer() && cmd == this.getCommandID("attach vehicle"))
 	{
 		CBlob@ vehicle = getBlobByNetworkID(params.read_netid());
 		const u8 id = params.read_u8();
@@ -45,7 +45,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			this.server_AttachTo(vehicle, att.getAttachmentPointByID(id));
 		}
 	}
-	else if (getNet().isServer() && cmd == this.getCommandID("detach vehicle"))
+	else if (isServer() && cmd == this.getCommandID("detach vehicle"))
 	{
 		CBlob@ vehicle = getBlobByNetworkID(params.read_netid());
 		if (vehicle !is null)

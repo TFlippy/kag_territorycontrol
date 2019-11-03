@@ -19,16 +19,16 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getPosition().y < 0) this.server_Die();
+	if (isServer() && this.getPosition().y < 0) this.server_Die();
 
 	MakeParticle(this);
 }
 
 void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + Vec2f(XORRandom(200) / 10.0f - 10.0f, XORRandom(200) / 10.0f - 10.0f), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 3, 0.0f, false);
+	ParticleAnimated(filename, this.getPosition() + Vec2f(XORRandom(200) / 10.0f - 10.0f, XORRandom(200) / 10.0f - 10.0f), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 3, 0.0f, false);
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)

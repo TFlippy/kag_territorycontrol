@@ -21,7 +21,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob !is null && blob.hasTag("flesh"))
 	{
-		this.server_Hit(blob, this.getPosition(), Vec2f(0, 0), 0.125f, Hitters::spikes, true);
+		if (isServer()) this.server_Hit(blob, this.getPosition(), Vec2f(0, 0), 0.125f, Hitters::spikes, true);
 	}
 }
 
@@ -29,7 +29,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 {
 	if (hitterBlob !is null && hitterBlob !is this && customData == Hitters::builder)
 	{
-		this.server_Hit(hitterBlob, this.getPosition(), Vec2f(0, 0), 0.125f, Hitters::spikes, false);
+		if (isServer()) this.server_Hit(hitterBlob, this.getPosition(), Vec2f(0, 0), 0.125f, Hitters::spikes, false);
 	}
 	
 	return damage;

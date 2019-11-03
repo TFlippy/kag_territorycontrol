@@ -24,7 +24,7 @@ const string[] screams =
 void onInit(CSprite@ this)
 {
 	this.ReloadSprites(0, 0); //always blue
-	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
+	this.addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 }
 
 void onTick(CSprite@ this)

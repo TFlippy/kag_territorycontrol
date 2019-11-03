@@ -98,10 +98,10 @@ void onTick(CBlob@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	bool isServer = getNet().isServer();
+	bool is_server = isServer();
 
 	/// LOAD AMMO
-	if (isServer && cmd == this.getCommandID("load_ammo"))
+	if (is_server && cmd == this.getCommandID("load_ammo"))
 	{
 		VehicleInfo@ v;
 		if (!this.get("VehicleInfo", @v))
@@ -142,7 +142,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 	}
 	/// PUT IN MAG
-	else if (isServer && cmd == this.getCommandID("putin_mag"))
+	else if (is_server && cmd == this.getCommandID("putin_mag"))
 	{
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 		CBlob@ blob = getBlobByNetworkID(params.read_u16());
@@ -170,7 +170,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			return;
 		}
 		Fire(this, v, caller, charge);
-		if (isServer)
+		if (is_server)
 			RecountAmmo(this, v);
 	}
 	/// FLIP OVER
@@ -186,14 +186,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 	}
 	/// GET IN MAG
-	else if (isServer && cmd == this.getCommandID("getin_mag"))
+	else if (is_server && cmd == this.getCommandID("getin_mag"))
 	{
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 		if (caller !is null)
 			this.server_AttachTo(caller, "MAG");
 	}
 	/// GET OUT
-	else if (isServer && cmd == this.getCommandID("vehicle getout"))
+	else if (is_server && cmd == this.getCommandID("vehicle getout"))
 	{
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 
@@ -203,7 +203,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 	}
 	/// RELOAD as in server_LoadAmmo   - client-side
-	else if (!isServer && cmd == this.getCommandID("reload"))
+	else if (!is_server && cmd == this.getCommandID("reload"))
 	{
 		u8 loadedAmmo = params.read_u8();
 
@@ -219,7 +219,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 		v.loaded_ammo = loadedAmmo;
 	}
-	else if (!isServer && cmd == this.getCommandID("recount ammo"))
+	else if (!is_server && cmd == this.getCommandID("recount ammo"))
 	{
 		VehicleInfo@ v;
 		if (!this.get("VehicleInfo", @v))

@@ -73,14 +73,19 @@ void onTick(CBlob@ this)
 		this.setAngleDegrees(-nDir.getAngleDegrees() + 90);
 		this.setVelocity(nDir * this.get_f32("velocity"));
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (dist < 8) this.server_Die();
 		}
 		
 		this.set_Vec2f("direction", nDir);
+
+
+		if(isClient())
+		{
+			MakeParticle(this, -dir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
+		}
 		
-		MakeParticle(this, -dir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
 	}		
 	
 }
@@ -127,17 +132,17 @@ void DoExplosion(CBlob@ this)
 
 void MakeExplosionParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(8), 0, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(8), 0, true);
 }
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(0, 16).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void onDie(CBlob@ this)

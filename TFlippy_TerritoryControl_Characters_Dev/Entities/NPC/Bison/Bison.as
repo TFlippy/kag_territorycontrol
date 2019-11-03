@@ -53,6 +53,7 @@ void onInit(CBlob@ this)
 	this.set_f32(target_searchrad_property, 320.0f);
 	this.set_f32(terr_rad_property, 85.0f);
 	this.set_u8(target_lose_random, 34);
+	this.set_u32("next_fart", getGameTime() + XORRandom(30 * 10));
 
 	this.getBrain().server_SetActive(true);
 
@@ -76,6 +77,8 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().runProximityRadius = 320.0f;
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 
+	this.addCommandID("bison_fart");
+	
 	AttachmentPoint@[] aps;
 	if (this.getAttachmentPoints(@aps))
 	{
@@ -83,6 +86,29 @@ void onInit(CBlob@ this)
 		{
 			AttachmentPoint@ ap = aps[i];
 			ap.offsetZ = 10.0f;
+		}
+	}
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+{
+	if (cmd == this.getCommandID("bison_fart"))
+	{
+		if (isClient())
+		{
+			this.getSprite().PlaySound("drunk_fx3.ogg", 0.50f, 0.80f);
+		}
+	
+		if (isServer())
+		{
+			s32 count = 1 + XORRandom(3);
+			f32 flip = this.isFacingLeft() ? 1 : -1;
+			
+			for (s32 i = 0; i < count; i++)
+			{
+				CBlob@ blob = server_CreateBlob("methane", -1, this.getPosition() + Vec2f(16 * flip, XORRandom(8)));
+				blob.setVelocity(this.getVelocity() + Vec2f(i * flip, 0));
+			}
 		}
 	}
 }
@@ -132,6 +158,12 @@ void onTick(CBlob@ this)
 			this.getSprite().PlaySound("/BisonBoo");
 	}
 
+	if (isServer() && getGameTime() >= this.get_u32("next_fart"))
+	{
+		this.SendCommand(this.getCommandID("bison_fart"));
+		this.set_u32("next_fart", getGameTime() + (30 * 30) + XORRandom(30 * 60));
+	}
+	
 	// footsteps
 
 	if (this.isOnGround() && (this.isKeyPressed(key_left) || this.isKeyPressed(key_right)))
@@ -226,7 +258,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		{
 			this.getSprite().PlaySound("/Eat.ogg");
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_SetHealth(this.getInitialHealth());
 				blob.server_Die();
@@ -250,13 +282,16 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		}
 		else if (blob.getName() == "mat_mithril" && blob.getQuantity() > 25)
 		{
-			ParticleZombieLightning(this.getPosition());
-			this.getSprite().PlaySound("/BisonMad", 1.5f, 0.5f);
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBlob@ cowo = server_CreateBlob("cowo", this.getTeamNum(), this.getPosition());
 				this.server_Die();
+			}
+			else
+			{
+				ParticleZombieLightning(this.getPosition());
+				this.getSprite().PlaySound("/BisonMad", 1.5f, 0.5f);
 			}
 		}
 	}

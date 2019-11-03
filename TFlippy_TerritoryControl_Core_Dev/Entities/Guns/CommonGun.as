@@ -165,8 +165,9 @@ void GunTick(CBlob@ this)
 		return;
 	}
 	AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
-	CBlob@ holder=			point.getOccupied();
-	//point.SetKeysToTake(key_action1); //this..... doesn't work........ serverside......
+	if(point is null){return;}
+		CBlob@ holder=			point.getOccupied();
+		//point.SetKeysToTake(key_action1); //this..... doesn't work........ serverside......
 	if(holder is null){
 		if(soundFireLoop){
 			sprite.SetEmitSoundPaused(true);
@@ -174,6 +175,7 @@ void GunTick(CBlob@ this)
 		}
 		return;
 	}
+	
 	CInventory@ inv=	holder.getInventory();
 	CPlayer@ player=	holder.getPlayer();
 	UpdateAngle(this);
@@ -197,7 +199,7 @@ void GunTick(CBlob@ this)
 			if(!this.get_bool("gun_shotgunReload")){
 				this.set_bool("gun_doReload",false);
 			}else{
-				if(getNet().isClient()) {
+				if(isClient()) {
 					PlayWeaponSound(this,"gun_soundReload");
 				}
 				if(this.get_u32("gun_clip")!=this.get_u32("gun_clipSize") && CountAmmo(inv,ammoItem)>0) {
@@ -224,7 +226,7 @@ void GunTick(CBlob@ this)
 	f32	ammoUsage=	this.get_f32("gun_ammoUsage");
 	CControls@ controls=	getControls();
 	if(player !is null){
-		if(getNet().isClient() && player.isMyPlayer()){
+		if(isClient() && player.isMyPlayer()){
 			if(controls.isKeyJustPressed(KEY_KEY_R) && this.hasCommandID("cmd_gunReload")) {
 				CBitStream stream;
 				this.SendCommand(this.getCommandID("cmd_gunReload"),stream);
@@ -239,7 +241,7 @@ void GunTick(CBlob@ this)
 					StartReload(this,inv,ammoItem,clip,clipSize);
 				}
 			}else{
-				if(getNet().isClient() && holder.hasTag("flesh")) {
+				if(isClient() && holder.hasTag("flesh")) {
 					this.getSprite().PlaySound("Entities/Characters/Sounds/NoAmmo.ogg",0.6f,1.0);
 				}
 			}
@@ -278,7 +280,7 @@ void GunTick(CBlob@ this)
 				if(!this.get_bool("gun_isAutomatic")){
 					this.set_bool("gun_needsRelease",true);
 				}
-				if(getNet().isClient()) {
+				if(isClient()) {
 					if(!soundFireLoop){
 						PlayWeaponSound(this,"gun_soundFire");
 					}else{
@@ -294,7 +296,7 @@ void GunTick(CBlob@ this)
 					}
 				}
 			}else{
-				if(getNet().isClient()) {
+				if(isClient()) {
 					if(soundFireLoop){
 						if(!sprite.getEmitSoundPaused()){
 							sprite.SetEmitSoundPaused(true);
@@ -308,7 +310,7 @@ void GunTick(CBlob@ this)
 					StartReload(this,inv,ammoItem,clip,clipSize);
 				}else{
 					this.set_bool("gun_needsRelease",true);
-					if(getNet().isClient() && holder.hasTag("flesh")) 
+					if(isClient() && holder.hasTag("flesh")) 
 					{
 						sprite.PlaySound("Entities/Characters/Sounds/NoAmmo.ogg",0.6f,1.0);
 						if(soundFireLoop){
@@ -325,7 +327,7 @@ void GunTick(CBlob@ this)
 		if(this.get_bool("gun_needsRelease")){
 			this.set_bool("gun_needsRelease",false);
 		}
-		if(getNet().isClient()) {
+		if(isClient()) {
 			if(soundFireLoop){
 				if(!sprite.getEmitSoundPaused()){
 					sprite.SetEmitSoundPaused(true);
@@ -349,6 +351,7 @@ void PlayWeaponSound(CBlob@ this,string sound)
 void Shoot(CBlob@ this)
 {
 	AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
+	if(point is null) {return;}
 	CBlob@ holder=			point.getOccupied();
 	
 	if(holder is null){
@@ -388,7 +391,7 @@ void Shoot(CBlob@ this)
 			length = (hitPos - startPos).Length();
 			
 			bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f),length,this,@hitInfos);
-			if(getNet().isClient())
+			if(isClient())
 			{
 				DrawLine(this.getSprite(), i, startPos,length / 32, jitter, this.isFacingLeft());
 		
@@ -404,7 +407,7 @@ void Shoot(CBlob@ this)
 				}
 			}
 			
-			if(getNet().isServer()) 
+			if(isServer()) 
 			{
 				const bool force_nonsolid = this.exists("gun_force_nonsolid") && this.get_bool("gun_force_nonsolid");
 			
@@ -453,7 +456,7 @@ void Shoot(CBlob@ this)
 	else
 	{
 		//Fire a projectile
-		if(getNet().isServer()) 
+		if(isServer()) 
 		{
 			f32 angle =	this.getAngleDegrees();
 			Vec2f dir=		Vec2f((this.isFacingLeft() ? -1 : 1),0.0f).RotateBy(angle);
@@ -492,7 +495,7 @@ void DoRecoil(CBlob@ this, CBlob@ holder)
 	Driver@ driver = getDriver();
 
 	const f32 deg2rad = 3.14f / 180.0f;
-	const f32 modifier = this.get_f32("gun_fireDamage");
+	const f32 modifier = this.get_f32("gun_fireDamage") ;
 	const f32 dampener = ((holder.isKeyPressed(key_down) || this.isKeyPressed(key_down)) ? 0.05f : 1.00f);
 	
 	// print("" + dampener);
@@ -598,6 +601,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if(this.hasCommandID("cmd_gunReload") && cmd == this.getCommandID("cmd_gunReload")) {
 		AttachmentPoint@ point=	this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder= 			point.getOccupied();
 		if(holder is null) {
 			return;
@@ -622,7 +626,7 @@ void StartReload(CBlob@ this,CInventory@ inv,string ammoItem,u32 clip,u32 clipSi
 	this.set_bool("gun_wasEmpty",clip==0);
 	if(!this.get_bool("gun_shotgunReload")){
 		//clip-based reload
-		if(getNet().isClient()) {
+		if(isClient()) {
 			PlayWeaponSound(this,"gun_soundReload");
 		}
 		this.set_u32("gun_readyTime",getGameTime()+this.get_u32("gun_reloadTime"));
@@ -631,7 +635,7 @@ void StartReload(CBlob@ this,CInventory@ inv,string ammoItem,u32 clip,u32 clipSi
 		this.set_bool("gun_doReload",true);
 	}else{
 		//clipless shotgun-like reload
-		f32 takenAmmo=TakeAmmo(inv,ammoItem,1);
+		f32 takenAmmo=TakeAmmo(inv,ammoItem,this.get_f32("gun_ammoUsage"));
 		if(takenAmmo>0) {
 			this.set_u32("gun_readyTime",getGameTime()+this.get_u32("gun_reloadTime"));
 			this.set_u32("gun_ammoToGive",1);

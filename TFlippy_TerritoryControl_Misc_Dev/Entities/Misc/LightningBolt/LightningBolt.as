@@ -13,7 +13,7 @@ void onInit(CBlob@ this)
 
 	this.set_Vec2f("strike pos", strikePos);
 
-	if(getNet().isServer())
+	if(isServer())
 	{
 		for(int i = 0; i < 4 + XORRandom(4); i++)
 		{
@@ -32,7 +32,7 @@ void onInit(CBlob@ this)
 
 	CBlob@ soundBlob = server_CreateBlob("lightningboltsound", this.getTeamNum(), strikePos);
 
-	// if (getNet().isClient())
+	// if (isClient())
 	// {
 		// Vec2f pos = getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos());
 		// f32 distance = Maths::Abs(strikePos.x - pos.x) / 8.0f;
@@ -58,7 +58,7 @@ void onTick(CBlob@ this)
 	int time = this.getTickSinceCreated();
 	u8 flashAlpha = 0;
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		f32 distance = this.get_f32("distance");
 		flashAlpha = XORRandom(128) + 128;
@@ -79,7 +79,7 @@ void onTick(CBlob@ this)
 	{
 		sprite.animation.frame = XORRandom(4);
 
-		if(getNet().isClient())
+		if(isClient())
 		{
 			SetScreenFlash(flashAlpha, 255, 255, 255);
 			ShakeScreen(200.0f, 50.0f, this.get_Vec2f("strike pos"));

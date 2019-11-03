@@ -21,10 +21,10 @@ void onInit(CBlob@ this)
 
 void onTick(CSprite@ this)
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 	
 	this.RotateBy(20.0f, Vec2f());
-	ParticleAnimated(CFileMatcher("SmalLFire").getFirst(), this.getBlob().getPosition() + Vec2f(4 - XORRandom(8), 4 - XORRandom(8)), Vec2f(0, 0), 0, 1.0f + (XORRandom(100) * 0.01f), 2, 0.25f, false);
+	ParticleAnimated("SmalLFire", this.getBlob().getPosition() + Vec2f(4 - XORRandom(8), 4 - XORRandom(8)), Vec2f(0, 0), 0, 1.0f + (XORRandom(100) * 0.01f), 2, 0.25f, false);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
@@ -64,7 +64,7 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		
@@ -87,22 +87,30 @@ void DoExplosion(CBlob@ this)
 			blob.setVelocity(Vec2f(XORRandom(10) - 5, -XORRandom(10)));
 			blob.server_SetTimeToDie(10 + XORRandom(25));
 		}
+
+		for(int i = 0; i < 40; i++)
+		{
+			map.server_setFireWorldspace(pos + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)) * 8, true);
+		}
 	}
 	
-	for (int i = 0; i < 40; i++)
+	if(isClient())
 	{
-		map.server_setFireWorldspace(pos + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)) * 8, true);
-		MakeParticle(this, Vec2f(XORRandom(64) - 32, XORRandom(64) - 32), getRandomVelocity(angle, XORRandom(512) * 0.0025f, 360), particles[XORRandom(particles.length)]);
+		for (int i = 0; i < 40; i++)
+		{
+			MakeParticle(this, Vec2f(XORRandom(64) - 32, XORRandom(64) - 32), getRandomVelocity(angle, XORRandom(512) * 0.0025f, 360), particles[XORRandom(particles.length)]);
+			
+			// ParticleAnimated("Entities/Effects/Sprites/FireFlash.png", this.getPosition() + Vec2f(0, -4), Vec2f(0, 0.5f), 0.0f, 1.0f, 2, 0.0f, true);
+		}
 		
-		// ParticleAnimated("Entities/Effects/Sprites/FireFlash.png", this.getPosition() + Vec2f(0, -4), Vec2f(0, 0.5f), 0.0f, 1.0f, 2, 0.0f, true);
+		this.getSprite().Gib();
 	}
 	
-	this.getSprite().Gib();
 }
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1.0f + (XORRandom(100) * 0.01f), 1 + XORRandom(8), XORRandom(100) * -0.0001f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1.0f + (XORRandom(100) * 0.01f), 1 + XORRandom(8), XORRandom(100) * -0.0001f, true);
 }

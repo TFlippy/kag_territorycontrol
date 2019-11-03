@@ -65,7 +65,7 @@ void onTick(CBlob@ this)
 		this.setPosition(this.get_Vec2f("lock"));
 		shape.SetStatic(true);
 
-		if(getNet().isServer())
+		if(isServer())
 		{
 			u8 timer = this.get_u8(MINE_TIMER);
 			timer++;
@@ -143,7 +143,7 @@ void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
-	if(getNet().isServer())
+	if(isServer())
 	{
 		this.Tag(MINE_PRIMING);
 		this.set_u8(MINE_TIMER, 0);
@@ -152,7 +152,7 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 
 void onThisRemoveFromInventory(CBlob@ this, CBlob@ inventoryBlob)
 {
-	if(getNet().isServer() && !this.isAttached())
+	if(isServer() && !this.isAttached())
 	{
 		this.Tag(MINE_PRIMING);
 		this.set_u8(MINE_TIMER, 0);
@@ -186,7 +186,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 void onDie(CBlob@ this)
 {
-	if(getNet().isServer() && this.hasTag("exploding"))
+	if(isServer() && this.hasTag("exploding"))
 	{
 		const Vec2f POSITION = this.getPosition();
 

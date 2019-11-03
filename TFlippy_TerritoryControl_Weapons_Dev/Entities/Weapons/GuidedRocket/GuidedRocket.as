@@ -76,7 +76,7 @@ void onTick(CBlob@ this)
 					dir = Vec2f(0, -1);
 				}
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					if (distance < 8) this.server_Die();
 				}
@@ -100,7 +100,10 @@ void onTick(CBlob@ this)
 				
 			this.set_Vec2f("direction", nDir);
 			
-			MakeParticle(this, -dir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
+			if(isClient())
+			{
+				MakeParticle(this, -dir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
+			}
 		}		
 	}
 }
@@ -132,32 +135,35 @@ void DoExplosion(CBlob@ this)
 		
 		LinearExplosion(this, dir, 8.0f + XORRandom(16) + (modifier * 8), 8 + XORRandom(24), 3, 0.125f, Hitters::explosion);
 	}
-	
-	Vec2f pos = this.getPosition();
-	CMap@ map = getMap();
-	
-	for (int i = 0; i < 35; i++)
+
+	if(isClient())
 	{
-		MakeExplosionParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
+		Vec2f pos = this.getPosition();
+		CMap@ map = getMap();
+		
+		for (int i = 0; i < 35; i++)
+		{
+			MakeExplosionParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
+		}
+		
+		this.Tag("dead");
+		this.getSprite().Gib();
 	}
-	
-	this.Tag("dead");
-	this.getSprite().Gib();
 }
 
 void MakeExplosionParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(8), 0, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(8), 0, true);
 }
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(0, 16).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void onDie(CBlob@ this)
@@ -170,7 +176,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	// if ((blob !is null ? !blob.isCollidable() : !solid)) return;
 	
-	if (getNet().isServer() && this.hasTag("offblast") && this.get_u32("no_explosion_timer") < getGameTime()) this.server_Die();
+	if (isServer() && this.hasTag("offblast") && this.get_u32("no_explosion_timer") < getGameTime()) this.server_Die();
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

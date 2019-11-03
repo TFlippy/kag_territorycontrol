@@ -22,7 +22,6 @@ void onInit( CBrain@ this )
 
 void onInit(CBlob@ this)
 {
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
 	this.set_f32("gib health", -10.0f);
 
 	this.set_u32("nextAttack", 0);
@@ -64,17 +63,14 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
-	if (this.hasTag("dead")){ return;}
+	if (this.hasTag("dead")) return;
 
-	if(isClient()){
+	if (isClient())
+	{
 		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
 		{
 			this.getSprite().PlaySound("Cuck_Idle_" + XORRandom(4) + ".ogg", 0.7f, 0.5f);
 			this.set_u32("next sound", getGameTime() + 350);
-		}
-		
-		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
-			return;
 		}
 	}
 
@@ -84,7 +80,6 @@ void onTick(CBlob@ this)
 		moveVars.walkFactor *= 0.90f;
 		moveVars.jumpFactor *= 1.50f;
 	}
-		
 		
 	if (this.isKeyPressed(key_action1) && getGameTime() > this.get_u32("next attack"))
 	{

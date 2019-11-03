@@ -51,7 +51,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 {
 	if (this.hasTag("grenade collided") && blob !is null && blob.getTeamNum() != this.getTeamNum())
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
@@ -109,21 +109,24 @@ void DoExplosion(CBlob@ this)
 
 		LinearExplosion(this, dir, 8.0f + XORRandom(8) + (modifier * 8), 8 + XORRandom(24), 2, 0.125f, Hitters::explosion);
 	}
-
-	Vec2f pos = this.getPosition();
-	CMap@ map = getMap();
-
-	for (int i = 0; i < 35; i++)
+	
+	if(isClient())
 	{
-		MakeParticle(this, Vec2f( XORRandom(32) - 16, XORRandom(40) - 20), getRandomVelocity(0, XORRandom(300) * 0.01f, 360), particles[XORRandom(particles.length)]);
-	}
+		Vec2f pos = this.getPosition();
+		CMap@ map = getMap();
 
-	this.getSprite().Gib();
+		for (int i = 0; i < 35; i++)
+		{
+			MakeParticle(this, Vec2f( XORRandom(32) - 16, XORRandom(40) - 20), getRandomVelocity(0, XORRandom(300) * 0.01f, 360), particles[XORRandom(particles.length)]);
+		}
+
+		this.getSprite().Gib();
+	}
 }
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1.0f + XORRandom(100) * 0.01f, 2 + XORRandom(4), XORRandom(100) * -0.00005f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1.0f + XORRandom(100) * 0.01f, 2 + XORRandom(4), XORRandom(100) * -0.00005f, true);
 }

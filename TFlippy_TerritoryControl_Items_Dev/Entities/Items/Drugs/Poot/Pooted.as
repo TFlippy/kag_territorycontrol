@@ -6,12 +6,12 @@
 
 void onInit(CBlob@ this)
 {
-	if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_poot.png");
+	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_poot.png");
 }
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
+	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
 }
 
 void onTick(CBlob@ this)
@@ -27,7 +27,7 @@ void onTick(CBlob@ this)
 		this.setAngleDegrees(0);
 		sprite.SetEmitSoundPaused(true);
 		
-		if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
+		if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
 		this.Untag("custom_camera");
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
@@ -113,8 +113,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	if (level > 1)
 	{
 		f32 vellen = this.getOldVelocity().Length();
-		bool client = getNet().isClient();
-		bool server = getNet().isServer();
+		bool client = isClient();
+		bool server = isServer();
 		
 		if (solid && vellen > 5.00f / true_level)
 		{

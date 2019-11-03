@@ -1,6 +1,7 @@
 
 #include "Hitters.as";
 #include "BuilderHittable.as";
+#include "Knocked.as";
  
 const string[] types =
 {
@@ -41,8 +42,8 @@ void onTick(CBlob@ this)
  
         this.getShape().SetRotationsAllowed(false);
  
-        if (point.isKeyJustPressed(key_action1) || holder.get_u8("knocked") > 0)
-        if(getNet().isServer()){
+        if (point.isKeyJustPressed(key_action1) || getKnocked(holder) > 0)
+        if(isServer()){
             CBlob @blob = server_CreateBlob("card", holder.getTeamNum(), this.getPosition());
             if (blob !is null)
             {

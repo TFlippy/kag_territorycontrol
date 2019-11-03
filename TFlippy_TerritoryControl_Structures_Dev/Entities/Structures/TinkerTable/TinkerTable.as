@@ -29,7 +29,7 @@ void onInit(CBlob@ this)
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(5, 6));
+	this.set_Vec2f("shop menu size", Vec2f(5, 8));
 	this.set_string("shop description", "Mechanist's Workshop");
 	this.set_u8("shop icon", 15);
 
@@ -53,14 +53,14 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	{
-		ShopItem@ s = addShopItem(this, "Giga Drill Breaker", "$powerdrill$", "powerdrill", "A huge overpowered drill with a durable mithril head.");
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
-		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2);
+	// {
+		// ShopItem@ s = addShopItem(this, "Giga Drill Breaker", "$powerdrill$", "powerdrill", "A huge overpowered drill with a durable mithril head.");
+		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
+		// AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
+		// AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2);
 
-		s.spawnNothing = true;
-	}
+		// s.spawnNothing = true;
+	// }
 	// {
 		// ShopItem@ s = addShopItem(this, "Contrabass", "$contrabass$", "contrabass", "A musical instrument for the finest bards.");
 		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 60);
@@ -78,13 +78,13 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", 666);
 		s.spawnNothing = true;
 	}
-	// {
-		// ShopItem@ s = addShopItem(this, "Autonomous Activator", "$icon_automat$", "automat", "A fish-operated contraption that uses anything in its tiny hands. May be only carried around when not holding anything.");
-		// AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 3);
-		// AddRequirement(s.requirements, "blob", "fishy", "Fishy", 1);
-		// AddRequirement(s.requirements, "coin", "", "Coins", 350);
-		// s.spawnNothing = true;
-	// }
+	/*{
+		ShopItem@ s = addShopItem(this, "Autonomous Activator", "$icon_automat$", "automat", "A fish-operated contraption that uses anything in its tiny hands. May be only carried around when not holding anything.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 3);
+		AddRequirement(s.requirements, "blob", "fishy", "Fishy", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 350);
+		s.spawnNothing = true;
+	}*/
 	{
 		ShopItem@ s = addShopItem(this, "Zapthrottle Gas Extractor", "$icon_gasextractor$", "gasextractor", "A handheld air pump commonly used for cleaning, martial arts and gas cloud extraction.\n\nLeft mouse: Pull\nRight mouse: Push");
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 2);
@@ -130,7 +130,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Rocket Pack", "$icon_jetpack$", "jetpack", "A small rocket-propelled backpack.\nOccupies the Torso slot.\nPress W to jump!");
+		ShopItem@ s = addShopItem(this, "Rocket Pack", "$icon_jetpack$", "jetpack", "A small rocket-propelled backpack.\nOccupies the Torso slot.\nPress Space to jump!");
 		AddRequirement(s.requirements, "blob", "mat_smallrocket", "Small Rocket", 2);
 		AddRequirement(s.requirements, "blob", "mat_oil", "Oil", 50);
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
@@ -195,6 +195,79 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 		
 		// AddRequirement(s.requirements, "tech", "tech_test", "Test", 1);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Dart Gun", "$icon_dartgun$", "dartgun", "Dart Gun that can be used to remotely deliver drugs.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 6);
+		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", 50);
+		AddRequirement(s.requirements, "coin", "", "Coins", 500);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Gauss Rifle", "$icon_gaussrifle$", "gaussrifle", "A modified toy used to kill people.\n\nUses Steel Ingots.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
+		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 50);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 10);
+		AddRequirement(s.requirements, "coin", "", "Coins", 850);
+
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Scorcher", "$icon_flamethrower$", "flamethrower", "A tool used for incinerating plants, buildings and people.\n\nUses Oil.");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Blazethrower", "$icon_blazethrower$", "blazethrower", "A Scorcher modification providing support for gaseous fuels.\n\nUses Fuel.");
+		AddRequirement(s.requirements, "blob", "flamethrower", "Scorcher", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 1000);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Accelerated Gyromat Core Replacement", "$icon_gyromat$", "gyromat", "Replace this Accelerated Gyromat's core in hope to improve it.");
+		AddRequirement(s.requirements, "blob", "gyromat", "Gyromat", 1);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 20);
+		AddRequirement(s.requirements, "coin", "", "Coins", 400);
+
+		s.customButton = true;
+		s.buttonwidth = 1;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Acidthrower", "$icon_acidthrower$", "acidthrower", "A tool used for dissolving plants, buildings and people.\n\nUses Acid.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
+		AddRequirement(s.requirements, "coin", "", "Coins", 1250);
+
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
 
 		s.spawnNothing = true;
 	}
@@ -288,7 +361,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if (callerBlob is null) return;
 
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 

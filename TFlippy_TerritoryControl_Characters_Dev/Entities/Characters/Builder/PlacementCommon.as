@@ -2,7 +2,7 @@
 
 #include "CustomBlocks.as";
 
-const f32 MAX_BUILD_LENGTH = 4.0f;
+// const f32 MAX_BUILD_LENGTH = 4.0f;
 
 shared class BlockCursor
 {
@@ -286,7 +286,7 @@ void SetTileAimpos(CBlob@ this, BlockCursor@ bc)
 	Vec2f aimpos = this.getAimPos();
 	Vec2f mouseNorm = aimpos - pos;
 	f32 mouseLen = mouseNorm.Length();
-	const f32 maxLen = MAX_BUILD_LENGTH;
+	const f32 maxLen = this.get_f32("max_build_length");
 	mouseNorm /= mouseLen;
 
 	if (mouseLen > maxLen * getMap().tilesize)
@@ -307,13 +307,13 @@ void SetTileAimpos(CBlob@ this, BlockCursor@ bc)
 
 f32 getMaxBuildDistance(CBlob@ this)
 {
-	return (MAX_BUILD_LENGTH + 0.51f) * getMap().tilesize;
+	return (this.get_f32("max_build_length") + 0.51f) * getMap().tilesize;
 }
 
 void SetupBuildDelay(CBlob@ this)
 {
 	this.set_u32("build time", getGameTime());
-	this.set_u32("build delay", this.getConfig() == "builder" ? 4 : 8);  // move this to builder init
+	// this.set_u32("build delay", this.getName() == "builder" ? 4 : 8);  // move this to builder init // okay
 }
 
 bool isBuildDelayed(CBlob@ this)

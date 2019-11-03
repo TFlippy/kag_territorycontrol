@@ -105,7 +105,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			// break;
 	// }
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (customData == HittersTC::radiation)
 		{
@@ -121,7 +121,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	
 	if (this.hasTag("equipment support"))
 	{
-		if ((this.get_string("equipment_torso") == "bulletproofvest") && (customData == HittersTC::bullet_low_cal || customData == HittersTC::bullet_high_cal || customData == HittersTC::shotgun))
+		if ((this.get_string("equipment_torso") == "bulletproofvest") && (customData == HittersTC::bullet_low_cal || customData == HittersTC::bullet_high_cal || customData == HittersTC::shotgun || customData == HittersTC::railgun_lance))
 		{
 			f32 vestMaxHealth = 25.0f;
 			f32 vestHealth = vestMaxHealth - this.get_f32("bpv_health");
@@ -134,11 +134,15 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					break;
 			
 				case HittersTC::bullet_high_cal:
-					ratio = ratio * 0.70f;
+					ratio = ratio * 0.60f;
 					break;
 					
 				case HittersTC::shotgun:
 					ratio = ratio * 0.85f;
+					break;
+					
+				case HittersTC::railgun_lance:
+					ratio = ratio * 0.60f;
 					break;
 					
 				default:
@@ -154,7 +158,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			dmg = playerDamage;
 		}
 		
-		if ((this.get_string("equipment_head") == "militaryhelmet") && (customData == HittersTC::bullet_low_cal || customData == HittersTC::bullet_high_cal || customData == HittersTC::shotgun))
+		if ((this.get_string("equipment_head") == "militaryhelmet") && (customData == HittersTC::bullet_low_cal || customData == HittersTC::bullet_high_cal || customData == HittersTC::shotgun || customData == HittersTC::railgun_lance))
 		{
 			f32 mhelmetMaxHealth = 20.0f;
 			f32 mhelmetHealth = mhelmetMaxHealth - this.get_f32("mh_health");
@@ -167,11 +171,15 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					break;
 			
 				case HittersTC::bullet_high_cal:
-					ratio = ratio * 0.70f;
+					ratio = ratio * 0.60f;
 					break;
 					
 				case HittersTC::shotgun:
 					ratio = ratio * 0.85f;
+					break;
+					
+				case HittersTC::railgun_lance:
+					ratio = ratio * 0.60f;
 					break;
 					
 				default:
@@ -217,13 +225,13 @@ void onDie(CBlob@ this)
 		
 		for (int i = 0; i < count; i++)
 		{
-			if (getNet().isClient())
+			if (isClient())
 			{
 				this.getSprite().PlaySound("Pigger_Gore.ogg", 0.3f, 0.9f);
 				ParticleBloodSplat(this.getPosition() + getRandomVelocity(0, radius, 360), true);
 			}
 		
-			if (getNet().isServer())
+			if (isServer())
 			{
 				Vec2f vel = Vec2f(XORRandom(4) - 2, -2 - XORRandom(4));
 			

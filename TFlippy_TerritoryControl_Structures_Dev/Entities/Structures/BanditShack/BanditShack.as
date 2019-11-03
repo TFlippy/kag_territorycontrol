@@ -14,7 +14,7 @@ void onInit(CBlob@ this)
 {
 	// this.set_TileType("background tile", CMap::tile_castle_back);
 
-	// if (getNet().isServer()) this.server_setTeamNum(-1);
+	// if (isServer()) this.server_setTeamNum(-1);
 	this.Tag("respawn");
 	
 	this.getSprite().SetZ(-50); //background
@@ -31,10 +31,25 @@ void onInit(CBlob@ this)
 	this.set_Vec2f("class offset", Vec2f(-4, 0));
 		
 	this.set_Vec2f("shop offset", Vec2f(4, 0));
-	this.set_Vec2f("shop menu size", Vec2f(4, 3));
+	this.set_Vec2f("shop menu size", Vec2f(5, 3));
 	this.set_string("shop description", "Rat's Den");
 	this.set_u8("shop icon", 25);
 	
+	{
+		ShopItem@ s = addShopItem(this, "Unlucky Badger", "$badgerBomb$", "badgerbomb", "A badger with an explosive personality.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+		AddRequirement(s.requirements, "blob", "mat_oil", "Oil Drum (25)", 25);
+		s.buttonwidth = 4;
+		s.buttonheight = 1;
+		
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Some Badger", "$badger$", "badger", "I found ths guy under my bed.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+		
+		s.spawnNothing = true;
+	}
 	{
 		ShopItem@ s = addShopItem(this, "Tasty Rat Burger", "$ratburger$", "ratburger", "I always ate this as a kid.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 31);
@@ -44,12 +59,6 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Very Fresh Rat", "$ratfood$", "ratfood", "I caught this rat myself.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 17);
-		
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Some Badger", "$badger$", "badger", "I found ths guy under my bed.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 		
 		s.spawnNothing = true;
 	}
@@ -127,7 +136,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			
@@ -159,7 +168,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 				
-				if (blob is null) return;
+				if (blob is null && callerBlob is null) return;
 			   
 				if (!blob.canBePutInInventory(callerBlob))
 				{

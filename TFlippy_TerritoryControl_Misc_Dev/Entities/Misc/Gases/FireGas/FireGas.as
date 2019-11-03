@@ -17,7 +17,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getTickSinceCreated() > 5) 
+	if (isServer() && this.getTickSinceCreated() > 5) 
 	{
 		// getMap().server_setFireWorldspace(this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), true);
 		
@@ -45,14 +45,14 @@ void onTick(CBlob@ this)
 
 void onTick(CSprite@ this)
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 	// for (int i = 0; i < 2; i++) ParticleAnimated(CFileMatcher("Explosion.png").getFirst(), this.getBlob().getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 2, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
-	if (this.getBlob().getTickSinceCreated() % 1 == 0) ParticleAnimated(CFileMatcher(XORRandom(100) < 90 ? "SmallFire.png" : "LargeSmoke").getFirst(), this.getBlob().getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 1, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
+	if (this.getBlob().getTickSinceCreated() % 1 == 0) ParticleAnimated(XORRandom(100) < 90 ? "SmallFire.png" : "LargeSmoke", this.getBlob().getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 1, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	bool server = getNet().isServer();
+	bool server = isServer();
 	if (solid) 
 	{
 		Vec2f pos = this.getPosition();
@@ -69,8 +69,11 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 				{
 					map.server_DestroyTile(bpos, 1, this);
 				}
+				else
+				{
+					if (XORRandom(100) < 25) ParticleAnimated("SmallExplosion.png", bpos + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 2, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
+				}
 				
-				if (XORRandom(100) < 25) ParticleAnimated(CFileMatcher("SmallExplosion.png").getFirst(), bpos + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 2, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
 			}
 			
 			if (server)

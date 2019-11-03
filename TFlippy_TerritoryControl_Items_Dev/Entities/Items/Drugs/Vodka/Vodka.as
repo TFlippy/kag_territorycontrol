@@ -25,7 +25,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			caller.set_u16("drunk", Maths::Min(caller.get_u16("drunk") + 5, 60000));
 			caller.set_u32("next sober", getGameTime());
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 			}

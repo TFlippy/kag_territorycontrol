@@ -3,6 +3,7 @@
 #include "Hitters.as";
 #include "BuilderHittable.as";
 #include "ParticleSparks.as";
+#include "Knocked.as";
 
 const f32 speed_thresh = 2.0f;
 const f32 speed_hard_thresh = 2.2f;
@@ -83,15 +84,16 @@ void onTick(CSprite@ this)
 
 void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.015625f * rad;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void makeSteamPuff(CBlob@ this, const f32 velocity = 1.0f, const int smallparticles = 10, const bool sound = true)
 {
+	if(!isClient()){return;}
 	if (sound)
 	{
 		this.getSprite().PlaySound("Steam.ogg");
@@ -156,9 +158,10 @@ void onTick(CBlob@ this)
 	{
 		this.getCurrentScript().runFlags &= ~(Script::tick_not_sleeping);
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder = point.getOccupied();
 
-		if (holder is null) return;
+		if (holder is null){return;}
 
 		// cool faster if holder is moving
 		if (heat > 0 && holder.getShape().vellen > 0.01f && getGameTime() % heat_cooldown_time == 0)
@@ -176,7 +179,7 @@ void onTick(CBlob@ this)
 			sprite.PlaySound("DrillOverheat.ogg");
 		}
 
-		if (!(point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) || holder.get_u8("knocked") > 0)
+		if (!(point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) || getKnocked(holder) > 0)
 		{
 			this.set_bool(buzz_prop, false);
 			return;
@@ -231,25 +234,26 @@ void onTick(CBlob@ this)
 					{
 						HitInfo@ hi = hitInfos[i];
 						bool hit_constructed = false;
-						if (hi.blob !is null) // blob
+						CBlob@ b = hi.blob;
+						if (b !is null) // blob
 						{
 							//detect
-							const bool is_ground = hi.blob.hasTag("blocks sword") && !hi.blob.isAttached() && hi.blob.isCollidable();
+							const bool is_ground = b.hasTag("blocks sword") && !b.isAttached() && b.isCollidable();
 							if (is_ground)
 							{
 								hit_ground = true;
 							}
 
-							if (hi.blob.getTeamNum() == holder.getTeamNum() ||
+							if (b.getTeamNum() == holder.getTeamNum() ||
 									hit_ground && !is_ground)
 							{
 								continue;
 							}
 
-							holder.server_Hit(hi.blob, hi.hitpos, attackVel, attack_dam, Hitters::drill);
+							holder.server_Hit(b, hi.hitpos, attackVel, attack_dam, Hitters::drill);
 							if (int(heat) > heat_max * 0.5f)
 							{
-								holder.server_Hit(hi.blob, hi.hitpos, attackVel, 1.6f, Hitters::drill);   //extra burn damage
+								holder.server_Hit(b, hi.hitpos, attackVel, 1.6f, Hitters::drill);   //extra burn damage
 							}
 							hitsomething = true;
 							hitblob = true;

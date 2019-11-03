@@ -380,7 +380,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		return;
 	}
 
-	if (!getNet().isServer())
+	if (!isServer())
 	{
 		return;
 	}

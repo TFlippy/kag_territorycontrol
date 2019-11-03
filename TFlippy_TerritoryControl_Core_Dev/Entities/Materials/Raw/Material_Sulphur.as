@@ -32,7 +32,7 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 		
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		
@@ -52,7 +52,7 @@ void DoExplosion(CBlob@ this)
 	
 	print("" + modifier);
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().PlaySound("Sulphur_Explode.ogg", 1.00f, 1.00f);
 	
@@ -70,7 +70,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	if (customData == Hitters::fire || customData == Hitters::burn || customData == Hitters::bomb || customData == Hitters::explosion || customData == Hitters::keg)
 	{
 		this.Tag("DoExplode");
-		if (getNet().isServer()) this.server_Die();
+		if (isServer()) this.server_Die();
 	}
 
 	return damage;
@@ -86,7 +86,7 @@ void onDie(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, Vec2f(XORRandom(4) - 2, -XORRandom(8) - 2), float(XORRandom(360)), 1.0f, 4 + XORRandom(8), XORRandom(100) * 0.01f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, Vec2f(XORRandom(4) - 2, -XORRandom(8) - 2), float(XORRandom(360)), 1.0f, 4 + XORRandom(8), XORRandom(100) * 0.01f, true);
 }

@@ -8,12 +8,12 @@ const f32 max_time = 3.00f;
 
 void onInit(CBlob@ this)
 {
-	if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_babby.png");
+	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_babby.png");
 }
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
+	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
 }
 
 void onTick(CBlob@ this)
@@ -25,12 +25,12 @@ void onTick(CBlob@ this)
 	
 	if (true_level <= 0)
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
 	
-		if (getNet().isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
+		if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
 	else
@@ -48,7 +48,7 @@ void onTick(CBlob@ this)
 			moveVars.jumpFactor *= 1.50f * modifier;
 		}	
 				
-		if (getNet().isClient())
+		if (isClient())
 		{
 			if (XORRandom(300) == 0)
 			{

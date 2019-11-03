@@ -79,7 +79,7 @@ void DoExplosion(CBlob@ this)
 	// this.set_f32("map_damage_ratio", 0.4f);
 	// f32 angle = this.get_f32("bomb angle");
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		if (boom !is null)
@@ -104,7 +104,7 @@ void DoExplosion(CBlob@ this)
 		// Vec2f dir = getRandomVelocity(angle, 1, 40);
 		// LinearExplosion(this, dir, 40.0f + XORRandom(64), 48.0f, 6, 0.5f, Hitters::explosion);
 	// }
-	
+	if(!isClient()){return;}
 	f32 angle = this.get_f32("bomb angle");
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
@@ -119,7 +119,7 @@ void DoExplosion(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1 + XORRandom(200) * 0.01f, 2 + XORRandom(5), XORRandom(100) * -0.00005f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1 + XORRandom(200) * 0.01f, 2 + XORRandom(5), XORRandom(100) * -0.00005f, true);
 }

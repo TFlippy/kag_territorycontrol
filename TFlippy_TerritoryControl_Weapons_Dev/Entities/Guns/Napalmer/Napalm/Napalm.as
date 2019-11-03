@@ -15,7 +15,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getTickSinceCreated() > 5) 
+	if (isServer() && this.getTickSinceCreated() > 5) 
 	{
 		// getMap().server_setFireWorldspace(this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), true);
 		
@@ -47,7 +47,7 @@ void onTick(CBlob@ this)
 		{
 			this.setPosition(blob.getPosition());
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.75f, Hitters::fire);
 			}
@@ -57,12 +57,12 @@ void onTick(CBlob@ this)
 
 void onTick(CSprite@ this)
 {
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CBlob@ blob = this.getBlob();
 	
-		ParticleAnimated(CFileMatcher(XORRandom(100) < 50 ? "SmallFire.png" : "LargeFire.png").getFirst(), blob.getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 1, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
-		if (XORRandom(100) < 25 && (blob.getShape().isStatic() || blob.get_u16("attached_blob") > 0))ParticleAnimated(CFileMatcher("SmallExplosion.png").getFirst(), blob.getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 1, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, -0.1, false);
+		ParticleAnimated(XORRandom(100) < 50 ? "SmallFire.png" : "LargeFire.png", blob.getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 1, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, 0.1, false);
+		if (XORRandom(100) < 25 && (blob.getShape().isStatic() || blob.get_u16("attached_blob") > 0))ParticleAnimated("SmallExplosion.png", blob.getPosition() + Vec2f(XORRandom(8) - 4, XORRandom(8) - 4), getRandomVelocity(0, 1, 360), 0, 1.00f + XORRandom(5) * 0.10f, 4, -0.1, false);
 	}
 }
 
@@ -85,7 +85,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 // void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 // {
-	// bool server = getNet().isServer();
+	// bool server = isServer();
 	// if (solid) 
 	// {
 		// Vec2f pos = this.getPosition();

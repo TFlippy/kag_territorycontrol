@@ -22,6 +22,7 @@ void onTick(CBlob@ this)
 {
 	if (this.isInWater())
 	{
+		if (!isClient()){ return;}
 		makeSteamParticle(this, Vec2f(), XORRandom(100) > 50 ? "MediumSteam" : "SmallSteam");
 		// this.getSprite().PlaySound("Steam.ogg");
 		return;
@@ -46,18 +47,21 @@ void onTick(CBlob@ this)
 		if (map.getTile(pos).type == CMap::tile_wood_back) map.server_setFireWorldspace(pos, true);
 		if (map.getTile(pos + Vec2f(0, 8)).type == CMap::tile_wood) map.server_setFireWorldspace(pos + Vec2f(0, 8), true);
 	}
+	if(isClient())
+	{
+		if ( XORRandom(100) < 60) this.getSprite().PlaySound("FireRoar.ogg");
+		makeSteamParticle(this, Vec2f(), XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
+	}
 	
-	if ( XORRandom(100) < 60) this.getSprite().PlaySound("FireRoar.ogg");
-	makeSteamParticle(this, Vec2f(), XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
 }
 
 void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.015625f * rad;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)

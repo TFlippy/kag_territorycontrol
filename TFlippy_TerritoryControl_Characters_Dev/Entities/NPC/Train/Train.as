@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 	
 	this.addCommandID("reset train");
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSoundVolume(10.0f);
@@ -39,7 +39,7 @@ void onInit(CBlob@ this)
 		sprite.RewindEmitSound();
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		Vec2f pos = this.getPosition();
 		CMap@ map = getMap();
@@ -59,7 +59,7 @@ void onInit(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer() && blob !is null && !blob.hasTag("train") && !blob.hasTag("nature"))
+	if (isServer() && blob !is null && !blob.hasTag("train") && !blob.hasTag("nature"))
 	{
 		if (blob.getPosition().x > this.getPosition().x + 24)
 		{
@@ -139,10 +139,10 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 {
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + smokeOffset, Vec2f(0, 0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + smokeOffset, Vec2f(0, 0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
-string[] loot_guns = 
+const string[] loot_guns = 
 { 
 	"amr",
 	"sniper",
@@ -152,7 +152,7 @@ string[] loot_guns =
 	"fuger"
 };
 
-string[] loot_building_resources = 
+const string[] loot_building_resources = 
 { 
 	"mat_stone",
 	"mat_concrete",
@@ -161,7 +161,7 @@ string[] loot_building_resources =
 	"mat_ironingot"
 };
 
-string[] loot_ores = 
+const string[] loot_ores = 
 { 
 	"mat_iron",
 	"mat_gold",
@@ -171,7 +171,7 @@ string[] loot_ores =
 	"mat_coal"
 };
 
-string[] loot_explosives = 
+const string[] loot_explosives = 
 { 
 	"mat_smallbomb",
 	"mat_mininuke",
@@ -179,13 +179,13 @@ string[] loot_explosives =
 	"mat_tankshell"
 };
 
-string[] loot_bling = 
+const string[] loot_bling = 
 { 
 	"mat_goldingot",
 	"mat_mithrilenriched"
 };
 
-string[] loot_food = 
+const string[] loot_food = 
 { 
 	"mat_meat"
 };
@@ -194,8 +194,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("reset train"))
 	{
-		const bool server = getNet().isServer();
-		const bool client = getNet().isClient();
+		const bool server = isServer();
+		const bool client = isClient();
 	
 		this.setPosition(Vec2f(0, this.get_f32("train_y")));
 	

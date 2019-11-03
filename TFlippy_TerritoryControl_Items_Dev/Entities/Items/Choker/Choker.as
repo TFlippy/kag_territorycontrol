@@ -5,14 +5,14 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this){
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		getMap().getBlobsInBox(this.getPosition() + Vec2f(48, -48), this.getPosition() + Vec2f(-48, 48), @blobs);
 	
 		int counter = 0;
 	
-		for (int i = 0; i < blobs.length; i++) if (blobs[i].getConfig() == "methane") counter++;
+		for (int i = 0; i < blobs.length; i++) if (blobs[i].getName() == "methane") counter++;
 
 		if (counter < 4)
 		{

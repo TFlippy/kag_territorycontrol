@@ -2,7 +2,7 @@ void onInit(CBlob@ this)
 {
 	this.addCommandID("use");
 	
-	if (getNet().isServer() && !this.exists("value")) this.set_u16("value", XORRandom(50000));
+	if (isServer() && !this.exists("value")) this.set_u16("value", XORRandom(50000));
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
@@ -27,7 +27,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		const int amount = int(Maths::Clamp((2500000.0f / (rand + 240.0f)) - 50, 0, 10000));
 		print("a: " + amount + "; rand: " + rand);
 		
-		if (getNet().isClient())
+		if (isClient())
 		{
 			if (amount <= 0) this.getSprite().PlaySound("depleted.ogg", 0.80f, 0.80f);
 			else if (amount <= 1000) this.getSprite().PlaySound("LotteryTicket_Kaching.ogg", 0.80f, 1.00f);
@@ -41,7 +41,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			server_DropCoins(this.getPosition(), amount);
 			this.server_Die();

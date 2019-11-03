@@ -188,5 +188,5 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer()) server_CreateBlob("hazmatitem", this.getTeamNum(), this.getPosition());
+	if (isServer()) server_CreateBlob("hazmatitem", this.getTeamNum(), this.getPosition());
 }

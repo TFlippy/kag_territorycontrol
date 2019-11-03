@@ -43,6 +43,10 @@ void onInit(CBlob@ this)
 
 	SetHelp(this, "help self action2", "builder", "$Pick$Dig/Chop  $KEY_HOLD$$RMB$", "", 3);
 
+	if (!this.exists("mining_hardness")) this.set_u8("mining_hardness", 2);
+	if (!this.exists("max_build_length")) this.set_f32("max_build_length", 4.00f);
+	if (!this.exists("build delay")) this.set_u32("build delay", 4);
+	
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	this.getCurrentScript().removeIfTag = "dead";
 }
@@ -181,36 +185,41 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 		
 			if (map.getSectorAtPosition(tilepos, "no build") is null)
 			{
-				if (this.getConfig() == "builder")
-				{	
+				u8 mining_hardness = this.get_u8("mining_hardness");
+				bool can_mine = true;
+				
+				if (mining_hardness < 3)
+				{
 					if ((tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || (tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14))
 					{
 						this.getSprite().PlaySound("/metal_stone.ogg");
 						sparks(tilepos, 1, 1);
-					}
-					else
-					{
-						this.server_HitMap(tilepos, attackVel, 1.0f, Hitters::builder);
+						can_mine = false;
 					}
 				}
-				else
+				
+				if (mining_hardness < 2)
 				{
-					if ((tile >= CMap::tile_iron && tile <= CMap::tile_iron_d8) || 
-						(tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || 
-						(tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14) || 
-						(tile >= CMap::tile_reinforcedconcrete_d5 && tile <= CMap::tile_reinforcedconcrete_d15) || 
-						(tile >= CMap::tile_biron && tile <= CMap::tile_biron_d8))
+					if ((tile >= CMap::tile_iron && tile <= CMap::tile_iron_d8) || (tile >= CMap::tile_reinforcedconcrete_d5 && tile <= CMap::tile_reinforcedconcrete_d15) || (tile >= CMap::tile_biron && tile <= CMap::tile_biron_d8))
 					{
 						this.getSprite().PlaySound("/metal_stone.ogg");
 						sparks(tilepos, 1, 1);
+						can_mine = false;
 					}
-					else if (this.getConfig() == "slave" && map.isTileCastle(tile))
+				}
+				
+				if (mining_hardness < 1)
+				{
+					if (map.isTileCastle(tile))
 					{
-						// this.getSprite().PlaySound("rock_hit" + (1 + XORRandom(3) + ".ogg"));
 						this.getSprite().PlaySound("build_wall2.ogg", 1.0f, 0.8f);
-						// sparks(tilepos, 1, 1);
+						can_mine = false;
 					}
-					else
+				}
+				
+				if (can_mine)
+				{
+					if (isServer())
 					{
 						this.server_HitMap(tilepos, attackVel, 1.0f, Hitters::builder);
 					}
@@ -223,23 +232,33 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 		CBlob@ blob = getBlobByNetworkID(blobID);
 		if(blob !is null)
 		{
-			if (this.getConfig() == "builder")
-			{	
-				const bool teamHurt = !blob.hasTag("flesh") || blob.hasTag("dead");
-				this.server_Hit(blob, tilepos, attackVel, attack_power, Hitters::builder, teamHurt);
-			}
-			else
+			u8 mining_hardness = this.get_u8("mining_hardness");
+			bool can_mine = true;
+			
+			if (mining_hardness < 2)
 			{
 				if (blob.getName() == "iron_door")
 				{
 					this.getSprite().PlaySound("/metal_stone.ogg");
 					sparks(tilepos, 1, 1);
+					can_mine = false;
 				}
-				else
-				{
-					const bool teamHurt = !blob.hasTag("flesh") || blob.hasTag("dead");
-					this.server_Hit(blob, tilepos, attackVel, attack_power, Hitters::builder, teamHurt);
+			}
+			
+			if (this.get_f32("babbyed") > 0)
+			{
+				can_mine = false;
+				this.getSprite().PlaySound("launcher_boing" + XORRandom(2), 0.5f, 1.7f);
+				if (this.isMyPlayer())
+				{		
+					ShakeScreen(16.0f, 12.00f, this.getPosition());
 				}
+			}
+			
+			if (can_mine)
+			{
+				const bool teamHurt = !blob.hasTag("flesh") || blob.hasTag("dead");
+				this.server_Hit(blob, tilepos, attackVel, attack_power, Hitters::builder, teamHurt);
 			}
 		}
 	}
@@ -317,7 +336,7 @@ void Pickaxe(CBlob@ this)
 				CBlob@ b = getBlobByNetworkID(hitdata.blobID);
 				if (b !is null)
 				{
-					SendHitCommand(this, b, (b.getPosition() + this.getPosition()) * 0.5f, attackVel, this.getConfig() == "builder" ? hit_damage : hit_damage * 0.50f);
+					SendHitCommand(this, b, (b.getPosition() + this.getPosition()) * 0.5f, attackVel, this.getName() == "builder" ? hit_damage : hit_damage * 0.50f);
 				}
 			}
 		}
@@ -460,7 +479,7 @@ void SortHits(CBlob@ this, HitInfo@[]@ hitInfos, f32 damage, SortHitsParams@ p)
 			if (!p.justCheck && isUrgent(this, b))
 			{
 				p.hasHit = true;
-				SendHitCommand(this, hi.blob, hi.hitpos, hi.blob.getPosition() - p.pos, damage);
+				SendHitCommand(this, b, hi.hitpos, b.getPosition() - p.pos, damage);
 			}
 			else
 			{

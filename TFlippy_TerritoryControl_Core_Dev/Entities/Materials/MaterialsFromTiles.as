@@ -9,7 +9,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 
 	CMap@ map = getMap();
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		TileType tile = map.getTile(worldPoint).type;
 		// hit bedrock
@@ -20,7 +20,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 		}
 	}
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		TileType tile = map.getTile(worldPoint).type;
 
@@ -60,7 +60,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 				if (XORRandom(200) == 0) 
 				{
 					CBlob@[] blobs;
-					getBlobsByName("methanefissure", @blobs);
+					getBlobsByName("methanedeposit", @blobs);
 					
 					if (blobs.length < 8)
 					{

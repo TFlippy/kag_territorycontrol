@@ -49,11 +49,12 @@ void onTick(CBlob@ this)
 		UpdateAngle(this);
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder = point.getOccupied();
 
 		if (holder is null) return;
 
-		if (holder.get_u8("knocked") <= 0)
+		if (getKnocked(holder) <= 0)
 		{
 			CSprite@ sprite = this.getSprite();
 
@@ -98,7 +99,7 @@ void onTick(CBlob@ this)
 							continue;
 						}
 
-						if (getNet().isServer())
+						if (isServer())
 						{
 							this.server_Hit(b, b.getPosition(), Vec2f(0, 0), damage, HittersTC::electric, true);
 						}
@@ -110,7 +111,7 @@ void onTick(CBlob@ this)
 					}
 				}
 
-				if (getNet().isClient())
+				if (isClient())
 				{
 					CSpriteLayer@ zap = this.getSprite().getSpriteLayer("zap");
 					if (zap !is null)

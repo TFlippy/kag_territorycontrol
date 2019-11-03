@@ -57,21 +57,27 @@ void onTick(CBlob@ this)
 		this.set_Vec2f("direction", nDir);
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-		CBlob@ holder = point.getOccupied();
+		if(point !is null){
+			CBlob@ holder = point.getOccupied();
 		
-		if (holder !is null)
-		{
-			holder.setVelocity(nDir * this.get_f32("velocity"));
+			if (holder !is null)
+			{
+				holder.setVelocity(nDir * this.get_f32("velocity"));
+			}
 		}
 		
-		MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
 		
-		if (getNet().isServer())
+		
+		if (isServer())
 		{
 			if (getGameTime() >= this.get_u32("explosion_timer") || this.getPosition().y < 64) 
 			{
 				this.server_Die();
 			}
+		}
+		else
+		{
+			MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
 		}
 	}		
 }
@@ -128,7 +134,7 @@ void DoExplosion(CBlob@ this)
 		}
 	}
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		f32 chance = this.get_f32("split_chance");
 		if (XORRandom(100) <= (chance * 100))
@@ -155,7 +161,7 @@ void DoExplosion(CBlob@ this)
 		}
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		const u32 count = 360;
 		const f32 seg = 360.00f / count;
@@ -179,7 +185,7 @@ void DoExplosion(CBlob@ this)
 			
 			f32 size = 3 + ((XORRandom(100) / 100.00f) * 2.00f);
 			// CParticle@ p = ParticleAnimated(CFileMatcher("Sparkle.png").getFirst(), ppos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(8, 8), 1, 0, true);
-			CParticle@ p = ParticleAnimated(CFileMatcher("pixel.png").getFirst(), ppos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(1, 1), 1, 0, true);
+			CParticle@ p = ParticleAnimated("pixel.png", ppos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(1, 1), 1, 0, true);
 			if (p !is null)
 			{
 				p.animated = 60 + XORRandom(120);
@@ -216,7 +222,7 @@ const f32 push_radius = 350.00f;
 
 void MakePulseParticle(CBlob@ this, const Vec2f pos, const f32 time, const f32 size, const f32 growth, const SColor color)
 {
-	CParticle@ p = ParticleAnimated(CFileMatcher("falloff_invsqr.png").getFirst(),  this.getPosition() + pos, Vec2f(0, 0), 0, 0, 0, 0, true);
+	CParticle@ p = ParticleAnimated("falloff_invsqr.png",  this.getPosition() + pos, Vec2f(0, 0), 0, 0, 0, 0, true);
 	if (p !is null)
 	{
 		p.Z = 100;
@@ -229,10 +235,10 @@ void MakePulseParticle(CBlob@ this, const Vec2f pos, const f32 time, const f32 s
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(0, 16).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void onDie(CBlob@ this)
@@ -242,7 +248,7 @@ void onDie(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer() && this.getOldVelocity().y < -6 && this.hasTag("offblast") && blob is null && solid) this.server_Die();
+	if (isServer() && this.getOldVelocity().y < -6 && this.hasTag("offblast") && blob is null && solid) this.server_Die();
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

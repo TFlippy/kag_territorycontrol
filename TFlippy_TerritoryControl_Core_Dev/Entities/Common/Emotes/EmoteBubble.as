@@ -128,12 +128,17 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		u8 emote = params.read_u8();
 		u32 emotetime = params.read_u32();
 		
+		if (this.get_f32("babbyed") > 0)
+		{
+			emote = 39;
+		}
+		
 		this.set_u8("emote", emote);
 		this.set_u32("emotetime", emotetime);
 		
 		if (emote < sounds.length && getGameTime() >= this.get_u32("next_emote_sound") && sounds[emote] != "")
 		{
-			if (getNet().isClient())
+			if (isClient())
 			{
 				f32 pitch = this.getSexNum() == 0 ? 0.9f : 1.5f;
 				if (this.exists("voice pitch")) pitch = this.get_f32("voice pitch");

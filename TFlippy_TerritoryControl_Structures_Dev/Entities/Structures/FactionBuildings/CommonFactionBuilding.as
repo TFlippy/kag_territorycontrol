@@ -23,6 +23,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$faction_become_leader$", "FactionIcons.png", Vec2f(16, 16), 0);
 	AddIconToken("$faction_resign_leader$", "FactionIcons.png", Vec2f(16, 16), 1);
 	AddIconToken("$faction_remove$", "FactionIcons.png", Vec2f(16, 16), 2);
+	AddIconToken("$faction_enslave$", "FactionIcons.png", Vec2f(16, 16), 3);
 	
 	AddIconToken("$faction_bed_true$", "FactionIcons.png", Vec2f(16, 16), 4);
 	AddIconToken("$faction_bed_false$", "FactionIcons.png", Vec2f(16, 16), 5);
@@ -69,12 +70,12 @@ void onTick(CBlob@ this)
 	
 	if (getGameTime() % 30 == 0 && this.get_bool("base_demolition"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Hit(this, this.getPosition(), Vec2f(0, 1), this.getInitialHealth() * 0.05f, Hitters::builder, true);
 		}
 		
-		if (getNet().isClient())
+		if (isClient())
 		{	
 			this.getSprite().PlaySound("/BuildingExplosion", 0.8f, 0.8f);
 			
@@ -87,7 +88,7 @@ void onTick(CBlob@ this)
 					if (XORRandom(100) < 75) 
 					{
 						// MakeDustParticle(pos + Vec2f(x + (8 - XORRandom(16)), y + (8 - XORRandom(16))), "woodparts.png");
-						ParticleAnimated(CFileMatcher("Smoke.png").getFirst(), pos + Vec2f(x + (8 - XORRandom(16)), y + (8 - XORRandom(16))), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+						ParticleAnimated("Smoke.png", pos + Vec2f(x + (8 - XORRandom(16)), y + (8 - XORRandom(16))), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
 					}
 				}
 			}
@@ -145,7 +146,7 @@ void onChangeTeam(CBlob@ this, const int oldTeam)
 	
 	if (oldTeamForts <= 0)
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBitStream bt;
 			bt.write_s32(newTeam);
@@ -204,7 +205,7 @@ void onDie(CBlob@ this)
 	
 	if (teamForts <= 0)
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBitStream bt;
 			bt.write_s32(team);
@@ -236,7 +237,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (this.isOverlapping(caller))
 	{
-		if (caller.getTeamNum() >= 100 && caller.getTeamNum() < 200 && this.getTeamNum() < 100 && caller.getConfig() != "slave")
+		if (caller.getTeamNum() >= 100 && caller.getTeamNum() < 200 && this.getTeamNum() < 100 && caller.getName() != "slave")
 		{
 			TeamData@ team_data;
 			GetTeamData(this.getTeamNum(), @team_data);
@@ -285,7 +286,7 @@ void SetAlarm(CBlob@ this, bool inState)
 	if (inState == this.get_bool("base_alarm")) return;
 
 	this.set_bool("base_alarm", inState);
-	if (getNet().isServer()) this.Sync("base_alarm", true);
+	if (isServer()) this.Sync("base_alarm", true);
 
 	this.SetLight(inState);
 							
@@ -456,7 +457,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					int yOffset = ((players.length - 1) * 24) - 48;
 					// print("" + yOffset);
 				
-					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(200.00f + 16.00f, yOffset), this, Vec2f(5, players.length), "Faction Member Management");
+					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(200.00f + 40.00f, yOffset), this, Vec2f(6, players.length), "Faction Member Management");
 					if (menu !is null)
 					{
 						{
@@ -478,6 +479,17 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 									CGridButton@ butt = menu.AddButton("$faction_remove$", "Kick " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
 									butt.hoverText = "Remove " + ply.getUsername() + " from your faction.";
 									butt.SetEnabled(isLeader || ply.getUsername() == myPly.getUsername());
+								}
+								
+								{
+									CBitStream params;
+									params.write_u8(1);
+									params.write_u16(myPly.getNetworkID());
+									params.write_u16(ply.getNetworkID());
+							
+									CGridButton@ butt = menu.AddButton("$faction_enslave$", "Enslave " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
+									butt.hoverText = "Enslave " + ply.getUsername() + ".";
+									butt.SetEnabled(isLeader);
 								}
 							}
 						}
@@ -601,8 +613,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 
 							print_log(ply, (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName());
 							
-							if (getNet().isServer()) this.Sync("base_demolition", true);
-							if (getNet().isClient())
+							if (isServer()) this.Sync("base_demolition", true);
+							if (isClient())
 							{
 								client_AddToChat(ply.getUsername() + " has " + (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName() + "!", teamColor);
 								
@@ -618,9 +630,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						if (isLeader)
 						{	
 							this.set_bool("base_alarm_manual", data > 0);
-							if (getNet().isServer()) this.Sync("base_alarm_manual", true);
+							if (isServer()) this.Sync("base_alarm_manual", true);
 						
-							if (getNet().isClient())
+							if (isClient())
 							{
 								SetAlarm(this, data > 0);
 								
@@ -648,10 +660,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		CPlayer@ ply = getPlayerByNetworkId(player_netid);
 	
 		CRules@ rules = getRules();
-		
-		// print("" + player_netid);
-	
-		
 	
 		if (rules !is null && ply !is null && getRules() !is null && ply.getTeamNum() < 7)
 		{
@@ -679,15 +687,42 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						string teamName = rules.getTeam(caller.getTeamNum()).getName();
 						printf(ply.getUsername() + " has been kicked out of the " + teamName + " by " + caller.getUsername());
 						
-						if (getNet().isServer())
+						if (isServer())
 						{
 							ply.server_setTeamNum(100 + XORRandom(100));
 							if (ply.getBlob() !is null) ply.getBlob().server_Die();
 						}
 						
-						if (getNet().isClient())
+						if (isClient())
 						{
 							client_AddToChat(ply.getUsername() + " has been kicked out of the " + teamName + " by " + caller.getUsername() + "!", teamColor);
+						}
+					}
+					break;
+					
+				case 1:
+					if (isLeader)
+					{
+						string teamName = rules.getTeam(caller.getTeamNum()).getName();
+						printf(ply.getUsername() + " has been enslaved by " + caller.getUsername());
+												
+						if (isServer())
+						{
+							CBlob@ playerBlob = ply.getBlob();
+							
+							CBlob@ slave = server_CreateBlob("slave", this.getTeamNum(), playerBlob !is null ? playerBlob.getPosition() : this.getPosition());
+							slave.set_u8("slaver_team", this.getTeamNum());
+							
+							if (slave !is null)
+							{
+								slave.server_SetPlayer(ply);
+								if (playerBlob !is null) playerBlob.server_Die();
+							}
+						}
+						
+						if (isClient())
+						{
+							client_AddToChat(ply.getUsername() + " has been enslaved by " + caller.getUsername() + "!", teamColor);
 						}
 					}
 					break;
@@ -725,7 +760,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						this.getSprite().PlaySound("party_join.ogg");
 						printf(p.getUsername() + " has joined " + getRules().getTeam(myTeam).getName());
 						
-						if (getNet().isServer())
+						if (isServer())
 						{	
 							p.server_setTeamNum(myTeam);
 							CBlob@ newPlayer = server_CreateBlob("builder", myTeam, blob.getPosition());
@@ -740,7 +775,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 	}
 	
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (cmd == this.getCommandID("faction_captured"))
 		{

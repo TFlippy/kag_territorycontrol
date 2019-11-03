@@ -278,6 +278,7 @@ void onTick(CBlob@ this)
 
 
 	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+	if(point is null) {return;}
 	CBlob@ playerblob = point.getOccupied();
     if(playerblob is null)
 	{ return; }

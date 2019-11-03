@@ -24,9 +24,9 @@ void onInit(CBlob @ this)
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	this.getCurrentScript().tickFrequency = 3;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
-		if (this.getConfig() == "corpsetrader")
+		if (this.getName() == "corpsetrader")
 		{
 			this.getSprite().PlaySound("trader_death.ogg");
 		}
@@ -126,7 +126,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 }
 
 void KillThis(CBlob@ this,Vec2f worldPoint){
-	if(getNet().isServer()){
+	if(isServer()){
 		CPlayer@ player=	this.getPlayer();
 		if(player !is null){
 			CPlayer@ owner=		this.getDamageOwnerPlayer();
@@ -145,7 +145,7 @@ void onDie(CBlob@ this)
 {
 	this.getShape().SetVelocity(Vec2f(0.0f,-1.5f));
 	this.getSprite().Gib();
-	if(getNet().isClient()){
+	if(isClient()){
 		for(int i=0;i<5;i++){
 			Vec2f pos=Vec2f(XORRandom(16)-8,XORRandom(16)-8);
 			if(pos.Length()>=8.0f){

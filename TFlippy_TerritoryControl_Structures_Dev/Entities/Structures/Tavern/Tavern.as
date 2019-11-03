@@ -118,7 +118,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			
@@ -194,7 +194,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		this.set_string("Owner", player.getUsername());
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_setTeamNum(player.getTeamNum());
 		}
@@ -215,7 +215,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				
 				// print("" + ply.getTeamNum());
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					ply.Sync("tavern_netid", true);
 					ply.Sync("tavern_team", true);
@@ -236,7 +236,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				ply.set_u16("tavern_netid", 0);
 				ply.set_u8("tavern_team", 255);
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					ply.Sync("tavern_netid", true);
 					ply.Sync("tavern_team", true);

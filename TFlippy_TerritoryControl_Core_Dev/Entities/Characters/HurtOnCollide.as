@@ -55,7 +55,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			if (vellen > 0.1f &&
 			        this.getMass() > 1.0f &&
 			        (map.isTileCastle(tile) ||
-			         map.isTileWood(tile)))
+			         map.isTileWood(tile)) ||
+			         (tile>=394&&tile<=410 /*glass block*/))
 			{
 				f32 vellen = this.getShape().vellen;
 				f32 dmg = this.get_f32("map dmg modifier") * vellen * this.getMass() / 10000.0f;

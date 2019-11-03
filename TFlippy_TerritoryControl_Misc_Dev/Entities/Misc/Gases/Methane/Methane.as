@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getPosition().y < 0) this.server_Die();
+	if (isServer() && this.getPosition().y < 0) this.server_Die();
 }
 
 void Boom(CBlob@ this)
@@ -41,7 +41,7 @@ void Boom(CBlob@ this)
 	CMap@ map = getMap();
 	Vec2f pos = this.getPosition();
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 
@@ -106,9 +106,9 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	if (blob is null) return;
 	if (blob.hasTag("gas")) return;
 
-	if ((blob.getConfig() == "lantern" ? blob.isLight() : false) ||
-		blob.getConfig() == "fireplace" ||
-		(blob.getConfig() == "arrow" && blob.get_u8("arrow type") == ArrowType::fire))
+	if ((blob.getName() == "lantern" ? blob.isLight() : false) ||
+		blob.getName() == "fireplace" ||
+		(blob.getName() == "arrow" && blob.get_u8("arrow type") == ArrowType::fire))
 	{
 		this.Tag("lit");
 		this.server_Die();

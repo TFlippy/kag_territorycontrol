@@ -1,6 +1,7 @@
 // Drill.as
 
 #include "Hitters.as";
+#include "Knocked.as";
 #include "BuilderHittable.as";
 #include "ParticleSparks.as";
 
@@ -13,9 +14,9 @@ const string heat_prop = "drill heat";
 const u8 heat_max = 250;
 
 const u8 heat_add = 2;
-const u8 heat_add_constructed = 4;
-const u8 heat_add_blob = heat_add * 2;
-const u8 heat_cool_amount = 2;
+const u8 heat_add_constructed = 1;
+const u8 heat_add_blob = 1;
+const u8 heat_cool_amount = 5;
 
 const u8 heat_cooldown_time = 10;
 const u8 heat_cooldown_time_water = u8(heat_cooldown_time / 3);
@@ -83,15 +84,17 @@ void onTick(CSprite@ this)
 
 void makeSteamParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.015625f * rad;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void makeSteamPuff(CBlob@ this, const f32 velocity = 1.0f, const int smallparticles = 10, const bool sound = true)
 {
+	if(!isClient()){return;}
+	
 	if (sound)
 	{
 		this.getSprite().PlaySound("Steam.ogg");
@@ -151,14 +154,17 @@ void onTick(CBlob@ this)
 		}
 		this.set_u8(heat_prop, heat);
 	}
+	
 	sprite.SetEmitSoundPaused(true);
+	
 	if (this.isAttached())
 	{
 		this.getCurrentScript().runFlags &= ~(Script::tick_not_sleeping);
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder = point.getOccupied();
 
-		if (holder is null) return;
+		if (holder is null){return;}
 
 		// cool faster if holder is moving
 		if (heat > 0 && holder.getShape().vellen > 0.01f && getGameTime() % heat_cooldown_time == 0)
@@ -176,7 +182,7 @@ void onTick(CBlob@ this)
 			sprite.PlaySound("DrillOverheat.ogg");
 		}
 
-		if (!(point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) || holder.get_u8("knocked") > 0)
+		if (!(point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) || getKnocked(holder) > 0)
 		{
 			this.set_bool(buzz_prop, false);
 			return;
@@ -224,32 +230,36 @@ void onTick(CBlob@ this)
 			if (map !is null)
 			{
 				HitInfo@[] hitInfos;
-				if (map.getHitInfosFromArc((this.getPosition() - attackVel), -attackVel.Angle(), 30, distance, this, false, @hitInfos))
+				if (map.getHitInfosFromArc((this.getPosition() - attackVel), -attackVel.Angle(), 30, distance, this, true, @hitInfos))
 				{
+					//print("dril" + hitInfos.length);
+				
 					bool hit_ground = false;
 					for (uint i = 0; i < hitInfos.length; i++)
 					{
 						HitInfo@ hi = hitInfos[i];
 						bool hit_constructed = false;
-						if (hi.blob !is null) // blob
+						CBlob@ b = hi.blob;
+						if (b !is null) // blob
 						{
 							//detect
-							const bool is_ground = hi.blob.hasTag("blocks sword") && !hi.blob.isAttached() && hi.blob.isCollidable();
+							const bool is_ground = b.hasTag("blocks sword") && !b.isAttached() && b.isCollidable();
 							if (is_ground)
 							{
 								hit_ground = true;
 							}
 
-							if (hi.blob.getTeamNum() == holder.getTeamNum() ||
-									hit_ground && !is_ground)
+							if (b.getTeamNum() == holder.getTeamNum() || hit_ground && !is_ground)
 							{
 								continue;
 							}
+							
+							
 
-							holder.server_Hit(hi.blob, hi.hitpos, attackVel, attack_dam, Hitters::drill);
+							holder.server_Hit(b, hi.hitpos, attackVel, attack_dam, Hitters::drill);
 							if (int(heat) > heat_max * 0.5f)
 							{
-								holder.server_Hit(hi.blob, hi.hitpos, attackVel, 1.0f, Hitters::drill);   //extra burn damage
+								holder.server_Hit(b, hi.hitpos, attackVel, 1.0f, Hitters::drill);   //extra burn damage
 							}
 							hitsomething = true;
 							hitblob = true;

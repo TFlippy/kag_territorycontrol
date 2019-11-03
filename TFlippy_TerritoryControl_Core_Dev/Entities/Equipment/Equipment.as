@@ -248,6 +248,7 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 	if(headname == "pumpkin")
 		playerblob.set_u8("override head", 101);
 
+	playerblob.setHeadNum((playerblob.getHeadNum()+1) % 3);
 	playerblob.Tag(headname);
 	playerblob.set_string("reload_script", headname);
 	playerblob.AddScript(headname+"_effect.as");
@@ -264,6 +265,15 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 		{
 			playerblob.getSprite().RemoveSpriteLayer("mhelmet");
 			playerblob.SetLight(false);
+		}
+	}
+	
+	if(headname == "crown")
+	{
+		CSpriteLayer@ crown = playerblob.getSprite().getSpriteLayer("crown");
+		if (crown !is null)
+		{
+			playerblob.getSprite().RemoveSpriteLayer("crown");
 		}
 	}
 	
@@ -295,7 +305,7 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 	}
 	
 	playerblob.Untag(headname);
-	if(getNet().isServer())
+	if(isServer())
 	{
 		if(headname == "militaryhelmet")			//need to be after creating blob, bcos it sets hp to it
 		{
@@ -311,6 +321,7 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 		}
 	}
 	playerblob.set_u8("override head", playerblob.get_u8("last head"));
+	playerblob.setHeadNum((playerblob.getHeadNum()+1) % 3);
 	playerblob.set_string("equipment_head", "");
 	playerblob.RemoveScript(headname+"_effect.as");
 	playerblob.Tag("update head");
@@ -366,7 +377,7 @@ void removeTorso(CBlob@ playerblob, string torsoname)		//Same stuff with removin
 	}
 	
 	playerblob.Untag(torsoname);
-	if(getNet().isServer())
+	if(isServer())
 	{
 		if(torsoname == "bulletproofvest")			//need to be after creating blob, bcos it sets hp to it
 		{
@@ -405,7 +416,7 @@ void removeBoots(CBlob@ playerblob, string bootsname)		//I think you should alre
 	}
 	
 	playerblob.Untag(bootsname);
-	if(getNet().isServer())
+	if(isServer())
 	{
 		if(bootsname == "combatboots")			//need to be after creating blob, bcos it sets hp to it
 		{
@@ -425,7 +436,7 @@ void removeBoots(CBlob@ playerblob, string bootsname)		//I think you should alre
 
 void onDie(CBlob@ this)
 {
-    if (getNet().isServer())
+    if (isServer())
 	{
 		if (this.get_string("equipment_head") != "")
 		{

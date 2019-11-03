@@ -21,7 +21,7 @@ void onRestart(CRules@ this)
 
 void onTick(CRules@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		u32 time = getGameTime();
 		if (time >= next_rain)

@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		// if (this.getMap().getBlobsInRadius(this.getPosition(), 32.0f, @blobs))
@@ -60,4 +60,19 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
+}
+
+
+void onAddToInventory( CBlob@ this, CBlob@ blob )
+{
+	if(blob.getName() != "gyromat") return;
+
+	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+}
+
+void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
+{
+	if(blob.getName() != "gyromat") return;
+	
+	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

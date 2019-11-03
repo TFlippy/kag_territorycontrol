@@ -23,7 +23,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 bool canBeForceFed(CBlob@ this)
 {
-	return (getKnocked(this) > 0) || (this.get_f32("babbyed") > 0) || (this.isKeyPressed(key_down));
+	return (getKnocked(this) > 0) || (this.get_f32("babbyed") > 0) || (this.isKeyPressed(key_down)) || (this.getPlayer() is null);
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

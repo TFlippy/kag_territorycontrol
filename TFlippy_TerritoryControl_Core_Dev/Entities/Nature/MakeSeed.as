@@ -8,7 +8,7 @@
 
 CBlob@ server_MakeSeed(Vec2f atpos, string blobname, u16 growtime, u8 spriteIndex, u8 created_blob_radius)
 {
-	if (!getNet().isServer()) { return null; }
+	if (!isServer()) { return null; }
 
 	CBlob@ seed = server_CreateBlobNoInit("seed");
 
@@ -60,6 +60,10 @@ CBlob@ server_MakeSeed(Vec2f atpos, string blobname)
 	else if (blobname == "pumpkin_plant")
 	{
 		return server_MakeSeed(atpos, blobname, 300, 7, 4);
+	}
+	else if (blobname == "protopopov_plant")
+	{
+		return server_MakeSeed(atpos, blobname, 100, 7, 4);
 	}
 
 	return server_MakeSeed(atpos, blobname, 100, 0, 4);

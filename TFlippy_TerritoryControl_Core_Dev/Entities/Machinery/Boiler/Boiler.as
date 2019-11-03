@@ -152,10 +152,10 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 
 void makeSteamParticle(CBlob@ this, Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	const f32 rad = this.getRadius();
-	ParticleAnimated(CFileMatcher(filename).getFirst(), pos, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, pos, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 

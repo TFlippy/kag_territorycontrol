@@ -8,7 +8,7 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	bool canChangeClass = caller.getConfig() != "hazmat";
+	bool canChangeClass = caller.getName() != "hazmat";
 
 	if(canChangeClass)
 	{

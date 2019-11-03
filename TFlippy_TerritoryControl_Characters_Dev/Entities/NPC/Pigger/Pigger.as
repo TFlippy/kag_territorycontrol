@@ -10,7 +10,7 @@ void onInit(CSprite@ this)
 {
     this.ReloadSprites(0,0);
 	this.SetZ(-20.0f);
-	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
+	this.addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 }
 
 void onTick(CSprite@ this)
@@ -133,10 +133,10 @@ void onTick(CBlob@ this)
 						}
 					}
 				
-					if (getNet().isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.025f, Hitters::bite, true);
+					if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.025f, Hitters::bite, true);
 				}
 				
-				// if (getNet().isServer() && !blob.hasTag("transformed") && blob.hasTag("pigger_pregnant"))
+				// if (isServer() && !blob.hasTag("transformed") && blob.hasTag("pigger_pregnant"))
 				// {
 					// if (blob.getHealth() < 0.125f)
 					// {
@@ -234,7 +234,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (blob !is null && getGameTime() >= this.get_u32("next attach") && this.get_u16("succ netid") == 0 && blob.hasTag("human") && !blob.hasTag("dead") && !this.hasTag("dead") && blob.getConfig() != "hazmat")
+	if (blob !is null && getGameTime() >= this.get_u32("next attach") && this.get_u16("succ netid") == 0 && blob.hasTag("human") && !blob.hasTag("dead") && !this.hasTag("dead") && blob.getName() != "hazmat")
 	{
 		this.set_u16("succ netid", blob.getNetworkID());
 		this.getSprite().PlaySound("Pigger_Pop_" + XORRandom(2), 1.00f, 1.00f);

@@ -30,12 +30,12 @@ string g_kick_reason = kick_reason_string[kick_reason_griefer]; //default
 enum nextmap_reason
 {
 	nextmap_reason_ruined = 0,
-	nextmap_reason_stalemate,
 	nextmap_reason_bugged,
+	nextmap_reason_lag,
 	nextmap_reason_count,
 };
 
-string[] nextmap_reason_string = { "Map Ruined", "Stalemate", "Game Bugged" };
+string[] nextmap_reason_string = { "Map Ruined", "Game Bugged", "Server lagging"};
 
 //votekick and vote nextmap
 
@@ -61,7 +61,6 @@ void onInit(CRules@ this)
 	this.addCommandID(votenextmap_id);
 	this.addCommandID(voteteamkick_id);
 }
-
 
 void onRestart(CRules@ this)
 {
@@ -97,7 +96,7 @@ class VoteTeamKickFunctor : VoteFunctor
 		{
 			client_AddToChat("Team Votekick passed! " + kickplayer.getUsername() + " will be kicked out of your team.", vote_message_colour());
 
-			if (getNet().isServer())
+			if (isServer())
 			{
 				kickplayer.server_setTeamNum(XORRandom(100)+100);
 				kickplayer.set_u32("teamkick_time", getGameTime() + VoteTeamKickNoTeamTime);
@@ -172,7 +171,7 @@ class VoteKickFunctor : VoteFunctor
 		{
 			client_AddToChat("Votekick passed! " + kickplayer.getUsername() + " will be kicked out.", vote_message_colour());
 
-			if (getNet().isServer())
+			if (isServer())
 				BanPlayer(kickplayer, VoteKickTime); //30 minutes ban
 		}
 	}
@@ -223,7 +222,7 @@ class VoteKickLeaveFunctor : VotePlayerLeaveFunctor
 		if (player is kickplayer)
 		{
 			client_AddToChat(player.getUsername() + " left early, acting as if they were kicked.", vote_message_colour());
-			if (getNet().isServer())
+			if (isServer())
 			{
 				BanPlayer(player, VoteKickTime);
 			}
@@ -280,7 +279,7 @@ class VoteNextmapFunctor : VoteFunctor
 	{
 		if (outcome)
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				LoadNextMap();
 			}
@@ -314,6 +313,7 @@ VoteObject@ Create_VoteNextmap(CPlayer@ byplayer, string reason)
 	vote.reason = reason;
 	vote.byuser = byplayer.getUsername();
 	vote.forcePassFeature = "nextmap";
+	vote.required_percent = 0.65f;
 
 	CalculateVoteThresholds(vote);
 

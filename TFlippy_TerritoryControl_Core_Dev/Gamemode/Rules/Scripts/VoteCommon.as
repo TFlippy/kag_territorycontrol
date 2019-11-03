@@ -141,7 +141,8 @@ void PassVote(VoteObject@ vote)
 	vote.timeremaining = -1; // so the gui hides and another vote can start
 
 	if (vote.onvotepassed is null) return;
-	bool outcome = vote.current_yes > vote.current_no;//vote.required_percent * vote.maximum_votes;
+
+	bool outcome = vote.current_yes> vote.required_percent*(vote.current_no+vote.current_yes);//jammer did it
 	client_AddToChat(getTranslatedString("--- Vote {OUTCOME}: {YESCOUNT} vs {NOCOUNT} (out of {MAXVOTES}) ---").replace("{OUTCOME}", getTranslatedString(outcome ? "passed" : "failed")).replace("{YESCOUNT}", vote.current_yes + "").replace("{NOCOUNT}", vote.current_no + "").replace("{MAXVOTES}", vote.maximum_votes + ""), vote_message_colour());
 	vote.onvotepassed.Pass(outcome);
 }
@@ -220,7 +221,7 @@ void Vote(VoteObject@ vote, CPlayer@ p, bool favour)
 			vote.current_no++;
 		}
 
-		if (CanPlayerVote(vote, getLocalPlayer()) || getNet().isServer()) //include all in server logs
+		if (CanPlayerVote(vote, getLocalPlayer()) || isServer()) //include all in server logs
 		{
 
 

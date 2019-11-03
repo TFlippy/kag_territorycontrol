@@ -7,7 +7,7 @@ void onInit(CBlob@ this)
 	this.getShape().SetGravityScale(0.0f);
 	this.getShape().SetStatic(true);
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		client_AddToChat("You hear several distant explosions.", SColor(255, 255, 0, 0));
 	}
@@ -30,7 +30,7 @@ void onTick(CBlob@ this)
 	const u8 maxShotsFired = this.get_u8("max shots fired");
 	const u32 delay = this.get_u32("delay between shells");
 	
-	if (getNet().isClient() && getGameTime() >= this.get_u32("next shot") && shotsFired < maxShotsFired)
+	if (isClient() && getGameTime() >= this.get_u32("next shot") && shotsFired < maxShotsFired)
 	{
 		CCamera@ cam = getCamera();
 		if (cam !is null)
@@ -43,7 +43,7 @@ void onTick(CBlob@ this)
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		const u32 ticks = this.getTickSinceCreated();
 		const u8 shotsSpawned = this.get_u8("shots spawned");

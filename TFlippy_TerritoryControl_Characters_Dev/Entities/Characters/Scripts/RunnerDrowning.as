@@ -51,8 +51,8 @@ void onTick(CBlob@ this)
 	const bool inWater = this.isInWater() && this.getMap().isInWater(pos + Vec2f(0.0f, -this.getRadius() * 0.66f)) && !this.hasTag("scubagear") && !this.hasTag("no drown");
 	bool canBreathe = !inWater && !gassed;
 	
-	const bool server = getNet().isServer();				
-	const bool client = getNet().isClient();				
+	const bool server = isServer();				
+	const bool client = isClient();				
 
 	if (this.hasTag("bubblegem")) canBreathe = !canBreathe;
 	

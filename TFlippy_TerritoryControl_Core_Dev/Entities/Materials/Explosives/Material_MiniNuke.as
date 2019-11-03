@@ -27,7 +27,7 @@ void onInit(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer() && this.hasTag("DoExplode"))
+	if (isServer() && this.hasTag("DoExplode"))
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		boom.setPosition(this.getPosition());

@@ -2,7 +2,7 @@ void onInit(CBlob@ this)
 {
 	this.getShape().SetGravityScale(0.0f);
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		SetScreenFlash(255, 255, 255, 255);
 	
@@ -19,7 +19,7 @@ void onInit(CBlob@ this)
 		client_AddToChat("The world has been transformed into a mithril wasteland, and is now barely habitable.", SColor(255, 255, 0, 0));
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		getBlobsByName("tree_bushy", @blobs);

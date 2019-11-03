@@ -46,7 +46,7 @@ void onTick(CBlob@ this)
 		
 		this.setAngleDegrees(-this.getVelocity().Angle() + 90);
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			u8 team = this.getTeamNum();
 		
@@ -72,7 +72,7 @@ void onTick(CBlob@ this)
 	}
 	else
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
@@ -81,10 +81,10 @@ void onTick(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(0, 4).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void DoExplosion(CBlob@ this, Vec2f velocity)
@@ -119,7 +119,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		// CMap@ map = this.getMap();
 		

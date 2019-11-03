@@ -88,7 +88,7 @@ void onSetPlayer(CBlob@ this, CPlayer@ player)
 		
 		this.setInventoryName("The Relentless X");
 		
-		// if (getNet().isServer()) player.server_setCharacterName("The Relentless X");
+		// if (isServer()) player.server_setCharacterName("The Relentless X");
 	}
 }
 
@@ -160,7 +160,7 @@ void onTick(CBlob@ this)
 			ninja.swordTimer = 0;
 		}
 
-		if (ninja.state == NinjaStates::sword_drawn && getNet().isServer())
+		if (ninja.state == NinjaStates::sword_drawn && isServer())
 		{
 			ninja_clear_actor_limits(this);
 		}
@@ -316,7 +316,7 @@ void onTick(CBlob@ this)
 	
 	if(knocked > 0 || inair && !this.isOnWall())this.Untag("cant_jump");
 
-	if (!swordState && getNet().isServer())
+	if (!swordState && isServer())
 	{
 		ninja_clear_actor_limits(this);
 	}
@@ -329,7 +329,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer()) server_CreateBlob("ninjascroll", this.getTeamNum(), this.getPosition());
+	if (isServer()) server_CreateBlob("ninjascroll", this.getTeamNum(), this.getPosition());
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
@@ -361,7 +361,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, int deltaInt, NinjaInfo@ info)
 {
-	if (!getNet().isServer())
+	if (!isServer())
 	{
 		return;
 	}
@@ -550,8 +550,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	
 	blob.setVelocity(dir * vellen * 0.8f);
 	
-	if (getNet().isClient()) this.getSprite().PlaySound("Ninja_Attack" + XORRandom(4), 0.75f, this.getSexNum() == 0 ? 1.0f : 2.0f);
-	if (getNet().isServer()) 
+	if (isClient()) this.getSprite().PlaySound("Ninja_Attack" + XORRandom(4), 0.75f, this.getSexNum() == 0 ? 1.0f : 2.0f);
+	if (isServer()) 
 	{
 		if (blob.hasTag("flesh") || blob.hasTag("wooden"))
 		{

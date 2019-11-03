@@ -281,7 +281,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void Unpack(CBlob@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 
 	if (this.hasTag("unpacking")) return;
 
@@ -343,6 +343,7 @@ void ShowParachute(CBlob@ this)
 
 void HideParachute(CBlob@ this)
 {
+	if(!isClient()){return;}
 	CSprite@ sprite = this.getSprite();
 	CSpriteLayer@ parachute = sprite.getSpriteLayer("parachute");
 
@@ -364,12 +365,13 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 
 void onDie(CBlob@ this)
 {
+	if(!isClient()){return;}
 	HideParachute(this);
 	this.getSprite().Gib();
 	Vec2f pos = this.getPosition();
 	Vec2f vel = this.getVelocity();
 	//custom gibs
-	string fname = CFileMatcher("/Crate.png").getFirst();
+	string fname = "Crate.png";
 	for (int i = 0; i < 4; i++)
 	{
 		CParticle@ temp = makeGibParticle(fname, pos, vel + getRandomVelocity(90, 1 , 120), 9, 2 + i, Vec2f(16, 16), 2.0f, 20, "Sounds/material_drop.ogg", 0);
@@ -449,6 +451,7 @@ void onRender(CSprite@ this)
 	if (blob.isAttached())
 	{
 		AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null ){return;}
 
 		CBlob@ holder = point.getOccupied();
 
@@ -490,7 +493,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 	f32 vellen = this.getOldVelocity().Length();
 
-	if (getNet().isServer() && vellen > 5.0f)
+	if (isServer() && vellen > 5.0f)
 	{
 		Unpack(this);
 	}

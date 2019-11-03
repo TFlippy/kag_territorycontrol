@@ -58,7 +58,7 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 	if (this.getTeamNum() == forBlob.getTeamNum() || (this.getTeamNum() > 100 && this.getTeamNum() < 200))
 	{
 		CBlob@ carried = forBlob.getCarriedBlob();
-		return (carried is null ? true : carried.getConfig() == "mat_battery");
+		return (carried is null ? true : carried.getName() == "mat_battery");
 	}
 	else return false;
 }
@@ -164,13 +164,13 @@ void Zap(CBlob@ this, CBlob@ target)
 	SetKnocked(target, 60);
 	this.set_u32("next zap", getGameTime() + delay);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_Hit(target, target.getPosition(), Vec2f(0, 0), damage, HittersTC::electric, true);
 		SetFuel(this, Maths::Max(0, fuel - 5));
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{				
 		bool flip = this.isFacingLeft();
 	

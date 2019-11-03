@@ -53,7 +53,7 @@ void onInit(CBlob@ this)
 	this.set_string("autograb blob", "mat_stone");
 
 	// auto-load on creation
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ ammo = server_CreateBlob("mat_stone");
 		if (ammo !is null)
@@ -89,7 +89,7 @@ void onTick(CBlob@ this)
 			v.cooldown_time--;
 		}
 
-		if (getNet().isClient() && delay != 0) //only matters visually on client
+		if (isClient() && delay != 0) //only matters visually on client
 		{
 			//set the arm angle based on how long ago we fired
 			f32 rechargeRatio = (time_til_fire / delay);

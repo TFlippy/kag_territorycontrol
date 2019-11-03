@@ -52,7 +52,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (XORRandom(100) > 5) return;
 	
@@ -75,7 +75,7 @@ void onTick(CBlob@ this)
 		// }
 	}
 
-	// if (!getNet().isServer() || XORRandom(100)>=50) {
+	// if (!isServer() || XORRandom(100)>=50) {
 		// return;
 	// }
 	
@@ -125,7 +125,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			
@@ -162,7 +162,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 				
-				if (blob is null) return;
+				if (blob is null && callerBlob is null) return;
 			   
 				if (!blob.canBePutInInventory(callerBlob))
 				{

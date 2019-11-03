@@ -10,10 +10,7 @@ void Take(CBlob@ this, CBlob@ blob)
 {
 	const string blobName = blob.getName();
 	
-	// This garbage should've been removed a long time ago
-	// if (blobName == "mat_gold" || blobName == "mat_stone" || blobName == "mat_coal" || blobName == "mat_sand" || blobName == "mat_metal" || blobName == "mat_metalbars" || blobName == "mat_gunpowder" || blobName == "mat_hemp" ||  blobName == "mat_wood" || blobName == "grain" || blobName == "mat_rifleammo" || blobName == "mat_pistolammo" || blobName == "mat_copper" || blobName == "mat_copperingot" || blobName == "mat_iron" || blobName == "mat_ironingot" || blobName == "mat_steelingot" || blobName == "mat_goldingot" || blobName == "mat_smallrocket" || blobName == "mat_shotgunammo" || blobName == "mat_sulphur" || blobName == "mat_mithrilingot" || blobName == "mat_plasteel" || blobName == "mat_matter")
-	
-	if (blob.hasTag("builder pickup") && !blob.hasTag("no pickup"))
+	if (!this.isAttached() && blob.hasTag("builder pickup") && !blob.hasTag("no pickup"))
 	{
 		if ((this.getDamageOwnerPlayer() is blob.getPlayer()) || getGameTime() > blob.get_u32("autopick time"))
 		{

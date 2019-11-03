@@ -14,7 +14,7 @@ void onHealthChange(CBlob@ this, f32 health_old)
 	
 	sprite.animation.frame = newFrame;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (lastFrame != newFrame && this.hasTag("building"))
 		{		
@@ -29,7 +29,7 @@ void onHealthChange(CBlob@ this, f32 health_old)
 					if (XORRandom(100) < 75) 
 					{
 						// MakeDustParticle(pos + Vec2f(x + (8 - XORRandom(16)), y + (8 - XORRandom(16))), "woodparts.png");
-						ParticleAnimated(CFileMatcher("Smoke.png").getFirst(), pos + Vec2f(x + (8 - XORRandom(16)), y + (8 - XORRandom(16))), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+						ParticleAnimated("Smoke.png", pos + Vec2f(x + (8 - XORRandom(16)), y + (8 - XORRandom(16))), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
 					}
 				}
 			}

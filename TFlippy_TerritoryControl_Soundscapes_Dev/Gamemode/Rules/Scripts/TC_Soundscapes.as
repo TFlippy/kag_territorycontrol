@@ -229,7 +229,7 @@ void GameMusicLogic(CBlob@ this, CMixer@ mixer)
 				{
 					isUPF = true;
 					if (team != 250) isHostile = true;
-					if (building.getConfig() == "merchantchicken") isUrban = true;
+					if (building.getName() == "merchantchicken") isUrban = true;
 				}
 			}
 		}

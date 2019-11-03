@@ -21,22 +21,26 @@ void onInit(CBlob@ this)
 	if (!this.exists("boom_size")) this.set_f32("boom_size", 0);
 	if (!this.exists("boom_end")) this.set_f32("boom_end", 1024);
 	if (!this.exists("boom_delay")) this.set_u32("boom_delay", 10);
-	if (!this.exists("boom_increment")) this.set_u32("boom_increment", 2.00f);
+	if (!this.exists("boom_increment")) this.set_f32("boom_increment", 2.00f);
 	if (!this.exists("flash_delay")) this.set_u32("flash_delay", 0);
 	if (!this.exists("flash_distance")) this.set_f32("flash_distance", 2500);
 	if (!this.exists("custom_explosion_sound")) this.set_string("custom_explosion_sound", "Antimatter_Kaboom_Big");
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		Vec2f pos = getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos());
 		f32 distance = Maths::Abs(this.getPosition().x - pos.x) / 8;
 		sound_delay = (Maths::Abs(this.getPosition().x - pos.x) / 8) / (340 * 0.4f);
 		
-		f32 length = Maths::Abs(this.get_f32("boom_size") - this.get_f32("boom_end")) / this.get_u32("boom_increment");
+		print("" + sound_delay);
+		
+		f32 length = Maths::Abs(this.get_f32("boom_size") - this.get_f32("boom_end")) / this.get_f32("boom_increment");
 		for (int i = 0; i < (this.get_f32("boom_end") / 32); i++)
 		{
-			MakeLightningParticle(this, getRandomVelocity(0, XORRandom(100) * 0.01f, 360), Maths::Min(1 + length, 8), (XORRandom(200) * 0.01f), Maths::Min((this.get_f32("boom_end") / 32) * 0.25f, (XORRandom(50) * 0.01f) * 0.50f));
+			MakeLightningParticle(this, this.getPosition() + getRandomVelocity(0, XORRandom(100) * 0.01f, 360), Maths::Min(1 + length, 8), (XORRandom(200) * 0.01f), Maths::Min((this.get_f32("boom_end") / 32) * 0.25f, (XORRandom(50) * 0.01f) * 0.50f));
 		}
+		
+		// MakePulseParticle(this, Vec2f(0, 0), 1, 1 + (this.get_f32("boom_size") * 0.40f), 0.5f);
 	}
 
 	this.getCurrentScript().tickFrequency = 1;
@@ -48,7 +52,7 @@ void DoExplosion(CBlob@ this)
 	const f32 modifier = boom_size / this.get_f32("boom_end");
 	const f32 invModifier = 1.00f - modifier;
 		
-	if (getNet().isServer())
+	if (isServer())
 	{			
 		server_DestroyStuff(this, boom_size, 10 + (25 * modifier), this.getPosition());
 	
@@ -118,37 +122,62 @@ const u32 pulse_ticks = 90;
 
 void onTick(CBlob@ this)
 {
+	const u32 ticks = this.getTickSinceCreated();
+
 	if (this.get_f32("boom_size") >= this.get_f32("boom_end")) 
 	{
-		if (getNet().isServer()) this.server_Die();
+		if (isServer() && ticks > 150) this.server_Die();
 		this.Tag("dead");
-		
-		return;
 	}
 	
-	if (this.hasTag("dead")) return;
+	const bool dead = this.hasTag("dead");
 	
+	if (isClient())
+	{
+		if (ticks > (sound_delay * 30) && !this.hasTag("sound_played"))
+		{
+			this.Tag("sound_played");
+		
+			f32 modifier = Maths::Clamp(1.00f - (sound_delay / 3.0f), 0.10f, 0.80f);
+			// print("modifier: " + modifier);
+			
+			if (modifier > 0.01f)
+			{	
+				Sound::Play("Nuke_Kaboom_Big.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 2.0f - (0.2f * (1 - modifier)), Maths::Max(modifier * 0.90f, 0.10f));
+			}
+		}
+	}
+	
+	if (dead) return;
+	
+	CMap@ map = getMap();
 	const f32 boom_size = this.get_f32("boom_size");
 	const f32 boom_end = this.get_f32("boom_end");
-	const u32 ticks = this.getTickSinceCreated();
 	const f32 modifier = boom_size / boom_end;
 	const f32 invModifier = 1.00f - modifier;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
-		for (int i = 0; i < Maths::Pow(boom_size / 32, 2) * 0.01f; i++)
+		const f32 fx_count = Maths::Pow(boom_size / 32, 2) * 0.01f;
+		const s32 max_width = map.tilemapwidth * map.tilesize;
+		const s32 max_height = map.tilemapheight * map.tilesize;
+		
+		for (int i = 0; i < fx_count; i++)
 		{
 			// Vec2f offset = getRandomVelocity(0, XORRandom(boom_size), 360);
-			Vec2f offset = getRandomVelocity(0, boom_size + ((boom_size - XORRandom(boom_size * 2)) * 0.125f), 360);
-			// offset = Vec2f(offset.x, offset.y * 0.50f);
 			
-			f32 dist = (offset - this.getPosition()).getLength();
-			f32 dist_mod = 1.00f - (dist / boom_end);
+			Vec2f offset = this.getPosition() + getRandomVelocity(0, boom_size + ((boom_size - XORRandom(boom_size * 2)) * 0.125f), 360);
+			// print("" + offset.x + "; " + offset.y);
 			
-			// MakeLightningParticle(this, offset, 4 + XORRandom(4), Maths::Min((boom_size / 32) + (XORRandom(100) * 0.01f), (boom_size / 256.00f) * dist_mod), 0.125f * dist_mod);
-			if (XORRandom(2) == 0) MakeLightningParticle(this, getRandomVelocity(0, (boom_size - XORRandom(boom_size * 2)), 360), 4, Maths::Sqrt(boom_size / 32.00f), 0.20f);
-			// MakeLightningParticle(this, offset, 4 + XORRandom(4), Maths::Min((boom_size / 32) + (XORRandom(100) * 0.01f), (boom_size / 256.00f) * dist_mod), 0.125f);
-			MakeExplosionParticle(this, offset + getRandomVelocity(0, XORRandom(48), 360), Vec2f(0, 0), 5 + XORRandom(3), particles[XORRandom(particles.length)]);
+			// if (offset.x > 0 && offset.y > 0 && offset.x < max_width && offset.y < max_height)
+			if (offset.x > 0 && offset.y > 0 && offset.x < max_width && offset.y < max_height)
+			{
+				f32 dist = (offset - this.getPosition()).getLength();
+				f32 dist_mod = 1.00f - (dist / boom_end);
+				
+				MakeLightningParticle(this, offset + getRandomVelocity(0, 32 - XORRandom(64), 360), 4, Maths::Sqrt(boom_size / 32.00f), 0.20f);
+				MakeExplosionParticle(this, offset + getRandomVelocity(0, XORRandom(48), 360), Vec2f(0, 0), 5 + XORRandom(3), particles[XORRandom(particles.length)]);
+			}
 		}
 		
 		
@@ -193,19 +222,26 @@ void onTick(CBlob@ this)
 				
 				if (dist <= sound_distance)
 				{
-					f32 modifier = 1.00f - Maths::Sqrt(dist / sound_distance);
+					f32 modifier = Maths::Clamp(Maths::Sqrt(dist / sound_distance), 0.10f, 1.00f);
+					// print("" + modifier);
 					
 					if (modifier > 0.01f)
 					{	
 						// print("" + modifier);
-						Sound::Play("Antimatter_Kaboom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 2.0f - (0.2f * (1 - modifier)), modifier);
+						
+						f32 volume = Maths::Clamp(2.0f - (0.60f * (1 - modifier)), 0.25f, 0.70f);
+						f32 pitch = Maths::Clamp((modifier * 0.50f) - (XORRandom(100) * 0.003f), 0.50f, 1.00f);
+						
+						// print("volume: " + volume + "; pitch: " + pitch);
+						
+						Sound::Play("Antimatter_Kaboom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), volume, pitch);
 					}
 				}
 			}
 		}
 	}
 	
-	if (getNet().isClient() && !this.hasTag("no flash") && ticks == this.get_u32("flash_delay")) 
+	if (isClient() && !this.hasTag("no flash") && ticks == this.get_u32("flash_delay")) 
 	{
 		CBlob@ localBlob = getLocalPlayerBlob();
 		if (localBlob !is null)
@@ -225,7 +261,7 @@ void onTick(CBlob@ this)
 	if (ticks >= this.get_u32("boom_delay") && ticks % this.get_u8("boom_frequency") == 0 && this.get_f32("boom_size") < this.get_f32("boom_end"))
 	{
 		DoExplosion(this);
-		this.add_f32("boom_size", this.get_u32("boom_increment"));
+		this.add_f32("boom_size", this.get_f32("boom_increment"));
 		
 		// f32 modifier = 1.00f - (float(this.get_u8("boom_size")) / float(this.get_u8("boom_end")));
 		// this.SetLightRadius(1024.5f * modifier);
@@ -233,7 +269,7 @@ void onTick(CBlob@ this)
 	
 	if (!this.hasTag("no flash"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			if (ticks == 2)
 			{		
@@ -253,29 +289,15 @@ void onTick(CBlob@ this)
 			}	
 		}
 	}
-		
-	if (getNet().isClient())
-	{
-		if (ticks > (sound_delay * 30) && !this.hasTag("sound_played"))
-		{
-			this.Tag("sound_played");
-		
-			f32 modifier = 1.00f - (sound_delay / 3.0f);
-			// print("modifier: " + modifier);
-			
-			if (modifier > 0.01f)
-			{	
-				Sound::Play("Nuke_Kaboom_Big.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 2.0f - (0.2f * (1 - modifier)), modifier);
-			}
-		}
-	}
 }
 
 CParticle@ pulseParticle;
 
 void MakePulseParticle(CBlob@ this, const Vec2f pos, const f32 time, const f32 size, const f32 growth)
 {
-	CParticle@ p = ParticleAnimated(CFileMatcher("falloff_invsqr.png").getFirst(),  this.getPosition() + pos, Vec2f(0, 0), 0, 0, 0, 0, true);
+	if(!isClient()){return;}
+	
+	CParticle@ p = ParticleAnimated("AntimatterFlash.png", this.getPosition() + pos, Vec2f(0, 0), 0, 0, 0, 0, true);
 	if (p !is null)
 	{
 		p.Z = 100;
@@ -294,7 +316,8 @@ void MakePulseParticle(CBlob@ this, const Vec2f pos, const f32 time, const f32 s
 
 void MakeLightningParticle(CBlob@ this, const Vec2f pos, const f32 time, const f32 size, const f32 growth, const string filename = "AntimatterLightning.png")
 {
-	CParticle@ p = ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(32, 32), 1, 0, true);
+	if(!isClient()){return;}
+	CParticle@ p = ParticleAnimated(filename, pos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(32, 32), 1, 0, true);
 	if (p !is null)
 	{
 		p.Z = 200;
@@ -306,7 +329,8 @@ void MakeLightningParticle(CBlob@ this, const Vec2f pos, const f32 time, const f
 
 void MakeExplosionParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const f32 time, const string filename = "SmallSteam")
 {
-	CParticle@ p = ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 2.8f + XORRandom(200) * 0.01f, time, XORRandom(100) * -0.00005f, true);
+	if(!isClient()){return;}
+	CParticle@ p = ParticleAnimated(filename, pos, vel, float(XORRandom(360)), 2.8f + XORRandom(200) * 0.01f, time, XORRandom(100) * -0.00005f, true);
 	if (p !is null)
 	{
 		p.Z = 300;

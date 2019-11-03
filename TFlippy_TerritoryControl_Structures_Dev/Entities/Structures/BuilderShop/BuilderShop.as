@@ -92,11 +92,18 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
+	{
+		ShopItem@ s = addShopItem(this, "Engineer's Tools", "$engineertools$", "engineertools", "Engineer's Tools for real engineers.", true);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
+		AddRequirement(s.requirements, "coin", "", "Coins", 600);
+		
+		s.spawnNothing = true;
+	}
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	if(caller.getConfig() == this.get_string("required class"))
+	if(caller.getName() == this.get_string("required class"))
 	{
 		this.set_Vec2f("shop offset", Vec2f_zero);
 	}
@@ -123,7 +130,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			

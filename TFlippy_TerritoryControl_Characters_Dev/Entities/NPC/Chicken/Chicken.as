@@ -16,7 +16,7 @@ int g_layEggInterval = 0;
 void onInit(CSprite@ this)
 {
 	this.ReloadSprites(0, 0); //always blue
-	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
+	this.addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 }
 
 void onTick(CSprite@ this)
@@ -187,7 +187,7 @@ void onTick(CBlob@ this)
 		g_lastSoundPlayedTime =  getGameTime();
 
 		// lay eggs
-		if (getNet().isServer())
+		if (isServer())
 		{
 			g_layEggInterval++;
 			if (g_layEggInterval % 13 == 0)

@@ -11,6 +11,7 @@
 
 bool enable_quickswap = false;
 #include "ClassSelectMenu.as"
+#include "Knocked.as"
 
 void InitRespawnCommand(CBlob@ this)
 {
@@ -82,7 +83,7 @@ void onRespawnCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		case SpawnCmd::changeClass:
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				// build menu for them
 				CBlob@ caller = getBlobByNetworkID(params.read_u16());
@@ -129,7 +130,7 @@ void onRespawnCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						// set health to be same ratio
 						float healthratio = caller.getHealth() / caller.getInitialHealth();
 						
-						if (this.getConfig() == "citadel")
+						if (this.getName() == "citadel")
 						{
 							newBlob.server_SetHealth(Maths::Ceil(newBlob.getInitialHealth() * 1.50f));
 							// print("after " + new_blob.getHealth());
@@ -154,7 +155,7 @@ void onRespawnCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 						if (caller.exists("knocked"))
 						{
-							newBlob.set_u8("knocked", caller.get_u8("knocked"));
+							SetKnocked(newBlob, getKnocked(caller));
 							newBlob.Sync("knocked", true);
 						}
 

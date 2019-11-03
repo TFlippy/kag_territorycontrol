@@ -54,7 +54,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		this.set_bool("armed", false);
 		this.getSprite().SetFrameIndex(1);
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Hit(blob, this.getPosition(), Vec2f(0, 0), 1.0f, Hitters::builder, true);
 		}

@@ -107,7 +107,7 @@ void BuildRespawnMenu(CRules@ this, CPlayer@ player)
 
 void onTick(CRules@ this)
 {
-	/*if(getNet().isClient()) //if you can fix the infinite spawning, feel free to uncomment :)
+	/*if(isClient()) //if you can fix the infinite spawning, feel free to uncomment :)
 	{
 		CPlayer@ player = getLocalPlayer();
 		CControls@ controls = getControls();

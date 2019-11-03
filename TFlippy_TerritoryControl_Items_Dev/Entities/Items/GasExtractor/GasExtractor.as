@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "MakeMat.as";
+#include "Knocked.as";
 
 f32 maxDistance = 80;
 
@@ -24,11 +25,12 @@ void onTick(CBlob@ this)
 		UpdateAngle(this);
 	
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null) {return;}
 		CBlob@ holder = point.getOccupied();
 		
-		if (holder is null) return;
+		if (holder is null) {return;}
 
-		if (holder.get_u8("knocked") <= 0)
+		if (getKnocked(holder) <= 0)
 		{
 			CSprite@ sprite = this.getSprite();
 		
@@ -78,10 +80,10 @@ void onTick(CBlob@ this)
 								{
 									if (blob.hasTag("gas") && !holder.getInventory().isFull())
 									{
-										if (getNet().isServer())
+										if (isServer())
 										{
 											blob.server_Die();
-											MakeMat(holder, this.getPosition(), "mat_" + blob.getConfig(), 1 + XORRandom(5));
+											MakeMat(holder, this.getPosition(), "mat_" + blob.getName(), 1 + XORRandom(5));
 										}
 									
 										sprite.PlaySound("/gasextractor_load.ogg");
@@ -89,7 +91,7 @@ void onTick(CBlob@ this)
 									else if (blob.canBePickedUp(holder) && !holder.getInventory().isFull())
 									{
 										sprite.PlaySound("/gasextractor_load.ogg");
-										if (getNet().isServer()) holder.server_PutInInventory(blob);
+										if (isServer()) holder.server_PutInInventory(blob);
 									}
 								}
 							}
@@ -112,11 +114,11 @@ void onTick(CBlob@ this)
 void UpdateAngle(CBlob@ this)
 {
 	AttachmentPoint@ point=this.getAttachments().getAttachmentPointByName("PICKUP");
-	if(point is null) return;
+	if(point is null) {return;}
 	
 	CBlob@ holder=point.getOccupied();
 	
-	if(holder is null) return;
+	if(holder is null) {return;}
 	
 	Vec2f aimpos=holder.getAimPos();
 	Vec2f pos=holder.getPosition();
@@ -135,11 +137,11 @@ void UpdateAngle(CBlob@ this)
 
 void makeSteamParticle(CBlob@ this, Vec2f pos, const Vec2f vel)
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()){ return;}
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.04 * rad;
-	ParticleAnimated(CFileMatcher("MediumSteam").getFirst(), pos + random, vel, float(XORRandom(360)), 1.0f, 2, 0, false);
+	ParticleAnimated("MediumSteam", pos + random, vel, float(XORRandom(360)), 1.0f, 2, 0, false);
 }
 
 void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)

@@ -213,7 +213,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 	if(cmd >= Builder::make_block && cmd < Builder::make_reserved)
 	{
-		const bool isServer = getNet().isServer();
+		const bool isServer = isServer();
 
 		BuildBlock[][]@ blocks;
 		if(!blob.get(blocks_property, @blocks)) return;

@@ -81,12 +81,12 @@ void onTick(CBlob@ this)
 
 void onSetPlayer(CBlob@ this, CPlayer@ player)
 {
-	if (getNet().isClient() && this.isMyPlayer())
+	if (isClient() && this.isMyPlayer())
 	{
 		CCamera@ cam = getCamera();
 		cam.setRotation(0, 0, 0);
 		
-		if (getNet().isClient() && this.isMyPlayer()) 
+		if (isClient() && this.isMyPlayer()) 
 		{
 			if (getRules().get_bool("raining"))
 			{
@@ -103,7 +103,7 @@ void onSetPlayer(CBlob@ this, CPlayer@ player)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if ((customData == Hitters::suicide || customData == Hitters::nothing) && getKnocked(this) > 0)
+	if ((customData == Hitters::suicide || customData == Hitters::nothing) && (getKnocked(this) > 0 || this.get_f32("babbyed") > 0.00f))
 	{
 		damage = 0;
 	}
@@ -139,11 +139,16 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 
 	if (attached !is null)
 	{
-		// print_log(player.getUsername() + " (" + this.getConfig() + ", team " + this.getTeamNum() + ") has picked up " + attached.getConfig());
-		print_log(this, "has picked up " + attached.getConfig());
+		CRules@ r = getRules();
+		if(r.get_bool("log"))
+		{
+			print_log(this, "has picked up " + attached.getName());
+		}
+		// print_log(player.getUsername() + " (" + this.getName() + ") has picked up " + attached.getName()
+		
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		RemoveHelps(this, "help throw");
 
@@ -166,7 +171,7 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
 	if (detached !is null)
 	{
-		print_log(this, "has dropped " + detached.getConfig());
+		print_log(this, "has dropped " + detached.getName());
 	}
 
 	this.getSprite().SetZ(0.0f);
@@ -176,3 +181,9 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	return byBlob !is this && (this.hasTag("migrant") || this.hasTag("dead"));
 }
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return (forBlob !is this) && ((getKnocked(this) > 0) || (this.get_f32("babbyed") > 0) || (this.isKeyPressed(key_down)) || (this.getPlayer() is null));
+}
+

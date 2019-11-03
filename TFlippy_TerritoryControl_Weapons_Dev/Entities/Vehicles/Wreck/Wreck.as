@@ -3,9 +3,10 @@
 #include "Requirements_Tech.as";
 #include "ShopCommon.as";
 
+
 void onInit(CBlob@ this)
 {
-	string configName = this.getConfig();
+	string configName = this.getName();
 
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
 	this.set_Vec2f("shop menu size", Vec2f(2, 2));
@@ -97,7 +98,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		this.getSprite().PlaySound("/ConstructShort.ogg");
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBlob@ blob = server_CreateBlob(name, callerBlob.getTeamNum(), this.getPosition());
 			this.server_Die();
@@ -122,9 +123,10 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void onTick(CBlob@ this)
 {
+	if(!isClient()){return;}
 	u32 tick = this.getTickSinceCreated();
 	if (tick < 900 && getGameTime() % 10 == 0)
 	{
-		ParticleAnimated(CFileMatcher("LargeSmoke").getFirst(), this.getPosition() + Vec2f(XORRandom(32) - 16, XORRandom(16) - 8), Vec2f(0.5f, -0.75f), 0, 1.00f + (XORRandom(10) * 0.1f), 10 + XORRandom(10), 0, false);
+		ParticleAnimated("LargeSmoke", this.getPosition() + Vec2f(XORRandom(32) - 16, XORRandom(16) - 8), Vec2f(0.5f, -0.75f), 0, 1.00f + (XORRandom(10) * 0.1f), 10 + XORRandom(10), 0, false);
 	}
 }

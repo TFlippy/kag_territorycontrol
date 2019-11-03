@@ -85,7 +85,7 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		
@@ -108,22 +108,31 @@ void DoExplosion(CBlob@ this)
 			blob.setVelocity(Vec2f(XORRandom(10) - 5, -XORRandom(10)));
 			blob.server_SetTimeToDie(20 + XORRandom(10));
 		}
+		for(int a = 0; a < 80; a++)
+		{
+			map.server_setFireWorldspace(pos + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)) * 8, true);
+		}
 	}
-	
-	for (int i = 0; i < 80; i++)
+	else
 	{
-		map.server_setFireWorldspace(pos + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)) * 8, true);
-		MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(angle, XORRandom(400) * 0.01f, 70), particles[XORRandom(particles.length)]);
+	for (int i = 0; i < 80; i++)
+		{
+			
+			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(angle, XORRandom(400) * 0.01f, 70), particles[XORRandom(particles.length)]);
+			
+			// ParticleAnimated("Entities/Effects/Sprites/FireFlash.png", this.getPosition() + Vec2f(0, -4), Vec2f(0, 0.5f), 0.0f, 1.0f, 2, 0.0f, true);
+		}
 		
-		// ParticleAnimated("Entities/Effects/Sprites/FireFlash.png", this.getPosition() + Vec2f(0, -4), Vec2f(0, 0.5f), 0.0f, 1.0f, 2, 0.0f, true);
+		this.getSprite().Gib();
 	}
 	
-	this.getSprite().Gib();
+	
+	
 }
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), XORRandom(100) * -0.00005f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), XORRandom(100) * -0.00005f, true);
 }

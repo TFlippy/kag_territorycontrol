@@ -41,7 +41,7 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-    if (getNet().isServer())
+    if (isServer())
 	{
 		CBlob@ backpack = getBlobByNetworkID(this.get_u16("backpack_id"));
 		backpack.server_Die();

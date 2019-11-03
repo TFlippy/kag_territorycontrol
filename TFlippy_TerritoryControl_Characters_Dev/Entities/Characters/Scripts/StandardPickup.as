@@ -3,6 +3,7 @@
 
 #include "StandardControlsCommon.as"
 #include "ThrowCommon.as"
+#include "Knocked.as"
 
 const u32 PICKUP_ERASE_TICKS = 80;
 
@@ -25,7 +26,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (this.isInInventory() || this.get_u8("knocked") > 0)
+	if (this.isInInventory() || getKnocked(this) > 0)
 	{
 		this.clear("pickup blobs");
 		this.clear("closest blobs");
@@ -77,7 +78,7 @@ void onTick(CBlob@ this)
 			this.get("closest blobs", @closestBlobs);
 			closestBlobs.clear();
 			CBlob@ closest = getClosestBlob(this);
-			if (closest !is null)
+			if (closest !is null && this !is null)
 			{
 				closestBlobs.push_back(closest);
 				if (this.isKeyJustPressed(key_action1))	// pickup
@@ -96,7 +97,10 @@ void onTick(CBlob@ this)
 				this.get("closest blobs", @closestBlobs);
 				if (closestBlobs.length > 0)
 				{
-					server_Pickup(this, this, closestBlobs[0]);
+					if(closestBlobs[0] !is null)
+					{
+						server_Pickup(this, this, closestBlobs[0]);
+					}
 				}
 			}
 			ClearPickupBlobs(this);
@@ -434,7 +438,7 @@ void onRender(CSprite@ this)
 						{
 							if (blob.get_u16("hover netid") != b.getNetworkID())
 							{
-								Sound::Play(CFileMatcher("/select.ogg").getFirst());
+								Sound::Play("/select.ogg");
 							}
 
 							blob.set_u16("hover netid", b.getNetworkID());

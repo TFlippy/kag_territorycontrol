@@ -56,7 +56,7 @@ void onTick(CBlob@ this)
 		this.getCurrentScript().tickFrequency = CHECK_FREQ;
 	}
 	else // check for collapse
-		if (getNet().isServer())
+		if (isServer())
 		{
 			Vec2f ul, lr;
 			this.getShape().getBoundingRect(ul, lr);

@@ -13,7 +13,7 @@ void onInit(CBlob@ this)
 		ap.SetKeysToTake(key_action1 | key_action2);
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{		
 		CBlob@ blob = server_CreateBlobNoInit("nanobot");
 		blob.set_u16("remote_netid", this.getNetworkID());
@@ -33,14 +33,15 @@ void onTick(CBlob@ this)
 	if (this.isAttached())
 	{
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null) { return;}
 		CBlob@ holder = point.getOccupied();
 		
-		if (holder is null) return;
+		if (holder is null) {return;}
 		
 		Vec2f pos = holder.getAimPos();
 		
 		CBlob@ remote = getBlobByNetworkID(this.get_u16("remote_netid"));
-		if (remote !is null && remote.getConfig() == "nanobot")
+		if (remote !is null && remote.getName() == "nanobot")
 		{
 			remote.set_Vec2f("tpos", pos);
 			remote.set_u8("mode", 1 + (holder.isKeyPressed(key_action2) ? 1 : 0) + (holder.isKeyPressed(key_action1) ? -1 : 0));
@@ -50,17 +51,17 @@ void onTick(CBlob@ this)
 
 void onRender(CSprite@ this)
 {
-	if (this is null) return;
+	if (this is null) {return;}
 
 	AttachmentPoint@ ap = this.getBlob().getAttachments().getAttachmentPointByName("PICKUP");
-	if (ap is null) return;
+	if (ap is null) {return;}
 	
 	CBlob@ holder = ap.getOccupied();
 	
 	if (holder !is null && holder.isMyPlayer())
 	{
 		CBlob@ remote = getBlobByNetworkID(this.getBlob().get_u16("remote_netid"));
-		if (remote !is null && remote.getConfig() == "nanobot")
+		if (remote !is null && remote.getName() == "nanobot")
 		{
 			DrawFillCount(this.getBlob(), remote.get_f32("fill"));
 		}

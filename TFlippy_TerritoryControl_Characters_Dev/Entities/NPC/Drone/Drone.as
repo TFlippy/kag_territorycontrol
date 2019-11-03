@@ -30,7 +30,7 @@ void onInit( CBrain@ this )
 
 void onInit(CBlob@ this)
 {
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 	this.set_u32("next sound", 0);
 
 	this.SetLight(true);
@@ -204,7 +204,7 @@ void Shoot(CBlob@ this)
 			
 				// print("mod: " + mod + "; len: " + len);
 			
-				if (getNet().isServer())
+				if (isServer())
 				{
 					this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 1.00f * mod, Hitters::crush, true);
 				}
@@ -219,7 +219,7 @@ void Shoot(CBlob@ this)
 		}
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CSpriteLayer@ zap = this.getSprite().getSpriteLayer("zap");
 		if (zap !is null)
@@ -424,12 +424,8 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 	
-	for (int i = 0; i < 16; i++)
-	{
-		MakeParticle(this, Vec2f( XORRandom(32) - 16, XORRandom(40) - 30), getRandomVelocity(-angle, XORRandom(250) * 0.01f, 25), particles[XORRandom(particles.length)]);
-	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -451,7 +447,7 @@ void DoExplosion(CBlob@ this)
 		{
 			CBlob@ b = trees[i];
 			
-			if (b.getConfig() == "tree_bushy" || b.getConfig() == "tree_pine")
+			if (b.getName() == "tree_bushy" || b.getName() == "tree_pine")
 			{
 				CBlob@ tree = server_CreateBlob("crystaltree", b.getTeamNum(), b.getPosition() + Vec2f(0, -32));
 					
@@ -460,15 +456,23 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 	}
+	else
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			MakeParticle(this, Vec2f( XORRandom(32) - 16, XORRandom(40) - 30), getRandomVelocity(-angle, XORRandom(250) * 0.01f, 25), particles[XORRandom(particles.length)]);
+		}
+		SetScreenFlash(50, 255, 255, 255);
+		this.getSprite().Gib();
+	}
 	
-	SetScreenFlash(50, 255, 255, 255);
-	this.getSprite().Gib();
+	
 }
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1.8f + XORRandom(100) * 0.01f, 2 + XORRandom(6), XORRandom(100) * -0.00005f, true);
+	if (!isClient()) return;
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1.8f + XORRandom(100) * 0.01f, 2 + XORRandom(6), XORRandom(100) * -0.00005f, true);
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)

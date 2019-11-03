@@ -4,7 +4,7 @@
 // Note for modders upgrading their mod, handlePixel's signature has changed recently!
 
 #include "LoaderColors.as";
-#include "LoaderUtilities.as";
+// #include "LoaderUtilities.as";
 #include "CustomBlocks.as";
 
 enum WAROffset
@@ -40,7 +40,7 @@ class PNGLoader
 		@map = _map;
 		@map_random = Random();
 
-		if(!getNet().isServer())
+		if(!isServer())
 		{
 			SetupMap(0, 0);
 			SetupBackgrounds();
@@ -403,7 +403,7 @@ class PNGLoader
 			case map_colors::mook_spawner_10: autotile(offset); AddMarker(map, offset, "mook spawner 10"); break;
 			case map_colors::dummy:           autotile(offset); spawnBlob(map, "dummy", offset, 1, true); break;
 			default:
-				HandleCustomTile( map, offset, pixel );
+				// HandleCustomTile( map, offset, pixel );
 			};
 		}
 	}

@@ -8,7 +8,7 @@ const u8 DEFAULT_PERSONALITY = AGGRO_BIT;
 void onInit(CSprite@ this)
 {
 	this.ReloadSprites(0, 0); //always blue
-	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
+	this.addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 }
 
 void onTick(CSprite@ this)
@@ -229,7 +229,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		return;
 	}
 		
-	if (blob.getConfig() != this.getConfig() && blob.hasTag("flesh"))
+	if (blob.getName() != this.getName() && blob.hasTag("flesh"))
 	{
 		const f32 vellen = this.getShape().vellen;
 		if (vellen > 0.1f)

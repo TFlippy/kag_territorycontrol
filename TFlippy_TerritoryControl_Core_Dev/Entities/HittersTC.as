@@ -15,6 +15,7 @@ namespace HittersTC
 		magix,
 		staff,
 		hammer,
-		foof
+		foof,
+		poison
 	};
 }

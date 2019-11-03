@@ -13,7 +13,7 @@
 
 void onInit(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_setTeamNum(-1);
 
@@ -32,7 +32,7 @@ void onInit(CBlob@ this)
 
 	this.getShape().getVars().waterDragScale = 12.0f;
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		// Force inventory icon update
 		Material::updateFrame(this);
@@ -52,7 +52,7 @@ void onInit(CBlob@ this)
 
 void onQuantityChange(CBlob@ this, int old)
 {
-  if (getNet().isServer())
+  if (isServer())
   {
     // Kill 0-materials
     if (this.getQuantity() == 0)
@@ -62,7 +62,7 @@ void onQuantityChange(CBlob@ this, int old)
     }
   }
 
-  if (getNet().isClient())
+  if (isClient())
   {
     Material::updateFrame(this);
   }
@@ -70,7 +70,7 @@ void onQuantityChange(CBlob@ this, int old)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	// print("doesCollideWithBlob: " + this.getConfig() + " with " + blob.getConfig());
+	// print("doesCollideWithBlob: " + this.getName() + " with " + blob.getName());
 
 	// print("test");
 	
@@ -83,7 +83,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 {
-	// print("onThisAddToInventory:" + this.getConfig());
+	// print("onThisAddToInventory:" + this.getName());
 
 	CShape@ shape = this.getShape();
 	if (shape !is null)
@@ -96,7 +96,7 @@ void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 void onThisRemoveFromInventory(CBlob@ this, CBlob@ inventoryBlob)
 {
-	// print("onThisRemoveFromInventory: " + this.getConfig());
+	// print("onThisRemoveFromInventory: " + this.getName());
 
 	CShape@ shape = this.getShape();
 	if (shape !is null)
@@ -109,6 +109,6 @@ void onThisRemoveFromInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 // void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 // {
-	// if (blob !is null) print("onCollision: " + this.getConfig() + " with " + blob.getConfig());
-	// else print("onCollision: " + this.getConfig() + " with World");
+	// if (blob !is null) print("onCollision: " + this.getName() + " with " + blob.getName());
+	// else print("onCollision: " + this.getName() + " with World");
 // }

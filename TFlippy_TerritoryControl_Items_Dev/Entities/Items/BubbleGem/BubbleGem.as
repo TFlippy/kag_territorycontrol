@@ -1,12 +1,12 @@
 void onTick(CBlob@ this){
 
-	if(getNet().isServer())
-	if (getGameTime() % 30 == 0){
+	// if(isServer())
+	// if (getGameTime() % 30 == 0){
 	
-		if(this.getInventoryBlob() !is null)
-		this.getInventoryBlob().server_Heal(0.25f);
+		// if(this.getInventoryBlob() !is null)
+		// this.getInventoryBlob().server_Heal(0.25f);
 	
-	}
+	// }
 
 	if(this.getInventoryBlob() !is null)
 	this.getInventoryBlob().Tag("bubblegem");

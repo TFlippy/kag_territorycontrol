@@ -59,7 +59,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 
 	// auto-load on creation
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ ammo = server_CreateBlob("mat_lancerod");
 		if (ammo !is null)
@@ -183,7 +183,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 {
 	// this.set_bool("shooting", true);
 	
-	if (getNet().isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
+	if (isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
 
 	if (bullet !is null)
 	{

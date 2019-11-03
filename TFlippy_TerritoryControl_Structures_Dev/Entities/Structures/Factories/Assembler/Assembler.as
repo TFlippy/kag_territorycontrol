@@ -285,16 +285,14 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 
 void onTick(CBlob@ this)
 {
-	int crafting = this.get_u8("crafting");
-
-	AssemblerItem item = getItems(this)[crafting];
+	AssemblerItem item = getItems(this)[this.get_u8("crafting")];
 	CInventory@ inv = this.getInventory();
 
 
 	CBitStream missing;
 	if (hasRequirements(inv, item.reqs, missing))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBlob @mat = server_CreateBlob(item.resultname, this.getTeamNum(), this.getPosition());
 			mat.server_SetQuantity(item.resultcount);
@@ -302,8 +300,11 @@ void onTick(CBlob@ this)
 			server_TakeRequirements(inv, item.reqs);
 		}
 
-		this.getSprite().PlaySound("ProduceSound.ogg");
-		this.getSprite().PlaySound("BombMake.ogg");
+		if(isClient())
+		{
+			this.getSprite().PlaySound("ProduceSound.ogg");
+			this.getSprite().PlaySound("BombMake.ogg");
+		}
 	}
 }
 
@@ -312,12 +313,9 @@ void onTick(CBlob@ this)
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob is null) return;
-
-	int crafting = this.get_u8("crafting");
-
 	bool isMat = false;
 
-	AssemblerItem item = getItems(this)[crafting];
+	AssemblerItem item = getItems(this)[this.get_u8("crafting")];
 	CBitStream bs = item.reqs;
 	bs.ResetBitIndex();
 	string text, requiredType, name, friendlyName;
@@ -336,8 +334,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 	if (isMat && !blob.isAttached() && blob.hasTag("material"))
 	{
-		if (getNet().isServer()) this.server_PutInInventory(blob);
-		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
+		if (isServer()) this.server_PutInInventory(blob);
+		if (isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
 }
 
@@ -351,4 +349,19 @@ AssemblerItem[] getItems(CBlob@ this)
 	AssemblerItem[] items;
 	this.get("items", items);
 	return items;
+}
+
+
+void onAddToInventory( CBlob@ this, CBlob@ blob )
+{
+	if(blob.getName() != "gyromat") return;
+
+	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+}
+
+void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
+{
+	if(blob.getName() != "gyromat") return;
+	
+	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

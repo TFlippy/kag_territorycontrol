@@ -270,7 +270,7 @@ f32 Vehicle_getWeaponAngle(CBlob@ this, VehicleInfo@ v)
 
 void Vehicle_LoadAmmoIfEmpty(CBlob@ this, VehicleInfo@ v)
 {
-	if (getNet().isServer() && (this.getInventory().getItemsCount() > 0 || v.infinite_ammo) &&
+	if (isServer() && (this.getInventory().getItemsCount() > 0 || v.infinite_ammo) &&
 	        getMagBlob(this) is null &&
 	        v.loaded_ammo == 0)
 	{
@@ -439,12 +439,11 @@ void Fire(CBlob@ this, VehicleInfo@ v, CBlob@ caller, const u8 charge)
 				shot = true;
 
 				const int team = caller.getTeamNum();
-				const bool isServer = getNet().isServer();
 				for (u8 i = 0; i < loadedAmmo; i += v.fire_cost_per_amount)
 				{
 					if (v.bullet_name != "")
 					{
-						CBlob@ bullet = isServer ? server_CreateBlobNoInit(v.bullet_name) : null;
+						CBlob@ bullet = isServer() ? server_CreateBlobNoInit(v.bullet_name) : null;
 						if (bullet !is null)
 						{
 							bullet.setPosition(bulletPos);
@@ -863,7 +862,7 @@ bool Vehicle_doesCollideWithBlob_boat(CBlob@ this, CBlob@ blob)
 void Vehicle_onAttach(CBlob@ this, VehicleInfo@ v, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	// special-case stone material  - put in inventory
-	if (getNet().isServer() && attached.getName() == v.ammo_name)
+	if (isServer() && attached.getName() == v.ammo_name)
 	{
 		attached.server_DetachFromAll();
 		this.server_PutInInventory(attached);
@@ -882,29 +881,31 @@ void Vehicle_onAttach(CBlob@ this, VehicleInfo@ v, CBlob@ attached, AttachmentPo
 
 void Vehicle_onDetach(CBlob@ this, VehicleInfo@ v, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
-	if (attachedPoint.name == "MAG")
+	if (attachedPoint !is null && v !is null && detached !is null)
 	{
-		attachedPoint.offset = v.mag_offset;
-	}
-
-	// jump out - needs to be synced so do here
-
-	if (detached.hasTag("player") && attachedPoint.socket)
-	{
-
-		// Fires on detach. Blame Fuzzle.
-		if (attachedPoint.name == "GUNNER" && v.charge > 0)
+		if (attachedPoint.name == "MAG")
 		{
-			CBitStream params;
-			params.write_u16(detached.getNetworkID());
-			params.write_u8(v.charge);
-			this.SendCommand(this.getCommandID("fire"), params);
+			attachedPoint.offset = v.mag_offset;
 		}
 
-		detached.setPosition(detached.getPosition() + Vec2f(0.0f, -4.0f));
-		detached.setVelocity(v.out_vel);
-		detached.IgnoreCollisionWhileOverlapped(null);
-		this.IgnoreCollisionWhileOverlapped(null);
+		// jump out - needs to be synced so do here
+
+		if (detached.hasTag("player") && attachedPoint.socket)
+		{
+			if (attachedPoint.name == "GUNNER" && v.charge > 0)
+			{
+				CBitStream params;
+				params.write_u16(detached.getNetworkID());
+				params.write_u8(v.charge);
+				this.SendCommand(this.getCommandID("fire"), params);
+			}
+
+			detached.setPosition(detached.getPosition() + Vec2f(0.0f, -4.0f));
+			// detached.setVelocity(v.out_vel);
+			detached.setVelocity(Vec2f(0, 0));
+			detached.IgnoreCollisionWhileOverlapped(null);
+			this.IgnoreCollisionWhileOverlapped(null);
+		}
 	}
 }
 

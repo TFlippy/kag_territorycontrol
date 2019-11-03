@@ -26,7 +26,7 @@ HelpText@ SetHelp(CBlob@ this, const string &in name, const string &in recipient
 	if (!u_showtutorial)
 		return null;
 
-	if (!getNet().isClient())
+	if (!isClient())
 		return null;
 
 	if (!this.exists(HELPS_ARRAY))
@@ -56,7 +56,7 @@ HelpText@ SetHelp(CBlob@ this, const string &in name, const string &in recipient
 	if (!u_showtutorial)
 		return null;
 
-	if (!getNet().isClient())
+	if (!isClient())
 		return null;
 
 	if (!this.exists(HELPS_ARRAY))
@@ -149,7 +149,7 @@ void RemoveHelps(CBlob@ this, const string &in name)
 	if (!u_showtutorial)
 		return;
 
-	if (!getNet().isClient())
+	if (!isClient())
 		return;
 
 	HelpText[]@ helps =  getHelps(this);

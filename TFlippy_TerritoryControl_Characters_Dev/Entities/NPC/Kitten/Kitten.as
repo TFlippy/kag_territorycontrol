@@ -6,7 +6,7 @@ void onInit(CSprite@ this)
 {
     this.ReloadSprites(0,0);
 	this.SetZ(-20.0f);
-	this.addSpriteLayer("isOnScreen","NoTexture.png",0,0);
+	this.addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 }
 
 void onTick(CSprite@ this)
@@ -118,8 +118,8 @@ void onTick(CBlob@ this)
 			{
 				if (this.getTickSinceCreated() % 10 == 0)
 				{
-					if (getNet().isServer()) this.server_Hit(inventoryBlob, inventoryBlob.getPosition(), Vec2f(0, 0), 0.15f, Hitters::bite, true);
-					if (getNet().isClient()) 
+					if (isServer()) this.server_Hit(inventoryBlob, inventoryBlob.getPosition(), Vec2f(0, 0), 0.15f, Hitters::bite, true);
+					if (isClient()) 
 					{
 						if (XORRandom(3) == 0) 
 						{	
@@ -179,12 +179,16 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 	if (blob.getName() == "mat_mithril" && blob.getQuantity() > 50)
 	{
-		ParticleZombieLightning(this.getPosition());
 		
-		if (getNet().isServer())
+		
+		if (isServer())
 		{
 			CBlob@ bagel = server_CreateBlob("pus", this.getTeamNum(), this.getPosition());
 			this.server_Die();
+		}
+		else
+		{
+			ParticleZombieLightning(this.getPosition());
 		}
 	}
 }

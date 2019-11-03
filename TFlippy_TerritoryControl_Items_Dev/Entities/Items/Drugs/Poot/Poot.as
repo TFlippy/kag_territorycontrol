@@ -1,4 +1,5 @@
 #include "Hitters.as";
+#include "Knocked.as";
 
 void onInit(CBlob@ this)
 {
@@ -19,24 +20,25 @@ void onTick(CBlob@ this)
 	if (this.isAttached())
 	{
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null) {return;}
 		CBlob@ holder = point.getOccupied();
 		
-		if (holder is null) return;
+		if (holder is null) {return;}
 
-		if (holder.get_u8("knocked") <= 0)
+		if (getKnocked(holder) <= 0)
 		{
 			if (holder.isKeyPressed(key_action1) || point.isKeyPressed(key_action1))
 			{
 				if (this.get_u32("next attack") > getGameTime()) return;
 			
-				if (getNet().isClient())
+				if (isClient())
 				{
 					this.getSprite().PlaySound("drunk_fx3.ogg", 0.8f, 0.75f);
 					this.getSprite().SetAnimation("default");
 					this.getSprite().SetAnimation("honk");
 				}
 				
-				if (getNet().isServer())
+				if (isServer())
 				{
 					CBlob@ blob = server_CreateBlobNoInit("pootgas");
 					blob.setVelocity(Vec2f(holder.isFacingLeft() ? -3 : 3, 0));

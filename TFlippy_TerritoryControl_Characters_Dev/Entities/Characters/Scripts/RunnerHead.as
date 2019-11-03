@@ -72,7 +72,7 @@ int getHeadFrame(CBlob@ blob, int headIndex, bool default_pack = false)
 		//if nothing special set
 		if(!holidayhead)
 		{
-			string config = blob.getConfig();
+			string config = blob.getName();
 			if(config == "builder")
 			{
 				headIndex = NUM_UNIQUEHEADS;
@@ -228,12 +228,14 @@ void onGib(CSprite@ this)
 		Vec2f pos = blob.getPosition();
 		Vec2f vel = blob.getVelocity();
 		f32 hp = Maths::Min(Maths::Abs(blob.getHealth()), 2.0f) + 1.5;
-		makeGibParticle(
-			blob.get_string("head texture"),
-			pos, vel + getRandomVelocity(90, hp , 30),
-			framex, framey, Vec2f(16, 16),
-			2.0f, 20, "/BodyGibFall", blob.getTeamNum()
-		);
+		if(isClient()){
+			makeGibParticle(
+				blob.get_string("head texture"),
+				pos, vel + getRandomVelocity(90, hp , 30),
+				framex, framey, Vec2f(16, 16),
+				2.0f, 20, "/BodyGibFall", blob.getTeamNum()
+			);
+		}
 	}
 }
 
@@ -298,7 +300,7 @@ void onTick(CSprite@ this)
 			head.animation.frame = 2;
 
 			// sparkle blood if cut throat
-			if (getNet().isClient() && getGameTime() % 2 == 0 && blob.hasTag("cutthroat"))
+			if (isClient() && getGameTime() % 2 == 0 && blob.hasTag("cutthroat"))
 			{
 				Vec2f vel = getRandomVelocity(90.0f, 1.3f * 0.1f * XORRandom(40), 2.0f);
 				ParticleBlood(blob.getPosition() + Vec2f(this.isFacingLeft() ? headoffset.x : -headoffset.x, headoffset.y), vel, SColor(255, 126, 0, 0));

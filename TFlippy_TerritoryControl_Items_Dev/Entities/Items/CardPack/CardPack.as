@@ -23,7 +23,7 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 		CBlob@ callerBlob = getBlobByNetworkID(caller);
 	
 		if(!this.hasTag("opened"))
-	    if(getNet().isServer()){
+	    if(isServer()){
 		
 			for(int i = 0; i < 8; i+= 1){
 			

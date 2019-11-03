@@ -40,7 +40,7 @@ void onInit(CBlob@ this)
 
 	this.server_setTeamNum(-1);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (XORRandom(100) < 75)
 		{
@@ -101,7 +101,7 @@ void onInit(CBlob@ this)
 	this.setVelocity(Vec2f((15 + XORRandom(5)) * (XORRandom(2) == 0 ? 1.00f : -1.00f), 5));
 	// this.getShape().SetGravityScale(0.0f);
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSoundVolume(0.5f);
@@ -136,7 +136,7 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if (this.hasTag("drone inside"))
 	{
-		if (getNet().isServer()) 
+		if (isServer()) 
 		{
 			for (int i = 0; i < 4 + XORRandom(4); i++)
 			{
@@ -169,7 +169,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			
@@ -206,7 +206,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 				
-				if (blob is null) return;
+				if (blob is null && callerBlob is null) return;
 			   
 				if (!blob.canBePutInInventory(callerBlob))
 				{
@@ -223,9 +223,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void onTick(CBlob@ this)
@@ -240,7 +240,7 @@ void onTick(CBlob@ this)
 		this.Untag("explosive");
 	}
 
-	if (getNet().isClient() && this.getTickSinceCreated() < 60) MakeParticle(this, XORRandom(100) < 10 ? "LargeSmoke.png" : "Explosion.png");
+	if (isClient() && this.getTickSinceCreated() < 60) MakeParticle(this, XORRandom(100) < 10 ? "LargeSmoke.png" : "Explosion.png");
 
 	if (this.hasTag("collided"))
 	{
@@ -252,7 +252,7 @@ void onTick(CBlob@ this)
 			f32 modifier = 1.00f - (sound_delay / 3.0f);
 			print("modifier: " + modifier);
 
-			if (modifier > 0.01f && getNet().isClient())
+			if (modifier > 0.01f && isClient())
 			{
 				Sound::Play("Nuke_Kaboom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 1.0f - (0.7f * (1 - modifier)), modifier);
 			}
@@ -314,7 +314,7 @@ void onHitGround(CBlob@ this)
 
 	if(!this.hasTag("collided"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			ShakeScreen(power * 400.0f, power * 100.0f, this.getPosition());
 			SetScreenFlash(100, 255, 255, 255);
@@ -331,7 +331,7 @@ void onHitGround(CBlob@ this)
 	this.set_f32("map_damage_radius", boomRadius);
 	Explode(this, boomRadius, 20.0f);
 
-	if (getNet().isServer() && this.hasTag("gas inside"))
+	if (isServer() && this.hasTag("gas inside"))
 	{
 		CBlob@ gas = server_CreateBlob("falloutgas", -1, this.getPosition());
 		this.Untag("gas inside");
@@ -372,7 +372,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 {
 	// if (customData != Hitters::builder && customData != Hitters::drill) return 0.0f;
 
-	if (getNet().isServer())
+	if (isServer())
 	{	
 		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_steelingot", (XORRandom(2)));
 		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_ironingot", (XORRandom(3)));
@@ -391,7 +391,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		boom.setPosition(this.getPosition());

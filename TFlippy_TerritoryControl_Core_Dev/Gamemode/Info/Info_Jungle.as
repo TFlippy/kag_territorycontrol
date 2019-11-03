@@ -22,7 +22,7 @@ void onInit(CBlob@ this)
 {
 	this.getShape().SetGravityScale(0.0f);
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		SetScreenFlash(255, 255, 255, 255);
 	
@@ -49,7 +49,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (this.getTickSinceCreated() < 30 * 15)
 		{

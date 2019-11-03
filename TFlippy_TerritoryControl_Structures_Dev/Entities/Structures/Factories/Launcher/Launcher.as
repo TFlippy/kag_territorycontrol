@@ -69,13 +69,12 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (blob is null) return;
+	if (blob is null || blob.hasTag("player")) return;
 	if (blob.getPosition().y > this.getPosition().y) return;
-	if (blob.hasTag("player")) return;
 	
 	blob.setVelocity(Vec2f(this.isFacingLeft() ? -1 : 1, -6));
 	
-	this.getSprite().PlaySound("/launcher_boing" + XORRandom(2) + ".ogg", 0.5f, 0.9f);
+	if(isClient()) this.getSprite().PlaySound("/launcher_boing" + XORRandom(2) + ".ogg", 0.5f, 0.9f);
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -100,7 +99,7 @@ void GetButtonsFor( CBlob@ this, CBlob@ caller )
 void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 {
 	CBlob@ caller = getBlobByNetworkID(params.read_u16());
-	if    (caller !is null)
+	if (caller !is null)
 	{
 		if (cmd == this.getCommandID("use"))
 		{

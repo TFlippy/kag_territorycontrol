@@ -20,7 +20,7 @@ string[] particles =
 
 void onInit( CBrain@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -61,13 +61,13 @@ void onInit(CBlob@ this)
 	
 	this.getCurrentScript().tickFrequency = 30;
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		client_AddToChat("A Scyther has arrived!", SColor(255, 255, 0, 0));
 		Sound::Play("scyther-intro.ogg");
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		this.server_setTeamNum(251);
 			
@@ -79,12 +79,15 @@ void onInit(CBlob@ this)
 		}
 		
 		CBlob@ lance = server_CreateBlob("chargelance", this.getTeamNum(), this.getPosition());
-		this.server_Pickup(lance);
-		
-		if (lance.hasCommandID("cmd_gunReload"))
+		if(lance !is null)
 		{
-			CBitStream stream;
-			lance.SendCommand(lance.getCommandID("cmd_gunReload"), stream);
+			this.server_Pickup(lance);
+		
+			if (lance.hasCommandID("cmd_gunReload"))
+			{
+				CBitStream stream;
+				lance.SendCommand(lance.getCommandID("cmd_gunReload"), stream);
+			}
 		}
 	}
 }
@@ -100,7 +103,7 @@ void onTick(CBlob@ this)
 		moveVars.wallsliding = true;
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound"))
 		{
@@ -112,7 +115,7 @@ void onTick(CBlob@ this)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 	
 	CBlob@ blob = this.getBlob();
 	
@@ -250,7 +253,7 @@ CBlob@ FindTarget(CBrain@ this, f32 maxDistance)
 
 // void onTick(CBrain@ this)
 // {
-	// if (!getNet().isServer()) return;
+	// if (!isServer()) return;
 	
 	// CBlob@ blob = this.getBlob();
 	
@@ -406,7 +409,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 50)
 		{
@@ -415,7 +418,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		
@@ -435,7 +438,7 @@ void onDie(CBlob@ this)
 		DoExplosion(this);
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < 7; i++)
 		{
@@ -496,12 +499,7 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 	
-	for (int i = 0; i < 60; i++)
-	{
-		MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(500) * 0.01f, 25), particles[XORRandom(particles.length)]);
-	}
-	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < 24; i++)
 		{
@@ -523,7 +521,7 @@ void DoExplosion(CBlob@ this)
 		{
 			CBlob@ b = trees[i];
 			
-			if (b.getConfig() == "tree_bushy" || b.getConfig() == "tree_pine")
+			if (b.getName() == "tree_bushy" || b.getName() == "tree_pine")
 			{
 				CBlob@ tree = server_CreateBlob("crystaltree", b.getTeamNum(), b.getPosition() + Vec2f(0, -32));
 					
@@ -532,14 +530,22 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 	}
+	else
+	{
+		for (int i = 0; i < 60; i++)
+		{
+			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(500) * 0.01f, 25), particles[XORRandom(particles.length)]);
+		}
+		SetScreenFlash(50, 255, 255, 255);
+		this.getSprite().Gib();
+	}
 	
-	SetScreenFlash(50, 255, 255, 255);
-	this.getSprite().Gib();
+	
 }
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1.8f + XORRandom(100) * 0.01f, 2 + XORRandom(6), XORRandom(100) * -0.00005f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1.8f + XORRandom(100) * 0.01f, 2 + XORRandom(6), XORRandom(100) * -0.00005f, true);
 }

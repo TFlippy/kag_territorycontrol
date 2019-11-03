@@ -291,7 +291,7 @@ void onTick(CBlob@ this)
 			return;
 		}
 	
-		if (getNet().isServer() && getGameTime() % 150 == 0)
+		if (isServer() && getGameTime() % 150 == 0)
 		{
 			const u8 myTeam = this.getTeamNum();
 
@@ -336,7 +336,7 @@ void onTick(CBlob@ this)
 				}
 			}
 
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBitStream stream;
 				stream.write_string(text);
@@ -364,7 +364,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			
@@ -396,7 +396,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 				
-				if (blob is null) return;
+				if (blob is null && callerBlob is null) return;
 			   
 				if (!blob.canBePutInInventory(callerBlob))
 				{
@@ -413,7 +413,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_DropCoins(this.getPosition(), XORRandom(400));
 	}
@@ -426,6 +426,7 @@ void onGib(CSprite@ this)
 	Vec2f vel = blob.getVelocity();
 	vel.y -= 3.0f;
 	f32 hp = Maths::Min(Maths::Abs(blob.getHealth()), 2.0f) + 1.0;
+	if(!isClient()){return;}
 	CParticle@ Gib1 = makeGibParticle("Entities/Special/WAR/Trading/TraderGibs.png", pos, vel + getRandomVelocity(90, hp, 80), 0, 0, Vec2f(16, 16), 2.0f, 20, "/BodyGibFall");
 	CParticle@ Gib2 = makeGibParticle("Entities/Special/WAR/Trading/TraderGibs.png", pos, vel + getRandomVelocity(90, hp - 0.2, 80), 1, 0, Vec2f(16, 16), 2.0f, 20, "/BodyGibFall");
 	CParticle@ Gib3 = makeGibParticle("Entities/Special/WAR/Trading/TraderGibs.png", pos, vel + getRandomVelocity(90, hp, 80), 2, 0, Vec2f(16, 16), 2.0f, 0, "/BodyGibFall");

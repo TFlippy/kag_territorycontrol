@@ -125,7 +125,7 @@ void onTick(CBlob@ this)
 				{
 					u32 itemCount = inv.getItemsCount();
 					
-					if (getNet().isClient()) 
+					if (isClient()) 
 					{
 						if (itemCount > 0)
 						{ 
@@ -139,7 +139,7 @@ void onTick(CBlob@ this)
 					
 					if (itemCount > 0) 
 					{
-						if (getNet().isServer()) 
+						if (isServer()) 
 						{
 							CBlob@ item = inv.getItem(0);
 							u32 quantity = item.getQuantity();
@@ -189,11 +189,11 @@ void onTick(CBlob@ this)
 	if (this.getVelocity().Length() > 1.50f && v > 0.25f) this.setAngleDegrees((this.isFacingLeft() ? 180 : 0) - this.getVelocity().Angle());
 	else this.setAngleDegrees(0);
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().SetEmitSoundSpeed(0.5f + (this.get_f32("velocity") / SPEED_MAX * 0.4f) * (this.getVelocity().Length() * 0.15f));
 		
-		if (hmod < 0.7 && u32(getGameTime() % 20 * hmod) == 0) ParticleAnimated(CFileMatcher(smokes[XORRandom(smokes.length)]).getFirst(), this.getPosition(), Vec2f(0, 0), float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 3 + XORRandom(4), XORRandom(100) * -0.001f, true);
+		if (hmod < 0.7 && u32(getGameTime() % 20 * hmod) == 0) ParticleAnimated(smokes[XORRandom(smokes.length)], this.getPosition(), Vec2f(0, 0), float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 3 + XORRandom(4), XORRandom(100) * -0.001f, true);
 	}
 }
 
@@ -222,7 +222,7 @@ void Shoot(CBlob@ this)
 	
 	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		DrawLine(this.getSprite(), startPos, length / 32, angleOffset, this.isFacingLeft());
 		this.getSprite().PlaySound("GatlingGun-Shoot0", 1.00f, 1.00f);
@@ -231,7 +231,7 @@ void Shoot(CBlob@ this)
 		// getControls().setMousePosition(Vec2f(mousePos.x, mousePos.y - 10));
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blobHit)
 		{
@@ -288,7 +288,7 @@ void onDie(CBlob@ this)
 {
 	DoExplosion(this);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ wreck = server_CreateBlobNoInit("triplanewreck");
 		wreck.setPosition(this.getPosition());
@@ -304,7 +304,7 @@ void onCollision(CBlob@ this,CBlob@ blob,bool solid)
 	float power = this.getOldVelocity().getLength();
 	if (power > 5.0f && blob == null)
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			Sound::Play("WoodHeavyHit1.ogg", this.getPosition(), 1.0f);
 		}
@@ -360,9 +360,9 @@ void DoExplosion(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
 }
 
 void onAttach(CBlob@ this,CBlob@ attached,AttachmentPoint @attachedPoint)
@@ -423,23 +423,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (carried !is null)
 		{
-			string fuel_name = carried.getConfig();
+			string fuel_name = carried.getName();
 			f32 fuel_modifier = 1.00f;
 			bool isValid = false;
 			
-			if (fuel_name == "mat_wood")
-			{
-				fuel_modifier = 1.00f;
-				isValid = true;
-			}
-			else if (fuel_name == "mat_coal")
-			{
-				fuel_modifier = 4.00f * 5.00f; // More coal than oil in a drum
-				isValid = true;
-			}
-			else if (fuel_name == "mat_oil")
+			if (fuel_name == "mat_oil")
 			{
 				fuel_modifier = 3.00f * 5.00f;
+				isValid = true;
+			}
+			else if (fuel_name == "mat_methane")
+			{
+				fuel_modifier = 15.00f;
 				isValid = true;
 			}
 			else if (fuel_name == "mat_fuel")
@@ -452,10 +447,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				u16 remain = GiveFuel(this, carried.getQuantity(), fuel_modifier);
 					
-				if (getNet().isServer())
+				if (isServer())
 				{
 					if (remain == 0)
 					{
+						carried.Tag("dead");
 						carried.server_Die();
 					}
 					else
@@ -547,8 +543,8 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	CBlob@ carried = caller.getCarriedBlob();
 	if (carried !is null && this.get_f32("fuel_count") < this.get_f32("max_fuel"))
 	{
-		string fuel_name = carried.getConfig();
-		bool isValid = fuel_name == "mat_oil" || fuel_name == "mat_fuel";
+		string fuel_name = carried.getName();
+		bool isValid = fuel_name == "mat_oil" || fuel_name == "mat_methane" || fuel_name == "mat_fuel";
 		
 		if (isValid)
 		{
@@ -576,6 +572,6 @@ void onRender(CSprite@ this)
 		
 		GUI::SetFont("menu");
 		GUI::DrawTextCentered("This vehicle requires fuel to fly!", Vec2f(pos.x, pos.y + 85 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
-		GUI::DrawTextCentered("(Oil)", Vec2f(pos.x, pos.y + 105 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
+		GUI::DrawTextCentered("(Oil, Methane, Fuel)", Vec2f(pos.x, pos.y + 105 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
 	}
 }

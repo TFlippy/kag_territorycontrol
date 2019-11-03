@@ -20,7 +20,7 @@
 	sprite.SetEmitSoundPaused(false);
 	sprite.SetEmitSoundVolume(0.3f);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_CreateBlob("commanderchicken", -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
 	}
@@ -31,7 +31,7 @@ void onTick(CBlob@ this)
 
 	SetMinimap(this);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if(getGameTime() % 30 == 0)
 		{
@@ -61,7 +61,7 @@ void SetMinimap(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		server_DropCoins(this.getPosition(), 250 + XORRandom(500));
 	}

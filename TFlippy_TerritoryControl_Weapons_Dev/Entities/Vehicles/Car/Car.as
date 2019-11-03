@@ -115,7 +115,7 @@ void onDie(CBlob@ this)
 	
 	Explode(this, 32.0f, 4.0f);
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ blob = server_CreateBlob("carwreck", this.getTeamNum(), this.getPosition());
 	}

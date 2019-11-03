@@ -22,7 +22,7 @@ void onInit( CBrain@ this )
 void onInit(CBlob@ this)
 {
 	// this.Tag("npc");
-	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 0, 0);
+	this.getSprite().addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 	this.Tag("flesh");
 	this.Tag("dangerous");
 	this.Tag("map_damage_dirt");
@@ -160,7 +160,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("mg_explode"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
@@ -169,14 +169,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		this.set_u32("next pigger", getGameTime() + 30 * 15);
 	
-		if (getNet().isClient())
+		if (isClient())
 		{
 			this.getSprite().PlaySound("FleshHit.ogg", 1.00f, 1.00f);
 			this.getSprite().PlaySound("Pigger_Pop_" + XORRandom(2), 1.00f, 1.00f);
 			ParticleBloodSplat(this.getPosition(), true);
 		}
 	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Hit(this, this.getPosition(), Vec2f(0, 0), 1.00f + (XORRandom(300) / 100.00f), Hitters::stab, true);
 			
@@ -206,7 +206,7 @@ void onDie(CBlob@ this)
 		}
 	}
 
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		// boom.setPosition(this.getPosition());
@@ -224,7 +224,7 @@ void onDie(CBlob@ this)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 
 	CBlob @blob = this.getBlob();
 	
@@ -279,7 +279,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;			
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 25)
 		{
@@ -288,7 +288,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		

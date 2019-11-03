@@ -77,11 +77,11 @@ void onInit(CBlob@ this)
 	{
 		AssemblerItem i("mat_sammissile", 4, "SAM Missile (4)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 8);
-		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 100);
+		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
 		items.push_back(i);
 	}
 	{
-		AssemblerItem i("mat_battery", 100, "Voltron Battery Plus (100)");
+		AssemblerItem i("mat_battery", 200, "Voltron Battery Plus (200)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
 		AddRequirement(i.reqs, "blob", "mat_copperingot", "Copper Ingot", 1);
 		AddRequirement(i.reqs, "blob", "mat_mithril", "Mithril", 25);
@@ -124,8 +124,25 @@ void onInit(CBlob@ this)
 		items.push_back(i);
 	}
 	
+		{
+		AssemblerItem i("cruisemissileacid", 1, "Acid Cruise Missile (1)");
+		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
+		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
+		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
+		AddRequirement(i.reqs, "blob", "mat_acid", "Acid", 100);
+		items.push_back(i);
+	}
+	
+	{
+		AssemblerItem i("cruisemissilecluster", 1, "Cluster Cruise Missile (1)");
+		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
+		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
+		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
+		AddRequirement(i.reqs, "blob", "mat_clusterbomb", "Cluster Bomb", 1);
+		items.push_back(i);
+	}
+	
 	this.set("items", items);
-
 
 	this.set_TileType("background tile", CMap::tile_biron);
 	this.getShape().getConsts().mapCollisions = false;
@@ -158,7 +175,7 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 		{
 			if(caller.isMyPlayer())
 			{
-				CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 6), "Set Assembly");
+				CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 7), "Set Assembly");
 				if (menu !is null)
 				{
 					AssemblerItem[] items = getItems(this);
@@ -196,6 +213,7 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 
 void onTick(CBlob@ this)
 {
+
 	int crafting = this.get_u8("crafting");
 
 	AssemblerItem[]@ items = getItems(this);
@@ -208,7 +226,7 @@ void onTick(CBlob@ this)
 	CBitStream missing;
 	if (hasRequirements(inv, item.reqs, missing))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			// CBlob @mat = server_CreateBlob(item.resultname, this.getTeamNum(), this.getPosition());
 			// mat.server_SetQuantity(item.resultcount);
@@ -253,8 +271,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 	if (isMat && !blob.isAttached() && blob.hasTag("material"))
 	{
-		if (getNet().isServer()) this.server_PutInInventory(blob);
-		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
+		if (isServer()) this.server_PutInInventory(blob);
+		if (isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
 }
 
@@ -268,4 +286,19 @@ AssemblerItem[] getItems(CBlob@ this)
 	AssemblerItem[] items;
 	this.get("items", items);
 	return items;
+}
+
+
+void onAddToInventory( CBlob@ this, CBlob@ blob )
+{
+	if(blob.getName() != "gyromat") return;
+
+	this.getCurrentScript().tickFrequency = 150 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+}
+
+void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
+{
+	if(blob.getName() != "gyromat") return;
+	
+	this.getCurrentScript().tickFrequency = 150 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

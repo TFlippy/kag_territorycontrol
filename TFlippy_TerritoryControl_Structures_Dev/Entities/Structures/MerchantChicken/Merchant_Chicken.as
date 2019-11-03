@@ -219,7 +219,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		const u8 myTeam = this.getTeamNum();
 		if (myTeam >= 100) return;
@@ -255,7 +255,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			

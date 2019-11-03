@@ -72,7 +72,7 @@ void onTick(CBlob@ this)
 		
 		if (this.isKeyJustPressed(key_action1))
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				ResetPlayer(this);
 				this.server_Die();
@@ -84,7 +84,7 @@ void onTick(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if ((blob !is null ? !blob.isCollidable() : !solid)) return;
 		if (this.hasTag("offblast") && this.get_u32("no_explosion_timer") < getGameTime()) 
@@ -96,7 +96,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void ResetPlayer(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CPlayer@ ply = getPlayerByNetworkId(this.get_u16("controller_player_netid"));
 		CBlob@ blob = getBlobByNetworkID(this.get_u16("controller_blob_netid"));
@@ -160,7 +160,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		this.SetLightRadius(128.0f);
 		this.SetLightColor(SColor(255, 255, 100, 0));
 		
-		if (getNet().isServer() && ply !is null)
+		if (isServer() && ply !is null)
 		{
 			this.server_SetPlayer(ply);
 		}
@@ -179,10 +179,10 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	Vec2f offset = Vec2f(0, 16).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 

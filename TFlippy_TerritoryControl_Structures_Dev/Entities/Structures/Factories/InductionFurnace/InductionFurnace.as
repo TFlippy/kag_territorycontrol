@@ -48,11 +48,12 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+
 	for (int i = 0; i < 4; i++)
 	{
 		if (this.hasBlob(matNames[i], matRatio[i]))
 		{
-			if (getNet().isServer())
+			if (isServer())
 			{
 				CBlob @mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
 				mat.server_SetQuantity(4);
@@ -80,14 +81,14 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	for(int i = 0;i < 4; i += 1)
 	if (!blob.isAttached() && blob.hasTag("material") && blob.getName() == matNames[i])
 	{
-		if (getNet().isServer()) this.server_PutInInventory(blob);
-		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
+		if (isServer()) this.server_PutInInventory(blob);
+		if (isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
 	
 	if (!blob.isAttached() && blob.hasTag("material") && blob.getName() == "mat_coal")
 	{
-		if (getNet().isServer()) this.server_PutInInventory(blob);
-		if (getNet().isClient()) this.getSprite().PlaySound("bridge_open.ogg");
+		if (isServer()) this.server_PutInInventory(blob);
+		if (isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
 }
 
@@ -95,4 +96,18 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	// return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
 	return forBlob !is null && forBlob.isOverlapping(this);
+}
+
+void onAddToInventory( CBlob@ this, CBlob@ blob )
+{
+	if(blob.getName() != "gyromat") return;
+
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+}
+
+void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
+{
+	if(blob.getName() != "gyromat") return;
+	
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

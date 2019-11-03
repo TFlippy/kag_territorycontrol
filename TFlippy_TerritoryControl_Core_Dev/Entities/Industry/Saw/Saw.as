@@ -60,7 +60,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		bool set = !getSawOn(this);
 		SetSawOn(this, set);
 
-		if (getNet().isClient()) //closed/opened gfx
+		if (isClient()) //closed/opened gfx
 		{
 			CSprite@ sprite = this.getSprite();
 
@@ -86,7 +86,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 //function for blending things
 void Blend(CBlob@ this, CBlob@ tobeblended)
 {
-	if (this is tobeblended || tobeblended.hasTag("sawed") || tobeblended.hasTag("invincible") || !getSawOn(this) || tobeblended.getConfig() == "seed")
+	if (this is tobeblended || tobeblended.hasTag("sawed") || tobeblended.hasTag("invincible") || !getSawOn(this) || tobeblended.getName() == "seed")
 	{
 		return;
 	}
@@ -94,7 +94,7 @@ void Blend(CBlob@ this, CBlob@ tobeblended)
 	//make plankfrom wooden stuff
 	if (tobeblended.getName() == "log")
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			CBlob @wood = server_CreateBlob("mat_wood", this.getTeamNum(), this.getPosition() + Vec2f(0, 12));
 			if (wood !is null)
@@ -170,7 +170,7 @@ bool canSaw(CBlob@ this, CBlob@ blob)
 
 		if (dot > 0.8f)
 		{
-			if (getNet().isClient() && !g_kidssafe) //add blood gfx
+			if (isClient() && !g_kidssafe) //add blood gfx
 			{
 				CSprite@ sprite = this.getSprite();
 				CSpriteLayer@ chop = sprite.getSpriteLayer("chop");
@@ -203,7 +203,7 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 //we have contact!
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (blob is null || !getNet().isServer() ||
+	if (blob is null || !isServer() ||
 	        this.isAttached() || blob.isAttached() ||
 	        !getSawOn(this))
 	{

@@ -30,19 +30,24 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getPosition().y < 0) this.server_Die();
+	
 
-	MakeParticle(this, "FalloutGas");
-	f32 radius = 128;
+	if(isClient())
+	{
+		MakeParticle(this, "FalloutGas.png");
+	}
+	else
+	{
+		if(this.getPosition().y < 0) {this.server_Die();}
+		f32 radius = 128;
 
 	// SetScreenFlash(240, 16, 40, 8);	
 	
 	// this.AddForce(getRandomVelocity(0, 100, 360));
-	
-	if (XORRandom(100) < 20) 
-	{
-		if (getNet().isServer())
+		
+		if (XORRandom(100) < 20) 
 		{
+			
 			CMap@ map = getMap();
 			
 
@@ -73,8 +78,11 @@ void onTick(CBlob@ this)
 					}
 				}
 			}
+			
 		}
 	}
+
+	
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
@@ -84,10 +92,11 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 {
-	if (!getNet().isClient()) return;
-	CParticle@ particle = ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + Vec2f(XORRandom(1000) / 10.0f - 50.0f, -XORRandom(600) / 10.0f + 20.0f), Vec2f(), float(XORRandom(360)), 2.0f + (XORRandom(150) / 100.0f), 4, 0.00f, false);
+	if (!isClient()) return;
+	CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(XORRandom(1000) / 10.0f - 50.0f, -XORRandom(600) / 10.0f + 20.0f), Vec2f(), float(XORRandom(360)), 2.0f + (XORRandom(150) / 100.0f), 4, 0.00f, false);
 	if (particle !is null) 
 	{
+		particle.fastcollision = true;
 		particle.setRenderStyle(RenderStyle::additive);
 	}
 	

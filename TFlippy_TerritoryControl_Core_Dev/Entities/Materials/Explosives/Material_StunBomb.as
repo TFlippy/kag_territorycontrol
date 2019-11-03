@@ -65,7 +65,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
 
 void DoExplosion(CBlob@ this)
 {
-	const bool server = getNet().isServer();
+	const bool server = isServer();
 
 	f32 random = XORRandom(16);
 	f32 quantity = this.getQuantity();
@@ -76,13 +76,16 @@ void DoExplosion(CBlob@ this)
 	this.set_f32("map_damage_ratio", 0.01f);
 	
 	Explode(this, 32.0f + random, 0.2f);
-	
-	u8 len = particles.length;
-	for (int i = 0; i < 200 * modifier; i++) 
+	if(isClient())
 	{
-		Vec2f dir = getRandomVelocity(-angle, 8.5f * (XORRandom(100) * 0.01f), 100);
-		MakeParticle(this, dir, particles[XORRandom(len)]);
+		u8 len = particles.length;
+		for (int i = 0; i < 200 * modifier; i++) 
+		{
+			Vec2f dir = getRandomVelocity(-angle, 8.5f * (XORRandom(100) * 0.01f), 100);
+			MakeParticle(this, dir, particles[XORRandom(len)]);
+		}
 	}
+	
 	
 	Vec2f pos = this.getPosition() + this.get_Vec2f("explosion_offset");
 	
@@ -100,7 +103,10 @@ void DoExplosion(CBlob@ this)
 				dir.Normalize();
 				
 				f32 mod = Maths::Pow(Maths::Clamp(1.00f - (dist / 192), 0, 1),2);
-				blob.AddForce(dir * blob.getRadius() * 70 * mod * modifier);
+				f32 force = Maths::Clamp(blob.getRadius() * 70 * mod * modifier, 0, blob.getMass() * 50);
+				
+				blob.AddForce(dir * force);
+
 				SetKnocked(blob, 150 * mod);
 				
 				if (server && XORRandom(100) < 12 * modifier)
@@ -119,9 +125,9 @@ void DoExplosion(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
 	const f32 rad = this.getRadius();
 	Vec2f random = Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.015625f * rad;
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 1 + XORRandom(2), -0.005f, true);
+	ParticleAnimated(filename, this.getPosition() + random, vel, float(XORRandom(360)), 1.0f, 1 + XORRandom(2), -0.005f, true);
 }

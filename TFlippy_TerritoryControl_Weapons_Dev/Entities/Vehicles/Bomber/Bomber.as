@@ -39,7 +39,7 @@ void onCollision(CBlob@ this, CBlob@ blob,bool solid)
 
 void onDie( CBlob@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ wreck = server_CreateBlobNoInit("bomberwreck");
 		wreck.setPosition(this.getPosition());

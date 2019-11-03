@@ -50,7 +50,7 @@ void onDie(CBlob@ this)
 		}
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().PlaySound("FlashGrenade_Boom.ogg");
 	}

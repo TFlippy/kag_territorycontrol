@@ -12,7 +12,7 @@
 
 void onInit( CBrain@ this )
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		InitBrain( this );
 		this.server_SetActive( true ); // always running
@@ -110,7 +110,7 @@ void onTick(CBlob@ this)
 		moveVars.jumpFactor *= 0.75f;
 	}
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
 		{
@@ -118,7 +118,7 @@ void onTick(CBlob@ this)
 			this.set_u32("next sound", getGameTime() + 200);
 		}
 		
-		if (getNet().isClient())
+		if (isClient())
 		{
 			if (XORRandom(100) < 25) MakeParticle(this, 0.75f);
 		}
@@ -138,7 +138,7 @@ void onTick(CBlob@ this)
 	
 	this.SetFacingLeft(this.getVelocity().x < 0);
 	
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// if (XORRandom(100) == 0)
 		// {
@@ -192,7 +192,7 @@ void onTick(CBlob@ this)
 					f32 dist = dir.getLength();
 					dir.Normalize();
 
-					if (getNet().isServer())
+					if (isServer())
 					{
 						if (getGameTime() % 5 == 0) this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 0.50f, Hitters::crush, true);
 					}
@@ -214,7 +214,7 @@ void onTick(CBlob@ this)
 	
 	if (XORRandom(8) == 0) 
 	{	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			const f32 radius = 256.00f;
 		
@@ -255,7 +255,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("mg_explode"))
 	{
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Die();
 		}
@@ -264,14 +264,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		this.set_u32("next pigger", getGameTime() + 30 * 15);
 	
-		if (getNet().isClient())
+		if (isClient())
 		{
 			this.getSprite().PlaySound("FleshHit.ogg", 1.00f, 1.00f);
 			this.getSprite().PlaySound("Pigger_Pop_" + XORRandom(2), 1.00f, 1.00f);
 			ParticleBloodSplat(this.getPosition(), true);
 		}
 	
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_Hit(this, this.getPosition(), Vec2f(0, 0), 1.00f + (XORRandom(300) / 100.00f), Hitters::stab, true);
 			
@@ -301,7 +301,7 @@ void onDie(CBlob@ this)
 		}
 	}
 
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		// boom.setPosition(this.getPosition());
@@ -319,7 +319,7 @@ void onDie(CBlob@ this)
 
 void onTick(CBrain@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 
 	CBlob @blob = this.getBlob();
 	
@@ -374,7 +374,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;			
 	}
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") - 100)
 		{
@@ -383,7 +383,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
 		
@@ -398,10 +398,11 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void MakeParticle(CBlob@ this, float magnitude)
 {
-	if (!getNet().isClient()) return;
-	CParticle@ p = ParticleAnimated(CFileMatcher("FalloutGas").getFirst(), this.getPosition() + getRandomVelocity(0, magnitude * 32, 360), Vec2f(), float(XORRandom(360)), 1.00f + (magnitude * 2 * (XORRandom(100) / 100.0f)), 3 + (6 * magnitude), -0.05f, false);
+	if (!isClient()) return;
+	CParticle@ p = ParticleAnimated("FalloutGas.png", this.getPosition() + getRandomVelocity(0, magnitude * 32, 360), Vec2f(), float(XORRandom(360)), 1.00f + (magnitude * 2 * (XORRandom(100) / 100.0f)), 3 + (6 * magnitude), -0.05f, false);
 	if (p !is null)
 	{
+		p.fastcollision = true;
 		// p.deadeffect = 0;
 	}
 }

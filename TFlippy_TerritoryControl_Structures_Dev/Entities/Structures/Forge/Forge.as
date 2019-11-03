@@ -109,7 +109,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		this.getSprite().PlaySound("/ConstructShort");
 		
-		if (getNet().isServer())
+		if (isServer())
 		{	
 			u16 caller, item;
 			

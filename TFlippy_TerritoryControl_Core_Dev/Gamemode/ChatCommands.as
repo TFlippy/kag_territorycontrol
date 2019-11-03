@@ -15,7 +15,17 @@ void onInit(CRules@ this)
 	this.addCommandID("playsound");
 	this.addCommandID("startInfection");
 	this.addCommandID("endInfection");
+
+	if(isClient())
+	{
+		this.set_bool("log",false);//so no clients can get logs unless they do ~logging
+	}
+	if(isServer())
+	{
+		this.set_bool("log",true);//server always needs to log anyway
+	}
 }
+
 void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 {
 	/*ShakeScreen(64,32,tpBlob.getPosition());
@@ -41,12 +51,12 @@ void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 		CBlob@ tpBlob=	getBlobByNetworkID(tpBlobId);
 		CBlob@ destBlob=	getBlobByNetworkID(destBlobId);
 		if(tpBlob !is null && destBlob !is null){
-			if(getNet().isClient()){
+			if(isClient()){
 				ShakeScreen(64,32,tpBlob.getPosition());
 				ParticleZombieLightning(tpBlob.getPosition());
 			}
 			tpBlob.setPosition(destBlob.getPosition());
-			if(getNet().isClient()){
+			if(isClient()){
 				ShakeScreen(64,32,destBlob.getPosition());
 				ParticleZombieLightning(destBlob.getPosition());
 			}
@@ -72,14 +82,23 @@ void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 			KickPlayer(player);
 		}
 	}
-	else if(cmd==this.getCommandID("playsound")) {
+	else if(cmd==this.getCommandID("playsound")) 
+	{
 		string soundname;
 
-		if(!params.saferead_string(soundname)) {
+		if(!params.saferead_string(soundname)) 
+		{
 			return;
 		}
-
-		Sound::Play(soundname + ".ogg");
+		
+		f32 volume = 1.00f;
+		f32 pitch = 1.00f;
+		
+		params.saferead_f32(volume);
+		params.saferead_f32(pitch);
+		
+		if (volume == 0.00f) Sound::Play(soundname);
+		else Sound::Play(soundname, getCamera().getPosition() + getRandomVelocity(0, 8, 360), volume, pitch);
 	}
 	else if(cmd==this.getCommandID("startInfection"))
 	{
@@ -184,7 +203,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 			//For at least moderators
 			if(isMod || isCool){
 				if(tokens[0]=="!admin") {
-					if(blob.getConfig()!="grandpa") {
+					if(blob.getName()!="grandpa") {
 						player.server_setTeamNum(-1);
 						CBlob@ newBlob = server_CreateBlob("grandpa",-1,blob.getPosition());
 						newBlob.server_SetPlayer(player);
@@ -273,7 +292,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					if(tpBlob !is null && tpDest !is null) {
 						CBlob@ destBlob=tpDest.getBlob();
 						if(destBlob !is null) {
-							if(isCool || blob.getConfig()=="grandpa"){
+							if(isCool || blob.getName()=="grandpa"){
 								CBitStream params;
 								params.write_u16(tpBlob.getNetworkID());
 								params.write_u16(destBlob.getNetworkID());
@@ -324,14 +343,18 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				}
 				else if(tokens[0]=="!playsound")
 				{
-					if(tokens.length!=2 || IsCool(tokens[1]))
+					if (tokens.length < 2)
 					{
+						print("" + tokens.length);
 						return false;
 					}
 
 					CBitStream params;
 					params.write_string(tokens[1]);
-					this.SendCommand(this.getCommandID("playsound"),params);
+					params.write_f32(tokens.length > 2 ? parseFloat(tokens[2]) : 0.00f);
+					params.write_f32(tokens.length > 3 ? parseFloat(tokens[3]) : 1.00f);
+					
+					this.SendCommand(this.getCommandID("playsound"), params);
 
 					return false;
 				}
@@ -609,7 +632,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 		}
 		return false;
 	}else{
-		if(blob.getConfig()=="chicken"){
+		if(blob.getName()=="chicken"){
 			string[] messages={
 				"Bwak!!!",
 				"Coo-coo!!",
@@ -620,7 +643,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				"bwakwak, bwak!"
 			};
 			text_out=messages[XORRandom(messages.length)];
-		}else if(blob.getConfig()=="bison"){
+		}else if(blob.getName()=="bison"){
 			string[] messages={
 				"Moo...",
 				"moooooooo?",
@@ -721,7 +744,7 @@ bool onClientProcessChat(CRules@ this,const string& in text_in,string& out text_
 		// }
 	// }
 
-	if (text_in=="!debug" && !getNet().isServer())
+	if (text_in=="!debug" && !isServer())
 	{
 		// print all blobs
 		CBlob@[] all;
@@ -744,6 +767,13 @@ bool onClientProcessChat(CRules@ this,const string& in text_in,string& out text_
 					}
 				}
 			}
+		}
+	}
+	else if(text_in=="~logging")//for some reasons ! didnt work
+	{
+		if(player.isRCON())
+		{
+			this.set_bool("log",!this.get_bool("log"));
 		}
 	}
 

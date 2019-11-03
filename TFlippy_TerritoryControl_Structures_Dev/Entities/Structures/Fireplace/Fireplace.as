@@ -6,7 +6,7 @@
 void onInit(CBlob@ this)
 {
 	// this.getShape().getConsts().mapCollisions = false;
-	this.getShape().getConsts().rotates = false;
+	this.getShape().getConsts().rotates = true;
 	this.getCurrentScript().tickFrequency = 9;
 	this.getSprite().SetEmitSound("CampfireSound.ogg");
 	this.getSprite().SetAnimation("fire");
@@ -21,6 +21,8 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	if(!isClient()){return;}
+
 	if (this.getSprite().isAnimation("fire"))
 	{
 		makeFireParticle(this.getPosition() + getRandomVelocity(90.0f, 3.0f, 90.0f));

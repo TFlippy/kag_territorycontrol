@@ -86,7 +86,7 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition() + Vec2f(0, -8);
 	CMap@ map = getMap();
 	
-	// if (getNet().isClient())
+	// if (isClient())
 	// {
 		// for (int i = 0; i < 25; i++) 
 		// {
@@ -94,7 +94,7 @@ void DoExplosion(CBlob@ this)
 		// }
 	// }
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		
@@ -131,7 +131,7 @@ void DoExplosion(CBlob@ this)
 
 // void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 // {
-	// if (!getNet().isClient()) return;
+	// if (!isClient()) return;
 	// CParticle@ particle = ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + Vec2f(XORRandom(1000) / 10.0f - 50.0f, -XORRandom(600) / 10.0f + 20.0f), Vec2f(), float(XORRandom(360)), 2.0f + (XORRandom(150) / 100.0f), 25, 0.00f, false);
 	// if (particle !is null) 
 	// {
@@ -141,7 +141,7 @@ void DoExplosion(CBlob@ this)
 
 // void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 // {
-	// if (!getNet().isClient()) return;
+	// if (!isClient()) return;
 
 	// ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), XORRandom(100) * -0.00005f, true);
 	

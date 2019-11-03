@@ -92,7 +92,7 @@ void onInit(CBlob@ this)
 
 /*void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		u8 index = XORRandom(resources.length - 1);
 		MakeMat(this, this.getPosition(), resources[index], XORRandom(resourceYields[index]));
@@ -101,7 +101,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if(getNet().isServer())
+	if(isServer())
 	{
 		// if (this.getInventory().isFull()) return;
 	
@@ -174,7 +174,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (callerBlob is null) return;
 		
-		if (getNet().isServer())
+		if (isServer())
 		{
 			string[] spl = name.split("-");
 			

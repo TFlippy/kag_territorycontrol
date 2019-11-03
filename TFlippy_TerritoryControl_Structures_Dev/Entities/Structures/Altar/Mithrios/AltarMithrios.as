@@ -99,7 +99,7 @@ void onTick(CBlob@ this)
 
 // void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 // {
-	// if (getNet().isServer())
+	// if (isServer())
 	// {
 		// if (cmd == this.getCommandID("sv_store"))
 		// {
@@ -107,7 +107,7 @@ void onTick(CBlob@ this)
 			// if (caller !is null)
 			// {
 				// CInventory @inv = caller.getInventory();
-				// if (caller.getConfig() == "builder")
+				// if (caller.getName() == "builder")
 				// {
 					// CBlob@ carried = caller.getCarriedBlob();
 					// if (carried !is null)

@@ -18,7 +18,7 @@ void onDie(CBlob@ this)
 {
 	this.getSprite().PlaySound("TreeDestruct.ogg", 1.0f, 1.0f);
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		for (int i = 0; i < (5 + XORRandom(15)); i++)
 		{
@@ -31,13 +31,13 @@ void onDie(CBlob@ this)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (getNet().isClient())
+	if (isClient())
 	{ 
 		this.getSprite().PlaySound("dig_stone.ogg", 0.8f, 1.2f);
 		this.getSprite().PlaySound("TreeChop" + (1 + XORRandom(3)) + ".ogg", 1.0f, 1.0f);
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (hitterBlob !is null)
 		{

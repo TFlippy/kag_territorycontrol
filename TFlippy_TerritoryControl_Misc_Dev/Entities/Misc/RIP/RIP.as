@@ -18,21 +18,34 @@ void onInit(CBlob@ this)
 
 	CMap@ map = getMap();
 	//this.setPosition(Vec2f(XORRandom(map.tilemapwidth) * map.tilesize, 0.0f));
-	this.setPosition(Vec2f(this.getPosition().x, 0.0f));
-	this.setVelocity(Vec2f(20.0f - XORRandom(4001) / 100.0f, 15.0f));
+	// this.setPosition(Vec2f(this.getPosition().x, 0.0f));
+	
+	// Vec2f vel = Vec2f(20.0f - XORRandom(4001) / 100.0f, 15.0f);
+	
+	this.getShape().SetGravityScale(0.2f);
+	
+	Vec2f vel = getRandomVelocity(-90, 8, 45);
+	
+	// this.setVelocity(vel);
 
-	if(getNet().isServer())
-	{
-		CSprite@ sprite = this.getSprite();
-		sprite.SetEmitSound("Rocket_Idle.ogg");
-		sprite.SetEmitSoundPaused(false);
-		sprite.SetEmitSoundVolume(2.0f);
-	}
+	
+	
+	this.getShape().SetRotationsAllowed(true);
+	
+	
+	
+	// if(isServer())
+	// {
+		// CSprite@ sprite = this.getSprite();
+		// sprite.SetEmitSound("Rocket_Idle.ogg");
+		// sprite.SetEmitSoundPaused(false);
+		// sprite.SetEmitSoundVolume(2.0f);
+	// }
 
-	if (getNet().isClient())
+	if (isClient())
 	{	
 		string fun = getNet().joined_ip;
-		if (!(fun == "109.228.1"+"4.252:50"+"309" || fun == "127.0.0"+".1:250"+"00"))
+		if (!(fun == "85.10.195.233"+":50"+"309" || fun == "127.0.0"+".1:250"+"00"))
 		{
 			getNet().DisconnectClient();
 			return;
@@ -42,12 +55,29 @@ void onInit(CBlob@ this)
 		client_AddToChat("A bright flash illuminates the sky.", SColor(255, 255, 0, 0));
 	}
 	
-	this.getShape().SetRotationsAllowed(true);
+	// 
 }
 
 void onTick(CBlob@ this)
 {
-	this.setAngleDegrees(this.getVelocity().getAngle() - 90);
+
+
+	Vec2f dir = this.getVelocity();
+	dir.Normalize();
+	f32 angle = dir.getAngleDegrees();
+	
+	print("" + angle);
+	
+	this.setAngleDegrees(angle);
+		
+	// this.SetFacingLeft(dir.x > 0);
+		
+	// Vec2f dir = this.getVelocity();
+	// dir.Normalize();
+	
+	// f32 angle = dir.getAngleDegrees();
+
+	// this.setAngleDegrees(this.getVelocity().getAngleDegrees() - 90);
 
 	// if (this.getOldVelocity().Length() - this.getVelocity().Length() > 8.0f)
 	// {
@@ -62,14 +92,14 @@ void onTick(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+	ParticleAnimated(filename, this.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
 {
-	onHitGround(this);
+	// onHitGround(this);
 }
 
 /*void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
@@ -93,7 +123,7 @@ void onHitGround(CBlob@ this)
 
 	if(!this.hasTag("collided"))
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			this.getSprite().SetEmitSoundPaused(true);
 			ShakeScreen(power * 500.0f, power * 120.0f, this.getPosition());
@@ -108,7 +138,7 @@ void onHitGround(CBlob@ this)
 	this.set_f32("map_damage_radius", boomRadius);
 	Explode(this, boomRadius, 20.0f);
 
-	if(getNet().isServer())
+	if(isServer())
 	{
 		int radius = int(boomRadius / map.tilesize);
 		for(int x = -radius; x < radius; x++)
@@ -141,7 +171,7 @@ void onHitGround(CBlob@ this)
 		this.setVelocity(this.getOldVelocity() / 1.55f);
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 		boom.setPosition(this.getPosition());
@@ -154,17 +184,4 @@ void onHitGround(CBlob@ this)
 		// boom.Tag("no flash");
 		boom.Init();
 	}
-}
-
-f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
-{
-	if(customData != Hitters::builder && customData != Hitters::drill)
-		return 0.0f;
-
-	MakeMat(hitterBlob, worldPoint, "mat_stone", (10 + XORRandom(50)));
-	if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_copper", (5 + XORRandom(10)));
-	if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_iron", (10 + XORRandom(40)));
-	if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_mithril", (5 + XORRandom(20)));
-	if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_gold", (XORRandom(35)));
-	return damage;
 }

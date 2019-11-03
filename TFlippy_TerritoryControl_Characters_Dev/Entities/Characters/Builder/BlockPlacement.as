@@ -219,7 +219,7 @@ void onRender(CSprite@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (getNet().isServer() && cmd == this.getCommandID("placeBlock"))
+	if (isServer() && cmd == this.getCommandID("placeBlock"))
 	{
 		u8 index = params.read_u8();
 		Vec2f pos = params.read_Vec2f();

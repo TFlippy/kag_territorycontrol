@@ -51,11 +51,12 @@ void onTick(CBlob@ this)
 		UpdateAngle(this);
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if(point is null){return;}
 		CBlob@ holder = point.getOccupied();
 
 		if (holder is null) return;
 
-		if (holder.get_u8("knocked") <= 0)
+		if (getKnocked(holder) <= 0)
 		{
 			CSprite@ sprite = this.getSprite();
 			const bool lmb = holder.isKeyPressed(key_action1) || point.isKeyPressed(key_action1);
@@ -92,7 +93,7 @@ void onTick(CBlob@ this)
 								hitBlobs = true;
 								hitPos = hitInfos[i].hitpos;
 								
-								if (getNet().isServer())
+								if (isServer())
 								{
 									SpawnBoom(this, hitPos);
 								}
@@ -109,7 +110,7 @@ void onTick(CBlob@ this)
 					{
 						CMap@ map = getMap();
 						
-						if (getNet().isServer())
+						if (isServer())
 						{
 							SpawnBoom(this, hitPos);
 						}
@@ -123,7 +124,7 @@ void onTick(CBlob@ this)
 				ShakeScreen(64, 32, startPos);
 				holder.AddForce(-aimDir * 400.00f);
 				
-				if (getNet().isClient())
+				if (isClient())
 				{
 					CSpriteLayer@ zap = this.getSprite().getSpriteLayer("zap");
 					if (zap !is null)
@@ -239,9 +240,9 @@ void SpawnBoom(CBlob@ this, Vec2f pos)
 {
 	CBlob@ boom = server_CreateBlobNoInit("antimatterexplosion");
 	boom.setPosition(pos);
-	boom.set_u8("boom_frequency", 5);
+	boom.set_u8("boom_frequency", 2);
 	boom.set_f32("boom_size", 0);
-	boom.set_u32("boom_increment", 10.00f);
+	boom.set_f32("boom_increment", 10.00f);
 	boom.set_f32("boom_end", 30);
 	boom.set_f32("flash_distance", 128);
 	boom.set_u32("boom_delay", 5);

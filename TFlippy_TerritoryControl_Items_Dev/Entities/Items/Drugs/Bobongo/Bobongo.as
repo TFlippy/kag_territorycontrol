@@ -23,7 +23,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (!caller.hasScript("Bobonged.as")) caller.AddScript("Bobonged.as");
 			caller.add_f32("bobonged", 1);
 			
-			if (getNet().isServer())
+			if (isServer())
 			{
 				this.server_Die();
 			}
@@ -35,6 +35,6 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (solid)
 	{
-		if (getNet().isClient() && this.getOldVelocity().Length() > 2.0f) this.getSprite().PlaySound("launcher_boing" + XORRandom(2), 0.2f, 1.0f);
+		if (isClient() && this.getOldVelocity().Length() > 2.0f) this.getSprite().PlaySound("launcher_boing" + XORRandom(2), 0.2f, 1.0f);
 	}
 }

@@ -124,7 +124,7 @@ void onTick(CBlob@ this)
 				{
 					u32 itemCount = inv.getItemsCount();
 					
-					if (getNet().isClient()) 
+					if (isClient()) 
 					{
 						if (itemCount > 0)
 						{ 
@@ -138,7 +138,7 @@ void onTick(CBlob@ this)
 					
 					if (itemCount > 0) 
 					{
-						if (getNet().isServer()) 
+						if (isServer()) 
 						{
 							CBlob@ item = inv.getItem(0);
 							u32 quantity = item.getQuantity();
@@ -188,11 +188,11 @@ void onTick(CBlob@ this)
 	if (this.getVelocity().Length() > 1.00f && v > 0.25f) this.setAngleDegrees((this.isFacingLeft() ? 180 : 0) - this.getVelocity().Angle());
 	else this.setAngleDegrees(0);
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		this.getSprite().SetEmitSoundSpeed(0.25f + (this.get_f32("velocity") / SPEED_MAX * 0.2f) * (this.getVelocity().Length() * 0.15f));
 		
-		if (hmod < 0.7 && u32(getGameTime() % 20 * hmod) == 0) ParticleAnimated(CFileMatcher(smokes[XORRandom(smokes.length)]).getFirst(), this.getPosition(), Vec2f(0, 0), float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 3 + XORRandom(4), XORRandom(100) * -0.001f, true);
+		if (hmod < 0.7 && u32(getGameTime() % 20 * hmod) == 0) ParticleAnimated(smokes[XORRandom(smokes.length)], this.getPosition(), Vec2f(0, 0), float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 3 + XORRandom(4), XORRandom(100) * -0.001f, true);
 	}
 }
 
@@ -221,7 +221,7 @@ void Shoot(CBlob@ this)
 	
 	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		DrawLine(this.getSprite(), startPos, length / 32, angleOffset, this.isFacingLeft());
 		this.getSprite().PlaySound("GatlingGun-Shoot0", 1.00f, 1.00f);
@@ -230,7 +230,7 @@ void Shoot(CBlob@ this)
 		// getControls().setMousePosition(Vec2f(mousePos.x, mousePos.y - 10));
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blobHit)
 		{
@@ -293,7 +293,7 @@ void onCollision(CBlob@ this,CBlob@ blob,bool solid)
 	float power = this.getOldVelocity().getLength();
 	if (power > 5.0f && blob == null)
 	{
-		if (getNet().isClient())
+		if (isClient())
 		{
 			Sound::Play("WoodHeavyHit1.ogg", this.getPosition(), 1.0f);
 		}
@@ -335,23 +335,27 @@ void DoExplosion(CBlob@ this)
 		LinearExplosion(this, dir, 16.0f + XORRandom(16) + (modifier * 8), 16 + XORRandom(24), 3, 2.00f, Hitters::explosion);
 	}
 	
-	Vec2f pos = this.getPosition();
-	CMap@ map = getMap();
-	
-	for (int i = 0; i < 35; i++)
+	if(isClient())
 	{
-		MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
+		Vec2f pos = this.getPosition();
+		CMap@ map = getMap();
+		
+		for (int i = 0; i < 35; i++)
+		{
+			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
+		}
+		
+		this.Tag("exploded");
+		this.getSprite().Gib();
 	}
-	
-	this.Tag("exploded");
-	this.getSprite().Gib();
+
 }
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!getNet().isClient()) return;
+	if (!isClient()) return;
 
-	ParticleAnimated(CFileMatcher(filename).getFirst(), this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
+	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
 }
 
 void onAttach(CBlob@ this,CBlob@ attached,AttachmentPoint @attachedPoint)
@@ -412,7 +416,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		if (carried !is null)
 		{
-			string fuel_name = carried.getConfig();
+			string fuel_name = carried.getName();
 			f32 fuel_modifier = 1.00f;
 			bool isValid = false;
 			
@@ -441,10 +445,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				u16 remain = GiveFuel(this, carried.getQuantity(), fuel_modifier);
 					
-				if (getNet().isServer())
+				if (isServer())
 				{
 					if (remain == 0)
 					{
+						carried.Tag("dead");
 						carried.server_Die();
 					}
 					else
@@ -536,7 +541,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	CBlob@ carried = caller.getCarriedBlob();
 	if (carried !is null && this.get_f32("fuel_count") < this.get_f32("max_fuel"))
 	{
-		string fuel_name = carried.getConfig();
+		string fuel_name = carried.getName();
 		bool isValid = fuel_name == "mat_oil" || fuel_name == "mat_fuel";
 		
 		if (isValid)

@@ -25,11 +25,12 @@ void onTick(CBlob@ this)
 		for (uint i = 0; i < blobs.length; i++)
 		{
 			CBlob@ blob = blobs[i];
-			if (blob !is null && blob !is this)
+			if (blob !is null && blob !is this && !blob.getShape().isStatic())
 			{
 				foundBlobs = true;
+				u8 team = blob.getTeamNum();
 			
-				if (blob.getTeamNum() != this.getTeamNum())
+				if (team != this.getTeamNum() || team >= 100)
 				{
 					if (isDangerous(blob) || blob.get_string("equipment_torso") == "suicidevest")
 					{				
@@ -92,31 +93,7 @@ void onTick(CBlob@ this)
 		}
 	}
 	
-	this.set_u8("detector_state", state);
-	
-	// CSprite@ sprite = this.getSprite();
-	// if (foundBlobs)
-	// {
-		// if (this.get_u8("detector_state") != state)
-		// {
-			// if (detected)
-			// {
-				// sprite.SetAnimation("detected");
-				// sprite.PlaySound("MetalDetector_Detected");
-			// }
-			// else
-			// {
-				// sprite.SetAnimation("undetected");
-				// sprite.PlaySound("MetalDetector_Undetected");
-			// }
-		// }
-	// }
-	// else
-	// {
-		// sprite.SetAnimation("default");
-	// }
-	
-	
+	this.set_u8("detector_state", state);	
 }
 
 bool isDangerous(CBlob@ blob)

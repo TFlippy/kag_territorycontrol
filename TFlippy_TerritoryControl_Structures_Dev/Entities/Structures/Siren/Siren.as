@@ -34,7 +34,7 @@ void onInit(CSprite@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@[] blobs;
 		getBlobsByTag("aerial", @blobs);
@@ -69,7 +69,7 @@ void onTick(CBlob@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (cmd == this.getCommandID("sv_toggle"))
 		{
@@ -83,7 +83,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if (cmd == this.getCommandID("cl_toggle"))
 		{		

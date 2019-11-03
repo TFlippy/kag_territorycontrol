@@ -48,7 +48,7 @@ u32 getCaptureSeconds(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
 
 	bool reset_timer = true;
 	bool sync = false;
@@ -69,7 +69,7 @@ void onTick(CBlob@ this)
 			{
 				// if (b.getTeamNum() != this.getTeamNum() && (this.getTeamNum() == 255 ? (this.hasTag("can be captured by neutral") ? this.getTeamNum() < 8 : b.getTeamNum() < 8)))
 				// && (this.getTeamNum() == 255 && this.hasTag("can be captured by neutral") ? true : b.getTeamNum() < 8)
-				if (b.getTeamNum()!=this.getTeamNum() && (this.getTeamNum() == 255 && this.hasTag("can be captured by neutral") ? true : ((!b.hasTag("neutral") && b.getTeamNum() < 7) || (b.getTeamNum() == 250 && this.hasTag("faction_base")))))
+				if ((b.getTeamNum() != this.getTeamNum()) && ((this.getTeamNum() == 255 && this.hasTag("can be captured by neutral")) || ((!b.hasTag("neutral") && b.getTeamNum() < 7) || (b.getTeamNum() == 250 && this.hasTag("faction_base")))))
 				{
 					Vec2f bpos = b.getPosition();
 					if (bpos.x > pos.x - this.getWidth() / 1.0f && bpos.x < pos.x + this.getWidth() / 1.0f && bpos.y < pos.y + this.getHeight() / 1.0f && bpos.y > pos.y - this.getHeight() / 1.0f)
@@ -117,11 +117,11 @@ void onTick(CBlob@ this)
 
 			if (ticks <= 0)
 			{
-				if (this.hasTag(chicken_tag) && (this.getConfig() == "citadel" || this.getConfig() == "fortress" || this.getConfig() == "camp"))
+				if (this.hasTag(chicken_tag) && (this.getName() == "citadel" || this.getName() == "fortress" || this.getName() == "camp"))
 				{
-					if (getNet().isServer())
+					if (isServer())
 					{
-						CBlob@ base = server_CreateBlob("chicken" + this.getConfig(), 250, this.getPosition());
+						CBlob@ base = server_CreateBlob("chicken" + this.getName(), 250, this.getPosition());
 						base.server_SetHealth(this.getHealth());
 						
 						this.server_Die();
@@ -175,7 +175,7 @@ void onTick(CBlob@ this)
 	
 	// if(!this.hasTag("faction_base"))
 	// if(this.get_u16("last_friendly_visit")+30*60*3 < getGameTime()){
-		// if(getNet().isServer()){
+		// if(isServer()){
 			// this.server_setTeamNum(-1);
 		// }
 	// }
@@ -203,6 +203,7 @@ void onRender(CSprite@ this)
 	if (blob is null || !blob.hasTag(raid_tag))
 		return;
 
+	
 	Vec2f pos2d = getDriver().getScreenPosFromWorldPos(blob.getPosition() + Vec2f(0.0f, -blob.getHeight()));
 
 	s16 friendlyCount = blob.get_s16(friendly_prop);

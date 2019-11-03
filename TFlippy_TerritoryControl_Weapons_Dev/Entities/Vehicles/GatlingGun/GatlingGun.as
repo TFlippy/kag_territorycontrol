@@ -67,7 +67,7 @@ void onInit(CBlob@ this)
 	
 	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CBlob@ ammo = server_CreateBlob("mat_gatlingammo");
 		if (ammo !is null)
@@ -207,7 +207,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 {
 	if (getGameTime() < this.get_u32("fireDelay")) return;
 
-	if (getNet().isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
+	if (isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
 	
 	f32 angle = this.getAngleDegrees() + Vehicle_getWeaponAngle(this, v);
 	angle = angle * (this.isFacingLeft() ? -1 : 1);
@@ -227,7 +227,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 	
 	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
 		
-	if (getNet().isClient())
+	if (isClient())
 	{
 		DrawLine(this.getSprite(), startPos, length / 32, angle, this.isFacingLeft());
 		
@@ -235,7 +235,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		// getControls().setMousePosition(Vec2f(mousePos.x, mousePos.y - 10));
 	}
 	
-	if (getNet().isServer())
+	if (isServer())
 	{
 		if (blobHit)
 		{

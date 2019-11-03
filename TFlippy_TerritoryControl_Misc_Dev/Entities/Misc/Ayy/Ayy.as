@@ -8,7 +8,7 @@ void onInit(CBlob@ this)
 	
 	this.setPosition(Vec2f(this.getPosition().x, yPos));
 
-	if (getNet().isClient())
+	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSoundVolume(10.0f);
@@ -24,8 +24,8 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	CMap@ map = getMap();
-	bool server = getNet().isServer();
-	bool client = getNet().isClient();
+	bool server = isServer();
+	bool client = isClient();
 	
 	Vec2f pos = Vec2f(this.getPosition().x, yPos);
 

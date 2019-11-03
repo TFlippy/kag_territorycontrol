@@ -143,7 +143,7 @@ void onTick(CBlob@ this)
 {
 	// TODO: Add stage based sleeping, rest(2 * 30) | sleep(heal_ammount * (patient.getHealth() - patient.getInitialHealth())) | awaken(1 * 30)
 	// TODO: Add SetScreenFlash(rest_time, 19, 13, 29) to represent the player gradually falling asleep
-	bool isServer = getNet().isServer();
+	const bool is_server = isServer();
 	AttachmentPoint@ bed = this.getAttachments().getAttachmentPointByName("BED");
 	if (bed !is null)
 	{
@@ -152,7 +152,7 @@ void onTick(CBlob@ this)
 		{
 			if (bed.isKeyJustPressed(key_up))
 			{
-				if (isServer)
+				if (is_server)
 				{
 					patient.server_DetachFrom(this);
 				}
@@ -161,18 +161,21 @@ void onTick(CBlob@ this)
 			{
 				if (requiresTreatment(patient))
 				{
-					if (patient.isMyPlayer())
-					{
-						Sound::Play("Heart.ogg", patient.getPosition());
-					}
-					if (isServer)
+					if (is_server)
 					{
 						patient.server_Heal(heal_ammount);
+					}
+					if(isClient())
+					{
+						if (patient.isMyPlayer())
+						{
+							Sound::Play("Heart.ogg", patient.getPosition());
+						}
 					}
 				}
 				else
 				{
-					if (isServer)
+					if (is_server)
 					{
 						patient.server_DetachFrom(this);
 					}
@@ -206,7 +209,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	bool isServer = (getNet().isServer());
+	const bool is_server = (isServer());
 
 	if (cmd == this.getCommandID("shop made item"))
 	{
@@ -226,7 +229,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (name == "rootbeer")
 			{
 				// TODO: gulp gulp sound
-				if (isServer)
+				if (is_server)
 				{
 					callerBlob.server_Heal(beer_ammount);
 				}
@@ -234,7 +237,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			else if (name == "meal")
 			{
 				this.getSprite().PlaySound("/Eat.ogg");
-				if (isServer)
+				if (is_server)
 				{
 					callerBlob.server_SetHealth(callerBlob.getInitialHealth());
 				}
@@ -254,7 +257,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (bed !is null && bedAvailable(this))
 			{
 				CBlob@ carried = caller.getCarriedBlob();
-				if (isServer)
+				if (is_server)
 				{
 					if (carried !is null)
 					{
@@ -280,7 +283,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint@ attachedPoint)
 
 	string texName = default_head_path;
 	CSprite@ attached_sprite = attached.getSprite();
-	if (attached_sprite !is null && getNet().isClient())
+	if (attached_sprite !is null && isClient())
 	{
 		attached_sprite.SetVisible(false);
 		attached_sprite.PlaySound("GetInVehicle.ogg");
@@ -301,7 +304,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint@ attachedPoint)
 		sprite.SetEmitSoundPaused(false);
 		sprite.RewindEmitSound();
 
-		if (getNet().isClient())
+		if (isClient())
 		{
 			CSpriteLayer@ bed_head = sprite.addSpriteLayer("bed head", texName, 16, 16, attached.getTeamNum(), attached.getSkinNum());
 			if (bed_head !is null)
