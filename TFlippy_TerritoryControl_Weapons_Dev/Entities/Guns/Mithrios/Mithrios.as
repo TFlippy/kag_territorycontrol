@@ -53,7 +53,7 @@ void onInit(CBlob@ this)
 		server_CreateBlob("lightningbolt", -1, this.getPosition());
 	}
 	
-	client_AddToChat("Mithrios has been summoned!", SColor(255, 255, 0, 0));
+	client_AddToChat("A Mithrios Device has been summoned.", SColor(255, 255, 0, 0));
 }
 
 void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitBlob, u8 customData)

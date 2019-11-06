@@ -5,6 +5,7 @@
 #include "Help.as"
 #include "Survival_Structs.as";
 #include "Logging.as";
+#include "DeityCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -77,6 +78,21 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
+
+	u8 deity_id = this.get_u8("deity_id");
+	switch (deity_id)
+	{
+		case Deity::mithrios:
+		{
+			RunnerMoveVars@ moveVars;
+			if (this.get("moveVars", @moveVars))
+			{
+				moveVars.walkFactor *= 1.20f;
+				moveVars.jumpFactor *= 1.15f;
+			}
+		}
+		break;
+	}
 }
 
 void onSetPlayer(CBlob@ this, CPlayer@ player)
@@ -108,6 +124,47 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		damage = 0;
 	}
 
+	u8 deity_id = this.get_u8("deity_id");
+	switch (deity_id)
+	{
+		case Deity::mithrios:
+		{
+			if (hitterBlob !is null && hitterBlob !is this)
+			{
+				CBlob@ altar = getBlobByName("altar_mithrios");
+				if (altar !is null)
+				{
+					f32 ratio = Maths::Clamp(altar.get_f32("deity_power") * 0.0001f, 0.00f, 0.50f);
+					f32 inv_ratio = 1.00f - ratio;
+					
+					// print("" + ratio);
+					
+					f32 damage_reflected = Maths::Min(damage * ratio, Maths::Max(this.getHealth(), 0));
+		
+					print("" + damage_reflected + "/" + damage + "; took " + (damage * inv_ratio));
+			
+					hitterBlob.setVelocity(hitterBlob.getVelocity() - (velocity * damage_reflected * 2.00f));
+					this.setVelocity(this.getVelocity() + (velocity * damage_reflected * 2.00f));
+				
+					if (isServer())
+					{
+						this.server_Hit(hitterBlob, worldPoint, velocity, damage_reflected, customData);
+					}
+				
+					if (isClient())
+					{
+						this.getSprite().PlaySound("DemonicBoing", 0.50f, 2.00f);
+						if (this.isMyPlayer()) SetScreenFlash(100, 50, 0, 0);			
+					}
+					
+					damage *= inv_ratio;
+				}
+		
+			}
+		}
+		break;
+	}
+	
 	// if (hitterBlob is null) return damage;
 
 	// AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");

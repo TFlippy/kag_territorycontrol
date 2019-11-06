@@ -4,6 +4,7 @@
 #include "Knocked.as";
 #include "Hitters.as";
 #include "HittersTC.as";
+#include "DeityCommon.as";
 
 
 // A script by TFlippy
@@ -31,14 +32,12 @@
 void onInit(CBlob@ this)
 {
 	CSprite@ sprite = this.getSprite();
-	
 	sprite.SetEmitSound("Ivan_Music.ogg");
 	sprite.SetEmitSoundVolume(0.4f);
 	sprite.SetEmitSoundSpeed(1.0f);
 	sprite.SetEmitSoundPaused(false);
 					
 	CSpriteLayer@ shield = sprite.addSpriteLayer("shield", "Ivan_Shield.png" , 16, 64, this.getTeamNum(), 0);
-
 	if (shield !is null)
 	{
 		Animation@ anim = shield.addAnimation("default", 3, false);
@@ -59,12 +58,8 @@ void onInit(CBlob@ this)
 	}
 	
 	this.set_Vec2f("shop menu size", Vec2f(2, 2));
-	this.set_string("shop description", "Make an offering");
-	this.set_u8("shop icon", 15);
-	// this.Tag(SHOP_AUTOCLOSE);
 	
 	AddIconToken("$icon_ivan_follower$", "InteractionIcons.png", Vec2f(32, 32), 11);
-	
 	{
 		ShopItem@ s = addShopItem(this, "Become a follower of Ivan", "$icon_ivan_follower$", "follower", "Gain Ivan's goodwill by offering him a bottle of vodka.");
 		AddRequirement(s.requirements, "blob", "vodka", "Vodka", 1);
@@ -99,12 +94,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					}
 				}
 			
-				// CPlayer@ callerPlayer = callerBlob.getPlayer();
-				// if (callerPlayer !is null)
-				// {
-					// callerPlayer.Tag("ivan");
-					// callerPlayer.Sync("ivan", true);
-				// }
+				CPlayer@ callerPlayer = callerBlob.getPlayer();
+				if (callerPlayer !is null)
+				{
+					callerPlayer.set_u8("deity_id", Deity::ivan);
+				}
 			}
 		}
 	}

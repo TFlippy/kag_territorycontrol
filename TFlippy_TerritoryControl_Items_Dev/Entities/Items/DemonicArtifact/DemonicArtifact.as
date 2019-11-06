@@ -3,6 +3,7 @@
 #include "Hitters.as";
 #include "HittersTC.as";
 #include "Knocked.as";
+#include "DeityCommon.as";
 
 const f32 radius = 128.0f;
 
@@ -67,7 +68,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 void onAttach(CBlob@ this, CBlob@ blob, AttachmentPoint@ point)
 {
 	CPlayer@ ply = blob.getPlayer();
-	if (this.get_u16("soulbound_netid") == 0)
+	if (blob.get_u8("deity_id") != Deity::mithrios && this.get_u16("soulbound_netid") == 0)
 	{
 		this.set_u16("soulbound_netid", ply.getNetworkID());
 		
