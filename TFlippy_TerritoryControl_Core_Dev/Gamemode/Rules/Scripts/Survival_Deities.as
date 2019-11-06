@@ -38,9 +38,19 @@ void onSetPlayer(CRules@ this, CBlob@ blob, CPlayer@ player)
 {
 	if (player !is null && blob !is null)
 	{
-		u8 deity_id = player.get_u8("deity_id");
-		blob.set_u8("deity_id", deity_id);
+		u8 deity_id;
 		
+		if (isServer())
+		{
+			deity_id = player.get_u8("deity_id");
+			blob.set_u8("deity_id", deity_id);
+			blob.Sync("deity_id", false);
+		}
+		else if (isClient())
+		{
+			deity_id = blob.get_u8("deity_id");
+		}
+
 		switch (deity_id)
 		{
 			case Deity::mithrios:

@@ -66,14 +66,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				{
 					if (data == "follower")
 					{
-						callerPlayer.set_u8("deity_id", Deity::gregor);
-						callerBlob.set_u8("deity_id", Deity::gregor);
-						
 						this.add_f32("deity_power", 50);
 						
 						if (isClient())
 						{
-							client_AddToChat(callerPlayer.getCharacterName() + " has become a follower of gregor_builder.", SColor(255, 255, 0, 0));
+							if (callerBlob.get_u8("deity_id") != Deity::mithrios)
+							{
+								client_AddToChat(callerPlayer.getCharacterName() + " has become a follower of gregor_builder.", SColor(255, 255, 0, 0));
+							}
 							
 							CBlob@ localBlob = getLocalPlayerBlob();
 							if (localBlob !is null)
@@ -84,6 +84,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 									SetScreenFlash(255, 255, 255, 255, 3.00f);
 								}
 							}
+						}
+						
+						if (isServer())
+						{
+							callerPlayer.set_u8("deity_id", Deity::gregor);
+							callerPlayer.Sync("deity_id", false);
+							
+							callerBlob.set_u8("deity_id", Deity::gregor);
+							callerBlob.Sync("deity_id", false);
 						}
 					}
 					else
