@@ -49,10 +49,10 @@ void onInit(CBlob@ this)
 		
 		{
 			ShopItem@ s = addShopItem(this, "Mithrios, God of Death", "$icon_mithrios$", "altar_mithrios", "A demon known for his cruelty and hunger for blood.\n\nAfter being banished from the mortal realm, he returned as a weapon of destruction.\n\n- Damage Reflection\n- Kill a random person\n- Create a Mithrios Device\n- Gain Demonic Power by killing people");
+			AddRequirement(s.requirements, "no more global", "altar_mithrios", "Altar of Mithrios", 1);
 			AddRequirement(s.requirements, "blob", "slaveball", "Slave Ball", 1);
 			AddRequirement(s.requirements, "blob", "mat_meat", "Meat", 250);
 			AddRequirement(s.requirements, "coin", "", "Coins", 2500);
-			AddRequirement(s.requirements, "no more global", "altar_mithrios", "Altar of Mithrios", 1);
 			s.customButton = true;
 			s.buttonwidth = 2;	
 			s.buttonheight = 2;
@@ -61,9 +61,9 @@ void onInit(CBlob@ this)
 		}
 		{
 			ShopItem@ s = addShopItem(this, "Ivan, God of Ivan", "$icon_ivan$", "altar_ivan", "A squatter worshipped by anarchists, slavs and those who indulge in drinking.\n\nAfter annoying the Illuminati Council and being banished three times, a cult worshipping him formed.\n\n- Immunity to enslavement\n- Anti-faction field around altar\n- Running speed bonus\n- Build a blessed AK-47\n- Raise a Hobo");
+			AddRequirement(s.requirements, "no more global", "altar_ivan", "Altar of Ivan", 1);
 			AddRequirement(s.requirements, "blob", "vodka", "Vodka", 4);
 			AddRequirement(s.requirements, "coin", "", "Coins", 1500);
-			AddRequirement(s.requirements, "no more global", "altar_ivan", "Altar of Ivan", 1);
 			s.customButton = true;
 			s.buttonwidth = 2;	
 			s.buttonheight = 2;
@@ -72,11 +72,11 @@ void onInit(CBlob@ this)
 		}
 		{
 			ShopItem@ s = addShopItem(this, "Gregor Builder, God of Destruction", "$icon_gregor$", "altar_gregor", "A deranged inventor known for his bizarre contraptions - such as the deadly ebola rune.\n\nOne day after being beaten in a wizard duel, he threatened to wipe out the entire world. The Illuminati Council removed him from existence for one month instead.\n\n- No one knows how to summon him yet");
+			AddRequirement(s.requirements, "no more global", "altar_gregor", "Altar of Gregor Builder", 1);
 			AddRequirement(s.requirements, "blob", "builder", "Virgin Builder Corpse", 1);
 			AddRequirement(s.requirements, "blob", "artisancertificate", "Building for Dummies", 1);
 			AddRequirement(s.requirements, "blob", "shito", "Shito", 1);
 			AddRequirement(s.requirements, "coin", "", "Coins", 2000);
-			AddRequirement(s.requirements, "no more global", "altar_gregor", "Altar of Gregor Builder", 1);
 			s.customButton = true;
 			s.buttonwidth = 2;	
 			s.buttonheight = 2;
