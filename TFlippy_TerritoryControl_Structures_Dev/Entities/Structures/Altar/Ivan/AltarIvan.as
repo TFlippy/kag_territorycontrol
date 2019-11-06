@@ -208,7 +208,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							
 							if (isServer())
 							{
-								CBlob@ hobo = server_CreateBlob("demonicartifact", this.getTeamNum(), this.getPosition());
+								CBlob@ hobo = server_CreateBlob("hobo", this.getTeamNum(), this.getPosition());
 							}
 							
 							if (isClient())
