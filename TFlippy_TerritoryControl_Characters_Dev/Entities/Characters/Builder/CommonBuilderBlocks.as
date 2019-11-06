@@ -110,6 +110,8 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_1x5blastdoor$", "1x5BlastDoor.png", Vec2f(8, 40), 0);
 	AddIconToken("$icon_barricade$", "Barricade.png", Vec2f(8, 24), 0);
 	
+	AddIconToken("$icon_altar$", "Altar.png", Vec2f(24, 32), 0);
+	
 	AddIconToken("$markettable$", "MarketTable.png", Vec2f(16, 16), 3);
 	AddIconToken("$constructionyard$", "ConstructionYardIcon.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_camp$", "Camp.png", Vec2f(80, 24), 0);
@@ -718,6 +720,16 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 2);
 		blocks[3].push_back(b);
 	}
+	
+	{
+		BuildBlock b(0, "altar", "$icon_altar$", "Altar\nWorship your idols here. Needs to be carved first.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 2000);
+		AddRequirement(b.reqs, "coin", "", "Coins", 250);
+		b.buildOnGround = true;
+		b.size.Set(24, 32);
+		blocks[3].push_back(b);
+	}	
+	
 	// {
 		// BuildBlock b(0, "barricade", "$icon_barricade$", "Barricade\neee");
 		// AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 100);
