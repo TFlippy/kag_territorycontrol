@@ -72,7 +72,18 @@ string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 			text += "At least "+quantity+" "+friendlyName+" required. \n";
 			text += quantityColor;
 		}
-
+		else if(requiredType == "no more global" && missing)
+		{
+			text += quantityColor;
+			text += "Only " + quantity + " " + friendlyName + " possible. \n";
+			text += quantityColor;
+		}
+		else if(requiredType == "no less global" && missing)
+		{
+			text += quantityColor;
+			text += "At least " + quantity + " " + friendlyName + " required. \n";
+			text += quantityColor;
+		}
 	}
 
 	return text;
@@ -222,22 +233,40 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 				has=false;
 			}
 		}
-		else if((req=="no more" || req=="no less") && inv1 !is null) 
+		else if((req == "no more" || req == "no less") && inv1 !is null) 
 		{
-			int teamNum=inv1.getBlob().getTeamNum();
-			int count=	0;
+			int teamNum = inv1.getBlob().getTeamNum();
+			int count =	0;
+			
 			CBlob@[] blobs;
-			if(getBlobsByName(blobName,@blobs)) {
-				for(uint step=0; step<blobs.length; ++step) {
-					CBlob@ blob=blobs[step];
-					if(blob.getTeamNum()==teamNum) {
+			if (getBlobsByName(blobName, @blobs)) 
+			{
+				for (uint step = 0; step < blobs.length; ++step) 
+				{
+					CBlob@ blob = blobs[step];
+					if(blob.getTeamNum() == teamNum) 
+					{
 						count++;
 					}
 				}
 			}
-			if((req=="no more" && count >= quantity) || (req=="no less" && count<quantity)) {
-				AddRequirement(missingBs,req,blobName,friendlyName,quantity);
-				has=false;
+			
+			if((req == "no more" && count >= quantity) || (req == "no less" && count < quantity)) 
+			{
+				AddRequirement(missingBs, req, blobName, friendlyName, quantity);
+				has = false;
+			}
+		}
+		else if((req == "no more global" || req == "no less global") && inv1 !is null) 
+		{
+			CBlob@[] blobs;
+			getBlobsByName(blobName, @blobs);
+		
+			int count =	blobs.length;
+			if((req == "no more global" && count >= quantity) || (req == "no less global" && count < quantity)) 
+			{
+				AddRequirement(missingBs, req, blobName, friendlyName, quantity);
+				has = false;
 			}
 		}
 		else if (req == "tech")

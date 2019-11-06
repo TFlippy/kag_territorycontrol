@@ -47,10 +47,15 @@ void onSetPlayer(CRules@ this, CBlob@ blob, CPlayer@ player)
 			{
 				blob.Tag("mithrios");
 	
-				blob.set_u8("override head", 101);
 				blob.SetLight(true);
 				blob.SetLightRadius(16.0f);
 				blob.SetLightColor(SColor(255, 255, 0, 0));
+			}
+			break;
+			
+			case Deity::ivan:
+			{
+				blob.Tag("ivan");
 			}
 			break;
 		}

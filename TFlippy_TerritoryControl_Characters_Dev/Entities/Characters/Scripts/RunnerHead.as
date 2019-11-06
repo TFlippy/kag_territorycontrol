@@ -5,6 +5,7 @@
 #include "PixelOffsets.as"
 #include "RunnerTextures.as"
 #include "Accolades.as"
+#include "DeityCommon.as"
 
 const s32 NUM_HEADFRAMES = 4;
 const s32 NUM_UNIQUEHEADS = 30;
@@ -112,28 +113,47 @@ void onPlayerInfoChanged(CSprite@ this)
 	CBlob@ blob = this.getBlob();
 	CPlayer@ ply = blob.getPlayer();
 	
-	if (ply !is null)
+	int head_index = blob.getHeadNum();
+	
+	if (ply !is null && blob !is null)
 	{
 		// Since he's evil
 		if (ply.getUsername() == "Mithrios")
 		{
 			blob.Tag("mithrios");
 		
-			blob.set_u8("override head", 101);
+			head_index = 101;
+			
 			blob.SetLight(true);
 			blob.SetLightRadius(16.0f);
 			blob.SetLightColor(SColor(255, 255, 0, 0));
+		}
+		
+		u8 deity_id = blob.get_u8("deity_id");
+		switch (deity_id)
+		{
+			case Deity::mithrios:
+			{
+				head_index = 101;
+			}
+			break;
+			
+			case Deity::ivan:
+			{
+				head_index = 104;
+			}
+			break;
 		}
 	}
 	
 	//LoadHead(this, (blob.exists("override head") ? blob.get_u8("override head") : blob.getHeadNum()));
 	if(blob.exists("override head"))
 	{
-		LoadHead(this,blob.get_u8("override head"));
+		LoadHead(this, blob.get_u8("override head"));
 	}
 	else
 	{
-		LoadHead(this,blob.getHeadNum());
+		LoadHead(this, head_index);
 	}
 }
 

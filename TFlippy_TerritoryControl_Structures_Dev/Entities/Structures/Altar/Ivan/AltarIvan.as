@@ -6,31 +6,17 @@
 #include "HittersTC.as";
 #include "DeityCommon.as";
 
-
-// A script by TFlippy
-
-// Mithrios
-	// Bonuses: Mithrios head for followers, +5% running speed with each follower, 20% damage resistance
-	// Offering: Meat
-	
-// Ivan
-	// Bonuses: Drunken speech for followers, shrine plays old tavern music, slaving immunity, ???
-	// Offering: Vodka
-	
-// Gregor Builder
-	// Bonuses: 
-	// Offering: 
-
-// Barsuk
-	// Bonuses: 
-	// Offering: 
-	
-// Barlth
-	// Bonuses: 
-	// Offering: 
+const SColor[] colors = 
+{
+	SColor(255, 255, 30, 30),
+	SColor(255, 30, 255, 30),
+	SColor(255, 30, 30, 255)
+};
 
 void onInit(CBlob@ this)
 {
+	this.set_u8("deity_id", Deity::ivan);
+
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Ivan_Music.ogg");
 	sprite.SetEmitSoundVolume(0.4f);
@@ -57,7 +43,7 @@ void onInit(CBlob@ this)
 		shield.SetIgnoreParentFacing(true);
 	}
 	
-	this.set_Vec2f("shop menu size", Vec2f(2, 2));
+	this.set_Vec2f("shop menu size", Vec2f(4, 2));
 	
 	AddIconToken("$icon_ivan_follower$", "InteractionIcons.png", Vec2f(32, 32), 11);
 	{
@@ -69,71 +55,59 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
-}
-
-void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
-{
-	if (cmd == this.getCommandID("shop made item"))
+	
+	AddIconToken("$icon_ivan_offering_0$", "AltarIvan_Icons.png", Vec2f(24, 24), 0);
 	{
-		u16 caller, item;
-		if (params.saferead_netid(caller) && params.saferead_netid(item))
-		{
-			string data = params.read_string();
-			
-			CBlob@ callerBlob = getBlobByNetworkID(caller);
-			if (callerBlob !is null)
-			{
-				this.getSprite().PlaySound("Ivan_Offering.ogg", 2.00f, 1.00f);
-			
-				CBlob@ localBlob = getLocalPlayerBlob();
-				if (localBlob !is null)
-				{
-					if (this.getDistanceTo(localBlob) < 128)
-					{
-						SetScreenFlash(255, 255, 255, 255, 3.00f);
-					}
-				}
-			
-				CPlayer@ callerPlayer = callerBlob.getPlayer();
-				if (callerPlayer !is null)
-				{
-					callerPlayer.set_u8("deity_id", Deity::ivan);
-				}
-			}
-		}
+		ShopItem@ s = addShopItem(this, "Squat of Hoboness", "$icon_ivan_offering_0$", "offering_hobo", "Bring this corpse back from the dead as a filthy hobo.");
+		AddRequirement(s.requirements, "blob", "peasant", "Peasant's Corpse", 1);
+		AddRequirement(s.requirements, "blob", "vodka", "Vodka", 1);
+		AddRequirement(s.requirements, "blob", "ratburger", "Rat Burger", 1);
+		s.customButton = true;
+		s.buttonwidth = 1;	
+		s.buttonheight = 1;
+		
+		s.spawnNothing = true;
+	}
+	
+	AddIconToken("$icon_ivan_offering_1$", "AltarIvan_Icons.png", Vec2f(24, 24), 1);
+	{
+		ShopItem@ s = addShopItem(this, "Squat of Kalashnikov", "$icon_ivan_offering_1$", "offering_ak47", "Build your own AK-47 and have it blessed by Ivan.");
+		AddRequirement(s.requirements, "blob", "log", "Log", 1);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
+		AddRequirement(s.requirements, "blob", "vodka", "Vodka", 4);
+		s.customButton = true;
+		s.buttonwidth = 1;	
+		s.buttonheight = 1;
+		
+		s.spawnNothing = true;
 	}
 }
 
-const SColor[] colors = 
-{
-	SColor(255, 255, 30, 30),
-	SColor(255, 30, 255, 30),
-	SColor(255, 30, 30, 255)
-};
-
 void onTick(CBlob@ this)
 {
-	f32 radius = 128.00f;
-
 	SColor color = colors[XORRandom(colors.length)];
+	
+	const f32 power = this.get_f32("deity_power");
+	const f32 radius = 64.00f + Maths::Sqrt(power);
+	
+	this.setInventoryName("Altar of Ivan\n\nIvanic Power: " + power + "\nRadius: " + int(radius / 8.00f));
 	
 	CBlob@ localBlob = getLocalPlayerBlob();
 	if (localBlob !is null)
 	{
+		f32 diameter = radius * 2.00f;
+	
 		f32 dist = this.getDistanceTo(localBlob);
-		f32 distMod = 1.00f - dist / radius;
+		f32 distMod = 1.00f - (dist / diameter);
 		f32 sqrDistMod = 1.00f - Maths::Sqrt(dist / radius);
 		
-		if (dist < radius * 2.00f) 
+		if (dist < diameter) 
 		{
 			ShakeScreen(50.0f, 15, this.getPosition());
-		}
-		
-		if (dist < radius)
-		{
+
 			if (getGameTime() % 8 == 0) 
 			{
-				SetScreenFlash(100 * distMod, color.getRed(), color.getGreen(), color.getBlue(), 0.2f);
+				SetScreenFlash(Maths::Min((power * 0.10f) * distMod, 50), color.getRed(), color.getGreen(), color.getBlue(), 0.2f);
 			}
 		}
 	}
@@ -143,10 +117,14 @@ void onTick(CBlob@ this)
 		this.SetLight(true);
 		this.SetLightRadius(radius);
 		this.SetLightColor(color);
+		
+		CSprite@ sprite = this.getSprite();
+		sprite.SetEmitSoundVolume(Maths::Max(power * 0.002f, 0.50f));
+		sprite.SetEmitSoundSpeed(0.70f + (power * 0.0002f));
 	}
 	
 	CBlob@[] blobsInRadius;
-	if (this.getMap().getBlobsInRadius(this.getPosition(), radius * 0.50f, @blobsInRadius))
+	if (this.getMap().getBlobsInRadius(this.getPosition(), radius, @blobsInRadius))
 	{
 		int index = -1;
 		f32 s_dist = 1337;
@@ -177,17 +155,109 @@ void onTick(CBlob@ this)
 	}
 }
 
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+{
+	if (cmd == this.getCommandID("shop made item"))
+	{
+		u16 caller, item;
+		if (params.saferead_netid(caller) && params.saferead_netid(item))
+		{
+			string data = params.read_string();
+			CBlob@ callerBlob = getBlobByNetworkID(caller);
+			if (callerBlob !is null)
+			{
+				CPlayer@ callerPlayer = callerBlob.getPlayer();
+				if (callerPlayer !is null)
+				{
+					if (data == "follower")
+					{
+						callerPlayer.set_u8("deity_id", Deity::ivan);
+						callerBlob.set_u8("deity_id", Deity::ivan);
+						
+						this.add_f32("deity_power", 50);
+						
+						if (isClient())
+						{
+							client_AddToChat(callerPlayer.getCharacterName() + " has become a follower of Ivan.", SColor(255, 255, 0, 0));
+							
+							CBlob@ localBlob = getLocalPlayerBlob();
+							if (localBlob !is null)
+							{
+								if (this.getDistanceTo(localBlob) < 128)
+								{
+									this.getSprite().PlaySound("Ivan_Offering.ogg", 2.00f, 1.00f);
+									SetScreenFlash(255, 255, 255, 255, 3.00f);
+								}
+							}
+						}
+					}
+					else
+					{
+						u8 deity_id = callerPlayer.get_u8("deity_id");
+					
+						if (data == "offering_hobo")
+						{
+							this.add_f32("deity_power", 25);
+							
+							if (isServer())
+							{
+								CBlob@ hobo = server_CreateBlob("demonicartifact", this.getTeamNum(), this.getPosition());
+							}
+							
+							if (isClient())
+							{
+								CBlob@ localBlob = getLocalPlayerBlob();
+								if (localBlob !is null)
+								{
+									if (this.getDistanceTo(localBlob) < 128)
+									{
+										this.getSprite().PlaySound("Ivan_Offering.ogg", 2.00f, 1.00f);
+										SetScreenFlash(255, 255, 255, 255, 3.00f);
+									}
+								}
+							}
+						}
+						else if (data == "offering_ak47")
+						{
+							this.add_f32("deity_power", 100);
+							
+							if (isServer())
+							{
+								CBlob@ gun = server_CreateBlob("ak47", this.getTeamNum(), this.getPosition());
+							}
+							
+							if (isClient())
+							{
+								CBlob@ localBlob = getLocalPlayerBlob();
+								if (localBlob !is null)
+								{
+									if (this.getDistanceTo(localBlob) < 128)
+									{
+										this.getSprite().PlaySound("Ivan_Offering.ogg", 2.00f, 1.00f);
+										SetScreenFlash(255, 255, 255, 255, 3.00f);
+									}
+								}
+							}
+						}
+					}
+				}				
+			}
+		}
+	}
+}
+
 void Zap(CBlob@ this, CBlob@ target)
 {
 	if (target.get_u32("next zap") > getGameTime()) return;
 
-	f32 radius = 128.00f * 0.50f;
+	const f32 power = this.get_f32("deity_power");
+	const f32 radius = 64.00f + Maths::Sqrt(power);
 	
 	Vec2f dir = target.getPosition() - this.getPosition();
 	f32 dist = Maths::Abs(dir.Length());
 	dir.Normalize();
 	
-	target.setVelocity(Vec2f(dir.x, dir.y) * 7.0f);
+	target.setVelocity(Vec2f(dir.x, dir.y) * (7.0f + (power * 0.001f)));
 	SetKnocked(target, 90);
 	target.set_u32("next zap", getGameTime() + 5);
 	

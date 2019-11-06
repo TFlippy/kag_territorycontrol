@@ -1,6 +1,7 @@
 #include "Hitters.as";
 #include "Knocked.as";
 #include "Survival_Structs.as";
+#include "DeityCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -46,7 +47,7 @@ void onTick(CBlob@ this)
 					for (uint i = 0; i < hitInfos.length; i++)
 					{
 						CBlob@ blob = hitInfos[i].blob;
-						if (blob !is null && blob.hasTag("player") && blob.getTeamNum() != team)
+						if (blob !is null && blob.hasTag("player") && blob.getTeamNum() != team && blob.get_u8("deity_id") != Deity::ivan)
 						{
 							f32 chance = 1.0f - (blob.getHealth() / blob.getInitialHealth());
 							if (blob.get_f32("babbyed") > 0) chance = 1.00f;

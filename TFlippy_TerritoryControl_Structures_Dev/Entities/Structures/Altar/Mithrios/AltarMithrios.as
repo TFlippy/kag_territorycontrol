@@ -3,30 +3,6 @@
 #include "ShopCommon.as";
 #include "DeityCommon.as";
 
-// A script by TFlippy
-
-// Mithrios
-	// Bonuses: Mithrios head for followers, +5% running speed with each follower, 20% damage resistance
-	// Offering: Meat
-	
-// Ivan
-	// Bonuses: Drunken speech for followers, shrine plays old tavern music, slaving immunity, ???
-	// Offering: Vodka
-	
-// Gregor Builder
-	// Bonuses: 
-	// Offering: 
-
-// Barsuk
-	// Bonuses: 
-	// Offering: 
-	
-// Barlth
-	// Bonuses: 
-	// Offering: 
-
-const f32 maxDistance = 40000;
-const u32 delay = 15;
 const f32 radius = 128.0f;
 	
 void onInit(CBlob@ this)
@@ -181,7 +157,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					else
 					{
 						u8 deity_id = callerPlayer.get_u8("deity_id");
-					
+						
 						if (data == "offering_flesh")
 						{
 							this.add_f32("deity_power", 25);
@@ -248,20 +224,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							}
 						}
 					}
-				}
-			
-				// this.getSprite().PlaySound("Ivan_Offering.ogg", 2.00f, 1.00f);
-			
-				// CBlob@ localBlob = getLocalPlayerBlob();
-				// if (localBlob !is null)
-				// {
-					// if (this.getDistanceTo(localBlob) < 128)
-					// {
-						// SetScreenFlash(255, 255, 255, 255, 3.00f);
-					// }
-				// }
-			
-				
+				}				
 			}
 		}
 	}

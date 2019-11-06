@@ -82,7 +82,7 @@ void onTick(CBlob@ this)
 	u8 deity_id = this.get_u8("deity_id");
 	switch (deity_id)
 	{
-		case Deity::mithrios:
+		case Deity::ivan:
 		{
 			RunnerMoveVars@ moveVars;
 			if (this.get("moveVars", @moveVars))
