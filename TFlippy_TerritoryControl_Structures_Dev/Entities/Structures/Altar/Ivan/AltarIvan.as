@@ -59,7 +59,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_ivan_offering_0$", "AltarIvan_Icons.png", Vec2f(24, 24), 0);
 	{
 		ShopItem@ s = addShopItem(this, "Squat of Hoboness", "$icon_ivan_offering_0$", "offering_hobo", "Bring this corpse back from the dead as a filthy hobo.");
-		AddRequirement(s.requirements, "blob", "peasant", "Peasant's Corpse", 1);
+		AddRequirement(s.requirements, "blob", "bandit", "Bandit's Corpse", 1);
 		AddRequirement(s.requirements, "blob", "vodka", "Vodka", 1);
 		AddRequirement(s.requirements, "blob", "ratburger", "Rat Burger", 1);
 		s.customButton = true;
