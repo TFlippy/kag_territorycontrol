@@ -38,7 +38,7 @@ void onInit(CBlob@ this)
 	
 	if (this.getName() == "altar")
 	{
-		this.set_Vec2f("shop menu size", Vec2f(6, 2));
+		this.set_Vec2f("shop menu size", Vec2f(8, 2));
 		this.set_string("shop description", "Select a Deity");
 		this.set_u8("shop icon", 15);
 		this.Tag(SHOP_AUTOCLOSE);
