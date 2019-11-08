@@ -202,7 +202,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						}
 						else if (data == "offering_might")
 						{
-							this.add_f32("deity_power", 150);
+							this.add_f32("deity_power", 400);
 							
 							if (isServer())
 							{
