@@ -299,9 +299,15 @@ void Attack(CBrain@ this, CBlob@ target, bool useBombs)
 {
 	CBlob@ blob = this.getBlob();
 
-	blob.setAimPos(target.getPosition());
+	// blob.setAimPos(target.getPosition());
 	// const f32 reactionTime = blob.get_f32("reactionTime");
 
+	
+	f32 dist = (target.getPosition() - blob.getPosition()).Length();
+	f32 jitter = blob.get_f32("inaccuracy") * Maths::Sqrt(dist);
+	Vec2f randomness = getRandomVelocity(0, (XORRandom(1000) * 0.001f) * jitter * 20.00f, 360);	
+	blob.setAimPos(Vec2f_lerp(blob.getAimPos(), target.getPosition() + randomness, 0.20f));
+	
 	if (blob.get_u32("nextAttack") < getGameTime())
 	{
 		AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
@@ -313,13 +319,13 @@ void Attack(CBrain@ this, CBlob@ target, bool useBombs)
 			{
 				if (blob.get_u32("nextAttack") < getGameTime())
 				{							
-					f32 dist = (target.getPosition() - blob.getPosition()).Length();
-					f32 jitter = blob.get_f32("inaccuracy") * Maths::Sqrt(dist);
+					// f32 dist = (target.getPosition() - blob.getPosition()).Length();
+					// f32 jitter = blob.get_f32("inaccuracy") * Maths::Sqrt(dist);
 					
 					// print("jitter " + Maths::Sqrt(dist));
 					
 					// Vec2f randomness = Vec2f((100 - XORRandom(200)) * jitter, (100 - XORRandom(200)) * jitter);
-					Vec2f randomness = getRandomVelocity(0, (XORRandom(1000) * 0.001f) * jitter * 20.00f, 360);	
+					// Vec2f randomness = getRandomVelocity(0, (XORRandom(1000) * 0.001f) * jitter * 20.00f, 360);	
 				
 					// Vec2f currentCursorPos = this.getAimPos();
 					// Vec2f targetCursorPos = target.getPosition() + randomness;
@@ -333,7 +339,7 @@ void Attack(CBrain@ this, CBlob@ target, bool useBombs)
 				
 					// blob.setAimPos(targetCursorPos);
 				
-					blob.setAimPos(target.getPosition() + randomness);
+					
 					blob.setKeyPressed(key_action1, true);
 					blob.set_u32("nextAttack", getGameTime() + blob.get_u8("attackDelay"));
 				}
