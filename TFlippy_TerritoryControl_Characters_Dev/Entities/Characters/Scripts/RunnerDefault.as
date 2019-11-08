@@ -173,6 +173,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				CBlob@ altar = getBlobByName("altar_mithrios");
 				if (altar !is null)
 				{
+					
 					f32 ratio = Maths::Clamp(altar.get_f32("deity_power") * 0.0001f, 0.00f, 0.50f);
 					f32 inv_ratio = 1.00f - ratio;
 					
@@ -185,8 +186,8 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					hitterBlob.setVelocity(hitterBlob.getVelocity() - (velocity * damage_reflected * 2.00f));
 					this.setVelocity(this.getVelocity() + (velocity * damage_reflected * 2.00f));
 				
-					if (isServer())
-					{
+					if (isServer() && hitterBlob.get_u8("deity_id") != Deity::mithrios)
+					{	
 						this.server_Hit(hitterBlob, worldPoint, velocity, damage_reflected, customData);
 					}
 				
