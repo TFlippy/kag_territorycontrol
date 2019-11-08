@@ -82,6 +82,45 @@ void onTick(CBlob@ this)
 	u8 deity_id = this.get_u8("deity_id");
 	switch (deity_id)
 	{
+		case Deity::mithrios:
+		{
+			CBlob@ altar = getBlobByName("altar_mithrios");
+			if (altar !is null)
+			{
+				f32 power = altar.get_f32("deity_power");
+			
+				RunnerMoveVars@ moveVars;
+				if (this.get("moveVars", @moveVars))
+				{
+					moveVars.walkFactor *= 1.00f + Maths::Clamp(power * 0.00009f, 0.00f, 0.40f);
+				}
+				
+				CBlob@[] blobs;
+				getBlobsByTag("flesh", @blobs);
+				
+				if (getGameTime() % 90 == 0)
+				{
+					CBlob@ localBlob = getLocalPlayerBlob();
+					if (this is localBlob)
+					{
+						u8 light_intensity = u8(255.00f * Maths::Clamp(power / 1000.00f, 0.00f, 1.00f));
+						
+						for (int i = 0; i < blobs.length; i++)
+						{
+							CBlob@ blob = blobs[i];
+							if (blob !is null)
+							{
+								blob.SetLight(true);
+								blob.SetLightRadius(16.00f);
+								blob.SetLightColor(SColor(0, light_intensity, 0, 0)); // Currently not being reset upon altar destruction or deity change, deal with that later
+							}
+						}
+					}
+				}
+			}
+		}
+		break;
+	
 		case Deity::ivan:
 		{
 			RunnerMoveVars@ moveVars;

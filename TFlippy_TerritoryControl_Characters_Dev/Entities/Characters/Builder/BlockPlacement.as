@@ -1,8 +1,8 @@
 #include "PlacementCommon.as"
 #include "BuildBlock.as"
 #include "Requirements.as"
-
 #include "GameplayEvents.as"
+#include "DeityCommon.as"
 
 //server-only
 void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
@@ -20,7 +20,34 @@ void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
 	CInventory@ inv = this.getInventory();
 	if (bc.tile > 0 && hasRequirements(inv, bc.reqs, missing))
 	{
-		server_TakeRequirements(inv, bc.reqs);
+		bool take = true;
+		
+		if (this.get_u8("deity_id") == Deity::mason)
+		{
+			CBlob@ altar = getBlobByName("altar_mason");
+			if (altar !is null)
+			{
+				// print("free block chance: " + altar.get_f32("deity_power") * 0.01f);
+				if (XORRandom(100) < altar.get_f32("deity_power") * 0.01f)
+				{
+					take = false;
+					// print("free block!");		
+				}
+				else
+				{
+					altar.add_f32("deity_power", 1);
+					altar.Sync("deity_power", false);
+				}
+
+				
+			}
+		}
+		
+		if (take)
+		{
+			server_TakeRequirements(inv, bc.reqs);
+		}
+		
 		getMap().server_SetTile(cursorPos, bc.tile);
 
 		SendGameplayEvent(createBuiltBlockEvent(this.getPlayer(), bc.tile));

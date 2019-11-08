@@ -27,7 +27,7 @@ void onInit(CBlob@ this)
 	
 	AddIconToken("$icon_gregor_follower$", "InteractionIcons.png", Vec2f(32, 32), 11);
 	{
-		ShopItem@ s = addShopItem(this, "Become a follower of gregor", "$icon_gregor_follower$", "follower", "Gain gregor's goodwill by offering him a bottle of vodka.");
+		ShopItem@ s = addShopItem(this, "Rite of gregor", "$icon_gregor_follower$", "follower", "Gain gregor's goodwill by offering him a bottle of vodka.");
 		AddRequirement(s.requirements, "blob", "vodka", "Vodka", 1);
 		s.customButton = true;
 		s.buttonwidth = 2;	
@@ -70,10 +70,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						
 						if (isClient())
 						{
-							if (callerBlob.get_u8("deity_id") != Deity::mithrios)
-							{
-								client_AddToChat(callerPlayer.getCharacterName() + " has become a follower of gregor_builder.", SColor(255, 255, 0, 0));
-							}
+							// if (callerBlob.get_u8("deity_id") != Deity::mithrios)
+							// {
+								// client_AddToChat(callerPlayer.getCharacterName() + " has become a follower of gregor_builder.", SColor(255, 255, 0, 0));
+							// }
 							
 							CBlob@ localBlob = getLocalPlayerBlob();
 							if (localBlob !is null)

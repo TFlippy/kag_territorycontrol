@@ -86,11 +86,23 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 			{
 				case Deity::mithrios:
 				{
-					CBlob@ altar = getBlobByName("altar_mithrios");
-					if (altar !is null)
+					if (isServer())
 					{
-						altar.add_f32("deity_power", 5);
-						print("add");
+						CBlob@ altar = getBlobByName("altar_mithrios");
+						if (altar !is null)
+						{
+							altar.add_f32("deity_power", 1 + XORRandom(10));
+							altar.Sync("deity_power", false);
+						}
+					}
+					
+					if (isClient())
+					{
+						CBlob@ victim_blob = victim.getBlob();
+						if (victim_blob !is null)
+						{
+							victim_blob.getSprite().PlaySound("Soul_Scream", 0.70f, victim_blob.getSexNum() == 0 ? 1.0f : 2.0f);
+						}
 					}
 				}
 				break;

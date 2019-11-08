@@ -22,7 +22,7 @@ void onInit(CBlob@ this)
 	
 	AddIconToken("$icon_mithrios_follower$", "InteractionIcons.png", Vec2f(32, 32), 11);
 	{
-		ShopItem@ s = addShopItem(this, "Become a follower of Mithrios", "$icon_mithrios_follower$", "follower", "Gain Mithrios's interest by offering him a dead peasant and some meat.");
+		ShopItem@ s = addShopItem(this, "Rite of Mithrios", "$icon_mithrios_follower$", "follower", "Gain Mithrios's interest by offering him a dead peasant and some meat.");
 		AddRequirement(s.requirements, "blob", "peasant", "Peasant's Corpse", 1);
 		AddRequirement(s.requirements, "blob", "mat_meat", "Mystery Meat", 100);
 		s.customButton = true;
@@ -64,6 +64,8 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
+	
+	this.addCommandID("mithrios_gib");
 }
 
 void onTick(CBlob@ this)
@@ -139,10 +141,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						
 						if (isClient())
 						{
-							if (callerBlob.get_u8("deity_id") != Deity::mithrios)
-							{
-								client_AddToChat(callerPlayer.getCharacterName() + " has become a follower of Mithrios.", SColor(255, 255, 0, 0));
-							}
+							// if (callerBlob.get_u8("deity_id") != Deity::mithrios)
+							// {
+								// client_AddToChat(callerPlayer.getCharacterName() + " has become a follower of Mithrios.", SColor(255, 255, 0, 0));
+							// }
 							
 							CBlob@ localBlob = getLocalPlayerBlob();
 							if (localBlob !is null)
@@ -185,32 +187,16 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						}
 						else if (data == "offering_death")
 						{
-							this.add_f32("deity_power", 50);
+							this.add_f32("deity_power", 100);
 							
 							int count = getPlayerCount();
 							CPlayer@ player = getPlayer(XORRandom(count));
 							if (player !is null)
 							{
-								CBlob@ blob = player.getBlob();
-								if (blob !is null)
-								{
-									if (isClient())
-									{
-										client_AddToChat(player.getCharacterName() + " has been turned inside-out by Mithrios.", SColor(255, 255, 0, 0));
-										ShakeScreen(48.0f, 32.0f, blob.getPosition());
-									
-										blob.getSprite().PlaySound("Pigger_Gore", 1.00f, 1.00f);
-										blob.getSprite().Gib();
-										
-										ParticleBloodSplat(blob.getPosition(), true);
-									}
-									
-									if (isServer())
-									{
-										blob.server_Die();
-									}
-								}
-							}
+								CBitStream stream;
+								stream.write_u16(player.getNetworkID());
+								this.SendCommand(this.getCommandID("mithrios_gib"), stream);
+														}
 						}
 						else if (data == "offering_might")
 						{
@@ -232,6 +218,38 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						}
 					}
 				}				
+			}
+		}
+	}
+	else if (cmd == this.getCommandID("mithrios_gib"))
+	{
+		print("gib");
+		
+		u16 target_player_netid;
+		if (params.saferead_netid(target_player_netid))
+		{
+			CPlayer@ player = getPlayerByNetworkId(target_player_netid);
+			if (player !is null)
+			{
+				CBlob@ blob = player.getBlob();
+				if (blob !is null)
+				{
+					if (isClient())
+					{
+						client_AddToChat(player.getCharacterName() + " has been turned inside-out by Mithrios.", SColor(255, 255, 0, 0));
+						ShakeScreen(48.0f, 32.0f, blob.getPosition());
+					
+						blob.getSprite().PlaySound("Pigger_Gore", 1.00f, 1.00f);
+						blob.getSprite().Gib();
+						
+						ParticleBloodSplat(blob.getPosition(), true);
+					}
+					
+					if (isServer())
+					{
+						blob.server_Die();
+					}
+				}
 			}
 		}
 	}

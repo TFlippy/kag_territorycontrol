@@ -46,6 +46,7 @@ void onInit(CBlob@ this)
 		AddIconToken("$icon_mithrios$", "Altar.png", Vec2f(24, 32), 1);
 		AddIconToken("$icon_ivan$", "Altar.png", Vec2f(24, 32), 2);
 		AddIconToken("$icon_gregor$", "Altar.png", Vec2f(24, 32), 3);
+		AddIconToken("$icon_mason$", "Altar.png", Vec2f(24, 32), 4);
 		
 		{
 			ShopItem@ s = addShopItem(this, "Mithrios, God of Death", "$icon_mithrios$", "altar_mithrios", "A demon known for his cruelty and hunger for blood.\n\nAfter being banished from the mortal realm, he returned as a weapon of destruction.\n\n- Damage Reflection\n- Kill a random person\n- Create a Mithrios Device\n- Gain Demonic Power by killing people");
@@ -77,6 +78,17 @@ void onInit(CBlob@ this)
 			AddRequirement(s.requirements, "blob", "artisancertificate", "Building for Dummies", 1);
 			AddRequirement(s.requirements, "blob", "shito", "Shito", 1);
 			AddRequirement(s.requirements, "coin", "", "Coins", 2000);
+			s.customButton = true;
+			s.buttonwidth = 2;	
+			s.buttonheight = 2;
+			
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Grand Mason, God of Masonry", "$icon_mason$", "altar_mason", "A determined architect responsible for creation of many bridges, castles and palaces.\n\He's humble.\n\n- Chance to not consume materials when placing a block.");
+			AddRequirement(s.requirements, "no more global", "mat_stone", "Stone", 4000);
+			AddRequirement(s.requirements, "blob", "artisancertificate", "Building for Dummies", 1);
+			AddRequirement(s.requirements, "coin", "", "Coins", 1000);
 			s.customButton = true;
 			s.buttonwidth = 2;	
 			s.buttonheight = 2;

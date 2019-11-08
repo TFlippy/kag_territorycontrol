@@ -6,5 +6,6 @@ namespace Deity
 		mithrios,
 		ivan,
 		gregor,
+		mason,
 	}
 }
