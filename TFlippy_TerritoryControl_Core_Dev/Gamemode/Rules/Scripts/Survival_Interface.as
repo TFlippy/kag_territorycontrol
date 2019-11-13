@@ -46,6 +46,24 @@ bool draw_tier = false;
 void onInit(CRules@ this)
 {
 	onRestart(this);	
+	Driver@ driver = getDriver();
+	driver.RemoveShader("hq2x");
+	/*driver.AddShader("palette", 1001.0f);
+	driver.SetShader("palette", true);
+	driver.SetShaderFloat("palette", "res_x", getScreenWidth());
+	driver.SetShaderFloat("palette", "res_y", getScreenHeight());
+	driver.SetShaderFloat("palette", "scroll_x", 0);
+	driver.SetShaderFloat("palette", "tick", 0);
+	driver.SetShaderExtraTexture("palette", CFileMatcher("default_palette.png").getFirst());*/
+	/*driver.AddShader("drunk", 1100.1f);
+	driver.SetShader("drunk", true);
+	driver.SetShaderFloat("drunk", "res_x", getScreenWidth());
+	driver.SetShaderFloat("drunk", "res_y", getScreenHeight());
+	driver.SetShaderFloat("drunk", "scroll_x", 0);
+	driver.SetShaderFloat("drunk", "time", 0);
+	driver.SetShaderFloat("drunk", "amount", 0);
+	driver.SetShaderTextureFilter("drunk", true);*/
+	driver.AddShader("chrom_ab", 1100.1f);
 }
 
 void onRestart(CRules@ this)
@@ -53,7 +71,16 @@ void onRestart(CRules@ this)
 	CNet@ net = getNet();
 	CMap@ map = getMap();
 	serverIP = net.joined_ip;
+	
 	mapName = map is null ? "Blame vamist, error" : getMap().getMapName();
+}
+
+void onTick(CRules@ this)
+{
+	/*f32 cam_x = getCamera().getPosition().x * getCamera().targetDistance;
+	getDriver().SetShaderFloat("drunk", "time", getGameTime()/2);
+	getDriver().SetShaderFloat("drunk", "scroll_x", cam_x);
+	getDriver().SetShaderFloat("drunk", "amount", getGameTime() % 5);*/
 }
 
 void onRenderScoreboard(CRules@ this)
@@ -218,7 +245,7 @@ void onRenderScoreboard(CRules@ this)
 			const s32 ping_in_ms = s32(p.getPing() * 1000.0f / 30.0f);
 			const u16 coins = p.getCoins();
 			const string lowUsername = p.getUsername().toLower();
-			const string rank = getRank(lowUsername, customCol);
+			const string rank = getRank(lowUsername, customCol, p);
 			const string clan = this.exists("clanData"+lowUsername) ? this.get_string("clanData"+lowUsername) : "";
 			const string characterName = (p.getClantag().length > 0 ? p.getClantag() + " " : "") + p.getCharacterName();
 			SColor playercolour = teamColourArray[p.getTeamNum() % teamColourArray.length];
@@ -273,7 +300,7 @@ void onRenderScoreboard(CRules@ this)
 				GUI::DrawText(ping_in_ms + " ms" , Vec2f(bottomright.x - 330, topleft.y), tempGrey);//Ping
 				GUI::DrawText("" + p.getKills()  , Vec2f(bottomright.x - 270, topleft.y), tempGrey);//Kills
 				GUI::DrawText("" + p.getDeaths() , Vec2f(bottomright.x - 220, topleft.y), tempGrey);//Deaths
-				if(rank != "") GUI::DrawText(rank, Vec2f(bottomright.x - 150, topleft.y), tempGrey);//Rank
+				if(rank != "") GUI::DrawText(rank, Vec2f(bottomright.x - 150, topleft.y), customCol);//Rank
 			}
 			else
 			{
@@ -285,7 +312,7 @@ void onRenderScoreboard(CRules@ this)
 				GUI::DrawText(ping_in_ms + " ms" , Vec2f(bottomright.x - 450, topleft.y), tempGrey);
 				GUI::DrawText("" + p.getKills()	 , Vec2f(bottomright.x - 350, topleft.y), tempGrey);
 				GUI::DrawText("" + p.getDeaths() , Vec2f(bottomright.x - 250, topleft.y), tempGrey);
-				if(rank != "") GUI::DrawText(rank, Vec2f(bottomright.x - 150, topleft.y), tempGrey);
+				if(rank != "") GUI::DrawText(rank, Vec2f(bottomright.x - 150, topleft.y), customCol);
 			}
 
 
@@ -547,7 +574,7 @@ void onRenderScoreboard(CRules@ this)
 		f32 width = 100;
 		f32 height = 40;
 		
-		const string text = "TFlippy's Devblog and Territory Control Patch Notes";
+		const string text = "TFlippy's Patreon";
 		
 		Vec2f dim;
 		GUI::GetTextDimensions(text, dim);
@@ -570,7 +597,7 @@ void onRenderScoreboard(CRules@ this)
 			{
 				Sound::Play("option");
 			
-				OpenWebsite("www.tflippy.com");
+				OpenWebsite("https://www.patreon.com/tflippy");
 				// Engine::AcceptWebsiteOpen(true);
 				// Menu::CloseAllMenus();
 			}
@@ -595,8 +622,8 @@ void onRenderScoreboard(CRules@ this)
 	
 		width = dim.x + 20;
 	
-		Vec2f tl = Vec2f(getScreenWidth() - 735 - width, y_offset + 10);
-		Vec2f br = Vec2f(getScreenWidth() - 735, tl.y + height);
+		Vec2f tl = Vec2f(getScreenWidth() - 500 - width, y_offset + 10);
+		Vec2f br = Vec2f(getScreenWidth() - 500, tl.y + height);
 		
 		CControls@ controls = getControls();
 		Vec2f mousePos = controls.getMouseScreenPos();
@@ -611,7 +638,7 @@ void onRenderScoreboard(CRules@ this)
 			{
 				Sound::Play("option");
 			
-				OpenWebsite("www.tflippy.com");
+				OpenWebsite("https://github.com/TFlippy/kag_territorycontrol");
 				// Engine::AcceptWebsiteOpen(true);
 				// Menu::CloseAllMenus();
 			}
@@ -660,7 +687,7 @@ void drawHoverExplanation(int hovered_accolade, int hovered_age, int hovered_tie
 	GUI::DrawText(desc, tl + expand, SColor(0xffffffff));
 }
 
-string getRank(string &in username, SColor &out col)
+string getRank(string &in username, SColor &out col, CPlayer@ p)
 {	
 	switch(username.getHash())
 	{
@@ -736,6 +763,19 @@ string getRank(string &in username, SColor &out col)
 
 		default:
 		{
+			if (p !is null)
+			{
+				CSecurity@ security = getSecurity();
+				if (!(security.checkAccess_Feature(p, "patreon")))
+				{
+					return "";
+				}
+				else
+				{
+					col = SColor(255, 241, 196, 15);
+					return "Patreon Supporter";
+				}
+			}
 			return "";
 		}
 	}
