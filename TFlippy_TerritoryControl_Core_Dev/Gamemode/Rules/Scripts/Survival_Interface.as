@@ -47,7 +47,7 @@ void onInit(CRules@ this)
 {
 	onRestart(this);	
 	Driver@ driver = getDriver();
-	driver.RemoveShader("hq2x");
+	//driver.RemoveShader("hq2x");
 	/*driver.AddShader("palette", 1001.0f);
 	driver.SetShader("palette", true);
 	driver.SetShaderFloat("palette", "res_x", getScreenWidth());
@@ -63,7 +63,8 @@ void onInit(CRules@ this)
 	driver.SetShaderFloat("drunk", "time", 0);
 	driver.SetShaderFloat("drunk", "amount", 0);
 	driver.SetShaderTextureFilter("drunk", true);*/
-	driver.AddShader("chrom_ab", 1100.1f);
+	//driver.AddShader("chrom_ab", 1100.1f);
+	//was testing shaders
 }
 
 void onRestart(CRules@ this)
