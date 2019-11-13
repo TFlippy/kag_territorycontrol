@@ -380,15 +380,16 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(40, 24);
 		blocks[1].push_back(b);
 	}
-	// {
-		// BuildBlock b(0, "patreonshop", "$patreonshop$", "Gift Shop\nA special souvenir shop for\nVamistorio's Patreon supporters.\n\nUsable by anyone once built.");
-		// AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
-		// AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
-		// AddRequirement(b.reqs, "coin", "", "Coins", 500);
-		// b.buildOnGround = true;
-		// b.size.Set(40, 40);
-		// blocks[1].push_back(b);
-	// }
+	{
+		BuildBlock b(0, "patreonshop", "$patreonshop$", "Gift Shop\nA special souvenir shop for\nVamistorio's Patreon supporters.\n\nUsable by anyone once built.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
+		AddRequirement(b.reqs, "coin", "", "Coins", 500);
+		AddRequirement(b.reqs, "seclev feature", "patreon", "Patreon", 1);
+		b.buildOnGround = true;
+		b.size.Set(40, 40);
+		blocks[1].push_back(b);
+	}
 	{
 		BuildBlock b(0, "camp", "$icon_camp$", "Camp\nA basic faction base. Can be upgraded to gain\nspecial functions and more durability.\n\nIncreases Upkeep cap by 15.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 500);

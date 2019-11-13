@@ -47,6 +47,12 @@ string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 			text += quantityColor;
 			// text += "\n\ntechnology required.\n";
 		}
+		else if (requiredType == "seclev feature")
+		{
+			text += quantityColor;
+			text += "Access to role " + friendlyName + " required. \n";
+			text += quantityColor;
+		}
 		else if(requiredType=="not tech" && missing)
 		{
 			text += " \n";
@@ -207,7 +213,8 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 	while (!bs.isBufferEnd()) 
 	{
 		ReadRequirement(bs,req,blobName,friendlyName,quantity);
-		if(req=="blob") {
+		if(req=="blob") 
+		{
 			int sum=(inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0)+(inv2 !is null ? inv2.getBlob().getBlobCount(blobName) : 0);
 			
 			if (storageEnabled)
@@ -218,11 +225,13 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 				}
 			}
 			
-			if(sum<quantity) {
+			if(sum<quantity) 
+			{
 				AddRequirement(missingBs,req,blobName,friendlyName,quantity);
 				has=false;
 			}
-		}else if(req=="coin") 
+		}
+		else if(req=="coin") 
 		{
 			CPlayer@ player1=	inv1 !is null ? inv1.getBlob().getPlayer() : null;
 			CPlayer@ player2=	inv2 !is null ? inv2.getBlob().getPlayer() : null;
@@ -280,6 +289,31 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 			else
 			{
 				AddRequirement(missingBs, req, blobName, friendlyName, quantity);
+				has = false;
+			}
+		}
+		else if (req == "seclev feature")
+		{
+			CPlayer@ player = playerBlob.getPlayer();
+			if (player !is null)
+			{
+				CSecurity@ security = getSecurity();
+				
+				if (security.checkAccess_Feature(player, blobName))
+				{
+					print("has feature " + blobName);
+				}
+				else
+				{
+					print("no access to seclev feature " + blobName);
+					
+					AddRequirement(missingBs, req, blobName, friendlyName, quantity);
+					has = false;
+				}
+			}
+			else
+			{
+				print("no player");
 				has = false;
 			}
 		}
