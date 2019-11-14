@@ -7,5 +7,8 @@ namespace Deity
 		ivan,
 		gregor,
 		mason,
+		cocok,
+		swaglag,
+		dragonfriend
 	}
 }

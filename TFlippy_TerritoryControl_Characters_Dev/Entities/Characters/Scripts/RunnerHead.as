@@ -142,6 +142,11 @@ void onPlayerInfoChanged(CSprite@ this)
 			{
 				head_index = 104;
 			}
+			
+			case Deity::cocok:
+			{
+				head_index = 105;
+			}
 			break;
 		}
 	}

@@ -38,7 +38,7 @@ void onInit(CBlob@ this)
 	
 	if (this.getName() == "altar")
 	{
-		this.set_Vec2f("shop menu size", Vec2f(8, 2));
+		this.set_Vec2f("shop menu size", Vec2f(10, 2));
 		this.set_string("shop description", "Select a Deity");
 		this.set_u8("shop icon", 15);
 		this.Tag(SHOP_AUTOCLOSE);
@@ -47,6 +47,7 @@ void onInit(CBlob@ this)
 		AddIconToken("$icon_ivan$", "Altar.png", Vec2f(24, 32), 2);
 		AddIconToken("$icon_gregor$", "Altar.png", Vec2f(24, 32), 3);
 		AddIconToken("$icon_mason$", "Altar.png", Vec2f(24, 32), 4);
+		AddIconToken("$icon_cocok$", "Altar.png", Vec2f(24, 32), 5);
 		
 		{
 			ShopItem@ s = addShopItem(this, "Mithrios, God of Death", "$icon_mithrios$", "altar_mithrios", "A demon known for his cruelty and hunger for blood.\n\nAfter being banished from the mortal realm, he returned as a weapon of destruction.\n\n- Damage Reflection\n- Kill a random person\n- Create a Mithrios Device\n- Gain Demonic Power by killing people");
@@ -86,9 +87,23 @@ void onInit(CBlob@ this)
 		}
 		{
 			ShopItem@ s = addShopItem(this, "Grand Mason, God of Masonry", "$icon_mason$", "altar_mason", "A determined architect responsible for creation of many bridges, castles and palaces.\n\He's humble.\n\n- Chance to not consume materials when placing a block.");
-			AddRequirement(s.requirements, "no more global", "mat_stone", "Stone", 4000);
+			AddRequirement(s.requirements, "no more global", "altar_gregor", "Altar of Gregor Builder", 1);
+			AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 4000);
 			AddRequirement(s.requirements, "blob", "artisancertificate", "Building for Dummies", 1);
 			AddRequirement(s.requirements, "coin", "", "Coins", 1000);
+			s.customButton = true;
+			s.buttonwidth = 2;	
+			s.buttonheight = 2;
+			
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Cocok, God of Cocok", "$icon_cocok$", "altar_cocok", "The bestest player in this region.\n\Specializes in illegal weaponry.\n\n- Infidels feel heavier around the altar.\n- Create Molotov Cocktails\n- Construct a Molothrower\n- Build a Cocok Bomba");
+			AddRequirement(s.requirements, "no more global", "altar_cocok", "Altar of Cocok", 1);
+			AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 200);
+			AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 200);
+			AddRequirement(s.requirements, "blob", "mat_smallbomb", "Small Bomb", 8);
+			AddRequirement(s.requirements, "blob", "vodka", "Vodka", 2);
 			s.customButton = true;
 			s.buttonwidth = 2;	
 			s.buttonheight = 2;

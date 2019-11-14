@@ -7,5 +7,6 @@ void onInit(CBlob@ this)
 	this.push("names to activate", "mat_dynamite");
 	this.push("names to activate", "mat_fraggrenade");
 	this.push("names to activate", "mat_flashgrenade");
+	this.push("names to activate", "mat_molotov");
 	this.getCurrentScript().runFlags |= Script::remove_after_this;
 }
