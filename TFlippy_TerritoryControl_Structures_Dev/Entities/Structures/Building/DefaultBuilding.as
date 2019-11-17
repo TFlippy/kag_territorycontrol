@@ -1,5 +1,7 @@
 ﻿// A default building init script
 
+#include "CustomBlocks.as";
+
 const f32 allow_overlap = 2.0f;
 
 void onInit(CBlob@ this)
@@ -21,7 +23,7 @@ void onTick(CBlob@ this)
 	{
 		// make window
 		Vec2f tilepos = this.getPosition() - Vec2f(0, 4);
-		getMap().server_SetTile(tilepos, CMap::tile_empty);
+		getMap().server_SetTile(tilepos, CMap::tile_bglass);
 
 		//check for overlapping buildings
 		CBlob@[] buildings;
