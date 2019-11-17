@@ -113,12 +113,17 @@ void onTick(CBlob@ this)
 			
 			CControls@ controls = getControls();
 			Driver@ driver = getDriver();
-
-			Vec2f spos = driver.getScreenPosFromWorldPos(this.getPosition());
-			Vec2f dir = (controls.getMouseScreenPos() - spos);
-			// dir.Normalize();
-			
-			controls.setMousePosition(controls.getMouseScreenPos() - (dir * 0.75f * factor));
+			if(isWindowActive() || isWindowFocused())
+			{
+				Vec2f spos = driver.getScreenPosFromWorldPos(this.getPosition());
+				Vec2f dir = (controls.getMouseScreenPos() - spos);
+				
+				Vec2f move_to = dir * 0.75f * factor;
+				if(move_to.x < 0) move_to.x--;
+				if(move_to.y < 0) move_to.y--;
+				
+				controls.setMousePosition(controls.getMouseScreenPos() - move_to);
+			}
 			
 			if (getGameTime() > this.get_u32("next_whisper"))
 			{
