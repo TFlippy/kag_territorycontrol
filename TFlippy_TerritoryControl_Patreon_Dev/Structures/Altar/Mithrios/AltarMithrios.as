@@ -68,34 +68,33 @@ void onInit(CBlob@ this)
 	this.addCommandID("mithrios_gib");
 }
 
-void onTick(CBlob@ this)
+void onTick(CSprite@ this)
 {
-	const bool server = isServer();
-	const bool client = isClient();
-
-	const f32 power = this.get_f32("deity_power");
-	this.setInventoryName("Altar of Mithrios\n\nDemonic Power: " + power + "\nDamage Reflection: " + (power * 0.01f) + "%");
+	CBlob@ blob = this.getBlob();
+	if (blob is null) return;
+	
+	const f32 power = blob.get_f32("deity_power");
+	blob.setInventoryName("Altar of Mithrios\n\nDemonic Power: " + power + "\nDamage Reflection: " + (power * 0.01f) + "%");
 	
 	CBlob@ playerBlob = getLocalPlayerBlob();
 	if (playerBlob !is null)
 	{
-		CSprite@ sprite = this.getSprite();
-		sprite.SetFrameIndex(0);
-		sprite.SetEmitSoundPaused(false);
+		this.SetFrameIndex(0);
+		this.SetEmitSoundPaused(false);
 	
-		Vec2f diff = playerBlob.getPosition() - this.getPosition();
-		f32 dist = diff.getLength();
+		Vec2f diff = playerBlob.getPosition() - blob.getPosition();
+		const f32 dist = diff.getLength();
 		
 		if (dist < radius)
 		{
-			f32 invFactor = (dist / radius);
-			f32 factor = 1.00f - invFactor;
+			const f32 invFactor = (dist / radius);
+			const f32 factor = 1.00f - invFactor;
 			
-			sprite.SetEmitSoundVolume(factor);
-			sprite.SetEmitSoundSpeed(0.50f + (0.50f * invFactor) + Maths::Min(power * 0.0005f, 0.35f));
+			this.SetEmitSoundVolume(factor);
+			this.SetEmitSoundSpeed(0.50f + (0.50f * invFactor) + Maths::Min(power * 0.0005f, 0.35f));
 			
 			SetScreenFlash(Maths::Clamp((50 * factor) + XORRandom(10 + (power * 0.02)) + (power * 0.005f), 0, 255), 64, 0, 0);
-			ShakeScreen((25 * factor) + (power * 0.0050f), 30, this.getPosition());
+			ShakeScreen((25 * factor) + (power * 0.0050f), 30, blob.getPosition());
 			
 			if (playerBlob.get_u8("deity_id") != Deity::mithrios)
 			{
@@ -103,7 +102,7 @@ void onTick(CBlob@ this)
 				Driver@ driver = getDriver();
 				if(isWindowActive() || isWindowFocused())
 				{
-					Vec2f spos = driver.getScreenPosFromWorldPos(this.getPosition());
+					Vec2f spos = driver.getScreenPosFromWorldPos(blob.getPosition());
 					Vec2f dir = (controls.getMouseScreenPos() - spos);
 					// dir.Normalize();
 					
@@ -111,12 +110,12 @@ void onTick(CBlob@ this)
 				}
 			}
 			
-			if (getGameTime() > this.get_u32("next_whisper"))
+			if (getGameTime() > blob.get_u32("next_whisper"))
 			{
 				if (XORRandom(100 * (invFactor)) == 0)
 				{
-					this.set_u32("next_whisper", getGameTime() + 30 * 10);
-					this.getSprite().PlaySound("dem_whisper_" + XORRandom(6), 0.75f * factor, 0.75f);
+					blob.set_u32("next_whisper", getGameTime() + 30 * 10);
+					this.PlaySound("dem_whisper_" + XORRandom(6), 0.75f * factor, 0.75f);
 				}
 			}
 		}
@@ -225,8 +224,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	else if (cmd == this.getCommandID("mithrios_gib"))
 	{
-		print("gib");
-		
 		u16 target_player_netid;
 		if (params.saferead_netid(target_player_netid))
 		{

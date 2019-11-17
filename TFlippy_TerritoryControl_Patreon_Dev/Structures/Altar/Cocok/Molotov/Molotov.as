@@ -1,11 +1,5 @@
 #include "Explosion.as";
 
-string[] particles = 
-{
-	"LargeSmoke",
-	"Explosion.png"
-};
-
 void onInit(CBlob@ this)
 {
 	this.getCurrentScript().tickFrequency = 3;
@@ -17,13 +11,11 @@ void onInit(CBlob@ this)
 	this.Tag("map_damage_dirt");
 }
 
-void onTick(CBlob@ this)
+void onTick(CSprite@ this)
 {
-	if (isClient())
-	{
-		ParticleAnimated("SmallFire", this.getPosition() + Vec2f(1 - XORRandom(3), -4), Vec2f(0, -1 - XORRandom(2)), 0, 1.0f, 2, 0.25f, false);
-	}
+	ParticleAnimated("SmallFire", this.getBlob().getPosition() + Vec2f(1 - XORRandom(3), -4), Vec2f(0, -1 - XORRandom(2)), 0, 1.0f, 2, 0.25f, false);
 }
+
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {

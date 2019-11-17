@@ -90,18 +90,44 @@ void onInit(CBlob@ this)
 	// }
 }
 
+void onTick(CSprite@ this)
+{
+	CBlob@ blob = this.getBlob();
+	if (blob is null) return;
+
+	const f32 power = blob.get_f32("deity_power");
+	const f32 radius = 64.00f + ((power / 100.00f) * 8.00f);
+
+	blob.setInventoryName("Altar of Cocok\n\nRussian Power: " + power + "\nFree block chance: " + (power * 0.01f) + "%");
+
+	blob.SetLightRadius(radius);
+
+	CBlob@ localBlob = getLocalPlayerBlob();
+	if (localBlob !is null)
+	{
+		f32 diameter = radius * 2.00f;
+	
+		f32 dist = blob.getDistanceTo(localBlob);
+		f32 distMod = 1.00f - (dist / diameter);
+		f32 sqrDistMod = 1.00f - Maths::Sqrt(dist / radius);
+		
+		this.SetEmitSoundVolume(0.20f + (distMod * 0.20f));
+		
+		if (dist < diameter) 
+		{
+			if (getGameTime() % 8 == 0) 
+			{
+				ShakeScreen(50.0f, 15, blob.getPosition());
+			}
+		}
+	}
+}
+
 void onTick(CBlob@ this)
 {
-	const bool server = isServer();
-	const bool client = isClient();
-
 	const f32 power = this.get_f32("deity_power");
-	this.setInventoryName("Altar of Cocok\n\nRussian Power: " + power + "\nFree block chance: " + (power * 0.01f) + "%");
-	
 	const f32 radius = 64.00f + ((power / 100.00f) * 8.00f);
 	const f32 gravity = sv_gravity * 0.03f;
-
-	this.SetLightRadius(radius);
 
 	CBlob@[] blobsInRadius;
 	if (this.getMap().getBlobsInRadius(this.getPosition(), radius, @blobsInRadius))
@@ -113,26 +139,6 @@ void onTick(CBlob@ this)
 			if (blob.get_u8("deity_id") != Deity::cocok && blob.hasTag("flesh"))
 			{
 				blob.AddForce(Vec2f(0, gravity * blob.getMass()));
-			}
-		}
-	}
-	
-	CBlob@ localBlob = getLocalPlayerBlob();
-	if (localBlob !is null)
-	{
-		f32 diameter = radius * 2.00f;
-	
-		f32 dist = this.getDistanceTo(localBlob);
-		f32 distMod = 1.00f - (dist / diameter);
-		f32 sqrDistMod = 1.00f - Maths::Sqrt(dist / radius);
-		
-		this.getSprite().SetEmitSoundVolume(0.20f + (distMod * 0.20f));
-		
-		if (dist < diameter) 
-		{
-			if (getGameTime() % 8 == 0) 
-			{
-				ShakeScreen(50.0f, 15, this.getPosition());
 			}
 		}
 	}
