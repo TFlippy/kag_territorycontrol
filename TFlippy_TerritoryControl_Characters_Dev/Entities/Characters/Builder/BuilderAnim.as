@@ -55,6 +55,7 @@ void onTick(CSprite@ this)
 {
 	// store some vars for ease and speed
 	CBlob@ blob = this.getBlob();
+	if (blob is null) return;
 
 	if (blob.hasTag("dead"))
 	{

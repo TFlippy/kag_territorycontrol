@@ -111,6 +111,7 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 			CBitStream missing;
 			if(hasRequirements(this, b.reqs, missing))
 			{
+				//print("true");
 				button.hoverText = b.description + "\n" + getButtonRequirementsText(b.reqs, false);
 			}
 			else
@@ -292,9 +293,11 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 void onRender(CSprite@ this)
 {
 	CMap@ map = getMap();
-
 	CBlob@ blob = this.getBlob();
 	CBlob@ localBlob = getLocalPlayerBlob();
+
+	if(map is null || blob is null || localBlob is null) return;
+
 	if(localBlob is blob)
 	{
 		// no build zone show
