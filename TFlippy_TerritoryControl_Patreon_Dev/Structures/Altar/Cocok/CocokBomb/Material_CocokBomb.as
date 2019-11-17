@@ -1,7 +1,7 @@
 #include "Hitters.as";
 #include "Explosion.as";
 
-string[] particles = 
+const string[] particles = 
 {
 	"LargeSmoke",
 	"Explosion.png"

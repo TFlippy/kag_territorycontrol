@@ -57,13 +57,13 @@ void onInit(CBlob@ this)
 	// }
 }
 
-void onTick(CBlob@ this)
+void onTick(CSprite@ this)
 {
-	const bool server = isServer();
-	const bool client = isClient();
+	CBlob@ blob = this.getBlob();
+	if (blob is null) return;
 
-	const f32 power = this.get_f32("deity_power");
-	this.setInventoryName("Altar of Grand Mason\n\nMasonic Power: " + power + "\nFree block chance: " + (power * 0.01f) + "%");
+	const f32 power = blob.get_f32("deity_power");
+	blob.setInventoryName("Altar of Grand Mason\n\nMasonic Power: " + power + "\nFree block chance: " + (power * 0.01f) + "%");
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

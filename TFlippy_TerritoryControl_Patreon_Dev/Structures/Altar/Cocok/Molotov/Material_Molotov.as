@@ -30,7 +30,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					
 					CPlayer@ activator = holder.getPlayer();
 					string activatorName = activator !is null ? (activator.getUsername() + " (team " + activator.getTeamNum() + ")") : "<unknown>";
-					printf(activatorName + " has activated " + this.getName());
+					//printf(activatorName + " has activated " + this.getName());
 				}
 			}
         }

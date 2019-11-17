@@ -267,6 +267,7 @@ void onGib(CSprite@ this)
 void onTick(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
+	if (blob is null) return;
 
 	ScriptData@ script = this.getCurrentScript();
 	if (script is null)

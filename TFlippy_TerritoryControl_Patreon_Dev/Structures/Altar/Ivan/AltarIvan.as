@@ -5,6 +5,7 @@
 #include "Hitters.as";
 #include "HittersTC.as";
 #include "DeityCommon.as";
+#include "RgbStuff.as";
 
 const SColor[] colors = 
 {
@@ -12,6 +13,8 @@ const SColor[] colors =
 	SColor(255, 30, 255, 30),
 	SColor(255, 30, 30, 255)
 };
+
+const u8 rgbStep = 10;
 
 void onInit(CBlob@ this)
 {
@@ -83,45 +86,64 @@ void onInit(CBlob@ this)
 	}
 }
 
-void onTick(CBlob@ this)
+void onTick(CSprite@ this)
 {
-	SColor color = colors[XORRandom(colors.length)];
-	
-	const f32 power = this.get_f32("deity_power");
+	CBlob@ blob = this.getBlob();
+	if (blob is null) return;
+
+	const f32 power = blob.get_f32("deity_power");
 	const f32 radius = 64.00f + Maths::Sqrt(power);
-	
-	this.setInventoryName("Altar of Ivan\n\nIvanic Power: " + power + "\nRadius: " + int(radius / 8.00f));
+		
+	blob.setInventoryName("Altar of Ivan\n\nIvanic Power: " + power + "\nRadius: " + int(radius / 8.00f));
 	
 	CBlob@ localBlob = getLocalPlayerBlob();
 	if (localBlob !is null)
 	{
-		f32 diameter = radius * 2.00f;
+		const f32 diameter = radius * 2.00f;
 	
-		f32 dist = this.getDistanceTo(localBlob);
-		f32 distMod = 1.00f - (dist / diameter);
-		f32 sqrDistMod = 1.00f - Maths::Sqrt(dist / radius);
+		const f32 dist = blob.getDistanceTo(localBlob);
+		const f32 distMod = 1.00f - (dist / diameter);
+		const f32 sqrDistMod = 1.00f - Maths::FastSqrt(dist / radius);
 		
 		if (dist < diameter) 
 		{
-			ShakeScreen(50.0f, 15, this.getPosition());
+			ShakeScreen(50.0f, 15, blob.getPosition());
 
 			if (getGameTime() % 8 == 0) 
 			{
-				SetScreenFlash(Maths::Min((power * 0.10f) * distMod, 50), color.getRed(), color.getGreen(), color.getBlue(), 0.2f);
+				s16 step = blob.get_s16("rgbStep");
+
+				if (step > 360) blob.set_bool("rgbReverse", true);	
+				else if (step <0) blob.set_bool("rgbReverse", false);
+
+				const bool reverse = blob.get_bool("rgbReverse");
+
+				if (reverse) step = blob.sub_s16("rgbStep", power / 10);
+				else step = blob.add_s16("rgbStep", power / 10);
+
+				const SColor color = HSVToRGB(step, 1.0f, 1.0f);
+				SetScreenFlash(Maths::Min((power * 0.20f) * distMod, 50), color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
 			}
 		}
 	}
 	
 	if (getGameTime() % 8 == 0) 
 	{
-		this.SetLight(true);
-		this.SetLightRadius(radius);
-		this.SetLightColor(color);
+		const SColor color = colors[getGameTime() % colors.length()];
+		blob.SetLight(true);
+		blob.SetLightRadius(radius);
+		blob.SetLightColor(color);
 		
-		CSprite@ sprite = this.getSprite();
-		sprite.SetEmitSoundVolume(Maths::Max(power * 0.002f, 0.50f));
-		sprite.SetEmitSoundSpeed(0.70f + (power * 0.0002f));
+	
+		this.SetEmitSoundVolume(Maths::Max(power * 0.002f, 0.50f));
+		this.SetEmitSoundSpeed(0.70f + (power * 0.0002f));
 	}
+}
+
+void onTick(CBlob@ this)
+{
+	const f32 power = this.get_f32("deity_power");
+	const f32 radius = 64.00f + Maths::Sqrt(power);
 	
 	CBlob@[] blobsInRadius;
 	if (this.getMap().getBlobsInRadius(this.getPosition(), radius, @blobsInRadius))

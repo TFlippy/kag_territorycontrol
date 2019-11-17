@@ -152,7 +152,7 @@ void onSetPlayer(CBlob@ this, CPlayer@ player)
 				getMap().CreateSkyGradient("skygradient.png");	
 			}
 		}
-		print("reset camera");
+		//print("reset camera");
 	}
 }
 
