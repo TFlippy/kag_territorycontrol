@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "HittersTC.as";
+#include "DeityCommon.as";
 
 //huge bug with SetKeysToTake only disabling stuff CLIENTSIDE - you're still actually jabbing when using a weapon
 	//looks like the only way to fix this is to add a check to all classes - do they have a tag "disableLMB", or custom tag to disable LMB stuff.
@@ -361,6 +362,15 @@ void Shoot(CBlob@ this)
 	f32 damage=	this.get_f32("gun_fireDamage");
 	f32 range=	this.get_f32("gun_fireRange");
 
+	if (holder.get_u8("deity_id") == Deity::swaglag)
+	{
+		CBlob@ altar = getBlobByName("altar_swaglag");
+		if (altar !is null)
+		{
+			damage *= 1.00f + Maths::Min(altar.get_f32("deity_power") * 0.01f, 2.00f);
+		}
+	}
+
 	string fireProj=this.get_string("gun_fireProj");
 
 	if(fireProj==""){
@@ -427,8 +437,9 @@ void Shoot(CBlob@ this)
 									f32 dmg = damage*Maths::Max(0.1,falloff)*(blob.hasTag("door") ? 0.2f : 1.0f);
 									Vec2f dir = blob.getPosition() - this.getPosition();
 									dir.Normalize();
-								
-									holder.server_Hit(blob, hitInfos[i].hitpos, dir, dmg, this.get_u8("gun_hitter"), false);
+									
+									holder.server_Hit(blob, hitInfos[i].hitpos, dir, dmg * 0.99f, this.get_u8("gun_hitter"), false);
+									this.server_Hit(blob, hitInfos[i].hitpos, dir, dmg * 0.01f, this.get_u8("gun_hitter"), false); // Hack
 									
 									// string name = holder.getName();
 									// if(name == "soldierchicken" || name == "scoutchicken"){blob.Tag("chickened");}

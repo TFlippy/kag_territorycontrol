@@ -140,6 +140,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					if (data == "follower")
 					{
 						this.add_f32("deity_power", 50);
+						if (isServer()) this.Sync("deity_power", false);
 						
 						if (isClient())
 						{
@@ -172,6 +173,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						if (data == "offering_flesh")
 						{
 							this.add_f32("deity_power", 25);
+							if (isServer()) this.Sync("deity_power", false);
 							
 							if (isServer())
 							{
@@ -190,6 +192,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						else if (data == "offering_death")
 						{
 							this.add_f32("deity_power", 100);
+							if (isServer()) this.Sync("deity_power", false);
 							
 							int count = getPlayerCount();
 							CPlayer@ player = getPlayer(XORRandom(count));
@@ -203,6 +206,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						else if (data == "offering_might")
 						{
 							this.add_f32("deity_power", 400);
+							if (isServer()) this.Sync("deity_power", false);
 							
 							if (isServer())
 							{
@@ -225,8 +229,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	else if (cmd == this.getCommandID("mithrios_gib"))
 	{
-		print("gib");
-		
 		u16 target_player_netid;
 		if (params.saferead_netid(target_player_netid))
 		{

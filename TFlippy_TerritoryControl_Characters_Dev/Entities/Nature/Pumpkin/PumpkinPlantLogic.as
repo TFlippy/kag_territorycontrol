@@ -1,5 +1,3 @@
-// Grain logic
-
 #include "PlantGrowthCommon.as";
 
 void onInit(CBlob@ this)
@@ -12,7 +10,6 @@ void onInit(CBlob@ this)
 	this.Tag("builder always hit");
 	this.Tag("nature");
 	
-	// this script gets removed so onTick won't be run on client on server join, just onInit
 	if (this.hasTag("instant_grow"))
 	{
 		GrowPumpkin(this);

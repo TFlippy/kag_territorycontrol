@@ -23,18 +23,16 @@ void Heal(CBlob@ this, CBlob@ blob)
 		params.write_u16(blob.getNetworkID());
 
 		u8 heal_amount = 255; //in quarter hearts, 255 means full hp
+		string name = this.getName();
 
-		if (this.getName() == "heart")	    // HACK
-		{
-			heal_amount = 1;
-		}
-		else if (this.getName() == "ratburger") heal_amount = 3;
-		else if (this.getName() == "ratfood") heal_amount = 2;
-		else if (this.getName() == "food") heal_amount = 4;
-		else if (this.getName() == "cake") heal_amount = 3;
-		else if (this.getName() == "foodcan") heal_amount = 5;
-		else if (this.getName() == "pumpkin") heal_amount = 8;
-		else if (this.getName() == "icecream") heal_amount = 2;
+		if (name == "heart") heal_amount = 1;
+		else if (name == "ratburger") heal_amount = 3;
+		else if (name == "ratfood") heal_amount = 2;
+		else if (name == "food") heal_amount = 4;
+		else if (name == "cake") heal_amount = 3;
+		else if (name == "foodcan") heal_amount = 10;
+		else if (name == "pumpkin") heal_amount = 7;
+		else if (name == "icecream") heal_amount = 2;
 
 		params.write_u8(heal_amount);
 

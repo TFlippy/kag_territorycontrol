@@ -96,9 +96,10 @@ void onTick(CBlob@ this)
 	const bool client = isClient();
 
 	const f32 power = this.get_f32("deity_power");
-	this.setInventoryName("Altar of Cocok\n\nRussian Power: " + power + "\nFree block chance: " + (power * 0.01f) + "%");
-	
 	const f32 radius = 64.00f + ((power / 100.00f) * 8.00f);
+	
+	this.setInventoryName("Altar of Cocok\n\nRussian Power: " + power + "\nGravitation field radius: " + radius);
+	
 	const f32 gravity = sv_gravity * 0.03f;
 
 	this.SetLightRadius(radius);
@@ -155,6 +156,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					if (data == "follower")
 					{
 						this.add_f32("deity_power", 100);
+						if (isServer()) this.Sync("deity_power", false);
 						
 						if (isClient())
 						{
@@ -187,6 +189,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						if (data == "offering_molotov")
 						{
 							this.add_f32("deity_power", 10);
+							if (isServer()) this.Sync("deity_power", false);
 							
 							if (isServer())
 							{
@@ -197,6 +200,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						else if (data == "offering_molothrower")
 						{
 							this.add_f32("deity_power", 50);
+							if (isServer()) this.Sync("deity_power", false);
 							
 							if (isServer())
 							{
@@ -207,6 +211,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						else if (data == "offering_bomb")
 						{
 							this.add_f32("deity_power", 400);
+							if (isServer()) this.Sync("deity_power", false);
 							
 							if (isServer())
 							{

@@ -24,7 +24,7 @@ void onTick(CSprite@ this)
 	if (!isClient()) return;
 	
 	this.RotateBy(20.0f, Vec2f());
-	ParticleAnimated("SmalLFire", this.getBlob().getPosition() + Vec2f(4 - XORRandom(8), 4 - XORRandom(8)), Vec2f(0, 0), 0, 1.0f + (XORRandom(100) * 0.01f), 2, 0.25f, false);
+	ParticleAnimated("SmallFire", this.getBlob().getPosition() + Vec2f(4 - XORRandom(8), 4 - XORRandom(8)), Vec2f(0, 0), 0, 1.0f + (XORRandom(100) * 0.01f), 2, 0.25f, false);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)

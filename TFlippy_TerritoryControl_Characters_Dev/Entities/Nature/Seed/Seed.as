@@ -6,29 +6,29 @@
 //sprites to load by index
 const string[] seed_sprites =
 {
-	"Entities/Natural/Seed/Seed.png",       //normal seed
-	"Entities/Natural/Seed/Seed.png",       //grain seed
-	"Entities/Natural/Trees/Trees.png",     //pine
-	"Entities/Natural/Trees/Trees.png",     //bushy
-	"Entities/Natural/Farming/Grain.png",   //grains
-	"Entities/Natural/Seed/Seed.png",  //bush
-	"Entities/Natural/Seed/Seed.png",  //flowers
-	"Entities/Natural/Seed/Seed.png",  //pumpkin
-	"Entities/Natural/Seed/Seed.png",  //protopopov
+	"Entities/Natural/Seed/Seed.png",       // normal seed
+	"Entities/Natural/Seed/Seed.png",       // grain seed
+	"Entities/Natural/Trees/Trees.png",     // pine
+	"Entities/Natural/Trees/Trees.png",     // bushy
+	"Entities/Natural/Farming/Grain.png",   // grains
+	"Entities/Natural/Seed/Seed.png",  		// bush
+	"Entities/Natural/Seed/Seed.png",  		// flowers
+	"Entities/Natural/Seed/Seed.png", 		// pumpkin
+	"Entities/Natural/Seed/Seed.png"  		// protopopov
 };
 
 // names of seeds
 const string[] seed_names =
 {
-	"Seed",           //normal seed
-	"Grain Seed",     //grain seed
-	"Pine Seed",        //pine
-	"Oak Seed",     //bushy
-	"Grain",       //grains
-	"Bush seed",    //bush
-	"Flower seed",   //flowers
-	"Pumpkin seed",   //flowers
-	"Protopopov seed"   //flowers
+	"Seed",         	// normal seed
+	"Grain Seed",    	// grain seed
+	"Pine Seed",     	// pine
+	"Oak Seed",       	// bushy
+	"Grain",         	// grains
+	"Bush Seed",    	// bush
+	"Flower Seed",   	// flowers
+	"Pumpkin Seed",   	// pumpkin
+	"Protopopov Seed"   // protopopov
 };
 
 const u32 OPT_TICK = 31;
@@ -112,18 +112,32 @@ void onTick(CBlob@ this)
 {
 	u16 seed_grow_time = this.get_u16("seed_grow_time");
 
-	if (canGrowAt(this, this.getPosition()) && !this.isAttached())
+	if (!this.isAttached())
 	{
-		this.getSprite().SetFrameIndex(1);
-
-		if (seed_grow_time > OPT_TICK)
+		if (canGrowAt(this, this.getPosition()))
 		{
-			seed_grow_time -= OPT_TICK;
+			this.getSprite().SetFrameIndex(1);
+
+			if (seed_grow_time > OPT_TICK)
+			{
+				seed_grow_time -= OPT_TICK;
+			}
 		}
-	}
-	else
-	{
-		this.getSprite().SetFrameIndex(0);
+		else
+		{
+			this.getSprite().SetFrameIndex(0);
+			
+			if (isServer())
+			{
+				if (XORRandom(10) == 0)
+				{
+					if (!isNotTouchingOthers(this))
+					{
+						this.server_Die();
+					}
+				}
+			}
+		}
 	}
 
 	this.set_u16("seed_grow_time", seed_grow_time);

@@ -67,6 +67,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					if (data == "follower")
 					{
 						this.add_f32("deity_power", 50);
+						if (isServer()) this.Sync("deity_power", false);
 						
 						if (isClient())
 						{
@@ -102,6 +103,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						if (data == "offering_hobo")
 						{
 							this.add_f32("deity_power", 25);
+							if (isServer()) this.Sync("deity_power", false);
 							
 							if (isServer())
 							{

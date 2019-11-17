@@ -93,6 +93,7 @@ void React(CBlob@ this)
 			const f32 mustard_count = inv.getCount("mat_mustard");
 			const f32 dirt_count = inv.getCount("mat_dirt");
 			const f32 coal_count = inv.getCount("mat_coal");
+			const f32 protopopov_count = inv.getCount("mat_protopopov");
 			
 			const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
 			const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
@@ -110,6 +111,7 @@ void React(CBlob@ this)
 			CBlob@ dirt_blob = inv.getItem("mat_dirt");
 			CBlob@ e_mithril_blob = inv.getItem("mat_mithrilenriched");
 			CBlob@ coal_blob = inv.getItem("mat_coal");
+			CBlob@ protopopov_blob = inv.getItem("mat_protopopov");
 
 			bool hasOil = oil_blob !is null;
 			bool hasMethane = methane_blob !is null;
@@ -122,6 +124,22 @@ void React(CBlob@ this)
 			bool hasMustard = mustard_blob !is null;
 			bool hasMithril = mithril_blob !is null;
 			bool hasCoal = coal_blob !is null;
+			bool hasProtopopov = protopopov_blob !is null;
+						
+			if (pressure > 70000 && heat > 420 && hasProtopopov && hasAcid && hasMithril && protopopov_count >= 50 && mithril_count >= 50 && acid_count > 50)
+			{
+				if (isServer())
+				{
+					protopopov_blob.server_SetQuantity(Maths::Max(protopopov_blob.getQuantity() - 50, 0));
+					mithril_blob.server_SetQuantity(Maths::Max(mithril_blob.getQuantity() - 50, 0));
+					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 50, 0));
+					
+					Material::createFor(this, "dew", 2 + XORRandom(4));
+				}
+				
+				ShakeScreen(20.0f, 30, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Acidic.ogg", 1.00f, 1.00f);
+			}
 						
 			if (pressure > 40000 && heat > 750 && hasOil && hasMethane)
 			{

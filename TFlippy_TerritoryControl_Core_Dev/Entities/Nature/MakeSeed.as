@@ -63,7 +63,7 @@ CBlob@ server_MakeSeed(Vec2f atpos, string blobname)
 	}
 	else if (blobname == "protopopov_plant")
 	{
-		return server_MakeSeed(atpos, blobname, 100, 7, 4);
+		return server_MakeSeed(atpos, blobname, 100, 8, 4);
 	}
 
 	return server_MakeSeed(atpos, blobname, 100, 0, 4);
