@@ -127,9 +127,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 					{
 						this.set_string("compactor_resource", "");
 						this.set_string("compactor_resource_name", "");
-						
-						server_Sync(this);
 					}
+					server_Sync(this);
 				}
 			}
 		}
