@@ -30,9 +30,10 @@ void Heal(CBlob@ this, CBlob@ blob)
 		else if (name == "ratfood") heal_amount = 2;
 		else if (name == "food") heal_amount = 4;
 		else if (name == "cake") heal_amount = 3;
-		else if (name == "foodcan") heal_amount = 10;
+		else if (name == "foodcan") heal_amount = 20;
 		else if (name == "pumpkin") heal_amount = 7;
 		else if (name == "icecream") heal_amount = 2;
+		else if (name == "doritos") heal_amount = 8;
 
 		params.write_u8(heal_amount);
 

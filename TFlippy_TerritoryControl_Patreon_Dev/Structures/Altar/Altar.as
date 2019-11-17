@@ -38,7 +38,7 @@ void onInit(CBlob@ this)
 	
 	if (this.getName() == "altar")
 	{
-		this.set_Vec2f("shop menu size", Vec2f(10, 2));
+		this.set_Vec2f("shop menu size", Vec2f(12, 2));
 		this.set_string("shop description", "Select a Deity");
 		this.set_u8("shop icon", 15);
 		this.Tag(SHOP_AUTOCLOSE);
@@ -48,6 +48,7 @@ void onInit(CBlob@ this)
 		AddIconToken("$icon_gregor$", "Altar.png", Vec2f(24, 32), 3);
 		AddIconToken("$icon_mason$", "Altar.png", Vec2f(24, 32), 4);
 		AddIconToken("$icon_cocok$", "Altar.png", Vec2f(24, 32), 5);
+		AddIconToken("$icon_swaglagk$", "Altar.png", Vec2f(24, 32), 6);
 		
 		{
 			ShopItem@ s = addShopItem(this, "Mithrios, God of Death", "$icon_mithrios$", "altar_mithrios", "A demon known for his cruelty and hunger for blood.\n\nAfter being banished from the mortal realm, he returned as a weapon of destruction.\n\n- Damage Reflection\n- Kill a random person\n- Create a Mithrios Device\n- Gain Demonic Power by killing people");
@@ -104,6 +105,17 @@ void onInit(CBlob@ this)
 			AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 200);
 			AddRequirement(s.requirements, "blob", "mat_smallbomb", "Small Bomb", 8);
 			AddRequirement(s.requirements, "blob", "vodka", "Vodka", 2);
+			s.customButton = true;
+			s.buttonwidth = 2;	
+			s.buttonheight = 2;
+			
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "SwagLag, God of Swag", "$icon_swaglag$", "altar_swaglag", "The god of drugs, Mountain Dew and scopeless sniper rifles.\n\n- Increased gun damage up to +200%\n- Create Protopopov seed\n- Construct a MLG rifle\n- Buy Doritos");
+			AddRequirement(s.requirements, "no more global", "altar_swaglag", "Altar of SwagLag", 1);
+			AddRequirement(s.requirements, "blob", "sniper", "UPF Sniper Rifle", 2);
+			AddRequirement(s.requirements, "coin", "", "Coins", 4200);
 			s.customButton = true;
 			s.buttonwidth = 2;	
 			s.buttonheight = 2;

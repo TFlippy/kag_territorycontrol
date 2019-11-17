@@ -2,7 +2,7 @@
 #include "Requirements_Tech.as";
 #include "ShopCommon.as";
 #include "DeityCommon.as";
-s
+
 void onInit(CBlob@ this)
 {
 	this.set_u8("deity_id", Deity::cocok);
@@ -95,15 +95,11 @@ void onTick(CSprite@ this)
 	CBlob@ blob = this.getBlob();
 	if (blob is null) return;
 
-	const f32 power = this.get_f32("deity_power");
+	const f32 power = blob.get_f32("deity_power");
 	const f32 radius = 64.00f + ((power / 100.00f) * 8.00f);
-
-	this.setInventoryName("Altar of Cocok\n\nRussian Power: " + power + "\nGravitation field radius: " + radius);
-
 	const f32 gravity = sv_gravity * 0.03f;
-
-	blob.setInventoryName("Altar of Cocok\n\nRussian Power: " + power + "\nFree block chance: " + (power * 0.01f) + "%");
-
+	
+	blob.setInventoryName("Altar of Cocok\n\nRussian Power: " + power + "\nGravitation field radius: " + radius);
 	blob.SetLightRadius(radius);
 
 	CBlob@ localBlob = getLocalPlayerBlob();
