@@ -16,7 +16,6 @@ void onTick(CSprite@ this)
 	ParticleAnimated("SmallFire", this.getBlob().getPosition() + Vec2f(1 - XORRandom(3), -4), Vec2f(0, -1 - XORRandom(2)), 0, 1.0f, 2, 0.25f, false);
 }
 
-
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (isServer())

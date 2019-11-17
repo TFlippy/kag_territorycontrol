@@ -102,7 +102,7 @@ void onTick(CSprite@ this)
 				Driver@ driver = getDriver();
 				if(isWindowActive() || isWindowFocused())
 				{
-					Vec2f spos = driver.getScreenPosFromWorldPos(this.getPosition());
+					Vec2f spos = driver.getScreenPosFromWorldPos(blob.getPosition());
 					Vec2f dir = (controls.getMouseScreenPos() - spos);
 					Vec2f move_to = dir * 0.01f * factor;
 					if(move_to.x < 0) move_to.x--;

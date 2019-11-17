@@ -34,6 +34,7 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Offering of Molotov", "$icon_cocok_offering_0$", "offering_molotov", "Sacrifice some lunch money to craft a Molotov Cocktail under Cocok's guidance.");
 		AddRequirement(s.requirements, "blob", "vodka", "Vodka", 1);
+		// AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 25);
 		AddRequirement(s.requirements, "coins", "coins", "Coins", 150);
 		s.customButton = true;
 		s.buttonwidth = 1;
