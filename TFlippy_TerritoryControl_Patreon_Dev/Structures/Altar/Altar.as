@@ -48,7 +48,8 @@ void onInit(CBlob@ this)
 		AddIconToken("$icon_gregor$", "Altar.png", Vec2f(24, 32), 3);
 		AddIconToken("$icon_mason$", "Altar.png", Vec2f(24, 32), 4);
 		AddIconToken("$icon_cocok$", "Altar.png", Vec2f(24, 32), 5);
-		AddIconToken("$icon_swaglagk$", "Altar.png", Vec2f(24, 32), 6);
+		AddIconToken("$icon_swaglag$", "Altar.png", Vec2f(24, 32), 6);
+		AddIconToken("$icon_dragonfriend$", "Altar.png", Vec2f(24, 32), 7);
 		
 		{
 			ShopItem@ s = addShopItem(this, "Mithrios, God of Death", "$icon_mithrios$", "altar_mithrios", "A demon known for his cruelty and hunger for blood.\n\nAfter being banished from the mortal realm, he returned as a weapon of destruction.\n\n- Damage Reflection\n- Kill a random person\n- Create a Mithrios Device\n- Gain Demonic Power by killing people");

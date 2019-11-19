@@ -1,8 +1,8 @@
-	#include "ResearchCommon.as"
+#include "ResearchCommon.as"
 #include "Survival_Structs.as";
 #include "Requirements_Tech.as"
 
-string getButtonRequirementsText(CBitStream& inout bs,const bool missing)
+string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 {
 	string text,requiredType,name,friendlyName;
 	u16 quantity=0;
@@ -22,109 +22,73 @@ string getButtonRequirementsText(CBitStream& inout bs,const bool missing)
 			quantityColor="$GREEN$";
 		}
 
-
-		switch(requiredType.getHash())
+		if(requiredType=="blob")
 		{
-			case 1673310378: // blob
-			{
-				if(quantity>0)
-				{
-					text += quantityColor;
-					text += quantity;
-					text += quantityColor;
-					text += " ";
-				}
-				text += "$"; text += name; text += "$";
-				text += " ";
-				text += quantityColor;
-				text += friendlyName;
-				text += quantityColor;
-				// text += " required.";
-				text += "\n";
-			}
-			break;
-
-			case -1543962255: // tech
-			{
-				text += " \n$"; text += name; text += "$ ";
-				text += quantityColor;
-				text += friendlyName;
-				text += quantityColor;
-				// text += "\n\ntechnology required.\n";
-			}
-
-			case 565632247: // seclev feature
+			if(quantity>0)
 			{
 				text += quantityColor;
-				text += "Access to role " + friendlyName + " required. \n";
-				text += quantityColor;
-			}
-			break;
-
-			case -196050102: // not tech
-			{
-				if(missing)
-				{
-					text += " \n";
-					text += quantityColor;
-					text += friendlyName;
-					text += " technology already acquired.\n";
-					text += quantityColor;
-				}
-			}
-			break;
-
-			case -766704116: // coin
-			{
 				text += quantity;
-				text += " $COIN$ required\n";
+				text += quantityColor;
+				text += " ";
 			}
-			break;
-
-			case 898494223: // no more
-			{
-				if(missing)
-				{
-					text += quantityColor;
-					text += "Only "+quantity+" "+friendlyName+" per-team possible. \n";
-					text += quantityColor;
-				}
-			}
-			break;
-
-			case -2129023113: // no less
-			{
-				if(missing)
-				{
-					text += quantityColor;
-					text += "At least "+quantity+" "+friendlyName+" required. \n";
-					text += quantityColor;
-				}
-			}
-			break;
-
-			case 653287638: // no more global
-			{
-				if(missing)
-				{
-					text += quantityColor;
-					text += "Only " + quantity + " " + friendlyName + " possible. \n";
-					text += quantityColor;
-				}
-			}
-			break;
-
-			case -1256092450: // no less global
-			{
-				if(missing)
-				{
-					text += quantityColor;
-					text += "At least " + quantity + " " + friendlyName + " required. \n";
-					text += quantityColor;
-				}
-			}
-			break;
-
+			text += "$"; text += name; text += "$";
+			text += " ";
+			text += quantityColor;
+			text += friendlyName;
+			text += quantityColor;
+			// text += " required.";
+			text += "\n";
+		}
+		else if(requiredType=="tech")
+		{
+			text += " \n$"; text += name; text += "$ ";
+			text += quantityColor;
+			text += friendlyName;
+			text += quantityColor;
+			// text += "\n\ntechnology required.\n";
+		}
+		else if (requiredType == "seclev feature")
+		{
+			text += quantityColor;
+			text += "Access to role " + friendlyName + " required. \n";
+			text += quantityColor;
+		}
+		else if(requiredType=="not tech" && missing)
+		{
+			text += " \n";
+			text += quantityColor;
+			text += friendlyName;
+			text += " technology already acquired.\n";
+			text += quantityColor;
+		}
+		else if(requiredType=="coin")
+		{
+			text += quantity;
+			text += " $COIN$ required\n";
+		}
+		else if(requiredType=="no more" && missing)
+		{
+			text += quantityColor;
+			text += "Only "+quantity+" "+friendlyName+" per-team possible. \n";
+			text += quantityColor;
+		}
+		else if(requiredType=="no less" && missing)
+		{
+			text += quantityColor;
+			text += "At least "+quantity+" "+friendlyName+" required. \n";
+			text += quantityColor;
+		}
+		else if(requiredType == "no more global" && missing)
+		{
+			text += quantityColor;
+			text += "Only " + quantity + " " + friendlyName + " possible. \n";
+			text += quantityColor;
+		}
+		else if(requiredType == "no less global" && missing)
+		{
+			text += quantityColor;
+			text += "At least " + quantity + " " + friendlyName + " required. \n";
+			text += quantityColor;
 		}
 	}
 
@@ -249,125 +213,110 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 	while (!bs.isBufferEnd()) 
 	{
 		ReadRequirement(bs,req,blobName,friendlyName,quantity);
-
-		switch(req.getHash())
+		if(req=="blob") 
 		{
-			case 1673310378: // blob
+			int sum=(inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0)+(inv2 !is null ? inv2.getBlob().getBlobCount(blobName) : 0);
+			
+			if (storageEnabled)
 			{
-				int sum=(inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0)+(inv2 !is null ? inv2.getBlob().getBlobCount(blobName) : 0);
-				
-				if (storageEnabled)
+				for (int i = 0; i< baseBlobs.length; i++)
 				{
-					for (int i = 0; i< baseBlobs.length; i++)
-					{
-						sum += baseBlobs[i].getBlobCount(blobName);
-					}
-				}
-				
-				if(sum<quantity) 
-				{
-					AddRequirement(missingBs,req,blobName,friendlyName,quantity);
-					has=false;
+					sum += baseBlobs[i].getBlobCount(blobName);
 				}
 			}
-			break;
-
-			case -1543962255: // tech
+			
+			if(sum<quantity) 
 			{
-				const int teamNum = playerBlob.getTeamNum();
-
-				if (!(HasFakeTech(getRules(), blobName, teamNum)))
+				AddRequirement(missingBs,req,blobName,friendlyName,quantity);
+				has=false;
+			}
+		}
+		else if(req=="coin") 
+		{
+			CPlayer@ player1=	inv1 !is null ? inv1.getBlob().getPlayer() : null;
+			CPlayer@ player2=	inv2 !is null ? inv2.getBlob().getPlayer() : null;
+			u16 sum=			(player1 !is null ? player1.getCoins() : 0)+(player2 !is null ? player2.getCoins() : 0);
+			if(sum<quantity) 
+			{
+				AddRequirement(missingBs,req,blobName,friendlyName,quantity);
+				has=false;
+			}
+		}
+		else if((req == "no more" || req == "no less") && inv1 !is null) 
+		{
+			int teamNum = inv1.getBlob().getTeamNum();
+			int count =	0;
+			
+			CBlob@[] blobs;
+			if (getBlobsByName(blobName, @blobs)) 
+			{
+				for (uint step = 0; step < blobs.length; ++step) 
 				{
-					AddRequirement(missingBs, req, blobName, friendlyName, quantity);
-					has = false;
+					CBlob@ blob = blobs[step];
+					if(blob.getTeamNum() == teamNum) 
+					{
+						count++;
+					}
 				}
 			}
-
-			case 565632247: // seclev feature
+			
+			if((req == "no more" && count >= quantity) || (req == "no less" && count < quantity)) 
 			{
-				CPlayer@ player = playerBlob.getPlayer();
-				if (player !is null)
+				AddRequirement(missingBs, req, blobName, friendlyName, quantity);
+				has = false;
+			}
+		}
+		else if((req == "no more global" || req == "no less global") && inv1 !is null) 
+		{
+			CBlob@[] blobs;
+			getBlobsByName(blobName, @blobs);
+		
+			int count =	blobs.length;
+			if((req == "no more global" && count >= quantity) || (req == "no less global" && count < quantity)) 
+			{
+				AddRequirement(missingBs, req, blobName, friendlyName, quantity);
+				has = false;
+			}
+		}
+		else if (req == "tech")
+		{
+			int teamNum = playerBlob.getTeamNum();
+
+			if (HasFakeTech(getRules(), blobName, teamNum))
+			{
+				// print(blobName + " is gud");
+			}
+			else
+			{
+				AddRequirement(missingBs, req, blobName, friendlyName, quantity);
+				has = false;
+			}
+		}
+		else if (req == "seclev feature")
+		{
+			CPlayer@ player = playerBlob.getPlayer();
+			if (player !is null)
+			{
+				CSecurity@ security = getSecurity();
+				
+				if (security.checkAccess_Feature(player, blobName))
 				{
-					CSecurity@ security = getSecurity();
-					
-					if (!(security.checkAccess_Feature(player, blobName)))
-					{
-						//print("has feature " + blobName);
-						AddRequirement(missingBs, req, blobName, friendlyName, quantity);
-						has = false;
-					}
+					print("has feature " + blobName);
 				}
 				else
 				{
-					has = false;
-				}
-				
-			}
-			break;
-
-			case -766704116: // coin
-			{
-				CPlayer@ player1=	inv1 !is null ? inv1.getBlob().getPlayer() : null;
-				CPlayer@ player2=	inv2 !is null ? inv2.getBlob().getPlayer() : null;
-				u16 sum=			(player1 !is null ? player1.getCoins() : 0)+(player2 !is null ? player2.getCoins() : 0);
-				if(sum<quantity) 
-				{
-					AddRequirement(missingBs,req,blobName,friendlyName,quantity);
-					has=false;
-				}
-			}
-			break;
-
-			case 898494223: // no more
-			case -2129023113: // no less
-			{
-				if(inv1 is null){break;}
-
-				const int teamNum = inv1.getBlob().getTeamNum();
-				int count =	0;
-				
-				CBlob@[] blobs;
-				if (getBlobsByName(blobName, @blobs)) 
-				{
-					for (uint step = 0; step < blobs.length; ++step) 
-					{
-						CBlob@ blob = blobs[step];
-						if(blob.getTeamNum() == teamNum) 
-						{
-							count++;
-						}
-					}
-				}
-				
-				if((req == "no more" && count >= quantity) || (req == "no less" && count < quantity)) 
-				{
-					AddRequirement(missingBs, req, blobName, friendlyName, quantity);
-					has = false;
-				}
-				
-			}
-			break;
-
-			case 653287638: // no more global
-			case -1256092450: // no less global
-			{
-				if(inv1 is null){break;}
-			
-				CBlob@[] blobs;
-				getBlobsByName(blobName, @blobs);
-			
-				const int count = blobs.length;
-				if((req == "no more global" && count >= quantity) || (req == "no less global" && count < quantity)) 
-				{
+					print("no access to seclev feature " + blobName);
+					
 					AddRequirement(missingBs, req, blobName, friendlyName, quantity);
 					has = false;
 				}
 			}
-			break;
-
+			else
+			{
+				print("no player");
+				has = false;
+			}
 		}
-
-		
 	}
 
 	missingBs.ResetBitIndex();
@@ -498,4 +447,3 @@ void server_TakeRequirements(CInventory@ inv,CBitStream &inout bs)
 {
 	server_TakeRequirements(inv,null,bs);
 }
-
