@@ -3,9 +3,12 @@
 #include "ShopCommon.as";
 #include "DeityCommon.as";
 #include "MakeSeed.as";
+#include "MakeMat.as";
 
 void onInit(CBlob@ this)
 {
+	Random@ rand = Random(this.getNetworkID());
+
 	this.set_u8("deity_id", Deity::dragonfriend);
 	this.set_Vec2f("shop menu size", Vec2f(4, 2));
 	
@@ -64,16 +67,17 @@ void onInit(CBlob@ this)
 	
 	this.set_f32("stonks_volatility", 0.20f);
 	this.set_f32("stonks_growth", 0.01f);
-	this.set_f32("stonks_value", 1000);
-	
+	this.set_f32("stonks_value", rand.NextRanged(stonks_value_max));
+
 	this.addCommandID("stonks_update");
+	this.addCommandID("stonks_purchase");
 }
 
 // const u32 stonks_update_frequency = 30 * 5;
-const u32 stonks_update_frequency = 30 * 3;
+const u32 stonks_update_frequency = 30 * 2;
 // const u32 stonks_update_frequency = 3;
-const f32 stonks_value_min = 1.00f;
-const f32 stonks_value_max = 3000.00f;
+const f32 stonks_value_min = 100.00f;
+const f32 stonks_value_max = 2000.00f;
 
 f32[] graph = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int graph_index = 0;
@@ -86,6 +90,9 @@ void onTick(CBlob@ this)
 
 	if (client)
 	{
+		buy_pressed = false;	
+		sell_pressed = false;	
+	
 		const f32 power = this.get_f32("deity_power");
 	
 		const f32 stonks_volatility = this.get_f32("stonks_volatility");
@@ -270,7 +277,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 			
 			this.set_f32("stonks_volatility", stonks_volatility);
 			this.set_f32("stonks_growth", stonks_growth);
-			this.set_f32("stonks_value", stonks_value);
+			this.set_f32("stonks_value", Maths::Clamp(stonks_value, stonks_value_min, stonks_value_max));
 			
 			// print("" + stonks_value);
 			
@@ -288,10 +295,101 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 			this.getSprite().PlaySound("LotteryTicket_Kaching", 0.25f, 1.00f + ((stonks_value_delta - 1.00f) * 4.00f));
 		}
 	}
+	else if (cmd == this.getCommandID("stonks_purchase") && isServer())
+	{
+		u16 caller_netid;
+		u8 action;
+		
+		if (params.saferead_netid(caller_netid) && params.saferead_u8(action))
+		{
+			CBlob@ caller = getBlobByNetworkID(caller_netid);
+			if (caller !is null)
+			{
+				CPlayer@ callerPlayer = caller.getPlayer();
+				if (callerPlayer !is null)
+				{
+					CBitStream reqs;
+					CBitStream missing;
+				
+					f32 stonks_value = this.get_f32("stonks_value");
+				
+					s32 buy_price = Maths::Ceil(stonks_value * 1.02f);
+					s32 sell_price = Maths::Ceil(stonks_value);
+				
+					switch (action)
+					{
+						case 0: // Buy
+						{
+							AddRequirement(reqs, "coin", "", "Coins", buy_price);
+						}
+						break;
+						
+						case 1: // Sell
+						{
+							AddRequirement(reqs, "blob", "mat_stonks", "Stonks", 1);
+						}
+						break;
+					}
+					
+					bool has_reqs = false;
+					if (hasRequirements_Tech(caller.getInventory(), this.getInventory(), reqs, missing))
+					{
+						if (isClient())
+						{
+							server_TakeRequirements(caller.getInventory(), this.getInventory(), reqs);
+						}
+						
+						has_reqs = true;
+					}
+					
+					if (has_reqs)
+					{
+						switch (action)
+						{
+							case 0: // Buy
+							{
+								if (isServer())
+								{
+									MakeMat(caller, this.getPosition(), "mat_stonks", 1);
+									this.set_f32("stonks_value", Maths::Clamp(stonks_value + (buy_price * 0.02f), stonks_value_min, stonks_value_max));
+									this.Sync("stonks_value", false);
+								}
+								
+								if (isClient())
+								{
+									this.getSprite().PlaySound("/ChaChing.ogg");
+								}
+							}
+							break;
+							
+							case 1: // Sell
+							{
+								if (isServer())
+								{
+									callerPlayer.server_setCoins(callerPlayer.getCoins() + sell_price);
+									this.set_f32("stonks_value", Maths::Clamp(stonks_value - (sell_price * 0.02f), stonks_value_min, stonks_value_max));
+									this.Sync("stonks_value", false);
+								}
+								
+								if (isClient())
+								{
+									this.getSprite().PlaySound("/ChaChing.ogg");
+								}
+							}
+							break;
+						}
+					}
+					
+					
+					print("has reqs: " + has_reqs);
+				}
+			}
+		}
+	}
 }
 
 f32 axis_x = 200;
-f32 axis_y = 100;
+f32 axis_y = 90;
 
 void onRender(CSprite@ this)
 {
@@ -328,13 +426,39 @@ void onRender(CSprite@ this)
 			text += "\nGrowth: " + (stonks_growth >= 0 ? "+" : "-") + (Maths::Abs(s32(stonks_growth * 10000.00f) * 0.01f)) + "%";
 			text += "\n";
 			text += "\nSell Price: " + Maths::Ceil(stonks_value) + " coins";
-			text += "\nBuy Price: " + Maths::Ceil(stonks_value * 0.98f) + " coins";
+			text += "\nBuy Price: " + Maths::Ceil(stonks_value * 1.02f) + " coins";
 			
 			GUI::SetFont("menu");
 			GUI::DrawText("Stonks Dashboard", pos + Vec2f(axis_x + 16, -axis_y - 8), SColor(255, 255, 255, 255));
 			
 			GUI::SetFont("");
 			GUI::DrawText(text, pos + Vec2f(axis_x + 16, -axis_y - 0), SColor(255, 255, 255, 255));
+			
+			if (DrawButton("Buy", pos + Vec2f(axis_x + 16, -24), Vec2f(64, 32)) && !buy_pressed)
+			{
+				buy_pressed = true;
+				
+				Sound::Play("option");
+				print("he bought");
+				
+				CBitStream stream;
+				stream.write_netid(localBlob.getNetworkID());
+				stream.write_u8(0);
+				blob.SendCommand(blob.getCommandID("stonks_purchase"), stream);
+			}
+			
+			if (DrawButton("Sell", pos + Vec2f(axis_x + 16 + 64, -24), Vec2f(64, 32)) && !sell_pressed)
+			{
+				sell_pressed = true;
+			
+				Sound::Play("option");
+				print("he sold");
+				
+				CBitStream stream;
+				stream.write_netid(localBlob.getNetworkID());
+				stream.write_u8(1);
+				blob.SendCommand(blob.getCommandID("stonks_purchase"), stream);
+			}
 			
 			f32 step_x = axis_x / graph.length();
 			for (int i = 0; i < graph.length() - 1; i++)
@@ -357,4 +481,43 @@ void onRender(CSprite@ this)
 			// GUI::DrawRectangle(pos + Vec2f(6, 6), bar + Vec2f(2, 2), SColor(transparency, 183, 51, 51));
 		}
 	}
+}
+
+bool buy_pressed = false;
+bool sell_pressed = false;
+
+bool DrawButton(string text, Vec2f pos, Vec2f size)
+{
+	f32 width = size.x;
+	f32 height = size.y;
+
+	Vec2f dim;
+	GUI::GetTextDimensions(text, dim);
+
+	Vec2f tl = pos + Vec2f(0, 0);
+	Vec2f br = pos + Vec2f(width, height);
+	
+	CControls@ controls = getControls();
+	Vec2f mousePos = controls.getMouseScreenPos();
+	
+	bool hover = mousePos.x > tl.x && mousePos.x < br.x && mousePos.y > tl.y && mousePos.y < br.y;
+	bool pressed = false;
+	
+	if (hover)
+	{
+		GUI::DrawButton(tl, br);
+		
+		if (controls.isKeyJustPressed(KEY_LBUTTON))
+		{
+			pressed = true;
+		}
+	}
+	else
+	{
+		GUI::DrawPane(tl, br, 0xffcfcfcf);
+	}
+	
+	GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
+	
+	return pressed;
 }

@@ -131,8 +131,8 @@ void onInit(CBlob@ this)
 
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
 	this.set_Vec2f("shop menu size", Vec2f(4, 4));
-	this.set_string("shop description", name + " the Trader");
-	this.setInventoryName(name + " the Trader");
+	this.set_string("shop description", name + " the Lawyer");
+	this.setInventoryName(name + " the Lawyer");
 	this.set_u8("shop icon", 25);
 	
 	this.set_u32("lastDanger", 0);
