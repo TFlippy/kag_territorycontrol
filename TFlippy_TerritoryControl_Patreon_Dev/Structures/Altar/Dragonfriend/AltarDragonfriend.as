@@ -74,7 +74,7 @@ void onInit(CBlob@ this)
 }
 
 // const u32 stonks_update_frequency = 30 * 5;
-const u32 stonks_update_frequency = 30 * 2;
+const u32 stonks_update_frequency = 30 * 5;
 // const u32 stonks_update_frequency = 3;
 const f32 stonks_value_min = 100.00f;
 const f32 stonks_value_max = 2000.00f;
@@ -351,8 +351,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 								if (isServer())
 								{
 									MakeMat(caller, this.getPosition(), "mat_stonks", 1);
-									this.set_f32("stonks_value", Maths::Clamp(stonks_value + (buy_price * 0.02f), stonks_value_min, stonks_value_max));
-									this.Sync("stonks_value", false);
+									// this.set_f32("stonks_value", Maths::Clamp(stonks_value + (buy_price * 0.02f), stonks_value_min, stonks_value_max));
+									// this.Sync("stonks_value", false);
 								}
 								
 								if (isClient())
@@ -367,8 +367,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 								if (isServer())
 								{
 									callerPlayer.server_setCoins(callerPlayer.getCoins() + sell_price);
-									this.set_f32("stonks_value", Maths::Clamp(stonks_value - (sell_price * 0.02f), stonks_value_min, stonks_value_max));
-									this.Sync("stonks_value", false);
+									// this.set_f32("stonks_value", Maths::Clamp(stonks_value - (sell_price * 0.02f), stonks_value_min, stonks_value_max));
+									// this.Sync("stonks_value", false);
 								}
 								
 								if (isClient())
@@ -381,7 +381,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 					}
 					
 					
-					print("has reqs: " + has_reqs);
+					// print("has reqs: " + has_reqs);
 				}
 			}
 		}
@@ -439,7 +439,7 @@ void onRender(CSprite@ this)
 				buy_pressed = true;
 				
 				Sound::Play("option");
-				print("he bought");
+				// print("he bought");
 				
 				CBitStream stream;
 				stream.write_netid(localBlob.getNetworkID());
@@ -452,7 +452,7 @@ void onRender(CSprite@ this)
 				sell_pressed = true;
 			
 				Sound::Play("option");
-				print("he sold");
+				// print("he sold");
 				
 				CBitStream stream;
 				stream.write_netid(localBlob.getNetworkID());
