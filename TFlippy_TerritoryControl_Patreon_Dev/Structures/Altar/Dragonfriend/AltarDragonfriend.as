@@ -74,7 +74,7 @@ void onInit(CBlob@ this)
 }
 
 // const u32 stonks_update_frequency = 30 * 5;
-const u32 stonks_update_frequency = 30 * 5;
+const u32 stonks_update_frequency = 30 * 2;
 // const u32 stonks_update_frequency = 3;
 const f32 stonks_value_min = 100.00f;
 const f32 stonks_value_max = 2000.00f;
@@ -136,7 +136,7 @@ void onTick(CBlob@ this)
 			f32 stonks_value = this.get_f32("stonks_value");
 		
 			if (stonks_value == stonks_value_min || stonks_value == stonks_value_max) stonks_growth *= -Maths::Min(0.30f + stonks_volatility, 0.80f);
-			if ((XORRandom(100) * 0.01f) < Maths::Pow(stonks_volatility, 2.00f)) stonks_growth *= -stonks_volatility;
+			if ((XORRandom(100) * 0.01f) < Maths::Pow(stonks_volatility, 2.00f)) stonks_growth *= -stonks_volatility * 1.40f;
 			if ((XORRandom(100) * 0.01f) > Maths::Pow(stonks_volatility, 2.00f)) stonks_growth *= 0.80f;
 			if ((XORRandom(100) * 0.01f) > Maths::Pow(stonks_volatility, 3.00f)) stonks_growth *= 1.25f;
 		
@@ -407,13 +407,13 @@ void onRender(CSprite@ this)
 			f32 stonks_growth = blob.get_f32("stonks_growth");
 			f32 stonks_value = blob.get_f32("stonks_value");
 			
-			string volatility_text;
-			if (stonks_volatility > 0.90f) volatility_text = "extremely high";
-			else if (stonks_volatility > 0.80f) volatility_text = "very high";
-			else if (stonks_volatility > 0.60f) volatility_text = "high";
-			else if (stonks_volatility > 0.40f) volatility_text = "medium";
-			else if (stonks_volatility > 0.20f) volatility_text = "low";
-			else volatility_text = "very low";
+			// string volatility_text;
+			// if (stonks_volatility > 0.90f) volatility_text = "extremely high";
+			// else if (stonks_volatility > 0.80f) volatility_text = "very high";
+			// else if (stonks_volatility > 0.60f) volatility_text = "high";
+			// else if (stonks_volatility > 0.40f) volatility_text = "medium";
+			// else if (stonks_volatility > 0.20f) volatility_text = "low";
+			// else volatility_text = "very low";
 			
 			Vec2f pos = blob.getScreenPos() + Vec2f(-axis_x * 0.50f, 224);
 
@@ -422,7 +422,7 @@ void onRender(CSprite@ this)
 			GUI::DrawLine2D(pos, pos + Vec2f(axis_x, 0), SColor(255, 196, 135, 58));
 			
 			string text;
-			text += "\nVolatility: " + volatility_text;
+			// text += "\nVolatility: " + volatility_text;
 			text += "\nGrowth: " + (stonks_growth >= 0 ? "+" : "-") + (Maths::Abs(s32(stonks_growth * 10000.00f) * 0.01f)) + "%";
 			text += "\n";
 			text += "\nSell Price: " + Maths::Ceil(stonks_value) + " coins";

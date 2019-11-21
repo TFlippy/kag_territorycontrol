@@ -47,7 +47,7 @@ void onTick(CBlob@ this)
 					for (uint i = 0; i < hitInfos.length; i++)
 					{
 						CBlob@ blob = hitInfos[i].blob;
-						if (blob !is null && blob.hasTag("player") && blob.getTeamNum() != team && blob.get_u8("deity_id") != Deity::ivan || blob.get_u8("deity_id") != Deity::swaglag)
+						if (blob !is null && blob.hasTag("player") && blob.getTeamNum() != team && (blob.get_u8("deity_id") != Deity::ivan || blob.get_u8("deity_id") != Deity::swaglag))
 						{
 							f32 chance = 1.0f - (blob.getHealth() / blob.getInitialHealth());
 							if (blob.get_f32("babbyed") > 0) chance = 1.00f;

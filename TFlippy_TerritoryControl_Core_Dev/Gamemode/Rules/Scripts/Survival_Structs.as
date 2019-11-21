@@ -77,7 +77,10 @@ shared class TeamData
 		recruitment_enabled = true;
 		lockdown_enabled = true;
 		tax_enabled = false;
+		bool f2p_enabled = true;
 		storage_enabled = true;
+		slavery_enabled = true;
+		
 		player_count = 0;
 	}
 	
