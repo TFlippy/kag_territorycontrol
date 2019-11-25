@@ -112,6 +112,7 @@ void React(CBlob@ this)
 			CBlob@ e_mithril_blob = inv.getItem("mat_mithrilenriched");
 			CBlob@ coal_blob = inv.getItem("mat_coal");
 			CBlob@ protopopov_blob = inv.getItem("mat_protopopov");
+			CBlob@ protopopovBulb_blob = inv.getItem("protopopovbulb");
 
 			bool hasOil = oil_blob !is null;
 			bool hasMethane = methane_blob !is null;
@@ -125,14 +126,30 @@ void React(CBlob@ this)
 			bool hasMithril = mithril_blob !is null;
 			bool hasCoal = coal_blob !is null;
 			bool hasProtopopov = protopopov_blob !is null;
-						
-			if (pressure > 70000 && heat > 420 && hasProtopopov && hasAcid && hasMithril && protopopov_count >= 50 && mithril_count >= 50 && acid_count > 50)
+			bool hasProtopopovBulb = protopopovBulb_blob !is null;
+			
+			if (pressure > 100000 && heat > 500 && hasFuel && hasAcid && hasCoal && fuel_count >= 50 && acid_count >= 50 && coal_count >= 50)
+			{
+				if (isServer())
+				{
+					fuel_blob.server_SetQuantity(Maths::Max(fuel_blob.getQuantity() - 50, 0));
+					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 50, 0));
+					coal_blob.server_SetQuantity(Maths::Max(coal_blob.getQuantity() - 50, 0));
+					
+					Material::createFor(this, "fumes", 2 + XORRandom(5));
+				}
+				
+				ShakeScreen(20.0f, 30, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Solid.ogg", 1.00f, 1.00f);
+			}
+			
+			if (pressure > 10000 && heat < 500 && hasProtopopov && hasAcid && hasMithril && protopopov_count >= 50 && acid_count >= 50 && mithril_count >= 25)
 			{
 				if (isServer())
 				{
 					protopopov_blob.server_SetQuantity(Maths::Max(protopopov_blob.getQuantity() - 50, 0));
-					mithril_blob.server_SetQuantity(Maths::Max(mithril_blob.getQuantity() - 50, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 50, 0));
+					mithril_blob.server_SetQuantity(Maths::Max(mithril_blob.getQuantity() - 25, 0));
 					
 					Material::createFor(this, "dew", 2 + XORRandom(4));
 				}
@@ -140,7 +157,21 @@ void React(CBlob@ this)
 				ShakeScreen(20.0f, 30, this.getPosition());
 				this.getSprite().PlaySound("DrugLab_Create_Acidic.ogg", 1.00f, 1.00f);
 			}
-						
+			
+			if (heat > 1400 && hasProtopopovBulb)
+			{
+				if (isServer())
+				{
+					protopopovBulb_blob.server_Die();
+					
+					Material::createFor(this, "mat_acid", 50 + XORRandom(75));
+					Material::createFor(this, "mat_oil", 25 + XORRandom(100));
+				}
+				
+				ShakeScreen(60.0f, 15, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Solid.ogg", 1.00f, 1.00f);
+			}
+			
 			if (pressure > 40000 && heat > 750 && hasOil && hasMethane)
 			{
 				f32 count = Maths::Min(Maths::Min(methane_count, oil_count), pressure * 0.0002f);
@@ -263,7 +294,7 @@ void React(CBlob@ this)
 				this.getSprite().PlaySound("DrugLab_Create_Creamy.ogg", 1.00f, 1.00f);
 			}
 					
-			if (pressure > 40000 && heat > 700 && hasAcid && hasMethane && hasMithrilEnriched && hasMeat && acid_count > 25 && methane_count > 25 && e_mithril_count > 5 && meat_count > 10)
+			if (pressure > 40000 && heat > 700 && hasAcid && hasMethane && hasMithrilEnriched && hasMeat && acid_count > 25 && methane_count >= 25 && e_mithril_count >= 5 && meat_count >= 10)
 			{
 				if (isServer())
 				{
@@ -349,7 +380,7 @@ void React(CBlob@ this)
 				}
 			}
 			
-			if (pressure < 25000 && heat > 100 && heat < 1000 && hasAcid && hasMithril && acid_count >= 15 && mithril_count >= 5)
+			if (pressure < 25000 && heat > 500 && heat < 2000 && hasAcid && hasMithril && acid_count >= 15 && mithril_count >= 5)
 			{
 				if (isServer())
 				{

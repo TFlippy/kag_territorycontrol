@@ -68,6 +68,12 @@ void onSetPlayer(CRules@ this, CBlob@ blob, CPlayer@ player)
 				blob.Tag("ivan");
 			}
 			break;
+			
+			case Deity::dragonfriend:
+			{
+				blob.Tag("dangerous");
+			}
+			break;
 		}
 	}
 }

@@ -38,7 +38,7 @@ void onInit(CBlob@ this)
 	
 	if (this.getName() == "altar")
 	{
-		this.set_Vec2f("shop menu size", Vec2f(12, 2));
+		this.set_Vec2f("shop menu size", Vec2f(14, 2));
 		this.set_string("shop description", "Select a Deity");
 		this.set_u8("shop icon", 15);
 		this.Tag(SHOP_AUTOCLOSE);
@@ -115,6 +115,17 @@ void onInit(CBlob@ this)
 		{
 			ShopItem@ s = addShopItem(this, "SwagLag, God of Swag", "$icon_swaglag$", "altar_swaglag", "The god of drugs, Mountain Dew and scopeless sniper rifles.\n\n- Increased gun damage up to +200%\n- Create Protopopov seed\n- Construct a MLG rifle\n- Buy Doritos");
 			AddRequirement(s.requirements, "no more global", "altar_swaglag", "Altar of SwagLag", 1);
+			AddRequirement(s.requirements, "blob", "sniper", "UPF Sniper Rifle", 2);
+			AddRequirement(s.requirements, "coin", "", "Coins", 4200);
+			s.customButton = true;
+			s.buttonwidth = 2;	
+			s.buttonheight = 2;
+			
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Dragonfriend, God of Greed", "$icon_dragonfriend$", "altar_dragonfriend", "The god of wealth, power and greed.\n\n- Stonks Trading\n- Fire Resistance up to 100%\n- Summon a meteor\n\n- $KEY_S$+$LMB$ to conjure a fireball");
+			AddRequirement(s.requirements, "no more global", "altar_dragonfriend", "Altar of the Dragon", 1);
 			AddRequirement(s.requirements, "blob", "sniper", "UPF Sniper Rifle", 2);
 			AddRequirement(s.requirements, "coin", "", "Coins", 4200);
 			s.customButton = true;

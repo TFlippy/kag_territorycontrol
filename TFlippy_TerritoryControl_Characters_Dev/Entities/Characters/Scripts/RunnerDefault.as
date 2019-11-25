@@ -134,7 +134,7 @@ void onTick(CBlob@ this)
 		
 		case Deity::dragonfriend:
 		{
-			if (this.isKeyPressed(key_down) && this.isKeyJustPressed(key_action1))
+			if (this.isKeyPressed(key_down) && this.isKeyJustPressed(key_action1) && this.getTeamNum() < 7 && !(getKnocked(this) > 0 || this.get_f32("babbyed") > 0.00f))
 			{
 				if (getGameTime() >= this.get_u32("nextDragonFireball"))
 				{
@@ -164,7 +164,14 @@ void onTick(CBlob@ this)
 						
 						this.setVelocity(this.getVelocity() - (vel * 0.50f));
 						
-						this.set_u32("nextDragonFireball", getGameTime() + (30 * 10));
+						
+						u32 cooldown = (30 * 15);
+						if (this.get_f32("fumes_effect") > 0.00f)
+						{
+							cooldown /= 5.00f;
+						}
+						
+						this.set_u32("nextDragonFireball", getGameTime() + cooldown);
 					}
 				}
 				else
@@ -256,37 +263,15 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				CBlob@ altar = getBlobByName("altar_dragonfriend");
 				if (altar !is null)
 				{
-				
 					f32 ratio = Maths::Clamp(altar.get_f32("deity_power") * 0.0001f, 0.00f, 1.00f);
 					f32 inv_ratio = 1.00f - ratio;
-				
-					
-				
 					damage *= inv_ratio;
-					
-					print("" + damage);
 				}
 			}
 		}
 		break;
 	}
-	
-	// print("" + this.getConfig() + " hit by damage " + customData + " for " + damage);
-	
-	// if (hitterBlob is null) return damage;
 
-	// AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-	// if (point is null) return damage;
-	
-	// CBlob@ vehicle = point.getOccupied();
-	
-	// // print("");
-	
-	// if (vehicle !is null)
-	// {
-		// hitterBlob.server_Hit(vehicle, worldPoint, velocity, damage, customData);
-	// }
-	
 	return damage;
 }
 

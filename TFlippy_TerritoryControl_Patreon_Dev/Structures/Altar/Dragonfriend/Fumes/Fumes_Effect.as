@@ -57,8 +57,6 @@ void onTick(CBlob@ this)
 		if (this.isMyPlayer())
 		{
 			SetScreenFlash(255, 0, 0, 0, 1);
-					
-			// Sound::Play("MLG_Airhorn.ogg");
 		}
 		
 		CSpriteLayer@ wings = this.getSprite().getSpriteLayer("fumes_wings");
@@ -79,15 +77,8 @@ void onTick(CBlob@ this)
 				wings.SetVisible(true);
 			}
 			
-			
 			ParticleAnimated("SmallSmoke", this.getPosition() + Vec2f(+8 + XORRandom(4), 8 - XORRandom(16)), this.getVelocity() * 0.10f, 0, 1.00f, 3 + XORRandom(2), 0, false);
 			ParticleAnimated("SmallSmoke", this.getPosition() + Vec2f(-8 - XORRandom(4), 8 - XORRandom(16)), this.getVelocity() * 0.10f, 0, 1.00f, 3 + XORRandom(2), 0, false);
-			
-			
-			// if (getGameTime() % 5 == 0)
-			// {
-				// ParticleAnimated("LargeSmoke", this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), this.getVelocity() * 0.10f, 0, 1.00f, 3 + XORRandom(2), 0, false);
-			// }
 		}
 	
 		const bool isknocked = isKnocked(this);
@@ -102,14 +93,6 @@ void onTick(CBlob@ this)
 			
 				this.setVelocity((this.getVelocity() * 0.25f) + vel);
 
-				// Vec2f pos = this.getPosition() + Vec2f( 0.0f, 4.0f);
-				// if(isClient())
-				// {
-					// MakeDustParticle(pos + Vec2f(2.0f, 0.0f), "Dust.png");
-					
-					// this.getSprite().PlaySound("/Jetpack_Offblast.ogg");
-				// }
-				
 				this.getSprite().PlaySound("Fumes_Fly.ogg");
 				this.set_u32("nextFumesJump", getGameTime() + 10);
 				
@@ -129,27 +112,27 @@ void onTick(CBlob@ this)
 			}
 		}
 			
-		if (this.isMyPlayer())
-		{
-			// f32 camX = Maths::Sin(getGameTime()) * 0.01f * (level);
-			// f32 camY = Maths::Cos(getGameTime()) * 0.01f * (level);
-			// f32 camZ = Maths::Sin(getGameTime() * 0.125f) * 2 * (level);
+		// if (this.isMyPlayer())
+		// {
+			// // f32 camX = Maths::Sin(getGameTime()) * 0.01f * (level);
+			// // f32 camY = Maths::Cos(getGameTime()) * 0.01f * (level);
+			// // f32 camZ = Maths::Sin(getGameTime() * 0.125f) * 2 * (level);
 
-			// f32 time = getGameTime(); // * true_level * 10.00f;
-			// f32 angle = (time * 0.50f) % 180;
-			// // print("" + angle);
+			// // f32 time = getGameTime(); // * true_level * 10.00f;
+			// // f32 angle = (time * 0.50f) % 180;
+			// // // print("" + angle);
 
-			// f32 value = (1.00f + Maths::Sin(angle)) * 0.50f;
+			// // f32 value = (1.00f + Maths::Sin(angle)) * 0.50f;
 			
-			// SColor col = HSVToRGB(83, 1.00f, 0.70f + (value * 0.30f));
-			// SetScreenFlash(Maths::Min(25 + (25 * true_level), 150), col.getRed(), col.getGreen(), col.getBlue(), 1);
+			// // SColor col = HSVToRGB(83, 1.00f, 0.70f + (value * 0.30f));
+			// // SetScreenFlash(Maths::Min(25 + (25 * true_level), 150), col.getRed(), col.getGreen(), col.getBlue(), 1);
 			
-			// ShakeScreen(50.0f * true_level, 5, this.getPosition());
+			// // ShakeScreen(50.0f * true_level, 5, this.getPosition());
 			
-			// CSprite@ sprite = this.getSprite();
-			// sprite.SetEmitSoundVolume(Maths::Min(true_level * 3.00f, 1.00f));
-			// sprite.SetEmitSoundSpeed(Maths::Min(true_level * 3.00f, 1.00f));
-		}
+			// // CSprite@ sprite = this.getSprite();
+			// // sprite.SetEmitSoundVolume(Maths::Min(true_level * 3.00f, 1.00f));
+			// // sprite.SetEmitSoundSpeed(Maths::Min(true_level * 3.00f, 1.00f));
+		// }
 		
 		// print("" + modifier);
 		// print("" + level / max_time);
