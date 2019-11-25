@@ -34,18 +34,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				}
 				
 				ParticleAnimated("LargeSmoke", this.getPosition(), Vec2f(0.5f, -0.75f), 0, 1.00f, 3 + XORRandom(2), 0, false);
-			
-				// Sound::Play("MLG_Airhorn.ogg");
-				// getMap().CreateSkyGradient("skygradient_Fumes.png");
-				
-				// CSprite@ sprite = caller.getSprite();
-				// sprite.SetEmitSound("AltarSwagLag_Music.ogg");
-				// sprite.SetEmitSoundVolume(1.00f);
-				// sprite.SetEmitSoundSpeed(1.00f);
-				// sprite.SetEmitSoundPaused(false);
 			}
-			
-			
 
 			if (isServer())
 			{
