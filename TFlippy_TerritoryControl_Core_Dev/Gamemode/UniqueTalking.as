@@ -192,9 +192,9 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 	}
 	
-	if (blob.get_u16("drunk") > 0)
+	if (blob.get_f32("drunk_effect") > 0)
 	{
-		if (XORRandom(100) < blob.get_u16("drunk") * 10)
+		if (XORRandom(100) < blob.get_f32("drunk_effect") * 10)
 		{
 			switch(XORRandom(13))
 			{
