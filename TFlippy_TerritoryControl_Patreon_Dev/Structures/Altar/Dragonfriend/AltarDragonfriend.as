@@ -181,8 +181,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 					{
 						if (callerBlob.getTeamNum() < 7)
 						{
-							this.add_f32("deity_power", 899);
-							if (isServer()) this.Sync("deity_power", false);
+							if (isServer()) 
+							{
+								this.add_f32("deity_power", 899);
+								this.Sync("deity_power", true);
+							}
 							
 							if (isClient())
 							{
@@ -205,10 +208,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 							if (isServer())
 							{
 								callerPlayer.set_u8("deity_id", Deity::dragonfriend);
-								callerPlayer.Sync("deity_id", false);
+								callerPlayer.Sync("deity_id", true);
 								
 								callerBlob.set_u8("deity_id", Deity::dragonfriend);
-								callerBlob.Sync("deity_id", false);
+								callerBlob.Sync("deity_id", true);
 							}
 						}
 						else
@@ -241,7 +244,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 								f32 stonks_value = this.get_f32("stonks_value");
 							
 								this.add_f32("deity_power", stonks_value * 0.95f);
-								if (isServer()) this.Sync("deity_power", false);
+								this.Sync("deity_power", true);
 							
 								server_DropCoins(this.getPosition(), stonks_value * 0.05f);
 							}
@@ -253,11 +256,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 						}
 						else if (data == "offering_meteor")
 						{
-							this.add_f32("deity_power", 7999);
-							if (isServer()) this.Sync("deity_power", false);
-							
 							if (isServer())
 							{
+								this.add_f32("deity_power", 7999);
+								this.Sync("deity_power", true);
+							
 								f32 map_width = getMap().tilemapwidth * 8.00f;
 								CBlob@ item = server_CreateBlob("meteor", this.getTeamNum(), Vec2f(XORRandom(map_width), 0));
 								
@@ -276,30 +279,33 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 	}
 	else if (cmd == this.getCommandID("stonks_update"))
 	{
-		f32 stonks_volatility;
-		f32 stonks_growth;
-		f32 stonks_value;
-		
-		if (params.saferead_f32(stonks_volatility) && params.saferead_f32(stonks_growth) && params.saferead_f32(stonks_value))
+		if (isClient())
 		{
-			const f32 power = this.get_f32("deity_power");
-		
-			f32 stonks_value_old = this.get_f32("stonks_value");
-			f32 stonks_value_delta = stonks_value / stonks_value_old;
+			f32 stonks_volatility;
+			f32 stonks_growth;
+			f32 stonks_value;
 			
-			f32 stonks_value_max = stonks_base_value_max + (power / 100.00f);
+			if (params.saferead_f32(stonks_volatility) && params.saferead_f32(stonks_growth) && params.saferead_f32(stonks_value))
+			{
+				const f32 power = this.get_f32("deity_power");
 			
-			this.set_f32("stonks_volatility", stonks_volatility);
-			this.set_f32("stonks_growth", stonks_growth);
-			this.set_f32("stonks_value", Maths::Clamp(stonks_value, stonks_base_value_min, stonks_value_max));
-			
-			graph[graph_index] = stonks_value;
-			graph_index = Maths::FMod(graph_index + 1, graph.length());
-			
-			this.getSprite().PlaySound("LotteryTicket_Kaching", 0.25f, 1.00f + ((stonks_value_delta - 1.00f) * 4.00f));
+				f32 stonks_value_old = this.get_f32("stonks_value");
+				f32 stonks_value_delta = stonks_value / stonks_value_old;
+				
+				f32 stonks_value_max = stonks_base_value_max + (power / 100.00f);
+				
+				this.set_f32("stonks_volatility", stonks_volatility);
+				this.set_f32("stonks_growth", stonks_growth);
+				this.set_f32("stonks_value", Maths::Clamp(stonks_value, stonks_base_value_min, stonks_value_max));
+				
+				graph[graph_index] = stonks_value;
+				graph_index = Maths::FMod(graph_index + 1, graph.length());
+				
+				this.getSprite().PlaySound("LotteryTicket_Kaching", 0.25f, 1.00f + ((stonks_value_delta - 1.00f) * 4.00f));
+			}
 		}
 	}
-	else if (cmd == this.getCommandID("stonks_trade") && isServer())
+	else if (cmd == this.getCommandID("stonks_trade"))
 	{
 		u16 caller_netid;
 		u8 action;
@@ -336,9 +342,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 					}
 					
 					bool has_reqs = false;
-					if (hasRequirements_Tech(caller.getInventory(), this.getInventory(), reqs, missing))
+					if (hasRequirements(caller.getInventory(), reqs, missing))
 					{
-						if (isClient())
+						if (isServer())
 						{
 							server_TakeRequirements(caller.getInventory(), this.getInventory(), reqs);
 						}

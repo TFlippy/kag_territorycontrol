@@ -140,8 +140,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				{
 					if (data == "follower")
 					{
-						this.add_f32("deity_power", 50);
-						if (isServer()) this.Sync("deity_power", false);
+						if (isServer())
+						{
+							this.add_f32("deity_power", 50);
+							this.Sync("deity_power", true);
+						}
 						
 						if (isClient())
 						{
@@ -163,21 +166,21 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						if (isServer())
 						{
 							callerPlayer.set_u8("deity_id", Deity::mithrios);
-							callerPlayer.Sync("deity_id", false);
+							callerPlayer.Sync("deity_id", true);
 							
 							callerBlob.set_u8("deity_id", Deity::mithrios);
-							callerBlob.Sync("deity_id", false);
+							callerBlob.Sync("deity_id", true);
 						}
 					}
 					else
 					{
 						if (data == "offering_flesh")
 						{
-							this.add_f32("deity_power", 25);
-							if (isServer()) this.Sync("deity_power", false);
-							
 							if (isServer())
 							{
+								this.add_f32("deity_power", 25);
+								this.Sync("deity_power", true);
+							
 								CMap@ map = getMap();
 							
 								float x = this.getPosition().x + (128 - XORRandom(256));
@@ -192,25 +195,28 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						}
 						else if (data == "offering_death")
 						{
-							this.add_f32("deity_power", 100);
-							if (isServer()) this.Sync("deity_power", false);
-							
-							int count = getPlayerCount();
-							CPlayer@ player = getPlayer(XORRandom(count));
-							if (player !is null)
+							if (isServer())
 							{
-								CBitStream stream;
-								stream.write_u16(player.getNetworkID());
-								this.SendCommand(this.getCommandID("mithrios_gib"), stream);
-														}
+								this.add_f32("deity_power", 100);
+								this.Sync("deity_power", true);
+							
+								int count = getPlayerCount();
+								CPlayer@ player = getPlayer(XORRandom(count));
+								if (player !is null)
+								{
+									CBitStream stream;
+									stream.write_u16(player.getNetworkID());
+									this.SendCommand(this.getCommandID("mithrios_gib"), stream);
+								}
+							}
 						}
 						else if (data == "offering_might")
 						{
-							this.add_f32("deity_power", 400);
-							if (isServer()) this.Sync("deity_power", false);
-							
 							if (isServer())
 							{
+								this.add_f32("deity_power", 400);
+								this.Sync("deity_power", true);
+							
 								CMap@ map = getMap();
 							
 								float x = this.getPosition().x + (128 - XORRandom(256));
