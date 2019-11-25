@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	DoKnockedUpdate(this);
-	
+
 	CRules@ rules = getRules();
 	if (rules !is null)
 	{
@@ -131,6 +131,51 @@ void onTick(CBlob@ this)
 			}
 		}
 		break;
+		
+		case Deity::dragonfriend:
+		{
+			if (this.isKeyPressed(key_down) && this.isKeyJustPressed(key_action1))
+			{
+				if (getGameTime() >= this.get_u32("nextDragonFireball"))
+				{
+					CBlob@ altar = getBlobByName("altar_dragonfriend");
+					if (altar !is null)
+					{
+						f32 power = altar.get_f32("deity_power");
+						
+						Vec2f vel = this.getAimPos() - this.getPosition();
+						vel.Normalize();
+						vel *= 13.00f;
+						
+						if (isServer())
+						{
+							CBlob@ fireball = server_CreateBlobNoInit("fireball");
+							fireball.setPosition(this.getPosition());
+							fireball.setVelocity(vel);
+							fireball.server_setTeamNum(this.getTeamNum());
+							fireball.set_f32("power", 1.00f + Maths::Sqrt(power * 0.00002f));
+							fireball.Init();
+						}
+						
+						if (isClient())
+						{
+							this.getSprite().PlaySound("KegExplosion", 1.00f, 1.50f);
+						}
+						
+						this.setVelocity(this.getVelocity() - (vel * 0.50f));
+						
+						this.set_u32("nextDragonFireball", getGameTime() + (30 * 10));
+					}
+				}
+				else
+				{
+					if (this.isMyPlayer()) 
+					{
+						Sound::Play("/NoAmmo");
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -203,7 +248,30 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			}
 		}
 		break;
+		
+		case Deity::dragonfriend:
+		{
+			if ((customData == Hitters::fire || customData == Hitters::burn))
+			{
+				CBlob@ altar = getBlobByName("altar_dragonfriend");
+				if (altar !is null)
+				{
+				
+					f32 ratio = Maths::Clamp(altar.get_f32("deity_power") * 0.0001f, 0.00f, 1.00f);
+					f32 inv_ratio = 1.00f - ratio;
+				
+					
+				
+					damage *= inv_ratio;
+					
+					print("" + damage);
+				}
+			}
+		}
+		break;
 	}
+	
+	// print("" + this.getConfig() + " hit by damage " + customData + " for " + damage);
 	
 	// if (hitterBlob is null) return damage;
 

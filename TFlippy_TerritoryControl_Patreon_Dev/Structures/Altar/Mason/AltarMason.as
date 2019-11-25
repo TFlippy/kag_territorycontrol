@@ -12,6 +12,12 @@ void onInit(CBlob@ this)
 	this.SetLightRadius(64.0f);
 	this.SetLightColor(SColor(255, 255, 180, 0));
 	
+	CSprite@ sprite = this.getSprite();
+	sprite.SetEmitSound("Disc_MountainKing.ogg");
+	sprite.SetEmitSoundVolume(0.40f);
+	sprite.SetEmitSoundSpeed(1.00f);
+	sprite.SetEmitSoundPaused(false);
+	
 	AddIconToken("$icon_mason_follower$", "InteractionIcons.png", Vec2f(32, 32), 11);
 	{
 		ShopItem@ s = addShopItem(this, "Rite of Grand Mason", "$icon_mason_follower$", "follower", "Gain Grand Mason's respect by offering him a huge pile of rocks.");
@@ -22,39 +28,6 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
-	
-	// AddIconToken("$icon_mason_offering_0$", "AltarMason_Icons.png", Vec2f(24, 24), 0);
-	// {
-		// ShopItem@ s = addShopItem(this, "Offering of Flesh", "$icon_mason_offering_0$", "offering_flesh", "Sacrifice an unidentifiable carcass for a Demonic Artifact.");
-		// AddRequirement(s.requirements, "blob", "mat_meat", "Meat", 50);
-		// s.customButton = true;
-		// s.buttonwidth = 1;	
-		// s.buttonheight = 1;
-		
-		// s.spawnNothing = true;
-	// }
-	
-	// AddIconToken("$icon_mason_offering_0$", "AltarMason_Icons.png", Vec2f(24, 24), 0);
-	// {
-		// ShopItem@ s = addShopItem(this, "Offering of Death", "$icon_mason_offering_0$", "offering_death", "Sacrifice a slave to kill a random person in this region.");
-		// AddRequirement(s.requirements, "blob", "slave", "Slave's Corpse", 1);
-		// s.customButton = true;
-		// s.buttonwidth = 1;	
-		// s.buttonheight = 1;
-		
-		// s.spawnNothing = true;
-	// }
-	
-	// AddIconToken("$icon_mason_offering_1$", "AltarMason_Icons.png", Vec2f(24, 24), 1);
-	// {
-		// ShopItem@ s = addShopItem(this, "Offering of Might", "$icon_mason_offering_1$", "offering_might", "Sacrifice Juggernaut's Hammer in exchange for he Mason Device.");
-		// AddRequirement(s.requirements, "blob", "juggernauthammer", "Juggernaut Hammer", 1);
-		// s.customButton = true;
-		// s.buttonwidth = 1;	
-		// s.buttonheight = 1;
-		
-		// s.spawnNothing = true;
-	// }
 }
 
 void onTick(CSprite@ this)
