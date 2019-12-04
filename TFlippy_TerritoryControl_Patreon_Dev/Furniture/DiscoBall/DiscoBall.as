@@ -16,7 +16,7 @@ void onInit(CBlob@ this)
 	this.SetLightRadius(128.0f);
 
 	CSprite@ sprite = this.getSprite();
-	sprite.SetEmitSound("caramell.ogg");
+	sprite.SetEmitSound("Awesome.ogg");
 	sprite.SetEmitSoundVolume(1.0f);
 	sprite.SetEmitSoundSpeed(1.0f);
 	sprite.SetEmitSoundPaused(false);
