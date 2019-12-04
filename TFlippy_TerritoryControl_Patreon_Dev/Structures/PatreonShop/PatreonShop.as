@@ -106,7 +106,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Disco Ball", "$icon_discoball$", "discoball", "Anime time.");
+		ShopItem@ s = addShopItem(this, "Disco Ball", "$icon_discoball$", "discoball", "Welcome to the bruh cube.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 9000);
 		
 		s.customButton = true;

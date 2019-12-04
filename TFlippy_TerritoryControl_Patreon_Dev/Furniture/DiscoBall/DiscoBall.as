@@ -13,11 +13,11 @@ void onInit(CBlob@ this)
 {
 	this.getShape().SetRotationsAllowed(true);
 	this.Tag("place norotate");
-	this.SetLightRadius(128.0f);
+	this.SetLightRadius(118.0f);
 
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Awesome.ogg");
-	sprite.SetEmitSoundVolume(1.0f);
+	sprite.SetEmitSoundVolume(2.0f);
 	sprite.SetEmitSoundSpeed(1.0f);
 	sprite.SetEmitSoundPaused(false);
 
