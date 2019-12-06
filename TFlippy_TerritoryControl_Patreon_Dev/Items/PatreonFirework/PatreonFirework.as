@@ -23,7 +23,7 @@ void onInit(CBlob@ this)
 	if (!this.exists("velocity")) this.set_f32("velocity", 5.0f);
 	if (!this.exists("direction")) this.set_Vec2f("direction", Vec2f(0, -1));
 	
-	this.set_u8("pattern", this.getNetworkID() % 5);
+	this.set_u8("pattern", this.getNetworkID() % 9);
 	
 	this.getShape().SetRotationsAllowed(true);
 }
@@ -143,6 +143,34 @@ void DoExplosion(CBlob@ this)
 				Explode_Ovals(this, 50, color);
 			}
 			break;
+
+			case 5:
+			{
+				Explode_Generic(this, 100, color);
+				Explode_Flower(this, 200, color);
+			}
+			break;
+			
+			case 6:
+			{
+				Explode_Generic(this, 100, color);
+				Explode_Flower_Two(this, 150, color);
+			}
+			break;
+		
+			case 7:
+			{
+				Explode_Generic(this, 100, color);
+				Explode_Flower_Three(this, 250, color);
+			}
+			break;
+		
+			case 8:
+			{
+				Explode_Generic(this, 100, color);
+				Explode_Star(this, 100, color);
+			}
+			break;
 		
 			default:
 			{
@@ -177,6 +205,93 @@ void DoExplosion(CBlob@ this)
 	
 	this.Tag("dead");
 	this.getSprite().Gib();
+}
+
+void Explode_Flower(CBlob@ this, int count, SColor color)
+{
+	Vec2f pos = this.getPosition();
+	const f32 seg = 2.00f * Maths::Pi / count;
+
+	for (int i = 0; i < count; i++)
+	{
+		Vec2f dir = Vec2f(Maths::Cos(i * seg), Maths::Sin(i * seg));
+		Vec2f ppos = pos + dir * 4.00f;
+		f32 vel = Maths::Abs(Maths::Sin(f32(i)))*3;
+	
+		CParticle@ p = ParticlePixel(ppos, dir * vel, SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255)), true, 30 + XORRandom(45));
+		if (p !is null)
+		{
+			p.gravity = Vec2f(0, 0.01f + (XORRandom(100) * 0.0001f));
+			p.scale = 3.00f + (XORRandom(100) / 20.00f);
+			p.growth = -0.10f + (XORRandom(100) * 0.0001f);
+		}
+	}
+}
+
+void Explode_Flower_Two(CBlob@ this, int count, SColor color)
+{
+	Vec2f pos = this.getPosition();
+	const f32 seg = 2.00f * Maths::Pi / count;
+	const f32 shape_seg = 6.00f * Maths::Pi / count;
+
+	for (int i = 0; i < count; i++)
+	{
+		Vec2f dir = Vec2f(Maths::Cos(i * seg), Maths::Sin(i * seg));
+		Vec2f ppos = pos + dir * 4.00f;
+		f32 vel = Maths::Abs(Maths::Sin(f32(i*shape_seg)))*3;
+	
+		CParticle@ p = ParticlePixel(ppos, dir * vel, SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255)), true, 30 + XORRandom(45));
+		if (p !is null)
+		{
+			p.gravity = Vec2f(0, 0.01f + (XORRandom(100) * 0.0001f));
+			p.scale = 3.00f + (XORRandom(100) / 20.00f);
+			p.growth = -0.10f + (XORRandom(100) * 0.0001f);
+		}
+	}
+}
+
+void Explode_Flower_Three(CBlob@ this, int count, SColor color)
+{
+	Vec2f pos = this.getPosition();
+	const f32 seg = 2.00f * Maths::Pi / count;
+	const f32 shape_seg = 8.00f * Maths::Pi / count;
+
+	for (int i = 0; i < count; i++)
+	{
+		Vec2f dir = Vec2f(Maths::Cos(i * seg), Maths::Sin(i * seg));
+		Vec2f ppos = pos + dir * 4.00f;
+		f32 vel = -3*(1-Maths::Abs(Maths::Cos(i*shape_seg)));
+	
+		CParticle@ p = ParticlePixel(ppos, dir * vel, SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255)), true, 30 + XORRandom(45));
+		if (p !is null)
+		{
+			p.gravity = Vec2f(0, 0.01f + (XORRandom(100) * 0.0001f));
+			p.scale = 3.00f + (XORRandom(100) / 20.00f);
+			p.growth = -0.10f + (XORRandom(100) * 0.0001f);
+		}
+	}
+}
+
+void Explode_Star(CBlob@ this, int count, SColor color)
+{
+	Vec2f pos = this.getPosition();
+	const f32 seg = 2.00f * Maths::Pi / count;
+	const f32 shape_seg = 5.00f * Maths::Pi / count;
+
+	for (int i = 0; i < count; i++)
+	{
+		Vec2f dir = Vec2f(Maths::Cos(i * seg), Maths::Sin(i * seg));
+		Vec2f ppos = pos + dir * 4.00f;
+		f32 vel = 3-(Maths::Abs(Maths::Cos(i*shape_seg))*1.8f);
+	
+		CParticle@ p = ParticlePixel(ppos, dir * vel, SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255)), true, 30 + XORRandom(45));
+		if (p !is null)
+		{
+			p.gravity = Vec2f(0, 0.01f + (XORRandom(100) * 0.0001f));
+			p.scale = 3.00f + (XORRandom(100) / 20.00f);
+			p.growth = -0.10f + (XORRandom(100) * 0.0001f);
+		}
+	}
 }
 
 void Explode_Generic(CBlob@ this, int count, SColor color)
