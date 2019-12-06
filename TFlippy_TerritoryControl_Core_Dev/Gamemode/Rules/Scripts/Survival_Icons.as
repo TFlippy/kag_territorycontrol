@@ -20,6 +20,7 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_noisemaker$", "Noisemaker.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_badgerstatue$", "BadgerStatue.png", Vec2f(32, 32), 0);
 	AddIconToken("$icon_pigeonstatue$", "PigeonStatue.png", Vec2f(32, 32), 0);
+	AddIconToken("$icon_discoball$", "Discoball.png", Vec2f(8, 8), 3);
 	
 	// TC Icons
 	// Components

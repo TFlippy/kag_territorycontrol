@@ -105,6 +105,16 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
+	{
+		ShopItem@ s = addShopItem(this, "Disco Ball", "$icon_discoball$", "discoball", "Welcome to the Bruh Cube.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 700);
+		
+		s.customButton = true;
+		s.buttonwidth = 1;
+		s.buttonheight = 1;
+		
+		s.spawnNothing = true;
+	}
 	
 	
 	// {
