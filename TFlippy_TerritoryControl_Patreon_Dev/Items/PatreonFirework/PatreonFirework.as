@@ -1,6 +1,7 @@
 #include "Hitters.as";
 #include "Explosion.as";
 #include "Knocked.as"
+#include "FireworkPatterns.as"
 
 const f32 max_distance = 150.00f;
 
@@ -23,7 +24,7 @@ void onInit(CBlob@ this)
 	if (!this.exists("velocity")) this.set_f32("velocity", 5.0f);
 	if (!this.exists("direction")) this.set_Vec2f("direction", Vec2f(0, -1));
 	
-	this.set_u8("pattern", this.getNetworkID() % 9);
+	this.set_u8("pattern", this.getNetworkID() % 13);
 	
 	this.getShape().SetRotationsAllowed(true);
 }
@@ -171,6 +172,34 @@ void DoExplosion(CBlob@ this)
 				Explode_Star(this, 100, color);
 			}
 			break;
+
+			case 9:
+			{
+				Explode_Generic(this, 100, color);
+				Explode_Pattern(this, @doge, color);
+			}
+			break;
+
+			case 10:
+			{
+				Explode_Generic(this, 100, color);
+				Explode_Pattern(this, @gg, color);
+			}
+			break;
+
+			case 11:
+			{
+				Explode_Generic(this, 100, color);
+				Explode_Pattern(this, @jebb, color);
+			}
+			break;
+
+			case 12:
+			{
+				Explode_Generic(this, 100, color);
+				Explode_Pattern(this, @cat, color);
+			}
+			break;
 		
 			default:
 			{
@@ -224,6 +253,28 @@ void Explode_Flower(CBlob@ this, int count, SColor color)
 			p.gravity = Vec2f(0, 0.01f + (XORRandom(100) * 0.0001f));
 			p.scale = 3.00f + (XORRandom(100) / 20.00f);
 			p.growth = -0.10f + (XORRandom(100) * 0.0001f);
+		}
+	}
+}
+
+void Explode_Pattern(CBlob@ this, Vec2f[]@ pattern, SColor color)
+{
+	Vec2f pos = this.getPosition();
+
+	for (int i = 0; i < pattern.size(); i++)
+	{
+		Vec2f dir = pattern[i];
+		Vec2f ppos = pos;
+		f32 vel = 0.1;
+	
+		CParticle@ p = ParticlePixelUnlimited(ppos, dir * vel, SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255)), true);
+		if (p !is null)
+		{
+			p.gravity = Vec2f(0, 0.01f + (XORRandom(100) * 0.0001f));
+			p.scale = 3.00f + (XORRandom(100) / 20.00f);
+			p.growth = -0.10f + (XORRandom(100) * 0.0001f);
+			p.damping = 0.95;
+			p.timeout = 30 + XORRandom(45);
 		}
 	}
 }
