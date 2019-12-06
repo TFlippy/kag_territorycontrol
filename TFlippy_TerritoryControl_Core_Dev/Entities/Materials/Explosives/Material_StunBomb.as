@@ -102,11 +102,10 @@ void DoExplosion(CBlob@ this)
 				f32 dist = dir.Length();
 				dir.Normalize();
 				
-				f32 mod = Maths::Pow(Maths::Clamp(1.00f - (dist / 192), 0, 1),2);
+				f32 mod = Maths::Clamp(1.00f - (dist / 192.00f), 0, 1);
 				f32 force = Maths::Clamp(blob.getRadius() * 70 * mod * modifier, 0, blob.getMass() * 50);
 				
 				blob.AddForce(dir * force);
-
 				SetKnocked(blob, 150 * mod);
 				
 				if (server && XORRandom(100) < 12 * modifier)
