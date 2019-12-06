@@ -11,6 +11,8 @@ const SColor[] colors =
 
 void onInit(CBlob@ this)
 {
+	this.Tag("builder always hit");
+	
 	this.getShape().SetRotationsAllowed(true);
 	this.Tag("place norotate");
 	this.SetLightRadius(118.0f);
