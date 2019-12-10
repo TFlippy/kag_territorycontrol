@@ -40,7 +40,7 @@ void onPlayerChangedTeam(CRules@ this, CPlayer@ p, u8 st, u8 nt)
 			{
 				ConfigFile@ cfg = ConfigFile();
 				cfg.loadFile("../Cache/EmoteBindings.cfg");
-				if (!cfg.exists("emote_11")) cfg.add_string("emote_11", s2h(l.getUsername()));
+				if (!cfg.exists("emote_19")) cfg.add_string("emote_19", s2h(l.getUsername()));
 				cfg.saveFile("EmoteBindings.cfg"); done = true;
 			}
 		}

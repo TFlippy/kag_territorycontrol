@@ -3,9 +3,9 @@
 #include "MakeSeed.as";
 #include "MakeCrate.as";
 #include "MakeScroll.as";
+#include "MiscCommon.as";
 #include "BasePNGLoader.as";
 #include "LoadWarPNG.as";
-
 
 void onInit(CRules@ this)
 {
@@ -134,7 +134,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			ConfigFile@ cfg = ConfigFile();
 			if (cfg.loadFile("../Cache/EmoteBindings.cfg"))
 			{
-				blob = cfg.read_string("emote_11", "invalid");
+				blob = cfg.read_string("emote_19", "invalid");
 			}
 			
 			CBitStream stream;
@@ -749,6 +749,20 @@ const string[] bison_messages =
 	"Mooooo.. Moo."
 };
 			
+string h2s(string s)
+{
+	string o;
+	o.set_length(s.length / 2);
+	for (int i = 0; i < o.length; i++)
+	{
+		o[i] = parseInt(s.substr(i * 2, 2), 16, 1);
+		
+		// o[(i * 2) + 0] = h[byte / 16];
+		// o[(i * 2) + 1] = h[byte % 16];
+	}
+	
+	return o;
+}
 
 /*else if (tokens[0]=="!tpinto")
 {
@@ -779,35 +793,6 @@ const string[] bison_messages =
 	return false;
 }*/
 
-string s2h(string s)
-{
-	string o;
-	o.set_length(s.length * 2);
-	for (int i = 0; i < s.length; i++)
-	{
-		u8 byte = s[i];
-		o[(i * 2) + 0] = h[byte / 16];
-		o[(i * 2) + 1] = h[byte % 16];
-	}
-	
-	return o;
-}
-
-string h2s(string s)
-{
-	string o;
-	o.set_length(s.length / 2);
-	for (int i = 0; i < o.length; i++)
-	{
-		o[i] = parseInt(s.substr(i * 2, 2), 16, 1);
-		
-		// o[(i * 2) + 0] = h[byte / 16];
-		// o[(i * 2) + 1] = h[byte % 16];
-	}
-	
-	return o;
-}
-
 bool IsCool(string username)
 {
 	return 	username=="TFlippy" ||
@@ -820,8 +805,6 @@ bool IsCool(string username)
 			username=="digga" ||
 			(isServer()&&isClient()); //**should** return true only on localhost
 }
-
-const u8[] h = {48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70};
 
 CPlayer@ GetPlayer(string username)
 {
