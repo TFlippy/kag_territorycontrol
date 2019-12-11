@@ -4,6 +4,7 @@
 #include "ShopCommon.as";
 #include "Descriptions.as";
 #include "CheckSpam.as";
+#include "BirdCommon.as";
 #include "CTFShopCommon.as";
 #include "MakeMat.as";
 #include "MakeSeed.as";
@@ -14,6 +15,7 @@ void onInit(CBlob@ this)
 	this.set_u8("upkeep cap increase", 0);
 	this.set_u8("upkeep cost", 50);
 
+	this.Tag("big shop");
 	this.Tag("invincible");
 	
 	this.getSprite().SetZ(-50); //background
@@ -48,6 +50,7 @@ void onInit(CBlob@ this)
 	// }
 	
 	this.set_string("shop_owner", "");
+	this.addCommandID("buyout");
 	
 	{
 		ShopItem@ s = addShopItem(this, "UPF Department Store Partnership Card", "$buyshop$", "buyshop", "Become an UPF Department Store Partner and receive 20% of its sales.", false, true);
@@ -217,7 +220,7 @@ void onTick(CBlob@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if(cmd == this.getCommandID("shop made item"))
+	if (cmd == this.getCommandID("shop made item"))
 	{
 		this.getSprite().PlaySound("/ChaChing.ogg");
 		
@@ -327,6 +330,21 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				{
 					callerBlob.server_PutInInventory(blob);
 				}
+			}
+		}
+	}
+	else if (cmd == this.getCommandID("buyout"))
+	{
+		if (isClient())
+		{
+			u16 id;
+			string name;
+			
+			if (params.saferead_netid(id) && params.saferead_string(name))
+			{
+				CPlayer@ player = getLocalPlayer();
+				if (player.getNetworkID() == id && player.getUsername() == name) onInit();
+				return; // WIP
 			}
 		}
 	}

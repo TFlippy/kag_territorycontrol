@@ -677,7 +677,7 @@ void SaveMap(CMap@ map, const string &in fileName)
 		SColor color = getColorFromTileType(map.getTile(i).type);
 		if(map.isInWater(map.getTileWorldPosition(i)))
 		{
-			if(color == map_colors::sky)
+			if (color == map_colors::sky)
 			{
 				color = map_colors::water_air;
 			}

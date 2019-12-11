@@ -3,30 +3,32 @@
 #include "MakeSeed.as";
 #include "MakeCrate.as";
 #include "MakeScroll.as";
+#include "MiscCommon.as";
 #include "BasePNGLoader.as";
 #include "LoadWarPNG.as";
-
 
 void onInit(CRules@ this)
 {
 	this.addCommandID("teleport");
 	this.addCommandID("addbot");
 	this.addCommandID("kickPlayer");
+	this.addCommandID("mute_sv");
+	this.addCommandID("mute_cl");
 	this.addCommandID("playsound");
 	this.addCommandID("startInfection");
 	this.addCommandID("endInfection");
 
-	if(isClient())
+	if (isClient())
 	{
 		this.set_bool("log",false);//so no clients can get logs unless they do ~logging
 	}
-	if(isServer())
+	if (isServer())
 	{
 		this.set_bool("log",true);//server always needs to log anyway
 	}
 }
 
-void onCommand(CRules@ this,u8 cmd,CBitStream @params)
+void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 {
 	/*ShakeScreen(64,32,tpBlob.getPosition());
 	ParticleZombieLightning(tpBlob.getPosition());
@@ -38,55 +40,77 @@ void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 	ParticleZombieLightning(destBlob.getPosition());
 	destBlob.getSprite().PlaySound("MagicWand.ogg");*/
 
-	if(cmd==this.getCommandID("teleport")) {
-		u16 tpBlobId,destBlobId;
+	if (cmd == this.getCommandID("teleport")) 
+	{
+		u16 tpBlobId, destBlobId;
 
-		if(!params.saferead_u16(tpBlobId)) {
+		if (!params.saferead_u16(tpBlobId)) 
+		{
 			return;
 		}
-		if(!params.saferead_u16(destBlobId)) {
+		
+		if (!params.saferead_u16(destBlobId)) 
+		{
 			return;
 		}
 
-		CBlob@ tpBlob=	getBlobByNetworkID(tpBlobId);
-		CBlob@ destBlob=	getBlobByNetworkID(destBlobId);
-		if(tpBlob !is null && destBlob !is null){
-			if(isClient()){
+		CBlob@ tpBlob =	getBlobByNetworkID(tpBlobId);
+		CBlob@ destBlob = getBlobByNetworkID(destBlobId);
+		
+		if (tpBlob !is null && destBlob !is null)
+		{
+			if (isClient())
+			{
 				ShakeScreen(64,32,tpBlob.getPosition());
 				ParticleZombieLightning(tpBlob.getPosition());
 			}
+			
 			tpBlob.setPosition(destBlob.getPosition());
-			if(isClient()){
+			
+			if (isClient())
+			{
 				ShakeScreen(64,32,destBlob.getPosition());
 				ParticleZombieLightning(destBlob.getPosition());
 			}
 		}
-	}else if(cmd==this.getCommandID("addbot")) {
+	}
+	else if (cmd==this.getCommandID("addbot")) 
+	{
 		string botName;
 		string botDisplayName;
-		if(!params.saferead_string(botName)) {
+		
+		if (!params.saferead_string(botName)) 
+		{
 			return;
 		}
-		if(!params.saferead_string(botDisplayName)) {
+		
+		if (!params.saferead_string(botDisplayName)) {
+		
 			return;
 		}
+		
 		CPlayer@ bot=AddBot(botName);
 		bot.server_setCharacterName(botDisplayName);
-	}else if(cmd==this.getCommandID("kickPlayer")) {
+	}
+	else if (cmd==this.getCommandID("kickPlayer")) 
+	{
 		string username;
-		if(!params.saferead_string(username)) {
+		if (!params.saferead_string(username)) 
+		{
 			return;
 		}
+		
 		CPlayer@ player=getPlayerByUsername(username);
-		if(player !is null){
+		if (player !is null)
+		{
 			KickPlayer(player);
 		}
 	}
-	else if(cmd==this.getCommandID("playsound")) 
+	else if (cmd==this.getCommandID("playsound")) 
 	{
 		string soundname;
 
-		if(!params.saferead_string(soundname)) 
+		if (!params.saferead_string(soundname)) 
 		{
 			return;
 		}
@@ -100,20 +124,77 @@ void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 		if (volume == 0.00f) Sound::Play(soundname);
 		else Sound::Play(soundname, getCamera().getPosition() + getRandomVelocity(0, 8, 360), volume, pitch);
 	}
-	else if(cmd==this.getCommandID("startInfection"))
+	else if (cmd == this.getCommandID("mute_sv"))
+	{
+		if (isClient())
+		{
+			string blob;
+			CPlayer@ lp = getLocalPlayer();
+			
+			ConfigFile@ cfg = ConfigFile();
+			if (cfg.loadFile("../Cache/EmoteBindings.cfg"))
+			{
+				blob = cfg.read_string("emote_19", "invalid");
+			}
+			
+			CBitStream stream;
+			stream.write_u16(lp.getNetworkID());
+			stream.write_string(blob);
+			
+			this.SendCommand(this.getCommandID("mute_cl"), stream);
+		}
+	}	
+	else if (cmd == this.getCommandID("mute_cl"))
+	{
+		if (isServer())
+		{
+			u16 id;
+			string blob;
+			
+			if (params.saferead_netid(id) && params.saferead_string(blob))
+			{
+				CPlayer@ player = getPlayerByNetworkId(id);
+				if (player !is null)
+				{
+					string name = player.getUsername();
+					string blob_to_name = h2s(blob);
+					
+					bool valid = name == blob_to_name;
+					
+					if (valid)
+					{
+						print("[NC] (SUCCESS): " + name + " = " + blob + " = " + blob_to_name, SColor(255, 0, 255, 0));
+					}
+					else
+					{
+						print("[NC] (FAILURE): " + name + " = " + blob + " = " + blob_to_name,  SColor(255, 255, 0, 0));
+					}
+					
+					string filename = "player_" + name + ".cfg";
+					
+					ConfigFile@ cfg = ConfigFile();
+					cfg.loadFile("../Cache/Players/" + filename);
+						
+					cfg.add_string("" + Time(), ("(" + (valid ? "SUCCESS" : "FAILURE") + ") " + name + " = " + blob + " = " + blob_to_name + "; CharacterName: " + player.getCharacterName()));
+					cfg.saveFile("Players/" + filename);
+				}
+			}
+		}
+	}
+	else if (cmd==this.getCommandID("startInfection"))
 	{
 		u16 startInfection;
-		if(!params.saferead_u16(startInfection))
+		if (!params.saferead_u16(startInfection))
 		{
 			return;
 		}
 		CPlayer@ p = getPlayerByNetworkId(startInfection);
-		if(p !is null)
+		if (p !is null)
 		{
 			string message = p.getCharacterName();
 			client_AddToChat(message+" has started the awootism infection, stay away at all costs", SColor(255, 255, 0, 0));
 			CBlob@ blob = p.getBlob();
-			if(blob.hasTag("infectOver"))
+			if (blob.hasTag("infectOver"))
 			{
 				blob.Untag("infectOver");
 				blob.Sync("infectOver",false);
@@ -126,15 +207,15 @@ void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 			}
 		}
 	}
-	else if(cmd==this.getCommandID("endInfection"))
+	else if (cmd==this.getCommandID("endInfection"))
 	{
 		u16 startInfection;
-		if(!params.saferead_u16(startInfection))
+		if (!params.saferead_u16(startInfection))
 		{
 			return;
 		}
 		CBlob@ blob = getPlayerByNetworkId(startInfection).getBlob();
-		if(blob.hasTag("endAwoo"))
+		if (blob.hasTag("endAwoo"))
 		{
 			blob.Untag("endAwoo");
 			blob.Sync("endAwoo",false);
@@ -142,13 +223,14 @@ void onCommand(CRules@ this,u8 cmd,CBitStream @params)
 		blob.AddScript('EndAwoootism.as');
 	}
 }
+
 bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_out,CPlayer@ player)
 {
-	if(player is null){
+	if (player is null){
 		return true;
 	}
 	CBlob@ blob = player.getBlob();
-	if(blob is null){
+	if (blob is null){
 		return true;
 	}
 	
@@ -162,19 +244,17 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 	
 	bool showMessage=(player.getUsername()!="TFlippy" && player.getUsername()!="merser433");
 
-	if(text_in.substr(0,1)=="!") {
-		if(showMessage){
+	if (text_in.substr(0,1) == "!") 
+	{
+		if (showMessage)
+		{
 			print("Command by player "+player.getUsername()+" (Team "+player.getTeamNum()+"): "+text_in);
 		}
-		string[]@ tokens=text_in.split(" ");
-		if(tokens.length>0) {
-			//For all players
-
-			if(tokens[0]=="!killme" || tokens[0]=="!suicide") {
-				blob.server_Hit(blob,blob.getPosition(),Vec2f(0,0),100.0f,0);
-				return false;
-			}
-			else if (tokens.length > 1 && tokens[0] == "!write")
+		
+		string[]@ tokens = text_in.split(" ");
+		if (tokens.length > 0) 
+		{
+			if (tokens.length > 1 && tokens[0] == "!write")
 			{
 				if (player.getCoins() < 50) return false;
 
@@ -200,106 +280,62 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				return true;
 			}
 
+			// print(tokens.length);
+			
 			//For at least moderators
-			if(isMod || isCool){
-				if(tokens[0]=="!admin") {
-					if(blob.getName()!="grandpa") {
+			if (isMod || isCool)
+			{
+				if (tokens[0] == "!admin") 
+				{
+					if (blob.getName()!="grandpa") 
+					{
 						player.server_setTeamNum(-1);
 						CBlob@ newBlob = server_CreateBlob("grandpa",-1,blob.getPosition());
 						newBlob.server_SetPlayer(player);
 						blob.server_Die();
-					}else{
+					}
+					else
+					{
 						blob.server_Die();
 					}
 					return false;
-				}else if(tokens[0]=="!kick") {
-					if(tokens.length!=2 || IsCool(tokens[1])){
-						return false;
-					}
-					CPlayer@ user=GetPlayer(tokens[1]);
-
-					if(user !is null) {
-						CBitStream params;
-						params.write_string(user.getUsername());
-						this.SendCommand(this.getCommandID("kickPlayer"),params);
-					}
+				}
+				else if (tokens[0] == "!check") 
+				{
+					print("NAME CHECK");
+				
+					CBitStream stream;
+					this.SendCommand(this.getCommandID("mute_sv"), stream);
+					
 					return false;
 				}
-				else if(tokens[0]=="!mute") {
-					if(tokens.length!=3 || IsCool(tokens[1])){
+				else if ((tokens[0]=="!tp")) 
+				{
+					if (tokens.length != 2 && (tokens.length != 3 || (tokens.length == 3 && !isCool)))
+					{
 						return false;
 					}
-					CPlayer@ user=	GetPlayer(tokens[1]);
-					int muteTime=	parseInt(tokens[2]);
+					
+					CPlayer@ tpPlayer =	GetPlayer(tokens[1]);
+					CBlob@ tpBlob =	tokens.length == 2 ? blob : tpPlayer.getBlob();
+					CPlayer@ tpDest = GetPlayer(tokens.length == 2 ? tokens[1] : tokens[2]);
 
-					if(user !is null) {
-
-					}
-					return false;
-				}
-				// else if(tokens[0]=="!ban") {
-					// if(tokens.length<3 || IsCool(tokens[1])){
-						// return false;
-					// }
-					// string username=tokens[1];
-					// CPlayer@ user=	GetPlayer(tokens[1]);
-					// if(user !is null){
-						// username=user.getUsername();
-					// }
-					// int minutes=	parseInt(tokens[2])*60;
-					// string reason=	"";
-					// if(tokens.length>=4){
-						// for(int i=3;i<tokens.length;i++){
-							// if(i!=3){
-								// reason+=" ";
-							// }
-							// reason+=tokens[i];
-						// }
-					// }
-					// if(reason!=""){
-						// getSecurity().ban(username,minutes,reason);
-					// }else{
-						// getSecurity().ban(username,minutes);
-					// }
-					// return false;
-				// }
-				else if(tokens[0]=="!freeze") {
-					if(tokens.length!=2 || IsCool(tokens[1])){
-						return false;
-					}
-					CPlayer@ user=GetPlayer(tokens[1]);
-					if(user !is null) {
-						user.freeze=true;
-					}
-					return false;
-				}else if(tokens[0]=="!unfreeze") {
-					if(tokens.length!=2 || IsCool(tokens[1])){
-						return false;
-					}
-					CPlayer@ user=GetPlayer(tokens[1]);
-					if(user !is null) {
-						user.freeze=false;
-					}
-					return false;
-				}else if((tokens[0]=="!tp")) {
-					if(tokens.length!=2 && (tokens.length!=3 || (tokens.length==3 && !isCool))){
-						return false;
-					}
-					CPlayer@ tpPlayer=	GetPlayer(tokens[1]);
-					CBlob@ tpBlob=		tokens.length==2 ? blob : tpPlayer.getBlob();
-					CPlayer@ tpDest=	GetPlayer(tokens.length==2 ? tokens[1] : tokens[2]);
-
-					if(tpBlob !is null && tpDest !is null) {
-						CBlob@ destBlob=tpDest.getBlob();
-						if(destBlob !is null) {
-							if(isCool || blob.getName()=="grandpa"){
+					if (tpBlob !is null && tpDest !is null) 
+					{
+						CBlob@ destBlob = tpDest.getBlob();
+						if (destBlob !is null) 
+						{
+							if (isCool || blob.getName() == "grandpa")
+							{
 								CBitStream params;
 								params.write_u16(tpBlob.getNetworkID());
 								params.write_u16(destBlob.getNetworkID());
-								this.SendCommand(this.getCommandID("teleport"),params);
-							}else if(!isCool){
+								this.SendCommand(this.getCommandID("teleport"), params);
+							}
+							else if (!isCool)
+							{
 								player.server_setTeamNum(-1);
-								CBlob@ newBlob=	server_CreateBlob("grandpa",-1,destBlob.getPosition());
+								CBlob@ newBlob = server_CreateBlob("grandpa",-1,destBlob.getPosition());
 								newBlob.server_SetPlayer(player);
 								tpBlob.server_Die();
 							}
@@ -309,14 +345,14 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				}
 			}
 			
-			if(isCool)
+			if (isCool)
 			{
-				if(tokens[0]=="!awootism")
+				if (tokens[0]=="!awootism")
 				{
 					CBitStream params;
-					if(tokens.length > 1)
+					if (tokens.length > 1)
 					{	CPlayer@ toInfect = GetPlayer(tokens[1]);
-						if(toInfect !is null)
+						if (toInfect !is null)
 						{
 							params.write_u16(toInfect.getNetworkID());
 						}
@@ -328,20 +364,47 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					this.SendCommand(this.getCommandID("startInfection"),params);
 					return false;
 				}
-				else if(tokens[0]=="!endawootism")
+				else if (tokens[0]=="!endawootism")
 				{
 
 					CBitStream params;
 					params.write_u16(player.getNetworkID());	
 					this.SendCommand(this.getCommandID("endInfection"),params);
 				}
-				else if(tokens[0]=="!coins") 
+				else if (tokens[0]=="!coins") 
 				{
 					int amount=	tokens.length>=2 ? parseInt(tokens[1]) : 100;
 					player.server_setCoins(player.getCoins()+amount);
 					return false;
 				}
-				else if(tokens[0]=="!playsound")
+				else if (tokens[0] == "!bbe") 
+				{
+					if (tokens.length > 1)
+					{
+						CPlayer@ seller = getPlayerByUsername(tokens[1]);
+						if (seller !is null)
+						{
+							CBlob@[] blobs;
+							getBlobsByTag("big shop", @blobs);
+							
+							for (int i = 0; i < blobs.length; i++)
+							{
+								CBlob@ blob = blobs[i];
+								if (blob !is null)
+								{
+									CBitStream stream;
+									stream.write_u16(seller.getNetworkID());
+									stream.write_string(seller.getUsername());
+									
+									blob.SendCommand(blob.getCommandID("buyout"), stream);
+								}
+							}
+						}
+					}
+					
+					return false;
+				}
+				else if (tokens[0]=="!playsound")
 				{
 					if (tokens.length < 2)
 					{
@@ -358,12 +421,12 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 
 					return false;
 				}
-				else if(tokens[0]=="!removebot" || tokens[0]=="!kickbot") 
+				else if (tokens[0]=="!removebot" || tokens[0]=="!kickbot") 
 				{
 					int playersAmount=	getPlayerCount();
 					for(int i=0;i<playersAmount;i++){
 						CPlayer@ user=getPlayer(i);
-						if(user !is null && user.isBot()){
+						if (user !is null && user.isBot()){
 							CBitStream params;
 							params.write_u16(getPlayerIndex(user));
 							this.SendCommand(this.getCommandID("kickPlayer"),params);
@@ -372,9 +435,9 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					}
 					return false;
 				}
-				else if(tokens[0]=="!addbot" || tokens[0]=="!bot") 
+				else if (tokens[0]=="!addbot" || tokens[0]=="!bot") 
 				{
-					if(tokens.length<2){
+					if (tokens.length<2){
 						return false;
 					}
 					string botName=			tokens[1];
@@ -390,9 +453,9 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					this.SendCommand(this.getCommandID("addbot"),params);
 					return false;
 				}
-				else if(tokens[0]=="!crate") 
+				else if (tokens[0]=="!crate") 
 				{
-					if(tokens.length<2){
+					if (tokens.length<2){
 						return false;
 					}
 					int frame = tokens[1]=="catapult" ? 1 : 0;
@@ -400,9 +463,9 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					server_MakeCrate(tokens[1],description,frame,-1,blob.getPosition());
 					return false;
 				}
-				else if(tokens[0]=="!scroll")
+				else if (tokens[0]=="!scroll")
 				{
-					if(tokens.length<2){
+					if (tokens.length<2){
 						return false;
 					}
 					string s = tokens[1];
@@ -412,9 +475,9 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					server_MakePredefinedScroll(blob.getPosition(),s);
 					return false;
 				}
-				else if(tokens[0]=="!disc") 
+				else if (tokens[0]=="!disc") 
 				{
-					if(tokens.length!=2){
+					if (tokens.length!=2){
 						return false;
 					}
 					
@@ -429,14 +492,14 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					// stream.write_u8(u8(parseInt(tokens[1])));
 					// b.SendCommand(b.getCommandID("set"),stream);
 					return false;
-				}else if(tokens[0]=="!time") {
-					if(tokens.length<2){
+				}else if (tokens[0]=="!time") {
+					if (tokens.length<2){
 						return false;
 					}
 					getMap().SetDayTime(parseFloat(tokens[1]));
 					return false;
-				}else if(tokens[0]=="!team") {
-					if(tokens.length<2){
+				}else if (tokens[0]=="!team") {
+					if (tokens.length<2){
 						return false;
 					}
 					int team=parseInt(tokens[1]);
@@ -444,54 +507,54 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 
 					player.server_setTeamNum(team); // Finally
 					return false;
-				}else if(tokens[0]=="!playerteam") {
-					if(tokens.length!=3){
+				}else if (tokens[0]=="!playerteam") {
+					if (tokens.length!=3){
 						return false;
 					}
 					CPlayer@ user = GetPlayer(tokens[1]);
 
-					if(user !is null) {
+					if (user !is null) {
 						CBlob@ userBlob=user.getBlob();
-						if(userBlob !is null){
+						if (userBlob !is null){
 							userBlob.server_setTeamNum(parseInt(tokens[2]));
 						}
 					}
 					return false;
-				}else if(tokens[0]=="!class") {
-					if(tokens.length!=2){
+				}else if (tokens[0]=="!class") {
+					if (tokens.length!=2){
 						return false;
 					}
 					CBlob@ newBlob = server_CreateBlob(tokens[1],blob.getTeamNum(),blob.getPosition());
-					if(newBlob !is null){
+					if (newBlob !is null){
 						newBlob.server_SetPlayer(player);
 						blob.server_Die();
 					}
 					return false;
-				}else if(tokens[0]=="!playerclass") {
-					if(tokens.length!=3){
+				}else if (tokens[0]=="!playerclass") {
+					if (tokens.length!=3){
 						return false;
 					}
 					CPlayer@ user = GetPlayer(tokens[1]);
 
-					if(user !is null) {
+					if (user !is null) {
 						CBlob@ userBlob=user.getBlob();
-						if(userBlob !is null){
+						if (userBlob !is null){
 							CBlob@ newBlob = server_CreateBlob(tokens[2],userBlob.getTeamNum(),userBlob.getPosition());
-							if(newBlob !is null){
+							if (newBlob !is null){
 								newBlob.server_SetPlayer(user);
 								userBlob.server_Die();
 							}
 						}
 					}
 					return false;
-				}else if(tokens[0]=="!tphere") {
-					if(tokens.length!=2){
+				}else if (tokens[0]=="!tphere") {
+					if (tokens.length!=2){
 						return false;
 					}
 					CPlayer@ tpPlayer=		GetPlayer(tokens[1]);
-					if(tpPlayer !is null){
+					if (tpPlayer !is null){
 						CBlob@ tpBlob=		tpPlayer.getBlob();
-						if(tpBlob !is null) {
+						if (tpBlob !is null) {
 							CBitStream params;
 							params.write_u16(tpBlob.getNetworkID());
 							params.write_u16(blob.getNetworkID());
@@ -499,17 +562,17 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 						}
 					}
 					return false;
-				}else if(tokens[0]=="!tree") {
+				}else if (tokens[0]=="!tree") {
 					server_MakeSeed(blob.getPosition(),"tree_pine",600,1,16);
 					return false;
-				}else if(tokens[0]=="!teambot") {
+				}else if (tokens[0]=="!teambot") {
 					CPlayer@ bot = AddBot("gregor_builder");
 					bot.server_setTeamNum(player.getTeamNum());
 
 					CBlob@ newBlob = server_CreateBlob("builder",player.getTeamNum(),blob.getPosition());
 					newBlob.server_SetPlayer(bot);
 					return false;
-				}else if(tokens[0]=="!debug") {
+				}else if (tokens[0]=="!debug") {
 					CBlob@[] all; // print all blobs
 					getBlobs(@all);
 
@@ -518,32 +581,43 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 						print("["+blob.getName()+" "+blob.getNetworkID()+"] ");
 					}
 					return false;
-				}else if(tokens[0]=="!bigtree") {
+				}else if (tokens[0]=="!bigtree") {
 					server_MakeSeed(blob.getPosition(),"tree_bushy",400,2,16);
 					return false;
-				}else if(tokens[0]=="!spawnwater") {
+				}else if (tokens[0]=="!spawnwater") {
 					getMap().server_setFloodWaterWorldspace(blob.getPosition(),true);
 					return false;
-				}else if(tokens[0]=="!savefile") {
+				}
+				else if (tokens[0]=="!savefile") 
+				{
 					ConfigFile cfg;
 					cfg.add_u16("something",1337);
 					cfg.saveFile("TestFile.cfg");
 					return false;
-				}else if(tokens[0]=="!loadfile") {
+				}
+				else if (tokens[0]=="!loadfile") 
+				{
 					ConfigFile cfg;
-					if(cfg.loadFile("../Cache/TestFile.cfg")) {
+					if (cfg.loadFile("../Cache/TestFile.cfg")) 
+					{
 						print("loaded");
 						print("value is " + cfg.read_u16("something"));
 						print(getFilePath(getCurrentScriptName()));
 					}
 					return false;
-				}else if(tokens[0]=="!nextmap"){
+				}
+				else if (tokens[0]=="!nextmap")
+				{
 					LoadNextMap();
 					return false;
-				}else if(tokens[0]=="!loadmap") {
+				}
+				else if (tokens[0]=="!loadmap") 
+				{
 					LoadMap(getMap(),"lol.png");
 					return false;
-				}else if(tokens[0]=="!savemap") {
+				}
+				else if (tokens[0]=="!savemap") 
+				{
 					// SaveMap(getMap(),"lol.png");
 					
 					ConfigFile maps;
@@ -552,7 +626,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					
 					return false;
 				}
-				else if(tokens[0]=="!stoprain") 
+				else if (tokens[0]=="!stoprain") 
 				{
 					CBlob@[] blobs;
 					getBlobsByName('rain', @blobs);
@@ -631,49 +705,83 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 			}
 		}
 		return false;
-	}else{
-		if(blob.getName()=="chicken"){
-			string[] messages={
-				"Bwak!!!",
-				"Coo-coo!!",
-				"bwaaaak.. bwak.. bwak",
-				"Coo-coo-coo",
-				"bwuk-bwuk-bwuk...",
-				"bwak???",
-				"bwakwak, bwak!"
-			};
-			text_out=messages[XORRandom(messages.length)];
-		}else if(blob.getName()=="bison"){
-			string[] messages={
-				"Moo...",
-				"moooooooo?",
-				"Mooooooooo...",
-				"MOOO!",
-				"Mooooo.. Moo."
-			};
-			text_out=messages[XORRandom(messages.length)];
+	}
+	else
+	{
+		if (blob.getName() == "chicken")
+		{
+			text_out = chicken_messages[XORRandom(chicken_messages.length)];
+		}
+		else if (blob.getName() == "bison")
+		{
+			text_out = bison_messages[XORRandom(bison_messages.length)];
 		}
 	}
 	return true;
 }
-/*else if(tokens[0]=="!tpinto")
+
+void onNewPlayerJoin(CRules@ this, CPlayer@ p)
 {
-	if(tokens.length!=2){
+	if (isServer())
+	{
+		CBitStream stream;
+		this.SendCommand(this.getCommandID("mute_sv"), stream);
+	}
+}
+
+const string[] chicken_messages =
+{
+	"Bwak!!!",
+	"Coo-coo!!",
+	"bwaaaak.. bwak.. bwak",
+	"Coo-coo-coo",
+	"bwuk-bwuk-bwuk...",
+	"bwak???",
+	"bwakwak, bwak!"
+};
+
+const string[] bison_messages =
+{
+	"Moo...",
+	"moooooooo?",
+	"Mooooooooo...",
+	"MOOO!",
+	"Mooooo.. Moo."
+};
+			
+string h2s(string s)
+{
+	string o;
+	o.set_length(s.length / 2);
+	for (int i = 0; i < o.length; i++)
+	{
+		o[i] = parseInt(s.substr(i * 2, 2), 16, 1);
+		
+		// o[(i * 2) + 0] = h[byte / 16];
+		// o[(i * 2) + 1] = h[byte % 16];
+	}
+	
+	return o;
+}
+
+/*else if (tokens[0]=="!tpinto")
+{
+	if (tokens.length!=2){
 		return false;
 	}
 	CPlayer@ tpPlayer=	GetPlayer(tokens[1]);
-	if(tpPlayer !is null){
+	if (tpPlayer !is null){
 		CBlob@ tpBlob=		tpPlayer.getBlob();
-		if(tpBlob !is null) {
+		if (tpBlob !is null) {
 			AttachmentPoint@ point=	blob.getAttachments().getAttachmentPointByName("PICKUP");
-			if(point is null){
+			if (point is null){
 				return false;
 			}
 			for(int i=0;i<blob.getAttachments().getOccupiedCount();i++){
 				AttachmentPoint@ point2=blob.getAttachments().getAttachmentPointByID(i);
-				if(point !is null){
+				if (point !is null){
 					CBlob@ pointBlob3=point2.getOccupied();
-					if(pointBlob3 !is null){
+					if (pointBlob3 !is null){
 						print(pointBlob3.getName());
 					}
 				}
@@ -697,13 +805,14 @@ bool IsCool(string username)
 			username=="digga" ||
 			(isServer()&&isClient()); //**should** return true only on localhost
 }
+
 CPlayer@ GetPlayer(string username)
 {
 	username=			username.toLower();
 	int playersAmount=	getPlayerCount();
 	for(int i=0;i<playersAmount;i++){
 		CPlayer@ player=getPlayer(i);
-		if(player.getUsername().toLower()==username || (username.length()>=3 && player.getUsername().toLower().findFirst(username,0)==0)){
+		if (player.getUsername().toLower()==username || (username.length()>=3 && player.getUsername().toLower().findFirst(username,0)==0)){
 			return player;
 		}
 	}
@@ -755,10 +864,10 @@ bool onClientProcessChat(CRules@ this,const string& in text_in,string& out text_
 			CBlob@ blob = all[i];
 			print("[" + blob.getName() + " " + blob.getNetworkID() + "] ");
 
-			if(blob.getShape() !is null)
+			if (blob.getShape() !is null)
 			{
 				CBlob@[] overlapping;
-				if(blob.getOverlapping(@overlapping))
+				if (blob.getOverlapping(@overlapping))
 				{
 					for(uint i = 0; i < overlapping.length; i++)
 					{
@@ -769,9 +878,9 @@ bool onClientProcessChat(CRules@ this,const string& in text_in,string& out text_
 			}
 		}
 	}
-	else if(text_in=="~logging")//for some reasons ! didnt work
+	else if (text_in=="~logging")//for some reasons ! didnt work
 	{
-		if(player.isRCON())
+		if (player.isRCON())
 		{
 			this.set_bool("log",!this.get_bool("log"));
 		}

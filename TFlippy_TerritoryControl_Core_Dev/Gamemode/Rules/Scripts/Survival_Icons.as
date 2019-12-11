@@ -20,6 +20,7 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_noisemaker$", "Noisemaker.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_badgerstatue$", "BadgerStatue.png", Vec2f(32, 32), 0);
 	AddIconToken("$icon_pigeonstatue$", "PigeonStatue.png", Vec2f(32, 32), 0);
+	AddIconToken("$icon_discoball$", "Discoball.png", Vec2f(8, 8), 3);
 	
 	// TC Icons
 	// Components
@@ -145,6 +146,7 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_suicidevest$", "SuicideVest.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_binoculars$", "Binoculars.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_firework$", "Firework.png", Vec2f(16, 24), 0);
+	AddIconToken("$icon_patreonfirework$", "PatreonFirework.png", Vec2f(16, 24), 0);
 	AddIconToken("$icon_firejob$", "Firejob.png", Vec2f(16, 24), 0);
 	AddIconToken("$icon_hazmat$", "HazmatItem.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_mousetrap$", "MouseTrap.png", Vec2f(32, 16), 0);

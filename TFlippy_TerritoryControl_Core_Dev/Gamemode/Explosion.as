@@ -254,15 +254,27 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 	//hit blobs
 	{
 		CBlob@[] blobs;
-		map.getBlobsInRadius(pos, radius, @blobs);
-
+		
+		f32 explosion_radius = 1.00f + (radius * 3.00f);
+		map.getBlobsInRadius(pos, explosion_radius, @blobs);
+		
+		f32 force = Maths::Pow(radius * damage, 0.75f);
+		
 		for (uint i = 0; i < blobs.length; i++)
 		{
 			CBlob@ hit_blob = blobs[i];
-			if (hit_blob is this)
-				continue;
-
-			HitBlob(this, hit_blob, radius, damage, hitter, true, should_teamkill);
+		
+			Vec2f dir = hit_blob.getPosition() - pos;
+			f32 distance = dir.getLength();
+			dir.Normalize();
+			
+			hit_blob.AddForce(dir * Maths::Min(force * (1.00f - (distance / explosion_radius)), hit_blob.getMass() * 4.00f));
+		
+			if (distance <= radius)
+			{
+				if (hit_blob is this) continue;
+				HitBlob(this, hit_blob, radius, damage, hitter, true, should_teamkill);
+			}
 		}
 	}
 }
@@ -509,21 +521,12 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 		}
 	}
 
-	//explosion particle
-
 	if (isServer())
 	{
 		f32 scale;
 		Vec2f bombforce = getBombForce(this, radius, hit_blob_pos, pos, hit_blob.getMass(), scale);
 		f32 dam = damage * scale;
-
-		//hit the object
-		this.server_Hit(hit_blob, hit_blob_pos,
-						bombforce, dam,
-						hitter, hitter == Hitters::water || //hit with water
-						isOwnerBlob(this, hit_blob) ||	//allow selfkill with bombs
-						should_teamkill || hit_blob.hasTag("dead")			//hit all corpses
-					   );
+		this.server_Hit(hit_blob, hit_blob_pos, bombforce, dam, hitter, hitter == Hitters::water || isOwnerBlob(this, hit_blob) || should_teamkill || hit_blob.hasTag("dead"));
 	}
 
 	if (isClient() && particles)

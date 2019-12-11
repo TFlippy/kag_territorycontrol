@@ -110,7 +110,7 @@ void onInit(CBlob@ this)
 	att.SetKeysToTake(key_action1);*/
 
 	// movement
-
+	
 	this.server_setTeamNum(250);
 	
 	AnimalVars@ vars;
@@ -135,13 +135,9 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void onTick(CBlob@ this)
 {
-	if(isClient()){
-		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
-			return;
-		}	
-	}
 	Vec2f vel=this.getVelocity();
-	if(vel.x!=0.0f){
+	if(vel.x!=0.0f)
+	{
 		this.SetFacingLeft(vel.x<0.0f ? true : false);
 	}
 

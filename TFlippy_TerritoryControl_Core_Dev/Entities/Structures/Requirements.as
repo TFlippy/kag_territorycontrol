@@ -294,20 +294,27 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 		}
 		else if (req == "seclev feature")
 		{
-			CPlayer@ player = playerBlob.getPlayer();
-			if (player !is null)
+			if (playerBlob !is null)
 			{
-				CSecurity@ security = getSecurity();
-				
-				if (security.checkAccess_Feature(player, blobName))
+				CPlayer@ player = playerBlob.getPlayer();
+				if (player !is null)
 				{
-					print("has feature " + blobName);
+					CSecurity@ security = getSecurity();
+					
+					if (security.checkAccess_Feature(player, blobName))
+					{
+						print("has feature " + blobName);
+					}
+					else
+					{
+						print("no access to seclev feature " + blobName);
+						
+						AddRequirement(missingBs, req, blobName, friendlyName, quantity);
+						has = false;
+					}
 				}
 				else
 				{
-					print("no access to seclev feature " + blobName);
-					
-					AddRequirement(missingBs, req, blobName, friendlyName, quantity);
 					has = false;
 				}
 			}
