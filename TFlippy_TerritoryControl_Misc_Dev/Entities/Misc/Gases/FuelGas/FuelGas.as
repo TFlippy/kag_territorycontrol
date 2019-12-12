@@ -29,15 +29,25 @@ void onInit(CBlob@ this)
 	
 	// this.SetMapEdgeFlags(CBlob::map_collide_left | CBlob::map_collide_right | CBlob::map_collide_up | CBlob::map_collide_down);
 	this.SetMapEdgeFlags(CBlob::map_collide_sides);
-	this.getCurrentScript().tickFrequency = 90;
+	this.getCurrentScript().tickFrequency = 5;
 
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
 
 	this.server_SetTimeToDie(150);
+	
+	if (isClient())
+	{
+		this.getCurrentScript().runFlags |= Script::tick_onscreen;
+	}
 }
 
 void onTick(CBlob@ this)
 {
+	if (isClient())
+	{
+		MakeParticle(this, "FuelGas.png");
+	}
+
 	if (isServer() && this.getPosition().y < 0) this.server_Die();
 }
 
@@ -77,11 +87,8 @@ void Boom(CBlob@ this)
 	for (int i = 0; i < 24; i++)
 	{
 		if (isServer()) map.server_setFireWorldspace(this.getPosition() + getRandomVelocity(0, 8 + XORRandom(96), 360), true);
-		if (isClient() && XORRandom(100) < 25) MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(0, XORRandom(220) * 0.01f, 360), particles[XORRandom(particles.length)]);
+		if (isClient() && XORRandom(100) < 25) MakeExplosionParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(0, XORRandom(220) * 0.01f, 360), particles[XORRandom(particles.length)]);
 	}
-	
-	
-	
 	
 	Explode(this, 48.0f, 0.02f);
 
@@ -134,9 +141,24 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	}
 }
 
-void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
+void MakeExplosionParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!isClient()) return;
+	if (isClient())
+	{
+		ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1 + (XORRandom(100) * 0.02f), 2 + XORRandom(3), XORRandom(100) * -0.00005f, true);
+	}
+}
 
-	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1 + (XORRandom(100) * 0.02f), 2 + XORRandom(3), XORRandom(100) * -0.00005f, true);
+void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
+{
+	if (isClient())
+	{
+		CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(16 - XORRandom(32), 8 - XORRandom(32)), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 4, 0.00f, false);
+		if (particle !is null) 
+		{
+			particle.fastcollision = true;
+			particle.lighting = false;
+			particle.setRenderStyle(RenderStyle::additive);
+		}
+	}
 }
