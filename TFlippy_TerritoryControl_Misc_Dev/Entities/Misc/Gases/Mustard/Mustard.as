@@ -18,6 +18,8 @@ void onInit(CBlob@ this)
 	
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
 	this.server_SetTimeToDie(60 + XORRandom(90));
+
+	
 }
 
 void onTick(CBlob@ this)
@@ -45,6 +47,11 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
+
+	if(isClient())
+	{
+		MakeParticle(this, "Mustard.png");
+	}
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
@@ -62,3 +69,18 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	// if (blob is null) return;
 	// if (blob.hasTag("gas")) return;
 // }
+
+void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
+{
+	if (!isClient()) return;
+	CParticle@ particle = ParticleAnimated(filename, this.getPosition(), Vec2f(), 1.0f, 1, 6, 0.0f, false);
+	if (particle !is null) 
+	{
+		particle.collides = false;
+		particle.deadeffect = 1;
+		particle.bounce = 0.0f;
+		particle.fastcollision = true;
+		particle.lighting = false;
+		particle.setRenderStyle(RenderStyle::additive);
+	}
+}

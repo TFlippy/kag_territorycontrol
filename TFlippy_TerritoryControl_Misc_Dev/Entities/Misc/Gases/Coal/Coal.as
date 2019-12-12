@@ -37,7 +37,15 @@ void onInit(CBlob@ this)
 	
 	// this.SetMapEdgeFlags(CBlob::map_collide_left | CBlob::map_collide_right | CBlob::map_collide_up | CBlob::map_collide_down);
 	this.SetMapEdgeFlags(CBlob::map_collide_sides);
-	this.getCurrentScript().tickFrequency = 90;
+	if(isClient())
+	{
+		this.getCurrentScript().tickFrequency = 2;
+		this.getCurrentScript().runFlags |= Script::tick_onscreen;
+	}
+	else // its like this for localhost, so we can still see it
+	{
+		this.getCurrentScript().tickFrequency = 90;
+	}
 
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
 
@@ -46,6 +54,22 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	if(isClient())
+	{
+		CParticle@ particle = ParticleAnimated("Coal.png", this.getPosition(), Vec2f(), 1.0f, 1, 6, 0.0f, false);
+		if (particle !is null) 
+		{
+			particle.frame = XORRandom(7);
+			particle.collides = false;
+			particle.deadeffect = 1;
+			particle.bounce = 0.0f;
+			particle.fastcollision = true;
+			particle.lighting = false;
+		}
+
+		return; // now we dont need to run the isServer() :)
+	}
+
 	if (isServer())
 	{
 		if (this.getPosition().y < 0) 
@@ -59,6 +83,7 @@ void onTick(CBlob@ this)
 			blob.server_SetQuantity(1 + XORRandom(6));
 		}
 	}
+
 }
 
 void DoExplosion(CBlob@ this)

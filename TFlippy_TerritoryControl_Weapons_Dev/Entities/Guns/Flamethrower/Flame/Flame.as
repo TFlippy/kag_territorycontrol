@@ -4,12 +4,25 @@ void onInit(CBlob@ this)
 {
 	this.getShape().SetGravityScale(0.4f);
 	this.server_SetTimeToDie(2 + XORRandom(3));
+
+	if(isServer())
+	{
+		this.getCurrentScript().tickFrequency = 15;
+	}
+
+	if(isClient())
+	{
+		this.getCurrentScript().tickFrequency = 2;
+	}
 	
-	this.getCurrentScript().tickFrequency = 15;
-	
-	this.SetLight(true);
+	/*this.SetLight(true);
 	this.SetLightRadius(48.0f);
-	this.SetLightColor(SColor(255, 255, 200, 50));
+	this.SetLightColor(SColor(255, 255, 200, 50));*/
+
+	if(isClient())
+	{
+		this.getCurrentScript().runFlags |= Script::tick_onscreen;
+	}
 }
 
 void onTick(CBlob@ this)
@@ -37,12 +50,12 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
-}
 
-void onTick(CSprite@ this)
-{
-	if (!isClient()) return;
-	if (this.getBlob().getTickSinceCreated() % 2 == 0) ParticleAnimated("SmallFire", this.getBlob().getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), Vec2f(0, 0), 0, 1.0f, 2, 0.25f, false);
+	if (isClient())
+	{
+		this.getSprite().SetFrame(XORRandom(6));
+		ParticleAnimated("SmallFire", this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), Vec2f(0, 0), 0, 1.0f, 2, 0.25f, false);
+	}
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)

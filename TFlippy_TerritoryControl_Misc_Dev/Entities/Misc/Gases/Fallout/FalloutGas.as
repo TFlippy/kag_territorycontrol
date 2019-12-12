@@ -21,11 +21,16 @@ void onInit(CBlob@ this)
 	
 	this.server_SetTimeToDie((30 * 60 * 5) + XORRandom(30 * 60 * 15));
 	
-	this.SetLight(true);
+	/*this.SetLight(true);
 	this.SetLightRadius(48.0f);
-	this.SetLightColor(SColor(200, 25, 255, 100));
+	this.SetLightColor(SColor(200, 25, 255, 100));*/ // clients literally die to this
 	
-	// this.getCurrentScript().runFlags |= Script::tick_not_inwater | Script::tick_not_ininventory;
+	//this.getCurrentScript().runFlags |= Script::tick_not_inwater | Script::tick_not_ininventory;
+	if(isClient())
+	{
+		this.getCurrentScript().runFlags |= Script::tick_onscreen;
+	}
+
 }
 
 void onTick(CBlob@ this)
@@ -36,7 +41,8 @@ void onTick(CBlob@ this)
 	{
 		MakeParticle(this, "FalloutGas.png");
 	}
-	else
+
+	if(isServer())
 	{
 		if(this.getPosition().y < 0) {this.server_Die();}
 		f32 radius = 128;
@@ -73,7 +79,6 @@ void onTick(CBlob@ this)
 					CBlob@ blob = blobsInRadius[i];
 					if ((blob.hasTag("flesh") || blob.hasTag("nature")) && !blob.hasTag("dead"))
 					{
-						Vec2f pos = this.getPosition();
 						this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.0625f, HittersTC::radiation, true);
 					}
 				}
@@ -97,6 +102,7 @@ void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 	if (particle !is null) 
 	{
 		particle.fastcollision = true;
+		particle.lighting = false;
 		particle.setRenderStyle(RenderStyle::additive);
 	}
 	

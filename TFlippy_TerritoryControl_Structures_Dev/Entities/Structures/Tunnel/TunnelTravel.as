@@ -137,14 +137,14 @@ void Travel(CBlob@ this, CBlob@ caller, Vec2f position)
 				{
 					occBlob.setPosition(position);
 					occBlob.setVelocity(Vec2f_zero);
-					occBlob.getShape().PutOnGround();
+					//occBlob.getShape().PutOnGround();
 				}
 			}
 		}
 		// move caller
 		caller.setPosition(position);
 		caller.setVelocity(Vec2f_zero);
-		caller.getShape().PutOnGround();
+		//caller.getShape().PutOnGround();
 
 		if (caller.isMyPlayer())
 		{
