@@ -18,7 +18,7 @@ void onInit(CBlob@ this)
 		CBlob@ blob = server_CreateBlobNoInit("nanobot");
 		blob.set_u16("remote_netid", this.getNetworkID());
 		blob.server_setTeamNum(this.getTeamNum());
-		blob.set_Vec2f("tpos", this.getPosition() + Vec2f(0, -16));
+		blob.set_Vec2f("target_position", this.getPosition() + Vec2f(0, -16));
 		blob.set_u8("mode", 1);
 		blob.setPosition(this.getPosition());
 		
@@ -33,18 +33,24 @@ void onTick(CBlob@ this)
 	if (this.isAttached())
 	{
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-		if(point is null) { return;}
-		CBlob@ holder = point.getOccupied();
-		
-		if (holder is null) {return;}
-		
-		Vec2f pos = holder.getAimPos();
-		
-		CBlob@ remote = getBlobByNetworkID(this.get_u16("remote_netid"));
-		if (remote !is null && remote.getName() == "nanobot")
+		if (point !is null)
 		{
-			remote.set_Vec2f("tpos", pos);
-			remote.set_u8("mode", 1 + (holder.isKeyPressed(key_action2) ? 1 : 0) + (holder.isKeyPressed(key_action1) ? -1 : 0));
+			CBlob@ holder = point.getOccupied();
+			if (holder !is null)
+			{
+				Vec2f pos = holder.getAimPos();
+				
+				CBlob@ remote = getBlobByNetworkID(this.get_u16("remote_netid"));
+				if (remote !is null && remote.getName() == "nanobot")
+				{
+					u8 mode = 1;
+					if (point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) mode = 0;
+					else if (point.isKeyPressed(key_action2) || holder.isKeyPressed(key_action2)) mode = 2;
+				
+					remote.set_Vec2f("target_position", pos);
+					remote.set_u8("mode", mode);
+				}
+			}
 		}
 	}
 }
