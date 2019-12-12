@@ -134,7 +134,7 @@ void onTick(CBlob@ this)
 		
 		case Deity::dragonfriend:
 		{
-			if (this.isKeyPressed(key_down) && this.isKeyJustPressed(key_action1) && this.getTeamNum() < 7 && !(getKnocked(this) > 0 || this.get_f32("babbyed") > 0.00f))
+			if (this.isKeyJustPressed(key_eat) && this.getTeamNum() < 7 && !(getKnocked(this) > 0 || this.get_f32("babbyed") > 0.00f))
 			{
 				if (getGameTime() >= this.get_u32("nextDragonFireball"))
 				{
