@@ -55,7 +55,7 @@ void Pierce(CBlob@ this, Vec2f velocity, const f32 angle)
 	Vec2f tip_position = position + direction * 4.0f;
 	Vec2f tail_position = position + direction * -4.0f;
 
-	Vec2f[] positions =
+	const Vec2f[] positions =
 	{
 		position,
 		tip_position,
@@ -66,12 +66,13 @@ void Pierce(CBlob@ this, Vec2f velocity, const f32 angle)
 	{
 		Vec2f temp_position = positions[i];
 		TileType type = map.getTile(temp_position).type;
-
-		if (map.isTileSolid(type))
+		const u32 offset = map.getTileOffset(temp_position);
+		
+		if (map.hasTileFlag(offset, Tile::SOLID))
 		{
-			const u32 offset = map.getTileOffset(temp_position);
 			onCollision(this, null, true);
 		}
+
 	}
 	
 	HitInfo@[] infos;
@@ -115,23 +116,36 @@ void DoExplosion(CBlob@ this, Vec2f velocity)
 
 	this.SetMinimapRenderAlways(false);
 		
-	this.set_f32("map_damage_radius", 512.0f);
-	Explode(this, 128.0f, 16.0f);
-	
 	ShakeScreen(256, 64, this.getPosition());
 	SetScreenFlash(64, 255, 255, 255);
 	
+	// LinearExplosion(this, velocity, 256.00f, 16.0f, 32, 64.0f, Hitters::explosion);
+	
 	for (int i = 0; i < 4; i++)
 	{
-		// Vec2f dir = Vec2f(1 - i / 4.0f, -1 + i / 4.0f);
-		// Vec2f dir = velocity + velocity * (100 - XORRandom(200) / 100.0f);
-		Vec2f jitter = Vec2f((XORRandom(200) - 100) / 200.0f, (XORRandom(200) - 100) / 200.0f);
-		// print("x: " + dir.x + "; y: " + dir.y);
-		LinearExplosion(this, Vec2f(velocity.x * jitter.x, velocity.y * jitter.y), 64.0f + XORRandom(32), 48.0f, 8, 40.0f, Hitters::explosion);
-		LinearExplosion(this, velocity, 64, 64.0f, 16, 80.0f, Hitters::explosion);
-		
-		// LinearExplosion(this, Vec2f(0, -1), radius, ray_width, steps, damage, hitter, blobs, should_teamkill);
+		// Vec2f jitter = Vec2f((XORRandom(200) - 100) / 200.0f, (XORRandom(200) - 100) / 200.0f);
+		// LinearExplosion(this, Vec2f(velocity.x * jitter.x, velocity.y * jitter.y), 64.0f + XORRandom(32), 48.0f, 8, 40.0f, Hitters::explosion);
+		LinearExplosion(this, velocity.RotateBy((100 - XORRandom(200)) * 0.02f), 64.00f + XORRandom(64), 12.0f, 32, 64.0f, Hitters::explosion);
 	}
+	
+	if (isServer())
+	{
+		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
+		if (boom !is null)
+		{
+			boom.setPosition(this.getPosition());
+			boom.set_u8("boom_start", 0);
+			boom.set_u8("boom_end", 10);
+			boom.set_u8("boom_frequency", 1);
+			boom.set_u32("boom_delay", 0);
+			boom.set_u32("flash_delay", 0);
+			boom.Tag("no fallout");
+			boom.Tag("no flash");
+			boom.Tag("no mithril");
+			boom.Init();
+		}
+	}
+
 
 	this.Tag("dead");
 	this.server_Die();
