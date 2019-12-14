@@ -3,7 +3,7 @@
 #include "Explosion.as";
 #include "CustomBlocks.as";
 
-const f32 reproduce_threshold = 50.0f;
+const f32 reproduce_threshold = 500.0f;
 
 void onInit(CBlob@ this)
 {
@@ -22,6 +22,8 @@ void onInit(CBlob@ this)
 	sprite.SetEmitSoundPaused(false);
 	sprite.SetEmitSoundSpeed(1.0f);
 	sprite.SetEmitSoundVolume(1.0f);
+	
+	this.Tag("nanobot_ignore");
 }
 
 const f32 max_distance = 256;
@@ -32,21 +34,39 @@ CBlob@ GetTarget(CBlob@ this)
 	if (this.getMap().getBlobsInRadius(this.getPosition(), max_distance, @blobs))
 	{
 		f32 dist = max_distance * max_distance;
-		uint index = 0;
+		int index = -1;
 	
-		for (uint i = 0; i < blobs.length; i++)
+		for (int i = 0; i < blobs.length; i++)
 		{
 			CBlob@ blob = blobs[i];
 			f32 d = (blob.getPosition() - this.getPosition()).Length();
 			
-			if (d < dist && !blob.exists("nanobot_netid") && blob.getInitialHealth() > 0 && !blob.hasTag("invincible") && !blob.hasTag("gas"))
+			if (d <= dist && !blob.exists("nanobot_netid") && !blob.hasTag("nanobot_ignore"))
 			{
 				dist = d;
 				index = i;
 			}
 		}
 		
-		return blobs[index];
+		if (index >= 0)
+		{
+			return blobs[index];
+		}
+		else
+		{
+			CBlob@[] allBlobs;
+			getBlobs(allBlobs);
+			
+			for (int i = 0; i < 4; i++)
+			{
+				CBlob@ blob = allBlobs[XORRandom(allBlobs.length())];
+				if ((blob.getPosition() - this.getPosition()).Length() < (max_distance * max_distance * 8.00f) && !blob.exists("nanobot_netid") && !blob.hasTag("nanobot_ignore") && !blob.isInInventory())
+				{
+					return blob;
+				}
+			}
+		}
+		
 	}
 	
 	return null;
@@ -55,21 +75,27 @@ CBlob@ GetTarget(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	CMap@ map = getMap();
+	Vec2f pos = this.getPosition();
+	u32 tick = this.getTickSinceCreated();
 
 	if(isClient())
 	{
 		MakeParticle(this, "Nanobot.png");
-		f32 vellen = this.getVelocity().getLength();
 		
-		CSprite@ sprite = this.getSprite();
-		sprite.SetEmitSoundSpeed(0.25f + Maths::Min(vellen * 0.10f, 0.80f) + (XORRandom(100) * 0.01f));
-		sprite.SetEmitSoundVolume(0.25f + vellen);
+		if (tick % 10 == 0)
+		{
+			f32 vellen = this.getVelocity().getLength();
+			
+			CSprite@ sprite = this.getSprite();
+			sprite.SetEmitSoundSpeed(0.25f + Maths::Min(vellen * 0.10f, 0.80f) + (XORRandom(100) * 0.01f));
+			sprite.SetEmitSoundVolume(0.25f + vellen);
+		}
 	}
 
 	CBlob@ remote = getBlobByNetworkID(this.get_u16("remote_netid"));
 	if (remote !is null)
 	{
-		Vec2f dir = this.get_Vec2f("target_position") - this.getPosition();
+		Vec2f dir = this.get_Vec2f("target_position") - pos;
 		f32 len = dir.Length();
 		dir.Normalize();
 		
@@ -78,37 +104,46 @@ void onTick(CBlob@ this)
 	else
 	{
 		CBlob@ target = getBlobByNetworkID(this.get_u16("target"));	
-		if (target !is null && target.exists("nanobot_netid") && target.get_u16("nanobot_netid") == this.getNetworkID())
+		if (target !is null)
 		{
-			Vec2f dir = target.getPosition() - this.getPosition();
-			f32 len = dir.Length();
-			dir.Normalize();
-			
-			this.setVelocity(dir * Maths::Clamp(len * 0.125f, -8, 8));
-			this.set_u8("mode", 0);
-			
-			if (this.get_f32("fill") >= reproduce_threshold)
+			if (target.exists("nanobot_netid") && target.get_u16("nanobot_netid") == this.getNetworkID() && !target.hasTag("nanobot_ignore"))
 			{
-				if (isServer())
-				{
-					server_CreateBlob("nanobot", -1, this.getPosition());
-				}
+				Vec2f dir = target.getPosition() - pos;
+				f32 len = dir.Length();
+				dir.Normalize();
 				
-				if (isClient())
-				{
-					this.getSprite().PlaySound("Nanobot_Ping_Split", 1.00f, 1.00f);
-				}
+				this.setVelocity(dir * Maths::Clamp(len * 0.125f, -8, 8));
+				this.set_u8("mode", 0);
 				
-				this.set_f32("fill", this.get_f32("fill") - reproduce_threshold);
+				if (this.get_f32("fill") >= reproduce_threshold)
+				{
+					if (isServer())
+					{
+						server_CreateBlob("nanobot", -1, pos);
+					}
+					
+					if (isClient())
+					{
+						this.getSprite().PlaySound("Nanobot_Ping_Split", 1.00f, 1.00f);
+					}
+					
+					this.set_f32("fill", this.get_f32("fill") - reproduce_threshold);
+				}
+			}
+			else
+			{
+				this.set_u16("target", 0);
+				target.Tag("nanobot_ignore");
 			}
 		}
-		else if (XORRandom(25) == 0)
+		else if (XORRandom(50) == 0)
 		{
 			CBlob@ target = GetTarget(this);
 			if (target !is null) 
 			{
 				this.set_u16("target", target.getNetworkID());
 				target.set_u16("nanobot_netid", this.getNetworkID());
+				this.Sync("target", true);
 				
 				if (isClient()) this.getSprite().PlaySound("Nanobot_Ping_Found", 1.00f, 1.00f);
 			}
@@ -124,45 +159,57 @@ void onTick(CBlob@ this)
 	{
 		case 0:
 		{
-			if (getGameTime() % 3 == 0)
+			if (tick % 3 == 0)
 			{
 				bool hit = false;
 			
 				CBlob@[] blobs;
-				if (this.getMap().getBlobsInRadius(this.getPosition(), 8.0f, @blobs))
+				if (map.getBlobsInRadius(pos, 8.0f, @blobs))
 				{
 					for (int i = 0; i < blobs.length; i++)
 					{
 						CBlob@ blob = blobs[i];
-						if (blob !is null && !blob.hasTag("invincible") && blob.getInitialHealth() > 0)
+						if (blob !is null)
 						{
-							f32 damage = blob.getInitialHealth() / 5.0f;
-							
-							if (isServer()) 
+							if (!blob.hasTag("nanobot_ignore"))
 							{
-								this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), damage * (blob.hasTag("flesh") ? 4.00f : 1.00f), HittersTC::nanobot, true);
-							}
+								f32 damage = blob.getInitialHealth() / 5.0f;
 							
-							hit = true;
-							this.add_f32("fill", damage);
+								if (isServer()) 
+								{
+									f32 health = blob.getHealth();
+									this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), damage * (blob.hasTag("flesh") ? 4.00f : 1.00f), HittersTC::nanobot, true);
+									
+									if (blob.getHealth() == health)
+									{
+										blob.Tag("nanobot_ignore");
+									}
+								}
+								
+								hit = true;
+								this.add_f32("fill", damage);
+							}
 						}
 					}
 				}
 			
+				for (int x = 0; x < 4; x++)
+				{
+					Vec2f tpos = pos + (Vec2f(3 - XORRandom(6), 3 -XORRandom(6)) * 8.00f);
+					Tile tile = map.getTile(tpos);
+					if (tile.type != CMap::tile_empty)
+					{
+						if (isServer()) map.server_DestroyTile(tpos, 0.125f);
+						hit = true;
+					}
+				}
+				
 				if (isClient())
 				{
 					if (hit)
 					{
 						this.getSprite().PlaySound("Nanobot_Attack.ogg", 0.50f, 0.25f + XORRandom(100) * 0.01f);
 					}
-				}
-			}
-			
-			if (isServer())
-			{
-				for (int x = 0; x < 4; x++)
-				{
-					map.server_DestroyTile(this.getPosition() + Vec2f(3 - XORRandom(6), 3 -XORRandom(6)) * 8, 0.125f);
 				}
 			}
 		}
@@ -178,13 +225,26 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	 this.getSprite().PlaySound("/Nanobot_Die.ogg", 0.75f, 0.50f + XORRandom(100) * 0.01f);
-	 this.getSprite().Gib();
+	this.getSprite().PlaySound("/Nanobot_Die.ogg", 0.75f, 0.50f + XORRandom(100) * 0.01f);
+	this.getSprite().Gib();
+	 
+	Explode(this, 32.0f, 2.0f);
+	 
+	if (isServer())
+	{
+		for (int i = 0; i < (5 + XORRandom(15)); i++)
+		{
+			CBlob@ blob = server_CreateBlob("mat_matter", this.getTeamNum(), this.getPosition());
+			blob.server_SetQuantity(XORRandom(4));
+			blob.setVelocity(getRandomVelocity(0, XORRandom(24), 360));
+		}
+	}
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return blob.getName() == "nanobot";
+	// return blob.getName() == "nanobot";
+	return false;
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
