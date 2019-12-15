@@ -1,6 +1,4 @@
-#define SERVER_ONLY
-
-//#include "CustomBlocks.as";
+#include "CustomBlocks.as";
 
 void onInit(CRules@ this)
 {
@@ -27,6 +25,8 @@ void Reset(CRules@ this, CMap@ map)
 		map.SetBorderColourLeft(SColor(255, 0, 0, 0));
 		map.SetBorderColourRight(SColor(255, 0, 0, 0));
 		map.SetBorderColourBottom(SColor(255, 0, 0, 0));
+		
+		if (!this.exists("map_type")) this.set_u8("map_type", MapType::normal);
 	}
 }
 
@@ -73,7 +73,7 @@ void Reset(CRules@ this, CMap@ map)
 
 void onTick(CRules@ this)
 {
-	if (getGameTime() % (60 * 30) == 0) Reset(this, getMap()); // Damn hack
+	// if (getGameTime() % (60 * 30) == 0) Reset(this, getMap()); // Damn hack
 	
 	// CMap@ map = getMap();
 	// map.SetBorderFadeWidth(16);

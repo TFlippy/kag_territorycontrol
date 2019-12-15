@@ -1,6 +1,11 @@
+#include "CustomBlocks.as";
+
 void onInit(CBlob@ this)
 {
 	this.getShape().SetGravityScale(0.0f);
+	this.getShape().SetStatic(true);
+	
+	getRules().set_u8("map_type", MapType::desert);
 
 	if (isClient())
 	{

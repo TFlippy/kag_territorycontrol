@@ -1,4 +1,6 @@
 #define SERVER_ONLY
+#include "CustomBlocks.as";
+
 u32 next_rain = 1000;
 
 void onInit(CRules@ this)
@@ -30,10 +32,36 @@ void onTick(CRules@ this)
 
 			if (!this.get_bool("raining"))
 			{
-				CBlob@ rain = server_CreateBlob("rain", 255, Vec2f(0, 0));
-				if (rain !is null)
+				switch (this.get_u8("map_type"))
 				{
-					rain.server_SetTimeToDie(length / 30.00f);
+					case MapType::arctic:
+					{
+						CBlob@ rain = server_CreateBlob("blizzard", 255, Vec2f(0, 0));
+						if (rain !is null)
+						{
+							rain.server_SetTimeToDie(length / 30.00f);
+						}
+					}
+					break;
+					
+					case MapType::desert:
+					{
+						return;
+					}
+					break;
+					
+					case MapType::normal:
+					case MapType::jungle:
+					case MapType::dead:
+					default:
+					{
+						CBlob@ rain = server_CreateBlob("rain", 255, Vec2f(0, 0));
+						if (rain !is null)
+						{
+							rain.server_SetTimeToDie(length / 30.00f);
+						}
+					}
+					break;
 				}
 			}
 

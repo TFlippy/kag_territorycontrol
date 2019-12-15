@@ -27,8 +27,8 @@ void onInit(CBlob@ this)
 		if(!Texture::exists("FOG")) Texture::createFromFile("FOG", "pixel.png");
 	}
 	
-	getRules().set_bool("blizzarding", true);
-	// client_AddToChat("A Blizzard has formed! Heavy wind will now blow away aerial vehicles and promote plant growth.", SColor(255, 255, 0, 0));
+	getRules().set_bool("raining", true);
+	client_AddToChat("A blizzard has formed! Heavy wind will now blow away aerial vehicles and promote snow growth.", SColor(255, 255, 0, 0));
 }
 
 const int spritesize = 128;
@@ -183,13 +183,13 @@ void Snow(CBlob@ this)
 					Vec2f pos_l = pos_c + Vec2f(-8.00f, 0.00f);
 					Vec2f pos_r = pos_c + Vec2f(+8.00f, 0.00f);
 					
-					Tile tile_c = map.getTile(pos_c);
-					Tile tile_l = map.getTile(pos_l);
-					Tile tile_r = map.getTile(pos_r);
+					const Tile tile_c = map.getTile(pos_c);
+					const Tile tile_l = map.getTile(pos_l);
+					const Tile tile_r = map.getTile(pos_r);
 					
-					TileType tileType_c = tile_c.type;
-					TileType tileType_l = tile_l.type;
-					TileType tileType_r = tile_r.type;
+					const TileType tileType_c = tile_c.type;
+					const TileType tileType_l = tile_l.type;
+					const TileType tileType_r = tile_r.type;
 					
 					if (tileType_c == CMap::tile_empty || map.isTileGrass(tileType_c))
 					{
@@ -197,8 +197,8 @@ void Snow(CBlob@ this)
 					}
 					else 
 					{
-						bool valid_l = (isTileSnowPile(tileType_l) && Maths::Abs(tileType_l - tileType_c + 1) < max_snow_difference) || (tile_l.flags & Tile::SOLID != 0);
-						bool valid_r = (isTileSnowPile(tileType_r) && Maths::Abs(tileType_r - tileType_c + 1) < max_snow_difference) || (tile_r.flags & Tile::SOLID != 0);
+						const bool valid_l = (isTileSnowPile(tileType_l) && Maths::Abs(tileType_l - tileType_c + 1) < max_snow_difference) || (tile_l.flags & Tile::SOLID != 0);
+						const bool valid_r = (isTileSnowPile(tileType_r) && Maths::Abs(tileType_r - tileType_c + 1) < max_snow_difference) || (tile_r.flags & Tile::SOLID != 0);
 					
 						if (isTileSnowPile(tileType_c - 1) && (valid_l && valid_r))
 						{
@@ -206,7 +206,7 @@ void Snow(CBlob@ this)
 						}
 						else if (tileType_c == CMap::tile_snow_pile) 
 						{
-							map.server_SetTile(pos_c, CMap::tile_snow + XORRandom(4));
+							map.server_SetTile(pos_c, CMap::tile_snow);
 						}
 					}
 				}
@@ -246,7 +246,7 @@ f32 Lerp(f32 v0, f32 v1, f32 t)
 
 void onDie(CBlob@ this)
 {
-	getRules().set_bool("blizzarding", false);
+	getRules().set_bool("raining", false);
 	CBlob@ jungle = getBlobByName('info_jungle');
 
 	if (jungle !is null)

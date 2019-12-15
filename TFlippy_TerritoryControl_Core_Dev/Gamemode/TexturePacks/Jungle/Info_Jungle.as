@@ -1,6 +1,7 @@
 #include "canGrow.as";
 #include "MakeSeed.as";
 #include "Hitters.as";
+#include "CustomBlocks.as";
 
 const string[] seeds =
 {
@@ -21,6 +22,9 @@ const Vec2f[] dir =
 void onInit(CBlob@ this)
 {
 	this.getShape().SetGravityScale(0.0f);
+	this.getShape().SetStatic(true);
+	
+	getRules().set_u8("map_type", MapType::jungle);
 
 	if (isClient())
 	{

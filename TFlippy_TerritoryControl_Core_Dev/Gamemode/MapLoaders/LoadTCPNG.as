@@ -1726,7 +1726,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 					if(isClient()) OnSnowTileHit(map, index);
 				}
 				map.SetTileSupport(index, 0);
-				map.AddTileFlag(index, Tile::LIGHT_SOURCE | Tile::LIGHT_PASSES);
+				map.AddTileFlag(index, Tile::LIGHT_SOURCE | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
 				map.RemoveTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				break;
 		}
