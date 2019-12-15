@@ -596,6 +596,7 @@ const SColor c_bconcrete = SColor(0xffe4e0c4);
 const SColor c_mossyconcrete = SColor(0xffd8e4c4);
 const SColor c_mossybconcrete = SColor(0xffd8e4c4);
 const SColor c_reinforcedconcrete = SColor(0xffbcbbb3);
+const SColor c_snow = SColor(0xffd3decf);
 
 SColor[] fire_colors = 
 {
@@ -700,6 +701,10 @@ void CalculateMinimapColour( CMap@ this, u32 offset, TileType type, SColor &out 
 		else if (type >= CMap::tile_reinforcedconcrete && type <= CMap::tile_reinforcedconcrete_d15)
 		{
 			col = c_reinforcedconcrete;
+		}
+		else if (isTileSnowPile(type) || isTileSnow(type))
+		{
+			col = c_snow;
 		}
 		else
 		{
@@ -2311,7 +2316,7 @@ void OnSnowTileHit(CMap@ map, u32 index)
 			: SColor(255, 110, 100, 93);														
 			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);									
 		}																						
-		Sound::Play("PickStone" + (1 + XORRandom(3)), pos, 1.0f, 1.0f);							
+		Sound::Play("dig_dirt" + (1 + XORRandom(3)), pos, 0.80f, 1.30f);							
 	}																							
 }																								
 																								
@@ -2330,6 +2335,6 @@ void OnSnowTileDestroyed(CMap@ map, u32 index)
 		}																						
 		ParticleAnimated("Smoke.png", pos+Vec2f(4, 0), 											
 		Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, false);												
-		Sound::Play("destroy_wall.ogg", pos, 1.0f, 1.0f);										
+		Sound::Play("destroy_dirt.ogg", pos, 0.80f, 1.30f);										
 	}																							
 }
