@@ -262,6 +262,19 @@ namespace CMap
 		tile_snow_v2,
 		tile_snow_v3,
 		tile_snow_v4,
+		tile_snow_v5,
+		tile_snow_d0,
+		tile_snow_d1,
+		tile_snow_d2,
+		tile_snow_d3,
+
+		tile_snow_pile = tile_snow + 16,
+		tile_snow_pile_v0,
+		tile_snow_pile_v1,
+		tile_snow_pile_v2,
+		tile_snow_pile_v3,
+		tile_snow_pile_v4,
+		tile_snow_pile_v5,
 	};
 };
 
@@ -312,7 +325,12 @@ bool isTileBGlass(TileType tile)
 
 bool isTileSnow(TileType tile)
 {
-	return tile >= CMap::tile_snow && tile <= CMap::tile_snow_v4;
+	return tile >= CMap::tile_snow && tile <= CMap::tile_snow_d3;
+}
+
+bool isTileSnowPile(TileType tile)
+{
+	return tile >= CMap::tile_snow_pile && tile <= CMap::tile_snow_pile_v5;
 }
 
 // void onInit(CMap@ this)
