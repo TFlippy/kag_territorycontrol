@@ -564,7 +564,14 @@ bool LoadMap(CMap@ map, const string& in fileName)
 
 	TCPNGLoader loader();
 
-	return loader.loadMap(map , fileName);
+	bool result = loader.loadMap(map , fileName);
+	
+	// if (isServer())
+	// {
+		// server_CreateBlob("info_arctic", 255, Vec2f(0, 0));
+	// }
+	
+	return result;
 }
 
 const SColor c_white = SColor(255, 255, 255, 255);

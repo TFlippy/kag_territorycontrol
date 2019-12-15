@@ -1,4 +1,5 @@
 #include "CustomBlocks.as";
+#include "MapType.as";
 
 void onInit(CBlob@ this)
 {

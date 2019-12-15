@@ -1,4 +1,5 @@
 #include "CustomBlocks.as";
+#include "MapType.as";
 
 void onInit(CRules@ this)
 {
@@ -19,11 +20,6 @@ void Reset(CRules@ this, CMap@ map)
 {
 	if (map !is null)
 	{
-		if (isServer())
-		{
-			server_CreateBlob("info_arctic", 255, Vec2f(0, 0));
-		}
-	
 		map.SetBorderFadeWidth(16);	
 		
 		map.SetBorderColourTop(SColor(255, 0, 0, 0));

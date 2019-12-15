@@ -2,6 +2,7 @@
 #include "MakeSeed.as";
 #include "Hitters.as";
 #include "CustomBlocks.as";
+#include "MapType.as";
 
 const string[] seeds =
 {

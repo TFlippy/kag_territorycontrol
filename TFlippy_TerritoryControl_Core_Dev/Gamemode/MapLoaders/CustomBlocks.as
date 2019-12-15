@@ -1,34 +1,3 @@
-// void HandleCustomTile( CMap@ map, int offset, SColor pixel )
-// {
-	// // print("custom");
-
-	// // if (pixel == color_goo)
-	// // {
-		// // map.SetTile(offset, CMap::tile_goo );
-		// // map.AddTileFlag( offset, Tile::SOLID | Tile::COLLISION );
-
-		// // //map.AddTileFlag( offset, Tile::BACKGROUND );
-		// // //map.AddTileFlag( offset, Tile::LADDER );
-		// // //map.AddTileFlag( offset, Tile::LIGHT_PASSES );
-		// // //map.AddTileFlag( offset, Tile::WATER_PASSES );
-		// // //map.AddTileFlag( offset, Tile::FLAMMABLE );
-		// // //map.AddTileFlag( offset, Tile::PLATFORM );
-		// // //map.AddTileFlag( offset, Tile::LIGHT_SOURCE );
-	// // }
-// }
-
-namespace MapType
-{
-	enum Type
-	{
-		normal = 0,
-		desert,
-		jungle,
-		arctic,
-		dead
-	}
-}
-
 namespace CMap
 {
 	enum CustomTiles
@@ -286,7 +255,7 @@ namespace CMap
 		tile_snow_pile_v2,
 		tile_snow_pile_v3,
 		tile_snow_pile_v4,
-		tile_snow_pile_v5,
+		tile_snow_pile_v5
 	};
 };
 

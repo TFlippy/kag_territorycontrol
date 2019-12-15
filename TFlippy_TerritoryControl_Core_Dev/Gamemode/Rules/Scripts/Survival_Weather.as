@@ -1,5 +1,6 @@
 #define SERVER_ONLY
 #include "CustomBlocks.as";
+#include "MapType.as";
 
 u32 next_rain = 1000;
 
