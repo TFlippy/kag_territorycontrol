@@ -160,6 +160,8 @@ void onTick(CBlob@ this)
 	Snow(this);
 }
 
+const int max_snow_difference = 4;
+
 void Snow(CBlob@ this)
 {
 	if (isServer())
@@ -167,9 +169,9 @@ void Snow(CBlob@ this)
 		CMap@ map = getMap();
 		Vec2f dir = Vec2f(0, 1); //.RotateBy(10);
 		
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 5; i++)
 		{
-			Vec2f start_pos = Vec2f(XORRandom(map.tilemapwidth) * 8, 0);
+			Vec2f start_pos = Vec2f(XORRandom(map.tilemapwidth) * 8, XORRandom(map.tilemapheight * 0.75f) * 8);
 			Vec2f end_pos = start_pos + (dir * 10000);
 			Vec2f hit_pos;
 			
@@ -195,8 +197,8 @@ void Snow(CBlob@ this)
 					}
 					else 
 					{
-						bool valid_l = (isTileSnowPile(tileType_l) && tileType_l <= tileType_c) || (tile_l.flags & Tile::SOLID != 0);
-						bool valid_r = (isTileSnowPile(tileType_r) && tileType_r <= tileType_c) || (tile_r.flags & Tile::SOLID != 0);
+						bool valid_l = (isTileSnowPile(tileType_l) && Maths::Abs(tileType_l - tileType_c + 1) < max_snow_difference) || (tile_l.flags & Tile::SOLID != 0);
+						bool valid_r = (isTileSnowPile(tileType_r) && Maths::Abs(tileType_r - tileType_c + 1) < max_snow_difference) || (tile_r.flags & Tile::SOLID != 0);
 					
 						if (isTileSnowPile(tileType_c - 1) && (valid_l && valid_r))
 						{
