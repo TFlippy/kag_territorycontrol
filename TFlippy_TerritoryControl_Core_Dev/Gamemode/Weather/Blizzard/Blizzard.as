@@ -23,10 +23,8 @@ void onInit(CBlob@ this)
 	if (isClient())
 	{
 		Render::addBlobScript(Render::layer_postworld, this, "Blizzard.as", "RenderBlizzard");
-		if(!Texture::exists("BLIZZARD"))
-			Texture::createFromFile("BLIZZARD", "blizzard.png");
-		if(!Texture::exists("FOG"))
-			Texture::createFromFile("FOG", "pixel.png");
+		if(!Texture::exists("BLIZZARD")) Texture::createFromFile("BLIZZARD", "blizzard.png");
+		if(!Texture::exists("FOG")) Texture::createFromFile("FOG", "pixel.png");
 	}
 	
 	getRules().set_bool("blizzarding", true);
@@ -159,24 +157,61 @@ void onTick(CBlob@ this)
 		fogDarkness = Maths::Clamp(130 + (fog * 0.10f), 0, 255);
 	}
 	
+	Snow(this);
+}
+
+void Snow(CBlob@ this)
+{
 	if (isServer())
 	{
 		CMap@ map = getMap();
-		//if(XORRandom(5) == 4)
+		Vec2f dir = Vec2f(0, 1); //.RotateBy(10);
+		
+		for (int i = 0; i < 10; i++)
 		{
-			Vec2f out_pos;
-			s32 rand_x = XORRandom(map.tilemapwidth)*8;
-			if(map.rayCastSolid(Vec2f(rand_x,0), Vec2f(rand_x,map.tilemapheight*8), out_pos))
+			Vec2f start_pos = Vec2f(XORRandom(map.tilemapwidth) * 8, 0);
+			Vec2f end_pos = start_pos + (dir * 10000);
+			Vec2f hit_pos;
+			
+			if (map.rayCastSolidNoBlobs(start_pos, end_pos, hit_pos))
 			{
-				if(map.isInWater(out_pos)-Vec2f(0,8))
-					return;
-				TileType tile = map.getTile(out_pos-Vec2f(0,8)).type;
-				if(tile == CMap::tile_snow_pile)
-					map.server_SetTile(out_pos-Vec2f(0,8), CMap::tile_snow);
-				else if(isTileSnowPile(tile))
-					map.server_SetTile(out_pos-Vec2f(0,8), tile - 1);
-				else if(tile == CMap::tile_empty)
-					map.server_SetTile(out_pos-Vec2f(0,8), CMap::tile_snow_pile_v5);
+				Vec2f pos_c = hit_pos + Vec2f(+0.00f, -8.00f);
+				if (!map.isInWater(pos_c))
+				{
+					Vec2f pos_l = pos_c + Vec2f(-8.00f, 0.00f);
+					Vec2f pos_r = pos_c + Vec2f(+8.00f, 0.00f);
+					
+					Tile tile_c = map.getTile(pos_c);
+					Tile tile_l = map.getTile(pos_l);
+					Tile tile_r = map.getTile(pos_r);
+					
+					TileType tileType_c = tile_c.type;
+					TileType tileType_l = tile_l.type;
+					TileType tileType_r = tile_r.type;
+					
+					if (tileType_c == CMap::tile_empty || map.isTileGrass(tileType_c))
+					{
+						map.server_SetTile(pos_c, CMap::tile_snow_pile_v5);
+					}
+					else 
+					{
+						bool valid_l = (isTileSnowPile(tileType_l) && tileType_l <= tileType_c) || (tile_l.flags & Tile::SOLID != 0);
+						bool valid_r = (isTileSnowPile(tileType_r) && tileType_r <= tileType_c) || (tile_r.flags & Tile::SOLID != 0);
+					
+						if (isTileSnowPile(tileType_c - 1) && (valid_l && valid_r))
+						{
+							map.server_SetTile(pos_c, tileType_c - 1);
+						}
+						else if (tileType_c == CMap::tile_snow_pile) 
+						{
+							map.server_SetTile(pos_c, CMap::tile_snow + XORRandom(4));
+						}
+					}
+				}
+				
+				// if (tile_c == CMap::tile_empty || map.isTileGrass(tile_c)) map.server_SetTile(pos_c, CMap::tile_snow_pile_v5);
+				// else if (isTileSnowPile(tile_c - 1)) map.server_SetTile(pos_c, tile_c - 1);
+				// else if (tile_c == CMap::tile_snow_pile) map.server_SetTile(pos_c, CMap::tile_snow);
 			}
 		}
 	}
@@ -192,16 +227,8 @@ void RenderBlizzard(CBlob@ this, int id)
 		Blizzard_vs[2].v = Blizzard_vs[3].v = uvMove + uvs;
 		float[] model;
 		Matrix::MakeIdentity(model);
-		Matrix::SetRotationDegrees(model,
-			0,
-			0,
-			70.0f
-		);
-		Matrix::SetTranslation(model,
-			blizzardpos.x,
-			blizzardpos.y,
-			0
-		);
+		Matrix::SetRotationDegrees(model, 0.00f, 0.00f, 70.0f);
+		Matrix::SetTranslation(model, blizzardpos.x, blizzardpos.y, 0.00f);
 		Render::SetModelTransform(model);
 		Render::RawQuads("BLIZZARD", Blizzard_vs);
 		f32 alpha = Maths::Clamp(Maths::Max(fog, 255 * fogHeightModifier * 1.20f) * modifier, 0, 190);
