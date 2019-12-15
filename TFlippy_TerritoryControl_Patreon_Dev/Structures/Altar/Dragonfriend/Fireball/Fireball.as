@@ -20,7 +20,7 @@ void onInit(CBlob@ this)
 {
 	this.getShape().SetGravityScale(0.80f);
 		
-	this.set_string("custom_explosion_sound", "methane_explode");
+	this.set_string("custom_explosion_sound", "Fireball_Boom");
 		
 	this.SetLight(true);
 	this.SetLightRadius(48.0f);
@@ -59,16 +59,20 @@ void DoExplosion(CBlob@ this)
 	this.set_f32("map_damage_radius", (16.0f + random) * Maths::Sqrt(modifier));
 	this.set_f32("map_damage_ratio", 0.50f);
 	
-	Explode(this, 32.0f * Maths::Sqrt(modifier), 2.0f * modifier);
+	Explode(this, 128.0f * Maths::Sqrt(modifier), 50.0f * modifier);
 	
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
+	
+	SetScreenFlash(255, 255, 255, 255, 15);
+	Sound::Play("Fireball_Boom");
+	ShakeScreen(666, 666, this.getPosition());
 	
 	if (isServer())
 	{
 		CBlob@[] blobs;
 		
-		if (map.getBlobsInRadius(pos, 16.0f, @blobs))
+		if (map.getBlobsInRadius(pos, 256.0f, @blobs))
 		{
 			for (int i = 0; i < blobs.length; i++)
 			{		
@@ -84,6 +88,29 @@ void DoExplosion(CBlob@ this)
 		for (int i = 0; i < 14; i++)
 		{
 			map.server_setFireWorldspace(pos + Vec2f(2 - XORRandom(4), 2 - XORRandom(4)) * 8, true);
+		}
+		
+		for (int i = 0; i < 40; i++)
+		{
+			CBlob@ blob = server_CreateBlob("flame", -1, this.getPosition());
+			blob.setVelocity(Vec2f(8 - XORRandom(16), -XORRandom(10)));
+			blob.server_SetTimeToDie(60 + XORRandom(10));
+		}
+		
+		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
+		if (boom !is null)
+		{
+			boom.setPosition(this.getPosition());
+			boom.set_u8("boom_start", 0);
+			boom.set_u8("boom_end", 40);
+			boom.set_u8("boom_frequency", 4);
+			boom.set_u32("boom_delay", 0);
+			boom.set_u32("flash_delay", 0);
+			boom.Tag("no fallout");
+			boom.Tag("no flash");
+			boom.Tag("no mithril");
+			boom.set_string("custom_explosion_sound", "Fireball_Boom");
+			boom.Init();
 		}
 	}
 	

@@ -255,6 +255,13 @@ namespace CMap
 		tile_mossybconcrete_d2,
 		tile_mossybconcrete_d3,
 		tile_mossybconcrete_d4,
+		
+		tile_snow = tile_bconcrete_d0 + 16,
+		tile_snow_v0,
+		tile_snow_v1,
+		tile_snow_v2,
+		tile_snow_v3,
+		tile_snow_v4,
 	};
 };
 
@@ -301,6 +308,11 @@ bool isTileGlass(TileType tile)
 bool isTileBGlass(TileType tile)
 {
 	return tile >= CMap::tile_bglass && tile <= CMap::tile_bglass_d0;
+}
+
+bool isTileSnow(TileType tile)
+{
+	return tile >= CMap::tile_snow && tile <= CMap::tile_snow_v4;
 }
 
 // void onInit(CMap@ this)
