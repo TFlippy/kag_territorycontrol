@@ -1682,6 +1682,17 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				break;
 			
 			case CMap::tile_snow:
+				if(isClient())
+				{
+					int add = index % 7;
+					if(add > 0)
+					map.SetTile(index, CMap::tile_snow + add);
+				}
+				map.SetTileSupport(index, 1);
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+				map.RemoveTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
+				break;
+
 			case CMap::tile_snow_v0:
 			case CMap::tile_snow_v1:
 			case CMap::tile_snow_v2:
@@ -1700,7 +1711,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.SetTileSupport(index, 1);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
-				OnSnowTileHit(map, index);
+				if(isClient()) OnSnowTileHit(map, index);
 				break;
 			
 			case CMap::tile_snow_pile:
@@ -1712,7 +1723,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_snow_pile_v5:
 				if(tile_new > tile_old && isTileSnowPile(tile_old)) // if pile got smaller do particles
 				{
-					OnSnowTileHit(map, index);
+					if(isClient()) OnSnowTileHit(map, index);
 				}
 				map.SetTileSupport(index, 0);
 				map.AddTileFlag(index, Tile::LIGHT_SOURCE | Tile::LIGHT_PASSES);

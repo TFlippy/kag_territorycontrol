@@ -413,7 +413,7 @@ void Pickaxe(CBlob@ this)
 				hasHit = true;
 				hitdata.tilepos = tilepos;
 			}
-			else if (map.isTileGrass(tile.type))
+			else if (map.isTileGrass(tile.type) || isTileSnowPile(tile.type))
 			{
 				//NOT hashit - check last for grass
 				isgrass = true;
