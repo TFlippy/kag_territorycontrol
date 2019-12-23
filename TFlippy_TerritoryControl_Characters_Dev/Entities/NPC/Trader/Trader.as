@@ -289,19 +289,19 @@ void onTick(CBlob@ this)
 			{
 				// this.set_u32("lastDanger", getGameTime());
 				
-				text = textsDanger[XORRandom(textsDanger.length())];
-				this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.length())]);
+				text = textsDanger[XORRandom(textsDanger.size())];
+				this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.size())]);
 			}
 			else
 			{
 				if (getGameTime() - this.get_u32("lastDanger") < 30 * 60)
 				{
-					text = textsWon[XORRandom(textsWon.length())];
+					text = textsWon[XORRandom(textsWon.size())];
 				}
 				else
 				{
-					text = textsIdle[XORRandom(textsIdle.length())];
-					this.getSprite().PlaySound(soundsTalk[XORRandom(soundsTalk.length())]);
+					text = textsIdle[XORRandom(textsIdle.size())];
+					this.getSprite().PlaySound(soundsTalk[XORRandom(soundsTalk.size())]);
 				}
 			}
 

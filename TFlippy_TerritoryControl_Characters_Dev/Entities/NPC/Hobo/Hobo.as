@@ -322,19 +322,19 @@ void onTick(CBlob@ this)
 			string text = "";
 			if (danger)
 			{
-				text = textsDanger[XORRandom(textsDanger.length())];
-				this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.length())], 0.75f, 0.75f);
+				text = textsDanger[XORRandom(textsDanger.size())];
+				this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.size())], 0.75f, 0.75f);
 			}
 			else
 			{
 				if (time - this.get_u32("lastDanger") < 30 * 60)
 				{
-					text = textsWon[XORRandom(textsWon.length())];
+					text = textsWon[XORRandom(textsWon.size())];
 				}
 				else
 				{
-					text = textsIdle[XORRandom(textsIdle.length())];
-					this.getSprite().PlaySound(soundsTalk[XORRandom(soundsTalk.length())], 0.75f, 1.00f);
+					text = textsIdle[XORRandom(textsIdle.size())];
+					this.getSprite().PlaySound(soundsTalk[XORRandom(soundsTalk.size())], 0.75f, 1.00f);
 				}
 			}
 
@@ -386,7 +386,7 @@ void onTick(CBlob@ this)
 					
 						if (isClient())
 						{	
-							if (isAttached) this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.length())], 0.75f, 0.75f);
+							if (isAttached) this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.size())], 0.75f, 0.75f);
 						}
 					
 						if (isServer())

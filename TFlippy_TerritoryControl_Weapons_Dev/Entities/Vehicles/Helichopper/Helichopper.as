@@ -631,7 +631,7 @@ void renderAmmo(CBlob@ blob, bool rocket)
 
 	string reqsText = "" + ammo;
 
-	u8 numDigits = reqsText.length();
+	u8 numDigits = reqsText.size();
 
 	upperleft -= Vec2f((float(numDigits) * 4.0f), 0);
 	lowerright += Vec2f((float(numDigits) * 4.0f), 0);
@@ -789,7 +789,7 @@ void drawFuelCount(CBlob@ this)
 	f32 fuel = this.get_f32("fuel_count");
 	string reqsText = "Fuel: " + fuel + " / " + this.get_f32("max_fuel");
 
-	u8 numDigits = reqsText.length() - 1;
+	u8 numDigits = reqsText.size() - 1;
 
 	upperleft -= Vec2f((float(numDigits) * 4.0f), 0);
 	lowerright += Vec2f((float(numDigits) * 4.0f), 18);

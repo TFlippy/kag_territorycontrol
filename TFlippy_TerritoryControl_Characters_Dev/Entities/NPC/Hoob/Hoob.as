@@ -167,20 +167,20 @@ void onTick(CBlob@ this)
 			string text = "";
 			if (danger)
 			{
-				text = textsDanger[XORRandom(textsDanger.length())];
-				this.getSprite().PlaySound(sounds_idle[XORRandom(sounds_idle.length())], 0.75f, 0.75f);
+				text = textsDanger[XORRandom(textsDanger.size())];
+				this.getSprite().PlaySound(sounds_idle[XORRandom(sounds_idle.size())], 0.75f, 0.75f);
 			}
 			else
 			{
 				if (time - this.get_u32("lastDanger") < 30 * 60)
 				{
-					text = textsWon[XORRandom(textsWon.length())];
-					this.getSprite().PlaySound(sounds_laugh[XORRandom(sounds_laugh.length())], 0.75f, 1.00f);
+					text = textsWon[XORRandom(textsWon.size())];
+					this.getSprite().PlaySound(sounds_laugh[XORRandom(sounds_laugh.size())], 0.75f, 1.00f);
 				}
 				else
 				{
-					text = textsIdle[XORRandom(textsIdle.length())];
-					this.getSprite().PlaySound(sounds_idle[XORRandom(sounds_idle.length())], 0.75f, 1.00f);
+					text = textsIdle[XORRandom(textsIdle.size())];
+					this.getSprite().PlaySound(sounds_idle[XORRandom(sounds_idle.size())], 0.75f, 1.00f);
 				}
 			}
 
@@ -348,7 +348,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		{
 			if (getGameTime() > this.get_u32("next sound"))
 			{
-				this.getSprite().PlaySound(sounds_pain[XORRandom(sounds_pain.length())], 0.75f, 1.00f);
+				this.getSprite().PlaySound(sounds_pain[XORRandom(sounds_pain.size())], 0.75f, 1.00f);
 				this.set_u32("next sound", getGameTime() + 150);
 			}
 		}

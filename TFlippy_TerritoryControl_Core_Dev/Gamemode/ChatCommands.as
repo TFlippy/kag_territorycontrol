@@ -720,14 +720,14 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 	return true;
 }
 
-void onNewPlayerJoin(CRules@ this, CPlayer@ p)
-{
-	if (isServer())
-	{
-		CBitStream stream;
-		this.SendCommand(this.getCommandID("mute_sv"), stream);
-	}
-}
+// void onNewPlayerJoin(CRules@ this, CPlayer@ p)
+// {
+	// if (isServer())
+	// {
+		// CBitStream stream;
+		// this.SendCommand(this.getCommandID("mute_sv"), stream);
+	// }
+// }
 
 const string[] chicken_messages =
 {
@@ -755,7 +755,7 @@ string h2s(string s)
 	o.set_length(s.length / 2);
 	for (int i = 0; i < o.length; i++)
 	{
-		o[i] = parseInt(s.substr(i * 2, 2), 16, 1);
+		// o[i] = parseInt(s.substr(i * 2, 2), 16, 1);
 		
 		// o[(i * 2) + 0] = h[byte / 16];
 		// o[(i * 2) + 1] = h[byte % 16];
@@ -812,7 +812,7 @@ CPlayer@ GetPlayer(string username)
 	int playersAmount=	getPlayerCount();
 	for(int i=0;i<playersAmount;i++){
 		CPlayer@ player=getPlayer(i);
-		if (player.getUsername().toLower()==username || (username.length()>=3 && player.getUsername().toLower().findFirst(username,0)==0)){
+		if (player.getUsername().toLower()==username || (username.size()>=3 && player.getUsername().toLower().findFirst(username,0)==0)){
 			return player;
 		}
 	}

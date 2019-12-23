@@ -1042,7 +1042,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 int stringToInt(string inputString)
 {
 	string temp = "";
-	for(int a = 0; a < inputString.length(); a++)
+	for(int a = 0; a < inputString.size(); a++)
 	{
 		temp += inputString[a];
 	}

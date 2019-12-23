@@ -104,7 +104,7 @@ void DrawFillCount(CBlob@ this, u16 amount)
 
 	string reqsText = "" + amount;
 
-	u8 numDigits = reqsText.length();
+	u8 numDigits = reqsText.size();
 
 	upperleft -= Vec2f((float(numDigits) * 4.0f), 0);
 	lowerright += Vec2f((float(numDigits) * 4.0f), 0);
