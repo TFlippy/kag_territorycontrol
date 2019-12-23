@@ -748,7 +748,7 @@ void CalculateMinimapColour( CMap@ this, u32 offset, TileType type, SColor &out 
 	}
 	
 	if (this.isInWater(pos)) col = col.getInterpolated(SColor(0xff1d85ab), 0.5f);
-	if (this.isTileInFire(x, y)) col = col.getInterpolated(fire_colors[XORRandom(fire_colors.length)], 0.5f);
+	// if (this.isTileInFire(x, y)) col = col.getInterpolated(fire_colors[XORRandom(fire_colors.length)], 0.5f);
 }
 
 bool isGrassTile(u16 tile)

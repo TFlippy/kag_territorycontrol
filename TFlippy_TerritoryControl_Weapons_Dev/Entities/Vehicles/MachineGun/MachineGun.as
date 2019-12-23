@@ -362,7 +362,7 @@ void drawAmmoCount(CBlob@ this)
 
 	string reqsText = "" + ammo + " / " + max_ammo;
 
-	u8 numDigits = reqsText.length();
+	u8 numDigits = reqsText.size();
 
 	upperleft -= Vec2f((float(numDigits) * 4.0f), 0);
 	lowerright += Vec2f((float(numDigits) * 4.0f), 0);
