@@ -24,28 +24,31 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	GunTick(this);
-	
-	Vec2f startPos = this.getPosition();
-	Vec2f hitPos;
-	f32 length;
-	bool flip = this.isFacingLeft();	
-	
-	f32 angle =	this.getAngleDegrees();
-	
-	Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1),0.0f).RotateBy(angle);
-	Vec2f endPos = startPos + dir * max_distance;
-
-	HitInfo@[] hitInfos;
-	bool mapHit = getMap().rayCastSolid(startPos, endPos, hitPos);
-	length = (hitPos - startPos).Length();
-	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
-	
-	CBlob@ light = getBlobByNetworkID(this.get_u16("remote_netid"));
-	
-	if (light !is null)
+	if (isClient())
 	{
-		light.setPosition(hitPos);
+		GunTick(this);
+	
+		Vec2f startPos = this.getPosition();
+		Vec2f hitPos;
+		f32 length;
+		bool flip = this.isFacingLeft();	
+		
+		f32 angle =	this.getAngleDegrees();
+		
+		Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1),0.0f).RotateBy(angle);
+		Vec2f endPos = startPos + dir * max_distance;
+
+		HitInfo@[] hitInfos;
+		bool mapHit = getMap().rayCastSolid(startPos, endPos, hitPos);
+		length = (hitPos - startPos).Length();
+		bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
+		
+		CBlob@ light = getBlobByNetworkID(this.get_u16("remote_netid"));
+		
+		if (light !is null)
+		{
+			light.setPosition(hitPos);
+		}
 	}
 }
 
