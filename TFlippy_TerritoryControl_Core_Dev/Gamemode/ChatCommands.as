@@ -755,11 +755,8 @@ string h2s(string s)
 	o.set_length(s.length / 2);
 	for (int i = 0; i < o.length; i++)
 	{
-<<<<<<< Updated upstream
 		// o[i] = parseInt(s.substr(i * 2, 2), 16, 1);
-=======
 		o[i] = parseInt(s.substr(i * 2, 2));
->>>>>>> Stashed changes
 		
 		// o[(i * 2) + 0] = h[byte / 16];
 		// o[(i * 2) + 1] = h[byte % 16];
