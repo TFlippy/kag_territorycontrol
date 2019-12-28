@@ -144,7 +144,7 @@ void onTick(CBlob@ this)
 		
 	//with the code about menus and myplayer you can slash-cancel;
 	//we'll see if knights dmging stuff while in menus is a real issue and go from there
-	if (knocked > 0)// || myplayer && getHUD().hasMenus())
+	if (knocked > 0 || (myplayer && getHUD().hasMenus()))// || myplayer && getHUD().hasMenus())
 	{
 		knight.state = KnightStates::normal; //cancel any attacks or shielding
 		knight.swordTimer = 0;

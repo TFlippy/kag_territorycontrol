@@ -140,7 +140,7 @@ void onTick(CBlob@ this)
 
 	//with the code about menus and myplayer you can slash-cancel;
 	//we'll see if knights dmging stuff while in menus is a real issue and go from there
-	if (knocked > 0)// || myplayer && getHUD().hasMenus())
+	if (knocked > 0 || (myplayer && getHUD().hasMenus()))
 	{
 		knight.state = KnightStates::normal; //cancel any attacks or shielding
 		knight.swordTimer = 0;
@@ -153,8 +153,7 @@ void onTick(CBlob@ this)
 		walking = false;
 
 	}
-	else if (!pressed_a1 && !swordState &&
-	         (pressed_a2 || (specialShieldState)))
+	else if (!pressed_a1 && !swordState && (pressed_a2 || (specialShieldState)))
 	{
 		moveVars.jumpFactor *= 0.5f;
 		moveVars.walkFactor *= 0.9f;
@@ -722,8 +721,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	CPlayer@ player=this.getPlayer();
-	if(this.hasTag("invincible") || (player !is null && player.freeze)) {
+	CPlayer@ player = this.getPlayer();
+	if (this.hasTag("invincible") || (player !is null && player.freeze)) 
+	{
 		return 0;
 	}
 	// play cling sound if other knight attacked us
@@ -734,13 +734,9 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		CSprite@ sprite = this.getSprite();
 		CSprite@ hsprite = hitterBlob.getSprite();
 
-		if (hsprite.isAnimation("strike_power_ready") || hsprite.isAnimation("strike_mid") ||
-		        hsprite.isAnimation("strike_mid_down") || hsprite.isAnimation("strike_up") ||
-		        hsprite.isAnimation("strike_down") || hsprite.isAnimation("strike_up"))
+		if (hsprite.isAnimation("strike_power_ready") || hsprite.isAnimation("strike_mid") || hsprite.isAnimation("strike_mid_down") || hsprite.isAnimation("strike_up") || hsprite.isAnimation("strike_down") || hsprite.isAnimation("strike_up"))
 		{
-			if (sprite.isAnimation("strike_power_ready") || sprite.isAnimation("strike_mid") ||
-			        sprite.isAnimation("strike_mid_down") || sprite.isAnimation("strike_up") ||
-			        sprite.isAnimation("strike_down") || sprite.isAnimation("strike_up"))
+			if (sprite.isAnimation("strike_power_ready") || sprite.isAnimation("strike_mid") || sprite.isAnimation("strike_mid_down") || sprite.isAnimation("strike_up") || sprite.isAnimation("strike_down") || sprite.isAnimation("strike_up"))
 			{
 				this.getSprite().PlaySound("SwordCling");
 			}
@@ -833,79 +829,78 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 					}
 				}
 			}
-			else  // hitmap
-				if (!dontHitMoreMap && (deltaInt == DELTA_BEGIN_ATTACK + 1))
+			else if (!dontHitMoreMap && (deltaInt == DELTA_BEGIN_ATTACK + 1))
+			{
+				bool ground = map.isTileGround(hi.tile);
+				bool dirt_stone = map.isTileStone(hi.tile);
+				bool gold = map.isTileGold(hi.tile);
+				bool wood = map.isTileWood(hi.tile);
+				bool glass = ((hi.tile >= CMap::tile_glass && hi.tile <= CMap::tile_glass_d0) ? true : false);
+				bool tnt = (hi.tile == CMap::tile_tnt ? true : false);
+				if (ground || wood || dirt_stone || gold)
 				{
-					bool ground = map.isTileGround(hi.tile);
-					bool dirt_stone = map.isTileStone(hi.tile);
-					bool gold = map.isTileGold(hi.tile);
-					bool wood = map.isTileWood(hi.tile);
-					bool glass = ((hi.tile >= CMap::tile_glass && hi.tile <= CMap::tile_glass_d0) ? true : false);
-					bool tnt = (hi.tile == CMap::tile_tnt ? true : false);
-					if (ground || wood || dirt_stone || gold)
+					Vec2f tpos = map.getTileWorldPosition(hi.tileOffset) + Vec2f(4, 4);
+					Vec2f offset = (tpos - blobPos);
+					f32 tileangle = offset.Angle();
+					f32 dif = Maths::Abs(exact_aimangle - tileangle);
+					if (dif > 180)
+						dif -= 360;
+					if (dif < -180)
+						dif += 360;
+
+					dif = Maths::Abs(dif);
+					//print("dif: "+dif);
+
+					if (dif < 20.0f)
 					{
-						Vec2f tpos = map.getTileWorldPosition(hi.tileOffset) + Vec2f(4, 4);
-						Vec2f offset = (tpos - blobPos);
-						f32 tileangle = offset.Angle();
-						f32 dif = Maths::Abs(exact_aimangle - tileangle);
-						if (dif > 180)
-							dif -= 360;
-						if (dif < -180)
-							dif += 360;
+						//detect corner
 
-						dif = Maths::Abs(dif);
-						//print("dif: "+dif);
+						int check_x = -(offset.x > 0 ? -1 : 1);
+						int check_y = -(offset.y > 0 ? -1 : 1);
+						if (map.isTileSolid(hi.hitpos - Vec2f(map.tilesize * check_x, 0)) &&
+								map.isTileSolid(hi.hitpos - Vec2f(0, map.tilesize * check_y)))
+							continue;
 
-						if (dif < 20.0f)
+						bool canhit = true; //default true if not jab
+						if (jab) //fake damage
 						{
-							//detect corner
+							info.tileDestructionLimiter++;
+							canhit = ((info.tileDestructionLimiter % ((wood || dirt_stone) ? 3 : 2)) == 0);
+						}
+						else //reset fake dmg for next time
+						{
+							info.tileDestructionLimiter = 0;
+						}
 
-							int check_x = -(offset.x > 0 ? -1 : 1);
-							int check_y = -(offset.y > 0 ? -1 : 1);
-							if (map.isTileSolid(hi.hitpos - Vec2f(map.tilesize * check_x, 0)) &&
-							        map.isTileSolid(hi.hitpos - Vec2f(0, map.tilesize * check_y)))
-								continue;
+						//dont dig through no build zones
+						canhit = canhit && map.getSectorAtPosition(tpos, "no build") is null;
 
-							bool canhit = true; //default true if not jab
-							if (jab) //fake damage
-							{
-								info.tileDestructionLimiter++;
-								canhit = ((info.tileDestructionLimiter % ((wood || dirt_stone) ? 3 : 2)) == 0);
-							}
-							else //reset fake dmg for next time
-							{
-								info.tileDestructionLimiter = 0;
-							}
-
-							//dont dig through no build zones
-							canhit = canhit && map.getSectorAtPosition(tpos, "no build") is null;
-
-							dontHitMoreMap = true;
-							if (canhit)
-							{
-								map.server_DestroyTile(hi.hitpos, 0.1f, this);
-							}
+						dontHitMoreMap = true;
+						if (canhit)
+						{
+							map.server_DestroyTile(hi.hitpos, 0.1f, this);
 						}
 					}
-					else if (glass || tnt)
-					{
-						dontHitMoreMap = true;
-						map.server_DestroyTile(hi.hitpos, 0.1f, this);
-					}
 				}
+				else if (glass || tnt)
+				{
+					dontHitMoreMap = true;
+					map.server_DestroyTile(hi.hitpos, 0.1f, this);
+				}
+			}
 		}
 	}
 
 	// destroy grass
 
-	if (((aimangle >= 0.0f && aimangle <= 180.0f) || damage > 1.0f) &&    // aiming down or slash
-	        (deltaInt == DELTA_BEGIN_ATTACK + 1)) // hit only once
+	if (((aimangle >= 0.0f && aimangle <= 180.0f) || damage > 1.0f) && (deltaInt == DELTA_BEGIN_ATTACK + 1))
 	{
 		f32 tilesize = map.tilesize;
 		int steps = Maths::Ceil(2 * radius / tilesize);
 		int sign = this.isFacingLeft() ? -1 : 1;
 
 		for (int y = 0; y < steps; y++)
+		{
 			for (int x = 0; x < steps; x++)
 			{
 				Vec2f tilepos = blobPos + Vec2f(x * tilesize * sign, y * tilesize);
@@ -921,6 +916,7 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 					}
 				}
 			}
+		}
 	}
 }
 
@@ -1130,7 +1126,8 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @ap)
 		}
 	}
 
-	if (!ap.socket) {
+	if (!ap.socket) 
+	{
 		KnightInfo@ knight;
 		if (!this.get("knightInfo", @knight))
 		{
