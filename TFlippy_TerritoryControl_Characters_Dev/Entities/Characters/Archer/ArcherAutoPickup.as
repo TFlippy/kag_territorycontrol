@@ -14,48 +14,48 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 	string blobName = blob.getName();
 
-	if (blobName == "mat_arrows")
-	{
-		u32 arrows_count = this.getBlobCount("mat_arrows");
-		u32 blob_quantity = blob.getQuantity();
-		if (arrows_count + blob_quantity <= 60)
-		{
-			this.server_PutInInventory(blob);
-		}
-		else if (arrows_count < 60) //merge into current arrow stacks
-		{
-			this.getSprite().PlaySound("/PutInInventory.ogg");
+	// if (blobName == "mat_arrows")
+	// {
+		// u32 arrows_count = this.getBlobCount("mat_arrows");
+		// u32 blob_quantity = blob.getQuantity();
+		// if (arrows_count + blob_quantity <= 60)
+		// {
+			// this.server_PutInInventory(blob);
+		// }
+		// else if (arrows_count < 60) //merge into current arrow stacks
+		// {
+			// this.getSprite().PlaySound("/PutInInventory.ogg");
 
-			u32 pickup_amount = Maths::Min(blob_quantity, 60 - arrows_count);
-			if (blob_quantity - pickup_amount > 0)
-				blob.server_SetQuantity(blob_quantity - pickup_amount);
-			else
-				blob.server_Die();
+			// u32 pickup_amount = Maths::Min(blob_quantity, 60 - arrows_count);
+			// if (blob_quantity - pickup_amount > 0)
+				// blob.server_SetQuantity(blob_quantity - pickup_amount);
+			// else
+				// blob.server_Die();
 
-			CInventory@ inv = this.getInventory();
+			// CInventory@ inv = this.getInventory();
 			
-			if (inv is null) return;
+			// if (inv is null) return;
 			
-			for (int i = 0; i < inv.getItemsCount() && pickup_amount > 0; i++)
-			{
-				CBlob@ arrows = inv.getItem(i);
-				if (arrows !is null && arrows.getName() == blobName)
-				{
-					u32 arrow_amount = arrows.getQuantity();
-					u32 arrow_maximum = arrows.getMaxQuantity();
-					if (arrow_amount + pickup_amount < arrow_maximum)
-					{
-						arrows.server_SetQuantity(arrow_amount + pickup_amount);
-					}
-					else
-					{
-						pickup_amount -= arrow_maximum - arrow_amount;
-						arrows.server_SetQuantity(arrow_maximum);
-					}
-				}
-			}
-		}
-	}
+			// for (int i = 0; i < inv.getItemsCount() && pickup_amount > 0; i++)
+			// {
+				// CBlob@ arrows = inv.getItem(i);
+				// if (arrows !is null && arrows.getName() == blobName)
+				// {
+					// u32 arrow_amount = arrows.getQuantity();
+					// u32 arrow_maximum = arrows.getMaxQuantity();
+					// if (arrow_amount + pickup_amount < arrow_maximum)
+					// {
+						// arrows.server_SetQuantity(arrow_amount + pickup_amount);
+					// }
+					// else
+					// {
+						// pickup_amount -= arrow_maximum - arrow_amount;
+						// arrows.server_SetQuantity(arrow_maximum);
+					// }
+				// }
+			// }
+		// }
+	// }
 	
 	// if (blobName == "mat_firearrows" || blobName == "mat_bombarrows" || blobName == "mat_waterarrows" || blobName == "mat_rifleammo" || blobName == "mat_pistolammo" || blobName == "mat_smallrocket" || blobName == "mat_shotgunammo")
 	

@@ -68,7 +68,7 @@ bool GiveSpawnResources(CRules@ this, CBlob@ blob, CPlayer@ player, CTFPlayerInf
 	}
 	else if (blob.getName() == "archer")
 	{
-		ret = SetMaterials(blob, "mat_arrows", 30) || ret;
+		// ret = SetMaterials(blob, "mat_arrows", 30) || ret;
 
 		if (ret)
 		{
@@ -77,15 +77,6 @@ bool GiveSpawnResources(CRules@ this, CBlob@ blob, CPlayer@ player, CTFPlayerInf
 	}
 	else if (blob.getName() == "knight")
 	{
-		if (ret)
-		{
-			info.items_collected |= ItemFlag::Knight;
-		}
-	}
-	else if (blob.getName() == "sapper")
-	{
-		ret = SetMaterials(blob, "mat_bombs", 2) || ret;
-	
 		if (ret)
 		{
 			info.items_collected |= ItemFlag::Knight;

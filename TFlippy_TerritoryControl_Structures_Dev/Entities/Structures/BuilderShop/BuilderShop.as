@@ -55,12 +55,12 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
-	{
-		ShopItem@ s = addShopItem(this, "Arrows (30)", "$mat_arrows$", "mat_arrows-30", descriptions[2], true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 15);
+	// {
+		// ShopItem@ s = addShopItem(this, "Arrows (30)", "$mat_arrows$", "mat_arrows-30", descriptions[2], true);
+		// AddRequirement(s.requirements, "coin", "", "Coins", 15);
 		
-		s.spawnNothing = true;
-	}
+		// s.spawnNothing = true;
+	// }
 	{
 		ShopItem@ s = addShopItem(this, "Crate", "$crate$", "crate", "A wooden crate used for storage.\nBreaks upon impact.", true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 75);

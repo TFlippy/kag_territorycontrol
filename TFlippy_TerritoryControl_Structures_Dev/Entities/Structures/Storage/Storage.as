@@ -103,7 +103,7 @@ void PickupOverlap(CBlob@ this)
 		for (uint i = 0; i < blobs.length; i++)
 		{
 			CBlob@ blob = blobs[i];
-			if (!blob.isAttached() && blob.isOnGround() && blob.hasTag("material") && blob.getName() != "mat_arrows")
+			if (!blob.isAttached() && blob.isOnGround() && blob.hasTag("material"))
 			{
 				this.server_PutInInventory(blob);
 			}
