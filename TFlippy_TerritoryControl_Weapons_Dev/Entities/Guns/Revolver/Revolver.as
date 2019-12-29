@@ -6,7 +6,7 @@ void onInit(CBlob@ this)
 	GunInitRaycast(
 		this,
 		false,				//If true, gun will be fully automatic and players will be able to just hold the fire button
-		0.82f,				//Weapon damage / projectile blob name
+		1.50f,				//Weapon damage / projectile blob name
 		450.0f,				//Weapon raycast range
 		5,					//Weapon fire delay, in ticks
 		6,					//Weapon clip size
