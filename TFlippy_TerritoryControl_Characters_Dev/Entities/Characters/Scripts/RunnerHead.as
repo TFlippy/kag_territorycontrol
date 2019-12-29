@@ -13,6 +13,26 @@ const int FRAMES_WIDTH = 8 * NUM_HEADFRAMES;
 
 //handling Heads pack DLCs
 
+void onInit(CSprite@ this)
+{
+	CBlob@ blob = this.getBlob();
+	if (blob !is null)
+	{
+		blob.addCommandID("reload_head");
+	}
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+{
+	if (isClient())
+	{
+		if (cmd == this.getCommandID("reload_head"))
+		{
+			ReloadHead(this.getSprite());
+		}
+	}
+}
+
 int getHeadsPackIndex(int headIndex)
 {
 	if (headIndex > 255) {
@@ -109,6 +129,11 @@ string getHeadTexture(int headIndex)
 }
 
 void onPlayerInfoChanged(CSprite@ this)
+{
+	ReloadHead(this);
+}
+
+void ReloadHead(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
 	CPlayer@ ply = blob.getPlayer();

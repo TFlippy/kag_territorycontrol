@@ -107,6 +107,8 @@ void onInit(CBlob@ this)
 	
 	this.getShape().SetRotationsAllowed(false);
 	this.set_f32("gib health", -20.0f);
+	this.set_f32("crak_effect", 2.00f);
+	this.set_f32("drunk_effect", 8.00f);
 	this.Tag("flesh");
 	this.Tag("migrant");
 	this.Tag("human");

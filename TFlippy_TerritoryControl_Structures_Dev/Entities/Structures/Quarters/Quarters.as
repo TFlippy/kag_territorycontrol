@@ -6,7 +6,7 @@
 #include "CheckSpam.as";
 #include "StandardControlsCommon.as";
 #include "CTFShopCommon.as";
-#include "RunnerHead.as";
+// #include "RunnerHead.as";
 
 s32 cost_beer = 5;
 s32 cost_meal = 10;
@@ -311,14 +311,16 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint@ attachedPoint)
 			{
 				Animation@ anim = bed_head.addAnimation("default", 0, false);
 
-				if (texName == default_head_path)
-				{
-					anim.AddFrame(getHeadFrame(attached, attached.getHeadNum()) + 2);
-				}
-				else
-				{
-					anim.AddFrame(2);
-				}
+				anim.AddFrame(2);
+
+				// if (texName == default_head_path)
+				// {
+					// // anim.AddFrame(getHeadFrame(attached, attached.getHeadNum()) + 2);
+				// }
+				// else
+				// {
+					// anim.AddFrame(2);
+				// }
 
 				bed_head.SetAnimation(anim);
 				bed_head.SetFacingLeft(true);

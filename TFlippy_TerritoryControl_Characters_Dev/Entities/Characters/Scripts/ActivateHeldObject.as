@@ -143,6 +143,11 @@ void DoThrow(CBlob@ this, CBlob@ carried, Vec2f pos, Vec2f vector, Vec2f selfVel
 
 	if (carried !is null)
 	{
+		if (this.get_f32("crak_effect") > 0.00f)
+		{
+			vel *= 1.50f;
+		}
+	
 		if (carried.hasTag("medium weight"))
 		{
 			vel *= 0.6f;

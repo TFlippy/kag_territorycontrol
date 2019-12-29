@@ -114,6 +114,7 @@ void React(CBlob@ this)
 			CBlob@ protopopov_blob = inv.getItem("mat_protopopov");
 			CBlob@ protopopovBulb_blob = inv.getItem("protopopovbulb");
 			CBlob@ vodka_blob = inv.getItem("vodka");
+			CBlob@ fiks_blob = inv.getItem("fiks");
 
 			bool hasOil = oil_blob !is null;
 			bool hasMethane = methane_blob !is null;
@@ -129,6 +130,20 @@ void React(CBlob@ this)
 			bool hasProtopopov = protopopov_blob !is null;
 			bool hasProtopopovBulb = protopopovBulb_blob !is null;
 			bool hasVodka = vodka_blob !is null;
+			bool hasFiks = fiks_blob !is null;
+			
+			if (heat > 1000 && hasFiks)
+			{
+				if (isServer())
+				{
+					fiks_blob.server_Die();
+					
+					Material::createFor(this, "crak", 1);
+				}
+				
+				ShakeScreen(60.0f, 15, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Solid.ogg", 1.00f, 1.00f);
+			}
 			
 			if (pressure > 50000 && heat > 1500 && hasFuel && hasCoal && hasVodka && fuel_count >= 50 && coal_count >= 50)
 			{

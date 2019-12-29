@@ -125,6 +125,8 @@ void onInit(CBlob@ this)
 	
 	this.getShape().SetRotationsAllowed(false);
 	this.set_f32("gib health", -2.0f);
+	this.set_f32("crak_effect", 1.00f);
+	this.set_f32("drunk_effect", 4.00f);
 	this.Tag("flesh");
 	this.Tag("migrant");
 	this.Tag("human");
@@ -296,6 +298,9 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().runFlags |= Script::tick_blob_in_proximity;
 	this.getCurrentScript().runProximityTag = "player";
 	this.getCurrentScript().runProximityRadius = 320.0f;
+	
+	this.set_f32("voice pitch", 0.75f);
+	this.getSprite().PlaySound("drunk_fx4");
 }
 
 void onTick(CBlob@ this)
@@ -307,7 +312,6 @@ void onTick(CBlob@ this)
 			this.Tag("dead");				
 			return;
 		}
-
 
 		uint time = getGameTime();
 		if (time >= this.get_u32("nextTalk"))
@@ -527,7 +531,9 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	this.set_u32("lastDanger", getGameTime());
 	this.set_u16("danger blob", hitterBlob.getNetworkID());
 	this.set_u32("nextTalk", this.get_u32("nextTalk") - (30 * damage * 13));
-	
+
+	if (customData == Hitters::suicide) damage = 0;
+
 	return damage;
 }
 
@@ -590,9 +596,12 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 	if (blob.getName() == "mat_mithrilenriched" && blob.getQuantity() > 5)
 	{
-		if (isServer())
+		if (isServer() && !this.hasTag("transformed"))
 		{
-			CBlob@ bagel = server_CreateBlob("hoob", this.getTeamNum(), this.getPosition());
+			CBlob@ blob = server_CreateBlob("hoob", this.getTeamNum(), this.getPosition());
+			if (this.getPlayer() !is null) blob.server_SetPlayer(this.getPlayer());
+			
+			this.Tag("transformed");
 			this.server_Die();
 		}
 		else

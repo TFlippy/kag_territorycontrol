@@ -6,11 +6,13 @@ string[] w_wtf = {"gosh", "omg", "geez", "jesus", "woot", "wut", "wat", "oo", "x
 string[] w_filler = {"like", "just", "maybe", "basically", "well", "*burp*", "pbfpsfst", "pffffoo", "buhuhu", "huhu", "harhar"};
 string[] w_friends = {"darlings", "loves", "children", "friends", "comrades", "players", "beings", "bwoosh", "geti"};
 string[] w_smileys = {":)", ":(", ":D", "XD", "xd", ":)))", ":o", ";(", ";_;", "<3", ":3"};
+string[] w_expletives = {"fuck", "shit", "cock", "shite", "fuc", "fug", "bugger", "feck", "piss"};
 
 string GetWTF() { return w_wtf[XORRandom(w_wtf.length)]; }
 string GetFiller() { return w_filler[XORRandom(w_filler.length)]; }
 string GetFriends() { return w_friends[XORRandom(w_friends.length)]; }
 string GetSmileys() { return w_smileys[XORRandom(w_smileys.length)]; }
+string GetExpletive() { return w_expletives[XORRandom(w_expletives.length)]; }
 
 bool onClientProcessChat(CRules@ this, const string &in text_in, string &out text_out, CPlayer@ player)
 {
@@ -18,7 +20,7 @@ bool onClientProcessChat(CRules@ this, const string &in text_in, string &out tex
 	
 	CPlayer@ localPlayer = getLocalPlayer();
 	CBlob@ localBlob = getLocalPlayerBlob();
-	
+
 	if (XORRandom(10) == 0 && localPlayer !is player && localBlob !is null && localPlayer !is null && localBlob.hasTag("schisked"))
 	{
 		string playerName = localPlayer.getCharacterName();
@@ -94,6 +96,33 @@ bool onClientProcessChat(CRules@ this, const string &in text_in, string &out tex
 			break;
 		}
 	}
+	
+	if (player !is null)
+	{
+		CBlob@ senderBlob = player.getBlob();
+		if (senderBlob !is null)
+		{
+			if (senderBlob !is localBlob && senderBlob.hasTag("schisked"))
+			{	
+				int total_len = text_out.size();
+				int pos = XORRandom(total_len / 2);
+				string result = "";
+				
+				for (int i = 0; i < 3 && pos < total_len; i++)
+				{
+					int len = XORRandom(total_len - pos);
+					string segment = text_out.substr(pos, len);
+				
+					if (XORRandom(3) == 0) segment = segment.toUpper();
+					
+					result += segment;
+					pos += len;
+				}
+			
+				text_out = result;
+			}
+		}
+	}	
 	
 	return true;
 }
@@ -324,6 +353,115 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		text_out = tempReplace("e", "ee",text_out);
 	}
 	
+	if (blob.get_f32("crak_effect") > 0)
+	{
+		switch(XORRandom(8))
+		{
+			case 0:
+				if (XORRandom(4) == 0) text_out += " :DDDD";
+				break;
+				
+			case 1:
+				if (XORRandom(5) == 0) text_out += " OH " + GetExpletive() + " MY TEETH!";
+				break;
+				
+			case 2:
+				if (XORRandom(2) == 0) text_out += " " + text_out;
+				break;
+				
+			case 3:
+				if (XORRandom(4) == 0) text_out += " AAAA";
+				break;
+				
+			case 4:
+				if (XORRandom(3) == 0) text_out = "EEEE " + text_out; 
+				break;
+				
+			case 5:
+				if (XORRandom(2) == 0) text_out += " HHHHHHH";
+				break;
+		
+			case 6:
+				text_out += " " + GetExpletive();
+				break;
+				
+			case 7:
+				if (XORRandom(4) == 0) text_out = "HOLY " + GetExpletive();
+				break;
+				
+			default:
+				break;
+		}
+		
+		// text_out = text_out.toLower();
+		// text_out = text_out.replace("th", "f");
+		// text_out = text_out.replace("t's", "f");
+		// text_out = text_out.replace("z", "f");
+		// text_out = text_out.replace("s", "f");
+		// text_out = text_out.replace("g", "f");
+		// text_out = text_out.replace("l", "w");
+		// text_out = text_out.replace("c", "f");
+		// text_out = text_out.replace("k", "f");
+		// text_out = text_out.replace("t", "f");
+		// text_out = text_out.replace("r", "w");
+	
+		// // Broken Dementia
+		// int total_len = text_out.size();
+		// int pos = XORRandom(total_len / 2);
+		// string result = "";
+		
+		// for (int i = 0; i < 3 && pos < total_len; i++)
+		// {
+			// int len = XORRandom(total_len - pos);
+			// string segment = text_out.substr(pos, len);
+		
+			// if (XORRandom(3) == 0) segment = segment.toUpper();
+			
+			// result += segment;
+		// }
+		// text_out = result;
+	
+		// if (text_out.find("!") > 0)
+		// {
+			// text_out = text_out.toUpper();
+		// }
+		
+		// // Dementia
+		// int total_len = text_out.size();
+		// int pos = XORRandom(total_len / 2);
+		// string result = "";
+		
+		// for (int i = 0; i < 3 && pos < total_len; i++)
+		// {
+			// int len = XORRandom(total_len - pos);
+			// string segment = text_out.substr(pos, len);
+		
+			// if (XORRandom(3) == 0) segment = segment.toUpper();
+			
+			// result += segment;
+			// pos += len;
+		// }
+	
+		// text_out = result;
+		
+		int total_len = text_out.size();
+		int pos = 0;
+		string result = "";
+		
+		for (int i = 0; i < 10 && pos < total_len; i++)
+		{
+			int len = 1 + XORRandom(total_len - pos);
+			string segment = text_out.substr(pos - (1 - XORRandom(2)), len);
+		
+			if (XORRandom(3) == 0) segment = segment.toUpper();
+			
+			result += segment;
+			pos += len;
+		}
+	
+		text_out = result;
+	}
+	
 	f32 stim = blob.get_f32("stimed");
 	if (stim > 0)
 	{		
@@ -341,7 +479,6 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 			text_out += " Rawr~! <3";
 		}
 	}
-
 	
 	if (player.getUsername() == "digga" || player.getCharacterName() == "Rajang" || player.hasTag("awootism")) 
 	{

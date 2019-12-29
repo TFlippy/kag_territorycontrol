@@ -22,6 +22,7 @@ void onInit(CBlob@ this)
 
 	this.set_s8("charge_time", 0);
 	this.set_u8("charge_state", ArcherParams::not_aiming);
+	this.set_u8("charge_increment", 1);
 	this.set_bool("has_arrow", false);
 	this.set_f32("gib health", -1.5f);
 	
@@ -290,6 +291,8 @@ void ManageBow(CBlob@ this, ArcherInfo@ archer, RunnerMoveVars@ moveVars)
 	const bool pressed_action2 = this.isKeyPressed(key_action2);
 	Vec2f pos = this.getPosition();
 
+	int charge_increment = this.get_u8("charge_increment");
+
 	if (responsible)
 	{
 		if ((getGameTime() + this.getNetworkID()) % 10 == 0)
@@ -437,7 +440,7 @@ void ManageBow(CBlob@ this, ArcherInfo@ archer, RunnerMoveVars@ moveVars)
 		}
 		else if (charge_state == ArcherParams::readying)
 		{
-			charge_time++;
+			charge_time += charge_increment;
 
 			if (charge_time > ArcherParams::ready_time)
 			{
@@ -447,7 +450,7 @@ void ManageBow(CBlob@ this, ArcherInfo@ archer, RunnerMoveVars@ moveVars)
 		}
 		else if (charge_state == ArcherParams::charging)
 		{
-			charge_time++;
+			charge_time += charge_increment;
 
 			if (charge_time >= ArcherParams::legolas_period)
 			{
@@ -471,7 +474,7 @@ void ManageBow(CBlob@ this, ArcherInfo@ archer, RunnerMoveVars@ moveVars)
 		{
 			if (charge_time < ArcherParams::ready_time)
 			{
-				charge_time++;
+				charge_time += charge_increment;
 			}
 		}
 	}

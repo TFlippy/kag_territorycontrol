@@ -98,15 +98,6 @@ void onTick(CBlob@ this)
 	
 	if (XORRandom(10) == 0) 
 	{
-		// if (isClient())
-		// {
-			// // I know it's unrealistic, but people kept complaining about 'random' damage. Hopefully this'll give them the idea. :v
-			// // ...Let's say that KAG players have a built-in Geiger counter.
-			// // -- TFlippy
-			
-			// this.getSprite().PlaySound("geiger" + XORRandom(3) + ".ogg", 0.7f, 1.0f);
-		// }
-	
 		if (isServer())
 		{
 			CBlob@[] blobsInRadius;

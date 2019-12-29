@@ -16,7 +16,9 @@ void onInit(CBrain@ this)
 
 void onTick(CBrain@ this)
 {
-	CBlob @blob = this.getBlob();
+	CBlob@ blob = this.getBlob();
+	if (blob.getPlayer() !is null) return;
+	
 	u32 gametime = ((getGameTime() / this.getCurrentScript().tickFrequency) + blob.getNetworkID()); //!
 
 	
