@@ -18,116 +18,14 @@ void onTick(CBlob@ this)
 	f32 true_level = this.get_f32("foofed");		
 	f32 level = 1.00f + true_level;
 	
-	// print("" + true_level);
-	
 	if (true_level <= 0)
 	{
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
 	else
 	{
-		// print("foofing");
-	
-	
-		// f32 time = f32(getGameTime() * level);
-		// f32 original_radius = this.get_f32("foof_original_radius");
-		// f32 radius = this.get_f32("foof_radius") + 0.01f;
-		
-		// this.set_f32("foof_radius", radius);
-		
-		// // f32 modifier = Maths::Min(level / max_time, 1);
-		// // modifier = modifier * modifier * modifier;
-		// // f32 modifier = level / 3.00f;
-		
-		// CShape@ shape = this.getShape();
-		// ShapeConsts@ consts = shape.getConsts();
-		
-		// consts.radius = radius;
-		
-		// print("" + radius);
-		
-		// RunnerMoveVars@ moveVars;
-		// if (this.get("moveVars", @moveVars))
-		// {
-			// moveVars.walkFactor *= 1.50f * modifier;
-			// moveVars.jumpFactor *= 1.50f * modifier;
-		// }	
-				
-		// if (modifier >= 1)
-		// {
-			// if (this.getTickSinceCreated() % 30 == 0)
-			// {
-				// f32 maxHealth = Maths::Ceil(this.getInitialHealth() * 2.00f);
-				// if (this.getHealth() < maxHealth)
-				// {				
-					// if (isServer())
-					// {
-						// this.server_SetHealth(Maths::Min(this.getHealth() + 0.125f, maxHealth));
-					// }
-					
-					// if (isClient())
-					// {
-						// for (int i = 0; i < 4; i++)
-						// {
-							// ParticleAnimated("HealParticle.png", this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), Vec2f(0, f32(XORRandom(100) * -0.02f)) * 0.25f, 0, 0.5f, 10, 0, true);
-						// }
-					// }
-				// }
-			// }	
-		// }
-		// else
-		// {
-			// f32 invModifier = 1.00f - modifier;
-		
-			// if (getKnocked(this) == 0 && XORRandom(500 * modifier) == 0)
-			// {
-				// u8 knock = (30 + XORRandom(90)) * invModifier;
-			
-				// SetKnocked(this, knock);
-				// this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
-			// }
-			
-			// if (isClient())
-			// {
-				// if (this.isMyPlayer())
-				// {
-					// f32 rot;
-					// rot += Maths::Sin(getGameTime() / 30.0f) * invModifier * 1.8f;
-					// rot += Maths::Cos(getGameTime() / 25.0f) * invModifier * 1.3f;
-					// rot += Maths::Sin(380 + getGameTime() / 40.0f) * invModifier * 2.5f;
-					
-					// CCamera@ cam = getCamera();
-					// cam.setRotation(rot);
-					
-					// SetScreenFlash(255 * invModifier, XORRandom(3) * 25, 0, 0, 2 * invModifier);
-					// ShakeScreen(250.0f * invModifier, 1, this.getPosition());
-				// }
-			// }
-			
-			// if (XORRandom(500 * invModifier) == 0)
-			// {
-				// switch (XORRandom(2))
-				// {
-					// case 0:
-						// this.setKeyPressed(key_action1, true);
-						// break;
-					
-					// case 1:
-						// this.setKeyPressed(key_action2, true);
-						// break;
-				// }
-			
-				
-			// }
-		// }
-	
-		// print("" + modifier);
-		// print("" + level / max_time);
 		this.set_f32("foofed", Maths::Max(0, this.get_f32("foofed") - (0.0005f)));
 	}
-	
-	// print("" + true_level);
-	// print("" + (1.00f / (level)));
 }
 
 void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitBlob, u8 customData)
