@@ -220,19 +220,6 @@ void DoExplosion(CBlob@ this)
 
 const f32 push_radius = 350.00f;
 
-void MakePulseParticle(CBlob@ this, const Vec2f pos, const f32 time, const f32 size, const f32 growth, const SColor color)
-{
-	CParticle@ p = ParticleAnimated("falloff_invsqr.png",  this.getPosition() + pos, Vec2f(0, 0), 0, 0, 0, 0, true);
-	if (p !is null)
-	{
-		p.Z = 100;
-		p.animated = 30;
-		p.growth = growth;
-		p.setRenderStyle(RenderStyle::additive);
-		p.colour = color;
-	}
-}
-
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
 	if (!isClient()) return;
