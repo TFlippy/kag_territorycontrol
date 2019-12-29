@@ -121,7 +121,7 @@ void onTick(CBlob@ this)
 	
 		// print("" + modifier);
 		// print("" + level / max_time);
-		//this.set_f32("dominoed", Maths::Max(0, this.get_f32("dominoed") - (0.0005f)));
+		this.set_f32("dominoed", Maths::Max(0, this.get_f32("dominoed") - (0.0005f)));
 	}
 	
 	// print("" + true_level);
