@@ -48,7 +48,7 @@ void onTick(CBlob@ this)
 	{
 		if (isServer() && !this.hasTag("transformed"))
 		{
-			if (this.hasTag("human"))
+			if (this.hasTag("human") && this.getConfig() != "hobo")
 			{
 				CBlob@ blob = server_CreateBlob("hobo", this.getTeamNum(), this.getPosition());
 				if (this.getPlayer() !is null) blob.server_SetPlayer(this.getPlayer());

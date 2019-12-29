@@ -270,11 +270,6 @@ void onTick(CBlob@ this)
 			return;
 		}
 	
-		if(isClient()){
-			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
-				return;
-			}
-		}
 		if (getGameTime() >= this.get_u32("nextTalk"))
 		{
 			this.set_u32("nextTalk", getGameTime() + (30 * 10) + XORRandom(30 * 20));
