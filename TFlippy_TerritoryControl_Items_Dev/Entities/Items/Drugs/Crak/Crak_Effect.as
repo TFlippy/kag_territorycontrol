@@ -48,8 +48,21 @@ void onTick(CBlob@ this)
 	{
 		if (isServer() && !this.hasTag("transformed"))
 		{
-			CBlob@ blob = server_CreateBlob("hobo", this.getTeamNum(), this.getPosition());
-			if (this.getPlayer() !is null) blob.server_SetPlayer(this.getPlayer());
+			if (this.hasTag("human"))
+			{
+				CBlob@ blob = server_CreateBlob("hobo", this.getTeamNum(), this.getPosition());
+				if (this.getPlayer() !is null) blob.server_SetPlayer(this.getPlayer());
+			}
+			else if (this.hasTag("chicken"))
+			{
+				CBlob@ blob = server_CreateBlob("chicken", this.getTeamNum(), this.getPosition());
+				if (this.getPlayer() !is null) blob.server_SetPlayer(this.getPlayer());
+			}
+			else if (this.getConfig() == "kitten")
+			{
+				CBlob@ blob = server_CreateBlob("badger", this.getTeamNum(), this.getPosition());
+				if (this.getPlayer() !is null) blob.server_SetPlayer(this.getPlayer());
+			}
 			
 			this.Tag("transformed");
 			this.server_Die();
@@ -66,14 +79,14 @@ void onTick(CBlob@ this)
 			moveVars.walkFactor *= 2.00f - (withdrawal * 1.50f);
 			moveVars.jumpFactor *= 2.50f - (withdrawal * 2.00f);
 			
-			if (true_level > 2.00f)
+			if (true_level > 3.00f)
 			{
 				moveVars.walkFactor = 1.25f;
 				moveVars.jumpFactor = 0.00f;
 			}
 		}	
 		
-		if (true_level > 2.00f)
+		if (true_level > 3.00f)
 		{
 			if (this.getTickSinceCreated() % (30 + XORRandom(60)) == 0)
 			{
