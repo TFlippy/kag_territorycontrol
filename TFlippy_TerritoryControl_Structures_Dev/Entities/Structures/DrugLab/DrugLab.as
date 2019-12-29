@@ -132,13 +132,19 @@ void React(CBlob@ this)
 			bool hasVodka = vodka_blob !is null;
 			bool hasFiks = fiks_blob !is null;
 			
-			if (heat > 1000 && hasFiks)
+			if (heat > 500 && hasFiks)
 			{
 				if (isServer())
 				{
-					fiks_blob.server_Die();
-					
-					Material::createFor(this, "crak", 1);
+					if (XORRandom(100) < 30)
+					{
+						fiks_blob.server_Die();
+						Material::createFor(this, "crak", 1);
+					}
+					else
+					{
+						Material::createFor(this, "mat_coal", 3 + XORRandom(10));
+					}
 				}
 				
 				ShakeScreen(60.0f, 15, this.getPosition());
@@ -153,7 +159,7 @@ void React(CBlob@ this)
 					coal_blob.server_SetQuantity(Maths::Max(coal_blob.getQuantity() - 50, 0));
 					vodka_blob.server_Die();
 					
-					Material::createFor(this, "sosek", 1 + XORRandom(2));
+					Material::createFor(this, "sosek", 2 + XORRandom(3));
 				}
 				
 				ShakeScreen(20.0f, 30, this.getPosition());
@@ -227,7 +233,7 @@ void React(CBlob@ this)
 				if (isServer())
 				{
 					coal_blob.server_SetQuantity(Maths::Max(coal_blob.getQuantity() - count, 0));
-					Material::createFor(this, "mat_oil", count);
+					Material::createFor(this, "mat_oil", count * 1.75f);
 				}
 				
 				ShakeScreen(20.0f, 15, this.getPosition());
@@ -309,23 +315,7 @@ void React(CBlob@ this)
 				ShakeScreen(10.0f, 15, this.getPosition());
 				this.getSprite().PlaySound("DrugLab_Create_Liquid.ogg", 1.00f, 1.00f);
 			}
-			
-			if (heat > 1000 && dirt_blob !is null && meat_blob !is null && hasAcid && dirt_count >= 50 && meat_count > 15 && acid_count >= 25)
-			{
-				if (isServer())
-				{
-					dirt_blob.server_SetQuantity(Maths::Max(dirt_blob.getQuantity() - 50, 0));
-					meat_blob.server_SetQuantity(Maths::Max(meat_blob.getQuantity() - 15, 0));
-					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 25, 0));
-					
-					Material::createFor(this, "bobongo", 3 + XORRandom(5));
-					Material::createFor(this, "mat_methane", XORRandom(50));
-				}
 				
-				ShakeScreen(10.0f, 60, this.getPosition());
-				this.getSprite().PlaySound("DrugLab_Create_Creamy.ogg", 1.00f, 1.00f);
-			}
-					
 			if (pressure > 40000 && heat > 700 && hasAcid && hasMethane && hasMithrilEnriched && hasMeat && acid_count > 25 && methane_count >= 25 && e_mithril_count >= 5 && meat_count >= 10)
 			{
 				if (isServer())
@@ -352,7 +342,7 @@ void React(CBlob@ this)
 					meat_blob.server_SetQuantity(Maths::Max(meat_blob.getQuantity() - 15, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 25, 0));
 					
-					Material::createFor(this, "bobongo", 2 + XORRandom(4));
+					Material::createFor(this, "bobongo", 2 + XORRandom(5));
 					Material::createFor(this, "mat_methane", XORRandom(50));
 				}
 				
@@ -368,7 +358,7 @@ void React(CBlob@ this)
 				{
 					dirt_blob.server_SetQuantity(Maths::Max(dirt_blob.getQuantity() - count, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - count * 0.25f, 0));
-					Material::createFor(this, "mat_sulphur", count * 1.75f);
+					Material::createFor(this, "mat_sulphur", count * 3.00f);
 				}
 				
 				ShakeScreen(20.0f, 30, this.getPosition());
@@ -386,7 +376,7 @@ void React(CBlob@ this)
 						oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 20, 0));
 						bobomax.server_Die();
 						
-						Material::createFor(this, "foof", 3 + XORRandom(6));
+						Material::createFor(this, "foof", 3 + XORRandom(7));
 					}
 					
 					ShakeScreen(60.0f, 15, this.getPosition());
@@ -404,7 +394,7 @@ void React(CBlob@ this)
 						oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 25, 0));
 						stim.server_Die();
 						
-						Material::createFor(this, "rippio", 1 + XORRandom(2));
+						Material::createFor(this, "rippio", 2 + XORRandom(2));
 					}
 					
 					ShakeScreen(100.0f, 15, this.getPosition());
@@ -434,7 +424,7 @@ void React(CBlob@ this)
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 20, 0));
 					coal_blob.server_SetQuantity(Maths::Max(coal_blob.getQuantity() - 15, 0));
 					
-					Material::createFor(this, "babby", 1 + XORRandom(2));
+					Material::createFor(this, "babby", 2 + XORRandom(3));
 				}
 				
 				ShakeScreen(10.0f, 10, this.getPosition());
@@ -463,8 +453,8 @@ void React(CBlob@ this)
 					oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 15, 0));
 					mithril_blob.server_SetQuantity(Maths::Max(mithril_blob.getQuantity() - 5, 0));
 					
-					Material::createFor(this, "schisk", 1 + XORRandom(3));
-					Material::createFor(this, "bobomax", 1 + XORRandom(2));
+					Material::createFor(this, "schisk", 2 + XORRandom(3));
+					Material::createFor(this, "bobomax", 1 + XORRandom(3));
 				}
 				
 				ShakeScreen(30.0f, 60, this.getPosition());
