@@ -148,6 +148,7 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_firework$", "Firework.png", Vec2f(16, 24), 0);
 	AddIconToken("$icon_patreonfirework$", "PatreonFirework.png", Vec2f(16, 24), 0);
 	AddIconToken("$icon_firejob$", "Firejob.png", Vec2f(16, 24), 0);
+	AddIconToken("$icon_fireboom$", "Fireboom.png", Vec2f(32, 32), 0);
 	AddIconToken("$icon_hazmat$", "HazmatItem.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_mousetrap$", "MouseTrap.png", Vec2f(32, 16), 0);
 	AddIconToken("$icon_contrabass$", "Contrabass.png", Vec2f(8, 16), 0);
@@ -202,6 +203,10 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_foof$", "Foof.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_stim$", "Stim.png", Vec2f(8, 16), 0);
 	AddIconToken("$icon_bobongo$", "Bobongo.png", Vec2f(8, 8), 0);
+	AddIconToken("$icon_crak$", "Crak.png", Vec2f(8, 8), 0);
+	AddIconToken("$icon_fumes$", "Fumes.png", Vec2f(16, 8), 0);
+	AddIconToken("$icon_rippio$", "Rippio.png", Vec2f(8, 16), 0);
+	AddIconToken("$icon_propesko$", "Propesko.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_minidruglab$", "MiniDrugLab.png", Vec2f(24, 24), 0);
 
 	// add color tokens

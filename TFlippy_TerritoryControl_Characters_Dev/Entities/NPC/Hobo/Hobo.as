@@ -138,7 +138,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("traderChat");
 
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
-	this.set_Vec2f("shop menu size", Vec2f(5, 3));
+	this.set_Vec2f("shop menu size", Vec2f(6, 4));
 	this.set_string("shop description", name + " the Hobo");
 	this.setInventoryName(name + " the Hobo");
 	this.set_u8("shop icon", 25);
@@ -177,6 +177,13 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "firejob", "$icon_firejob$", "firejob", "fucking tie it to your neck and launch it ya cunt");
 		AddRequirement(s.requirements, "coin", "", "Coins", 250 + rand.NextRanged(1500));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 25)
+	{
+		ShopItem@ s = addShopItem(this, "fireboom", "$icon_fireboom$", "fireboom", "ok so now listen carefully my dear this is illegal as fUCK");
+		AddRequirement(s.requirements, "coin", "", "Coins", 5000 + rand.NextRanged(20000));
 		s.spawnNothing = true;
 	}
 	
@@ -236,45 +243,17 @@ void onInit(CBlob@ this)
 			s.spawnNothing = true;
 		}
 	}
-	
-	if (rand.NextRanged(100) < 25)
-	{
-		ShopItem@ s = addShopItem(this, "fun", "$icon_domino$", "domino", "hoyl shit");
-		AddRequirement(s.requirements, "coin", "", "Coins", 150 + rand.NextRanged(500));
-		s.spawnNothing = true;
-	}
-	
-	if (rand.NextRanged(100) < 25)
-	{
-		ShopItem@ s = addShopItem(this, "speedo", "$icon_stim$", "stim", "speedy stuff you'll be fast like hedgehog");
-		AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
-		s.spawnNothing = true;
-	}
-	
-	if (rand.NextRanged(100) < 25)
-	{
-		ShopItem@ s = addShopItem(this, "shite", "$icon_bobongo$", "bobongo", "stfu");
-		AddRequirement(s.requirements, "coin", "", "Coins", 125 + rand.NextRanged(500));
-		s.spawnNothing = true;
-	}
-	
+		
 	if (rand.NextRanged(100) < 25)
 	{
 		ShopItem@ s = addShopItem(this, "cat", "$icon_kitten$", "badger", "yea");
 		AddRequirement(s.requirements, "coin", "", "Coins", 50 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
-	
-	if (rand.NextRanged(100) < 25)
-	{
-		ShopItem@ s = addShopItem(this, "yellow mellow", "$icon_foof$", "foof", "pissssss");
-		AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
-		s.spawnNothing = true;
-	}
-	
+		
 	if (rand.NextRanged(100) < 3)
 	{
-		ShopItem@ s = addShopItem(this, "some retarded shite", "$icon_oof$", "oof", "it's a rake or some stuff now get the fuck out before i gouge your eyes out");
+		ShopItem@ s = addShopItem(this, "some retarded shite", "$icon_oof$", "oof", "it's a rake or some shit now get the fuck out before i gouge your eyes out");
 		AddRequirement(s.requirements, "coin", "", "Coins", 1 + rand.NextRanged(1000));
 		s.spawnNothing = true;
 	}
@@ -287,6 +266,95 @@ void onInit(CBlob@ this)
 		s.customButton = true;
 		s.buttonwidth = 2;
 		s.buttonheight = 2;
+	}
+	
+	if (rand.NextRanged(100) < 50)
+	{
+		if (rand.NextRanged(100) < 25)
+		{
+			ShopItem@ s = addShopItem(this, "yellow mellow", "$icon_foof$", "foof", "pissssss");
+			AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
+			s.spawnNothing = true;
+		}
+		
+		if (rand.NextRanged(100) < 25)
+		{
+			ShopItem@ s = addShopItem(this, "fun", "$icon_domino$", "domino", "hoyl shit");
+			AddRequirement(s.requirements, "coin", "", "Coins", 150 + rand.NextRanged(500));
+			s.spawnNothing = true;
+		}
+		
+		if (rand.NextRanged(100) < 30)
+		{
+			ShopItem@ s = addShopItem(this, "speedo", "$icon_stim$", "stim", "speedy stuff you'll be fast like hedgehog");
+			AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
+			s.spawnNothing = true;
+		}
+		
+		if (rand.NextRanged(100) < 40)
+		{
+			ShopItem@ s = addShopItem(this, "shite", "$icon_bobongo$", "bobongo", "stfu");
+			AddRequirement(s.requirements, "coin", "", "Coins", 125 + rand.NextRanged(500));
+			s.spawnNothing = true;
+		}
+		
+		if (rand.NextRanged(100) < 40)
+		{
+			ShopItem@ s = addShopItem(this, "crack", "$icon_crak$", "crak", "gets shit done quick");
+			AddRequirement(s.requirements, "coin", "", "Coins", 50 + rand.NextRanged(500));
+			s.spawnNothing = true;
+		}
+		
+		if (rand.NextRanged(100) < 25)
+		{
+			ShopItem@ s = addShopItem(this, "red stuff", "$icon_propesko$", "propesko", "had to do it to em");
+			AddRequirement(s.requirements, "coin", "", "Coins", 200 + rand.NextRanged(1000));
+			s.spawnNothing = true;
+		}
+		
+		if (rand.NextRanged(100) < 25)
+		{
+			ShopItem@ s = addShopItem(this, "smokey", "$icon_fumes$", "fumes", "fly like an idiot");
+			AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(1000));
+			s.spawnNothing = true;
+		}
+	}
+	else if (rand.NextRanged(100) < 40)
+	{
+		if (rand.NextRanged(100) < 50)
+		{
+			ShopItem@ s = addShopItem(this, "sell crak", "$COIN$", "coin-" + (100 + XORRandom(400)), "shitcrackers love these");
+			AddRequirement(s.requirements, "blob", "crak", "Crak", 1);
+			s.spawnNothing = true;
+		}
+		
+		if (rand.NextRanged(100) < 50)
+		{
+			ShopItem@ s = addShopItem(this, "sell rippio", "$COIN$", "coin-" + (400 + XORRandom(1500)), "fucks them up pretty well");
+			AddRequirement(s.requirements, "blob", "rippio", "Rippio", 1);
+			s.spawnNothing = true;
+		}
+		
+		if (rand.NextRanged(100) < 50)
+		{
+			ShopItem@ s = addShopItem(this, "sell stim", "$COIN$", "coin-" + (200 + XORRandom(300)), "makes them cruise like hedgehog");
+			AddRequirement(s.requirements, "blob", "stim", "Stim", 1);
+			s.spawnNothing = true;
+		}
+		
+		if (rand.NextRanged(100) < 50)
+		{
+			ShopItem@ s = addShopItem(this, "sell propesko", "$COIN$", "coin-" + (400 + XORRandom(1000)), "what are you lookin at");
+			AddRequirement(s.requirements, "blob", "propesko", "Propesko", 1);
+			s.spawnNothing = true;
+		}
+		
+		if (rand.NextRanged(100) < 50)
+		{
+			ShopItem@ s = addShopItem(this, "sell fumes", "$COIN$", "coin-" + (500 + XORRandom(1200)), "smelly shit");
+			AddRequirement(s.requirements, "blob", "fumes", "Fumes", 1);
+			s.spawnNothing = true;
+		}
 	}
 	
 	if (isServer())
@@ -410,6 +478,11 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
+}
+
+void onSetPlayer(CBlob@ this, CPlayer@ player)
+{
+	this.set_bool("shop available", false);
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
