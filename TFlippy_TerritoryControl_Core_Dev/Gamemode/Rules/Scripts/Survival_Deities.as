@@ -98,7 +98,7 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 						if (altar !is null)
 						{
 							altar.add_f32("deity_power", 1 + XORRandom(10));
-							altar.Sync("deity_power", false);
+							if (isServer()) altar.Sync("deity_power", false);
 						}
 					}
 					

@@ -140,11 +140,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				{
 					if (data == "follower")
 					{
-						if (isServer())
-						{
-							this.add_f32("deity_power", 50);
-							this.Sync("deity_power", true);
-						}
+						this.add_f32("deity_power", 50);
+						if (isServer()) this.Sync("deity_power", false);
 						
 						if (isClient())
 						{
@@ -179,7 +176,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							if (isServer())
 							{
 								this.add_f32("deity_power", 25);
-								this.Sync("deity_power", true);
+								if (isServer()) this.Sync("deity_power", false);
 							
 								CMap@ map = getMap();
 							
@@ -198,7 +195,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							if (isServer())
 							{
 								this.add_f32("deity_power", 100);
-								this.Sync("deity_power", true);
+								if (isServer()) this.Sync("deity_power", false);
 							
 								int count = getPlayerCount();
 								CPlayer@ player = getPlayer(XORRandom(count));
@@ -215,7 +212,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							if (isServer())
 							{
 								this.add_f32("deity_power", 400);
-								this.Sync("deity_power", true);
+								if (isServer()) this.Sync("deity_power", false);
 							
 								CMap@ map = getMap();
 							
