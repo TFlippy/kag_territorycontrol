@@ -32,34 +32,4 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	GunTick(this);
-	
-	// if (getGameTime() % 60 != 0) return;
-
-	// const f32 deg2rad = 3.14f / 180.0f;
-	// f32 modifier = this.get_f32("gun_fireDamage");
-	
-	// CControls@ controls = getControls();
-	// Driver@ driver = getDriver();
-
-	// Vec2f dir = (controls.getMouseScreenPos() - driver.getScreenCenterPos());
-	// f32 len = dir.Length();
-	// f32 angle = dir.Angle() - 10;
-
-	// print("" + angle);
-	
-	// Vec2f recoil = Vec2f(Maths::FastCos(angle * deg2rad), -Maths::FastSin(angle * deg2rad));
-	// controls.setMousePosition((driver.getScreenDimensions() / 2.0f) + (recoil * len));
-	
-	// // f32 rad2deg = 180.0f / 3.14f;
-	// const f32 deg2rad = 3.14f / 180.0f;
-	
-	// CControls@ controls = getControls();
-	// Driver@ driver = getDriver();
-
-	// Vec2f dir = (controls.getMouseScreenPos() - driver.getScreenCenterPos());
-	// f32 len = dir.Length();
-	// f32 angle = dir.Angle() -  10.0f;
-
-	// Vec2f recoil = Vec2f(Maths::FastCos(angle * deg2rad), -Maths::FastSin(angle * deg2rad));
-	// controls.setMousePosition((driver.getScreenDimensions() / 2) + (recoil * len));
 }

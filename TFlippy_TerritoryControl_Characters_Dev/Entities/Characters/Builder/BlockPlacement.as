@@ -22,25 +22,51 @@ void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
 	{
 		bool take = true;
 		
-		if (this.get_u8("deity_id") == Deity::mason)
+		u8 deity_id = this.get_u8("deity_id");
+		switch (deity_id)
 		{
-			CBlob@ altar = getBlobByName("altar_mason");
-			if (altar !is null)
+			case Deity::mason:
 			{
-				// print("free block chance: " + altar.get_f32("deity_power") * 0.01f);
-				if (XORRandom(100) < altar.get_f32("deity_power") * 0.01f)
+				CBlob@ altar = getBlobByName("altar_mason");
+				if (altar !is null)
 				{
-					take = false;
-					// print("free block!");		
+					// print("free block chance: " + altar.get_f32("deity_power") * 0.01f);
+					if (XORRandom(100) < altar.get_f32("deity_power") * 0.01f)
+					{
+						take = false;
+						// print("free block!");		
+					}
+					else
+					{
+						altar.add_f32("deity_power", 1);
+						if (isServer()) this.Sync("deity_power", false);
+					}
 				}
-				else
-				{
-					altar.add_f32("deity_power", 1);
-					if (isServer()) this.Sync("deity_power", false);
-				}
-
-				
 			}
+		
+			case Deity::foghorn:
+			{
+				if (getMap().isBlobWithTagInRadius("upf property", cursorPos, 128))
+				{
+					CBlob@ altar = getBlobByName("altar_foghorn");
+					if (altar !is null)
+					{
+						f32 reputation_penalty = 10.00f;
+						if (isClient())
+						{
+							if (this.isMyPlayer()) 
+							{
+								client_AddToChat("You have tampered with UPF property! (" + -reputation_penalty + " reputation)", 0xffff0000);
+								Sound::Play("Collect.ogg", cursorPos, 2.00f, 0.80f);
+							}
+						}
+						
+						altar.add_f32("deity_power", -reputation_penalty);
+						if (isServer()) altar.Sync("deity_power", false);
+					}
+				}
+			}
+		break;
 		}
 		
 		if (take)

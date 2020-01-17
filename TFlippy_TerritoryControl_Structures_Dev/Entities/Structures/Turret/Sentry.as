@@ -4,6 +4,7 @@
 #include "HittersTC.as";
 #include "Knocked.as";
 #include "VehicleAttachmentCommon.as"
+#include "DeityCommon.as"
 
 const f32 radius = 128.0f;
 const f32 damage = 5.00f;
@@ -133,6 +134,7 @@ void onTick(CBlob@ this)
 			
 			f32 dist = (b.getPosition() - this.getPosition()).LengthSquared();
 			
+			if (myTeam == 250 && b.get_u8("deity_id") == Deity::foghorn) continue;
 			if (team != myTeam && dist < s_dist && b.hasTag("flesh") && !b.hasTag("dead") && isVisible(this, b))
 			{
 				s_dist = dist;

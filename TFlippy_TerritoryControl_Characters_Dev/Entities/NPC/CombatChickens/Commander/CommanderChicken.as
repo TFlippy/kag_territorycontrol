@@ -191,20 +191,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (isServer())
-	{
-		CBrain@ brain = this.getBrain();
-		
-		if (brain !is null && hitterBlob !is null)
-		{
-			if (hitterBlob.getTeamNum() != this.getTeamNum() && hitterBlob.isCollidable()) 
-			{
-				if (brain.getTarget() is null) brain.SetTarget(hitterBlob);
-				else if (!hitterBlob.hasTag("material")) brain.SetTarget(hitterBlob);
-			}
-		}
-	}
-	
 	return damage;
 }
 

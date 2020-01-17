@@ -32,7 +32,7 @@ void onInit(CBlob@ this)
 	
 	this.set_f32("map_damage_radius", 96.0f);
 	this.set_f32("map_damage_ratio", 0.4f);
-	this.set_string("custom_explosion_sound", "bigbomb_explosion.ogg");
+	this.set_string("custom_explosion_sound", "ShockMine_explode.ogg");
 	
 	this.getSprite().SetFrame(0);
 	this.getSprite().getConsts().accurateLighting = false;
@@ -41,6 +41,10 @@ void onInit(CBlob@ this)
 	this.SetMapEdgeFlags(CBlob::map_collide_left | CBlob::map_collide_right);
 	this.getShape().SetGravityScale(1.18f);
 	this.sendonlyvisible = false;
+	
+	CShape@ shape = this.getShape();
+	ShapeConsts@ consts = shape.getConsts();
+	consts.bullet = true;
 	
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Shell_Whistle.ogg");
@@ -138,8 +142,8 @@ void DoExplosion(CBlob@ this)
 	f32 angle = this.getOldVelocity().Angle();
 	// print("Modifier: " + modifier + "; Quantity: " + this.getQuantity());
 
-	this.set_f32("map_damage_radius", 32.0f);
-	this.set_f32("map_damage_ratio", 0.25f);
+	this.set_f32("map_damage_radius", 48.0f);
+	this.set_f32("map_damage_ratio", 0.40f);
 	
 	Explode(this, 128.0f, 150.0f);
 	
@@ -152,7 +156,28 @@ void DoExplosion(CBlob@ this)
 		LinearExplosion(this, dir, 32.0f + XORRandom(16) + (modifier * 8), 24 + XORRandom(24), 4, 0.50f, Hitters::explosion);
 	}
 	
-	if(isClient())
+	if (isServer())
+	{
+		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
+		if (boom !is null)
+		{
+			boom.setPosition(this.getPosition());
+			boom.set_u8("boom_start", 0);
+			boom.set_u8("boom_end", 4);
+			boom.set_u8("boom_frequency", 2);
+			boom.set_u32("boom_delay", 0);
+			boom.set_u32("flash_delay", 0);
+			boom.Tag("no fallout");
+			boom.Tag("no flash");
+			boom.Tag("no mithril");
+			// boom.Tag("no particles");
+			// boom.Tag("no explosion particles");
+			boom.set_string("custom_explosion_sound", "ShockMine_explode");
+			boom.Init();
+		}
+	}
+	
+	if (isClient())
 	{
 		Vec2f pos = this.getPosition();
 		CMap@ map = getMap();

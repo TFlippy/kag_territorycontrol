@@ -134,16 +134,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (isServer())
-	{
-		CBrain@ brain = this.getBrain();
-		
-		if (brain !is null && hitterBlob !is null)
-		{
-			if (hitterBlob.getTeamNum() != this.getTeamNum()) brain.SetTarget(hitterBlob);
-		}
-	}
-	
 	return damage;
 }
 

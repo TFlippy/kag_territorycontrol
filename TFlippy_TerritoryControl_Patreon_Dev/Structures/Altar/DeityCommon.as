@@ -9,6 +9,7 @@ namespace Deity
 		mason,
 		cocok,
 		swaglag,
-		dragonfriend
+		dragonfriend,
+		foghorn
 	}
 }

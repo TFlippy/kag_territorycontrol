@@ -1,4 +1,5 @@
 #include "LootSystem.as";
+#include "DeityCommon.as";
 
 const LootItem@[] c_items =
 {
@@ -71,9 +72,9 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	if (caller.getTeamNum() != 250 && !this.hasTag("opened"))
+	if (caller.getTeamNum() != 250 && !this.hasTag("opened") && caller.get_u8("deity_id") != Deity::foghorn)
 	{
-		caller.CreateGenericButton("$chest_open$", Vec2f(0, 0), this, this.getCommandID("chest_open"), "Open");
+		CButton@ button = caller.CreateGenericButton("$chest_open$", Vec2f(0, 0), this, this.getCommandID("chest_open"), "Open");
 	}
 }
 

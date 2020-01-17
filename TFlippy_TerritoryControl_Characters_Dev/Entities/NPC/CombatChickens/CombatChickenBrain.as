@@ -1,6 +1,7 @@
 #include "BrainCommon.as"
 #include "Hitters.as";
 #include "RunnerCommon.as";
+#include "DeityCommon.as";
 
 const f32 cursor_lerp_speed = 0.50f;
 
@@ -108,7 +109,7 @@ void onTick(CBrain@ this)
 				
 				// print("" + d);
 				
-				if (b.getTeamNum() != myTeam && d <= chaseDistanceSqr && !b.hasTag("dead") && b.hasTag("flesh") && !b.hasTag("invincible") && (isVisible(blob, b) || d < (48 * 48)))
+				if (b.getTeamNum() != myTeam && d <= chaseDistanceSqr && !b.hasTag("dead") && b.hasTag("flesh") && !b.hasTag("invincible") && b.get_u8("deity_id") != Deity::foghorn && (isVisible(blob, b) || d < (48 * 48)))
 				{
 					this.SetTarget(b);
 					blob.set_u32("nextAttack", getGameTime() + blob.get_u8("reactionTime"));

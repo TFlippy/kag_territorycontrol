@@ -275,6 +275,84 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	return damage;
 }
 
+void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitBlob, u8 customData)
+{
+	u8 deity_id = this.get_u8("deity_id");
+	switch (deity_id)
+	{
+		case Deity::foghorn:
+		{
+			if (hitBlob !is null && hitBlob.getTeamNum() == 250 && hitBlob !is this)
+			{
+				CBlob@ altar = getBlobByName("altar_foghorn");
+				if (altar !is null)
+				{
+					string action = "damaged";
+					string type = "property";
+					f32 reputation_penalty = damage * 100.00f;
+					
+					if (hitBlob.hasTag("flesh"))
+					{
+						reputation_penalty *= 3.00f;
+						action = "injured";
+						type = "personnel";
+					}
+					
+					reputation_penalty = Maths::Round(reputation_penalty);
+	
+					if (isClient())
+					{
+						if (this.isMyPlayer()) 
+						{
+							client_AddToChat("You have " + action + " UPF " + type + "! (" + -reputation_penalty + " reputation)", 0xffff0000);
+							Sound::Play("Collect.ogg", hitBlob.getPosition(), 2.00f, 0.80f);
+						}
+					}
+					
+					altar.add_f32("deity_power", -reputation_penalty);
+					if (isServer()) altar.Sync("deity_power", false);
+				}
+			}
+		}
+		break;
+	}
+}
+
+void onHitMap( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData )
+{
+	u8 deity_id = this.get_u8("deity_id");
+	switch (deity_id)
+	{
+		case Deity::foghorn:
+		{
+			if (getMap().isBlobWithTagInRadius("upf property", worldPoint, 128))
+			{
+				CBlob@ altar = getBlobByName("altar_foghorn");
+				if (altar !is null)
+				{
+					string type = "property";
+					f32 reputation_penalty = damage * 25.00f;
+					
+					reputation_penalty = Maths::Round(reputation_penalty);
+					
+					if (isClient())
+					{
+						if (this.isMyPlayer()) 
+						{
+							client_AddToChat("You have damaged UPF " + type + "! (" + -reputation_penalty + " reputation)", 0xffff0000);
+							Sound::Play("Collect.ogg", worldPoint, 2.00f, 0.80f);
+						}
+					}
+					
+					altar.add_f32("deity_power", -reputation_penalty);
+					if (isServer()) altar.Sync("deity_power", false);
+				}
+			}
+		}
+		break;
+	}
+}
+
 // pick up efffects
 // something was picked up
 
