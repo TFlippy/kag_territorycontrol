@@ -596,7 +596,7 @@ void onHealthChange(CBlob@ this, f32 oldHealth)
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
-	return this.hasTag("dead");
+	return this.hasTag("dead") || this.getPlayer() is null;
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
