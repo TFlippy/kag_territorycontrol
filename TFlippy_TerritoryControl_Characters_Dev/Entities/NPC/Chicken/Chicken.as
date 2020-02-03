@@ -121,6 +121,8 @@ void onInit(CBlob@ this)
 	vars.slowForce.Set(1.0f, 0.0f);
 	vars.jumpForce.Set(0.0f, -20.0f);
 	vars.maxVelocity = 1.1f;
+	
+	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 2.00f);
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)

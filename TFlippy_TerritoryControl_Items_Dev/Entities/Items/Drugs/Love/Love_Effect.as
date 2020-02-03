@@ -4,19 +4,18 @@
 #include "HittersTC.as";
 #include "MakeDustParticle.as";
 
-const f32 increment = 1.00f / (30.00f * 2.00f);
+const f32 increment = 1.00f / (30.00f * 3.00f);
 
 void onInit(CBlob@ this)
 {
 	CSprite@ sprite = this.getSprite();
 	sprite.RewindEmitSound();
-	sprite.SetEmitSound("Rippio_Scream.ogg");
-	sprite.SetEmitSoundSpeed(this.getSexNum() == 0 ? 1.0f : 2.0f);
-	sprite.SetEmitSoundVolume(0);
+	sprite.SetEmitSound("Love_Loop.ogg");
+	sprite.SetEmitSoundSpeed(1.00f);
+	sprite.SetEmitSoundVolume(0.00f);
 	sprite.SetEmitSoundPaused(false);
 	
 	this.set_u32("love_time", getGameTime());
-	
 	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_poot.png");
 }
 
@@ -74,29 +73,37 @@ void onTick(CBlob@ this)
 		moveVars.jumpFactor = 0;
 	}	
 	
-	if (this.isMyPlayer())
+	if (isClient())
 	{
+		CSprite@ sprite = this.getSprite();
 	
-		CCamera@ cam = getCamera();
-		f32 camX = Maths::Cos(time * value * 0.001f) * 10 * Maths::Pow(value, 2);
-		// cam.setRotation(camX);
+		if (this.isMyPlayer())
+		{
+			CCamera@ cam = getCamera();
+			f32 camX = Maths::Cos(time * value * 0.001f) * 10 * Maths::Pow(value, 2);
+			cam.targetDistance = 2.00f + ((1 + Maths::Cos(time * 10.0f * value)) * 0.50f) * (value * 1.50f);
+
+			CControls@ controls = getControls();
+			Driver@ driver = getDriver();
+			controls.setMousePosition(controls.getMouseScreenPos() + getRandomVelocity(0, (100 - XORRandom(200)) * value, 360));
+			
+			sprite.SetEmitSoundVolume(value * 0.50f);
+		}
+		else
+		{
+			sprite.SetEmitSoundVolume(Maths::Min(value * 0.25f, 0.15f));
+		}
 		
-		cam.targetDistance = 2.00f + ((1 + Maths::Cos(time * 10.0f * value)) * 0.50f) * (value * 1.50f);
+		f32 pitch = 1.00f;
+		if (this.exists("voice pitch")) pitch = this.get_f32("voice pitch");
 		
-		// for (int i = 0; i < Maths::Ceil(time * 0.01f); i++)
-		// {
-			// Sound::Play("MithrilMan_Scream_0.ogg", this.getPosition(), 10.00f, 0.25f + (XORRandom(100) * 0.01f) * value);
-		// }
-		
-		CControls@ controls = getControls();
-		Driver@ driver = getDriver();
-		controls.setMousePosition(controls.getMouseScreenPos() + getRandomVelocity(0, (100 - XORRandom(200)) * value, 360));
+		sprite.SetEmitSoundSpeed(pitch + (Maths::Cos(time * 0.10f * value) * 0.50f * 0.25f));
 	}
 	
 	if (time % (3 + XORRandom(5)) == 0)
 	{
 		SetKnocked(this, 30);
-		
+
 		if (isClient())
 		{
 			if (XORRandom(100) < 25)

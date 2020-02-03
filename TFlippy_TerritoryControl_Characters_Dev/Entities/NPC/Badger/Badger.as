@@ -58,7 +58,7 @@ void onInit(CBlob@ this)
 	this.set_u32("next growl", 0);
 	this.set_u32("next bite", 0);
 	
-	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 1.00f);
+	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 0.90f);
 	
 	// this.getCurrentScript().removeIfTag = "dead";
 	

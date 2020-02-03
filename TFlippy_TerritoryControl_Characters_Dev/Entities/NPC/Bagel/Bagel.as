@@ -100,6 +100,8 @@ void onInit(CBlob@ this)
 			ap.offsetZ = 10.0f;
 		}
 	}
+	
+	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 0.50f);
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)

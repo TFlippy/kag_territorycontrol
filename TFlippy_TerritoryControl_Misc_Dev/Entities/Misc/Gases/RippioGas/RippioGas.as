@@ -1,23 +1,40 @@
+
 #include "Hitters.as";
 #include "Explosion.as";
+#include "ArcherCommon.as";
+
+string[] particles = 
+{
+	"LargeSmoke.png",
+	"Explosion.png"
+};
 
 void onInit(CBlob@ this)
 {
 	this.Tag("gas");
+	this.Tag("invincible");
 
-	this.getShape().SetGravityScale(0.10f);
-	
+	this.getShape().SetGravityScale(0.40f);
+
 	this.getSprite().setRenderStyle(RenderStyle::additive);
 	this.getSprite().SetZ(10.0f);
+
+	this.Tag("map_damage_dirt");
+	
+	if (!this.exists("toxicity")) this.set_f32("toxicity", 0.01f);
 	
 	// this.SetMapEdgeFlags(CBlob::map_collide_left | CBlob::map_collide_right | CBlob::map_collide_up | CBlob::map_collide_down);
 	this.SetMapEdgeFlags(CBlob::map_collide_sides);
-	this.getCurrentScript().tickFrequency = 15 + XORRandom(15);
-	
-	if (!this.exists("toxicity")) this.set_f32("toxicity", 0.50f);
-	
+	this.getCurrentScript().tickFrequency = 5;
+
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
-	this.server_SetTimeToDie(60 + XORRandom(90));
+
+	this.server_SetTimeToDie(15 + XORRandom(15));
+	
+	if (isClient())
+	{
+		this.getCurrentScript().runFlags |= Script::tick_onscreen;
+	}
 }
 
 void onTick(CBlob@ this)
@@ -25,48 +42,39 @@ void onTick(CBlob@ this)
 	if (isServer() && this.getPosition().y < 0) this.server_Die();
 	
 	CBlob@[] blobsInRadius;
-	if (this.getMap().getBlobsInRadius(this.getPosition(), this.getRadius() * 1.5f, @blobsInRadius))
+	if (this.getMap().getBlobsInRadius(this.getPosition(), this.getRadius() * 3.0f, @blobsInRadius))
 	{
 		for (uint i = 0; i < blobsInRadius.length; i++)
 		{
 			CBlob@ blob = blobsInRadius[i];
 			if (blob.hasTag("flesh") && !blob.hasTag("gas immune"))
 			{
-				blob.set_u8("mustard value", Maths::Clamp(blob.get_u8("mustard value") + 1, 0, 64));
-			
-				if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.0625f, Hitters::burn);
-			
-				if (!blob.hasTag("mustarded"))
+				f32 value = blob.get_f32("rippioed");
+				if (value == 0)
 				{
-					blob.set_u32("mustard time", getGameTime());
-					blob.AddScript("MustardEffect.as");
-					blob.getSprite().AddScript("MustardEffect.as");
+					if (!blob.hasScript("Rippioed.as")) blob.AddScript("Rippioed.as");
 				}
+				
+				blob.set_f32("rippioed", value + 0.005f);
 			}
 		}
 	}
 
-	if(isClient())
+	if (isClient())
 	{
-		MakeParticle(this, "Mustard.png");
+		MakeParticle(this, "RippioGas.png");
 	}
+}
+
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	return 0;
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
 	return blob.hasTag("gas");
 }
- 
-f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
-{
-	return 0;
-}
- 
-// void onCollision(CBlob@ this, CBlob@ blob, bool solid)
-// {
-	// if (blob is null) return;
-	// if (blob.hasTag("gas")) return;
-// }
 
 void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 {

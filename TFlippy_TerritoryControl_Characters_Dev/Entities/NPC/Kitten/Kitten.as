@@ -75,6 +75,8 @@ void onInit(CBlob@ this)
 	this.set_u8("number of steaks", 2);
 	this.set_u32("next meow", getGameTime());
 	this.set_u32("next screech", getGameTime());
+	
+	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 1.70f);
 }
 
 void onTick(CBlob@ this)

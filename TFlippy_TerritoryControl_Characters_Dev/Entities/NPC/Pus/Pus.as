@@ -51,6 +51,8 @@ void onInit(CBlob@ this)
 	this.set_f32("voice pitch", 1.75f);
 	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 1, 1);
 	this.server_setTeamNum(231);
+	
+	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 1.25f);
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)

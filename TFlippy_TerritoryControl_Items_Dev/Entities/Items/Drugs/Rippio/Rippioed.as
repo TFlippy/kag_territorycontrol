@@ -4,16 +4,19 @@
 #include "HittersTC.as";
 #include "MakeDustParticle.as";
 
-const f32 increment = 1.00f / (30.00f * 15.00f);
+const f32 increment = 1.00f / (30.00f * 30.00f);
 
 void onInit(CBlob@ this)
 {
-	CSprite@ sprite = this.getSprite();
-	sprite.RewindEmitSound();
-	sprite.SetEmitSound("Rippio_Scream.ogg");
-	sprite.SetEmitSoundSpeed(this.getSexNum() == 0 ? 1.0f : 2.0f);
-	sprite.SetEmitSoundVolume(0);
-	sprite.SetEmitSoundPaused(false);
+	if (this.hasTag("human") || this.hasTag("chicken"))
+	{
+		CSprite@ sprite = this.getSprite();
+		sprite.RewindEmitSound();
+		sprite.SetEmitSound("Rippio_Scream.ogg");
+		sprite.SetEmitSoundSpeed(this.getSexNum() == 0 ? 1.0f : 2.0f);
+		sprite.SetEmitSoundVolume(0);
+		sprite.SetEmitSoundPaused(false);
+	}
 }
 
 void onTick(CBlob@ this)
@@ -61,10 +64,10 @@ void onTick(CBlob@ this)
 			SetScreenFlash(Maths::Clamp((25 + XORRandom(100)) * value, 0, 255), 25 + (XORRandom(4) * 25), 0, 0);
 			if (value > 0.20f) ShakeScreen2(100.0f * (value - 0.20f), 30.0f, this.getPosition());
 			
-			if (value > 0.40f && XORRandom(1 + (4 / (1 + value))) == 0)
-			{
-				this.getSprite().PlaySound("Rippio_Screech", 0.1f * value, 0.05f + (0.05f * value) + (XORRandom(100) * value * 0.001f));
-			}
+			// if (value > 0.40f && XORRandom(1 + (4 / (1 + value))) == 0)
+			// {
+				// this.getSprite().PlaySound("psheh", 0.1f * value, 0.05f + (0.05f * value) + (XORRandom(100) * value * 0.001f));
+			// }
 		}
 	}
 	
@@ -87,7 +90,7 @@ void onTick(CBlob@ this)
 	{
 		if (isServer() && time % 10 == 0)
 		{
-			this.server_Hit(this, this.getPosition(), Vec2f(0, 0), Maths::Max(this.getHealth() * 0.10f, 0.125f * value), HittersTC::poison, true);
+			this.server_Hit(this, this.getPosition(), Vec2f(0, 0), Maths::Max(this.getHealth() * 0.01f, 0.02f * value), HittersTC::poison, true);
 		}
 	}
 		
