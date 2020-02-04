@@ -4,7 +4,7 @@
 #include "HittersTC.as";
 #include "MakeDustParticle.as";
 
-const f32 increment = 1.00f / (30.00f * 3.00f);
+const f32 increment = 1.00f / (30.00f * 6.00f);
 
 void onInit(CBlob@ this)
 {
@@ -97,7 +97,7 @@ void onTick(CBlob@ this)
 		f32 pitch = 1.00f;
 		if (this.exists("voice pitch")) pitch = this.get_f32("voice pitch");
 		
-		sprite.SetEmitSoundSpeed(pitch + (Maths::Cos(time * 0.10f * value) * 0.50f * 0.25f));
+		sprite.SetEmitSoundSpeed(pitch + (Maths::Cos(time * 0.10f * value) * 0.50f * 0.10f));
 	}
 	
 	if (time % (3 + XORRandom(5)) == 0)

@@ -16,6 +16,7 @@ namespace HittersTC
 		staff,
 		hammer,
 		foof,
-		poison
+		poison,
+		disease
 	};
 }

@@ -26,7 +26,7 @@ void DoExplosion(CBlob@ this)
 				{
 					CBlob@ blob = server_CreateBlob("rippiogas", -1, this.getPosition());
 					blob.setVelocity(Vec2f(XORRandom(20) - 10, -XORRandom(10)));
-					blob.server_SetTimeToDie(60 + XORRandom(60));
+					blob.server_SetTimeToDie(15 + XORRandom(15));
 				}
 			}
 		}
