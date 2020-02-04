@@ -32,7 +32,20 @@ void onTick(CBlob@ this)
 	}
 		
 	const f32 value = this.get_f32("paxilon_effect");
-	const bool sleeping = value > 0.00f && !this.hasTag("dead");
+	const bool sleeping = value > 0.05f && !this.hasTag("dead");
+	
+	// print("" + value);
+	
+	RunnerMoveVars@ moveVars;
+	if (this.get("moveVars", @moveVars))
+	{
+		f32 mod = 1.00f - Maths::Clamp(value * 10.00f, 0.00f, 1.00f);
+
+		// print("" + mod);
+	
+		moveVars.walkFactor *= mod;
+		moveVars.jumpFactor *= mod;
+	}
 	
 	if (getGameTime() % 30 == 0)
 	{
@@ -53,7 +66,7 @@ void onTick(CBlob@ this)
 		}
 	}
 
-	if (sleeping)
+	if (value >= 0.00f)
 	{
 		this.set_f32("paxilon_effect", value - increment);
 	}

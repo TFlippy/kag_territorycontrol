@@ -481,7 +481,7 @@ void React(CBlob@ this)
 				this.getSprite().PlaySound("DrugLab_Create_Solid.ogg", 1.00f, 1.00f);
 			}
 			
-			if (heat > 400 && hasOil && oil_count >= 25 && hasVodka)
+			if (heat > 500 && hasOil && oil_count >= 25 && hasVodka)
 			{
 				CBlob@ vodka = inv.getItem("vodka");
 				if (vodka !is null)
@@ -492,6 +492,8 @@ void React(CBlob@ this)
 						vodka.server_Die();
 						
 						Material::createFor(this, "paxilon", 2 + XORRandom(2));
+						Material::createFor(this, "mat_paxilon", 15 + XORRandom(35));
+						
 						if (XORRandom(100) < 3)
 						{
 							Material::createFor(this, "fusk", 2 + XORRandom(2));
