@@ -16,7 +16,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		CButton@ button = caller.CreateGenericButton(22, Vec2f(0, 0), this, this.getCommandID("forcefeed"), "Forcefeed!", params);
 		if (button !is null)
 		{
-			button.SetEnabled(canBeForceFed(this));
+			button.SetEnabled(carried.hasTag("forcefeed_always") || canBeForceFed(this));
 		}
 	}
 }

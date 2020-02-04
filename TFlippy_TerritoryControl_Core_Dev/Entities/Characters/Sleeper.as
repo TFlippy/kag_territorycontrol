@@ -9,10 +9,6 @@ void onInit(CBlob@ this)
 
 	CSprite@ sprite = this.getSprite();
 	
-	// sprite.SetEmitSound("MigrantSleep.ogg");
-	// sprite.SetEmitSoundPaused(true);
-	// sprite.SetEmitSoundVolume(0.5f);
-	
 	CSpriteLayer@ zzz = sprite.addSpriteLayer("zzz", "Quarters.png", 8, 8);
 	if (zzz !is null)
 	{
@@ -47,40 +43,13 @@ void onTick(CBlob@ this)
 			this.set_u16("sleeper_coins", 0);
 		}
 	}
-	else if(this.getPlayer() !is null && this.getPlayer().hasTag("awootism") && this.hasScript('AwooootismSpread.as') == false) 
-	{
-		this.AddScript('AwooootismSpread.as');
-	}
 	else if (sleeping) SetKnocked(this, 35);
 
-	
 	CSprite@ sprite = this.getSprite();
-	// sprite.SetEmitSoundPaused(!sleeping);
-	
 	CSpriteLayer@ layer = sprite.getSpriteLayer("zzz");
 	if (layer !is null)
 	{
 		layer.SetVisible(sleeping);
-	}
-	
-	// if (sleeping) print(this.getConfig() + " is sleeping");
-	CPlayer@ player = getLocalPlayer();
-	if(player !is null)
-	{
-		CMap@ map = getMap();
-		if(player.hasTag("awootism"))
-		{
-			if(!map.rayCastSolidNoBlobs(this.getPosition(), Vec2f(this.getPosition().x,0)) || this.isInWater())
-			{
-				CBitStream params;
-				params.write_u16(this.getNetworkID());
-				params.write_u16(player.getNetworkID());
-				this.SendCommand(this.getCommandID("removeAwootism"),params);
-				client_AddToChat("You have been cured from awootism!", SColor(255, 255, 0, 0));
-				player.Untag("awootism");
-				this.Tag("infectOver");
-			}
-		}
 	}
 }
 
@@ -106,36 +75,4 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @bt)
 		
 		print("Sleeper sync: " + sleeping);
 	}
-	else if (cmd == this.getCommandID("removeAwootism"))
-	{
-		u16 blob1, player1;
-
-		if (!bt.saferead_u16(blob1)) 
-		{
-			return;
-		}
-		
-		if (!bt.saferead_u16(player1)) 
-		{
-			return;
-		}
-
-		CBlob@ ourBlob = getBlobByNetworkID(blob1);
-		CPlayer@ player = getPlayerByNetworkId(player1);
-
-		player.Untag("awootism");
-		player.Sync("awootism", false);
-		ourBlob.Tag("infectOver");
-		ourBlob.Sync("infectOver", false);
-	}
 }
-
-// void onSetPlayer(CBlob@ this, CPlayer@ player)
-// {
-	// if (player !is null)
-	// {
-		// this.Untag("sleeper");
-		// SetKnocked(this, 0);
-	// }
-// }
-

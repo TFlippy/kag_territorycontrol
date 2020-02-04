@@ -1,5 +1,6 @@
 //bf_piglet
 #include "AnimalConsts.as";
+#include "Knocked.as";
 
 //sprite
 void onInit(CSprite@ this)

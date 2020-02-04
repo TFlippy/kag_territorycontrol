@@ -23,8 +23,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 		if (caller !is null)
 		{
-			if (!caller.hasScript("Rippioed.as")) caller.AddScript("Rippioed.as");
-			caller.set_f32("rippioed", 0.50f + caller.get_f32("rippioed") * 2.00f);
+			if (!caller.hasScript("Paxilon_Effect.as")) caller.AddScript("Paxilon_Effect.as");
+			caller.add_f32("paxilon_effect", 1.00f);
 			
 			if (isServer())
 			{

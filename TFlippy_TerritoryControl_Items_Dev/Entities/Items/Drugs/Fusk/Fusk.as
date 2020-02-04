@@ -2,6 +2,8 @@ void onInit(CBlob@ this)
 {
 	this.getShape().SetRotationsAllowed(true);
 	this.addCommandID("consume");
+	
+	this.Tag("forcefeed_always");
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
