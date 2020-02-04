@@ -401,23 +401,6 @@ void onGib(CSprite@ this)
 	CParticle@ Gib3 = makeGibParticle("Entities/Special/WAR/Trading/TraderGibs.png", pos, vel + getRandomVelocity(90, hp, 80), 2, 0, Vec2f(16, 16), 2.0f, 0, "/BodyGibFall");
 }
 
-void onHealthChange(CBlob@ this, f32 oldHealth)
-{
-	if (this.getHealth() < 1.0f && !this.hasTag("dead"))
-	{
-		this.Tag("dead");
-		this.set_bool("shop available", false);
-		// this.server_SetTimeToDie(20);
-	}
-
-	if (this.getHealth() < 0)
-	{
-		this.getSprite().Gib();
-		this.server_Die();
-		return;
-	}
-}
-
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	// if (byBlob.getTeamNum() != this.getTeamNum()) return true;

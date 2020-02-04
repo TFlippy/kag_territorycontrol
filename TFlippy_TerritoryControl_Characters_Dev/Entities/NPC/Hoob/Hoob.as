@@ -143,13 +143,7 @@ void onTick(CBlob@ this)
 	if (!this.hasTag("dead"))
 	{	
 		bool client = isClient();
-		bool server = isServer();		
-	
-		if (this.getHealth() <= 0)
-		{
-			this.Tag("dead");		
-			return;
-		}
+		bool server = isServer();
 
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
