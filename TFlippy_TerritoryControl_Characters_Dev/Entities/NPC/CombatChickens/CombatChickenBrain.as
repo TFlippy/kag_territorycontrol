@@ -2,6 +2,7 @@
 #include "Hitters.as";
 #include "RunnerCommon.as";
 #include "DeityCommon.as";
+#include "Knocked.as";
 
 const f32 cursor_lerp_speed = 0.50f;
 
@@ -29,6 +30,7 @@ void onTick(CBrain@ this)
 	if (!isServer()) return;
 	
 	CBlob@ blob = this.getBlob();
+	if (getKnocked(blob) > 0) return;
 	
 	if (blob.getPlayer() !is null) return;
 	
