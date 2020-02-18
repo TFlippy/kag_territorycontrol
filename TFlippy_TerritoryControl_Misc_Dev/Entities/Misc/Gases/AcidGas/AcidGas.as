@@ -1,5 +1,3 @@
-
-#include "Hitters.as";
 #include "Explosion.as";
 #include "ArcherCommon.as";
 #include "CustomBlocks.as";
@@ -82,7 +80,7 @@ void onTick(CBlob@ this)
 				
 					if (server) 
 					{
-						this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.40f, Hitters::burn);
+						this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.40f, 8);
 					}
 					
 					strength -= 1;
