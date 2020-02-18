@@ -34,7 +34,15 @@ void LoadSprites(CSprite@ this)
 		armour = p.getArmourSet();
 	}
 
-	if(p !is null && IsCool(p.getUsername()))
+	bool patreon = true;
+
+	CSecurity@ security = getSecurity();
+	if (p !is null && !(security.checkAccess_Feature(p, "patreon")))
+	{
+		patreon = false;
+	}
+
+	if(p !is null && (IsCool(p.getUsername()) || patreon))
 	{
 		ensureCorrectRunnerTexture(this, "archer_cape", "ArcherCape");
 	}
