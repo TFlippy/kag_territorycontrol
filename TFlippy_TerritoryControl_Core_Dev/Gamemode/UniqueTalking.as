@@ -21,6 +21,7 @@ bool onClientProcessChat(CRules@ this, const string &in text_in, string &out tex
 	CPlayer@ localPlayer = getLocalPlayer();
 	CBlob@ localBlob = getLocalPlayerBlob();
 
+
 	if (XORRandom(10) == 0 && localPlayer !is player && localBlob !is null && localPlayer !is null && localBlob.hasTag("schisked"))
 	{
 		string playerName = localPlayer.getCharacterName();
@@ -138,12 +139,15 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 	}
 
 	text_out = text_in;
+
+	string username = player.getUsername();
+	string charname = player.getCharacterName();
 	
 	///////////Lol, well you found it, feel free to look around.
 	///////////If the lines here really annoy you, just send me a message.
 	///////////If you're bunnie, then: AHAHAHAH :P
 	
-	if (player.getUsername() == "kreblthis" || player.getCharacterName() == "Hans Smooth")
+	if (username == "kreblthis" || charname == "Hans Smooth")
 	{
 		if (XORRandom(100) < 20)
 		{
@@ -472,15 +476,78 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 	}
 	
-	if (player.getUsername() == "Vamist" || player.getCharacterName() == "Vamist") 
+	if (username == "Vamist" || charname == "Vamist") 
 	{
-		if(XORRandom(10) == 0)
+		if(XORRandom(100) == 0)
 		{
 			text_out += " Rawr~! <3";
 		}
 	}
+
+	if (player.getUsername() == "TFlippy" || player.getCharacterName() == "TFlippy") 
+	{
+		if(XORRandom(100 < 5))
+		{
+			switch(XORRandom(9))
+			{
+				case 0:
+				{
+					text_out = "its a mystery";
+				}
+				break;
+				
+				case 1:
+				{
+					text_out = "rip";
+				}
+				break;
+				
+				case 2:
+				{
+					text_out = "ripi";
+				}
+				break;
+				
+				case 3:
+				{
+					text_out = "hi";
+				}
+				break;
+				
+				case 4:
+				{
+					text_out = "yus";
+				}
+				break;
+				
+				case 5:
+				{
+					text_out = "mystery";
+				}
+				break;
+				
+				case 6:
+				{
+					text_out = "rup";
+				}
+				break;
+				
+				case 7:
+				{
+					text_out = "such is life";
+				}
+				break;
+
+				case 8:
+				{
+					text_out = "snif";
+				}
+				break;
+			}
+		}
+	}
 	
-	if (player.getUsername() == "digga" || player.getCharacterName() == "Rajang" || player.hasTag("awootism")) 
+	if (username "digga" || charname == "Rajang" || player.hasTag("awootism")) 
 	{
 		string emptyBOI = "";
 		bool noTouch = false;
@@ -489,7 +556,7 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
   		{
 
         	string letter = text_out.substr(i,1);
-			if(player.getUsername() == "digga" || player.getUsername() == "vamist")
+			if(username == "digga" || username == "vamist")
 			{
 				if(letter == '.')
 				{
@@ -587,7 +654,7 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 	}
 	
-	if (player.getUsername() == "BarsukEughen555" || player.getCharacterName() == "BarsukEughen")
+	if (username == "BarsukEughen555" || charname == "BarsukEughen")
 	{
 		if (XORRandom(100) == 0)
 		{
