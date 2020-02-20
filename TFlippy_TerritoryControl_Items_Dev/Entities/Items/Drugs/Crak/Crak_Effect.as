@@ -155,12 +155,32 @@ void onTick(CBlob@ this)
 	}
 }
 
-void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitBlob, u8 customData)
+void onCollision( CBlob@ this, CBlob@ blob, bool solid )
 {
+	if (blob is null || this is null) return;
+	CPlayer@ p = this.getPlayer();
 	
-}
+	if (p is null || p.getUsername() != "Turtlecake") return;
+	if (this.hasTag("dead")) return;
 
-void onDie(CBlob@ this)
-{
-	
+	if (blob.getName() == "mat_mithrilenriched" && blob.getQuantity() > 5)
+	{
+		if (isServer() && !this.hasTag("transformed"))
+		{
+			CBlob@ blob = server_CreateBlob("boowb", this.getTeamNum(), this.getPosition());
+			if (this.getPlayer() !is null) blob.server_SetPlayer(this.getPlayer());
+			
+			this.Tag("transformed");
+			this.server_Die();
+
+			ParticleZombieLightning(this.getPosition());
+
+			Sound::Play("thunder_distant" + XORRandom(4));
+			SetScreenFlash(100, 255, 255, 255);
+		}
+		else
+		{
+			ParticleZombieLightning(this.getPosition());
+		}
+	}
 }

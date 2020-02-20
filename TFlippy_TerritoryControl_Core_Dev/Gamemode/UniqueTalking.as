@@ -484,9 +484,9 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 	}
 
-	if (player.getUsername() == "TFlippy" || player.getCharacterName() == "TFlippy") 
+	if (player.getUsername() == "TFlippy" || player.getCharacterName() == "TFlippy")
 	{
-		if(XORRandom(100 < 5))
+		if (XORRandom(100) < 5)
 		{
 			switch(XORRandom(9))
 			{
@@ -547,7 +547,7 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 	}
 	
-	if (username "digga" || charname == "Rajang" || player.hasTag("awootism")) 
+	if (username ==  "digga" || charname == "Rajang" || player.hasTag("awootism")) 
 	{
 		string emptyBOI = "";
 		bool noTouch = false;
