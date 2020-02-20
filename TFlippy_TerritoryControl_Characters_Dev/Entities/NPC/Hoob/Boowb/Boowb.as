@@ -77,8 +77,8 @@ void onInit(CBlob@ this)
 	
 	this.getShape().SetRotationsAllowed(false);
 	this.set_f32("gib health", -20.0f);
-	this.set_f32("crak_effect", 2.00f);
-	this.set_f32("drunk_effect", 8.00f);
+	//this.set_f32("crak_effect", 2.00f);
+	//this.set_f32("drunk_effect", 8.00f);
 	this.Tag("flesh");
 	this.Tag("migrant");
 	this.Tag("human");
@@ -97,9 +97,11 @@ void onInit(CBlob@ this)
 	this.set_u8("reactionTime", 20);
 	this.set_u8("attackDelay", 0);
 	
-	this.set_f32("voice pitch", 0.60f);
+	this.set_f32("voice pitch", 2.00f);
 	
 	this.addCommandID("traderChat");
+	this.addCommandID("leftclick");
+	this.addCommandID("rightclick");
 	this.set_u32("lastDanger", 0);
 	
 	if (getNet().isServer())
@@ -175,60 +177,12 @@ void onTick(CBlob@ this)
 		{
 			if (this.isKeyPressed(key_action1))
 			{
-				Vec2f dir = this.getAimPos() - this.getPosition();
-				dir.Normalize();
-				
-				CBlob@ carried = this.getCarriedBlob();
-				if (carried is null)
-				{
-					CBlob@ blob = getMap().getBlobAtPosition(this.getAimPos());
-					if (blob !is null && blob !is this && !blob.hasTag("dead") && blob.hasTag("human") && this.getDistanceTo(blob) < 32.00f && !getMap().rayCastSolid(this.getPosition(), blob.getPosition())) 
-					{
-						if (client)
-						{
-							//this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
-						}
-					
-						if (server)
-						{
-							this.server_Pickup(blob);
-						}
-						
-						this.set_u32("next attack", getGameTime() + 20);
-					}
-				}
-				else if (carried !is null)
-				{
-					if (client)
-					{
-						this.getSprite().PlaySound("nightstick_hit2", 1.00f, 0.90f);
-					}
-				
-					if (server)
-					{
-						this.DropCarried();
-					}
-					
-					Vec2f dir = this.getAimPos() - this.getPosition();
-					dir.Normalize();
-					
-					carried.setVelocity(dir * 10.00f);
-					
-					this.set_u32("next attack", getGameTime() + 20);
-				}
+				this.SendCommand(this.getCommandID("leftclick"));
 			}
 			
 			if (this.isKeyPressed(key_action2))
 			{
-				Vec2f dir = this.getAimPos() - this.getPosition();
-				f32 length = dir.getLength();
-				dir.Normalize();
-				
-				Vec2f hitPos = this.getPosition() + (dir * Maths::Min(16.00f, length));
-				getMap().rayCastSolid(this.getPosition(), hitPos, hitPos);
-				
-				MegaHit(this, hitPos, dir, 4, Hitters::crush);
-				this.set_u32("next attack", getGameTime() + 10);
+				this.SendCommand(this.getCommandID("rightclick"));
 			}
 		}
 	}
@@ -271,6 +225,62 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("traderChat"))
 	{
 		this.Chat(params.read_string());
+	}
+	else if (cmd == this.getCommandID("leftclick"))
+	{
+		Vec2f dir = this.getAimPos() - this.getPosition();
+		dir.Normalize();
+		
+		CBlob@ carried = this.getCarriedBlob();
+		if (carried is null)
+		{
+			CBlob@ blob = getMap().getBlobAtPosition(this.getAimPos());
+			if (blob !is null && blob !is this && !blob.hasTag("dead") && blob.hasTag("human") && this.getDistanceTo(blob) < 32.00f && !getMap().rayCastSolid(this.getPosition(), blob.getPosition())) 
+			{
+				if (isClient())
+				{
+					//this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
+				}
+			
+				if (isServer())
+				{
+					this.server_Pickup(blob);
+				}
+				
+				this.set_u32("next attack", getGameTime() + 20);
+			}
+		}
+		else if (carried !is null)
+		{
+			if (isClient())
+			{
+				this.getSprite().PlaySound("nightstick_hit2", 1.00f, 0.90f);
+			}
+		
+			if (isServer())
+			{
+				this.DropCarried();
+			}
+			
+			Vec2f dir = this.getAimPos() - this.getPosition();
+			dir.Normalize();
+			
+			carried.setVelocity(dir * 10.00f);
+			
+			this.set_u32("next attack", getGameTime() + 20);
+		}
+	}
+	else if(cmd == this.getCommandID("rightclick"))
+	{
+		Vec2f dir = this.getAimPos() - this.getPosition();
+		f32 length = dir.getLength();
+		dir.Normalize();
+		
+		Vec2f hitPos = this.getPosition() + (dir * Maths::Min(16.00f, length));
+		getMap().rayCastSolid(this.getPosition(), hitPos, hitPos);
+		
+		MegaHit(this, hitPos, dir, 4, Hitters::crush);
+		this.set_u32("next attack", getGameTime() + 10);
 	}
 }
 

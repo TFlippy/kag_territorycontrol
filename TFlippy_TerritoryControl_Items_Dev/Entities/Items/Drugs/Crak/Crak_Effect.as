@@ -172,15 +172,13 @@ void onCollision( CBlob@ this, CBlob@ blob, bool solid )
 			
 			this.Tag("transformed");
 			this.server_Die();
-
-			ParticleZombieLightning(this.getPosition());
-
-			Sound::Play("thunder_distant" + XORRandom(4));
-			SetScreenFlash(100, 255, 255, 255);
 		}
 		else
 		{
 			ParticleZombieLightning(this.getPosition());
+
+			Sound::Play("thunder_distant" + XORRandom(4));
+			SetScreenFlash(100, 255, 255, 255);
 		}
 	}
 }
