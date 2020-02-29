@@ -62,12 +62,12 @@ void onTick(CBlob@ this)
 			
 			map.rayCastSolid(this.getPosition(), hit_position, hit_position);
 			
-			UpdateBeam(this, i, hit_position, colors[(getGameTime() + i) % colors.length()]);
+			UpdateBeam(this, i, hit_position, colors[(getGameTime() + i) % colors.size()]);
 		}
 	
 		if (time % 10 == 0) 
 		{
-			const SColor color = colors[getGameTime() % colors.length()];
+			const SColor color = colors[getGameTime() % colors.size()];
 			this.SetLightColor(color);
 			
 			if (isClient())

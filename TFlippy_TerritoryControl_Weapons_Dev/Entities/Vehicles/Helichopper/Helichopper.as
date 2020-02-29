@@ -128,7 +128,8 @@ void onTick(CBlob@ this)
 			sprite.getSpriteLayer("tracer").SetVisible(false);
 		}
 
-		for(int a = 0; a < aps.length(); a++)
+		int size = aps.size();
+		for(int a = 0; a < size; a++)
 		{
 			AttachmentPoint@ ap = aps[a];
 			if (ap !is null)

@@ -396,12 +396,16 @@ void onDie( CBlob@ this )
 	// getBlobsByName("mat_bigbomb",		@explosives);
 	// getBlobsByName("mat_incendiarybomb",@explosives);
 	getBlobsByTag("explosive",@explosives);
-	
-	for(int i=0;i<explosives.length();i++){
-		float distance=(explosives[i].getPosition()-this.getPosition()).Length();
+	int eploSize = explosives.size();
+
+	for (int i=0;i<eploSize; i++){
+		CBlob@ b = explosives[i];
+
+		float distance=(b.getPosition()-this.getPosition()).Length();
+		
 		if(distance<1.0f){
-			explosives[i].Tag("DoExplode");
-			explosives[i].server_Die();
+			b.Tag("DoExplode");
+			b.server_Die();
 		}
 	}
 	

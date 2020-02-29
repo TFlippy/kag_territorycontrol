@@ -184,7 +184,7 @@ void DoExplosion(CBlob@ this)
 			Vec2f ppos = (pos + dir * 4.00f) + getRandomVelocity(0, 1, 360);
 			f32 vel = XORRandom(200) / (10.00f + XORRandom(10));
 		
-			string filename = CFileMatcher(explosion_particles[XORRandom(explosion_particles.length())]).getFirst();
+			string filename = CFileMatcher(explosion_particles[XORRandom(explosion_particles.size())]).getFirst();
 	
 			CParticle@ p = ParticleAnimated(filename, this.getPosition(), dir * vel, float(XORRandom(360)), 1.0f, 10 + XORRandom(30), 0.05f, true);
 			if (p !is null)

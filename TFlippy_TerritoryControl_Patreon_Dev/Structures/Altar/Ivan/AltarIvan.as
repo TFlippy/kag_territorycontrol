@@ -129,7 +129,7 @@ void onTick(CSprite@ this)
 	
 	if (getGameTime() % 8 == 0) 
 	{
-		const SColor color = colors[getGameTime() % colors.length()];
+		const SColor color = colors[getGameTime() % colors.size()];
 		blob.SetLight(true);
 		blob.SetLightRadius(radius);
 		blob.SetLightColor(color);

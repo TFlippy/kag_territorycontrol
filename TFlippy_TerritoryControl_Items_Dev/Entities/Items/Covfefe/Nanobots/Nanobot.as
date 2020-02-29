@@ -59,7 +59,7 @@ CBlob@ GetTarget(CBlob@ this)
 			
 			for (int i = 0; i < 4; i++)
 			{
-				CBlob@ blob = allBlobs[XORRandom(allBlobs.length())];
+				CBlob@ blob = allBlobs[XORRandom(allBlobs.size())];
 				if ((blob.getPosition() - this.getPosition()).Length() < (max_distance * max_distance * 8.00f) && !blob.exists("nanobot_netid") && !blob.hasTag("nanobot_ignore") && !blob.isInInventory())
 				{
 					return blob;

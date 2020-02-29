@@ -296,7 +296,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 				this.set_f32("stonks_value", Maths::Clamp(stonks_value, stonks_base_value_min, stonks_value_max));
 				
 				graph[graph_index] = stonks_value;
-				graph_index = Maths::FMod(graph_index + 1, graph.length());
+				graph_index = Maths::FMod(graph_index + 1, graph.size());
 				
 				this.getSprite().PlaySound("LotteryTicket_Kaching", 0.25f, 1.00f + ((stonks_value_delta - 1.00f) * 4.00f));
 			}
@@ -473,11 +473,12 @@ void onRender(CSprite@ this)
 					blob.SendCommand(blob.getCommandID("stonks_trade"), stream);
 				}
 				
-				f32 step_x = axis_x / graph.length();
-				for (int i = 0; i < graph.length() - 1; i++)
+				int size = graph.size();
+				f32 step_x = axis_x / graph.size();
+				for (int i = 0; i < size - 1; i++)
 				{
-					f32 value_a = (graph[Maths::FMod(i + graph_index, graph.length())] / stonks_value_max);
-					f32 value_b = (graph[Maths::FMod(i + graph_index + 1, graph.length())] / stonks_value_max);
+					f32 value_a = (graph[Maths::FMod(i + graph_index, size)] / stonks_value_max);
+					f32 value_b = (graph[Maths::FMod(i + graph_index + 1, size)] / stonks_value_max);
 					
 					Vec2f pos_a = Vec2f(4 + pos.x + ((i + 0) * step_x), pos.y - (value_a * axis_y));
 					Vec2f pos_b = Vec2f(4 + pos.x + ((i + 1) * step_x), pos.y - (value_b * axis_y));

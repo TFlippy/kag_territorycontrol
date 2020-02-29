@@ -221,7 +221,7 @@ void Snow(CBlob@ this)
 
 void RenderBlizzard(CBlob@ this, int id)
 {
-	if (Blizzard_vs.length() > 0)
+	if (Blizzard_vs.size() > 0)
 	{
 		Render::SetTransformWorldspace();
 		Render::SetAlphaBlend(true);
