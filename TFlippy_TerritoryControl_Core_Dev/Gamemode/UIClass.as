@@ -1,6 +1,9 @@
 //Made by vamist :>
 #define CLIENT_ONLY
 
+bool active = false;
+int id = 0;
+
 class ParticleUI
 {
 	Vec2f Size;
@@ -118,7 +121,8 @@ class GroupedParticleUI
 
 	void onFakeTick()
 	{
-		for(int a = 0; a < ParticleUICount.length(); ++a)
+		int size = ParticleUICount.size();
+		for(int a = 0; a < size; ++a)
 		{
 			ParticleUICount[a].onFakeTick();
 			if(ParticleUICount[a].isTimeToDie())
@@ -131,7 +135,7 @@ class GroupedParticleUI
 
 	int ArrayCount()
 	{
-		return ParticleUICount.length();
+		return ParticleUICount.size();
 	}
 }
 
@@ -150,9 +154,37 @@ void onRestart(CRules@ this)
 }
 
 void onInit(CRules@ this)
-{	
-	Render::addScript(Render::layer_objects, "UIClass", "renderMeHarder", 0.0f);
+{
+	return;
+	CPlayer@ player = getLocalPlayer();
+	if (player !is null && player.getUsername() == "Vamist")
+	{
+		active = true;
+		id = Render::addScript(Render::layer_objects, "UIClass", "renderMeHarder", 0.0f);
+	}
+
 	Reset(this);
+}
+
+void onNewPlayerJoin( CRules@ this, CPlayer@ player )
+{
+	return;
+	if (player.getUsername() == "Vamist")
+	{
+		active = true;
+		id = Render::addScript(Render::layer_objects, "UIClass", "renderMeHarder", 0.0f);
+	}
+}
+
+void onPlayerLeave( CRules@ this, CPlayer@ player )
+{
+	return;
+	if (player.getUsername() == "digga")
+	{
+		active = false;
+		Render::RemoveScript(id);
+		Reset(this);
+	}
 }
 
 void Reset(CRules@ this)
@@ -162,67 +194,28 @@ void Reset(CRules@ this)
 
 void onTick(CRules@ this)
 {
-	Particles.onFakeTick();
+	if (active)
+	{
+		Particles.onFakeTick();
+	}
 }
 
 void renderMeHarder(int id)//New onRender
 {
-	CMap@ map = getMap();
-	no(map);
+	no(getMap());
 }
 
 void no(CMap@ map)
 {
 	Render::SetAlphaBlend(true);
 
-	//Check blobs on screen for particle effects
-	CBlob@[] blobsInBox;
 	CPlayer@ raj = getPlayerByUsername('digga');
-	if(getBlobsByTag('awootism',@blobsInBox))
-	{
-		for(int a = 0; a < blobsInBox.length(); ++a)
-		{
-			CBlob@ blob = blobsInBox[a];
-			if(blob !is null)
-			{
-				if(blob.getTickSinceCreated() % 30 == 0) //TODO spawns more then one (remember its onRender and not onTick)
-				{
-					int result = XORRandom(4);
-					ParticleUI@ newParticle;
-					switch(result)
-					{
-						case 0:
-							@newParticle = ParticleUI(Vec2f(10,3),blob.getPosition(),0);
-							Particles.AddNewUI(newParticle);
-						break;
-
-						case 1:
-							@newParticle = ParticleUI(Vec2f(10,5),blob.getPosition(),1);
-							Particles.AddNewUI(newParticle);
-						break;
-
-						case 2:
-							@newParticle = ParticleUI(Vec2f(12,5),blob.getPosition(),2);
-							Particles.AddNewUI(newParticle);
-						break;
-
-						case 3:
-							@newParticle = ParticleUI(Vec2f(10,3),blob.getPosition(),3);
-							Particles.AddNewUI(newParticle);
-						break;	
-
-					}
-					
-				}
-			}
-		}
-	}
-	if(raj !is null)
+	if (raj !is null)
 	{
 		CBlob@ blob = raj.getBlob();
-		if(blob !is null)
+		if (blob !is null)
 		{
-			if(blob.getTickSinceCreated() % 30 == 0) //TODO spawns more then one (remember its onRender and not onTick)
+			if (blob.getTickSinceCreated() % 30 == 0) //TODO spawns more then one (remember its onRender and not onTick)
 			{
 				ParticleUI@ newParticle =  ParticleUI(Vec2f(11,12),blob.getPosition(),100,1);
 				Particles.AddNewUI(newParticle);

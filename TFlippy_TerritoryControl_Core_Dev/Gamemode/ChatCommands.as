@@ -181,7 +181,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			}
 		}
 	}
-	else if (cmd==this.getCommandID("startInfection"))
+	/*else if (cmd==this.getCommandID("startInfection"))
 	{
 		u16 startInfection;
 		if (!params.saferead_u16(startInfection))
@@ -221,7 +221,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			blob.Sync("endAwoo",false);
 		}
 		blob.AddScript('EndAwoootism.as');
-	}
+	}*/
 }
 
 bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_out,CPlayer@ player)
@@ -347,7 +347,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 			
 			if (isCool)
 			{
-				if (tokens[0]=="!awootism")
+				/*if (tokens[0]=="!awootism")
 				{
 					CBitStream params;
 					if (tokens.length > 1)
@@ -370,8 +370,8 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					CBitStream params;
 					params.write_u16(player.getNetworkID());	
 					this.SendCommand(this.getCommandID("endInfection"),params);
-				}
-				else if (tokens[0]=="!coins") 
+				}*/
+				if (tokens[0]=="!coins") 
 				{
 					int amount=	tokens.length>=2 ? parseInt(tokens[1]) : 100;
 					player.server_setCoins(player.getCoins()+amount);
@@ -804,6 +804,7 @@ bool IsCool(string username)
 			username=="GoldenGuy" ||
 			username=="Koi_" ||
 			username=="digga" ||
+			username=="Asu" ||
 			(isServer()&&isClient()); //**should** return true only on localhost
 }
 
