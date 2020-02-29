@@ -169,7 +169,7 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 		m_pos.x = Maths::Floor(m_pos.x);
 		m_pos.y = Maths::Floor(m_pos.y);
 		m_pos = (m_pos * map.tilesize) + Vec2f(map.tilesize / 2, map.tilesize / 2);
-
+		CNet@ net = getNet();
 		
 		
 		//explode outwards
@@ -178,6 +178,8 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 			for (int y_step = 0; y_step <= tile_rad; ++y_step)
 			{
 				Vec2f offset = (Vec2f(x_step, y_step) * map.tilesize);
+
+				net.server_KeepConnectionsAlive();
 
 				for (int i = 0; i < 4; i++)
 				{
@@ -316,7 +318,9 @@ void LinearExplosion(CBlob@ this, Vec2f _direction, f32 length, const f32 width,
 	const bool hitmap = this.hasTag("use hitmap");
 	const bool particles = !this.hasTag("no explosion particles");
 	const bool damage_dirt = this.hasTag("map_damage_dirt");
-	
+	CNet@ net = getNet();
+
+
 	for (int step = 0; step <= steps; ++step)
 	{
 		bool damaged = false;
@@ -324,6 +328,7 @@ void LinearExplosion(CBlob@ this, Vec2f _direction, f32 length, const f32 width,
 		Vec2f tpos = pos;
 		for (int width_step = 0; width_step < width_steps + 2; width_step++)
 		{
+			net.server_KeepConnectionsAlive();
 			bool justhurt = laststep || (width_step == 0 || width_step == width_steps + 1);
 			if (isserver)
 			{
