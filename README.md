@@ -18,6 +18,7 @@
   <li><b>Olimarrex</b> - Scripting</li>
   <li><b>Gingerbeard</b> - Mapping</li>
   <li><b>Jenny</b> - Spriting</li>
+  <li><b>Laika</b> - Project management, scripting, spriting, sounds, mapping</li>
 </ul>
 
 
