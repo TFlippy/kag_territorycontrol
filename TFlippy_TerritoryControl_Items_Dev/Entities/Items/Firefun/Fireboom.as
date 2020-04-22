@@ -126,6 +126,11 @@ void DoExplosion(CBlob@ this)
 		for (int i = 0; i < blobs.length; i++)
 		{		
 			CBlob@ blob = blobs[i];
+			if (blob is null || blob.getShape() is null)
+			{
+				continue;
+			}
+			
 			if (blob !is null && !blob.getShape().isStatic()) 
 			{
 				Vec2f dir = blob.getPosition() - pos;
