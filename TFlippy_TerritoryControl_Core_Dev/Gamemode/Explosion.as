@@ -509,14 +509,20 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 
 				if (b !is null) // blob
 				{
-					if (b is this || b is hit_blob || !b.isCollidable())
+					if (b is this || b is hit_blob || !b.isCollidable() || b)
+					{
+						continue;
+					}
+					
+					CShape@ s = b.getShape();
+					if (s is null)
 					{
 						continue;
 					}
 
 					// only shield and heavy things block explosions
 					if (b.hasTag("heavy weight") ||
-					        b.getMass() > 500 || b.getShape().isStatic() ||
+					        b.getMass() > 500 || s.isStatic() ||
 					        (b.hasTag("shielded") && blockAttack(b, hitvec, 0.0f)))
 					{
 						return false;
