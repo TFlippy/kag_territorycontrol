@@ -823,10 +823,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 			int team = inParams.read_s32();
 			if (!(team < rules.getTeamsNum()) || rules is null) return;
 			
-			CTeam@ team = rules.getTeam(team);
-			if (team is null) return;
+			CTeam@ rteam = rules.getTeam(team);
+			if (rteam is null) return;
 
-			string teamName = team.getName();
+			string teamName = rteam.getName();
 		
 			client_AddToChat(teamName + " has been defeated!", SColor(0xff444444));
 			

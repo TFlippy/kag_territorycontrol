@@ -509,7 +509,7 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 
 				if (b !is null) // blob
 				{
-					if (b is this || b is hit_blob || !b.isCollidable() || b)
+					if (b is this || b is hit_blob || !b.isCollidable())
 					{
 						continue;
 					}
