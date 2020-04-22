@@ -517,6 +517,7 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 					CShape@ s = b.getShape();
 					if (s is null)
 					{
+						b.server_Die();
 						continue;
 					}
 
