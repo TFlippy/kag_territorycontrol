@@ -142,7 +142,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Building for Dummies", "$artisancertificate$", "artisancertificate", "Simplified Builder manuscript for those dumb peasants.", true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 250);
+		AddRequirement(s.requirements, "coin", "", "Coins", 500);
 		s.spawnNothing = true;
 	}
 	{
@@ -213,7 +213,7 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	if (isServer())
-{
+	{
 		const u8 myTeam = this.getTeamNum();
 		if (myTeam >= 100) return;
 		
