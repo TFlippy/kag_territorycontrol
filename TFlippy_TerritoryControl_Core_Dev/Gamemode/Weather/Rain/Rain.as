@@ -22,7 +22,7 @@ void onInit(CBlob@ this)
 	{
 		this.server_SetTimeToDie(300);
 	}
-
+	
 	if (isClient())
 	{
 		Render::addBlobScript(Render::layer_postworld, this, "Rain.as", "RenderRain");
@@ -124,7 +124,7 @@ void onTick(CBlob@ this)
 			Vec2f cam_pos = cam.getPosition();
 			rainpos = Vec2f(int(cam_pos.x / spritesize) * spritesize + (spritesize/2), int(cam_pos.y / spritesize) * spritesize + (spritesize/2));
 			this.setPosition(cam_pos);
-			uvMove = (uvMove - 0.05f) % uvs;
+			uvMove = (uvMove - 0.05f)  % uvs;
 			
 			if (XORRandom(500) == 0)
 			{
@@ -144,9 +144,9 @@ void onTick(CBlob@ this)
 			}
 			
 			modifier = Lerp(modifier, modifierTarget, 0.10f);
-			fogHeightModifier = 1.00f - (cam_pos.y / (map.tilemapheight * map.tilesize));
+			fogHeightModifier = 1.00f - ((cam_pos.y*2) / (map.tilemapheight * map.tilesize));
 			
-			if (getGameTime() % 5 == 0) ShakeScreen(Maths::Abs(wind) * 0.03f * modifier, 90, cam_pos);
+			//if (getGameTime() % 5 == 0) ShakeScreen(Maths::Abs(wind) * 0.03f * modifier, 90, cam_pos);
 			
 			this.getSprite().SetEmitSoundSpeed(0.5f + modifier * 0.5f);
 			this.getSprite().SetEmitSoundVolume(0.30f + 0.10f * modifier);
@@ -154,7 +154,7 @@ void onTick(CBlob@ this)
 		
 		
 		
-		fogDarkness = Maths::Clamp(50 + (fog * 0.10f), 0, 255);
+		fogDarkness = Maths::Clamp(50 + (fog * 0.10f), 0, 150);
 		//if (modifier > 0.01f) SetScreenFlash(Maths::Clamp(Maths::Max(fog, 255 * fogHeightModifier * 1.20f) * modifier, 0, 190), fogDarkness, fogDarkness, fogDarkness);
 		
 		// print("" + modifier);
@@ -245,6 +245,7 @@ void RenderRain(CBlob@ this, int id)
 	Fog_vs[0].col = Fog_vs[1].col = Fog_vs[2].col = Fog_vs[3].col = SColor(alpha,fogDarkness,fogDarkness,fogDarkness);
 	Render::RawQuads("FOG", Fog_vs);
 }
+
 
 void onCommand(CBlob@ this,u8 cmd,CBitStream @params)
 {
