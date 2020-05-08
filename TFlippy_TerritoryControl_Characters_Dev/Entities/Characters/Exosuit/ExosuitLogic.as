@@ -261,9 +261,15 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	{
 		return 0;
 	}
+
+	bool recursionPrevent = false;
 	
 	switch (customData)
 	{
+		case Hitters::stomp:
+			recursionPrevent = true;
+			break;
+
 		case Hitters::suicide:
 			damage *= 10.0f;
 			break;
@@ -351,7 +357,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		SetKnocked(hitterBlob, 30.0f * damage_reflected);
 		SetKnocked(this, 30.0f * damage_reflected);
 	
-		if (isServer())
+		if (isServer() && !recursionPrevent)
 		{
 			this.server_Hit(hitterBlob, worldPoint, velocity, damage_reflected, customData);
 		}
