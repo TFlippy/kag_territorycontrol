@@ -93,7 +93,7 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 				Vec2f headoffset(sprite.getFrameWidth() / 2, -sprite.getFrameHeight() / 2);
 				headoffset += Vec2f(-po.x, po.y);
 				headoffset.x *= -1.0f;
-				hands.offset = headoffset;
+				//hands.offset = headoffset;
 			}
 			else
 			{
