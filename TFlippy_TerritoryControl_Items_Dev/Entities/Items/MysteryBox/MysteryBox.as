@@ -21,7 +21,7 @@ LootItem@[] c_items =
 	LootItem("bomb", 1, 2, 675),
 	LootItem("mine", 1, 2, 475),
 	LootItem("keg", 1, 1, 122),
-	// LootItem("automat", 1, 0, 76),
+	LootItem("automat", 1, 0, 76),
 	LootItem("mat_bombita", 1, 0, 27),
 	LootItem("mat_incendiarybomb", 2, 4, 103),
 	LootItem("mat_smallbomb", 4, 16, 247),
