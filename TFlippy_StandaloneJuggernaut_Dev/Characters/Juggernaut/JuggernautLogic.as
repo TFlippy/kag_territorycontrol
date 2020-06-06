@@ -897,7 +897,7 @@ void DoAttack(CBlob@ this,f32 damage,JuggernautInfo@ info,f32 arcDegrees,u8 type
 void DamageWall(CBlob@ this,CMap@ map,Vec2f pos)
 {
 	if(pos.x<0.0f || pos.x>=map.tilemapwidth*8.0f || pos.y<0.0f || pos.y>=map.tilemapheight*8.0f){
-		print("returned from "+pos.x+","+pos.y);
+		//print("returned from "+pos.x+","+pos.y);
 		return;
 	}
 	Tile tile=map.getTile(pos);

@@ -196,7 +196,7 @@ void onTick(CBlob@ this)
 	{
 		if(isServer())
 		{
-			print("time to die");
+			//print("time to die");
 			this.server_Die();
 		}
 	}
