@@ -29,7 +29,7 @@ void onInit(CBlob@ this)
 
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
 
-	this.server_SetTimeToDie(15 + XORRandom(15));
+	this.server_SetTimeToDie(60 + XORRandom(15));
 	
 	if (isClient())
 	{
@@ -42,7 +42,7 @@ void onTick(CBlob@ this)
 	if (isServer() && this.getPosition().y < 0) this.server_Die();
 	
 	CBlob@[] blobsInRadius;
-	if (this.getMap().getBlobsInRadius(this.getPosition(), this.getRadius() * 3.0f, @blobsInRadius))
+	if (this.getMap().getBlobsInRadius(this.getPosition(), this.getRadius() * 4.0f, @blobsInRadius))
 	{
 		for (uint i = 0; i < blobsInRadius.length; i++)
 		{
@@ -80,7 +80,7 @@ void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 {
 	if (isClient())
 	{
-		CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(16 - XORRandom(32), 8 - XORRandom(32)), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 4, 0.00f, false);
+		CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(32 - XORRandom(64), 16 - XORRandom(40)), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 4, 0.00f, false);
 		if (particle !is null) 
 		{
 			particle.collides = false;
