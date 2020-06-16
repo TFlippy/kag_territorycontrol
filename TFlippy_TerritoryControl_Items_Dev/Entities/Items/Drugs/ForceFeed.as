@@ -33,7 +33,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (cmd == this.getCommandID("forcefeed"))
 		{
 			CBlob@ item = getBlobByNetworkID(params.read_u16());
-			if (item !is null && item.hasTag("forcefeedable") && canBeForceFed(this))
+			if (item !is null && item.hasTag("forcefeedable") && (item.hasTag("forcefeed_always") || canBeForceFed(this)))
 			{
 				CBitStream stream;
 				stream.write_u16(this.getNetworkID());
