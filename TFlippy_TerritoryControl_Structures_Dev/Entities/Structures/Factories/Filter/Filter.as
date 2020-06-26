@@ -10,7 +10,7 @@ void onInit(CBlob@ this)
 	this.getSprite().SetZ(10);
 
 	this.getShape().SetRotationsAllowed(false);
-
+	this.getShape().AddPlatformDirection(Vec2f(0, -1), 45, false);
 	this.set_bool("open", false);
 	this.Tag("place norotate");
 
