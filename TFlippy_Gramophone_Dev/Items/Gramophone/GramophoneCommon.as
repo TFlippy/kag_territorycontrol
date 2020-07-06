@@ -36,6 +36,7 @@ const GramophoneRecord@[] records =
 	GramophoneRecord("Tea for Two", "Disc_TeaForTwo.ogg"),
 	GramophoneRecord("7 Year Bitch", "Disc_7YearBitch.ogg"),
 	GramophoneRecord("Keep on Running", "Disc_KeepOnRunning.ogg"),
+	GramophoneRecord("La Valse d'Amelie", "Disc_LaValsedAmelie.ogg"),
 	GramophoneRecord("Money", "Disc_Money.ogg"),
 	GramophoneRecord("Big Iron", "Disc_BigIron.ogg"),
 	GramophoneRecord("Metallic Monks", "Disc_MetallicMonks.ogg")
