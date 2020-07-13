@@ -164,10 +164,15 @@ void Shoot(CBlob@ this, CBlob@ holder, Vec2f source_pos, Vec2f target_pos_initia
 		
 		for (u8 b = 0; b < bullet_count; b++)
 		{
-			Vec2f target_pos = target_pos_initial + Vec2f(spread * (random.NextFloat() - 0.50f), spread * (random.NextFloat() - 0.50f));
+			Vec2f target_pos = target_pos_initial; // + Vec2f(spread * (random.NextFloat() - 0.50f), spread * (random.NextFloat() - 0.50f));
 			Vec2f hit_pos = target_pos;
 			Vec2f dir = (target_pos - source_pos);
-			f32 length = dir.getLength();
+			dir.RotateBy(spread * (random.NextFloat() - 0.50f));
+			
+			f32 length_target = dir.getLength();
+			f32 length_max = 500.00f; // max range or something
+			f32 length_rem = length_max;
+			
 			f32 angle = dir.getAngleDegrees();
 			dir.Normalize();
 
@@ -179,7 +184,7 @@ void Shoot(CBlob@ this, CBlob@ holder, Vec2f source_pos, Vec2f target_pos_initia
 				if (!done)
 				{
 					HitInfo@[] hitInfos_1;
-					map.getHitInfosFromRay(source_pos, -angle, length, this, @hitInfos_1);
+					map.getHitInfosFromRay(source_pos, -angle, length_target, this, @hitInfos_1);
 					if (hitInfos_1 !is null)
 					{
 						for (int i = 0; i < hitInfos_1.length; i++)
@@ -208,6 +213,8 @@ void Shoot(CBlob@ this, CBlob@ holder, Vec2f source_pos, Vec2f target_pos_initia
 										hit_pos = hit.hitpos;
 										done = true;
 									}
+									
+									length_rem -= length_target;
 								}
 							}
 							else break;
@@ -246,7 +253,7 @@ void Shoot(CBlob@ this, CBlob@ holder, Vec2f source_pos, Vec2f target_pos_initia
 				if (!done)
 				{
 					HitInfo@[] hitInfos_2;
-					map.getHitInfosFromRay(hit_pos, -angle, length, this, @hitInfos_2);
+					map.getHitInfosFromRay(hit_pos, -angle, length_rem, this, @hitInfos_2);
 					if (hitInfos_2 !is null)
 					{
 						for (int i = 0; i < hitInfos_2.length; i++)
@@ -280,11 +287,13 @@ void Shoot(CBlob@ this, CBlob@ holder, Vec2f source_pos, Vec2f target_pos_initia
 							else break;
 						}
 					}
+					
+					length_rem = 0.00f;
 				}
 							
 				if (!done)
 				{
-					hit_pos += (dir * length);
+					hit_pos += (dir * (length_max - length_rem));
 					
 					CBlob@ blob = map.getBlobAtPosition(hit_pos);
 					if (blob !is null && blob.getTeamNum() != holder.getTeamNum() && !blob.hasTag("invincible"))
