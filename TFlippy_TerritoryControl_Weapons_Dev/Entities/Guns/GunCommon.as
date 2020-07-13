@@ -124,21 +124,28 @@ bool takeAmmo(CBlob@ this, u32 count)
 	return false;
 }
 
-bool takeAmmo(CBlob@ this, u32 count, CBlob@&out item)
+bool takeAmmo(CBlob@ this, u32 count, CBlob@ passedBlob, CBlob@ &out item) // hacky work around, cant do &inout on cblob, maybe we can do engine change
 {
-	if (item is null)
+	if (passedBlob is null)
 	{
 		CInventory@ inv = this.getInventory();
 		if (inv !is null && inv.getItemsCount() > 0)
 		{
-			@item = @inv.getItem(0);
+			@item = inv.getItem(0);
+			if (item !is null)
+			{
+				s32 quantity = item.getQuantity();
+				item.server_SetQuantity(Maths::Max(quantity - 1, 0));
+				
+				return true;
+			}
 		}
 	}
 	
-	if (item !is null)
+	if (passedBlob !is null)
 	{
-		s32 quantity = item.getQuantity();
-		item.server_SetQuantity(Maths::Max(quantity - 1, 0));
+		s32 quantity = passedBlob.getQuantity();
+		passedBlob.server_SetQuantity(Maths::Max(quantity - 1, 0));
 		
 		return true;
 	}

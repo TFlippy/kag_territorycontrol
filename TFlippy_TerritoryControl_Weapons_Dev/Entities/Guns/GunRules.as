@@ -57,8 +57,8 @@ void Shoot(CBlob@ this, CBlob@ holder, Vec2f source_pos, Vec2f target_pos_initia
 	GunSettings@ settings;
 	this.get("gun_settings", @settings);
 
-	CBlob@ ammo;
-	if (takeAmmo(this, 1, @ammo)) // why does this crash?
+	CBlob@ ammo = null;
+	if (takeAmmo(this, 1, ammo, @ammo)) // why does this crash?
 	{			
 		Random@ random = Random(seed);
 			
