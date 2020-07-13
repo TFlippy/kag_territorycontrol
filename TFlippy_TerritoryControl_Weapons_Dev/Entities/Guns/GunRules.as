@@ -15,10 +15,10 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("gun_shoot"))
 	{   
         CBlob@ blob = getBlobByNetworkID(params.read_netid());
-        if (blob is null) { return; }
+        if (blob is null) return;
 
 		u32 seed = params.read_u32();
-		Vec2f source_pos = params.read_Vec2f() - blob.get_Vec2f("gun_muzzle_offset").RotateBy(blob.getAngleDegrees() + (blob.isFacingLeft() ? -180 : 0));				
+		Vec2f source_pos = blob.getPosition() - blob.get_Vec2f("gun_muzzle_offset").RotateBy(blob.getAngleDegrees() + (blob.isFacingLeft() ? -180 : 0));				
 		Vec2f target_pos = params.read_Vec2f();		
 	
 		AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
@@ -58,7 +58,7 @@ void Shoot(CBlob@ this, CBlob@ holder, Vec2f source_pos, Vec2f target_pos_initia
 	GunSettings@ settings;
 	this.get("gun_settings", @settings);
 
-	if (TakeAmmo(this, 1))
+	if (takeAmmo(this, 1))
 	{			
 		Random@ random = Random(seed);
 			

@@ -103,7 +103,7 @@ CBlob@ getAmmoBlob(CBlob@ this, u32&out quantity)
 	return null;
 }
 
-bool TakeAmmo(CBlob@ this, u32 count)
+bool takeAmmo(CBlob@ this, u32 count)
 {
 	CInventory@ inv = this.getInventory();
 	if (inv !is null && inv.getItemsCount() > 0)
@@ -119,4 +119,34 @@ bool TakeAmmo(CBlob@ this, u32 count)
 	}
 	
 	return false;
+}
+
+void client_Shoot(CBlob@ this, Vec2f pos_aim)
+{
+	if (isClient())
+	{
+		CRules@ rules = getRules();
+		
+		CBitStream stream;
+		stream.write_netid(this.getNetworkID());
+		stream.write_u32(getGameTime());
+		stream.write_Vec2f(pos_aim);
+
+		rules.SendCommand(rules.getCommandID("gun_shoot"), stream);
+	}
+}
+
+void server_Shoot(CBlob@ this, Vec2f pos_aim)
+{
+	if (isServer())
+	{
+		CRules@ rules = getRules();
+
+		CBitStream stream;
+		stream.write_netid(this.getNetworkID());
+		stream.write_u32(getGameTime());
+		stream.write_Vec2f(pos_aim);
+
+		rules.SendCommand(rules.getCommandID("gun_shoot"), stream);
+	}
 }

@@ -97,16 +97,7 @@ void onTick(CBlob@ this)
 		{
 			if (this.get_bool("gun_cycled") && getGameTime() >= this.get_u32("gun_shoot_next"))
 			{
-				CRules@ rules = getRules();
-
-				CBitStream stream;
-
-				stream.write_netid(this.getNetworkID());
-				stream.write_u32(getGameTime());
-				stream.write_Vec2f(this.getPosition());
-				stream.write_Vec2f(holder.getAimPos());
-
-				rules.SendCommand(rules.getCommandID("gun_shoot"), stream);
+				server_Shoot(this, holder.getAimPos());
 			}
 		}
 		else if (point.isKeyJustReleased(key_action1) || holder.isKeyJustReleased(key_action1))
