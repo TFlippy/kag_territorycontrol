@@ -3,6 +3,8 @@
 #include "BulletCommon.as";
 #include "MakeMat.as";
 
+funcdef bool BulletOnHit(CBlob@ gun_blob, CBlob@ victim, f32 &inout damage, Vec2f hit_pos, Vec2f dist);
+
 namespace AmmoType
 {
 	shared enum ammo_types
@@ -22,31 +24,33 @@ class AmmoSettings
 }
 
 class GunSettings
-{
-	string[] shoot_sounds;
+{	
 
+	bool automatic;
+
+	u8 bullet_count;
 	u8 shoot_delay;
-	string sound_empty;
-	
 	u8 ammo_type;
+	u8 reload_time;
+
 	u32 ammo_count_max;
 	
 	f32 recoil_modifier;
 	f32 shake_modifier;
-	
 	f32 damage_modifier;
-	
-	u8 reload_time;
+	f32 bullet_spread;
+	f32 sound_reload_volume;
+	f32 sound_reload_pitch;
+	f32 sound_reload_range;
 	
 	Vec2f muzzle_offset;
-
-	// Bullet
-	u8 bullet_count;
-	f32 bullet_spread;
-	
-	bool automatic;
 	
 	string sprite_muzzleflash;
+	string sound_reload;
+	string sound_empty;
+	string[] shoot_sounds;
+
+	BulletOnHit@ hook;
 	
 	GunSettings()
 	{
