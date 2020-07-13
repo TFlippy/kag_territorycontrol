@@ -25,17 +25,16 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 		if (point !is null)
 		{
 			CBlob@ holder =	point.getOccupied();
-			if (holder !is null)
-			{
-				GunSettings@ settings;
-				blob.get("gun_settings", @settings);
+			if (holder !is null) @holder = blob;
 			
-				Shoot(blob, holder, source_pos, target_pos, seed);
-				
-				if (isClient())
-				{
-					blob.set_u32("gun_shoot_next", getGameTime() + settings.shoot_delay);
-				}
+			GunSettings@ settings;
+			blob.get("gun_settings", @settings);
+		
+			Shoot(blob, holder, source_pos, target_pos, seed);
+			
+			if (isClient())
+			{
+				blob.set_u32("gun_shoot_next", getGameTime() + settings.shoot_delay);
 			}
 		}
 	}
@@ -58,7 +57,8 @@ void Shoot(CBlob@ this, CBlob@ holder, Vec2f source_pos, Vec2f target_pos_initia
 	GunSettings@ settings;
 	this.get("gun_settings", @settings);
 
-	if (takeAmmo(this, 1))
+	CBlob@ ammo;
+	if (takeAmmo(this, 1, @ammo)) // why does this crash?
 	{			
 		Random@ random = Random(seed);
 			

@@ -3,7 +3,7 @@
 #include "BulletCommon.as";
 #include "MakeMat.as";
 
-funcdef bool BulletOnHit(CBlob@ gun_blob, CBlob@ victim, f32 &inout damage, Vec2f hit_pos, Vec2f dist);
+funcdef void AmmoOnHit(CBlob@ &in gun_blob, CBlob@ &in victim, Vec2f &in hit_pos, Vec2f &in dist, f32 &out damage, bool &out custom_hit, bool &out done);
 
 namespace AmmoType
 {
@@ -21,11 +21,12 @@ class AmmoSettings
 {
 	f32 base_damage;
 	SColor color;
+	
+	AmmoOnHit@ hook_onHit;
 }
 
 class GunSettings
 {	
-
 	bool automatic;
 
 	u8 bullet_count;
@@ -49,8 +50,6 @@ class GunSettings
 	string sound_reload;
 	string sound_empty;
 	string[] shoot_sounds;
-
-	BulletOnHit@ hook;
 	
 	GunSettings()
 	{
@@ -120,6 +119,28 @@ bool takeAmmo(CBlob@ this, u32 count)
 			
 			return true;
 		}
+	}
+	
+	return false;
+}
+
+bool takeAmmo(CBlob@ this, u32 count, CBlob@&out item)
+{
+	if (item is null)
+	{
+		CInventory@ inv = this.getInventory();
+		if (inv !is null && inv.getItemsCount() > 0)
+		{
+			@item = @inv.getItem(0);
+		}
+	}
+	
+	if (item !is null)
+	{
+		s32 quantity = item.getQuantity();
+		item.server_SetQuantity(Maths::Max(quantity - 1, 0));
+		
+		return true;
 	}
 	
 	return false;
