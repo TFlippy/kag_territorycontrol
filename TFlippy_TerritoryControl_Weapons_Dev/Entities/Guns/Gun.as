@@ -6,6 +6,9 @@
 
 void onInit(CBlob@ this)
 {
+	GunSettings@ settings;
+	this.get("gun_settings", @settings);
+
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
 	if(ap !is null) 
 	{
@@ -20,6 +23,8 @@ void onInit(CBlob@ this)
 	this.set_u32("gun_shoot_next", 0);
 	this.set_f32("gun_recoil_current", 0);
 	
+	this.set_bool("gun_cycled", false);
+	
 	this.addCommandID("gun_shoot");
 	this.addCommandID("gun_reload");
 	
@@ -28,7 +33,7 @@ void onInit(CBlob@ this)
 		CSprite@ sprite = this.getSprite();
 		if (sprite !is null)
 		{
-			CSpriteLayer@ flash = sprite.addSpriteLayer("muzzle_flash", (this.exists("gun_muzzleflash_sprite") ? this.get_string("gun_muzzleflash_sprite") : "MuzzleFlash.png"), 16, 8, this.getTeamNum(), 0);
+			CSpriteLayer@ flash = sprite.addSpriteLayer("muzzle_flash",settings.sprite_muzzleflash, 16, 8, this.getTeamNum(), 0);
 			if (flash !is null)
 			{
 				Animation@ anim = flash.addAnimation("default", 1, false);
@@ -89,28 +94,19 @@ void onTick(CBlob@ this)
 				
 		if ((point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) && !(holder.get_f32("babbyed") > 0)) 
 		{
-			if (getGameTime() >= this.get_u32("gun_shoot_next"))
+			if (this.get_bool("gun_cycled") && getGameTime() >= this.get_u32("gun_shoot_next"))
 			{
-				u32 ammoCount = 0;
-				CBlob@ ammo = getAmmoBlob(this, ammoCount);
-			
-				GunSettings@ settings;
-				this.get("gun_settings", @settings);
-			
-				if (ammo !is null && ammoCount > 0)
-				{			
-					CBitStream stream;
-					stream.write_u32(getGameTime());
-					stream.write_Vec2f(this.getPosition());
-					stream.write_Vec2f(holder.getAimPos());
-					
-					this.SendCommand(this.getCommandID("gun_shoot"), stream);
-				}
-				else if (point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1))
-				{
-					this.getSprite().PlaySound(settings.sound_empty, 0.50f, 1.00f);
-				}
+				CBitStream stream;
+				stream.write_u32(getGameTime());
+				stream.write_Vec2f(this.getPosition());
+				stream.write_Vec2f(holder.getAimPos());
+				
+				this.SendCommand(this.getCommandID("gun_shoot"), stream);
 			}
+		}
+		else if (point.isKeyJustReleased(key_action1) || holder.isKeyJustReleased(key_action1))
+		{
+			this.set_bool("gun_cycled", true);
 		}
 	}
 }
@@ -129,9 +125,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CBlob@ holder =	point.getOccupied();
 			if (holder !is null)
 			{
-				if (TakeAmmo(this, 1))
+				GunSettings@ settings;
+				this.get("gun_settings", @settings);
+			
+				Shoot(this, holder, source_pos, target_pos, seed);
+				
+				if (isClient())
 				{
-					Shoot(this, holder, source_pos, target_pos, seed);
+					this.set_u32("gun_shoot_next", getGameTime() + settings.shoot_delay);
 				}
 			}
 		}
@@ -144,197 +145,214 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void Shoot(CBlob@ this, CBlob@ holder, Vec2f source_pos, Vec2f target_pos_initial, u32 seed)
 {
+	const bool server = isServer();
+	const bool client = isClient();
+	
 	CMap@ map = getMap();
 	
 	GunSettings@ settings;
 	this.get("gun_settings", @settings);
 
-	this.set_u32("gun_shoot_next", getGameTime() + settings.shoot_delay);
-
-	const bool server = isServer();
-	const bool client = isClient();
-
-	Random@ random = Random(seed);
+	if (TakeAmmo(this, 1))
+	{			
+		Random@ random = Random(seed);
+			
+		const f32 damage_init = 1.00f * settings.damage_modifier;
+		const u8 hitter_type = HittersTC::bullet_low_cal;
+		const u8 bullet_count = settings.bullet_count;
+		const f32 spread = settings.bullet_spread;
 		
-	const f32 damage_init = 1.00f * settings.damage_modifier;
-	const u8 hitter_type = HittersTC::bullet_low_cal;
-	const u8 bullet_count = settings.bullet_count;
-	const f32 spread = settings.bullet_spread;
-	
-	for (u8 b = 0; b < bullet_count; b++)
-	{
-		Vec2f target_pos = target_pos_initial + Vec2f(spread * (random.NextFloat() - 0.50f), spread * (random.NextFloat() - 0.50f));
-		Vec2f hit_pos = target_pos;
-		Vec2f dir = (target_pos - source_pos);
-		f32 length = dir.getLength();
-		f32 angle = dir.getAngleDegrees();
-		dir.Normalize();
-
-		if (server)
+		for (u8 b = 0; b < bullet_count; b++)
 		{
-			f32 damage = damage_init;
-			bool done = false;
-		
-			if (!done)
+			Vec2f target_pos = target_pos_initial + Vec2f(spread * (random.NextFloat() - 0.50f), spread * (random.NextFloat() - 0.50f));
+			Vec2f hit_pos = target_pos;
+			Vec2f dir = (target_pos - source_pos);
+			f32 length = dir.getLength();
+			f32 angle = dir.getAngleDegrees();
+			dir.Normalize();
+
+			if (server)
 			{
-				HitInfo@[] hitInfos_1;
-				map.getHitInfosFromRay(source_pos, -angle, length, this, @hitInfos_1);
-				if (hitInfos_1 !is null)
+				f32 damage = damage_init;
+				bool done = false;
+			
+				if (!done)
 				{
-					for (int i = 0; i < hitInfos_1.length; i++)
+					HitInfo@[] hitInfos_1;
+					map.getHitInfosFromRay(source_pos, -angle, length, this, @hitInfos_1);
+					if (hitInfos_1 !is null)
 					{
-						if (!done)
+						for (int i = 0; i < hitInfos_1.length; i++)
 						{
-							HitInfo@ hit = hitInfos_1[i];
-							if (hit !is null)
+							if (!done)
 							{
-								CBlob@ blob = hit.blob;
-								if (blob !is null)
+								HitInfo@ hit = hitInfos_1[i];
+								if (hit !is null)
 								{
-									if (blob.getTeamNum() != holder.getTeamNum() && (blob.isCollidable() || blob.hasTag("flesh")) && !blob.hasTag("invincible"))
+									CBlob@ blob = hit.blob;
+									if (blob !is null)
 									{
-										f32 health_before = blob.getHealth();
-										holder.server_Hit(blob, hit.hitpos, dir, damage, hitter_type, false);
-										
+										if (blob.getTeamNum() != holder.getTeamNum() && (blob.isCollidable() || blob.hasTag("flesh")) && !blob.hasTag("invincible"))
+										{
+											f32 health_before = blob.getHealth();
+											holder.server_Hit(blob, hit.hitpos, dir, damage, hitter_type, false);
+											
+											hit_pos = hit.hitpos;
+											damage = Maths::Max(damage - health_before, 0);
+											if (damage <= 0) done = true;
+										}
+									}
+									else
+									{
+										map.server_DestroyTile(hit.hitpos, damage);
 										hit_pos = hit.hitpos;
-										damage = Maths::Max(damage - health_before, 0);
-										if (damage <= 0) done = true;
+										done = true;
 									}
 								}
-								else
-								{
-									map.server_DestroyTile(hit.hitpos, damage);
-									hit_pos = hit.hitpos;
-									done = true;
-								}
 							}
+							else break;
 						}
-						else break;
 					}
 				}
-			}
-			
-			if (!done)
-			{
-				CBlob@ blob = map.getBlobAtPosition(hit_pos);
-				if (blob !is null && blob.getTeamNum() != holder.getTeamNum() && !blob.hasTag("invincible"))
-				{
-					f32 health_before = blob.getHealth();
-					holder.server_Hit(blob, hit_pos, dir, damage, hitter_type, false);
-					
-					damage = Maths::Max(damage - health_before, 0);
-					if (damage <= 0) done = true;
-				}
-			}
-			
-			if (!done)
-			{
-				map.rayCastSolidNoBlobs(source_pos, target_pos, hit_pos);
 				
-				Tile tile = map.getTile(hit_pos);
-				if (tile.type != CMap::tile_empty)
+				if (!done)
 				{
-					if (server)
+					CBlob@ blob = map.getBlobAtPosition(hit_pos);
+					if (blob !is null && blob.getTeamNum() != holder.getTeamNum() && !blob.hasTag("invincible"))
 					{
-						map.server_DestroyTile(hit_pos, damage);
-						done = true;
-					}
-				}
-			}
-			
-			if (!done)
-			{
-				HitInfo@[] hitInfos_2;
-				map.getHitInfosFromRay(hit_pos, -angle, length, this, @hitInfos_2);
-				if (hitInfos_2 !is null)
-				{
-					for (int i = 0; i < hitInfos_2.length; i++)
-					{
-						if (!done)
-						{
-							HitInfo@ hit = hitInfos_2[i];
-							if (hit !is null)
-							{
-								CBlob@ blob = hit.blob;
-								if (blob !is null)
-								{
-									if (blob.getTeamNum() != holder.getTeamNum() && (blob.isCollidable() || blob.hasTag("flesh")) && !blob.hasTag("invincible"))
-									{
-										f32 health_before = blob.getHealth();
-										holder.server_Hit(blob, hit.hitpos, dir, damage, hitter_type, false);
-										
-										hit_pos = hit.hitpos;
-										damage = Maths::Max(damage - health_before, 0);
-										if (damage <= 0) done = true;
-									}
-								}
-								else
-								{
-									hit_pos = hit.hitpos;
-									map.server_DestroyTile(hit.hitpos, damage);
-									done = true;
-								}
-							}
-						}
-						else break;
-					}
-				}
-			}
+						f32 health_before = blob.getHealth();
+						holder.server_Hit(blob, hit_pos, dir, damage, hitter_type, false);
 						
-			if (!done)
-			{
-				hit_pos += (dir * length);
-				
-				CBlob@ blob = map.getBlobAtPosition(hit_pos);
-				if (blob !is null && blob.getTeamNum() != holder.getTeamNum() && !blob.hasTag("invincible"))
-				{
-					f32 health_before = blob.getHealth();
-					holder.server_Hit(blob, hit_pos, dir, damage, hitter_type, false);
-					
-					damage = Maths::Max(damage - health_before, 0);
-					if (damage <= 0) done = true;
+						damage = Maths::Max(damage - health_before, 0);
+						if (damage <= 0) done = true;
+					}
 				}
+				
+				if (!done)
+				{
+					map.rayCastSolidNoBlobs(source_pos, target_pos, hit_pos);
+					
+					Tile tile = map.getTile(hit_pos);
+					if (tile.type != CMap::tile_empty)
+					{
+						if (server)
+						{
+							map.server_DestroyTile(hit_pos, damage);
+							done = true;
+						}
+					}
+				}
+				
+				if (!done)
+				{
+					HitInfo@[] hitInfos_2;
+					map.getHitInfosFromRay(hit_pos, -angle, length, this, @hitInfos_2);
+					if (hitInfos_2 !is null)
+					{
+						for (int i = 0; i < hitInfos_2.length; i++)
+						{
+							if (!done)
+							{
+								HitInfo@ hit = hitInfos_2[i];
+								if (hit !is null)
+								{
+									CBlob@ blob = hit.blob;
+									if (blob !is null)
+									{
+										if (blob.getTeamNum() != holder.getTeamNum() && (blob.isCollidable() || blob.hasTag("flesh")) && !blob.hasTag("invincible"))
+										{
+											f32 health_before = blob.getHealth();
+											holder.server_Hit(blob, hit.hitpos, dir, damage, hitter_type, false);
+											
+											hit_pos = hit.hitpos;
+											damage = Maths::Max(damage - health_before, 0);
+											if (damage <= 0) done = true;
+										}
+									}
+									else
+									{
+										hit_pos = hit.hitpos;
+										map.server_DestroyTile(hit.hitpos, damage);
+										done = true;
+									}
+								}
+							}
+							else break;
+						}
+					}
+				}
+							
+				if (!done)
+				{
+					hit_pos += (dir * length);
+					
+					CBlob@ blob = map.getBlobAtPosition(hit_pos);
+					if (blob !is null && blob.getTeamNum() != holder.getTeamNum() && !blob.hasTag("invincible"))
+					{
+						f32 health_before = blob.getHealth();
+						holder.server_Hit(blob, hit_pos, dir, damage, hitter_type, false);
+						
+						damage = Maths::Max(damage - health_before, 0);
+						if (damage <= 0) done = true;
+					}
+				}
+			}
+			
+			if (client)
+			{
+				// #ff9d33 low cal
+				
+				// createBullet(source_pos, hit_pos, SColor(200, 100, 255, 240), Vec2f(6.00f, 0.75f));
+				createBullet(source_pos, hit_pos, SColor(200, 100, 255, 240), Vec2f(10.00f, 1.00f));
+				// createBullet(source_pos, hit_pos, SColor(255, 255, 150, 50), Vec2f(4.00f, 0.50f));
 			}
 		}
-		
+					
 		if (client)
 		{
-			// #ff9d33 low cal
+			ShakeScreen(Maths::Sqrt(damage_init * 100), 10, this.getPosition());	
+			Sound::Play(settings.getRandomShootSound(), source_pos, 1, 1);
 			
-			// createBullet(source_pos, hit_pos, SColor(200, 100, 255, 240), Vec2f(6.00f, 0.75f));
-			createBullet(source_pos, hit_pos, SColor(255, 255, 150, 50), Vec2f(4.00f, 0.50f));
-		}
-	}
-				
-	if (client)
-	{
-		ShakeScreen(Maths::Sqrt(damage_init * 100), 10, this.getPosition());	
-		Sound::Play(settings.getRandomShootSound(), source_pos, 1, 1);
-		
-		Vec2f target_pos = target_pos_initial;
-		Vec2f dir = (target_pos - source_pos);
-		dir.Normalize();
-		
-		ShakeScreen(-dir * damage_init * 15.00f * settings.shake_modifier, 30, this.getPosition());
-		
-		CSprite@ sprite = this.getSprite();
-		if (sprite !is null)
-		{
-			CSpriteLayer@ flash = sprite.getSpriteLayer("muzzle_flash");
-			if (flash !is null)
+			Vec2f target_pos = target_pos_initial;
+			Vec2f dir = (target_pos - source_pos);
+			dir.Normalize();
+			
+			ShakeScreen(-dir * damage_init * 15.00f * settings.shake_modifier, 30, this.getPosition());
+			
+			CSprite@ sprite = this.getSprite();
+			if (sprite !is null)
 			{
-				flash.SetFrameIndex(0);
-				flash.SetOffset(settings.muzzle_offset);
-				flash.SetVisible(true);
+				CSpriteLayer@ flash = sprite.getSpriteLayer("muzzle_flash");
+				if (flash !is null)
+				{
+					flash.SetFrameIndex(0);
+					flash.SetOffset(settings.muzzle_offset);
+					flash.SetVisible(true);
+				}
 			}
+			
+			this.set_f32("gun_recoil_current", 2);
 		}
 		
-		this.set_f32("gun_recoil_current", 2);
+		this.set_bool("gun_cycled", settings.automatic);
 	}
+	else
+	{	
+		this.set_bool("gun_cycled", false);
+	
+		if (client)
+		{
+			this.getSprite().PlaySound(settings.sound_empty, 0.50f, 1.00f);
+		}
+	}
+	
+	this.set_u32("gun_shoot_next", getGameTime() + settings.shoot_delay);
 }
 
 void Reload(CBlob@ this)
 {
+	this.set_bool("gun_cycled", true);
+
 	if (isServer())
 	{
 		GunSettings@ settings;

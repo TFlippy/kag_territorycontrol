@@ -1,6 +1,5 @@
 #include "Hitters.as";
-#include "HittersTC.as";
-#include "CommonGun.as";
+#include "GunCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -26,19 +25,29 @@ void onInit(CBlob@ this)
 		// Vec2f(-8.0f,2.0f)	//Visual offset for raycast bullets
 	// );
 	
-	this.set_f32("gun_damage_modifier", 3);
+	// this.set_f32("gun_damage_modifier", 3);
 	
-	this.set_u8("gun_shoot_delay", 3);
+	// this.set_u8("gun_shoot_delay", 3);
 	
-	this.set_u8("gun_bullet_count", 3);
-	this.set_f32("gun_bullet_spread", 20);
-	this.set_Vec2f("gun_muzzle_offset", Vec2f(-8.0f, -0.50f));
+	// this.set_u8("gun_bullet_count", 3);
+	// this.set_f32("gun_bullet_spread", 20);
+	// this.set_Vec2f("gun_muzzle_offset", Vec2f(-8.0f, -0.50f));
 	
-	this.set_string("gun_shoot_sound", "ChargeRifle_Shoot1");
-	this.set_u8("gun_hitter", HittersTC::plasma);
-}
+	// this.set_string("gun_shoot_sound", "ChargeRifle_Shoot1");
+	// this.set_u8("gun_hitter", HittersTC::plasma);
 
-void onTick(CBlob@ this)
-{
-	GunTick(this);
+	const string[] shoot_sounds = { "ChargeRifle_Shoot1", "ChargeRifle_Shoot2", "ChargeRifle_Shoot3", "ChargeRifle_Shoot4" };
+	
+	GunSettings settings = GunSettings();
+	settings.shoot_sounds = shoot_sounds;
+	settings.shoot_delay = 3;
+	settings.ammo_count_max = 20;
+	settings.bullet_spread = 30.00f;
+	settings.bullet_count = 3;
+	settings.shake_modifier = 3.00f;
+	settings.recoil_modifier = 3.00f;
+	settings.muzzle_offset = Vec2f(-15.0f, -1.00f);
+	settings.automatic = true;
+	settings.sprite_muzzleflash = "MuzzleFlash_Plasma.png";
+	this.set("gun_settings", @settings);
 }

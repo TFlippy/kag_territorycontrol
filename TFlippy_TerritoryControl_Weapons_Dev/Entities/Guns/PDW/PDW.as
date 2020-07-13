@@ -2,6 +2,8 @@
 #include "HittersTC.as";
 #include "GunCommon.as";
 
+const string[] shoot_sounds = { "pdw_shoot" };
+
 void onInit(CBlob@ this)
 {
 	// GunInitRaycast(
@@ -27,16 +29,14 @@ void onInit(CBlob@ this)
 	// );
 	
 	// this.set_u8("gun_shoot_delay", 2);
-	
-	
-	string[] shoot_sounds = { "pdw_shoot" };
-	
+		
 	GunSettings settings = GunSettings();
 	settings.shoot_sounds = shoot_sounds;
 	settings.shoot_delay = 3;
 	settings.ammo_count_max = 30;
 	settings.bullet_spread = 4.00f;
 	settings.muzzle_offset = Vec2f(-15.0f, -1.00f);
+	settings.automatic = true;
 	this.set("gun_settings", @settings);
 	
 	// this.set_u8("gun_shoot_delay", 3);

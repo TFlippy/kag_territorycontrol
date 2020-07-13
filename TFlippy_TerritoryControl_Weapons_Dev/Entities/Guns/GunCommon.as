@@ -15,6 +15,12 @@ namespace AmmoType
 	};
 }
 
+class AmmoSettings
+{
+	f32 base_damage;
+	SColor color;
+}
+
 class GunSettings
 {
 	string[] shoot_sounds;
@@ -22,7 +28,7 @@ class GunSettings
 	u8 shoot_delay;
 	string sound_empty;
 	
-	u8 ammo_caliber;
+	u8 ammo_type;
 	u32 ammo_count_max;
 	
 	f32 recoil_modifier;
@@ -38,13 +44,17 @@ class GunSettings
 	u8 bullet_count;
 	f32 bullet_spread;
 	
+	bool automatic;
+	
+	string sprite_muzzleflash;
+	
 	GunSettings()
 	{
 		this.damage_modifier = 1;
 	
 		this.shoot_delay = 1;
 		
-		this.ammo_caliber = AmmoType::low_cal;
+		this.ammo_type = AmmoType::low_cal;
 		this.ammo_count_max = 20;
 		
 		this.bullet_count = 1;
@@ -56,6 +66,9 @@ class GunSettings
 		this.muzzle_offset = Vec2f(0, 0);
 	
 		this.sound_empty = "Gun_Empty.ogg";
+		this.sprite_muzzleflash = "MuzzleFlash.png";
+	
+		this.automatic = true;
 	
 		// this.blobname = blobname;
 		// this.base_count = base_count;
