@@ -65,7 +65,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Buy Stone (250)", "$mat_stone$", "mat_stone-250", "Buy 250 Stone for 125 coins.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 125);
+		AddRequirement(s.requirements, "coin", "", "Coins", 375);
 		s.spawnNothing = true;
 	}
 	{
