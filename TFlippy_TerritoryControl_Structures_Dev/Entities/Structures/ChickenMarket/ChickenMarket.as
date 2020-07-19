@@ -108,12 +108,12 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Portable SAM System", "$icon_sam$", "sam-500", "A portable surface-to-air missile system used to shoot down aerial targets. Automatically operated.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 2499);
+		AddRequirement(s.requirements, "coin", "", "Coins", 4669);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "SAM Missile (1)", "$sammissile$", "mat_sammissile-1-56", "Guided missiles for the Portable SAM System.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 279);
+		AddRequirement(s.requirements, "coin", "", "Coins", 469);
 		s.spawnNothing = true;
 	}
 	{
@@ -123,12 +123,12 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Portable LWS", "$icon_lws$", "lws-400", "A portable laser weapon system capable of shooting down airborne projectiles. Automatically operated.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 1999);
+		AddRequirement(s.requirements, "coin", "", "Coins", 4199);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Peacekeeper", "$icon_sentry$", "sentry-400", "A small sentry gun that uses Machine Gun ammo. Automatically operated.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 1999);
+		AddRequirement(s.requirements, "coin", "", "Coins", 2666);
 		s.spawnNothing = true;
 	}
 	
