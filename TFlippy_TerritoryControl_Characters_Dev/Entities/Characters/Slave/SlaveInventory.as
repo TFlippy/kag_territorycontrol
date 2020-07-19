@@ -183,8 +183,7 @@ void onCreateInventoryMenu(CInventory@ this, CBlob@ forBlob, CGridMenu@ menu)
 	blob.ClearGridMenusExceptInventory();
 
 	CBlob@[] forts;
-	getBlobsByName("fortress", @forts);
-	getBlobsByName("camp", @forts);
+	getBlobsByTag("faction_base", @forts);
 					
 	u8[] teamForts = {0, 0, 0, 0, 0, 0, 0, 0};
 	u8[] emptyTeams;

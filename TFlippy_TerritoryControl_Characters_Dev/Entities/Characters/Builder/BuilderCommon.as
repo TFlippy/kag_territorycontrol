@@ -137,8 +137,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 				if (!fail && b.name == "camp")
 				{
 					CBlob@[] blobs;
-					getBlobsByName("camp", @blobs);
-					getBlobsByName("fortress", @blobs);
+					getBlobsByTag("faction_base", @blobs);
 					for (int i = 0; i < blobs.length; i++)
 					{
 						CBlob@ e = blobs[i];
@@ -147,7 +146,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 						if(e.getTeamNum() != this.getTeamNum() && distance <= 256)
 						{
 							fail = true;
-							print("there is enemy camp/fortress near!");
+							//print("there is enemy faction base near!"); //why is it even here it doesn't write to chat
 							break;
 						}
 					}
