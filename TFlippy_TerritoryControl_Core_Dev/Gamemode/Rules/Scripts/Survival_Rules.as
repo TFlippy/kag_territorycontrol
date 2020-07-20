@@ -256,7 +256,7 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 			f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
 
 			if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RESPAWN_TIME) respawn_time += 30 * 4;
-			if (upkeep_ratio >= UPKEEP_RATIO_BONUS_RESPAWN_TIME) respawn_time -= 30 * 2;
+			if (upkeep_ratio <= UPKEEP_RATIO_BONUS_RESPAWN_TIME) respawn_time -= 30 * 2;
 		}
 	}
 
