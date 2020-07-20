@@ -332,7 +332,7 @@ void onTick(CRules@ this)
 						if (base !is null && base.getTeamNum() == team)
 						{
 							has_bases = true;
-							if (!base.hasTag("can respawn")) continue;
+							if (!base.hasTag("reinforcements allowed")) continue;
 							spawns.push_back(bases[i]);
 						}
 					}

@@ -2,6 +2,7 @@
 // apply "travel tunnel" tag to use
 
 #include "TunnelCommon.as";
+#include "KnockedCommon.as"
 
 void onInit(CBlob@ this)
 {
@@ -122,7 +123,7 @@ bool doesFitAtTunnel(CBlob@ this, CBlob@ caller, CBlob@ tunnel)
 	return true;
 }
 
-void Travel(CBlob@ this, CBlob@ caller, Vec2f position)
+void Travel(CBlob@ this, CBlob@ caller, Vec2f position, bool vulnerable)
 {
 	if (caller !is null)
 	{
@@ -155,6 +156,17 @@ void Travel(CBlob@ this, CBlob@ caller, Vec2f position)
 			Sound::Play("Travel.ogg", this.getPosition());
 			Sound::Play("Travel.ogg", caller.getPosition());
 		}
+		//stunned on going through tunnel
+		//(prevents tunnel spam and ensures traps get you)
+		if (vulnerable && isKnockable(caller))
+		{
+			//if you travel, you lose invincible
+			caller.Untag("invincible");
+			caller.Sync("invincible", true);
+
+			//actually do the knocking
+			setKnocked(caller, 30, true);
+		}
 	}
 }
 
@@ -171,7 +183,7 @@ void onTunnelCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			// instant travel cause there is just one place to go
 			if (tunnels.length == 1)
 			{
-				Travel(this, caller, tunnels[0].getPosition());
+				Travel(this, caller, tunnels[0].getPosition(), !tunnels[0].hasTag("reinforcements allowed"));
 			}
 			else
 			{
@@ -194,6 +206,7 @@ void onTunnelCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				params.write_u16(caller.getNetworkID());
 				//params.write_u16(tunnel.getNetworkID());
 				params.write_Vec2f(tunnel.getPosition());
+				params.write_bool(!tunnel.hasTag("reinforcements allowed"));
 				this.SendCommand(this.getCommandID("server travel to"), params);
 			}
 		}
@@ -204,7 +217,8 @@ void onTunnelCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 		Vec2f pos = params.read_Vec2f();
-		Travel(this, caller, pos);
+		bool vulnerable = params.read_bool();
+		Travel(this, caller, pos, vulnerable);
 	}
 	else if (cmd == this.getCommandID("travel none"))
 	{

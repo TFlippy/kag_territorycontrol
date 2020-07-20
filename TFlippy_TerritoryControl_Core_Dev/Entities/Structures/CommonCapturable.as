@@ -5,7 +5,7 @@
 const string counter_prop = "capture ticks";
 const string raid_tag = "under raid";
 const string chicken_tag = "chicken raid";
-const string reinforcements_tag = "can respawn";
+const string reinforcements_tag = "reinforcements allowed";
 
 // const u16 capture_seconds = 10;
 const u16 capture_radius = 48;
