@@ -325,12 +325,14 @@ void onTick(CRules@ this)
 					getBlobsByTag("faction_base", @bases);
 					getBlobsByTag("respawn", @bases);
 					CBlob@[] spawns;
-
+					bool has_bases = false;
 					for (uint i = 0; i < bases.length; i++)
 					{
 						CBlob@ base = bases[i];
 						if (base !is null && base.getTeamNum() == team)
 						{
+							has_bases = true;
+							if (base.hasTag("under raid")) continue;
 							spawns.push_back(bases[i]);
 						}
 					}
@@ -385,6 +387,7 @@ void onTick(CRules@ this)
 					}
 					else
 					{
+						if (has_bases) return; //wait until able to spawn or lost all bases
 						isNeutral = true; // In case if the player is respawning while the team has been defeated
 					}
 				}

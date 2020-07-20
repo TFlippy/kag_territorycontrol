@@ -15,7 +15,7 @@ void uncap_team(uint teamnum) {
 	getBlobsByTag("change team on fort capture", @blobs); //is it even needed? doors n stuff, maybe something else (but also collides with capturable)
 	for (int i = 0; i < blobs.length; ++i) {
 		if (blobs[i].getTeamNum() != teamnum) continue;
-		blobs[i].server_setTeamNum(blobs[i].hasTag("door") ? pure_neutral_team : chicken_team);
+		blobs[i].server_setTeamNum(blobs[i].hasTag("noncapturable") ? chicken_team : pure_neutral_team);
 	}
 
 	//players get neutralized
