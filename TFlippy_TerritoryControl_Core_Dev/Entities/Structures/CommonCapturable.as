@@ -86,10 +86,6 @@ void onTick(CBlob@ this)
 				}
 			}
 		}
-		
-		if(friendlyCount > 0){
-			this.set_u16("last_friendly_visit",getGameTime());
-		}
 
 		u32 capture_seconds = getCaptureSeconds(this);
 		
@@ -104,7 +100,7 @@ void onTick(CBlob@ this)
 			//convert
 			if (attackersCount > friendlyCount)
 			{
-				ticks--;
+				ticks = Maths::Max(ticks - 1, 0);
 			}
 			//un-convert gradually
 			else if (attackersCount < friendlyCount || attackersCount == 0)
@@ -115,7 +111,7 @@ void onTick(CBlob@ this)
 			this.set_s16(counter_prop, ticks);
 			this.Tag(raid_tag);
 
-			if (ticks <= 0)
+			if (ticks <= 0 && friendlyCount == 0)
 			{
 				if (this.hasTag(chicken_tag) && (this.getName() == "citadel" || this.getName() == "fortress" || this.getName() == "camp"))
 				{
