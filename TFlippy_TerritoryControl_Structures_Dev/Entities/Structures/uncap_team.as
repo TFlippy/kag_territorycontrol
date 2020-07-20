@@ -2,20 +2,19 @@
 
 #ifndef __uncap_team
 #define __uncap_team
+const uint pure_neutral_team = 255;
 
-void uncap_team(uint teamnum) {
+void uncap_team(uint teamnum, uint target_team = pure_neutral_team) {
 	if (!isServer()) return;
 
 	//non-players get converted to chicken faction
-	const uint chicken_team = 250;
-	const uint pure_neutral_team = 255;
 	CBlob@[] blobs;
 	getBlobsByTag("capturable", @blobs);
 	getBlobsByTag("noncapturable", @blobs);
 	getBlobsByTag("change team on fort capture", @blobs); //is it even needed? doors n stuff, maybe something else (but also collides with capturable)
 	for (int i = 0; i < blobs.length; ++i) {
 		if (blobs[i].getTeamNum() != teamnum) continue;
-		blobs[i].server_setTeamNum(blobs[i].hasTag("noncapturable") ? chicken_team : pure_neutral_team);
+		blobs[i].server_setTeamNum(target_team);
 	}
 
 	//players get neutralized
@@ -23,7 +22,7 @@ void uncap_team(uint teamnum) {
 	getBlobsByTag("player", @players);
 	for (int i = 0; i < players.length; ++i) {
 		if (players[i].getTeamNum() != teamnum) continue;
-		uint team = chicken_team; //turn them into chickens if all else fails
+		uint team = target_team;
 		CPlayer @player = players[i].getPlayer();
 		if (player !is null)
 			team = reserve_team(player.getUsername().split('~')[0]);

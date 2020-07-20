@@ -129,6 +129,14 @@ void onTick(CBlob@ this)
 			if (index < 0) return;
 			
 			CBlob@ target = blobsInRadius[index];
+			CPlayer@ host = this.getDamageOwnerPlayer();
+			if (target !is null) {
+				CPlayer@ _target = target.getPlayer();
+				if (host !is null && _target is host) { //recognizes host and changes team
+					this.server_setTeamNum(_target.getTeamNum());
+					return;
+				}
+			}
 			Zap(this, target);	
 		}
 	}

@@ -168,6 +168,14 @@ void onTick(CBlob@ this)
 		int ammo = GetAmmo(this);
 		
 		CBlob@ t = getBlobByNetworkID(this.get_u16("target"));
+		CPlayer@ host = this.getDamageOwnerPlayer();
+		if (t !is null) {
+			CPlayer@ _target = t.getPlayer();
+			if (host !is null && _target is host) { //recognizes host and changes team
+				this.server_setTeamNum(_target.getTeamNum());
+				@t = null;
+			}
+		}
 		if (t is null || !isVisible(this, t) || ((t.getPosition() - this.getPosition()).LengthSquared() > 450.00f*450.00f)) //if blob doesn't exist or gone out of tracking range or LoS
 		{
 			this.set_u16("target", 0); //then reset targetting
