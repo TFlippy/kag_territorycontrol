@@ -146,7 +146,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 						if(e.getTeamNum() != this.getTeamNum() && distance <= 256)
 						{
 							fail = true;
-							//print("there is enemy faction base near!"); //why is it even here it doesn't write to chat
+							if (this.isMyPlayer()) client_AddToChat("There is an enemy faction base near!", SColor(0xff444444));
 							break;
 						}
 					}

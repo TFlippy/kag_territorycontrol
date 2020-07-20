@@ -2,6 +2,8 @@
 #include "Hitters.as";
 #include "Logging.as";
 
+#include "uncap_team.as"
+
 const string raid_tag = "under raid";
 const u32[] teamcolours = {0xff0000ff, 0xffff0000, 0xff00ff00, 0xffff00ff, 0xffff6600, 0xff00ffff, 0xff6600ff, 0xff647160};
 
@@ -774,6 +776,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		}
 	}
 	
+	if (isServer()) {
+		if (cmd == this.getCommandID("faction_captured") || cmd == this.getCommandID("faction_destroyed")) {
+			int team = inParams.read_s32();
+			if (cmd == this.getCommandID("faction_captured")) {
+				team = inParams.read_s32();
+				bool defeat = inParams.read_bool();
+				if (!defeat) return;
+			}
+			uncap_team(team);
+		}
+	}
+
 
 	if (isClient())
 	{

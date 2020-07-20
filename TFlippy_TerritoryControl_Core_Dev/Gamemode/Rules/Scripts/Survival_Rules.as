@@ -7,6 +7,8 @@
 #include "Logging.as";
 // #include "Knocked.as"
 
+#include "neutral_team_assigner.as"
+
 shared class Players
 {
 	CTFPlayerInfo@[] list;
@@ -390,7 +392,8 @@ void onTick(CRules@ this)
 				// Bandit scum spawning
 				if (isNeutral)
 				{
-					team = 100 + XORRandom(100);
+					string playerName = player.getUsername().split('~')[0];
+					team = reserve_team(playerName);
 					player.server_setTeamNum(team);
 
 					string blobType = "peasant";
