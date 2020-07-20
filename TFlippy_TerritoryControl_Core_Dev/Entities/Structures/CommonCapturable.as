@@ -24,7 +24,7 @@ void onInit(CBlob@ this)
 	this.set_s16(friendly_prop, 0);
 	this.set_s16(enemy_prop, 0);
 	
-	// this.set_u16("last_friendly_visit",getGameTime());
+	this.set_u16("last_friendly_visit",getGameTime());
 	
 	this.Tag("capturable");
 }
@@ -80,16 +80,16 @@ void onTick(CBlob@ this)
 						if (b.hasTag("combat chicken")) this.Tag(chicken_tag);
 					}
 				}
-				// else if((b.getTeamNum()>=0 && b.getTeamNum()<7) || this.hasTag("can be captured by neutral")) 
-				// {
-					// friendlyCount++;
-				// }
+				else if((b.getTeamNum()>=0 && b.getTeamNum()<7) || this.hasTag("can be captured by neutral")) 
+				{
+					friendlyCount++;
+				}
 			}
 		}
 		
-		// if(friendlyCount > 0){
-			// this.set_u16("last_friendly_visit",getGameTime());
-		// }
+		if(friendlyCount > 0){
+			this.set_u16("last_friendly_visit",getGameTime());
+		}
 
 		u32 capture_seconds = getCaptureSeconds(this);
 		
