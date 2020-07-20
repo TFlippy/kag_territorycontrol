@@ -24,7 +24,7 @@ void onTick(CBlob@ this)
 		{
 			CBlob @blob = blobsInRadius[i];
 
-			if ((blob !is this) && blob.hasTag("seats") &&  blob !is carried && (blob.getTeamNum() > 8 || blob.getTeamNum() == this.getTeamNum() || blob.hasTag("usable by anyone")))
+			if ((blob !is this) && blob.hasTag("seats") &&  blob !is carried && (blob.getTeamNum() > 8 && blob.getTeamNum() != 250 || blob.getTeamNum() == this.getTeamNum() || blob.hasTag("usable by anyone")))
 			{
 				//can't get into carried blob - can pick it up after they get in though
 				//(prevents dinghy rockets)
