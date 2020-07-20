@@ -5,6 +5,7 @@
 const string counter_prop = "capture ticks";
 const string raid_tag = "under raid";
 const string chicken_tag = "chicken raid";
+const string reinforcements_tag = "can respawn";
 
 // const u16 capture_seconds = 10;
 const u16 capture_radius = 48;
@@ -110,6 +111,11 @@ void onTick(CBlob@ this)
 
 			this.set_s16(counter_prop, ticks);
 			this.Tag(raid_tag);
+			if (attackersCount > friendlyCount) {
+				this.Untag(reinforcements_tag);
+			} else {
+				this.Tag(reinforcements_tag);
+			}
 
 			if (ticks <= 0 && friendlyCount == 0)
 			{
@@ -144,6 +150,7 @@ void onTick(CBlob@ this)
 	{
 		this.Untag(raid_tag);
 		this.Untag(chicken_tag);
+		this.Tag(reinforcements_tag);
 	}
 
 	if (reset_timer)
@@ -156,6 +163,7 @@ void onTick(CBlob@ this)
 		this.set_s16(counter_prop, capture_seconds);
 		this.Untag(raid_tag);
 		this.Untag(chicken_tag);
+		this.Tag(reinforcements_tag);
 		
 		sync = true;
 	}

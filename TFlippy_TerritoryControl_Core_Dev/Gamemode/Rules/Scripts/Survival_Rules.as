@@ -332,7 +332,7 @@ void onTick(CRules@ this)
 						if (base !is null && base.getTeamNum() == team)
 						{
 							has_bases = true;
-							if (base.hasTag("under raid")) continue;
+							if (!base.hasTag("can respawn")) continue;
 							spawns.push_back(bases[i]);
 						}
 					}
