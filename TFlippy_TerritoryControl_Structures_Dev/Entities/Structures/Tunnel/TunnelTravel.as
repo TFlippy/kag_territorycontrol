@@ -156,16 +156,15 @@ void Travel(CBlob@ this, CBlob@ caller, Vec2f position, bool vulnerable)
 			Sound::Play("Travel.ogg", this.getPosition());
 			Sound::Play("Travel.ogg", caller.getPosition());
 		}
-		//stunned on going through tunnel
-		//(prevents tunnel spam and ensures traps get you)
+		//invuln strip
 		if (vulnerable && isKnockable(caller))
 		{
 			//if you travel, you lose invincible
 			caller.Untag("invincible");
 			caller.Sync("invincible", true);
 
-			//actually do the knocking
-			setKnocked(caller, 30, true);
+			// //actually do the knocking
+			// setKnocked(caller, 30, true); //idk seas of salt are extra deep with this one
 		}
 	}
 }
