@@ -1,5 +1,5 @@
 <h2 align = 'center'><img src="https://i.imgur.com/1InE1ll.png"><br>/tc/station</h2>
-<p align = 'center'>A <a href="https://github.com/TFlippy/kag_territorycontrol">King Arthur's Gold</a> Mod by Laika</p>
+<p align = 'center'>An alternate <a href="https://github.com/TFlippy/kag_territorycontrol">Territory Control</a> codebase by Laika</p>
 <h2>About</h2>
 <p>
   Territory Control revolves around base building, gathering resources, conquering other teams and controlling the territory.
