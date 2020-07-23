@@ -74,7 +74,7 @@ void onInit(CBlob@ this)
 	this.Tag("badger");
 	this.Tag("dangerous");
 	
-	this.set_u8("number of steaks", 2);
+	this.set_u8("number of steaks", 1);
 	
 	this.getShape().SetOffset(Vec2f(0, 0));
 	
