@@ -27,6 +27,13 @@ const int[] matRatio = {
 	4
 };
 
+const int[] coalRatio = {
+	2,
+	2,
+	2,
+	4
+};
+
 void onInit(CBlob@ this)
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
@@ -51,7 +58,7 @@ void onTick(CBlob@ this)
 
 	for (int i = 0; i < 4; i++)
 	{
-		if (this.hasBlob(matNames[i], matRatio[i]))
+		if (this.hasBlob(matNames[i], matRatio[i], coalRatio[i]))
 		{
 			if (isServer())
 			{
@@ -59,8 +66,7 @@ void onTick(CBlob@ this)
 				mat.server_SetQuantity(4);
 				mat.Tag("justmade");
 				this.TakeBlob(matNames[i], matRatio[i]);
-				
-				if (i == 1) this.TakeBlob("mat_coal", 1);
+				this.TakeBlob("mat_coal", coalRatio[i]);
 			}
 			
 			this.getSprite().PlaySound("ProduceSound.ogg");
