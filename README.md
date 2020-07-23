@@ -1,4 +1,4 @@
-<h2 align = 'center'><img src="https://imgur.com/1InE1ll"><br>/tc/station</h2>
+<h2 align = 'center'><img src="https://imgur.com/a/YJNMvqV"><br>/tc/station</h2>
 <p align = 'center'>A <a href="https://github.com/transhumandesign/kag-base">King Arthur's Gold</a> Mod by Laika</p>
 <h2>About</h2>
 <p>
