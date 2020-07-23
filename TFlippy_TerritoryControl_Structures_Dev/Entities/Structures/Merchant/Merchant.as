@@ -147,7 +147,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Kitten", "$icon_kitten$", "kitten", "A cute little kitten! Take care of it!", false, true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 300);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 		s.spawnNothing = true;
 	}
 	{
