@@ -37,7 +37,7 @@ void onInit(CBlob@ this)
 	
 	{
 		ShopItem@ s = addShopItem(this, "Unlucky Badger", "$badgerBomb$", "badgerbomb", "A badger with an explosive personality.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+		AddRequirement(s.requirements, "coin", "", "Coins", 250);
 		AddRequirement(s.requirements, "blob", "mat_oil", "Oil Drum (25)", 25);
 		s.buttonwidth = 4;
 		s.buttonheight = 1;
@@ -46,7 +46,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Some Badger", "$badger$", "badger", "I found ths guy under my bed.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+		AddRequirement(s.requirements, "coin", "", "Coins", 400);
 		
 		s.spawnNothing = true;
 	}
