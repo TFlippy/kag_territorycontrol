@@ -58,7 +58,7 @@ void onTick(CBlob@ this)
 
 	for (int i = 0; i < 4; i++)
 	{
-		if (this.hasBlob(matNames[i], matRatio[i], coalRatio[i]))
+		if (this.hasBlob(matNames[i], matRatio[i]) || this.hasBlob("mat_coal", coalRatio[i]))
 		{
 			if (isServer())
 			{
