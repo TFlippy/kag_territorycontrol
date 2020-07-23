@@ -111,11 +111,6 @@ void onTick(CBlob@ this)
 
 			this.set_s16(counter_prop, ticks);
 			this.Tag(raid_tag);
-			if (attackersCount > friendlyCount) {
-				this.Untag(reinforcements_tag);
-			} else {
-				this.Tag(reinforcements_tag);
-			}
 
 			if (ticks <= 0 && friendlyCount == 0)
 			{
