@@ -1,13 +1,14 @@
 <h2 align = 'center'><img src="https://i.imgur.com/1InE1ll.png"><br>/tc/station</h2>
-<p align = 'center'>A <a href="https://github.com/transhumandesign/kag-base">King Arthur's Gold</a> Mod by Laika</p>
+<p align = 'center'>A <a href="https://github.com/TFlippy/kag_territorycontrol">King Arthur's Gold</a> Mod by Laika</p>
 <h2>About</h2>
 <p>
-  Territory Control revolves around base building, gathering resources, conquering other teams and ruling the world.
+  Territory Control revolves around base building, gathering resources, conquering other teams and controlling the territory.
 </p>
 
 <h2>Credits</h2>
 <ul>
-  <li><b>TLaika</b> - Code monkey god</li>
+  <li><b>Laika</b> - Code monkey god</li>
+  
   <li><b>TFlippy</b> - Project management, scripting, spriting, sounds, mapping</li>
   <li><b>Pirate-Rob</b> - Scripting, voice acting</li>
   <li><b>Vamist</b> - programming</li>
