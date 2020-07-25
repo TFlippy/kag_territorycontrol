@@ -20,13 +20,13 @@ const string[] resources =
 
 const u8[] resourceYields = 
 {
-	10,
-	27,
-	4,
-	45,
-	20,
 	7,
-	15
+	50,
+	3,
+	125,
+	35,
+	7,
+	10
 };
 
 void onInit(CBlob@ this)
@@ -59,13 +59,13 @@ void onInit(CBlob@ this)
 	this.set_u8("shop icon", 25);
 		
 	{
-		ShopItem@ s = addShopItem(this, "Buy Dirt (100)", "$mat_dirt$", "mat_dirt-100", "Buy 100 Dirt for 100 coins.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+		ShopItem@ s = addShopItem(this, "Buy Dirt (100)", "$mat_dirt$", "mat_dirt-500", "Buy 500 Dirt for 150 coins.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Buy Stone (250)", "$mat_stone$", "mat_stone-250", "Buy 250 Stone for 125 coins.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 125);
+		ShopItem@ s = addShopItem(this, "Buy Stone (250)", "$mat_stone$", "mat_stone-250", "Buy 250 Stone for 150 coins.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 		s.spawnNothing = true;
 	}
 	{
@@ -79,12 +79,12 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Buy Iron Ore (100)", "$mat_iron$", "mat_iron-100", "Buy 100 Iron Ore for 100 coins.");
+		ShopItem@ s = addShopItem(this, "Buy Iron Ore (100)", "$mat_iron$", "mat_iron-100", "Buy 100 Iron Ore for 200 coins.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Buy Sulphur (50)", "$mat_sulphur$", "mat_sulphur-50", "Buy 50 Sulphur for 150 coins.");
+		ShopItem@ s = addShopItem(this, "Buy Sulphur (50)", "$mat_sulphur$", "mat_sulphur-50", "Buy 50 Sulphur for 200 coins.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 		s.spawnNothing = true;
 	}
