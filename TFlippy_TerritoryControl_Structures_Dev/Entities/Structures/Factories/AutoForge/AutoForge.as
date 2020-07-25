@@ -25,7 +25,7 @@ const string[] matNamesResult = {
 const int[] matRatio = { 
 	10,
 	10,
-	25,
+	35,
 	4,
 	20
 };
