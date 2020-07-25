@@ -157,12 +157,12 @@ void onInit(CBlob@ this)
 		AddRequirement(i.reqs, "blob", "mat_coal", "Coal", 4);
 		items.push_back(i);
 	}
-	{
-		AssemblerItem i("rocket", 1, "Rocket of Doom (1)");
-		AddRequirement(i.reqs, "blob", "mat_wood", "Wood", 100);
-		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 50);
-		items.push_back(i);
-	}
+	// {
+		// AssemblerItem i("rocket", 1, "Rocket of Doom (1)");
+		// AddRequirement(i.reqs, "blob", "mat_wood", "Wood", 100);
+		// AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 50);
+		// items.push_back(i);
+	// }
 	{
 		AssemblerItem i("foodcan", 2, "Scrub's Chow (4)");
 		AddRequirement(i.reqs, "blob", "mat_meat", "Mystery Meat", 10);
