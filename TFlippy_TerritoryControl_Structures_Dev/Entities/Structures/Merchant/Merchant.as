@@ -64,13 +64,13 @@ void onInit(CBlob@ this)
 	}
 	
 	{
-		ShopItem@ s = addShopItem(this, "Buy Stone (250)", "$mat_stone_1x$", "mat_stone-250", "Buy 250 stone for 125 coins.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 125);
+		ShopItem@ s = addShopItem(this, "Buy Stone (250)", "$mat_stone_1x$", "mat_stone-250", "Buy 250 stone for 150 coins.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Buy Stone (2500)", "$mat_stone_10x$", "mat_stone-2500", "Buy 2500 stone for 1250 coins.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 1250);
+		ShopItem@ s = addShopItem(this, "Buy Stone (2500)", "$mat_stone_10x$", "mat_stone-2500", "Buy 2500 stone for 1500 coins.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 1500);
 		s.spawnNothing = true;
 	}
 	
@@ -131,8 +131,8 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Sell Scrub's Chow (1)", "$COIN$", "coin-200", "Sell 1 Scrub's Chow for 200 coins.");
-		AddRequirement(s.requirements, "blob", "foodcan", "Scrub's Chow", 1);
+		ShopItem@ s = addShopItem(this, "Sell Scrub's Chow (1)", "$COIN$", "coin-420", "Sell 4 Scrub's Chow for 420 coins.");
+		AddRequirement(s.requirements, "blob", "foodcan", "Scrub's Chow", 4);
 		s.spawnNothing = true;
 	}
 	{
@@ -142,12 +142,12 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Building for Dummies", "$artisancertificate$", "artisancertificate", "Simplified Builder manuscript for those dumb peasants.", true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 500);
+		AddRequirement(s.requirements, "coin", "", "Coins", 700);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Kitten", "$icon_kitten$", "kitten", "A cute little kitten! Take care of it!", false, true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 200);
+		AddRequirement(s.requirements, "coin", "", "Coins", 350);
 		s.spawnNothing = true;
 	}
 	{
