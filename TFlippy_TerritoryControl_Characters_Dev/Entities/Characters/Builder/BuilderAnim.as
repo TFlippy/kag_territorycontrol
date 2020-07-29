@@ -46,14 +46,16 @@ void LoadSprites(CSprite@ this)
 		}
 	}
 
-	switch(armour)
+	switch (armour)
 	{
-		case PLAYER_ARMOUR_STANDARD:
-			ensureCorrectRunnerTexture(this, "builder", "Builder");
+	case PLAYER_ARMOUR_STANDARD:
+		ensureCorrectRunnerTexture(this, "builder", "Builder");
 		break;
-		
-		case PLAYER_ARMOUR_CAPE:
-			ensureCorrectRunnerTexture(this, "builder_cape", "BuilderCape");
+	case PLAYER_ARMOUR_CAPE:
+		ensureCorrectRunnerTexture(this, "builder_cape", "BuilderCape");
+		break;
+	case PLAYER_ARMOUR_GOLD:
+		ensureCorrectRunnerTexture(this, "builder_gold", "BuilderGold");
 		break;
 	}
 

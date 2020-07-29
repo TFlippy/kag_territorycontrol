@@ -17,7 +17,13 @@ void onInit(CBlob@ this)
 	this.addCommandID("faction_menu_button");
 	this.addCommandID("faction_player_button");
 	this.addCommandID("button_join");
-	
+
+	this.addCommandID("name");
+	this.addCommandID("renamed");
+	this.set_string("initial_base_name", this.getInventoryName());
+	string base_name = this.get_string("base_name");
+	if (base_name != "") this.setInventoryName(this.getInventoryName() + " \"" + base_name + "\"");
+
 	this.set_bool("base_demolition", false);
 	this.set_bool("base_alarm", false);
 	this.set_bool("base_alarm_manual", false);
@@ -146,7 +152,7 @@ void onChangeTeam(CBlob@ this, const int oldTeam)
 		}
 	}
 	
-	if (oldTeamForts <= 0)
+	if (oldTeamForts <= 0 || this.get_string("base_name") != "")
 	{
 		if (isServer())
 		{
@@ -205,33 +211,13 @@ void onDie(CBlob@ this)
 		if (forts[i].getTeamNum() == team) teamForts++;
 	}
 	
-	if (teamForts <= 0)
+	if (isServer() && (teamForts <= 0 || this.get_string("base_name") != ""))
 	{
-		if (isServer())
-		{
-			CBitStream bt;
-			bt.write_s32(team);
-		
-			this.SendCommand(this.getCommandID("faction_destroyed"), bt);
-			
-			// for(u8 i = 0; i < getPlayerCount(); i++)
-			// {
-				// CPlayer@ p = getPlayer(i);
-				// if(p !is null && p.getTeamNum() == team)
-				// {
-					// p.server_setTeamNum(XORRandom(100)+100);
-					// CBlob@ b = p.getBlob();
-					// if(b !is null)
-					// {
-						// b.server_Die();
-					// }
-				// }
-			// }
-		}
-	}
-	else
-	{
-		// print("is gud");
+		CBitStream bt;
+		bt.write_s32(team);
+		bt.write_bool(teamForts <= 0);
+	
+		this.SendCommand(this.getCommandID("faction_destroyed"), bt);
 	}
 }
 
@@ -279,7 +265,18 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			params_menu.write_u16(caller.getNetworkID());
 			// CButton@ button_menu = caller.CreateGenericButton(11, Vec2f(14, 5), this, this.getCommandID("faction_menu"), "Faction Management", params_menu);
 			CButton@ button_menu = caller.CreateGenericButton(11, Vec2f(1, -8), this, this.getCommandID("faction_menu"), "Faction Management", params_menu);
+
+			CBlob@ carried = caller.getCarriedBlob();
+			if(carried !is null && carried.getName() == "paper")
+			{
+				CBitStream params_menu;
+				params_menu.write_u16(caller.getNetworkID());
+				params_menu.write_u16(carried.getNetworkID());
+			
+				caller.CreateGenericButton(11, Vec2f(7, -8), this, this.getCommandID("name"), "Rename the base.", params_menu);
+			}
 		}
+
 	}
 }
 
@@ -643,7 +640,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 								// CPlayer@ ply = getLocalPlayer();
 								if (ply !is null && this.getTeamNum() == ply.getTeamNum() && data > 0) 
 								{
-									client_AddToChat(ply.getUsername() + " has set off the alarm at one of your bases and requires your assistance!", teamColor);
+									client_AddToChat(ply.getUsername() + " has set off the alarm at one of your bases ("+this.getInventoryName()+") and requires your assistance!", teamColor);
 								}
 							}
 						}
@@ -780,18 +777,56 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		if (cmd == this.getCommandID("faction_captured") || cmd == this.getCommandID("faction_destroyed")) {
 			int team = inParams.read_s32();
 			if (cmd == this.getCommandID("faction_captured")) {
-				team = inParams.read_s32();
-				bool defeat = inParams.read_bool();
-				if (!defeat) return;
+			team = inParams.read_s32();
 			}
-			uncap_team(team);
+			bool defeat = inParams.read_bool();
+			if (defeat) uncap_team(team);
+		}
+		else if (cmd == this.getCommandID("name"))
+		{
+			CBlob @caller = getBlobByNetworkID(inParams.read_u16());
+			CBlob @carried = getBlobByNetworkID(inParams.read_u16());
+
+			string base_name = carried.get_string("text");
+			this.set_string("base_name", base_name);
+			string old_name = this.getInventoryName();
+			this.setInventoryName(this.get_string("initial_base_name") + (base_name == "" ? "" : " \"" + base_name + "\""));
+			this.Sync("base_name", true);
+
+			CBitStream params;
+			params.write_u16(caller.getNetworkID());
+			params.write_string(old_name);
+			params.write_string(this.getInventoryName());
+			this.SendCommand(this.getCommandID("renamed"), params);
+
+			carried.server_Die();
 		}
 	}
 
 
 	if (isClient())
 	{
-		if (cmd == this.getCommandID("faction_captured"))
+		if (cmd == this.getCommandID("renamed")) {
+			CBlob @renamer = getBlobByNetworkID(inParams.read_u16());
+			string old_name = inParams.read_string();
+			string new_name = inParams.read_string();
+			CPlayer @renamer_player = renamer.getPlayer();
+			this.setInventoryName(new_name); //doesn't sync on it's own
+			string renamer_name = "Someone";
+			SColor message_color(255, 128, 128, 128);
+			if (renamer_player !is null) {
+				renamer_name = renamer_player.getUsername();
+				CRules @rules = getRules();
+				if (rules !is null) {
+					CTeam@ team = rules.getTeam(renamer_player.getTeamNum());
+					if (team !is null) {
+						message_color = renamer_player.getTeamNum() < 7 ? team.color : SColor(255, 128, 128, 128);
+					}
+				}
+			}
+			client_AddToChat(renamer_name+" has renamed "+old_name+" to "+new_name, message_color);
+		}
+		else if (cmd == this.getCommandID("faction_captured"))
 		{
 			CRules@ rules = getRules();
 		
@@ -808,6 +843,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 				string oldTeamName = rules.getTeam(oldTeam).getName();
 				string newTeamName = rules.getTeam(newTeam).getName();
 				
+				client_AddToChat(oldTeamName + "'s "+this.getInventoryName()+" has captured by the " + newTeamName + "!", SColor(0xff444444));
 				if (defeat)
 				{
 					client_AddToChat(oldTeamName + " has been defeated by the " + newTeamName + "!", SColor(0xff444444));
@@ -824,10 +860,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						Sound::Play("flag_score.ogg");
 					}
 				}
-				else
-				{
-					client_AddToChat(oldTeamName + "'s Fortress been faction_captured by the " + newTeamName + "!", SColor(0xff444444));
-				}
 			}
 		}
 		else if (cmd == this.getCommandID("faction_destroyed"))
@@ -835,25 +867,27 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 			CRules@ rules = getRules();
 		
 			int team = inParams.read_s32();
-			if (!(team < rules.getTeamsNum()) || rules is null) return;
-			
-			CTeam@ rteam = rules.getTeam(team);
-			if (rteam is null) return;
+			bool defeat = inParams.read_bool();
 
-			string teamName = rteam.getName();
-		
-			client_AddToChat(teamName + " has been defeated!", SColor(0xff444444));
-			
-			CPlayer@ ply = getLocalPlayer();
-			int myTeam = ply.getTeamNum();
-			
-			if (team == myTeam)
-			{
-				Sound::Play("FanfareLose.ogg");
-			}
-			else
-			{
-				Sound::Play("flag_score.ogg");
+			if (rules is null) return;
+			if (team < 7) {
+				string teamName = rules.getTeam(team).getName();
+				client_AddToChat(teamName + "'s "+this.getInventoryName()+" has been destroyed!", SColor(0xff444444));
+
+				if (defeat) {
+					client_AddToChat(teamName + " has been defeated!", SColor(0xff444444));
+					CPlayer@ ply = getLocalPlayer();
+					int myTeam = ply.getTeamNum();
+					
+					if (team == myTeam)
+					{
+						Sound::Play("FanfareLose.ogg");
+					}
+					else
+					{
+						Sound::Play("flag_score.ogg");
+					}
+				}
 			}
 		}
 	}
