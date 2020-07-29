@@ -146,7 +146,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 						if(e.getTeamNum() != this.getTeamNum() && distance <= 256 && distance >= 8)
 						{
 							fail = true;
-							if (this.isMyPlayer()) client_AddToChat("There is an enemy faction base near! pos: " + pos.x + ", "+pos.y+", team: "+e.getTeamNum()+" distance: "+ distance, SColor(0xff444444));
+							if (this.isMyPlayer()) client_AddToChat("There is an enemy faction base near!", SColor(0xff444444));
 							break;
 						}
 					}
