@@ -1,4 +1,4 @@
-﻿// ArcherShop.as
+// ArcherShop.as
 
 #include "Requirements.as";
 #include "ShopCommon.as";
@@ -100,7 +100,7 @@ void onInit(CBlob@ this)
 		walk.AddFrame(0); walk.AddFrame(1); walk.AddFrame(2); walk.AddFrame(3);
 		walk.time = 10;
 		walk.loop = true;
-		trader.SetOffset(Vec2f(0, 0));
+		trader.SetOffset(Vec2f(0, 4));
 		trader.SetFrame(0);
 		trader.SetAnimation(stop);
 		trader.SetIgnoreParentFacing(true);
