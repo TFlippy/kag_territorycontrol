@@ -344,11 +344,13 @@ void Attack(CBrain@ this, CBlob@ target, bool useBombs)
 				
 					
 					blob.setKeyPressed(key_action1, true);
+					blob.set_bool("should_do_attack_hack", true);
 					blob.set_u32("nextAttack", getGameTime() + blob.get_u8("attackDelay"));
 				}
 				else
 				{
 					blob.setKeyPressed(key_action1, false);
+					blob.set_bool("should_do_attack_hack", false);
 				}
 			}
 		}
