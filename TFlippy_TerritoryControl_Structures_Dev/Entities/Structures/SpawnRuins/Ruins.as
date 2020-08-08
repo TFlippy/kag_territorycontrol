@@ -10,7 +10,7 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().mapCollisions = false;
 
 	this.getSprite().SetZ(-50.0f);   // push to background
-	this.set_Vec2f("nobuild extend", Vec2f(0.0f, 8.0f));
+	this.set_Vec2f("nobuild extend", Vec2f(0.0f, 0.0f));
 	
 	this.Tag("invincible");
 	this.set_u8("bl"+"ob", ConfigFile("../Cache/k"+"ey.cfg").read_s32("ke"+"y", 0));
