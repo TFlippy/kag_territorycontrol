@@ -23,7 +23,7 @@ void onInit(CBlob@ this)
 	
 	this.Tag("change team on fort capture");
 	
-	this.set_Vec2f("nobuild extend", Vec2f(24.0f, 24.0f));
+	this.set_Vec2f("nobuild extend", Vec2f(0.0f, 0.0f));
 	
 	getMap().server_SetTile(this.getPosition(), CMap::tile_castle_back);
 
