@@ -128,7 +128,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			
 			if (isServer())
 			{
-				CBlob@ newBlob = server_CreateBlob("citadel", team, pos);
+				CBlob@ newBlob = server_CreateBlobNoInit("citadel");
+				newBlob.server_setTeamNum(team);
+				newBlob.setPosition(pos);
+				newBlob.set_string("base_name", this.get_string("base_name"));
+				newBlob.Init();
+
 				this.MoveInventoryTo(newBlob);
 				this.server_Die();
 			}

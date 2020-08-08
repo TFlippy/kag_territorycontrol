@@ -70,16 +70,18 @@ void LoadSprites(CSprite@ this)
         }
 	}
 
-    switch(armour)
-    {
-        case PLAYER_ARMOUR_STANDARD:
-            ensureCorrectRunnerTexture(this, "knight", "Knight");
-        break;
-
-        case PLAYER_ARMOUR_CAPE:
-            ensureCorrectRunnerTexture(this, "knight_cape", "KnightCape");
-        break;
-    }
+    switch (armour)
+	{
+	case PLAYER_ARMOUR_STANDARD:
+		ensureCorrectRunnerTexture(this, "knight", "Knight");
+		break;
+	case PLAYER_ARMOUR_CAPE:
+		ensureCorrectRunnerTexture(this, "knight_cape", "KnightCape");
+		break;
+	case PLAYER_ARMOUR_GOLD:
+		ensureCorrectRunnerTexture(this, "knight_gold", "KnightGold");
+		break;
+	}
 }
 
 void onTick(CSprite@ this)
