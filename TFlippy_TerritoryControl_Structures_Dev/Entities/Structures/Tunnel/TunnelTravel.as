@@ -4,6 +4,20 @@
 #include "TunnelCommon.as";
 #include "KnockedCommon.as"
 
+const string icon_path = "TunnelIcons.png";
+const Vec2f frame_dims(32, 32);
+
+
+
+string generate_token(int id, bool fortress, bool raid) {
+	const string prefix = "TRAVEL_";
+	const string fortress_token = "FORTRESS_";
+	const string token_raid_suffix = "RAIDED_";
+	string ret = "$"+prefix+(fortress ? fortress_token : "")+(raid ? token_raid_suffix : "")+id+"$";
+	// print("requested to generate token id: "+id+"; token: "+ret);
+	return ret;
+}
+
 void onInit(CBlob@ this)
 {
 	this.addCommandID("travel");
@@ -12,9 +26,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("server travel to");
 	this.Tag("travel tunnel");
 
-	AddIconToken("$TRAVEL_LEFT$", "GUI/MenuItems.png", Vec2f(32, 32), 23);
-	AddIconToken("$TRAVEL_RIGHT$", "GUI/MenuItems.png", Vec2f(32, 32), 22);
-	AddIconToken("$TRAVEL_FORTRESS$", "GUI/MenuItems.png", Vec2f(32, 32), 31);
+	for (int i = 0; i < 8 * 4; ++i) AddIconToken(generate_token(i / 4, i / 2 % 2 == 1, i % 2 == 1), icon_path, frame_dims, i);
 
 	if (!this.exists("travel button pos"))
 	{
@@ -262,19 +274,16 @@ void BuildTunnelsMenu(CBlob@ this, const u16 callerID)
 
 string getTravelIcon(CBlob@ this, CBlob@ tunnel)
 {
-	if (tunnel.getName() == "fortress" || tunnel.getName() == "citadel") return "$TRAVEL_FORTRESS$";
-	// else if (tunnel.hasTag("under raid")) return "$TRAVEL_FORTRESS$";
-	else if (tunnel.getPosition().x > this.getPosition().x) return "$TRAVEL_RIGHT$";
-	else return "$TRAVEL_LEFT$";
+	float angle = (tunnel.getPosition() - this.getPosition()).AngleRadians();
+	angle += Maths::Pi / 8; //offset for proper rounding
+	angle += 2 * Maths::Pi; //offset to ensure positiveness
+	int index = angle / (Maths::Pi * 2 / 8);
+	index = index % 8; //ensure index is in bounds
+	return generate_token(index, tunnel.hasTag("faction_base"), tunnel.hasTag("under raid"));
+
 }
 
 string getTravelDescription(CBlob@ this, CBlob@ tunnel)
 {
-	if (tunnel.getName() == "fortress" || tunnel.getName() == "citadel")
-		return "Return to " + tunnel.getInventoryName();
-
-	if (tunnel.getPosition().x > this.getPosition().x)
-		return "Travel right";
-
-	return "Travel left";
+	return "Travel to " + tunnel.getInventoryName() + " (" + int((tunnel.getPosition() - this.getPosition()).Length() / 8) + "m)";
 }
