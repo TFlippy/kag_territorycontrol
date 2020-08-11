@@ -37,7 +37,8 @@ void onInit(CBlob@ this)
 	this.SetDamageOwnerPlayer(null);
 	
 	this.Tag("can open door");
-	this.Tag("npc");
+	// this.Tag("npc");
+	// infinite ammo
 	this.Tag("player");
 	this.Tag("flesh");
 	this.Tag("dangerous");
