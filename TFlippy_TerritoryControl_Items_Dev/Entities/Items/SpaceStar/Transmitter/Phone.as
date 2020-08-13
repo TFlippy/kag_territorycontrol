@@ -1,5 +1,6 @@
 // ArcherShop.as
 
+
 #include "MakeCrate.as";
 #include "Requirements.as";
 #include "ShopCommon.as";
@@ -26,7 +27,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 1;
 	
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
-	this.set_Vec2f("shop menu size", Vec2f(4, 5));
+	this.set_Vec2f("shop menu size", Vec2f(4, 6));
 	this.set_string("shop description", "SpaceStar Ordering!");
 	this.set_u8("shop icon", 11);
 	
@@ -39,18 +40,18 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 
-	// {
-		// ShopItem@ s = addShopItem(this, "UPF Artillery Barrage! (10x)", "$ss_shelling$", "barrage-10", "When things go awry, there's still an option to shell it to oblivion.");
-		// AddRequirement(s.requirements, "coin", "", "Coins", 3499);
+	{
+		ShopItem@ s = addShopItem(this, "UPF Artillery Barrage! (10x)", "$ss_shelling$", "barrage-10", "When things go awry, there's still an option to shell it to oblivion.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 5999);
 		
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "UPF Artillery Barrage! (25x)", "$ss_shelling$", "barrage-25", "When things go really awry, there's still an option to shell it to oblivion even harder! (with a small discount)");
-		// AddRequirement(s.requirements, "coin", "", "Coins", 5999);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "UPF Artillery Barrage! (25x)", "$ss_shelling$", "barrage-25", "When things go really awry, there's still an option to shell it to oblivion even harder! (with a small discount)");
+		AddRequirement(s.requirements, "coin", "", "Coins", 11999);
 		
-		// s.spawnNothing = true;
-	// }
+		s.spawnNothing = true;
+	}
 	{
 		ShopItem@ s = addShopItem(this, "UPF Recon Squad!", "$ss_scout_raid$", "scout_raid", "Have you lost something? Order our willing recon squad, and you will sure find what you're looking for!");
 		AddRequirement(s.requirements, "coin", "", "Coins", 799);
@@ -94,8 +95,20 @@ void onInit(CBlob@ this)
 		s.buttonheight = 2;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "UPF Portable Minefield!", "$ss_minefield$", "minefield", "A brave flock of landmines! No more trespassers!");
+		ShopItem@ s = addShopItem(this, "UPF Portable Minefield!", "$ss_minefield$", "minefield-10", "A brave flock of landmines! No more trespassers!");
 		AddRequirement(s.requirements, "coin", "", "Coins", 799);
+		
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "UPF Portable Minefield! (3x) Package Deal!!", "$ss_minefield$", "minefield-30", "Three brave flocks of landmines! No more trespassers!");
+		AddRequirement(s.requirements, "coin", "", "Coins", 1599);
+		
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "UPF Frag Minefield! Now With Twice The BOOM!", "$ss_minefield$", "fragfield", "A brave flock of fragmines! No more trespassers!");
+		AddRequirement(s.requirements, "coin", "", "Coins", 1999);
 		
 		s.spawnNothing = true;
 	}
@@ -138,13 +151,22 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				
 					CBlob@ b = server_CreateBlobNoInit("bombardment");
 					b.server_setTeamNum(250);
-					b.setPosition(this.getPosition());
+					b.setPosition(Vec2f(this.getPosition().x+300,0));
 					
 					b.set_u8("max shots fired", parseInt(spl[1]));
 					b.set_u32("delay between shells", 15);
 					b.set_string("shell blob", "chickencannonshell");
 					
 					b.Init();
+				}
+				else if (spl[0] == "minefield")
+				{
+					for (int i = 0; i < parseInt(spl[1]); i++)
+					{
+						CBlob@ blob = server_MakeCrateOnParachute("mine", "SpaceStar Ordering Mines", 0, 250, Vec2f(callerBlob.getPosition().x + (256 - XORRandom(512)), XORRandom(86)));
+						blob.Tag("unpack on land");
+						blob.Tag("destroy on touch");
+					}
 				}
 			}
 			else
@@ -163,16 +185,16 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				{
 					for (int i = 0; i < 4; i++)
 					{
-						CBlob@ blob = server_MakeCrateOnParachute("soldierchicken", "SpaceStar Ordering Assault Squad", 0, 250, Vec2f(callerBlob.getPosition().x + (64 - XORRandom(128)), XORRandom(32)));
+						CBlob@ blob = server_MakeCrateOnParachute("soldierchicken", "SpaceStar Ordering Assault Squad", 0, 250, Vec2f(callerBlob.getPosition().x + (256 - XORRandom(1024)), XORRandom(64)));
 						blob.Tag("unpack on land");
 						blob.Tag("destroy on touch");
 					}
 				}
-				else if (name == "minefield")
+				else if (name == "fragfield")
 				{
 					for (int i = 0; i < 10; i++)
 					{
-						CBlob@ blob = server_MakeCrateOnParachute("mine", "SpaceStar Ordering Mines", 0, 250, Vec2f(callerBlob.getPosition().x + (256 - XORRandom(512)), XORRandom(64)));
+						CBlob@ blob = server_MakeCrateOnParachute("fragmine", "SpaceStar Ordering Fragmentation Mine", 0, 250, Vec2f(callerBlob.getPosition().x + (64 - XORRandom(128)), XORRandom(32)));
 						blob.Tag("unpack on land");
 						blob.Tag("destroy on touch");
 					}
