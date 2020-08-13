@@ -193,9 +193,10 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		u16 charge = v.charge;
 		f32 angle = this.getAngleDegrees() + Vehicle_getWeaponAngle(this, v);
 		angle = angle * (this.isFacingLeft() ? -1 : 1);
-		angle += ((XORRandom(200) - 100) / 100.0f) * 4.0f;
-		
-		Vec2f vel = Vec2f((18.0f + (XORRandom(100) / 100.0f) * 2.0f ) * (this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
+		angle += ((XORRandom(100) - 100) / 100.0f) * 4.0f;
+		//was 200
+		//was 18
+		Vec2f vel = Vec2f((24.0f + (XORRandom(100) / 100.0f) * 2.0f ) * (this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
 		bullet.setVelocity(vel);
 		
 		Vec2f offset = Vec2f((this.isFacingLeft() ? -1 : 1) * 16, 0);
