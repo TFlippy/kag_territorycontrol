@@ -2,8 +2,8 @@
 #include "ShieldCommon.as";
 #include "Explosion.as";
 
-const f32 BLOB_DAMAGE = 20.0f;
-const f32 MAP_DAMAGE = 10.0f;
+const f32 BLOB_DAMAGE = 160.0f;
+const f32 MAP_DAMAGE = 5.0f;
 
 string[] particles = 
 {
@@ -23,6 +23,7 @@ void onInit(CBlob@ this)
 	
 	this.Tag("projectile");
 	this.Tag("explosive");
+	this.Tag("map_damage_dirt");
 	
 	this.getSprite().SetFrame(0);
 	this.getSprite().getConsts().accurateLighting = false;
