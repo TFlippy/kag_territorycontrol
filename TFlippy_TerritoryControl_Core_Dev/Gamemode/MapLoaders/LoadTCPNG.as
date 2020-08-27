@@ -93,6 +93,11 @@ namespace tc_colors
 		// color_damaged_rustyiron_bg = 0xff150505,
 		color_damaged_mossyconcrete = 0xff657a4e,
 		color_damaged_mossyconcrete_bg = 0xff1d3310,
+		
+		color_biome_jungle = 0xff327800,
+		color_biome_arctic = 0xff64b4ff,
+		color_biome_desert = 0xffffd364,
+		color_biome_dead = 0xff736e64
 	};
 }
 
