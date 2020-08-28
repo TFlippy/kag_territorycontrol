@@ -84,7 +84,7 @@ f32 getAimAngle(CBlob@ this)
 
 	if (gunner !is null && gunner.getOccupied() !is null)
 	{
-		gunner.offsetZ = 5.0f;
+		gunner.offsetZ = 8.0f;
 		Vec2f aim_vec = gunner.getPosition() - gunner.getAimPos();
 
 		if (this.isAttached())
@@ -142,7 +142,7 @@ void onTick(CBlob@ this)
 			arm.SetFacingLeft(facing_left);
 			arm.SetRelativeZ(1.0f);
 			arm.SetOffset(arm_offset);
-			arm.RotateBy(rotation, Vec2f(facing_left ? -4.0f : 4.0f, 0.0f));
+			arm.RotateBy(rotation, Vec2f(facing_left ? -0.0f : 0.0f, 0.0f));
 		}
 		
 		const bool a1_jr = ap.isKeyJustReleased(key_action1);
