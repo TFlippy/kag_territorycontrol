@@ -22,6 +22,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$ss_ammo$", "SS_Icons.png", Vec2f(32, 16), 4);
 	AddIconToken("$ss_sam$", "SS_Icons.png", Vec2f(32, 24), 4);
 	AddIconToken("$ss_lws$", "SS_Icons.png", Vec2f(32, 24), 5);
+	AddIconToken("$ss_machinegun$", "SS_Icons.png", Vec2f(32, 24), 6);
 
 	this.getCurrentScript().tickFrequency = 1;
 	
@@ -96,6 +97,12 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "UPF Portable Minefield!", "$ss_minefield$", "minefield", "A brave flock of landmines! No more trespassers!");
 		AddRequirement(s.requirements, "coin", "", "Coins", 799);
+		
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "UPF Portable Machine Gun!", "$ss_machinegun$", "machinegun-parachute_no_unpack", "Humans disturbing your precious sleep? Mow them down with our Portable Machine Gun!");
+		AddRequirement(s.requirements, "coin", "", "Coins", 1299);
 		
 		s.spawnNothing = true;
 	}
