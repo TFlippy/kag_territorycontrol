@@ -13,7 +13,7 @@ void onInit(CBlob@ this)
 	this.Tag("blocks spawn");
 	
 	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 40);
+	this.set_u8("upkeep cap increase", 35);
 	this.set_u8("upkeep cost", 0);
 
 	this.set_TileType("background tile", CMap::tile_biron);
@@ -57,7 +57,7 @@ void onInit(CBlob@ this)
 	
 	// Upgrading stuff
 	this.set_Vec2f("shop offset", Vec2f(-12, 5));
-	this.set_Vec2f("shop menu size", Vec2f(2, 2));
+	this.set_Vec2f("shop menu size", Vec2f(4, 2));
 	this.set_string("shop description", "Upgrades & Repairs");
 	this.set_u8("shop icon", 15);
 	// this.Tag(SHOP_AUTOCLOSE);
@@ -66,9 +66,21 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_repair$", "InteractionIcons.png", Vec2f(32, 32), 15);
 	
 	{
+		ShopItem@ s = addShopItem(this, "Upgrade to the Convent", "$icon_upgrade$", "convent", "Upgrade to a powerful faction tier of the Convent.\n\n+ Even higher player & inventory capacity\n+ Extra durability\n+ Increased maximum player health\n+ Longer capture time");
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel", 250);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 50);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
+		AddRequirement(s.requirements, "coin", "", "Coins", 2500);
+		s.customButton = true;
+		s.buttonwidth = 2;	
+		s.buttonheight = 2;
+		
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Repair", "$icon_repair$", "repair", "Repair this badly damaged building.\nRestores 5% of building's integrity.");	
 		AddRequirement(s.requirements, "blob", "mat_concrete", "Concrete", 25);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
 		s.customButton = true;
 		s.buttonwidth = 2;	
 		s.buttonheight = 2;
@@ -107,7 +119,29 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		string data = params.read_string();
 		
-		if (data == "repair")
+		if (data == "convent")
+		{
+			Vec2f pos = this.getPosition();
+			u8 team = this.getTeamNum();
+		
+			this.Tag("upgrading");
+			this.getSprite().PlaySound("/Construct.ogg");
+			this.getSprite().getVars().gibbed = true;
+			
+			if (isServer())
+			{
+				CBlob@ newBlob = server_CreateBlobNoInit("convent");
+				newBlob.server_setTeamNum(team);
+				newBlob.setPosition(pos);
+				newBlob.set_string("base_name", this.get_string("base_name"));
+				newBlob.Init();
+
+
+				this.MoveInventoryTo(newBlob);
+				this.server_Die();
+			}
+		}
+		else if (data == "repair")
 		{
 			this.getSprite().PlaySound("/ConstructShort.ogg");
 			

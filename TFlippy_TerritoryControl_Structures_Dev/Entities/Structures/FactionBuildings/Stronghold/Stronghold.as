@@ -3,6 +3,7 @@
 #include "Requirements_Tech.as";
 #include "ShopCommon.as";
 #include "Descriptions.as";
+#include "CustomBlocks.as";
 
 void onInit(CBlob@ this)
 {
@@ -12,10 +13,10 @@ void onInit(CBlob@ this)
 	this.Tag("blocks spawn");
 	
 	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 15);
+	this.set_u8("upkeep cap increase", 25);
 	this.set_u8("upkeep cost", 0);
 
-	this.set_TileType("background tile", CMap::tile_castle_back);
+	this.set_TileType("background tile", CMap::tile_biron);
 	
 	this.getCurrentScript().tickFrequency = 30;
 	
@@ -33,7 +34,7 @@ void onInit(CBlob@ this)
 	// this.Tag("invincible");
 	this.Tag("respawn");
 	
-	this.set_f32("capture_speed_modifier", 1.30f);
+	this.set_f32("capture_speed_modifier", 1.60f);
 	
 	this.set_Vec2f("travel button pos", Vec2f(0.5f, 0));
 	
@@ -51,7 +52,7 @@ void onInit(CBlob@ this)
 	
 	for (int i = 0; i < this.getWidth(); i++)
 	{
-		if (!map.isTileSolid(offset + Vec2f(i, 0)) || map.isTileWood(map.getTile(offset + Vec2f(i, 0)).type)) map.server_SetTile(offset + Vec2f(i, 0), CMap::tile_castle);
+		if (!map.isTileSolid(offset + Vec2f(i, 0)) || map.isTileWood(map.getTile(offset + Vec2f(i, 0)).type)) map.server_SetTile(offset + Vec2f(i, 0), CMap::tile_iron);
 	}
 	
 	// Upgrading stuff
@@ -65,10 +66,11 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_repair$", "InteractionIcons.png", Vec2f(32, 32), 15);
 	
 	{
-		ShopItem@ s = addShopItem(this, "Upgrade to a Stronghold", "$icon_upgrade$", "stronghold", "Upgrade to a Stronghold.\n\n+ Even higher player & inventory capacity\n+ Extra durability\n+ Longer capture time");
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 50);
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 30);
-		AddRequirement(s.requirements, "coin", "", "Coins", 700);
+		ShopItem@ s = addShopItem(this, "Upgrade to a Citadel", "$icon_upgrade$", "citadel", "Upgrade to even more durable and spacious Citadel.\n\n+ Even higher player & inventory capacity\n+ Extra durability\n+ Increased maximum player health\n+ Longer capture time");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 70);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 50);
+		AddRequirement(s.requirements, "blob", "mat_concrete", "Concrete", 250);
+		AddRequirement(s.requirements, "coin", "", "Coins", 1500);
 		s.customButton = true;
 		s.buttonwidth = 2;	
 		s.buttonheight = 2;
@@ -77,8 +79,8 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Repair", "$icon_repair$", "repair", "Repair this badly damaged building.\nRestores 5% of building's integrity.");	
-		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 75);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 25);		
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 2);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);		
 		s.customButton = true;
 		s.buttonwidth = 2;	
 		s.buttonheight = 2;
@@ -117,7 +119,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		
 		string data = params.read_string();
 		
-		if (data == "stronghold")
+		if (data == "citadel")
 		{
 			Vec2f pos = this.getPosition();
 			u8 team = this.getTeamNum();
@@ -128,11 +130,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			
 			if (isServer())
 			{
-				CBlob@ newBlob = server_CreateBlobNoInit("stronghold");
+				CBlob@ newBlob = server_CreateBlobNoInit("citadel");
 				newBlob.server_setTeamNum(team);
 				newBlob.setPosition(pos);
 				newBlob.set_string("base_name", this.get_string("base_name"));
 				newBlob.Init();
+
 
 				this.MoveInventoryTo(newBlob);
 				this.server_Die();
