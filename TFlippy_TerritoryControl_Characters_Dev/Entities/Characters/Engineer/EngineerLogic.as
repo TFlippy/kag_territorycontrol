@@ -2,7 +2,6 @@
 
 void onInit(CBlob@ this)
 {
-	this.Tag("neutral");
 	this.Tag("human");
 	
 	this.set_f32("mining_multiplier", 0.75f);
