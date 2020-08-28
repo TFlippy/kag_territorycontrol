@@ -38,5 +38,7 @@ const GramophoneRecord@[] records =
 	GramophoneRecord("Keep on Running", "Disc_KeepOnRunning.ogg"),
 	GramophoneRecord("Money", "Disc_Money.ogg"),
 	GramophoneRecord("Big Iron", "Disc_BigIron.ogg"),
-	GramophoneRecord("Metallic Monks", "Disc_MetallicMonks.ogg")
+	GramophoneRecord("Metallic Monks", "Disc_MetallicMonks.ogg"),
+	GramophoneRecord("Fortunate Son", "Disc_FortunateSon.ogg"),
+	GramophoneRecord("Shakin' All Over", "Disc_ShakinAllOver.ogg")
 };
