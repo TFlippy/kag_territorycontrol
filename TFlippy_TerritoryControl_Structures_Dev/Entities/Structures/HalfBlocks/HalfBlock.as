@@ -2,6 +2,7 @@
 
 #include "Hitters.as"
 #include "MapFlags.as"
+#include "ParticleSparks.as";
 
 int openRecursion = 0;
 
@@ -30,12 +31,22 @@ bool canBePickedUp( CBlob@ this, CBlob@ byBlob )
 
 f32 onHit( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData )
 {
-	f32 dmg = damage;
-	switch(customData)
+	if (hitterBlob.getName() == "peasant" && this.hasTag("metal"))
 	{
-	case Hitters::builder:
-		dmg *= 2.5f;
-		break;
-	}		
-	return dmg;
+		this.getSprite().PlaySound("/metal_stone.ogg");
+		sparks(worldPoint, 1, 1);
+		
+		return 0.00f;
+	}
+	else
+	{
+		f32 dmg = damage;
+		switch(customData)
+		{
+			case Hitters::builder:
+				dmg *= 2.5f;
+				break;
+		}		
+		return dmg;
+	}
 }
