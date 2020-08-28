@@ -178,10 +178,14 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			{
 				CBlob@[] forts;
 				getBlobsByTag("faction_base", @forts);
-								
-				u8[] teamForts = {0, 0, 0, 0, 0, 0, 0, 0};
+				
+				//there are only 7 teams, not 8
+				//u8[] teamForts = {0, 0, 0, 0, 0, 0, 0, 0};
+				u8[] teamForts = {0, 0, 0, 0, 0, 0, 0};
 				u8[] emptyTeams;
 				u8 newTeam;
+
+				Random@ rand = Random(this.getNetworkID());
 				
 				for(uint i = 0; i < forts.length; i++)
 				{
@@ -189,12 +193,14 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 					if (team < getRules().getTeamsNum()) teamForts[team]++;
 				}
 				
+				//since there were 8 elements in teamForts before, it was possible for 7 to be pushed on emptyTeams
+				//but only 0-6 should be pushed on emptyTeams
 				for(uint i = 0; i < teamForts.length; i++)
 				{
 					if (teamForts[i] == 0) emptyTeams.push_back(i);
 				}
 					
-				newTeam = emptyTeams[0];
+				newTeam = emptyTeams[rand.NextRanged(emptyTeams.length)];
 
 				if (newTeam < getRules().getTeamsNum())
 				{
