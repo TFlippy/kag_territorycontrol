@@ -16,7 +16,7 @@ void onInit(CBlob@ this)
 		false,				//If true, gun will be reloaded like a shotgun
 		0,					//For shotguns: Additional delay to reload end
 		1,					//Bullet count - for shotguns
-		0.50f,				//Bullet Jitter
+		0.70f,				//Bullet Jitter
 		"mat_pistolammo",	//Ammo item blob name
 		false,				//If true, firing sound will be looped until player stops firing
 		SoundInfo("PDW_Shoot", 0, 0.70f, 1.00f),	//Sound to play when firing
