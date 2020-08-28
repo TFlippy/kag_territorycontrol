@@ -269,7 +269,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "iron_halfblock", "$iron_halfblock$", "Iron Half Block");
+		BuildBlock b(0, "iron_halfblock", "$iron_halfblock$", "Iron Half Block\nUnbreakable by peasants.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 2);
 		blocks[0].push_back(b);
 	}
