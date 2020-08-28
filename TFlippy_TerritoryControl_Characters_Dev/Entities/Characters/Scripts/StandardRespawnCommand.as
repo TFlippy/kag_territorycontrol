@@ -135,6 +135,11 @@ void onRespawnCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							newBlob.server_SetHealth(Maths::Ceil(newBlob.getInitialHealth() * 1.50f));
 							// print("after " + new_blob.getHealth());
 						}
+						else if (this.getName() == "convent")
+						{
+							newBlob.server_SetHealth(Maths::Ceil(newBlob.getInitialHealth() * 2.0f));
+							// print("after " + new_blob.getHealth());
+						}
 						else
 						{
 							newBlob.server_SetHealth(newBlob.getInitialHealth() * healthratio);
