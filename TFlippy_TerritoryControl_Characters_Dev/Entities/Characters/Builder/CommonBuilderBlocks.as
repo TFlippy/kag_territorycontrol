@@ -64,6 +64,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$concrete_triangle$", "ConcreteTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$iron_triangle$", "IronTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$stone_halfblock$", "StoneHalfBlock.png", Vec2f(8, 8), 0);
+	AddIconToken("$iron_halfblock$", "IronHalfBlock.png", Vec2f(8, 8), 0);
 	AddIconToken("$iron_door$", "1x1IronDoor.png", Vec2f(16, 8), 0);
 	AddIconToken("$iron_block$", "World.png", Vec2f(8, 8), CMap::tile_iron);
 	AddIconToken("$glass_block$", "World.png", Vec2f(8, 8), CMap::tile_glass);
@@ -265,6 +266,11 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	{
 		BuildBlock b(0, "stone_halfblock", "$stone_halfblock$", "Stone Half Block");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 2);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(0, "iron_halfblock", "$iron_halfblock$", "Iron Half Block\nUnbreakable by peasants.");
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 2);
 		blocks[0].push_back(b);
 	}
 	{
