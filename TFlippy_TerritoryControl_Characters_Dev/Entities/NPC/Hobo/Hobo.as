@@ -203,6 +203,13 @@ void onInit(CBlob@ this)
 	
 	if (rand.NextRanged(100) < 50)
 	{
+		ShopItem@ s = addShopItem(this, "burger", "$food$", "ratburger", "tasty burger");
+		AddRequirement(s.requirements, "coin", "", "Coins", 20 + rand.NextRanged(50));
+		s.spawnNothing = true;
+	}
+	
+	if (rand.NextRanged(100) < 50)
+	{
 		ShopItem@ s = addShopItem(this, "poppin shit", "$icon_firework$", "firework", "popping flying shit");
 		AddRequirement(s.requirements, "coin", "", "Coins", 75 + rand.NextRanged(200));
 		s.spawnNothing = true;
@@ -211,7 +218,7 @@ void onInit(CBlob@ this)
 	if (rand.NextRanged(100) < 50)
 	{
 		ShopItem@ s = addShopItem(this, "firejob", "$icon_firejob$", "firejob", "fucking tie it to your neck and launch it ya cunt");
-		AddRequirement(s.requirements, "coin", "", "Coins", 250 + rand.NextRanged(1500));
+		AddRequirement(s.requirements, "coin", "", "Coins", 1000 + rand.NextRanged(1500));
 		s.spawnNothing = true;
 	}
 	
