@@ -8,7 +8,7 @@ const string chicken_tag = "chicken raid";
 const string reinforcements_tag = "reinforcements allowed";
 
 // const u16 capture_seconds = 10;
-const u16 capture_radius = 45;
+const u16 capture_radius = 44;
 
 const string friendly_prop = "capture friendly count";
 const string enemy_prop = "capture enemy count";
