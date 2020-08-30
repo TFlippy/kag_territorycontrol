@@ -80,7 +80,7 @@ void onTick(CBlob@ this)
 	RunnerMoveVars@ moveVars;
 	if (this.get("moveVars", @moveVars))
 	{
-		moveVars.walkFactor *= 5.00f;
+		moveVars.walkFactor *= 15.00f;
 		moveVars.jumpFactor *= 50.00f;
 	}
 	
@@ -98,9 +98,7 @@ void onTick(CBlob@ this)
 
 void onTick(CBrain@ this)
 {
-	if (isClient()){
-		 return;
-	} 
+	if (!isServer()) return;
 	
 	
 	CBlob@ blob = this.getBlob();
@@ -221,6 +219,7 @@ void onTick(CBrain@ this)
 						if (blob.get_u32("nextAttack") < getGameTime())
 						{							
 							blob.setKeyPressed(key_action1, true);
+							blob.set_bool("should_do_attack_hack", true);
 							blob.set_u32("nextAttack", getGameTime() + blob.get_u8("attackDelay"));
 						}
 					}
