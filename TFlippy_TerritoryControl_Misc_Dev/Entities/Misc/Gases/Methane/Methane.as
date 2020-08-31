@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (isServer() && this.getPosition().y < 0) this.server_Die();
+	if (isServer() && this.getPosition().y < 0) { this.server_Die(); }
 	
 	if (isClient())
 	{
@@ -89,12 +89,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case Hitters::keg:
 		case Hitters::mine:
 			this.Tag("lit");
-			this.server_SetTimeToDie(2.00f / 20.00f);
-			return 0;
-			break;
-
-		default:
-			return 0;
+			this.server_SetTimeToDie(0.1f);
 			break;
 	}
 
