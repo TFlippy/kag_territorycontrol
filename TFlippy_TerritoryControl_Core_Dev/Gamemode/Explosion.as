@@ -529,8 +529,8 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 
 	if (isServer())
 	{
-		f32 scale;
-		Vec2f bombforce = getBombForce(this, radius, hit_blob_pos, pos, hit_blob.getMass(), scale);
+		f32 scale = 0;
+		Vec2f bombforce = getBombForce(radius, hit_blob_pos, pos, hit_blob.getMass(), scale);
 		f32 dam = damage * scale;
 		this.server_Hit(hit_blob, hit_blob_pos, bombforce, dam, hitter, hitter == Hitters::water || isOwnerBlob(this, hit_blob) || should_teamkill || hit_blob.hasTag("dead"));
 	}

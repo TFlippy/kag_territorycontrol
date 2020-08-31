@@ -66,7 +66,7 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 			{
 				CBlob@ blob = blobs[i];
 
-				if (blob is null) { continue; }
+				if (blob is null) { continue;}
                 /*if(raycast
                     && blob.getPlayer() !is null
                     && map.rayCastSolidNoBlobs(this.getPosition(), blob.getPosition()))
