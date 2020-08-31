@@ -25,7 +25,7 @@ void onInit(CBlob@ this)
 
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
 
-	this.server_SetTimeToDie(90);
+	this.server_SetTimeToDie(50 + XORRandom(40));
 }
 
 void onTick(CBlob@ this)
