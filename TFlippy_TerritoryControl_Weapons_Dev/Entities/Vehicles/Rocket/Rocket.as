@@ -98,7 +98,7 @@ void onDie(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if ((blob !is null ? !blob.isCollidable() : !solid)) return;
+	if (!solid || blob is null || blob.isCollidable() || blob.hasTag("gas")) { return; }
 	
 	if (this.hasTag("offblast") && this.get_u32("no_explosion_timer") < getGameTime()) DoExplosion(this, this.getOldVelocity());
 }
