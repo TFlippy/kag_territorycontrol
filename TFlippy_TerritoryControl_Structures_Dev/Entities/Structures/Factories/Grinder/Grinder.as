@@ -86,9 +86,8 @@ void onTick(CBlob@ this)
 	CBlob@[] blobs;
 	if (getMap().getBlobsInRadius(this.getPosition()+Vec2f(0,-2) ,6.0f, @blobs))
 	{
-		const int length = (blobs.length > MAX_GRINDABLE_AT_ONCE ? MAX_GRINDABLE_AT_ONCE : blobs.length);
-		print(length + '');
-
+		int length = (blobs.length > MAX_GRINDABLE_AT_ONCE ? MAX_GRINDABLE_AT_ONCE : blobs.length);
+		
 		for (uint i = 0; i < length; i++)
 		{
 			CBlob@ blob = blobs[i];
@@ -105,6 +104,11 @@ void onTick(CBlob@ this)
 			else if (blob.hasTag("material") ? !this.server_PutInInventory(blob) : true)
 			{
 				blob.setVelocity(Vec2f(4 - XORRandom(8), -4));
+
+				if (blobs.length > length) // lets increase the length if its a useless item
+				{
+					length += 1;
+				}
 			}
 		}
 	}
