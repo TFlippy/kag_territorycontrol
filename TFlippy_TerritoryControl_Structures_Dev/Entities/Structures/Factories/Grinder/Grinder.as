@@ -2,6 +2,8 @@
 #include "Hitters.as"
 #include "ParticleSparks.as";
 
+const int MAX_GRINDABLE_AT_ONCE = 5;
+
 void onInit(CSprite@ this)
 {
 	this.SetZ(10);
@@ -84,20 +86,25 @@ void onTick(CBlob@ this)
 	CBlob@[] blobs;
 	if (getMap().getBlobsInRadius(this.getPosition()+Vec2f(0,-2) ,6.0f, @blobs))
 	{
-		for (uint i = 0; i < blobs.length; i++)
+		const int length = (blobs.length > MAX_GRINDABLE_AT_ONCE ? MAX_GRINDABLE_AT_ONCE : blobs.length);
+		print(length + '');
+
+		for (uint i = 0; i < length; i++)
 		{
 			CBlob@ blob = blobs[i];
-			if (blob !is null)
+			if (blob is null) { continue; }
+			
+			if (canSaw(this, blob))
 			{
-				if (canSaw(this, blob))
-				{
-					Blend(this, blob);
-					if (isServer()) { this.server_Hit(blob, blob.getPosition(), Vec2f(0, -2), 2.00f, Hitters::saw, true); }
+				Blend(this, blob);
+				if (isServer()) 
+				{ 
+					this.server_Hit(blob, blob.getPosition(), Vec2f(0, -2), 2.00f, Hitters::saw, true); 
 				}
-				else if (blob.hasTag("material") ? !this.server_PutInInventory(blob) : true)
-				{
-					blob.setVelocity(Vec2f(4 - XORRandom(8), -4));
-				}
+			}
+			else if (blob.hasTag("material") ? !this.server_PutInInventory(blob) : true)
+			{
+				blob.setVelocity(Vec2f(4 - XORRandom(8), -4));
 			}
 		}
 	}
