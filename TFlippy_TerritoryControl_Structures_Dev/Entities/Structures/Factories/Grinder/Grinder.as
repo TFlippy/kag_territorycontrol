@@ -89,15 +89,10 @@ void onTick(CBlob@ this)
 			CBlob@ blob = blobs[i];
 			if (blob !is null)
 			{
-				if(blob.getName() == "grinder")
-				{
-					continue;
-				}
-
 				if (canSaw(this, blob))
 				{
 					Blend(this, blob);
-					if (isServer()) this.server_Hit(blob, blob.getPosition(), Vec2f(0, -2), 2.00f, Hitters::saw, true);
+					if (isServer()) { this.server_Hit(blob, blob.getPosition(), Vec2f(0, -2), 2.00f, Hitters::saw, true); }
 				}
 				else if (blob.hasTag("material") ? !this.server_PutInInventory(blob) : true)
 				{
@@ -111,6 +106,9 @@ void onTick(CBlob@ this)
 
 void onTick(CSprite@ this)
 {
+
+	if (this.getBlob().getTickSinceCreated() < 90) { return; }
+
 	CSpriteLayer@ chop_left = this.getSpriteLayer("chop_left");
 	CSpriteLayer@ chop_right = this.getSpriteLayer("chop_right");
 
@@ -120,7 +118,7 @@ void onTick(CSprite@ this)
 
 bool canSaw(CBlob@ this, CBlob@ blob)
 {
-	if (this.getTickSinceCreated() < 90 || blob.hasTag("sawed") || blob.getShape().isStatic() || (blob.getName() == "mat_stone" ? false : blob.hasTag("invincible"))) return false;
+	if (this.getTickSinceCreated() < 90 || blob.hasTag("sawed") || blob.getShape().isStatic() || blob.getName() == "grinder" || (blob.getName() == "mat_stone" ? false : blob.hasTag("invincible"))) return false;
 
 	if (blob.hasTag("flesh") && isClient() && !g_kidssafe)
 	{
