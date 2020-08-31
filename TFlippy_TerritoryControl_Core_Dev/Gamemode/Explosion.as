@@ -408,6 +408,8 @@ void LinearExplosion(CBlob@ this, Vec2f _direction, f32 length, const f32 width,
 	if (blobs is null)
 	{
 		Vec2f tolerance(tilesize * 2, tilesize * 2);
+		CBlob@[] tempblobs;
+		@blobs = tempblobs; // required, idk why, kag wont leave me alone
 		map.getBlobsInBox(pos - tolerance, pos + (direction * length) + tolerance, @blobs);
 	}
 
