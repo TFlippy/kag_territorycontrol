@@ -307,6 +307,10 @@ void onTick(CRules@ this)
 {
 	s32 gametime = getGameTime();
 
+	/// EXPERIMENTAL
+	getNet().server_KeepConnectionsAlive();
+	/// END
+
 	for (u8 i = 0; i < getPlayerCount(); i++)
 	{
 		CPlayer@ player = getPlayer(i);
