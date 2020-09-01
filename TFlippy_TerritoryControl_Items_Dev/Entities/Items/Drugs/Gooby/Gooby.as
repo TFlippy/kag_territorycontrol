@@ -23,8 +23,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 		if (caller !is null)
 		{
-			if (!caller.hasScript("Gooby_Effect.as")) caller.AddScript("Gooby_Effect.as");
-			caller.add_f32("gooby_effect", 1.00f);
+			if (!caller.hasScript("Gooby_Effect.as"))
+			{
+				caller.AddScript("Gooby_Effect.as");
+				caller.set_f32("gooby_effect", 1.00f);
+			}
+			else
+			{
+				caller.add_f32("gooby_effect", -1.00f);
+			}
 			
 			if (isServer())
 			{

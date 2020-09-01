@@ -142,6 +142,9 @@ void React(CBlob@ this)
 				}
 				
 				meat_blob.set_f32("explodium_amount", 0.00f);
+				
+				ShakeScreen(60.0f, 30, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Gas.ogg", 1.00f, 1.00f);
 			}
 			
 			if (heat > 500 && hasFiks)
