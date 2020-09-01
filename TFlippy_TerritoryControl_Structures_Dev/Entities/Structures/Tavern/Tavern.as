@@ -37,10 +37,14 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Beer's Bear", "$beer$", "beer", "Homemade fresh bear with foam!", false);
 		AddRequirement(s.requirements, "coin", "", "Coins", 29);
+	
+		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Vodka!", "$icon_vodka$", "vodka", "Also homemade fun water, buy this!");
 		AddRequirement(s.requirements, "coin", "", "Coins", 91);
+
+		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Tasty Rat Burger", "$ratburger$", "ratburger", "FLUFFY BURGER");
