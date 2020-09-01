@@ -132,6 +132,18 @@ void React(CBlob@ this)
 			bool hasVodka = vodka_blob !is null;
 			bool hasFiks = fiks_blob !is null;
 			
+			if (meat_count > 0 && meat_blob !is null)
+			{
+				f32 explodium_amount = meat_blob.get_f32("explodium_amount");
+				
+				if (isServer())
+				{
+					Material::createFor(this, "mat_explodium", Maths::Ceil(explodium_amount));
+				}
+				
+				meat_blob.set_f32("explodium_amount", 0.00f);
+			}
+			
 			if (heat > 500 && hasFiks)
 			{
 				if (isServer())
