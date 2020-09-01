@@ -484,68 +484,68 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 		}
 	}
 
-	if (player.getUsername() == "TFlippy" || player.getCharacterName() == "TFlippy")
-	{
-		if (XORRandom(100) < 5)
-		{
-			switch(XORRandom(9))
-			{
-				case 0:
-				{
-					text_out = "its a mystery";
-				}
-				break;
+	// if (player.getUsername() == "TFlippy" || player.getCharacterName() == "TFlippy")
+	// {
+		// if (XORRandom(100) < 5)
+		// {
+			// switch(XORRandom(9))
+			// {
+				// case 0:
+				// {
+					// text_out = "its a mystery";
+				// }
+				// break;
 				
-				case 1:
-				{
-					text_out = "rip";
-				}
-				break;
+				// case 1:
+				// {
+					// text_out = "rip";
+				// }
+				// break;
 				
-				case 2:
-				{
-					text_out = "ripi";
-				}
-				break;
+				// case 2:
+				// {
+					// text_out = "ripi";
+				// }
+				// break;
 				
-				case 3:
-				{
-					text_out = "hi";
-				}
-				break;
+				// case 3:
+				// {
+					// text_out = "hi";
+				// }
+				// break;
 				
-				case 4:
-				{
-					text_out = "yus";
-				}
-				break;
+				// case 4:
+				// {
+					// text_out = "yus";
+				// }
+				// break;
 				
-				case 5:
-				{
-					text_out = "mystery";
-				}
-				break;
+				// case 5:
+				// {
+					// text_out = "mystery";
+				// }
+				// break;
 				
-				case 6:
-				{
-					text_out = "rup";
-				}
-				break;
+				// case 6:
+				// {
+					// text_out = "rup";
+				// }
+				// break;
 				
-				case 7:
-				{
-					text_out = "such is life";
-				}
-				break;
+				// case 7:
+				// {
+					// text_out = "such is life";
+				// }
+				// break;
 
-				case 8:
-				{
-					text_out = "snif";
-				}
-				break;
-			}
-		}
-	}
+				// case 8:
+				// {
+					// text_out = "snif";
+				// }
+				// break;
+			// }
+		// }
+	// }
 	
 	if (username ==  "digga" || charname == "Rajang" || player.hasTag("awootism")) 
 	{
