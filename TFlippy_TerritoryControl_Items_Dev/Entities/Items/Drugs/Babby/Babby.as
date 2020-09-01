@@ -3,6 +3,7 @@ void onInit(CBlob@ this)
 	this.getShape().SetRotationsAllowed(true);
 	this.addCommandID("consume");
 	this.Tag("hopperable");
+	this.Tag("no_suicide");
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

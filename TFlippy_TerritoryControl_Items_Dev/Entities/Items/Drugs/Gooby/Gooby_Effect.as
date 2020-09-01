@@ -51,10 +51,11 @@ void onTick(CBlob@ this)
 	{	
 		if (XORRandom(20) == 0)
 		{
+			if (!this.hasTag("no_suicide")) this.Tag("no_suicide");
+		
 			if (isClient())
 			{
 				this.getSprite().PlaySound("Pus_Attack_0.ogg", 1.50f, 1.00f);
-				
 				
 				ParticleBloodSplat(this.getPosition(), true);
 				
