@@ -14,9 +14,9 @@ const string heat_prop = "drill heat";
 const u8 heat_max = 250;
 
 const u8 heat_add = 1;
-const u8 heat_add_constructed = 2.3;
-const u8 heat_add_blob = heat_add * 3.0;
-const u8 heat_cool_amount = 1;
+const u8 heat_add_constructed = 1;
+const u8 heat_add_blob = 1;
+const u8 heat_cool_amount = 5;
 
 const u8 heat_cooldown_time = 10;
 const u8 heat_cooldown_time_water = u8(heat_cooldown_time / 3);
@@ -227,7 +227,7 @@ void onTick(CBlob@ this)
 			if (map !is null)
 			{
 				HitInfo@[] hitInfos;
-				if (map.getHitInfosFromArc((this.getPosition() - attackVel), -attackVel.Angle(), 30, distance, this, false, @hitInfos))
+				if (map.getHitInfosFromArc((this.getPosition() - attackVel), -attackVel.Angle(), 30, distance, this, true, @hitInfos))
 				{
 					bool hit_ground = false;
 					for (uint i = 0; i < hitInfos.length; i++)
@@ -244,8 +244,7 @@ void onTick(CBlob@ this)
 								hit_ground = true;
 							}
 
-							if (b.getTeamNum() == holder.getTeamNum() ||
-									hit_ground && !is_ground)
+							if (hi.blob.getTeamNum() == holder.getTeamNum() || hit_ground && !is_ground)
 							{
 								continue;
 							}

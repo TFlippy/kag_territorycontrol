@@ -562,9 +562,16 @@ bool doChickenSpawn(CPlayer@ player)
 	if (ruins.length > 0)
 	{
 		string blobType;
-
-		int rand = XORRandom(100);
-
+		int minutes = getGameTime() / (60*30);
+		
+		if (minutes < 99)
+		{
+			int rand = XORRandom(100 - minutes);
+		}
+		else 
+		{
+			int rand = 1;
+		}
 		if (rand < 5)
 		{
 			blobType = "heavychicken";

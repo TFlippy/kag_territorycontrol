@@ -51,6 +51,23 @@ void onInit(CBlob@ this)
 		this.set_f32("maxDistance", 300);
 		this.set_f32("inaccuracy", 0.00f);
 		
+		if(XORRandom(100) < 5)
+		{
+			CBlob@ phone = server_CreateBlob("phone", this.getTeamNum(), this.getPosition());
+			this.server_PutInInventory(phone);
+		}
+		if (XORRandom(100) < 50) 
+		{
+			CBlob@ bp_auto = server_CreateBlob("bp_automation_advanced", -1, this.getPosition());
+			this.server_PutInInventory(bp_auto);
+		}
+		
+		if (XORRandom(100) < 30) 
+		{
+			CBlob@ bp_sdr = server_CreateBlob("bp_energetics", -1, this.getPosition());
+			this.server_PutInInventory(bp_sdr);
+		}
+
 		if (XORRandom(100) < 20)
 		{
 			CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
@@ -88,9 +105,8 @@ void onTick(CBlob@ this)
 		moveVars.jumpFactor *= 2.00f;
 	}
 
-	if (this.getHealth() < 0.0 && !this.hasTag("dead"))
+	if (this.getHealth() < 0.0 && this.hasTag("dead"))
 	{
-		this.Tag("dead");
 		this.getSprite().PlaySound("Wilhelm.ogg", 1.8f, 1.8f);
 		
 		if (isServer())
@@ -101,21 +117,6 @@ void onTick(CBlob@ this)
 			if (carried !is null)
 			{
 				carried.server_DetachFrom(this);
-			}
-			
-			if (XORRandom(100) < 5) 
-			{
-				server_CreateBlob("phone", -1, this.getPosition());
-			}
-			
-			if (XORRandom(100) < 50) 
-			{
-				server_CreateBlob("bp_automation_advanced", -1, this.getPosition());
-			}
-			
-			if (XORRandom(100) < 30) 
-			{
-				server_CreateBlob("bp_energetics", -1, this.getPosition());
 			}
 		}
 		
