@@ -55,7 +55,7 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 		{
 			CBlob@ ownerBlob;
 			CPlayer@ damagePlayer = this.getDamageOwnerPlayer();
-			if (damagePlayer !is null)
+			if (damagePlayer !is null && damagePlayer.getBlob() !is null)
 			{
 				@ownerBlob = damagePlayer.getBlob();
 			}
@@ -65,6 +65,8 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 			for (uint i = 0; i < blobs.length; i++)
 			{
 				CBlob@ blob = blobs[i];
+
+				if (blob is null) { continue;}
                 /*if(raycast
                     && blob.getPlayer() !is null
                     && map.rayCastSolidNoBlobs(this.getPosition(), blob.getPosition()))
@@ -77,8 +79,7 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 				bool hitHard = (blob.getTeamNum()!=this.getTeamNum() || (this.getTeamNum()<0 || this.getTeamNum()>=7)) || ownerBlob is blob;
 
 				Vec2f hit_blob_pos = blob.getPosition();
-				f32 scale;
-				Vec2f bombforce = getBombForce(this, radius, hit_blob_pos, pos, blob.getMass(), scale);
+				Vec2f bombforce = getBombForce(radius, hit_blob_pos, pos, blob.getMass(), 0);
 
 				if (shouldStun && (ownerBlob is blob || (this.isOverlapping(blob) && hitHard)))
 				{
@@ -99,7 +100,7 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 }
 
 // copied from Explosion.as ...... should be in bombcommon?
-Vec2f getBombForce(CBlob@ this, f32 radius, Vec2f hit_blob_pos, Vec2f pos, f32 hit_blob_mass, f32 &out scale)
+Vec2f getBombForce(f32 radius, Vec2f hit_blob_pos, Vec2f pos, f32 hit_blob_mass, f32 &out scale)
 {
 	Vec2f offset = hit_blob_pos - pos;
 	f32 distance = offset.Length();

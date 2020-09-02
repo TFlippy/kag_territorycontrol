@@ -169,8 +169,6 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 		m_pos.x = Maths::Floor(m_pos.x);
 		m_pos.y = Maths::Floor(m_pos.y);
 		m_pos = (m_pos * map.tilesize) + Vec2f(map.tilesize / 2, map.tilesize / 2);
-		CNet@ net = getNet();
-		
 		
 		//explode outwards
 		for (int x_step = 0; x_step <= tile_rad; ++x_step)
@@ -178,8 +176,6 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 			for (int y_step = 0; y_step <= tile_rad; ++y_step)
 			{
 				Vec2f offset = (Vec2f(x_step, y_step) * map.tilesize);
-
-				net.server_KeepConnectionsAlive();
 
 				for (int i = 0; i < 4; i++)
 				{
@@ -413,14 +409,14 @@ void LinearExplosion(CBlob@ this, Vec2f _direction, f32 length, const f32 width,
 	{
 		Vec2f tolerance(tilesize * 2, tilesize * 2);
 		CBlob@[] tempblobs;
-		@blobs = tempblobs;
+		@blobs = tempblobs; // required, idk why, kag wont leave me alone
 		map.getBlobsInBox(pos - tolerance, pos + (direction * length) + tolerance, @blobs);
 	}
 
 	for (uint i = 0; i < blobs.length; i++)
 	{
 		CBlob@ hit_blob = blobs[i];
-		if (hit_blob is this) continue;
+		if (hit_blob is null || hit_blob is this) { continue; }
 	
 
 		float rad = Maths::Max(tilesize, hit_blob.getRadius() * 0.25f);
@@ -535,8 +531,8 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 
 	if (isServer())
 	{
-		f32 scale;
-		Vec2f bombforce = getBombForce(this, radius, hit_blob_pos, pos, hit_blob.getMass(), scale);
+		f32 scale = 0;
+		Vec2f bombforce = getBombForce(radius, hit_blob_pos, pos, hit_blob.getMass(), scale);
 		f32 dam = damage * scale;
 		this.server_Hit(hit_blob, hit_blob_pos, bombforce, dam, hitter, hitter == Hitters::water || isOwnerBlob(this, hit_blob) || should_teamkill || hit_blob.hasTag("dead"));
 	}
@@ -700,9 +696,4 @@ bool WorldHitBlob(Vec2f position, CBlob@ hit_blob, f32 radius, f32 damage, const
 	}
 	
 	return true;
-}
-
-void kes(Vec2f position)
-{
-	print("no error?");
 }

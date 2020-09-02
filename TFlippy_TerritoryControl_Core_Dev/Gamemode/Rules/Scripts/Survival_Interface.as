@@ -733,6 +733,8 @@ string getRank(string &in username, SColor &out col, CPlayer@ p)
 		case 306188315://sjd360
 		case 1111849941://mr_hobo
 		case 494034411://turtlecake
+		case -608852120://hobey
+		case 926613433://blackguy123
 		case -1384627824://oolmbalol
 		{
 			col = SColor(255, 247, 156, 44);

@@ -7,6 +7,7 @@ void onInit(CBlob@ this)
 {
 	this.Tag("usable by anyone");
 	this.Tag("aerial");
+	this.Tag("heavy weight");
 
 	this.addCommandID("offblast");
 	
@@ -17,6 +18,7 @@ void onInit(CBlob@ this)
 	this.set_u32("no_explosion_timer", 0);
 	this.set_u32("fuel_timer", 0);
 	this.set_f32("velocity", 0.3f);
+	this.set_Vec2f("direction", Vec2f(0, 0));
 	
 	this.getShape().SetRotationsAllowed(true);
 }
@@ -51,6 +53,12 @@ void onTick(CBlob@ this)
 				this.setAngleDegrees(-this.getVelocity().Angle() + 90);
 			}
 						
+			
+			dir = Vec2f_lerp(this.get_Vec2f("direction"), dir, 0.05f);
+			dir.Normalize();
+			
+			this.set_Vec2f("direction", dir);
+			
 			this.setVelocity(dir * -this.get_f32("velocity"));
 			MakeParticle(this, -dir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
 		}
@@ -98,7 +106,7 @@ void onDie(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if ((blob !is null ? !blob.isCollidable() : !solid)) return;
+	if (!solid || blob is null || blob.isCollidable() || blob.hasTag("gas")) { return; }
 	
 	if (this.hasTag("offblast") && this.get_u32("no_explosion_timer") < getGameTime()) DoExplosion(this, this.getOldVelocity());
 }
@@ -128,6 +136,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if (point.getOccupied() is null)
 		{
+			this.set_Vec2f("direction", Vec2f(0, 1).RotateBy(this.getAngleDegrees()));
+		
 			this.Tag("offblast");
 			this.set_u32("no_explosion_timer", getGameTime() + 30);
 			this.set_u32("fuel_timer", getGameTime() + fuel_timer_max);

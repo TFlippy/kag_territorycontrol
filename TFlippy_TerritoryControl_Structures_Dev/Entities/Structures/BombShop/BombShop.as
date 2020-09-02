@@ -50,17 +50,18 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	{
-		ShopItem@ s = addShopItem(this, "S.Y.L.W. 9000 (1)", "$icon_bigbomb$", "mat_bigbomb-1", "A really big bomb. Handle with care. It's indeed a large bomb.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 1250);
-		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 250);
 
-		s.customButton = true;
-		s.buttonwidth = 1;
-		s.buttonheight = 2;
+	// {
+		// ShopItem@ s = addShopItem(this, "S.Y.L.W. 9000 (1)", "$icon_bigbomb$", "mat_bigbomb-1", "A really big bomb. Handle with care. It's indeed a large bomb.");
+		// AddRequirement(s.requirements, "coin", "", "Coins", 1250);
+		// AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 250);
 
-		s.spawnNothing = true;
-	}
+		// s.customButton = true;
+		// s.buttonwidth = 1;
+		// s.buttonheight = 2;
+
+		// s.spawnNothing = true;
+	// }
 	{
 		ShopItem@ s = addShopItem(this, "R.O.F.L.", "$icon_nuke$", "nuke", "A dangerous warhead stuffed in a cart. Since it's heavy, it can be only pushed around or picked up by balloons.");
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 20);
