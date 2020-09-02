@@ -10,7 +10,7 @@ void onInit(CBlob@ this)
 	this.Tag("ignore extractor");
 	this.Tag("remote_storage");
 	
-	this.Tag("stronghold")
+	this.Tag("stronghold");
 	this.Tag("blocks spawn");
 	
 	this.Tag("upkeep building");
