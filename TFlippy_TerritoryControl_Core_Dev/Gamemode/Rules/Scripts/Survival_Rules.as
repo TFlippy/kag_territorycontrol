@@ -563,14 +563,10 @@ bool doChickenSpawn(CPlayer@ player)
 	{
 		string blobType;
 		int minutes = getGameTime() / (60*30);
-		
-		if (minutes < 99)
+		int rand = XORRandom(100) - minutes;
+		if (rand < 5)
 		{
-			int rand = XORRandom(100 - minutes);
-		}
-		else 
-		{
-			int rand = 1;
+			rand = 4;
 		}
 		if (rand < 5)
 		{
