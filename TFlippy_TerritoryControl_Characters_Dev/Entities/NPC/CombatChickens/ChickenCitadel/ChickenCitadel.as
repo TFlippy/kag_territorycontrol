@@ -43,16 +43,16 @@ void onTick(CBlob@ this)
 				getBlobsByTag("combat chicken", @chickens);
 				
 				if (chickens.length < 8)
-                {
-                    if (this.hasTag("convent")) // convent spawn
-                    {
-                        server_CreateBlob((XORRandom(100) < 50 ? "heavychicken" : "heavychicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
-                    }
-                    else // default spawn for citadel
-                    {
-                        server_CreateBlob((XORRandom(100) < 70 ? "heavychicken" : "soldierchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
-                    }
-                }
+				{
+					if (this.hasTag("convent")) // convent spawn
+					{
+						server_CreateBlob((XORRandom(100) < 50 ? "heavychicken" : "heavychicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+					}
+					else // default spawn for citadel
+					{
+						server_CreateBlob((XORRandom(100) < 70 ? "heavychicken" : "soldierchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+					}
+				}
 			}
 		}
 	}
