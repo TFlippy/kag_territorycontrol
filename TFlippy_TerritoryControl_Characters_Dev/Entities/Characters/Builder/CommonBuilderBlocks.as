@@ -91,6 +91,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_inductionfurnace$", "InductionFurnace.png", Vec2f(40, 32), 0);
 	AddIconToken("$icon_assembler$", "Assembler.png", Vec2f(40, 24), 0);
 	AddIconToken("$icon_hopper$", "Hopper.png", Vec2f(24, 24), 0);
+	AddIconToken("$icon_fetcher$", "Fetcher.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_extractor$", "Extractor.png", Vec2f(16, 24), 0);
 	AddIconToken("$icon_filterextractor$", "FilterExtractor.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_grinder$", "Grinder.png", Vec2f(40, 24), 0);
@@ -564,6 +565,14 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		// AddRequirement(b.reqs, "blob", "mat_hemp", "Hemp", 20);
 		b.buildOnGround = true;
 		b.size.Set(16, 24);
+		blocks[2].push_back(b);
+	}
+	{
+		BuildBlock b(0, "fetcher", "$icon_fetcher$", "Fetcher\nFetches specified item from inventories and ground.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
+		b.buildOnGround = true;
+		b.size.Set(24, 24);
 		blocks[2].push_back(b);
 	}
 		

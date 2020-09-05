@@ -8,6 +8,8 @@ const f32 increment = 1.00f / (30.00f * 6.00f);
 
 void onInit(CBlob@ this)
 {
+	this.Tag("no_suicide");
+
 	CSprite@ sprite = this.getSprite();
 	sprite.RewindEmitSound();
 	sprite.SetEmitSound("Love_Loop.ogg");

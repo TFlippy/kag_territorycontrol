@@ -5,6 +5,8 @@
 
 void onInit(CBlob@ this)
 {
+	this.set_TileType("background tile", CMap::tile_castle_back);
+	
 	this.getSprite().SetZ(10);
 	this.getShape().SetRotationsAllowed(false);
 
