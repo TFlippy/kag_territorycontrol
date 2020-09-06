@@ -1,6 +1,8 @@
 #include "Hitters.as";
 #include "Explosion.as";
 
+const int PRIME_TIME = 3;
+
 string[] particles = 
 {
 	"LargeSmoke",
@@ -79,7 +81,7 @@ void DoExplosion(CBlob@ this)
 		dir.x *= 2;
 		dir.Normalize();
 		
-		LinearExplosion(this, dir, 8.0f + XORRandom(16) + (modifier * 8), 8 + XORRandom(24), 3, 0.125f, Hitters::explosion);
+		LinearExplosion(this, dir, 8.0f + XORRandom(16) + (modifier * 8), 8 + XORRandom(24), 3, 2.0f, Hitters::explosion);
 	}
 	
 	Vec2f pos = this.getPosition();
@@ -107,11 +109,14 @@ void DoExplosion(CBlob@ this)
 			CBlob@ blob = server_CreateBlob("tankshell", this.getTeamNum(), this.getPosition());
 			blob.setVelocity(getRandomVelocity(angle, 15 + XORRandom(5), 45));
 			blob.server_SetTimeToDie(20 + XORRandom(10));
-			blob.set_u32("primed_time", getGameTime() + 5);
+			blob.set_u32("primed_time", getGameTime() + PRIME_TIME);
 		}
 	}
-		
-	this.getSprite().Gib();
+
+	if (isClient())
+	{
+		this.getSprite().Gib();
+	}
 }
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")

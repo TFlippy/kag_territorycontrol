@@ -118,7 +118,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Cluster Bomb (1)", "$icon_clusterbomb$", "mat_clusterbomb-1", "A cluster bomb that splits into smaller bomblets upon detonation.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 250);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", 25);
 		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 25);
 
