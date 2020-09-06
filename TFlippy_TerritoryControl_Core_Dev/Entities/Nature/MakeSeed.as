@@ -69,6 +69,26 @@ CBlob@ server_MakeSeed(Vec2f atpos, string blobname)
 	return server_MakeSeed(atpos, blobname, 100, 0, 4);
 }
 
+void server_MakeSeedsFor(CBlob@ this, string blobname, u8 amount)
+{
+    if (this is null) return;
+
+    for (u8 i = 0; i < amount; i++)
+    {
+        CBlob@ blob = server_MakeSeed(this.getPosition(), blobname);
+
+        if (blob is null) continue;
+               
+        if (!blob.canBePutInInventory(this))
+        {
+            this.server_Pickup(blob);
+        }
+        else if (this.getInventory() !is null && !this.getInventory().isFull())
+        {
+            this.server_PutInInventory(blob);
+        }
+    }
+}
 
 ShopItem@ addSeedItem(CBlob@ this, const string &in seedName,
                       const string &in  description, u16 timeToMakeSecs, const u16 quantityLimit, CBitStream@ requirements = null)

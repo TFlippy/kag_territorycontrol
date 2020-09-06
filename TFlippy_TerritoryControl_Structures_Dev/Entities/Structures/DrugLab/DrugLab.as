@@ -62,18 +62,22 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	CBitStream params;
+	if (this.isOverlapping(caller))
+	{
+		CBitStream params;
 
-	{
-		CButton@ button = caller.CreateGenericButton(11, Vec2f(-4, -2), this, this.getCommandID("lab_react"), "React", params);
-		button.SetEnabled(getGameTime() >= this.get_u32("next_react"));
-	}
+		{
+			CButton@ button = caller.CreateGenericButton(11, Vec2f(-4, -2), this, this.getCommandID("lab_react"), "React", params);
+			button.SetEnabled(getGameTime() >= this.get_u32("next_react"));
+		}
 	
-	{
+		{
 		CButton@ button = caller.CreateGenericButton(11, Vec2f(-4, 6.5f), this, this.getCommandID("lab_add_heat"), "Increase Heat", params);
 		button.deleteAfterClick = false;
+		}
 	}
 }
+
 
 void React(CBlob@ this)
 {
@@ -115,6 +119,7 @@ void React(CBlob@ this)
 			CBlob@ protopopovBulb_blob = inv.getItem("protopopovbulb");
 			CBlob@ vodka_blob = inv.getItem("vodka");
 			CBlob@ fiks_blob = inv.getItem("fiks");
+			CBlob@ grain_blob = inv.getItem("grain");
 
 			bool hasOil = oil_blob !is null;
 			bool hasMethane = methane_blob !is null;
@@ -131,6 +136,34 @@ void React(CBlob@ this)
 			bool hasProtopopovBulb = protopopovBulb_blob !is null;
 			bool hasVodka = vodka_blob !is null;
 			bool hasFiks = fiks_blob !is null;
+			bool hasGrain = grain_blob !is null;
+			
+			if (meat_count > 0 && meat_blob !is null)
+			{
+				f32 explodium_amount = meat_blob.get_f32("explodium_amount");
+				
+				if (isServer())
+				{
+					Material::createFor(this, "mat_explodium", Maths::Ceil(explodium_amount));
+				}
+				
+				meat_blob.set_f32("explodium_amount", 0.00f);
+				
+				ShakeScreen(60.0f, 30, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Gas.ogg", 1.00f, 1.00f);
+			}
+			
+			if (heat > 1000 && hasGrain)
+			{
+				if (isServer())
+				{
+					grain_blob.server_Die();
+					Material::createFor(this, "vodka", 1);
+				}
+				
+				ShakeScreen(30.0f, 15, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Acidic.ogg", 1.00f, 1.00f);
+			}
 			
 			if (meat_count > 0 && meat_blob !is null)
 			{
