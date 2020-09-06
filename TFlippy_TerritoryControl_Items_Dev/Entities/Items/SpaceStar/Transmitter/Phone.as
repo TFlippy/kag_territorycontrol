@@ -141,7 +141,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				}
 				else if (spl[0] == "barrage")
 				{
-					print("barrage");
 				
 					CBlob@ b = server_CreateBlobNoInit("bombardment");
 					b.server_setTeamNum(250);

@@ -247,7 +247,6 @@ CBlob@ FindTarget(CBrain@ this, f32 maxDistance)
 		}
 	}
 	
-	print("" + net_id);
 
 	return getBlobByNetworkID(net_id);
 }

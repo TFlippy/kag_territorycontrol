@@ -224,8 +224,6 @@ void onDie(CBlob@ this)
 {
 	if (this.hasTag("do gib"))
 	{
-		print("gib");
-	
 		f32 count = 2 + XORRandom(4);
 		int frac = Maths::Min(250, this.getMass() / count);
 		f32 radius = this.getRadius();

@@ -47,8 +47,6 @@ void onRender(CSprite@ this)
 
 		AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
 	    CBlob@ playerblob = point.getOccupied();
-        if(point is null && playerblob !is null)
-            print("error");
 		if(point !is null && playerblob !is null && playerblob.isMyPlayer())
 		{
 		    displayLayoutName(blob);

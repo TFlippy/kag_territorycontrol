@@ -232,8 +232,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					// print("" + ratio);
 					
 					f32 damage_reflected = Maths::Min(damage * ratio, Maths::Max(this.getHealth(), 0));
-		
-					print("" + damage_reflected + "/" + damage + "; took " + (damage * inv_ratio));
 			
 					hitterBlob.setVelocity(hitterBlob.getVelocity() - (velocity * damage_reflected * 2.00f));
 					this.setVelocity(this.getVelocity() + (velocity * damage_reflected * 2.00f));

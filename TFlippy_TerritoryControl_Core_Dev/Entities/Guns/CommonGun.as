@@ -103,7 +103,6 @@ void GunInitProjectile(CBlob@ this,bool isAutomatic,string fireProj,f32 fireProj
 	this.Tag("isWeapon");
 	this.Tag("hopperable");
 	if(this.hasCommandID("cmd_gunReload")){
-		print("ALREADY HAD COMMAND");
 		return;
 	}
 	this.addCommandID("cmd_gunReload");

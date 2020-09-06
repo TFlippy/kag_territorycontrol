@@ -182,8 +182,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 			else if(spl[0] == "scyther")
 			{
-				print("scyther");
-				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
+				server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 			}
 			else if (name.findFirst("mat_") != -1)
 			{
@@ -250,7 +249,6 @@ void onTick(CBlob@ this)
 			this.Tag("sound_played");
 
 			f32 modifier = 1.00f - (sound_delay / 3.0f);
-			print("modifier: " + modifier);
 
 			if (modifier > 0.01f && isClient())
 			{
@@ -273,8 +271,7 @@ void onTick(CBlob@ this)
 			CMap@ map = this.getMap();
 			
 			this.set_u8("poison counter", poison_counter + 1);
-			
-			print("Poison: " + poison_counter);
+	
 			
 			for (int i = 0; i < 2; i++)
 			{

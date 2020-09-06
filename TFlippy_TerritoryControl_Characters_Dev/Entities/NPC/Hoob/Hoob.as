@@ -420,7 +420,6 @@ void Stomp(CBlob@ this, int count, f32 magnitude)
 
 void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)
 {
-	print("megahit");
 
 	bool client = isClient();
 	bool server = isServer();

@@ -322,7 +322,6 @@ void onTick(CBlob@ this)
 	{
         instr_number = (instr_number + 1)%(instrument_names.size());
         this.set_u8("instr_number", instr_number);
-        print("instr_number = "+instr_number);
 	}
         
     if(checkControlKey(controls,1)) //162 - left CTRL
@@ -333,7 +332,6 @@ void onTick(CBlob@ this)
         this.set_s8("key_shift", 0);
         octave_mod = 0;
         key_shift = 0;
-        print("layout_number = "+layout_number);
 	}
 
         
@@ -629,7 +627,6 @@ void playNote(CBlob@ this, u8 instr_number, u8 note, f32 volume)
         u8 file_num = Maths::Min(supposed_note,soundfiles[instr_number].size() - 1);
         for(;!soundfiles[instr_number][file_num];file_num--){}
 		u8 diff = supposed_note - file_num;
-		print("supp_note = " +supposed_note+" diff = "+diff);
 		if(diff < 30)
 		    pitch = pitch_table[diff-1];
 		supposed_note = file_num;

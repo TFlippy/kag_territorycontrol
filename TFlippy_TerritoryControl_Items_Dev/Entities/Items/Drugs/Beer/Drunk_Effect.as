@@ -2,7 +2,6 @@
 
 void onInit(CBlob@ this)
 {
-	print("drunk");
 }
 
 void onTick(CBlob@ this)

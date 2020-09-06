@@ -67,12 +67,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @bt)
 		this.set_bool("sleeper_sleeping", sleeping);
 		SetKnocked(this, 0);
 		this.Untag("dazzled");
-		
-		CSprite@ sprite = this.getSprite();
-		sprite.SetEmitSound("MigrantSleep.ogg");
-		sprite.SetEmitSoundVolume(0.5f);
-		sprite.SetEmitSoundPaused(!sleeping);
-		
-		print("Sleeper sync: " + sleeping);
+
+		if (isServer())
+		{
+			print("Sleeper sync: " + sleeping);
+		}
+
+		if (isClient())
+		{
+			CSprite@ sprite = this.getSprite();
+			sprite.SetEmitSound("MigrantSleep.ogg");
+			sprite.SetEmitSoundVolume(0.5f);
+			sprite.SetEmitSoundPaused(!sleeping);
+		}
 	}
 }

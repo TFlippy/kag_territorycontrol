@@ -320,7 +320,6 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 			}
 			else
 			{
-				print("no player");
 				has = false;
 			}
 		}

@@ -66,8 +66,6 @@ void onTick(CBlob@ this)
 	dir.Normalize();
 	f32 angle = dir.getAngleDegrees();
 	
-	print("" + angle);
-	
 	this.setAngleDegrees(angle);
 		
 	// this.SetFacingLeft(dir.x > 0);

@@ -73,5 +73,4 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	print("done shelling");
 }
