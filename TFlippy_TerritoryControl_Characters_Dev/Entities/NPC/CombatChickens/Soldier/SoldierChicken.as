@@ -215,9 +215,8 @@ void onTick(CBlob@ this)
 		moveVars.jumpFactor *= 1.30f;
 	}
 
-	if (this.getHealth() < 0.0 && !this.hasTag("dead"))
+	if (this.getHealth() < 0.0 && this.hasTag("dead"))
 	{
-		this.Tag("dead");
 		this.getSprite().PlaySound("Wilhelm.ogg", 1.8f, 1.8f);
 		
 		if (isServer())
