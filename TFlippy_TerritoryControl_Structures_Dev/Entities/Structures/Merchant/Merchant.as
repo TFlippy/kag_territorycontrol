@@ -139,6 +139,16 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "Sell Grain (1)", "$COIN$", "coin-40", "Sell 1 grain for 40 coins.");
+		AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Sell Grain (5)", "$COIN$", "coin-200", "Sell 5 grain for 200 coins.");
+		AddRequirement(s.requirements, "blob", "grain", "Grain", 5);
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Gramophone Record", "$musicdisc$", "musicdisc", "A random gramophone record.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 30);
 		s.spawnNothing = true;
