@@ -8,7 +8,6 @@
 #include "CustomBlocks.as";
 
 // #include "PrettyMap.as";
-
 namespace tc_colors
 {
 	enum color
@@ -609,6 +608,8 @@ const SColor c_mossyconcrete = SColor(0xffd8e4c4);
 const SColor c_mossybconcrete = SColor(0xffd8e4c4);
 const SColor c_reinforcedconcrete = SColor(0xffbcbbb3);
 const SColor c_snow = SColor(0xffd3decf);
+const SColor c_track = SColor(0xff474b4d);
+const SColor c_matter = SColor(0xff4d756f);
 
 SColor[] fire_colors = 
 {
@@ -617,7 +618,7 @@ SColor[] fire_colors =
 	SColor(0xff7e3041)
 };
 
-void CalculateMinimapColour( CMap@ this, u32 offset, TileType type, SColor &out col)
+void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out col)
 {
 	const int w = this.tilemapwidth;
 	const int h = this.tilemapheight;
@@ -717,6 +718,14 @@ void CalculateMinimapColour( CMap@ this, u32 offset, TileType type, SColor &out 
 		else if (isTileSnowPile(type) || isTileSnow(type))
 		{
 			col = c_snow;
+		}
+		else if (type >= CMap::tile_rail_0 && type <= CMap::tile_rail_0_bg )
+		{
+			col = c_track;
+		}
+		else if (type >= CMap::tile_matter && type <= CMap::tile_matter_d2)
+		{
+			col = c_matter;
 		}
 		else
 		{
