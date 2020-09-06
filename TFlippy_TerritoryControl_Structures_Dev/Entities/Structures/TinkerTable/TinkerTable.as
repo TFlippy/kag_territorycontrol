@@ -53,14 +53,14 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	// {
-		// ShopItem@ s = addShopItem(this, "Giga Drill Breaker", "$powerdrill$", "powerdrill", "A huge overpowered drill with a durable mithril head.");
-		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
-		// AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
-		// AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2);
+	{
+		ShopItem@ s = addShopItem(this, "Giga Drill Breaker", "$powerdrill$", "powerdrill", "A huge overpowered drill with a durable mithril head.");
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2);
 
-		// s.spawnNothing = true;
-	// }
+		s.spawnNothing = true;
+	}
 	// {
 		// ShopItem@ s = addShopItem(this, "Contrabass", "$contrabass$", "contrabass", "A musical instrument for the finest bards.");
 		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 60);
