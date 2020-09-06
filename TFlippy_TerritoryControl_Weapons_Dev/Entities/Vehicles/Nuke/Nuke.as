@@ -144,7 +144,7 @@ void onTick(CBlob@ this)
 				this.getSprite().PlaySound("Nuke_Loop.ogg", 0.75f, 1.00f);
 			}
 			
-			if (time > (this.get_u32("nuke_boomtime") - 90))
+			if (time > (this.get_u32("nuke_boomtime") - 120))
 			{
 				this.getSprite().PlaySound("Nuke_Alarm.ogg", 1.00f, 1.00f);
 				this.Tag("nuke_alarm");
@@ -155,10 +155,14 @@ void onTick(CBlob@ this)
 
 void onRender(CSprite@ this)
 {	
-	if (!this.getBlob().hasTag("nuke_active")) return;
+	CBlob@ blob = this.getBlob();
+	CBlob@ playerBlob = getLocalPlayerBlob();
 
-	u32 secs = ((this.getBlob().get_u32("nuke_boomtime") - 1 - getGameTime()) / getTicksASecond()) + 1;
+	if (playerBlob is null || !blob.hasTag("nuke_active") || blob.get_u32("nuke_boomtime") < getGameTime() ) { return; }
 	
+	if (getMap().rayCastSolidNoBlobs(blob.getInterpolatedPosition(), playerBlob.getPosition())) { return; }
+
+	u32 secs = ((blob.get_u32("nuke_boomtime") - 1 - getGameTime()) / getTicksASecond()) + 1;
 	string units = ((secs != 1) ? "seconds" : "second");
 	string text = "Detonation in " + secs + " " + units + "!";
 	
