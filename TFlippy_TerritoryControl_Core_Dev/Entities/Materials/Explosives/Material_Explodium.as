@@ -129,5 +129,6 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void onDie(CBlob@ this)
 {
+	if (this.getQuantity() == 0) { return; }
 	DoExplosion(this);
 }
