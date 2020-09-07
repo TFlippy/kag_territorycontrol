@@ -68,8 +68,8 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Building for Dummies", "$artisancertificate$", "artisancertificate", "Simplified Builder manuscript for those dumb peasants.", true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 300);
+		ShopItem@ s = addShopItem(this, "Boulder", "$boulder$", "boulder", "Boulder used for crushing people.", true);
+		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 50);
 		
 		s.spawnNothing = true;
 	}
@@ -89,6 +89,12 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Jack o' Lantern", "$jackolantern$", "jackolantern", "A spooky pumpkin.", true);
 		AddRequirement(s.requirements, "blob", "lantern", "Lantern", 1);
 		AddRequirement(s.requirements, "blob", "pumpkin", "Pumpkin", 1);
+		
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Building for Dummies", "$artisancertificate$", "artisancertificate", "Simplified Builder manuscript for those dumb peasants.", true);
+		AddRequirement(s.requirements, "coin", "", "Coins", 300);
 		
 		s.spawnNothing = true;
 	}
