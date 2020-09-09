@@ -216,7 +216,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			}
 			else
 			{
-				u8 myTeam = this.getTeamNum() > 100 ? -1 : this.getTeamNum();
+				u8 myTeam = this.getTeamNum() >= 100 ? -1 : this.getTeamNum();
 				CBlob@ blockBlob = server_CreateBlob(b.name, myTeam, pos);
 				if (blockBlob !is null)
 				{

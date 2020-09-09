@@ -243,7 +243,7 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	u8 victimTeam = victim.getTeamNum();
 	s32 respawn_time = 30 * 4;
 
-	if (victimTeam > 100) respawn_time += 30 * 4;
+	if (victimTeam >= 100) respawn_time += 30 * 4;
 	if (victimTeam < 7)
 	{
 		TeamData@ team_data;

@@ -117,7 +117,7 @@ void onTick(CBlob@ this)
 	// CBlob@[] blobs;
 	
 	u8 myTeam = this.getTeamNum();
-	if (myTeam > 100) return;
+	if (myTeam >= 100) return;
 	
 	CPlayer@[] players;
 	for (int i = 0; i < getPlayerCount(); i++)
