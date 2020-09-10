@@ -50,7 +50,7 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 
 CBlob@ FindStorage(u8 team)
 {
-	if (team > 100) return null;
+	if (team >= 100) return null;
 	
 	CBlob@[] blobs;
 	getBlobsByName("gastank", @blobs);

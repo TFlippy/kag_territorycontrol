@@ -51,9 +51,9 @@ void onTick(CBlob@ this)
 			
 			TileType type = map.getTile(bpos).type;
 			
-			if (!isTileGlass(type) && !isTileBGlass(type) && type != CMap::tile_empty)
+			if (!isTileGlass(type) && !isTileBGlass(type) && type != CMap::tile_empty && type != CMap::tile_ground_back)
 			{
-				if (server)
+				if (server && type != CMap::tile_bedrock)
 				{
 					map.server_DestroyTile(bpos, 1, this);
 				}

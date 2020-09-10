@@ -8,7 +8,7 @@ const string chicken_tag = "chicken raid";
 const string reinforcements_tag = "reinforcements allowed";
 
 // const u16 capture_seconds = 10;
-const u16 capture_radius = 48;
+const u16 capture_radius = 44;
 
 const string friendly_prop = "capture friendly count";
 const string enemy_prop = "capture enemy count";
@@ -119,7 +119,7 @@ void onTick(CBlob@ this)
 
 			if (ticks <= 0 && friendlyCount == 0)
 			{
-				if (this.hasTag(chicken_tag) && (this.getName() == "citadel" || this.getName() == "fortress" || this.getName() == "camp"))
+				if (this.hasTag(chicken_tag) && (this.getName() == "convent" || this.getName() == "citadel" || this.getName() == "fortress" || this.getName() == "stronghold" || this.getName() == "camp"))
 				{
 					if (isServer())
 					{

@@ -10,7 +10,6 @@ const f32 base_radius = 32.00f;
 
 void onInit(CBlob@ this)
 {
-	print("init");
 
 	CSpriteLayer@ wings = this.getSprite().addSpriteLayer("fumes_wings", "Fumes_Wings.png", 32, 32);
 	if (wings !is null)

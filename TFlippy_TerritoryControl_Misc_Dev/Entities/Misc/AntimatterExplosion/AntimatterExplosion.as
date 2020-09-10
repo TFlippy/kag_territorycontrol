@@ -32,8 +32,6 @@ void onInit(CBlob@ this)
 		f32 distance = Maths::Abs(this.getPosition().x - pos.x) / 8;
 		sound_delay = (Maths::Abs(this.getPosition().x - pos.x) / 8) / (340 * 0.4f);
 		
-		print("" + sound_delay);
-		
 		f32 length = Maths::Abs(this.get_f32("boom_size") - this.get_f32("boom_end")) / this.get_f32("boom_increment");
 		for (int i = 0; i < (this.get_f32("boom_end") / 32); i++)
 		{

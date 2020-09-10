@@ -64,6 +64,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$concrete_triangle$", "ConcreteTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$iron_triangle$", "IronTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$stone_halfblock$", "StoneHalfBlock.png", Vec2f(8, 8), 0);
+	AddIconToken("$iron_halfblock$", "IronHalfBlock.png", Vec2f(8, 8), 0);
 	AddIconToken("$iron_door$", "1x1IronDoor.png", Vec2f(16, 8), 0);
 	AddIconToken("$iron_block$", "World.png", Vec2f(8, 8), CMap::tile_iron);
 	AddIconToken("$glass_block$", "World.png", Vec2f(8, 8), CMap::tile_glass);
@@ -90,6 +91,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_inductionfurnace$", "InductionFurnace.png", Vec2f(40, 32), 0);
 	AddIconToken("$icon_assembler$", "Assembler.png", Vec2f(40, 24), 0);
 	AddIconToken("$icon_hopper$", "Hopper.png", Vec2f(24, 24), 0);
+	AddIconToken("$icon_fetcher$", "Fetcher.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_extractor$", "Extractor.png", Vec2f(16, 24), 0);
 	AddIconToken("$icon_filterextractor$", "FilterExtractor.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_grinder$", "Grinder.png", Vec2f(40, 24), 0);
@@ -265,6 +267,11 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	{
 		BuildBlock b(0, "stone_halfblock", "$stone_halfblock$", "Stone Half Block");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 2);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(0, "iron_halfblock", "$iron_halfblock$", "Iron Half Block\nUnbreakable by peasants.");
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 2);
 		blocks[0].push_back(b);
 	}
 	{
@@ -558,6 +565,14 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		// AddRequirement(b.reqs, "blob", "mat_hemp", "Hemp", 20);
 		b.buildOnGround = true;
 		b.size.Set(16, 24);
+		blocks[2].push_back(b);
+	}
+	{
+		BuildBlock b(0, "fetcher", "$icon_fetcher$", "Fetcher\nFetches specified item from inventories and ground.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
+		b.buildOnGround = true;
+		b.size.Set(24, 24);
 		blocks[2].push_back(b);
 	}
 		

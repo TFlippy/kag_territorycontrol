@@ -57,7 +57,6 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
 	{
 		this.Tag("DoExplode");
 		this.set_f32("bomb angle", -this.getOldVelocity().Angle());
-		print("coll");
 		this.server_Die();
 	}
 }
@@ -69,16 +68,12 @@ void DoExplosion(CBlob@ this)
 	f32 angle = 180 + this.get_f32("bomb angle");
 	f32 vellen = Maths::Min(this.getVelocity().Length(), 8);
 	
-	print("ang " + angle);
-	
 	// print("Modifier: " + modifier + "; Quantity: " + this.getQuantity());
 
 	this.set_f32("map_damage_radius", (40.0f + random) * modifier);
 	this.set_f32("map_damage_ratio", 0.25f);
 	
 	Explode(this, 40.0f + random, 15.0f);
-	
-	print("len " + vellen);
 	
 	for (int i = 0; i < 8 * modifier; i++) 
 	{

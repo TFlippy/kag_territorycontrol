@@ -19,7 +19,7 @@ void onInit(CBlob@ this)
 	(
 		this,
 		false,				//If true, gun will be fully automatic and players will be able to just hold the fire button
-		4.00f,				//Weapon damage / projectile blob name
+		3.00f,				//Weapon damage / projectile blob name
 		1000.0f,			//Weapon raycast range
 		5,					//Weapon fire delay, in ticks
 		3,					//Weapon clip size
@@ -27,8 +27,8 @@ void onInit(CBlob@ this)
 		15,					//Weapon reload time
 		true,				//If true, gun will be reloaded like a shotgun
 		0,					//For shotguns: Additional delay to reload end
-		1,					// Bullet count - for shotguns
-		0.0f,				// Bullet Jitter
+		4,					// Bullet count - for shotguns
+		0.1f,				// Bullet Jitter
 		"mat_rifleammo",	//Ammo item blob name
 		false,				//If true, firing sound will be looped until player stops firing
 		SoundInfo("MLG_Shoot", 1, 1.0f, 1.0f),	//Sound to play when firing

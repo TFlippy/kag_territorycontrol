@@ -21,7 +21,8 @@ void onInit( CBrain@ this )
 void onInit(CBlob@ this)
 {
 	this.Tag("builder always hit");
-	this.Tag("npc");
+	//causes infinite ammo
+	//this.Tag("npc");
 	
 	this.addCommandID("automat_give");
 	this.inventoryButtonPos = Vec2f(0, 16);

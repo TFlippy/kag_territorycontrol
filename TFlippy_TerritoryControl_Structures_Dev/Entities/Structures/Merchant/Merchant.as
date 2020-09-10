@@ -12,6 +12,8 @@ Random traderRandom(Time());
 
 void onInit(CBlob@ this)
 {
+	Random@ rand = Random(this.getNetworkID());
+
 	this.Tag("upkeep building");
 	this.set_u8("upkeep cap increase", 0);
 	this.set_u8("upkeep cost", 10);
@@ -85,8 +87,6 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	
-	
-	
 	{
 		ShopItem@ s = addShopItem(this, "Sell Gold Ingot (1)", "$COIN$", "coin-100", "Sell 1 Gold Ingot for 100 coins.");
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
@@ -121,18 +121,31 @@ void onInit(CBlob@ this)
 	}
 	
 	{
-		ShopItem@ s = addShopItem(this, "Sell Pumpkin (1)", "$COIN$", "coin-200", "Sell 1 pumpkin for 200 coins.");
+		u32 cost = getRandomCost(@rand, 100, 400);
+		ShopItem@ s = addShopItem(this, "Sell Pumpkin (1)", "$COIN$", "coin-" + cost, "Sell 1 pumpkin for " + cost + " coins.");
 		AddRequirement(s.requirements, "blob", "pumpkin", "Pumpkin", 1);
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Sell Oil Drum (50 l)", "$COIN$", "coin-300", "Sell 50 litres of oil for 300 coins.");
+		u32 cost = getRandomCost(@rand, 100, 500);
+		ShopItem@ s = addShopItem(this, "Sell Oil Drum (50 l)", "$COIN$", "coin-" + cost, "Sell 50 litres of oil for " + cost + " coins.");
 		AddRequirement(s.requirements, "blob", "mat_oil", "Oil Drum (50 l)", 50);
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Sell Scrub's Chow (1)", "$COIN$", "coin-200", "Sell 1 Scrub's Chow for 200 coins.");
+		u32 cost = getRandomCost(@rand, 50, 300);
+		ShopItem@ s = addShopItem(this, "Sell Scrub's Chow (1)", "$COIN$", "coin-" + cost, "Sell 1 Scrub's Chow for " + cost + " coins.");
 		AddRequirement(s.requirements, "blob", "foodcan", "Scrub's Chow", 1);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Sell Grain (1)", "$COIN$", "coin-40", "Sell 1 grain for 40 coins.");
+		AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Sell Grain (5)", "$COIN$", "coin-200", "Sell 5 grain for 200 coins.");
+		AddRequirement(s.requirements, "blob", "grain", "Grain", 5);
 		s.spawnNothing = true;
 	}
 	{
@@ -142,12 +155,12 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Building for Dummies", "$artisancertificate$", "artisancertificate", "Simplified Builder manuscript for those dumb peasants.", true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 500);
+		AddRequirement(s.requirements, "coin", "", "Coins", getRandomCost(@rand, 400, 800));
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Kitten", "$icon_kitten$", "kitten", "A cute little kitten! Take care of it!", false, true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 200);
+		AddRequirement(s.requirements, "coin", "", "Coins", getRandomCost(@rand, 150, 500));
 		s.spawnNothing = true;
 	}
 	{
@@ -208,6 +221,11 @@ void onInit(CBlob@ this)
 		this.set_u32("next offset", traderRandom.NextRanged(16));
 
 	}
+}
+
+int getRandomCost(Random@ random, int min, int max, int rounding = 10)
+{
+	return Maths::Round(f32(min + random.NextRanged(max - min)) / rounding) * rounding;
 }
 
 void onTick(CBlob@ this)

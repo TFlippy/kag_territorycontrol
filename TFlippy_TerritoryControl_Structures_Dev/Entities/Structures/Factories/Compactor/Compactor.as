@@ -1,7 +1,8 @@
 ﻿#include "MakeMat.as";
 #include "Requirements.as";
 
-const u16 max_loop = 150; // what you get for breaking it
+const u16 MAX_LOOP = 10; // what you get for breaking it
+const u16 LOOP_RNG = 40; // variation on what will spawn if broken 
 
 void onInit(CSprite@ this)
 {
@@ -158,21 +159,20 @@ void onDie(CBlob@ this)
 		const string resource_name = this.get_string("compactor_resource");
 		const u8 team = this.getTeamNum();
 		const Vec2f pos = this.getPosition();
-		int loop_amount = 0;
-		while (current_quantity > 0 && loop_amount < max_loop)
+		const int rng_amount = MAX_LOOP + XORRandom(LOOP_RNG);
+
+		for (int a = 0; a < current_quantity && a < rng_amount; a++)
 		{
-			loop_amount++;
 			CBlob@ blob = server_CreateBlob(resource_name, team, pos);
-			if (blob !is null)
-			{
-				u32 quantity = Maths::Min(current_quantity, blob.getMaxQuantity());
-				current_quantity = Maths::Max(current_quantity - quantity, 0);
+			if (blob is null) { continue; }
+
+			u32 quantity = Maths::Min(current_quantity, blob.getMaxQuantity());
+			current_quantity = Maths::Max(current_quantity - quantity, 0);
 									
-				blob.server_SetQuantity(quantity);
-				blob.setVelocity(getRandomVelocity(0, XORRandom(400) * 0.01f, 360));
-			}
+			blob.server_SetQuantity(quantity);
+			blob.setVelocity(getRandomVelocity(0, XORRandom(400) * 0.01f, 360));
 		}
-		
+
 		server_Sync(this);
 	}
 }

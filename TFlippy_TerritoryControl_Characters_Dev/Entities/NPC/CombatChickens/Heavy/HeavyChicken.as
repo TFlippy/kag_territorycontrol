@@ -236,9 +236,8 @@ void onTick(CBlob@ this)
 	
 	if (getGameTime() % 30 == 0) this.set_u8("mode", 0);
 
-	if (this.getHealth() < 0.0 && !this.hasTag("dead"))
+	if (this.getHealth() < 0.0 && this.hasTag("dead"))
 	{
-		this.Tag("dead");
 		this.getSprite().PlaySound("Wilhelm.ogg", 1.8f, 1.8f);
 		
 		if (isServer())

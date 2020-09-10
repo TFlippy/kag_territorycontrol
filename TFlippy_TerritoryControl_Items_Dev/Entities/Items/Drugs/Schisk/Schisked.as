@@ -47,7 +47,7 @@ void onTick(CBlob@ this)
 			CBlob@ localBlob = getLocalPlayerBlob();
 			if (localBlob !is null)
 			{
-				switch (XORRandom(4))
+				switch (XORRandom(5))
 				{
 					// Spooky sound
 					case 0:

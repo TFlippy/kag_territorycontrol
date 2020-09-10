@@ -9,15 +9,12 @@ void onInit(CBlob@ this)
 	this.set_u32("pigger_init", getGameTime());
 	
 	this.Tag("dangerous");
-	
-	print("piggered");
 }
 
 void onTick(CBlob@ this)
 {
 	if (this.get_f32("drunk_effect") > 2)
 	{
-		print("depiggered");
 	
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 		

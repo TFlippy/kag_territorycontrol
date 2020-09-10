@@ -37,7 +37,7 @@ void onInit(CBlob@ this)
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	// if (this.isOverlapping(caller) && this.getTeamNum() < getRules().getTeamsNum() && this.hasTag("travel tunnel") && (this.hasTag("teamlocked tunnel") ? this.getTeamNum() == caller.getTeamNum() : true))
-	if (this.isOverlapping(caller) && this.hasTag("travel tunnel") && (this.getTeamNum() > 100 ? (caller.getTeamNum() > 100) : (caller.getTeamNum() == this.getTeamNum())))
+	if (this.isOverlapping(caller) && this.hasTag("travel tunnel") && (this.getTeamNum() >= 100 ? (caller.getTeamNum() >= 100) : (caller.getTeamNum() == this.getTeamNum())))
 	{
 		MakeTravelButton(this, caller, this.get_Vec2f("travel button pos"), "Travel", "Travel (requires Transport Tunnels)");
 	}
@@ -60,7 +60,7 @@ bool getTunnelsForButtons(CBlob@ this, CBlob@[]@ tunnels)
 	for (uint i = 0; i < list.length; i++)
 	{
 		CBlob@ blob = list[i];
-		if (blob !is this && (this.getTeamNum() > 100 ? (blob.getTeamNum() > 100) : (blob.getTeamNum() == this.getTeamNum())) && blob.getPosition().x < thisPos.x)
+		if (blob !is this && (this.getTeamNum() >= 100 ? (blob.getTeamNum() >= 100) : (blob.getTeamNum() == this.getTeamNum())) && blob.getPosition().x < thisPos.x)
 		{
 			bool added = false;
 			const f32 distToBlob = (blob.getPosition() - thisPos).getLength();
@@ -87,7 +87,7 @@ bool getTunnelsForButtons(CBlob@ this, CBlob@[]@ tunnels)
 	for (uint i = 0; i < list.length; i++)
 	{
 		CBlob@ blob = list[i];
-		if (blob !is this && (this.getTeamNum() > 100 ? (blob.getTeamNum() > 100) : (blob.getTeamNum() == this.getTeamNum())) && blob.getPosition().x >= thisPos.x)
+		if (blob !is this && (this.getTeamNum() >= 100 ? (blob.getTeamNum() >= 100) : (blob.getTeamNum() == this.getTeamNum())) && blob.getPosition().x >= thisPos.x)
 		{
 			bool added = false;
 			const f32 distToBlob = (blob.getPosition() - thisPos).getLength();

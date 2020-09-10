@@ -60,7 +60,5 @@ int GetRandomItem(const LootItem@[]@&in items)
 		num += weight;
 	}
 
-	print("random: " + rnd + "; got nothing!");
-
 	return -1;
 }

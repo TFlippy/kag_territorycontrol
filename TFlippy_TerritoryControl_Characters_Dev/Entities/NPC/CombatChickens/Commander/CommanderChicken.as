@@ -61,6 +61,22 @@ void onInit(CBlob@ this)
 		this.set_f32("maxDistance", 300);
 		this.set_f32("inaccuracy", 0.00f);
 		
+		CBlob@ phone = server_CreateBlob("phone", this.getTeamNum(), this.getPosition());
+		this.server_PutInInventory(phone);
+		
+		if (XORRandom(100) < 60) 
+		{
+			CBlob@ bp_auto = server_CreateBlob("bp_automation_advanced", -1, this.getPosition());
+			this.server_PutInInventory(bp_auto);
+		}
+		
+		if (XORRandom(100) < 80) 
+		{
+			CBlob@ bp_sdr = server_CreateBlob("bp_energetics", -1, this.getPosition());
+			this.server_PutInInventory(bp_sdr);
+		}
+
+		// gun and ammo
 		for (int i = 0; i < 6; i++)
 		{
 			CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
@@ -94,9 +110,8 @@ void onTick(CBlob@ this)
 		moveVars.jumpFactor *= 1.50f;
 	}
 
-	if (this.getHealth() < 0.0 && !this.hasTag("dead"))
+	if (this.getHealth() < 0.0 && this.hasTag("dead"))
 	{
-		this.Tag("dead");
 		this.getSprite().PlaySound("Wilhelm.ogg", 1.8f, 1.8f);
 		
 		if (isServer())
@@ -109,20 +124,8 @@ void onTick(CBlob@ this)
 			{
 				carried.server_DetachFrom(this);
 			}
-			
-			if (XORRandom(100) < 25) server_CreateBlob("phone", -1, this.getPosition());
-			
-			if (XORRandom(100) < 60) 
-			{
-				server_CreateBlob("bp_automation_advanced", -1, this.getPosition());
-			}
-			
-			if (XORRandom(100) < 80) 
-			{
-				server_CreateBlob("bp_energetics", -1, this.getPosition());
-			}
 		}
-		
+
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
 

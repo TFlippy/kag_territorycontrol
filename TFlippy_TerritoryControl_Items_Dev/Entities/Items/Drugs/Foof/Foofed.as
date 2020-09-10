@@ -30,7 +30,7 @@ void onTick(CBlob@ this)
 
 void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitBlob, u8 customData)
 {
-	MegaHit(this, worldPoint, velocity, damage, hitBlob, customData);
+	if (hitBlob !is this) MegaHit(this, worldPoint, velocity, damage, hitBlob, customData);
 }
 
 void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)

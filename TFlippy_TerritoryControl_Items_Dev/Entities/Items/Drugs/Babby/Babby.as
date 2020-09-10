@@ -2,6 +2,7 @@ void onInit(CBlob@ this)
 {
 	this.getShape().SetRotationsAllowed(true);
 	this.addCommandID("consume");
+	this.Tag("hopperable");
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

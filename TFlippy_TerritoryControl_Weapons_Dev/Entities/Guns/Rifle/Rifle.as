@@ -7,7 +7,7 @@ void onInit(CBlob@ this)
 	GunInitRaycast(
 		this,
 		true,				//If true, gun will be fully automatic and players will be able to just hold the fire button
-		3.5f,				//Weapon damage / projectile blob name
+		1.0f,				//Weapon damage / projectile blob name
 		900.0f,				//Weapon raycast range
 		40,					//Weapon fire delay, in ticks
 		5,					//Weapon clip size
@@ -15,7 +15,7 @@ void onInit(CBlob@ this)
 		75,					//Weapon reload time
 		false,				//If true, gun will be reloaded like a shotgun
 		0,					//For shotguns: Additional delay to reload end
-		1,					// Bullet count - for shotguns
+		4,					// Bullet count - for shotguns
 		0.0f,				// Bullet Jitter
 		"mat_rifleammo",	//Ammo item blob name
 		false,				//If true, firing sound will be looped until player stops firing

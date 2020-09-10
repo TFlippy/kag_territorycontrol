@@ -42,7 +42,14 @@ void onTick(CBlob@ this)
 				
 				if (chickens.length < 8)
 				{
-					CBlob@ blob = server_CreateBlob((XORRandom(100) < 75 ? "soldierchicken" : "scoutchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+					if (this.hasTag("stronghold")) // stronghold spawn
+					{
+						server_CreateBlob((XORRandom(100) < 75 ? "soldierchicken" : "soldierchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+					}
+					else // default spawn for fortress
+					{
+					server_CreateBlob((XORRandom(100) < 75 ? "soldierchicken" : "scoutchicken"), -1, this.getPosition() + Vec2f(16 - XORRandom(32), 0));
+					}
 				}
 			}
 		}

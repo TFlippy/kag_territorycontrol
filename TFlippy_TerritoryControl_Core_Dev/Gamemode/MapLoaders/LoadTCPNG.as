@@ -8,7 +8,6 @@
 #include "CustomBlocks.as";
 
 // #include "PrettyMap.as";
-
 namespace tc_colors
 {
 	enum color
@@ -93,6 +92,11 @@ namespace tc_colors
 		// color_damaged_rustyiron_bg = 0xff150505,
 		color_damaged_mossyconcrete = 0xff657a4e,
 		color_damaged_mossyconcrete_bg = 0xff1d3310,
+		
+		color_biome_jungle = 0xff327800,
+		color_biome_arctic = 0xff64b4ff,
+		color_biome_desert = 0xffffd364,
+		color_biome_dead = 0xff736e64
 	};
 }
 
@@ -590,7 +594,7 @@ const SColor c_bedrock = SColor(255, 71, 71, 61);
 const SColor c_gold = SColor(255, 237, 190, 47);
 
 const SColor c_castle = SColor(0xff647160);
-const SColor c_castle_moss = SColor(0xff619352);
+const SColor c_castle_moss = SColor(0xff2e5425);
 const SColor c_wood = SColor(0xff845235);
 const SColor c_grass = SColor(0xff8bd21a);
 
@@ -604,6 +608,8 @@ const SColor c_mossyconcrete = SColor(0xffd8e4c4);
 const SColor c_mossybconcrete = SColor(0xffd8e4c4);
 const SColor c_reinforcedconcrete = SColor(0xffbcbbb3);
 const SColor c_snow = SColor(0xffd3decf);
+const SColor c_track = SColor(0xff474b4d);
+const SColor c_matter = SColor(0xff4d756f);
 
 SColor[] fire_colors = 
 {
@@ -612,7 +618,7 @@ SColor[] fire_colors =
 	SColor(0xff7e3041)
 };
 
-void CalculateMinimapColour( CMap@ this, u32 offset, TileType type, SColor &out col)
+void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out col)
 {
 	const int w = this.tilemapwidth;
 	const int h = this.tilemapheight;
@@ -712,6 +718,14 @@ void CalculateMinimapColour( CMap@ this, u32 offset, TileType type, SColor &out 
 		else if (isTileSnowPile(type) || isTileSnow(type))
 		{
 			col = c_snow;
+		}
+		else if (type >= CMap::tile_rail_0 && type <= CMap::tile_rail_0_bg )
+		{
+			col = c_track;
+		}
+		else if (type >= CMap::tile_matter && type <= CMap::tile_matter_d2)
+		{
+			col = c_matter;
 		}
 		else
 		{

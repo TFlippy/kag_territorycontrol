@@ -124,7 +124,7 @@ void onTick(CBlob@ this)
 
 CBlob@ FindStorage(u8 team)
 {
-	if (team > 100) return null;
+	if (team >= 100) return null;
 	
 	CBlob@[] blobs;
 	getBlobsByName("stonepile", @blobs);

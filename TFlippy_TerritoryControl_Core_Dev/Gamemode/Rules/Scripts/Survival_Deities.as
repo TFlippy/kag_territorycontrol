@@ -80,7 +80,6 @@ void onSetPlayer(CRules@ this, CBlob@ blob, CPlayer@ player)
 
 void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData)
 {
-	print("rip");
 
 	if (attacker !is null)
 	{

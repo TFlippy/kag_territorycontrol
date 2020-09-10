@@ -243,7 +243,7 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	u8 victimTeam = victim.getTeamNum();
 	s32 respawn_time = 30 * 4;
 
-	if (victimTeam > 100) respawn_time += 30 * 4;
+	if (victimTeam >= 100) respawn_time += 30 * 4;
 	if (victimTeam < 7)
 	{
 		TeamData@ team_data;
@@ -306,6 +306,10 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 void onTick(CRules@ this)
 {
 	s32 gametime = getGameTime();
+
+	/// EXPERIMENTAL
+	getNet().server_KeepConnectionsAlive();
+	/// END
 
 	for (u8 i = 0; i < getPlayerCount(); i++)
 	{
@@ -562,9 +566,12 @@ bool doChickenSpawn(CPlayer@ player)
 	if (ruins.length > 0)
 	{
 		string blobType;
-
-		int rand = XORRandom(100);
-
+		int minutes = getGameTime() / (60*30);
+		int rand = XORRandom(100) - minutes;
+		if (rand < 5)
+		{
+			rand = 4;
+		}
 		if (rand < 5)
 		{
 			blobType = "heavychicken";

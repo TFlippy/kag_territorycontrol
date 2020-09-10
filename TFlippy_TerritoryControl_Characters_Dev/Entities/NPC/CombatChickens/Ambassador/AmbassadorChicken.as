@@ -109,9 +109,8 @@ void onTick(CBlob@ this)
 		moveVars.jumpFactor *= 2.00f;
 	}
 
-	if (this.getHealth() < 0.0 && !this.hasTag("dead"))
+	if (this.getHealth() < 0.0 && this.hasTag("dead"))
 	{
-		this.Tag("dead");
 		this.getSprite().PlaySound("Wilhelm.ogg", 1.8f, 1.8f);
 		
 		if (isServer())
@@ -132,7 +131,6 @@ void onDie(CBlob@ this)
 	CBlob@ altar = getBlobByName("altar_foghorn");
 	if (altar !is null)
 	{
-		print("chicken has died altar");
 	
 		altar.add_f32("deity_power", -10000);
 		altar.set_u32("next_shelling", getGameTime() + (30 * 10));
@@ -156,7 +154,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	print("" + damage);
 	if (hitterBlob !is null && hitterBlob !is this)
 	{
 		CBlob@ altar = getBlobByName("altar_foghorn");

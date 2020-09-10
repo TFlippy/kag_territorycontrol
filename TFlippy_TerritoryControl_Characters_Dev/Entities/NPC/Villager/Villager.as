@@ -166,17 +166,17 @@ void onInit(CBlob@ this)
 	if (rand.NextRanged(100) < 50)
 	{
 		{
-			ShopItem@ s = addShopItem(this, "Piglet", "$icon_piglet$", "piglet", "A baby pig! Everyone's favourite pet, please be nice to it!");
+			ShopItem@ s = addShopItem(this, "Piglet", "$piglet$", "piglet", "A baby pig! Everyone's favourite pet, please be nice to it!");
 			AddRequirement(s.requirements, "coin", "", "Coins", 400);
 			s.spawnNothing = true;
 		}
 		{
-				ShopItem@ s = addShopItem(this, "Chicken", "$icon_chicken$", "chicken", "An chicken, wait for it to lay an egg!");
+				ShopItem@ s = addShopItem(this, "Chicken", "$chicken$", "chicken", "An chicken, wait for it to lay an egg!");
 			AddRequirement(s.requirements, "coin", "", "Coins", 250);
 			s.spawnNothing = true;
 		}
 		{
-				ShopItem@ s = addShopItem(this, "Fishy", "$icon_fishy$", "fishy", "A baby fishy, a good pet!");
+				ShopItem@ s = addShopItem(this, "Fishy", "$fishy$", "fishy", "A baby fishy, a good pet!");
 			AddRequirement(s.requirements, "coin", "", "Coins", 300);
 			s.spawnNothing = true;
 		}
@@ -201,25 +201,26 @@ void onInit(CBlob@ this)
 	if (rand.NextRanged(100) < 50)
 	{
 		{
-			ShopItem@ s = addShopItem(this, "Cinnamon Bun", "$icon_cake$", "cake", "Pastry made with love by my wife!");
+			ShopItem@ s = addShopItem(this, "Cinnamon Bun", "$cake$", "cake", "Pastry made with love by my wife!");
 			AddRequirement(s.requirements, "coin", "", "Coins", 50);
 			s.spawnNothing = true;
 		}
 		{
-			ShopItem@ s = addShopItem(this, "Top Burger", "$icon_food$", "cake", "A hearty burger made with love by me!");
+			ShopItem@ s = addShopItem(this, "Top Burger", "$food$", "food", "A hearty burger made with love by me!");
 			AddRequirement(s.requirements, "coin", "", "Coins", 75);
 			s.spawnNothing = true;
 		}
 		{
-			ShopItem@ s = addShopItem(this, "Bear's Beer", "$icon_beer$", "beer", "A spare real beer for real men I got from a nearby tavern. Good for thirst!");
+			ShopItem@ s = addShopItem(this, "Bear's Beer", "$beer$", "beer", "A spare real beer for real men I got from a nearby tavern. Good for thirst!");
 			AddRequirement(s.requirements, "coin", "", "Coins", 45);
 			s.spawnNothing = true;
 		}
 		{
-			ShopItem@ s = addShopItem(this, "Scrub's Chow", "$icon_foodcan$", "foodcan", "A delicious meatloaf in a can with a special ingredient!");
+			ShopItem@ s = addShopItem(this, "Scrub's Chow", "$foodcan$", "foodcan", "A delicious meatloaf in a can with a special ingredient!");
 			AddRequirement(s.requirements, "coin", "", "Coins", 150);
 			s.spawnNothing = true;
 		}
+		// reselling foodcans at merchant not sure if intentional
 		{
 			ShopItem@ s = addShopItem(this, "Sell Scrub's Chow (1)", "$COIN$", "coin-150", "Sell 1 Scrub's Chow 150 coins.");
 			AddRequirement(s.requirements, "blob", "foodcan", "Scrub's Chow", 1);
@@ -256,7 +257,7 @@ void onInit(CBlob@ this)
 	if (rand.NextRanged(100) < 2)
 	{
 		{
-			ShopItem@ s = addShopItem(this, "Snake Statue", "$icon_zatniktel", "zatniktel", "A snake statue I found in a badger den!");
+			ShopItem@ s = addShopItem(this, "Snake Statue", "$zatniktel$", "zatniktel", "A snake statue I found in a badger den!");
 			AddRequirement(s.requirements, "coin", "", "Coins", 900);
 			s.spawnNothing = true;
 		}
@@ -266,13 +267,14 @@ void onInit(CBlob@ this)
 			AddRequirement(s.requirements, "blob", "food", "Burger", 1);
 			s.spawnNothing = true;
 		}
+		// who made this require burgers lol
 		{
-			ShopItem@ s = addShopItem(this, "Glittery Dust", "$icon_matter$", "mat_matter-20", "Some weird glittery dust.");
+			ShopItem@ s = addShopItem(this, "Glittery Dust", "$mat_matter$", "mat_matter-20", "Some weird glittery dust.");
 			AddRequirement(s.requirements, "coin", "", "Coins", 10);
 			s.spawnNothing = true;
 		}
 		{
-			ShopItem@ s = addShopItem(this, "Pipe", "$icon_infernocannon$", "infernocannon", "A pipe, I guess one could club someone with it?");
+			ShopItem@ s = addShopItem(this, "Pipe", "$infernocannon$", "infernocannon", "A pipe, I guess one could club someone with it?");
 			AddRequirement(s.requirements, "coin", "", "Coins", 500);
 			s.spawnNothing = true;
 		}

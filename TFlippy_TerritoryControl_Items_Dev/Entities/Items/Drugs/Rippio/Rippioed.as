@@ -8,6 +8,8 @@ const f32 increment = 1.00f / (30.00f * 30.00f);
 
 void onInit(CBlob@ this)
 {
+	this.Tag("no_suicide");
+
 	if (this.hasTag("human") || this.hasTag("chicken"))
 	{
 		CSprite@ sprite = this.getSprite();

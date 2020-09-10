@@ -3,6 +3,7 @@
 void onInit(CBlob@ this)
 {
 	this.addCommandID("consume");
+	this.Tag("hopperable");
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

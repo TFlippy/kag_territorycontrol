@@ -22,6 +22,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$ss_ammo$", "SS_Icons.png", Vec2f(32, 16), 4);
 	AddIconToken("$ss_sam$", "SS_Icons.png", Vec2f(32, 24), 4);
 	AddIconToken("$ss_lws$", "SS_Icons.png", Vec2f(32, 24), 5);
+	AddIconToken("$ss_machinegun$", "SS_Icons.png", Vec2f(32, 24), 6);
 
 	this.getCurrentScript().tickFrequency = 1;
 	
@@ -99,6 +100,12 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
+	{
+		ShopItem@ s = addShopItem(this, "UPF Portable Machine Gun!", "$ss_machinegun$", "machinegun-parachute_no_unpack", "Humans disturbing your precious sleep? Mow them down with our Portable Machine Gun!");
+		AddRequirement(s.requirements, "coin", "", "Coins", 1299);
+		
+		s.spawnNothing = true;
+	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -134,7 +141,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				}
 				else if (spl[0] == "barrage")
 				{
-					print("barrage");
 				
 					CBlob@ b = server_CreateBlobNoInit("bombardment");
 					b.server_setTeamNum(250);

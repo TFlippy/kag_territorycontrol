@@ -225,8 +225,10 @@ void onDie(CBlob@ this)
 	if (this.hasTag("do gib"))
 	{
 		f32 count = 2 + XORRandom(4);
-		int frac = Maths::Min(250, this.getMass()) / count * 0.50f;
+		int frac = Maths::Min(250, this.getMass() / count) * 0.50f;
 		f32 radius = this.getRadius();
+		
+		f32 explodium_amount = this.get_f32("propeskoed") * 0.50f / count;
 		
 		for (int i = 0; i < count; i++)
 		{
@@ -243,7 +245,11 @@ void onDie(CBlob@ this)
 				CBlob@ blob = server_CreateBlob("mat_meat", this.getTeamNum(), this.getPosition());
 				if (blob !is null)
 				{
-					blob.server_SetQuantity(frac * 0.25f + XORRandom(frac));
+					if (explodium_amount > 0.00f) blob.set_f32("explodium_amount", explodium_amount);
+
+					// print("" + explodium_amount);
+				
+					blob.server_SetQuantity(1 + (frac * 0.25f + XORRandom(frac)));
 					blob.setVelocity(vel);
 				}
 			}

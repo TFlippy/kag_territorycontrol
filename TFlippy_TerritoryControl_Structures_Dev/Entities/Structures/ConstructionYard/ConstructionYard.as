@@ -104,6 +104,7 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100);
 		AddRequirement(s.requirements, "coin", "", "Coins", 30);
 		
+		s.spawnNothing = true;
 		s.customButton = true;
 		s.buttonwidth = 2;
 		s.buttonheight = 2;

@@ -23,7 +23,7 @@ void onInit(CBlob@ this)
 		SoundInfo("SMGReload",1,1.0f,0.8f),	//Sound to play when reloading
 		SoundInfo(),						//Sound to play some time after firing
 		0,					//Delay for the delayed sound, in ticks
-		Vec2f(-7.0f, 2.0f)	//Visual offset for raycast bullets
+		Vec2f(0.0f, -1.0f)	//Visual offset for raycast bullets
 	);
 	
 	this.set_u8("gun_hitter", HittersTC::bullet_high_cal);

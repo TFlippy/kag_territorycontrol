@@ -67,6 +67,11 @@ void onTick(CBlob@ this)
 
 		this.server_HitMap(pos, Vec2f(0, 0), 1.3f, Hitters::drill);
 	}
+	
+	if (isClient())
+	{
+		this.getSprite().SetEmitSoundSpeed(0.7f + ((this.get_f32("gyromat_acceleration") - 1.00f) * 0.10f));
+	}
 }
 
 void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)

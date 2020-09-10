@@ -165,7 +165,6 @@ void onTick(CBlob@ this)
 			if (dist <= flash_distance)
 			{
 				f32 flashMod = Maths::Sqrt(1.00f - (dist / flash_distance));
-				print("" + flashMod);
 				SetScreenFlash(255 * Maths::Min(flashMod * 2, 1), 255, 255, 255, 5 * flashMod);
 			}
 		}

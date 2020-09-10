@@ -166,6 +166,7 @@ void onTick(CBrain@ this)
 		if (blob.get_u32("nextAttack") < getGameTime() && (stuck || (visibleTarget ? true : distance <= chaseDistance * 0.50f)))
 		{
 			blob.setKeyPressed(key_action1, true);
+			blob.set_bool("should_do_attack_hack", true);
 		}
 		else
 		{
@@ -246,7 +247,6 @@ CBlob@ FindTarget(CBrain@ this, f32 maxDistance)
 		}
 	}
 	
-	print("" + net_id);
 
 	return getBlobByNetworkID(net_id);
 }
