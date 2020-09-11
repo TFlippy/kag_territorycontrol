@@ -16,10 +16,10 @@
  * u8 custom_hitter             - the hitter from Hitters.as to use
  */
 
-
 #include "Hitters.as";
 #include "ShieldCommon.as";
 #include "SplashWater.as";
+#include "BTL_Include.as";
 
 bool isOwnerBlob(CBlob@ this, CBlob@ that)
 {
@@ -53,7 +53,28 @@ void makeLargeExplosionParticle(Vec2f pos)
 void Explode(CBlob@ this, f32 radius, f32 damage)
 {
 	Vec2f pos = this.getPosition() + this.get_Vec2f("explosion_offset").RotateBy(this.getAngleDegrees());
-	CMap@ map = this.getMap();
+	CMap@ map = getMap();
+
+	/////////////////
+	// BTL - Bomb Tick Limit
+	//
+	// Oi mate, wtf is this i see you asking
+	// It's a limit for how many bomb's are allowed to explode at once
+	// and if that limit is reached, execute them the next tick instead
+	// this should help prevent crashes, and lower lag spikes
+	//
+	// shouldExplode sits in BTL_Include.as
+	//
+
+	if (!shouldExplode(this, radius, damage, getRules()))
+	{
+		return;
+	}
+
+	/// END -> Rest is in BTL.as
+
+
+
 	if(isClient())
 	{
 		if (!this.exists("custom_explosion_sound"))
