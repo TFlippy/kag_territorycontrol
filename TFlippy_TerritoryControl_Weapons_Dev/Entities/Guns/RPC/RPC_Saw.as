@@ -92,7 +92,7 @@ void DoExplosion(CBlob@ this, Vec2f velocity)
 	CRules@ rules = getRules();
 	if (!shouldExplode(this, rules))
 	{
-		addToNextTick(this, rules, DoExplosion);
+		addToNextTick(this, rules, velocity, DoExplosion);
 		return;
 	}
 	
