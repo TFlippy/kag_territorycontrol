@@ -11,7 +11,7 @@ shared void PopulateSpawnList(CBlob@[]@ respawns, const int teamNum)
 	{
 		CBlob@ blob = posts[i];
 
-		if (teamNum > 100 ? (blob.getTeamNum() > 100) : (blob.getTeamNum() == teamNum && !isUnderRaid(blob)))
+		if (teamNum >= 100 ? (blob.getTeamNum() >= 100) : (blob.getTeamNum() == teamNum && !isUnderRaid(blob)))
 		{
 			respawns.push_back(blob);
 		}

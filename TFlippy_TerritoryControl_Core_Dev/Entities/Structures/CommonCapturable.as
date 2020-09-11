@@ -119,7 +119,7 @@ void onTick(CBlob@ this)
 
 			if (ticks <= 0 && friendlyCount == 0)
 			{
-				if (this.hasTag(chicken_tag) && (this.getName() == "citadel" || this.getName() == "fortress" || this.getName() == "camp"))
+				if (this.hasTag(chicken_tag) && (this.getName() == "convent" || this.getName() == "citadel" || this.getName() == "fortress" || this.getName() == "stronghold" || this.getName() == "camp"))
 				{
 					if (isServer())
 					{

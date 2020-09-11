@@ -56,7 +56,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	if (this.getTeamNum() == forBlob.getTeamNum() || (this.getTeamNum() > 100 && this.getTeamNum() < 200))
+	if (this.getTeamNum() == forBlob.getTeamNum() || (this.getTeamNum() >= 100 && this.getTeamNum() < 200))
 	{
 		CBlob@ carried = forBlob.getCarriedBlob();
 		return (carried is null ? true : carried.getName() == "mat_battery");

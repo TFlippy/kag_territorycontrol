@@ -91,7 +91,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	}
 	else
 	{
-		if (caller.getTeamNum() > 100)
+		if (caller.getTeamNum() >= 100)
 		{
 			if (caller.getPlayer().get_u16("tavern_netid") != this.getNetworkID())
 			{

@@ -29,7 +29,7 @@ void onInit(CBlob@ this)
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(5, 8));
+	this.set_Vec2f("shop menu size", Vec2f(6, 7));
 	this.set_string("shop description", "Mechanist's Workshop");
 	this.set_u8("shop icon", 15);
 
@@ -47,6 +47,11 @@ void onInit(CBlob@ this)
 		s.spawnNothing = false;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "Copper Wire (2)", "$mat_copperwire$", "mat_copperwire-2", "A copper wire. Kids' favourite toy.");
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Saw", "$saw$", "saw", descriptions[12], false);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
@@ -59,17 +64,6 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
 		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2);
 
-		s.spawnNothing = true;
-	}
-	// {
-		// ShopItem@ s = addShopItem(this, "Contrabass", "$contrabass$", "contrabass", "A musical instrument for the finest bards.");
-		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 60);
-		// AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 1);
-		// s.spawnNothing = false;
-	// }
-	{
-		ShopItem@ s = addShopItem(this, "Copper Wire (2)", "$mat_copperwire$", "mat_copperwire-2", "A copper wire. Kids' favourite toy.");
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
 		s.spawnNothing = true;
 	}
 	{
@@ -166,35 +160,10 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Binoculars", "$icon_binoculars$", "binoculars", "Two telescopes glued together used for spying neighbours.");
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
-		// AddRequirement(s.requirements, "tech", "tech_metallurgy", "Metallurgy", 1);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Hazmat Suit", "$icon_hazmat$", "hazmatitem", "A hazardous materials suit giving the wearer protection against fire, toxic gases, radiation and drowning.");
-		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 50);
-		AddRequirement(s.requirements, "coin", "", "Coins", 500);
-
-		s.spawnNothing = true;
-	}
-	{
 		ShopItem@ s = addShopItem(this, "Mouse Trap", "$icon_mousetrap$", "mousetrap", "An intricate device used for capturing of oversized mice.");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
 		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 4);
 		AddRequirement(s.requirements, "coin", "", "Coins", 400);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Musical Contrabass", "$icon_contrabass$", "contrabass", "An advanced contrabass capable of emitting sounds of multiple instruments.");
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
-		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 4);
-		AddRequirement(s.requirements, "coin", "", "Coins", 200);
-		
-		// AddRequirement(s.requirements, "tech", "tech_test", "Test", 1);
 
 		s.spawnNothing = true;
 	}
@@ -206,6 +175,26 @@ void onInit(CBlob@ this)
 
 		s.customButton = true;
 		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Music Disc Replacement", "$musicdisc$", "musicdisc", "Change out the tunes to see if it fits your groove.");
+		AddRequirement(s.requirements, "blob", "musicdisc", "Music Disc", 1);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 15);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Accelerated Gyromat Core Replacement", "$icon_gyromat$", "gyromat", "Replace this Accelerated Gyromat's core in hope to improve it.");
+		AddRequirement(s.requirements, "blob", "gyromat", "Gyromat", 1);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 20);
+		AddRequirement(s.requirements, "coin", "", "Coins", 400);
+
+		s.customButton = true;
+		s.buttonwidth = 1;
 		s.buttonheight = 1;
 
 		s.spawnNothing = true;
@@ -237,24 +226,28 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Blazethrower", "$icon_blazethrower$", "blazethrower", "A Scorcher modification providing support for gaseous fuels.\n\nUses Fuel.");
-		AddRequirement(s.requirements, "blob", "flamethrower", "Scorcher", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 1000);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
+		ShopItem@ s = addShopItem(this, "Binoculars", "$icon_binoculars$", "binoculars", "Two telescopes glued together used for spying neighbours.");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+		// AddRequirement(s.requirements, "tech", "tech_metallurgy", "Metallurgy", 1);
 
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Accelerated Gyromat Core Replacement", "$icon_gyromat$", "gyromat", "Replace this Accelerated Gyromat's core in hope to improve it.");
-		AddRequirement(s.requirements, "blob", "gyromat", "Gyromat", 1);
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 20);
-		AddRequirement(s.requirements, "coin", "", "Coins", 400);
+		ShopItem@ s = addShopItem(this, "Hazmat Suit", "$icon_hazmat$", "hazmatitem", "A hazardous materials suit giving the wearer protection against fire, toxic gases, radiation and drowning.");
+		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 50);
+		AddRequirement(s.requirements, "coin", "", "Coins", 500);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Blazethrower", "$icon_blazethrower$", "blazethrower", "A Scorcher modification providing support for gaseous fuels.\n\nUses Fuel.");
+		AddRequirement(s.requirements, "blob", "flamethrower", "Scorcher", 1);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 5);
+		AddRequirement(s.requirements, "coin", "", "Coins", 600);
 
 		s.customButton = true;
-		s.buttonwidth = 1;
+		s.buttonwidth = 2;
 		s.buttonheight = 1;
 
 		s.spawnNothing = true;
@@ -268,6 +261,16 @@ void onInit(CBlob@ this)
 		s.customButton = true;
 		s.buttonwidth = 2;
 		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Musical Contrabass", "$icon_contrabass$", "contrabass", "An advanced contrabass capable of emitting sounds of multiple instruments.");
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 4);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
+		
+		// AddRequirement(s.requirements, "tech", "tech_test", "Test", 1);
 
 		s.spawnNothing = true;
 	}
