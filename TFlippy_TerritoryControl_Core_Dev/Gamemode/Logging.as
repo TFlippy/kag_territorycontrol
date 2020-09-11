@@ -2,8 +2,7 @@
 
 void print_log(string text)
 {
-	CRules@ r = getRules();
-	if(r.get_bool("log"))
+	if(isServer())
 	{
 		print("[LOG] " + text, SColor(255, 255, 0, 255));
 	}
@@ -11,8 +10,7 @@ void print_log(string text)
 
 void print_log(CBlob@ blob, string text)
 {
-	CRules@ r = getRules();
-	if(r.get_bool("log"))
+	if(isServer())
 	{
 		if (blob !is null)
 		{
@@ -32,8 +30,7 @@ void print_log(CBlob@ blob, string text)
 
 void print_log(CPlayer@ player, string text)
 {
-	CRules@ r = getRules();
-	if(r.get_bool("log"))
+	if(isServer())
 	{
 		if (player !is null)
 		{
