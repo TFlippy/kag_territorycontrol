@@ -103,6 +103,7 @@ void DoExplosion(CBlob@ this)
 	f32 random = XORRandom(16);
 	f32 modifier = 1 + Maths::Log(this.getQuantity());
 	f32 angle = -this.get_f32("bomb angle");
+	
 	// print("Modifier: " + modifier + "; Quantity: " + this.getQuantity());
 
 	this.set_f32("map_damage_radius", (40.0f + random) * modifier);
@@ -127,7 +128,7 @@ void DoExplosion(CBlob@ this)
 	{
 		for (int i = 0; i < blobs.length; i++)
 		{		
-			CBlob@ blob = blobs[i];
+			CBlob@ blob = @blobs[i];
 			if (blob !is null && !blob.getShape().isStatic()) 
 			{
 				Vec2f dir = blob.getPosition() - pos;
