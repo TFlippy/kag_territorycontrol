@@ -65,9 +65,10 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 	//
 	// shouldExplode sits in BTL_Include.as
 	//
-
-	if (!shouldExplode(this, radius, damage, getRules()))
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
 	{
+		addToNextTick(this, radius, damage, rules, Explode);
 		return;
 	}
 
@@ -505,6 +506,15 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 	const bool particles = !this.hasTag("no explosion particles");
 	const Vec2f pos = this.getPosition();
 	Vec2f hit_blob_pos = hit_blob.getPosition();
+
+	if ( hit_blob.getHealth() < 0.01f || this is hit_blob || !hit_blob.isCollidable())
+	{
+		// Don't hit blobs that are about to die, waste of a check (e.g. other bombs that are about to explode)
+		return false;
+	}
+
+
+
 	if (bother_raycasting) // have we already checked the rays?
 	{
 		CMap@ map = this.getMap();
@@ -526,21 +536,14 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 
 				if (b !is null) // blob
 				{
-					if (b is this || b is hit_blob || !b.isCollidable())
+					if (b is this || b is hit_blob || !b.isCollidable() )
 					{
-						continue;
-					}
-					
-					CShape@ s = b.getShape();
-					if (s is null)
-					{
-						b.server_Die();
 						continue;
 					}
 
 					// only shield and heavy things block explosions
 					if (b.hasTag("heavy weight") ||
-					        b.getMass() > 500 || s.isStatic() ||
+					        b.getMass() > 500 || b.getShape().isStatic() ||
 					        (b.hasTag("shielded") && blockAttack(b, hitvec, 0.0f)))
 					{
 						return false;

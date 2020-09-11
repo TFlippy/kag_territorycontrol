@@ -2,10 +2,12 @@
 
 const u8 MAX_BOMBS_PER_TICK = 10; 
 
-bool shouldExplode(CBlob@ this, f32 radius, f32 damage, CRules@ rules)
+bool shouldExplode(CBlob@ this, CRules@ rules)
 {
     uint lastGameTime = rules.get_u32("last_exp_tick"); // doesnt matter if it doesnt exist, it'll default to 0 ;)
 	u16 explosionCount = rules.add_u16("explosion_count", 1); // u16 because people will always go overkill
+
+	this.Tag("BTL_processed");
 
 	if (lastGameTime != getGameTime())
 	{
@@ -14,59 +16,117 @@ bool shouldExplode(CBlob@ this, f32 radius, f32 damage, CRules@ rules)
 		rules.set_u32("last_exp_tick", getGameTime());
 		rules.set_u16("explosion_count", explosionCount); // default to 1 if new tick (since this bomb counts as an explosion)
 	}
-
-	BTL[] @bombList;
-	if (!rules.get("BTL_DELAY", @bombList))
-	{
-		@bombList = array<BTL>();
-	}
-
 	if (explosionCount > MAX_BOMBS_PER_TICK) // is this explosion over the limit?
 	{
 		// OI MATE, YOU GOT A LICENSE FOR THAT BOMB?
 		// GO WAIT IN LINE WITH THE REST
-		bombList.push_back( BTL( this.getDamageOwnerPlayer(), this, radius, damage) );
-
-		rules.set("BTL_DELAY", @bombList);
-
 		return false;
 	}
 
     return true;
 }
 
+void addToNextTick(CBlob@ this, f32 radius, f32 damage, CRules@ rules, explosionHook@ toCall)
+{
+	BTL[] @bombList;
+	if (!rules.get("BTL_DELAY", @bombList))
+	{
+		@bombList = array<BTL>();
+	}
+
+	bombList.push_back( BTL( this.getDamageOwnerPlayer(), this, radius, damage, toCall) );
+
+	rules.set("BTL_DELAY", @bombList);
+}
+
+void addToNextTick(CBlob@ this, CRules@ rules, onDieHook@ toCall)
+{
+	BTL[] @bombList;
+	if (!rules.get("BTL_DELAY", @bombList))
+	{
+		@bombList = array<BTL>();
+	}
+
+	bombList.push_back( BTL( this.getDamageOwnerPlayer(), this, toCall) );
+
+	rules.set("BTL_DELAY", @bombList);
+}
+
+
+
 
 /// BTL data
+funcdef void onDieHook(CBlob@); // sorry, this is the hacky way around without an engine change :)
+funcdef void explosionHook(CBlob@, f32, f32); // sorry, this is the hacky way around without an engine change :)
 
 class BTL
 {
-	CPlayer@ explosion_owner;
-	CBlob@ explosion_host;
-	string blob_name; // used if explosion_host is dead
+	/// Call back hooks are used if original blobs are still alive
+	explosionHook@ ExpCallback; 
+	onDieHook@ DieCallback;
+
+	CPlayer@ damage_owner;
+	CBlob@ original_blob;
+
+	string blob_name; 
 	Vec2f position;
 	f32 radius;
 	f32 damage;
 	u32 time; 
 	int team;
 
-	BTL(){}
+	BTL () {}
 
-	BTL(CPlayer@ explosion_owner, CBlob@ this, f32 explosion_radius, f32 explosion_damage)
+	BTL (CPlayer@ damageOwner, CBlob@ blob, f32 exp_radius, f32 exp_damage, explosionHook@ toCall)
 	{
-		if (this.getTicksToDie() == -1) // is this item going to die this tick
+		@damage_owner = damageOwner;
+		@original_blob = blob;
+		@ExpCallback = toCall;
+
+		SetDeadBlobSettings(blob);
+
+		radius = exp_radius;
+		damage = exp_damage;
+	}
+
+
+	BTL (CPlayer@ damageOwner, CBlob@ blob, onDieHook@ toCall)
+	{
+		@damage_owner = damageOwner;
+		@original_blob = blob;
+		@DieCallback = toCall;
+
+		SetDeadBlobSettings(blob);
+	}
+
+
+	void SetDeadBlobSettings(CBlob@ this)
+	{
+		blob_name = this.getName();
+		position = this.getPosition();
+		team = this.getTeamNum();
+		time = getGameTime();
+	}
+
+	bool CallHookPls()
+	{
+		if (original_blob is null) 
 		{
-			blob_name = this.getName(); // lets clone it when we are going to re-explode it, i'll optimize this later (engine side or script side)
-		}
-		else
-		{
-			@explosion_host = this;
+			return false;
 		}
 
-		@explosion_owner = this.getDamageOwnerPlayer();
-		position = this.getPosition();
-		radius = explosion_radius;
-		damage = explosion_damage;
-		time = getGameTime();
-		team = this.getTeamNum();
+		if (DieCallback !is null)
+		{
+			DieCallback(original_blob);
+			return true;
+		}
+		else if (ExpCallback !is null)
+		{
+			ExpCallback(original_blob, radius, damage);
+			return true;
+		}
+
+
+		return false;
 	}
 }

@@ -12,33 +12,41 @@
 void onTick(CRules@ this)
 {
     u16[] toErase;
-    BTL[] @bombList;
-    int exp_count = this.get_u16("explosion_count");
-
-	this.get("BTL_DELAY", @bombList);
+    BTL[] @expList;
+	this.get("BTL_DELAY", @expList);
 	
-    if (bombList is null || bombList.size() == 0) { return; } 
+    if (expList is null || expList.size() == 0) { return; } 
+    int expCount = this.get_u16("explosion_count");
 
-    for (int a = 0; a < bombList.size(); a++)
+    for (int a = 0; a < expList.size(); a++)
     {
-        BTL boom = bombList[a];
+        BTL explosion = expList[a];
         
-        if (boom.time == getGameTime()) { continue; }
+        if (explosion.time == getGameTime()) { continue; }
         
-        exp_count += 1;
+        expCount += 1;
 
-        if (exp_count > MAX_BOMBS_PER_TICK) { break; } // exit out if we have done more then 5 this tick
+        if (expCount > MAX_BOMBS_PER_TICK) { break; } // exit out if we have done more then 5 this tick
 
-        if (boom.explosion_host is null) 
-        {;
+        CBlob@ blob = explosion.original_blob;
+
+        if (blob is null) // blob's have around '30 ticks' before they die
+        {
             if (!isServer()) { continue;} 
 
-            CBlob@ blob = server_CreateBlob( boom.blob_name, boom.team, boom.position ); // optimize this, lets see if we can stop a blob from dying?
+            CBlob@ blob = server_CreateBlob( explosion.blob_name, explosion.team, explosion.position ); // optimize this later
+
+            if (explosion.damage_owner !is null)
+            {
+                blob.SetDamageOwnerPlayer(explosion.damage_owner);
+            }
+
             blob.server_Die(); // sorry little one, such a short life
         }
         else 
         {
-            //Explode(boom.explosion_host, boom.radius, boom.damage); // just explode if the blob is still alive
+            print("calling new hook");
+            explosion.CallHookPls(); // explode 
         }
 
         toErase.push_back(a);
@@ -50,11 +58,11 @@ void onTick(CRules@ this)
 
         for (int a = 0; a < toErase.size(); a++) // erase all
         {
-            bombList.erase(toErase[a]);
+            expList.erase(toErase[a]);
         }
     }
 
 
-    this.set("BTL_DELAY", @bombList);
+    this.set("BTL_DELAY", @expList);
     this.set_u16("explosion_count", 0); 
 }
