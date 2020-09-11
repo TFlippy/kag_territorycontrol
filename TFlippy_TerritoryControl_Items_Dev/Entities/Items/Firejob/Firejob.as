@@ -144,12 +144,14 @@ void DoExplosion(CBlob@ this)
 
 	if (isServer())
 	{
+		
 		f32 chance = this.get_f32("split_chance");
 		if (XORRandom(100) <= (chance * 100))
 		{
 			for (int i = 0; i < 2; i++)
 			{
-				CBlob@ blob = server_CreateBlobNoInit("firejob");
+				CBlob@ blob = @server_CreateBlobNoInit("firejob");
+				if (blob is null) { continue; }
 				blob.setPosition(this.getPosition() + getRandomVelocity(0, XORRandom(16), 360));
 				blob.set_f32("velocity", XORRandom(100) / 50.00f);
 				blob.set_Vec2f("direction", getRandomVelocity(0, 1, 360));
@@ -161,9 +163,12 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 		
-		for (int i = 0; i < 3 + XORRandom(5); i++)
+		int rng = XORRandom(5);
+		for (int i = 0; i < 3 + rng; i++)
 		{
-			CBlob@ blob = server_CreateBlob("flame", -1, this.getPosition());
+			CBlob@ blob = @server_CreateBlob("flame", -1, this.getPosition());
+			if (blob is null) { continue; }
+			
 			blob.setVelocity(getRandomVelocity(0, XORRandom(8), 360));
 			blob.server_SetTimeToDie(3 + XORRandom(5));
 		}
