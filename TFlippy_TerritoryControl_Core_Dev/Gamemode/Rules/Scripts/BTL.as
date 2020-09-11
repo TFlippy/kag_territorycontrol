@@ -20,7 +20,7 @@ void onTick(CRules@ this)
 
     for (int a = 0; a < expList.size(); a++)
     {
-        BTL explosion = expList[a];
+        BTL@ explosion = @expList[a];
         
         if (explosion.time == getGameTime()) { continue; }
         
