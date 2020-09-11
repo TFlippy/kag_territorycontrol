@@ -508,7 +508,7 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 	const Vec2f pos = this.getPosition();
 	Vec2f hit_blob_pos = hit_blob.getPosition();
 
-	if ( hit_blob.getHealth() < 0.01f || this is hit_blob || !hit_blob.isCollidable())
+	if ( hit_blob.getHealth() <= 0.00f || this is hit_blob )
 	{
 		// Don't hit blobs that are about to die, waste of a check (e.g. other bombs that are about to explode)
 		return false;
