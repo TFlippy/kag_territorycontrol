@@ -65,6 +65,7 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 	//
 	// shouldExplode sits in BTL_Include.as
 	//
+	
 	CRules@ rules = getRules();
 	if (!shouldExplode(this, rules))
 	{

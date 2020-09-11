@@ -24,6 +24,13 @@ void onInit(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	f32 random = XORRandom(8);
 	f32 intensity = this.getQuantity() / f32(this.maxQuantity);	
 	

@@ -52,6 +52,13 @@ void onDie(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	f32 random = XORRandom(8);
 	f32 modifier = this.get_f32("power");
 	// print("Modifier: " + modifier);

@@ -401,6 +401,13 @@ void onDie(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+
 	this.Tag("exploded");
 
 	f32 random = XORRandom(16);

@@ -425,6 +425,13 @@ void onDie( CBlob@ this )
 
 void DoExplosion(CBlob@ this,Vec2f velocity)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, velocity, DoExplosion);
+		return;
+	}
+
 	Sound::Play("KegExplosion.ogg",this.getPosition(),1.0f);
 	this.set_Vec2f("explosion_offset",Vec2f(0,-16).RotateBy(this.getAngleDegrees()));
 	

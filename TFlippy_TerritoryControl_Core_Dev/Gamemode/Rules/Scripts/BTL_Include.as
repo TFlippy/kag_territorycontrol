@@ -53,15 +53,30 @@ void addToNextTick(CBlob@ this, CRules@ rules, onDieHook@ toCall)
 }
 
 
+void addToNextTick(CBlob@ this, CRules@ rules, Vec2f velocity, onDieVelocityHook@ toCall)
+{
+	BTL[] @bombList;
+	if (!rules.get("BTL_DELAY", @bombList))
+	{
+		@bombList = array<BTL>();
+	}
+
+	bombList.push_back( BTL( this.getDamageOwnerPlayer(), this, velocity, toCall) );
+
+	rules.set("BTL_DELAY", @bombList);
+}
+
 
 
 /// BTL data
 funcdef void onDieHook(CBlob@); // sorry, this is the hacky way around without an engine change :)
-funcdef void explosionHook(CBlob@, f32, f32); // sorry, this is the hacky way around without an engine change :)
+funcdef void explosionHook(CBlob@, f32, f32); 
+funcdef void onDieVelocityHook(CBlob@, Vec2f); 
 
 class BTL
 {
 	/// Call back hooks are used if original blobs are still alive
+	onDieVelocityHook@ VelCallback;
 	explosionHook@ ExpCallback; 
 	onDieHook@ DieCallback;
 
@@ -69,6 +84,7 @@ class BTL
 	CBlob@ original_blob;
 
 	string blob_name; 
+	Vec2f velocity;
 	Vec2f position;
 	f32 radius;
 	f32 damage;
@@ -99,6 +115,16 @@ class BTL
 		SetDeadBlobSettings(blob);
 	}
 
+	BTL (CPlayer@ damageOwner, CBlob@ blob, Vec2f bomb_vel, onDieVelocityHook@ toCall)
+	{
+		@damage_owner = damageOwner;
+		@original_blob = blob;
+		@VelCallback = toCall;
+		velocity = bomb_vel;
+
+		SetDeadBlobSettings(blob);
+	}
+
 
 	void SetDeadBlobSettings(CBlob@ this)
 	{
@@ -123,6 +149,11 @@ class BTL
 		else if (ExpCallback !is null)
 		{
 			ExpCallback(original_blob, radius, damage);
+			return true;
+		}
+		else if (VelCallback !is null)
+		{
+			VelCallback(original_blob, velocity);
 			return true;
 		}
 

@@ -12,6 +12,7 @@ void onDie(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+
 	if (isServer())
 	{
 		Vec2f velocity = this.getVelocity();

@@ -39,6 +39,13 @@ void onDie(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	if (!this.hasTag("dead"))
 	{
 		Explode(this, 16.0f, 2.0f);

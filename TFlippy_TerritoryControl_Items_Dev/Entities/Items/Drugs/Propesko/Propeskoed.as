@@ -45,6 +45,13 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	if (isServer())
 	{
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");

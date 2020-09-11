@@ -42,6 +42,13 @@ void onDie(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	f32 random = XORRandom(16);
 	f32 modifier = 1 + Maths::Log(this.getQuantity());
 	f32 angle = this.get_f32("bomb angle");

@@ -75,6 +75,13 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	// this.set_f32("map_damage_radius", 48.0f);
 	// this.set_f32("map_damage_ratio", 0.4f);
 	// f32 angle = this.get_f32("bomb angle");

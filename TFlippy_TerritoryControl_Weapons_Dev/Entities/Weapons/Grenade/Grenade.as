@@ -75,6 +75,13 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	if (this.hasTag("dead")) return;
 	this.Tag("dead");
 

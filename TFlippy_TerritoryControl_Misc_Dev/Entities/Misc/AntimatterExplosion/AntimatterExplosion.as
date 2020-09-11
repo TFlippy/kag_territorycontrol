@@ -46,6 +46,13 @@ void onInit(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	const f32 boom_size = this.get_f32("boom_size");
 	const f32 modifier = boom_size / this.get_f32("boom_end");
 	const f32 invModifier = 1.00f - modifier;

@@ -88,6 +88,13 @@ void onTick(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	Random@ random = Random(this.getNetworkID());
 	f32 angle = this.get_f32("bomb angle");
 

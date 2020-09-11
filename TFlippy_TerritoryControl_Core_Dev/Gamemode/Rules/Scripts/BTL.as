@@ -45,7 +45,6 @@ void onTick(CRules@ this)
         }
         else 
         {
-            print("calling new hook");
             explosion.CallHookPls(); // explode 
         }
 

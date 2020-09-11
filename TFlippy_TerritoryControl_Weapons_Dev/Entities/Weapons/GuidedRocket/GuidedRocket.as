@@ -115,6 +115,13 @@ bool doesCollideWithBlob( CBlob@ this, CBlob@ blob )
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	if (this.hasTag("dead")) return;
 
 	f32 random = XORRandom(16);

@@ -96,6 +96,13 @@ void onTick(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	if (!this.exists("vest_explode")) return;
 
 	f32 random = XORRandom(16);

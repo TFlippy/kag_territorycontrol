@@ -77,6 +77,14 @@ void onDie(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+
 	this.set_f32("map_damage_radius", 16.0f);
 	this.set_f32("map_damage_ratio", 0.20f);
 	this.set_Vec2f("explosion_offset", Vec2f(0, -12));

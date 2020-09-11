@@ -20,6 +20,13 @@ void onInit(CBlob@ this)
 
 void DoExplosion(CBlob@ this, Vec2f velocity)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, velocity, DoExplosion);
+		return;
+	}
+
 	ShakeScreen(256, 64, this.getPosition());
 	f32 modifier = this.get_u8("boom_start") / 3.0f;
 	

@@ -133,6 +133,13 @@ void onDie(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	f32 modifier = 1;
 	f32 angle = this.getOldVelocity().Angle();
 	// print("Modifier: " + modifier + "; Quantity: " + this.getQuantity());

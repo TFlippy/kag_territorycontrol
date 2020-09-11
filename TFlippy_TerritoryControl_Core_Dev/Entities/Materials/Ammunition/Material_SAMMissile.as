@@ -11,6 +11,13 @@ void onInit(CBlob@ this)
 
 void DoExplosion(CBlob@ this, Vec2f velocity)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, velocity, DoExplosion);
+		return;
+	}
+
 	if (this.hasTag("dead")) return;
 	this.Tag("dead");
 

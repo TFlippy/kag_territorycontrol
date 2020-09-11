@@ -89,6 +89,13 @@ void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSt
 
 void DoExplosion(CBlob@ this, Vec2f velocity)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	if (this.hasTag("dead")) return;
 	this.Tag("dead");
 	

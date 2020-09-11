@@ -40,6 +40,13 @@ void onInit(CBlob@ this)
 
 void DoExplosion(CBlob@ this)
 {
+	CRules@ rules = getRules();
+	if (!shouldExplode(this, rules))
+	{
+		addToNextTick(this, rules, DoExplosion);
+		return;
+	}
+	
 	ShakeScreen(512, 64, this.getPosition());
 	// SetScreenFlash(255 * (1.00f - (f32(this.get_u8("boom_start")) / f32(explosions_max))), 255, 255, 255);
 	
