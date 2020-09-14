@@ -4,7 +4,7 @@ void print_log(string text)
 {
 	if(isServer())
 	{
-		print("[LOG] " + text, SColor(255, 255, 0, 255));
+		tcpr("[LOG] " + text);
 	}
 }
 
