@@ -110,5 +110,5 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 
 void SendCallback(u32 id, string cmd, bool success, string content)
 {
-	tcpr("{\"id\":"+id+",\"cmd\":\""+cmd+"\",\"success\":"+success+", \"content\":\""+content+"\"}}");
+	//tcpr("{\"id\":"+id+",\"cmd\":\""+cmd+"\",\"success\":"+success+", \"content\":\""+content+"\"}}");
 }
