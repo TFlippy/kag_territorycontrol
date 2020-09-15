@@ -303,11 +303,11 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 					
 					if (security.checkAccess_Feature(player, blobName))
 					{
-						print("has feature " + blobName);
+						//print("has feature " + blobName);
 					}
 					else
 					{
-						print("no access to seclev feature " + blobName);
+						//print("no access to seclev feature " + blobName);
 						
 						AddRequirement(missingBs, req, blobName, friendlyName, quantity);
 						has = false;

@@ -113,7 +113,7 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 				// sleeper.Sync("sleeper_name", false);
 				// sleeper.Sync("sleeper_coins", false);
 
-				print(playerName + " joined, respawning him at sleeper " + sleeper.getName());
+				tcpr("[LOG] "+playerName + " joined, respawning him at sleeper " + sleeper.getName());
 			}
 		}
 	}
@@ -294,7 +294,6 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 				if (isServer())
 				{
 					CBlob@ blob = server_CreateBlob("demonicartifact", -1, attacker.getBlob().getPosition());
-					print("boo");
 				}
 			}
 		}
@@ -464,7 +463,7 @@ void onTick(CRules@ this)
 							f32 ruins_ratio = 1.00f - (f32(ruins_count) / f32(ruins.length));
 							f32 chicken_chance = ruins_ratio * ruins_ratio;
 
-							print("[Respawn] Chicken Chance: " + (chicken_chance * 100) + "%");
+							tcpr("[Respawn] Chicken Chance: " + (chicken_chance * 100) + "%");
 
 							if (XORRandom(100) < (chicken_chance * 100))
 							{

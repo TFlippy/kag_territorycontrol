@@ -446,8 +446,9 @@ void DoExplosion(CBlob@ this,Vec2f velocity)
 }
 void Vehicle_onFire(CBlob@ this,VehicleInfo@ v,CBlob@ bullet,const u8 charge)
 {
-	print("hello | hi :)");
+	//print("hello | hi :)");
 }
+
 bool Vehicle_canFire(CBlob@ this,VehicleInfo@ v,bool isActionPressed,bool wasActionPressed,u8 &out chargeValue)
 {
 	return true;

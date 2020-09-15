@@ -757,7 +757,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					if (can_join)
 					{
 						this.getSprite().PlaySound("party_join.ogg");
-						printf(p.getUsername() + " has joined " + getRules().getTeam(myTeam).getName());
+						tcpr("[LOG]  " + p.getUsername() + " has joined " + getRules().getTeam(myTeam).getName());
 						
 						if (isServer())
 						{	

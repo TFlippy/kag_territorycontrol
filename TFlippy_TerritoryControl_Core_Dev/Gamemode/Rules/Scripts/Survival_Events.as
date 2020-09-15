@@ -29,7 +29,7 @@ void onTick(CRules@ this)
 
         if (timeSinceMeteor > 6000 && XORRandom(Maths::Max(35000 - timeSinceMeteor, 0)) == 0) // Meteor strike
         {
-			print("Random event: Meteor");
+			tcpr("[LOG] Random event: Meteor");
             server_CreateBlob("meteor", -1, Vec2f(XORRandom(map.tilemapwidth) * map.tilesize, 0.0f));
 			
 			this.set_u32("lastMeteor", time);
@@ -37,7 +37,7 @@ void onTick(CRules@ this)
 		
 		if (timeSinceWreckage > 30000 && XORRandom(Maths::Max(250000 - timeSinceWreckage, 0)) == 0) // Wreckage
         {
-            print("Random event: Wreckage");
+            tcpr("[LOG] Random event: Wreckage");
             server_CreateBlob(XORRandom(100) > 50 ? "ancientship" : "poisonship", -1, Vec2f(XORRandom(map.tilemapwidth) * map.tilesize, 0.0f));
 			
 			this.set_u32("lastWreckage", time);

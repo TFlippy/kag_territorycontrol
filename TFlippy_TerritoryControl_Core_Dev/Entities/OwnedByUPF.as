@@ -1,6 +1,6 @@
 ﻿void onInit(CBlob@ this)
 {
-	print("" + this.getConfig() + " has set team to " + this.getTeamNum());
+	tcpr("[LOG] " + this.getConfig() + " has set team to " + this.getTeamNum());
 
 	if (this.getTeamNum() == 250)
 	{
@@ -10,7 +10,7 @@
 
 void onChangeTeam(CBlob@ this, const int oldTeam)
 {
-	print("" + this.getConfig() + " has changed team to " + this.getTeamNum());
+	tcpr("[LOG] " + this.getConfig() + " has changed team to " + this.getTeamNum());
 
 	if (this.getTeamNum() == 250)
 	{

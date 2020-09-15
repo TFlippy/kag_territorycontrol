@@ -68,10 +68,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @bt)
 		SetKnocked(this, 0);
 		this.Untag("dazzled");
 
-		if (isServer())
+		/*if (isServer())
 		{
 			print("Sleeper sync: " + sleeping);
-		}
+		}*/
 
 		if (isClient())
 		{

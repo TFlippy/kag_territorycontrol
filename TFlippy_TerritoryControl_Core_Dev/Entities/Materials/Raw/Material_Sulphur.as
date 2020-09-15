@@ -57,7 +57,7 @@ void DoExplosion(CBlob@ this)
 		}
 	}	
 	
-	print("" + modifier);
+	//print("" + modifier);
 	
 	if (isClient())
 	{
