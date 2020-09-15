@@ -560,7 +560,9 @@ bool doChickenSpawn(CPlayer@ player)
 	CBlob@[] ruins;
 	getBlobsByName("chickencamp", @ruins);
 	getBlobsByName("chickenfortress", @ruins);
+	getBlobsByName("chickenstronghold", @ruins);
 	getBlobsByName("chickencitadel", @ruins);
+	getBlobsByName("chickenconvent", @ruins);
 	getBlobsByName("chickencoop", @ruins);
 
 	if (ruins.length > 0)
