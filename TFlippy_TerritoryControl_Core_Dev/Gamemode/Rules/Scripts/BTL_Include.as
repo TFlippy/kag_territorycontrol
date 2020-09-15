@@ -28,42 +28,44 @@ bool shouldExplode(CBlob@ this, CRules@ rules)
 
 void addToNextTick(CBlob@ this, f32 radius, f32 damage, CRules@ rules, explosionHook@ toCall)
 {
-	BTL[] @bombList;
-	if (!rules.get("BTL_DELAY", @bombList))
+	BTL[] bombList;
+	if (!rules.get("BTL_DELAY", bombList))
 	{
-		@bombList = array<BTL>();
+		bombList = array<BTL>();
 	}
+	BTL exp = BTL( this.getDamageOwnerPlayer(), this, radius, damage, toCall);
+	bombList.push_back(exp);
 
-	bombList.push_back( BTL( this.getDamageOwnerPlayer(), this, radius, damage, toCall) );
-
-	rules.set("BTL_DELAY", @bombList);
+	rules.set("BTL_DELAY", bombList);
 }
 
 void addToNextTick(CBlob@ this, CRules@ rules, onDieHook@ toCall)
 {
-	BTL[] @bombList;
-	if (!rules.get("BTL_DELAY", @bombList))
+	BTL[] bombList;
+	if (!rules.get("BTL_DELAY", bombList))
 	{
-		@bombList = array<BTL>();
+		bombList = array<BTL>();
 	}
 
-	bombList.push_back( BTL( this.getDamageOwnerPlayer(), this, toCall) );
+	BTL exp = BTL( this.getDamageOwnerPlayer(), this, toCall);
+	bombList.push_back(exp);
 
-	rules.set("BTL_DELAY", @bombList);
+
+	rules.set("BTL_DELAY", bombList);
 }
 
 
 void addToNextTick(CBlob@ this, CRules@ rules, Vec2f velocity, onDieVelocityHook@ toCall)
 {
-	BTL[] @bombList;
-	if (!rules.get("BTL_DELAY", @bombList))
+	BTL[] bombList;
+	if (!rules.get("BTL_DELAY", bombList))
 	{
-		@bombList = array<BTL>();
+		bombList = array<BTL>();
 	}
+	BTL exp = BTL( this.getDamageOwnerPlayer(), this, velocity, toCall);
+	bombList.push_back(exp);
 
-	bombList.push_back( BTL( this.getDamageOwnerPlayer(), this, velocity, toCall) );
-
-	rules.set("BTL_DELAY", @bombList);
+	rules.set("BTL_DELAY", bombList);
 }
 
 
