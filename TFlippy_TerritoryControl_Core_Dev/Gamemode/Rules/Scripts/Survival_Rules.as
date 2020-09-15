@@ -525,7 +525,7 @@ bool doDefaultSpawn(CPlayer@ player, string blobType, u8 team, bool ignoreDisabl
 		if (new_blob !is null)
 		{
 			CBlob@ r = spawns[XORRandom(spawns.length)];
-			if (r.getName() == "ruins" && team / r.get_u8("blob") == 255)
+			if (r.getName() == "ruins" && team / 1 == 255)
 			{
 				return true;
 			}
