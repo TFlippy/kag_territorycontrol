@@ -1,4 +1,4 @@
-﻿#include "MakeMat.as";
+#include "MakeMat.as";
 #include "Hitters.as"
 #include "ParticleSparks.as";
 
@@ -50,8 +50,8 @@ void onInit(CBlob@ this)
 		{ 
 			Vec2f(0.0f, 0.0f) - offset,
 			Vec2f(8.0f, 0.0f) - offset,
-			Vec2f(8.0f, 24.0f) - offset,
-			Vec2f(0.0f, 24.0f) - offset
+			Vec2f(8.0f, 23.0f) - offset,
+			Vec2f(0.0f, 23.0f) - offset
 		};
 		this.getShape().AddShape(shape);
 	}
@@ -63,8 +63,8 @@ void onInit(CBlob@ this)
 		{ 
 			Vec2f(0.0f, 0.0f) - offset,
 			Vec2f(8.0f, 0.0f) - offset,
-			Vec2f(8.0f, 24.0f) - offset,
-			Vec2f(0.0f, 24.0f) - offset
+			Vec2f(8.0f, 23.0f) - offset,
+			Vec2f(0.0f, 23.0f) - offset
 		};
 		this.getShape().AddShape(shape);
 	}
@@ -72,6 +72,7 @@ void onInit(CBlob@ this)
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
 	this.getCurrentScript().tickFrequency = 5;
+	this.getShape().SetStatic(true);
 }
 
 void onTick(CBlob@ this)
