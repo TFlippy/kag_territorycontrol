@@ -54,6 +54,11 @@ namespace Material
     {
       this.server_SetQuantity(sum);
       blob.server_Die();
+
+      if (blob.exists("explodium_amount")) 
+      {
+        this.add_f32("explodium_amount", blob.get_f32("explodium_amount")) ;
+      }
     }
     else
     {
