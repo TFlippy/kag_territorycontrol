@@ -57,9 +57,9 @@ void onInit(CBlob@ this)
 
 	AddIconToken("$icon_cocok_offering_2$", "AltarCocok_Icons.png", Vec2f(24, 24), 2);
 	{
-		ShopItem@ s = addShopItem(this, "Offering of Bomba", "$icon_cocok_offering_2$", "offering_bomb", "Sacrifice your dignity to weld a L.O.L. and S.Y.L.W. together.");
+		ShopItem@ s = addShopItem(this, "Offering of Bomba", "$icon_cocok_offering_2$", "offering_bomb", "Sacrifice your dignity to weld a L.O.L. and some Explodium together.");
 		AddRequirement(s.requirements, "blob", "mat_mininuke", "L.O.L.", 1);
-		AddRequirement(s.requirements, "blob", "mat_bigbomb", "S.Y.L.W.", 1);
+		AddRequirement(s.requirements, "blob", "mat_explodium", "Explodium.", 1);
 		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 20);
 		s.customButton = true;
 		s.buttonwidth = 1;
