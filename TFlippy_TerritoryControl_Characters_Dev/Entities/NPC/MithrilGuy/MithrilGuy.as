@@ -194,7 +194,9 @@ void onDie(CBlob@ this)
 	this.getSprite().Gib();
 
 	Explode(this, 96.0f, 24.0f);
-		
+	
+	if (!isServer()) return;
+
 	for (int i = 0; i < 8; i++)
 	{
 		CBlob@ blob = server_CreateBlob("mat_mithril", this.getTeamNum(), this.getPosition());

@@ -97,6 +97,8 @@ void onDie(CBlob@ this)
 	this.getSprite().Gib();
 
 	Explode(this, 16.0f, 8.0f);
+
+	if (!isServer()) return;
 		
 	for (int i = 0; i < 8; i++)
 	{

@@ -128,14 +128,17 @@ void onTick(CBlob@ this)
 			
 			Explode(this, 32.0f, 4.0f);
 			
-			for (int i = 0; i < 6; i++)
+			if (isServer()) 
 			{
-				CBlob@ blob = server_CreateBlob("mat_mithril", this.getTeamNum(), this.getPosition());
-				
-				if (blob !is null)
+				for (int i = 0; i < 6; i++)
 				{
-					blob.server_SetQuantity(10 + XORRandom(50));
-					blob.setVelocity(Vec2f(4 - XORRandom(2), -2 - XORRandom(4)));
+					CBlob@ blob = server_CreateBlob("mat_mithril", this.getTeamNum(), this.getPosition());
+					
+					if (blob !is null)
+					{
+						blob.server_SetQuantity(10 + XORRandom(50));
+						blob.setVelocity(Vec2f(4 - XORRandom(2), -2 - XORRandom(4)));
+					}
 				}
 			}
 		}
