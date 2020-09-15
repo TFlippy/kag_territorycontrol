@@ -314,7 +314,7 @@ bool isTileSnowPile(TileType tile)
 	return tile >= CMap::tile_snow_pile && tile <= CMap::tile_snow_pile_v5;
 }
 
- void onInit(CMap@ this)
+void onInit(CMap@ this)
 {
     this.legacyTileMinimap = false;
 	this.MakeMiniMap();

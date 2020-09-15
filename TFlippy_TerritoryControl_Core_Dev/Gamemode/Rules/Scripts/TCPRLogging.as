@@ -21,18 +21,3 @@ bool onServerProcessChat(CRules@ this, const string &in textIn, string &out text
     return true;
 }
 
-void onInit(CRules@ this)
-{
-    Minimap(getMap());
-}
-
-void onRestart(CRules@ this)
-{
-    Minimap(getMap());
-}
-
-void Minimap(CMap@ map)
-{
-    map.legacyTileMinimap = false;
-	map.MakeMiniMap();
-}
