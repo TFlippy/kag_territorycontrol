@@ -222,8 +222,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 {
-	if (!isClient()) return;
-
 	ParticleAnimated(filename, this.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 

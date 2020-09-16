@@ -98,15 +98,15 @@ void onTick(CBlob@ this)
 		{
 			if (client)
 			{
-				if (client)
+				this.getSprite().PlaySound("Steam", 1, 1);
+				if (this.isOnScreen())
 				{
-					this.getSprite().PlaySound("Steam", 1, 1);
 					MakeSmokeParticle(this, hit_position, Vec2f(0, -1), "LargeSmoke");
 				}
 			}
 		}
 		
-		if (client)
+		if (client && this.isOnScreen())
 		{
 			MakeParticle(this, "AcidGas.png");
 		}
@@ -143,17 +143,14 @@ void MakeSmokeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const stri
 
 void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 {
-	if (isClient())
+	CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(16 - XORRandom(32), 8 - XORRandom(32)), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 3, 0.00f, false);
+	if (particle !is null) 
 	{
-		CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(16 - XORRandom(32), 8 - XORRandom(32)), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 3, 0.00f, false);
-		if (particle !is null) 
-		{
-			particle.collides = false;
-			particle.deadeffect = 1;
-			particle.bounce = 0.0f;
-			particle.fastcollision = true;
-			particle.lighting = false;
-			particle.setRenderStyle(RenderStyle::additive);
-		}
+		particle.collides = false;
+		particle.deadeffect = 1;
+		particle.bounce = 0.0f;
+		particle.fastcollision = true;
+		particle.lighting = false;
+		particle.setRenderStyle(RenderStyle::additive);
 	}
 }

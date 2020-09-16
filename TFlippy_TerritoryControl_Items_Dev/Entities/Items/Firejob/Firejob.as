@@ -75,7 +75,8 @@ void onTick(CBlob@ this)
 				this.server_Die();
 			}
 		}
-		else
+		
+		if (isClient())
 		{
 			MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
 		}

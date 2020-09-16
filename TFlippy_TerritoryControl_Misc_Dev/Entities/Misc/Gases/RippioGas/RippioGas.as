@@ -60,7 +60,7 @@ void onTick(CBlob@ this)
 		}
 	}
 
-	if (isClient())
+	if (isClient() && this.isOnScreen())
 	{
 		MakeParticle(this, "RippioGas.png");
 	}
@@ -78,17 +78,14 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 {
-	if (isClient())
+	CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(32 - XORRandom(64), 16 - XORRandom(40)), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 4, 0.00f, false);
+	if (particle !is null) 
 	{
-		CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(32 - XORRandom(64), 16 - XORRandom(40)), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 4, 0.00f, false);
-		if (particle !is null) 
-		{
-			particle.collides = false;
-			particle.deadeffect = 1;
-			particle.bounce = 0.0f;
-			particle.fastcollision = true;
-			particle.lighting = false;
-			particle.setRenderStyle(RenderStyle::additive);
-		}
+		particle.collides = false;
+		particle.deadeffect = 1;
+		particle.bounce = 0.0f;
+		particle.fastcollision = true;
+		particle.lighting = false;
+		particle.setRenderStyle(RenderStyle::additive);
 	}
 }

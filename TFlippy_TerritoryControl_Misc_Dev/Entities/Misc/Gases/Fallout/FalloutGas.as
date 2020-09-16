@@ -29,7 +29,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (isClient())
+	if (isClient() && this.isOnScreen())
 	{
 		MakeParticle(this, "FalloutGas.png");
 	}
@@ -77,15 +77,12 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 {
-	if (isClient())
+	CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(XORRandom(1000) / 10.0f - 50.0f, -XORRandom(600) / 10.0f + 20.0f), Vec2f(), float(XORRandom(360)), 2.0f + (XORRandom(150) / 100.0f), 4, 0.00f, false);
+	if (particle !is null) 
 	{
-		CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(XORRandom(1000) / 10.0f - 50.0f, -XORRandom(600) / 10.0f + 20.0f), Vec2f(), float(XORRandom(360)), 2.0f + (XORRandom(150) / 100.0f), 4, 0.00f, false);
-		if (particle !is null) 
-		{
-			particle.fastcollision = true;
-			particle.lighting = false;
-			particle.setRenderStyle(RenderStyle::additive);
-		}
+		particle.fastcollision = true;
+		particle.lighting = false;
+		particle.setRenderStyle(RenderStyle::additive);
 	}
 }
 

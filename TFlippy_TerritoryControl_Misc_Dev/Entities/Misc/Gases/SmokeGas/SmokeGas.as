@@ -26,7 +26,7 @@ void onTick(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 {
-	if (!isClient()) return;
+	if (!isClient() && !this.isOnScreen()) return;
 
 	ParticleAnimated(filename, this.getPosition() + Vec2f(XORRandom(200) / 10.0f - 10.0f, XORRandom(200) / 10.0f - 10.0f), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 3, 0.0f, false);
 }

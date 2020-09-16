@@ -463,7 +463,8 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 	}
-	else
+	
+	if (isClient())
 	{
 		for (int i = 0; i < 16; i++)
 		{
@@ -478,7 +479,6 @@ void DoExplosion(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!isClient()) return;
 	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1.8f + XORRandom(100) * 0.01f, 2 + XORRandom(6), XORRandom(100) * -0.00005f, true);
 }
 

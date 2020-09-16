@@ -120,16 +120,15 @@ void DoExplosion(CBlob@ this)
 			map.server_setFireWorldspace(pos + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)) * 8, true);
 		}
 	}
-	else
+	
+	if (isClient() && this.isOnScreen())
 	{
-	for (int i = 0; i < 80; i++)
+		for (int i = 0; i < 80; i++)
 		{
 			
 			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(angle, XORRandom(400) * 0.01f, 70), particles[XORRandom(particles.length)]);
-			
 			// ParticleAnimated("Entities/Effects/Sprites/FireFlash.png", this.getPosition() + Vec2f(0, -4), Vec2f(0, 0.5f), 0.0f, 1.0f, 2, 0.0f, true);
 		}
-		
 		this.getSprite().Gib();
 	}
 	
@@ -139,7 +138,5 @@ void DoExplosion(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!isClient()) return;
-
 	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), XORRandom(100) * -0.00005f, true);
 }

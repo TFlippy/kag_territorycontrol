@@ -231,6 +231,5 @@ void onTick(CBlob@ this)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const f32 time, const string filename = "SmallSteam")
 {
-	if (!isClient()) return;
 	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 2.8f + XORRandom(100) * 0.01f, time, XORRandom(100) * -0.00005f, true);
 }

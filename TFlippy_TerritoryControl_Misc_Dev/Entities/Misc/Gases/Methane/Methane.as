@@ -32,7 +32,7 @@ void onTick(CBlob@ this)
 {
 	if (isServer() && this.getPosition().y < 0) { this.server_Die(); }
 	
-	if (isClient())
+	if (isClient() && this.isOnScreen())
 	{
 		MakeParticle(this, "Methane.png");
 	}
@@ -117,17 +117,14 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 {
-	if (isClient())
+	CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(16 - XORRandom(32), 8 - XORRandom(32)), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 4, 0.00f, false);
+	if (particle !is null) 
 	{
-		CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(16 - XORRandom(32), 8 - XORRandom(32)), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 4, 0.00f, false);
-		if (particle !is null) 
-		{
-			particle.collides = false;
-			particle.deadeffect = 1;
-			particle.bounce = 0.0f;
-			particle.fastcollision = true;
-			particle.lighting = false;
-			particle.setRenderStyle(RenderStyle::additive);
-		}
+		particle.collides = false;
+		particle.deadeffect = 1;
+		particle.bounce = 0.0f;
+		particle.fastcollision = true;
+		particle.lighting = false;
+		particle.setRenderStyle(RenderStyle::additive);
 	}
 }

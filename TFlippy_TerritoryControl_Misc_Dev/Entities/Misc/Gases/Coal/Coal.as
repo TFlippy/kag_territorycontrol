@@ -127,10 +127,13 @@ void DoExplosion(CBlob@ this)
 	{
 		// this.getSprite().PlaySound("shockmine_explode.ogg", 0.80f, 1.10f);
 		ShakeScreen(100, 60, this.getPosition());
-	
-		for (int i = 0; i < 4; i++)
+
+		if (this.isOnScreen()) 
 		{
-			MakeParticle(this, this.getPosition() + getRandomVelocity(0, random.NextRanged(6), 360), getRandomVelocity(0, random.NextRanged(3), 360), particles[XORRandom(particles.length)]);
+			for (int i = 0; i < 4; i++)
+			{
+				MakeParticle(this, this.getPosition() + getRandomVelocity(0, random.NextRanged(6), 360), getRandomVelocity(0, random.NextRanged(3), 360), particles[XORRandom(particles.length)]);
+			}
 		}
 	}
 	
@@ -186,7 +189,6 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
 {
-	if (!isClient()) return;
 	CParticle@ p = ParticleAnimated(filename, pos, vel, XORRandom(360), 1 + (XORRandom(100) * 0.02f), 2 + XORRandom(5), 0, true);
 	if(p !is null)
 	{
