@@ -267,7 +267,7 @@ void GunTick(CBlob@ this)
 		// }
 	// }
 	
-	if((point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) && !isHolderAttached && !(holder.get_f32("babbyed") > 0)) {
+	if((point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)) && !isHolderAttached  && !(holder.get_u8("knocked") > 0 )&& !(holder.get_f32("babbyed") > 0)) {
 		if(!this.get_bool("gun_needsRelease") && getGameTime()>this.get_u32("gun_readyTime")) {
 			if(clip>=1){
 				clip-=1;
