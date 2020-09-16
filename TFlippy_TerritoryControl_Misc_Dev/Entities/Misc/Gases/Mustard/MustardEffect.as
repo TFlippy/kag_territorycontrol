@@ -54,13 +54,11 @@ void onDie(CSprite@ this)
 void onRender(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
-	if (!blob.isMyPlayer()) return;
-	
+
 	const int ticks = getGameTime() - blob.get_u32("mustard time");
 	const f32 mod = f32(blob.get_u8("mustard value") / 35.0f);
 	
 	Driver@ driver = getDriver();
 	Vec2f screenSize(driver.getScreenWidth(), driver.getScreenHeight());
-	
 	GUI::DrawRectangle(Vec2f(0, 0), screenSize, SColor(Maths::Clamp((ticks * mod) / 3, 0, 255), 10, 8, 0));
 }
