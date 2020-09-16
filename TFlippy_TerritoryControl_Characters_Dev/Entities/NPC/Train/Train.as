@@ -86,6 +86,7 @@ void onTick(CBlob@ this)
 			if (wagon !is null)
 			{
 				wagon.getSprite().SetEmitSoundPaused(true);
+				wagon.setPosition(this.getPosition());
 			}
 		}
 		
@@ -115,6 +116,7 @@ void onTick(CBlob@ this)
 			CBlob@ wagon = getBlobByNetworkID(this.get_u16("wagon_" + i));
 			if (wagon !is null)
 			{
+				wagon.setVelocity(Vec2f(0, 0));
 				wagon.setPosition(pos + Vec2f(-80 * (1 + i), wagon_offset + Maths::Sin(((getGameTime() + (60 * i)) * 0.50f) % 180) * 0.50f));
 				wagon.getSprite().SetEmitSoundPaused(false);
 				

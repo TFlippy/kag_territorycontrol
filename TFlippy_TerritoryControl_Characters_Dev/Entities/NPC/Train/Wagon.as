@@ -31,10 +31,6 @@ void onInit(CBlob@ this)
 		sprite.RewindEmitSound();
 	}
 	
-	if (isServer())
-	{
-		
-	}
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
@@ -42,6 +38,12 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 	return !blob.hasTag("train");
 }
 
+void onCollision( CBlob@ this, CBlob@ blob, bool solid )
+{
+	blob.setVelocity(Vec2f(6, 0));
+}
+
+/*
 void onTick(CBlob@ this)
 {
 	CMap@ map = getMap();
@@ -50,7 +52,7 @@ void onTick(CBlob@ this)
 
 	// if (client) ShakeScreen(80, 50, this.getPosition());
 	this.setVelocity(Vec2f(4, 0));
-}
+}*/
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
