@@ -339,7 +339,7 @@ void React(CBlob@ this)
 				this.getSprite().PlaySound("DrugLab_Create_Solid.ogg", 1.00f, 1.00f);
 			}
 			
-			if (pressure > 25000 && heat > 400 && hasSulphur && hasAcid && sulphur_count >= 25 && acid_count >= 50)
+			if (pressure > 25000 && heat > 400 && hasSulphur && hasAcid && sulphur_count >= 50 && acid_count >= 50)
 			{
 				if (isServer())
 				{
@@ -347,7 +347,7 @@ void React(CBlob@ this)
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 50, 0));
 					Material::createFor(this, "stim", 3 + XORRandom(5));
 					Material::createFor(this, "mat_dirt", XORRandom(15));
-					Material::createFor(this, "mat_mustard", XORRandom(25));
+					Material::createFor(this, "mat_mustard", 5 + XORRandom(15));
 				}
 				
 				ShakeScreen(10.0f, 15, this.getPosition());
