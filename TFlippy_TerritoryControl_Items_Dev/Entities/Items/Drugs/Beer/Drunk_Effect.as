@@ -17,11 +17,7 @@ void onTick(CBlob@ this)
 	
 	if (true_level <= 0)
 	{
-		if (isClient() && this.isMyPlayer())
-		{
-			CCamera@ cam = getCamera();
-			cam.setRotation(0);
-		}
+		onDie(this);
 	
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
