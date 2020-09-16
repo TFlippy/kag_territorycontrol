@@ -343,7 +343,7 @@ void React(CBlob@ this)
 			{
 				if (isServer())
 				{
-					sulphur_blob.server_SetQuantity(Maths::Max(sulphur_blob.getQuantity() - 25, 0));
+					sulphur_blob.server_SetQuantity(Maths::Max(sulphur_blob.getQuantity() - 50, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 50, 0));
 					Material::createFor(this, "stim", 3 + XORRandom(5));
 					Material::createFor(this, "mat_dirt", XORRandom(15));
