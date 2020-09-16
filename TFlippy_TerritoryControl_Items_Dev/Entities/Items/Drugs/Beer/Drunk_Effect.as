@@ -27,20 +27,27 @@ void onTick(CBlob@ this)
 	}
 	else
 	{
-		if (isClient())
+		if (isClient() && this.isMyPlayer())
 		{
-			if (this.isMyPlayer())
-			{
-				f32 rot;
-				rot += Maths::Sin(getGameTime() / 30.0f) * 1.8f;
-				rot += Maths::Cos(getGameTime() / 25.0f) * 1.3f;
-				rot += Maths::Sin(380 + getGameTime() / 40.0f) * 2.5f;
-				
-				// print("" + (rot * true_level_lerp));
-				
-				CCamera@ cam = getCamera();
-				cam.setRotation(Maths::Clamp(rot * true_level_lerp, -360, 360));
+			f32 rot;
+			rot += Maths::Sin(getGameTime() / 30.0f) * 1.8f;
+			rot += Maths::Cos(getGameTime() / 25.0f) * 1.3f;
+			rot += Maths::Sin(380 + getGameTime() / 40.0f) * 2.5f;
+			
+			// print("" + (rot * true_level_lerp));
+			
+			CCamera@ cam = getCamera();
+			cam.setRotation(Maths::Clamp(rot * true_level_lerp, -360, 360));
+
+			Driver@ driver = getDriver();
+			if (!driver.ShaderState()) {
+				driver.ForceStartShaders();
 			}
+
+			f32 cam_x = getCamera().getPosition().x;
+			driver.SetShaderFloat("drunk", "time", getGameTime() / 30.0f);
+			driver.SetShaderFloat("drunk", "scroll_x", cam_x);
+			driver.SetShaderFloat("drunk", "amount", true_level_lerp * 2);
 		}
 	
 		if (level > 0 && getKnocked(this) < 10 && XORRandom(4000 / (1 + level * 1.5f)) == 0)
@@ -62,6 +69,16 @@ void onDie(CBlob@ this)
 	{
 		CCamera@ cam = getCamera();
 		cam.setRotation(0);
+
+		Driver@ driver = getDriver();
+		driver.SetShaderFloat("drunk", "scroll_x", 0);
+		driver.SetShaderFloat("drunk", "time", 0);
+		driver.SetShaderFloat("drunk", "amount", 0);
+
+
+		if (driver.ShaderState()) {
+			driver.ForceStopShaders();
+		}
 	}
 
 	this.set_u16("drunk", 0);
