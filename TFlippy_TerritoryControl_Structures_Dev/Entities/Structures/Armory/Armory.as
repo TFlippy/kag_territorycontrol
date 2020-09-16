@@ -29,7 +29,7 @@ void onInit(CBlob@ this)
 	this.inventoryButtonPos = Vec2f(-8, 0);
 	
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(3, 3));
+	this.set_Vec2f("shop menu size", Vec2f(3, 4));
 	this.set_string("shop description", "Armory");
 	this.set_u8("shop icon", 15);
 	
@@ -113,6 +113,16 @@ void onInit(CBlob@ this)
 		
 		s.customButton = true;
 		s.buttonwidth = 1;
+		s.buttonheight = 1;
+		
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Rendezook", "$icon_rendezook$", "rendezook", "A replica of a rocket launcher found behind the UPF shop in a trash can.\nDoes not seem to hurt anybody.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 350);
+		
+		s.customButton = true;
+		s.buttonwidth = 3;
 		s.buttonheight = 1;
 		
 		s.spawnNothing = true;

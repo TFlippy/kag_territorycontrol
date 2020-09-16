@@ -302,6 +302,13 @@ void onInit(CBlob@ this)
 		s.buttonwidth = 2;
 		s.buttonheight = 2;
 	}
+
+	if (rand.NextRanged(100) < 40)
+	{
+		ShopItem@ s = addShopItem(this, "boots that smell of piss", "$icon_rendeboots$", "rendeboots", "old pair of shoes i won from a chicken");
+		AddRequirement(s.requirements, "coin", "", "Coins", 150 + rand.NextRanged(500));
+		s.spawnNothing = true;
+	}
 	
 	if (rand.NextRanged(100) < 50)
 	{

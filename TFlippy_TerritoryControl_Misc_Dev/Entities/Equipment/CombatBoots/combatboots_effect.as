@@ -33,3 +33,5 @@ void onTick(CBlob@ this)
         this.RemoveScript("combatboots_effect.as");
     }
 }
+
+

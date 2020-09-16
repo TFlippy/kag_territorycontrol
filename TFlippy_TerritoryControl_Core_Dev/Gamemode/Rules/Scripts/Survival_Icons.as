@@ -127,6 +127,8 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_militaryhelmet$", "MilitaryHelmet.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_bulletproofvest$", "Bulletproofvest.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_combatboots$", "CombatBoots.png", Vec2f(16, 16), 0);
+	AddIconToken("$icon_rendeboots$", "RendeBoots.png", Vec2f(16, 16), 0);
+	AddIconToken("$icon_rendezook$", "Rendezook.png", Vec2f(18, 6), 0);
 	
 	// Mechanist
 	AddIconToken("$icon_klaxon$", "Klaxon.png", Vec2f(24, 16), 0);
