@@ -43,9 +43,9 @@ void onTick(CBlob@ this)
 		f32 camZ = Maths::Sin(getGameTime() * 0.125f) * 2 * (level);
 
 		CCamera@ cam = getCamera();
-		s8 alphaTime = Maths::Min(255, 255 * time);
+		u8 alphaTime = Maths::Min(255, 255 * time);
 		cam.setRotation(camX, camY, camZ);
-
+		
 		Driver@ driver = getDriver();
 		if (driver.CanUseShaders())
 		{
