@@ -15,7 +15,7 @@ void onInit(CBlob@ this)
 		CMap@ map = this.getMap();
 		map.CreateTileMap(0, 0, 8.0f, "Desert_world.png");
 		
-		map.CreateSky(color_white, Vec2f(1.0f, 1.0f), 200, "Sprites/Back/cloud", 0);
+		//map.CreateSky(color_white, Vec2f(1.0f, 1.0f), 200, "Sprites/Back/cloud", 0);
 		map.CreateSkyGradient("skygradient.png"); // override sky color with gradient
 
 		map.AddBackground("Desert_BackgroundPlains.png", Vec2f(0.0f, -18.0f), Vec2f(0.3f, 0.3f), color_white);
