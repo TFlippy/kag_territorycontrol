@@ -8,7 +8,7 @@ void onInit(CBlob@ this)
 		false,				//If true, gun will be fully automatic and players will be able to just hold the fire button
 		"blankrocket",		//Projectile to fire
 		0.0f,				//Projectile speed
-		28,					//Weapon fire delay, in ticks
+		15,					//Weapon fire delay, in ticks
 		4,					//Weapon clip size
 		1.00f,				//Ammo usage factor, completely ignore for now
 		28,					//Weapon reload time
@@ -16,9 +16,9 @@ void onInit(CBlob@ this)
 		0,					//For shotguns: Additional delay to reload end
 		"mat_smallrocket",	//Ammo item blob name
 		false,				//If true, firing sound will be looped until player stops firing
-		SoundInfo("BazookaFire",1,1.0f,1.00f),	//Sound to play when firing
-		SoundInfo("BazookaReload",1,1.0f,0.63f),//Sound to play when reloading
-		SoundInfo("BazookaCycle",1,1.0f,1.0f),	//Sound to play some time after firing
+		SoundInfo("Rendezook_shoot",1,1.0f,1.00f),	//Sound to play when firing
+		SoundInfo("Rendezook_load",1,1.0f,1.0f),//Sound to play when reloading
+		SoundInfo(),	//Sound to play some time after firing
 		25,					//Delay for the delayed sound, in ticks
 		Vec2f(8.0f,-3.0f)	//Offset for projectiles
 	);

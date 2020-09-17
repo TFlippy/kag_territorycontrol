@@ -61,7 +61,6 @@ void onTick(CRules@ this)
         }
     }
 
-
     this.set("BTL_DELAY", @expList);
     this.set_u16("explosion_count", 0); 
 }

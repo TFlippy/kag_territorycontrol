@@ -80,6 +80,7 @@ void DoExplosion(CBlob@ this, Vec2f velocity)
 
 	if (dist > 50) { return; }
 
+
 	dir.Normalize();
 	
 	f32 mod = Maths::Clamp(1.00f - (dist / 192.00f), 0, 1);
