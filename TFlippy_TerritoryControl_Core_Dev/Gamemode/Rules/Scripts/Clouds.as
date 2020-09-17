@@ -10,14 +10,21 @@
 //
 // We can use script wide variables because cloud.as will only ever be in use once.
 
-int callback_id = 0;
 Vertex[] clouds;
 
 void onInit(CRules@ this)
 {
-    if (isClient()) 
+    onReload(this);
+}
+
+void onReload(CRules@ this)
+{
+
+    if (isClient())
     {
-       //callback_id = Render::addScript(Render::layer_tiles, "Clouds", "RenderClouds", 1.0f);
+        Render::RemoveScript(this.get_u16("callback"));
+        int callback = Render::addScript(Render::layer_background, "Clouds", "RenderClouds", -10000.0f);
+        this.set_u16("callback", callback);
     }
 }
 
@@ -32,5 +39,7 @@ void RenderClouds(int id)
 	clouds.push_back(Vertex(BotRight.x, BotRight.y, 1, 1, 1, color_white));
 	clouds.push_back(Vertex(TopLeft.x,  BotRight.y, 1, 0, 1, color_white));
 
-    //Render::RawQuads("cloud1.png", clouds);
+    Render::SetAlphaBlend(true);
+    Render::SetZBuffer(true, true);
+    Render::RawQuads("cloud1.png", clouds);
 }
