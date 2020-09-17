@@ -1,12 +1,49 @@
 #include "AnimalConsts.as";
 #include "Hitters.as";
 
+const string[] names = 
+{ 
+	"Thor",
+	"Loki",
+	"Buttface",
+	"Toby",
+	"Ginger",
+	"Fluffy",
+	"Shite",
+	"Fitz",
+	"Cheeder",
+	"Blaze",
+	"Marmalade",
+	"Orange",
+	"TFlippy",
+	"Apricot",
+	"Cheetah",
+	"Cheeto",
+	"Tigger",
+	"Luna",
+	"Mojo",
+	"Oscar",
+	"Bengie",
+	"Oatmeal"
+};
+
+const string[] surnames = {
+	"kitty",
+	"kitten",
+	"kat",
+	"cat",
+	"fluff",
+	"feline",
+	"small tiger",
+	"pussy",
+	"puss"
+};
+
 //sprite
 void onInit(CSprite@ this)
 {
     this.ReloadSprites(0,0);
 	this.SetZ(-20.0f);
-	this.addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 }
 
 void onTick(CSprite@ this)
@@ -19,9 +56,6 @@ void onTick(CSprite@ this)
 	}
 	else
 	{
-		if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
-			return;
-		}
 		f32 x = Maths::Abs(blob.getVelocity().x);
 
 		if (Maths::Abs(x) > 0.2f)
@@ -77,17 +111,16 @@ void onInit(CBlob@ this)
 	this.set_u32("next screech", getGameTime());
 	
 	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 1.70f);
+
+	Random@ rand = Random(this.getNetworkID());
+	string name = names[rand.NextRanged(names.length)] + " the " + surnames[rand.NextRanged(surnames.length)];
+	this.setInventoryName(name);
 }
 
 void onTick(CBlob@ this)
 {
 	if (!this.hasTag("dead"))
 	{
-		if(isClient()){
-			if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
-				return;
-			}
-		}
 		f32 x = this.getVelocity().x;		
 		if (Maths::Abs(x) > 1.0f)
 		{
