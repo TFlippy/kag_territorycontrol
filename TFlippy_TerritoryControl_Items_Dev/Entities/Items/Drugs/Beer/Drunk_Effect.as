@@ -2,6 +2,7 @@
 
 void onInit(CBlob@ this)
 {
+	getDriver().SetShader("drunk", true);
 }
 
 void onTick(CBlob@ this)
@@ -36,14 +37,13 @@ void onTick(CBlob@ this)
 			cam.setRotation(Maths::Clamp(rot * true_level_lerp, -360, 360));
 
 			Driver@ driver = getDriver();
-			if (!driver.ShaderState()) {
-				driver.ForceStartShaders();
+			if (driver.CanUseShaders())
+			{
+				f32 cam_x = getCamera().getPosition().x;
+				driver.SetShaderFloat("drunk", "time", getGameTime() / 30.0f);
+				driver.SetShaderFloat("drunk", "scroll_x", cam_x);
+				driver.SetShaderFloat("drunk", "amount", true_level_lerp * 2);
 			}
-
-			f32 cam_x = getCamera().getPosition().x;
-			driver.SetShaderFloat("drunk", "time", getGameTime() / 30.0f);
-			driver.SetShaderFloat("drunk", "scroll_x", cam_x);
-			driver.SetShaderFloat("drunk", "amount", true_level_lerp * 2);
 		}
 	
 		if (level > 0 && getKnocked(this) < 10 && XORRandom(4000 / (1 + level * 1.5f)) == 0)
@@ -66,15 +66,7 @@ void onDie(CBlob@ this)
 		CCamera@ cam = getCamera();
 		cam.setRotation(0);
 
-		Driver@ driver = getDriver();
-		driver.SetShaderFloat("drunk", "scroll_x", 0);
-		driver.SetShaderFloat("drunk", "time", 0);
-		driver.SetShaderFloat("drunk", "amount", 0);
-
-
-		if (driver.ShaderState()) {
-			driver.ForceStopShaders();
-		}
+		getDriver().SetShader("drunk", false);
 	}
 
 	this.set_u16("drunk", 0);
@@ -87,9 +79,4 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	f32 modifier = Maths::Max(0.3f, Maths::Min(1, Maths::Pow(0.80f, this.get_u16("drunk"))));
 	// print("" + modifier);
 	return damage * modifier;
-}
-
-void onSetPlayer( CBlob@ this, CPlayer@ player )
-{
-	onDie(this);
 }

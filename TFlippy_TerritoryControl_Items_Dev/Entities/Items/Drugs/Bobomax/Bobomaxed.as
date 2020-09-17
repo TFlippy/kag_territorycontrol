@@ -10,6 +10,8 @@ void onInit(CBlob@ this)
 	this.set_u32("bobomax end", getGameTime() + (30 * 108));
 	
 	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_bobomax.png");
+
+	getDriver().SetShader("bobomax", true);
 }
 
 void onTick(CBlob@ this)
@@ -32,19 +34,28 @@ void onTick(CBlob@ this)
 	
 	this.getShape().SetGravityScale(0.15f + 0.25f * (1.00f - (f32(level) / f32(max))));
 	
-	if (this.isMyPlayer())
+	if (isClient() && this.isMyPlayer())
 	{
 		f32 camX = Maths::Sin(getGameTime()) * 0.01f * (level);
 		f32 camY = Maths::Cos(getGameTime()) * 0.01f * (level);
 		f32 camZ = Maths::Sin(getGameTime() * 0.125f) * 2 * (level);
 
 		CCamera@ cam = getCamera();
-		int colTime = getGameTime() %360;
-		SColor col = HSVToRGB(colTime, 1.0f, 1.0f);
 		s8 alphaTime = Maths::Min(255, 255 * time);
 		cam.setRotation(camX, camY, camZ);
-		SetScreenFlash(alphaTime,col.getRed(), col.getGreen(), col.getBlue(),1);
-		//SetScreenFlash(255 * time, 150 + (XORRandom(4) * 25), 150 + (XORRandom(4) * 25), 150 + (XORRandom(4) * 25));
+
+		Driver@ driver = getDriver();
+		if (driver.CanUseShaders())
+		{
+			SetScreenFlash(alphaTime, 255, 255, 255);
+			driver.SetShaderFloat("bobomax", "time", time * 150);
+		}
+		else
+		{
+			int colTime = getGameTime() %360;
+			SColor col = HSVToRGB(colTime, 1.0f, 1.0f);
+			SetScreenFlash(alphaTime, col.getRed(), col.getGreen(), col.getBlue());
+		}
 		
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSound("/clown.ogg");
@@ -87,6 +98,8 @@ void onDie(CBlob@ this)
 	{
 		CCamera@ cam = getCamera();
 		cam.setRotation(0);
+		
+		getDriver().SetShader("bobomax", false);
 	}
 	
 	this.getSprite().PlaySound("klaxon0.ogg", 1.0f, 1.0f);
