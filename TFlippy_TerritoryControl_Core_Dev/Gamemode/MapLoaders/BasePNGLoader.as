@@ -465,7 +465,7 @@ class PNGLoader
 	void SetupBackgrounds()
 	{
 		// sky
-		//map.CreateSky(color_black, Vec2f(1.0f, 1.0f), 200, "cloud", 100);
+		map.CreateSky(color_white, Vec2f(1.0f, 1.0f), 200, "cloud", 0);
 		map.CreateSkyGradient("Sprites/skygradient.png"); // override sky color with gradient
 
 		// background
