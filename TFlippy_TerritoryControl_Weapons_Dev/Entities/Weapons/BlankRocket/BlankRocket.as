@@ -6,51 +6,29 @@ const u32 fuel_timer_max = 30 * 0.50f;
 
 void onInit(CBlob@ this)
 {
-	this.set_f32("map_damage_ratio", 0.5f);
-	this.set_f32("map_damage_radius", 32.0f);
-	this.set_string("custom_explosion_sound", "Keg.ogg");
-		
-	this.set_u32("fuel_timer", 0);
 	this.set_f32("velocity", 10.0f);
 	
 	this.getShape().SetRotationsAllowed(true);
-	
-	this.set_u32("fuel_timer", getGameTime() + fuel_timer_max + XORRandom(15));
 	
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Rocket_Idle.ogg");
 	sprite.SetEmitSoundSpeed(2.0f);
 	sprite.SetEmitSoundPaused(false);
-	
-	this.SetLight(true);
-	this.SetLightRadius(64.0f);
-	this.SetLightColor(SColor(255, 255, 100, 0));
+
+	this.server_SetTimeToDie(5);
 }
 
 void onTick(CBlob@ this)
-{
-	if (this.get_u32("fuel_timer") > getGameTime())
+{		
+	Vec2f dir = Vec2f(0, 1);
+	dir.RotateBy(this.getAngleDegrees());
+				
+	this.setVelocity(dir * -this.get_f32("velocity") + Vec2f(0, this.getTickSinceCreated() > 5 ? XORRandom(50) / 100.0f : 0));
+	
+	if(isClient())
 	{
-		this.set_f32("velocity", Maths::Min(this.get_f32("velocity") + 0.15f, 15.0f));
-		
-		Vec2f dir = Vec2f(0, 1);
-		dir.RotateBy(this.getAngleDegrees());
-					
-		this.setVelocity(dir * -this.get_f32("velocity") + Vec2f(0, this.getTickSinceCreated() > 5 ? XORRandom(50) / 100.0f : 0));
-		
-		if(isClient())
-		{
-			MakeParticle(this, -dir, "Smoke" );
-		}
-		
-		
-		this.setAngleDegrees(-this.getVelocity().Angle() + 90);
+		MakeParticle(this, -dir, "Smoke" );
 	}
-	else
-	{
-		this.setAngleDegrees(-this.getVelocity().Angle() + 90);
-		this.getSprite().SetEmitSoundPaused(true);
-	}		
 }
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
