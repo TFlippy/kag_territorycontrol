@@ -20,7 +20,7 @@ void onInit(CRules@ this)
     driver.SetShaderFloat("bobomax", "res_y", getScreenHeight());
     driver.SetShaderFloat("bobomax", "time", 0);
 
-    if (!isServer())
+    if (!isClient())
     {
         this.RemoveScript("ShaderController.as");
     }
