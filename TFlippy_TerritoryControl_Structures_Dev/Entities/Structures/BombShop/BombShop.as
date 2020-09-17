@@ -275,7 +275,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CPlayer@ ply = callerBlob.getPlayer();
 			if (ply !is null)
 			{
-				printf(ply.getUsername() + " has purchased " + name);
+				tcpr(ply.getUsername() + " has purchased " + name);
 			}
 		
 			string[] spl = name.split("-");
