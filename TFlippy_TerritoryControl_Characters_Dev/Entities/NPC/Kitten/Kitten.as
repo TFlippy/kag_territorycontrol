@@ -24,7 +24,9 @@ const string[] names =
 	"Mojo",
 	"Oscar",
 	"Bengie",
-	"Oatmeal"
+	"Oatmeal",
+	"Vamist",
+	"Sima"
 };
 
 const string[] surnames = {
