@@ -77,17 +77,14 @@ void onDie(CBlob@ this)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return this.getTickSinceCreated() > 5 && this.getTeamNum() != blob.getTeamNum() && blob.isCollidable();
+	return false;
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (isServer())
+	if (blob is null)
 	{
-		if (this.getTickSinceCreated() > 10 && (solid ? true : (blob !is null && blob.isCollidable())))
-		{
-			this.server_Die();
-		}
+		this.server_Die();
 	}
 }
 
