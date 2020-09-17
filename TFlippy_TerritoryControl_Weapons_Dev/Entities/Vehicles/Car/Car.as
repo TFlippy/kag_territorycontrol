@@ -100,7 +100,7 @@ void onCollision( CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f poin
 					if (this.getTeamNum() != blob.getTeamNum())
 					{
 						this.server_Hit(blob, point1, vel, power, Hitters::flying, false);
-						print(power + " aa");
+						//print(power + " aa");
 					}
 				}
 			}
