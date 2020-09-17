@@ -78,8 +78,7 @@ void DoExplosion(CBlob@ this, Vec2f velocity)
 	Vec2f dir = blob.getPosition() - this.getPosition();
 	f32 dist = dir.Length();
 
-	if (dist > 30) { return; }
-
+	if (dist > 50) { return; }
 
 	dir.Normalize();
 	
