@@ -9,9 +9,11 @@ void onInit(CBlob@ this)
 	this.set_u32("bobomax start", getGameTime());
 	this.set_u32("bobomax end", getGameTime() + (30 * 108));
 	
-	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_bobomax.png");
-
-	getDriver().SetShader("bobomax", true);
+	if (isClient() && this.isMyPlayer()) 
+	{
+		getMap().CreateSkyGradient("skygradient_bobomax.png");
+		getDriver().SetShader("bobomax", true);
+	}
 }
 
 void onTick(CBlob@ this)

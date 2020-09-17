@@ -2,7 +2,10 @@
 
 void onInit(CBlob@ this)
 {
-	getDriver().SetShader("drunk", true);
+	if (isClient() && this.isMyPlayer()) 
+	{
+		getDriver().SetShader("drunk", true);
+	}
 }
 
 void onTick(CBlob@ this)
