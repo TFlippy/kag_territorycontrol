@@ -2,11 +2,22 @@
 
 void onInit(CBlob@ this)
 {
-	if (isClient() && this.isMyPlayer()) 
+	addShader(this);
+}
+
+
+void addShader(CBlob@ this)
+{
+	if (isClient() && this.isMyPlayer())
 	{
-		getDriver().SetShader("drunk", true);
+		if (!this.hasTag("drunk_shader"))
+		{
+			getDriver().SetShader("drunk", true);
+			this.Tag("drunk_shader");
+		}
 	}
 }
+
 
 void onTick(CBlob@ this)
 {
@@ -22,8 +33,8 @@ void onTick(CBlob@ this)
 	if (true_level <= 0)
 	{
 		onDie(this);
-	
-		this.getCurrentScript().runFlags |= Script::remove_after_this;
+
+		this.RemoveScript("Drunk_Effect.as");
 	}
 	else
 	{
@@ -42,6 +53,8 @@ void onTick(CBlob@ this)
 			Driver@ driver = getDriver();
 			if (driver.CanUseShaders())
 			{
+				addShader(this);
+				
 				f32 cam_x = getCamera().getPosition().x;
 				driver.SetShaderFloat("drunk", "time", getGameTime() / 30.0f);
 				driver.SetShaderFloat("drunk", "scroll_x", cam_x);
@@ -70,6 +83,7 @@ void onDie(CBlob@ this)
 		cam.setRotation(0);
 
 		getDriver().SetShader("drunk", false);
+		this.Untag("drunk_shader");
 	}
 
 	this.set_u16("drunk", 0);
