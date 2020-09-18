@@ -53,7 +53,7 @@ const string[] surnames = {
 	"small tiger",
 	"pussy",
 	"puss",
-	"dog cat",
+	"dog cat"
 };
 
 //sprite
@@ -94,6 +94,10 @@ void onTick(CSprite@ this)
 
 void onInit(CBlob@ this)
 {
+	Random@ rand = Random(this.getNetworkID());
+	string name = names[rand.NextRanged(names.length)] + " the " + surnames[rand.NextRanged(surnames.length)];
+	this.setInventoryName(name);
+
 	this.set_f32("bite damage", 0.1f);
 	
 	//brain
@@ -128,10 +132,6 @@ void onInit(CBlob@ this)
 	this.set_u32("next screech", getGameTime());
 	
 	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 1.70f);
-
-	Random@ rand = Random(this.getNetworkID());
-	string name = names[rand.NextRanged(names.length)] + " the " + surnames[rand.NextRanged(surnames.length)];
-	this.setInventoryName(name);
 }
 
 void onTick(CBlob@ this)
