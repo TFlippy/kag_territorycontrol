@@ -460,7 +460,7 @@ void onTick(CBlob@ this)
 			}
 		}
 		
-		CBlob@[] blobs;
+		/*CBlob@[] blobs;
 		getMap().getBlobsInRadius(this.getPosition(), 96, @blobs);
 		
 		int index = -1;
@@ -518,7 +518,7 @@ void onTick(CBlob@ this)
 					}
 				}
 			}
-		}
+		}*/
 	}
 }
 
