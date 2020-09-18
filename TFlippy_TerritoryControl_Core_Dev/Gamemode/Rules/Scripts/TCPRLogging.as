@@ -1,3 +1,5 @@
+#define SERVER_ONLY
+
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 {
     tcpr("[LOG] Player joined-> Username:" +
