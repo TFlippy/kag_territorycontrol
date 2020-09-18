@@ -64,11 +64,17 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 						//print("playerDamage: "+playerDamage);
 						this.server_Hit(this, point1, normal, playerDamage, Hitters::fall);
 					}
+					else if (this.get_string("equipment_boots") == "rendeboots")
+					{
+						this.server_Hit(this, point1, normal, damage * 0.4f, Hitters::fall);
+					}
 					else
+					{
 						this.server_Hit(this, point1, normal, damage, Hitters::fall);
+					}
 				}
-				else
-					this.server_Hit(this, point1, normal, damage, Hitters::fall);
+				//else
+					//this.server_Hit(this, point1, normal, damage, Hitters::fall);
 			}
 			else
 			{
