@@ -30,7 +30,7 @@ f32 onHit( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hit
         case Hitters::mine:
         case Hitters::mine_special:
         {
-            damage *= 0.6f;
+            damage *= 0.4f;
         }
     }
 
