@@ -12,7 +12,6 @@ const string[] names =
 	"Shite",
 	"Fitz",
 	"Cheeder",
-	"Blaze",
 	"Marmalade",
 	"Orange",
 	"TFlippy",
@@ -37,7 +36,11 @@ const string[] names =
 	"Zoey",
 	"Porp",
 	"Grindy",
-	"Popcorn"
+	"Popcorn",
+	"Andragon",
+	"Ninji",
+	"Baby",
+	"Momma"
 };
 
 const string[] surnames = {
