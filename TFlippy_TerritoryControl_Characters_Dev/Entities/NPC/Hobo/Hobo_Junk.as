@@ -178,7 +178,7 @@ void Pierce(CBlob @this)
 				if (canHitBlob(this, b))
 				{
 					hit = true;
-					this.server_Hit(b, hi.hitpos, initVelocity, ROCK_DAMAGE, Hitters::cata_stones, true);
+					this.server_Hit(b, hi.hitpos, initVelocity, ROCK_DAMAGE, Hitters::muscles, true);
 				}
 			}
 			else //map
