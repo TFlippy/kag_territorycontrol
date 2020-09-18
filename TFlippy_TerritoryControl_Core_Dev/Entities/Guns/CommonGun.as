@@ -429,7 +429,7 @@ void Shoot(CBlob@ this)
 						{	
 							CBlob@ blob=hitInfos[i].blob;
 							
-							if((blob.isCollidable() || blob.hasTag("flesh") || force_nonsolid) && (!blob.hasTag("invincible") && blob.getTeamNum() != holder.getTeamNum())) 
+							if((blob.isCollidable() || blob.hasTag("flesh") || force_nonsolid) && (!blob.hasTag("invincible") && blob.getTeamNum() != holder.getTeamNum()) && blob.getHealth() > 0.0f) 
 							{
 								if (!blob.hasTag("isWeapon"))
 								{
