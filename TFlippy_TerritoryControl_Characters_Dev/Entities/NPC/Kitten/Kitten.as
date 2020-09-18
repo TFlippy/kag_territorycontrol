@@ -40,7 +40,11 @@ const string[] names =
 	"Andragon",
 	"Ninji",
 	"Baby",
-	"Momma"
+	"Momma",
+	"Tinka",
+	"Woodet",
+	"Monsieur Moustache",
+	"Ma' Hisha"
 };
 
 const string[] surnames = {
