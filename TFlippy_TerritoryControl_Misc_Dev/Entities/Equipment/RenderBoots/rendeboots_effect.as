@@ -4,14 +4,9 @@
 
 f32 onHit( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData )
 {
-    RunnerMoveVars@ moveVars;
-	if(this.get("moveVars", @moveVars))
-	{
-		moveVars.walkFactor *= 0.8f;
-	}
-
     if (customData == Hitters::fall) 
     {
+        damage *= 1.5f;
         SetKnocked(this, (damage + 1) * 30);
     }
 
