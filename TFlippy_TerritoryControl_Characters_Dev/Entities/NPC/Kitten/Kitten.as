@@ -26,7 +26,18 @@ const string[] names =
 	"Bengie",
 	"Oatmeal",
 	"Vamist",
-	"Sima"
+	"Sima",
+	"Morgana",
+	"Twat",
+	"WiFi",
+	"Piggy",
+	"Mikki",
+	"Tommy",
+	"Chloe",
+	"Zoey",
+	"Porp",
+	"Grindy",
+	"Popcorn"
 };
 
 const string[] surnames = {
@@ -38,7 +49,8 @@ const string[] surnames = {
 	"feline",
 	"small tiger",
 	"pussy",
-	"puss"
+	"puss",
+	"dog cat",
 };
 
 //sprite
