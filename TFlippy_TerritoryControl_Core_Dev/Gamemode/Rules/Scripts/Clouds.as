@@ -119,16 +119,8 @@ void RenderClouds(int id)
 
 	if (size == 0) { return; } // dont waste a draw call on an empty size
 
-	CCamera@ camera = getCamera();
-
-	if (camera is null) { return; }
-
-	Vec2f pos = camera.getPosition();
-
-	CAMERA_X = pos.x;
-	CAMERA_Y = pos.y;
-
-	FRAME_TIME += Render::getRenderDeltaTime() * getTicksASecond(); 
+	CAMERA_X = getCamera().getPosition().x; // Safe to say we won't be rendering if we don't have a camera
+	FRAME_TIME += Render::getRenderDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
 
 	for (int a = 0; a < size; a++)
 	{
@@ -138,7 +130,8 @@ void RenderClouds(int id)
 	Render::SetAlphaBlend(true);
 	Render::SetZBuffer(true, true);
 	Render::RawQuads("cloudsall.png", V_CLOUDS);
-	V_CLOUDS.clear();
+
+	V_CLOUDS.clear(); // clear after rendering
 }
 
 
@@ -154,7 +147,8 @@ class Clouds
 	{
 		goalPos = position;
 		oldPos = position;
-		for (int a = 0; a < spriteType; a++)
+
+		for (int a = 0; a < spriteType; a++) // Texture uv 'hacks'
 		{
 			spriteXPos += 0.25;
 		}
@@ -165,7 +159,7 @@ class Clouds
 		}  
 	}
 
-	bool MoveCloud() // done per tick
+	bool MoveCloud() // Updated every tick
 	{
 		if (goalPos.x > CLEAR_WIDTH_POS)
 		{
@@ -196,7 +190,6 @@ class Clouds
 // it's day time between 0.3 and 0.7
 // so I double the worldtime so we have between 0 and 510
 // when we go over 255, we start to go backwards
-
 void UpdateCloudColor()
 {
 	f32 worldTime = (getMap().getDayTime() * 256.0f) * 2.0f;
