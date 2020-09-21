@@ -11,6 +11,16 @@
 // We can use script wide variables because cloud.as will only ever be in use once.
 // This just means we dont need to use rules.get/set everywhere
 //
+//
+// TODO
+// -> Check if cloud is on screen before passing to render queue
+// -> Different cloud sizes (?)
+// -> More cloud sprites (?)
+// -> Allow variable editing through .cfg
+// -> Disable clouds on fast renderer
+// -> Colour changes based on rain (?)
+//
+//
 
 Random@ RAND = Random();
 Clouds@[] C_CLOUDS;
@@ -20,7 +30,7 @@ const Vec2f MOVE_VEL = Vec2f(0.5,0);
 const u16 CLOUD_COOLDOWN = 150;
 const u16 PADDING = 250;
 
-SColor CLOUDS_COL = SColor(200,0 ,0 ,0);
+SColor CLOUDS_COL = color_white; // temp col, get's changed based on time
 
 f32 FRAME_TIME = 0.0f;
 f32 CAMERA_X = 0.0f;
@@ -42,6 +52,9 @@ void onInit(CRules@ this)
 
 void onRestart(CRules@ this)
 {
+	C_CLOUDS.clear();
+	V_CLOUDS.clear();
+
 	LAST_ATTEMPT = 0;
 	CLEAR_WIDTH_POS = (getMap().tilemapwidth * 8) + PADDING;
 	SPAWN_VARIATION_HEIGHT = getMap().tilemapwidth / 2;
@@ -72,7 +85,7 @@ void onTick(CRules@ this)
 			if (RAND.NextRanged(100) < 50)
 			{
 				CBitStream cbs;
-				cbs.write_s16(RAND.NextRanged(SPAWN_VARIATION_HEIGHT)); // only send y, saves space
+				cbs.write_s16(RAND.NextRanged(SPAWN_VARIATION_HEIGHT)); // only send y instead of vec2f, saves space
 				cbs.write_u16(getGameTime());
 				cbs.write_u8(RAND.NextRanged(5));
 
@@ -127,8 +140,8 @@ void RenderClouds(int id)
 		C_CLOUDS[a].SendToRenderer();
 	}
 
-	Render::SetAlphaBlend(true);
-	Render::SetZBuffer(true, true);
+	Render::SetAlphaBlend(true); // alpha required to look more 'cloudy'
+	Render::SetZBuffer(true, true); // required to show up being tiles 
 	Render::RawQuads("cloudsall.png", V_CLOUDS);
 
 	V_CLOUDS.clear(); // clear after rendering
@@ -170,7 +183,7 @@ class Clouds
 		return true;
 	}
 
-	void SendToRenderer()
+	void SendToRenderer() // TODO -> Check if its on screen before passing it to be rendered
 	{
 		Vec2f TopLeft = Vec2f_lerp(oldPos, goalPos, FRAME_TIME);
 		oldPos = TopLeft;
