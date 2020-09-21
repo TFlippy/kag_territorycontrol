@@ -1,39 +1,38 @@
 /////////////////////////////////////////////
-// Cloud controller made by Vamist :)
-// Oi twat, no stealing without perms, its in BETA
+// Cloud controller made by Vamist
+// No stealing without perms, its in BETA >:(
 // 
 //
-// Clouds are mostly synced
+// Clouds are synced
 // Server will send a command when its time to spawn in a new cloud
 // Clients just render
 //
 //
 // We can use script wide variables because cloud.as will only ever be in use once.
+// This just means we dont need to use rules.get/set everywhere
+//
 
+Random@ RAND = Random();
+Clouds@[] C_CLOUDS;
 Vertex[] V_CLOUDS;
 
 const Vec2f MOVE_VEL = Vec2f(0.5,0);
-SColor CLOUDS_COL = SColor(200,0 ,0 ,0);
-
-u16 CLEAR_WIDTH_POS = 0;
-u16 SPAWN_VARIATION_HEIGHT = 0;
+const u16 CLOUD_COOLDOWN = 150;
 const u16 PADDING = 250;
+
+SColor CLOUDS_COL = SColor(200,0 ,0 ,0);
 
 f32 FRAME_TIME = 0.0f;
 f32 CAMERA_X = 0.0f;
 f32 CAMERA_Y = 0.0f;
 f32 PARRALEX_EFFECT = 0.2f;
-
-Clouds@[] C_CLOUDS;
-Random@ RAND = Random();
-
-u8 CLOUD_CHANCE = 0; // Changes on init
-u16 CLOUD_COOLDOWN = 150;
+u16 CLEAR_WIDTH_POS = 0;
+u16 SPAWN_VARIATION_HEIGHT = 0;
 u16 LAST_ATTEMPT = 0;
 
 void onInit(CRules@ this)
 {
-	this.addCommandID("new_cloud");
+	this.addCommandID("new_cloud"); 
 
 	int callback = Render::addScript(Render::layer_background, "Clouds", "RenderClouds", -10000.0f);
 	this.set_u16("callback", callback);
@@ -43,14 +42,12 @@ void onInit(CRules@ this)
 
 void onRestart(CRules@ this)
 {
-	C_CLOUDS.clear();
 	LAST_ATTEMPT = 0;
 	CLEAR_WIDTH_POS = (getMap().tilemapwidth * 8) + PADDING;
 	SPAWN_VARIATION_HEIGHT = getMap().tilemapwidth / 2;
 }
 
-
-// Very for debugging
+// Very useful for debugging, don't remove 
 void onReload(CRules@ this)
 {
 	onRestart(this);
@@ -61,7 +58,6 @@ void onReload(CRules@ this)
 		int callback = Render::addScript(Render::layer_background, "Clouds", "RenderClouds", -10000.0f);
 		this.set_u16("callback", callback);
 	}
-
 }
 //
 
@@ -76,12 +72,11 @@ void onTick(CRules@ this)
 			if (RAND.NextRanged(100) < 50)
 			{
 				CBitStream cbs;
-				cbs.write_Vec2f(Vec2f(-PADDING, RAND.NextRanged(SPAWN_VARIATION_HEIGHT)));
-
+				cbs.write_s16(RAND.NextRanged(SPAWN_VARIATION_HEIGHT)); // only send y, saves space
 				cbs.write_u16(getGameTime());
-				cbs.write_u8(XORRandom(5));
+				cbs.write_u8(RAND.NextRanged(5));
 
-				this.SendCommand(this.getCommandID("new_cloud"), cbs); // nothing new is spawning
+				this.SendCommand(this.getCommandID("new_cloud"), cbs); 
 			}
 
 		}
@@ -109,11 +104,11 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 
 	if (cmd == this.getCommandID("new_cloud"))
 	{
-		Vec2f pos = params.read_Vec2f();
+		s16 yPos = params.read_s16();
 		u16 gameTime = params.read_u16();
 		u16 spriteType = params.read_u8();
 
-		C_CLOUDS.push_back(Clouds(pos, gameTime, spriteType));
+		C_CLOUDS.push_back(Clouds(Vec2f(-PADDING, yPos), gameTime, spriteType));
 	}
 }
 
