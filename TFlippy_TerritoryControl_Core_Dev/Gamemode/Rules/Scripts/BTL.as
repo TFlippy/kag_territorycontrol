@@ -12,10 +12,11 @@
 void onTick(CRules@ this)
 {
     u16[] toErase;
-    BTL[] expList;
-	this.get("BTL_DELAY", expList);
-	
+    BTL[] @expList;
+
+	this.get("BTL_DELAY", @expList);
     if (expList is null || expList.size() == 0) { return; } 
+
     int expCount = this.get_u16("explosion_count");
 
     for (int a = 0; a < expList.size(); a++)
@@ -61,6 +62,6 @@ void onTick(CRules@ this)
         }
     }
 
-    this.set("BTL_DELAY", @expList);
+    this.set("BTL_DELAY", expList);
     this.set_u16("explosion_count", 0); 
 }

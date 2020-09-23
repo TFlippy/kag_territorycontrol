@@ -7,8 +7,6 @@ bool shouldExplode(CBlob@ this, CRules@ rules)
     uint lastGameTime = rules.get_u32("last_exp_tick"); // doesnt matter if it doesnt exist, it'll default to 0 ;)
 	u16 explosionCount = rules.add_u16("explosion_count", 1); // u16 because people will always go overkill
 
-	this.Tag("BTL_processed");
-
 	if (lastGameTime != getGameTime())
 	{
 		explosionCount = 1;
@@ -16,6 +14,7 @@ bool shouldExplode(CBlob@ this, CRules@ rules)
 		rules.set_u32("last_exp_tick", getGameTime());
 		rules.set_u16("explosion_count", explosionCount); // default to 1 if new tick (since this bomb counts as an explosion)
 	}
+
 	if (explosionCount > MAX_BOMBS_PER_TICK) // is this explosion over the limit?
 	{
 		// OI MATE, YOU GOT A LICENSE FOR THAT BOMB?
@@ -28,23 +27,25 @@ bool shouldExplode(CBlob@ this, CRules@ rules)
 
 void addToNextTick(CBlob@ this, f32 radius, f32 damage, CRules@ rules, explosionHook@ toCall)
 {
-	BTL[] bombList;
-	if (!rules.get("BTL_DELAY", bombList))
+	BTL[] @bombList;
+	if (!rules.get("BTL_DELAY", @bombList))
 	{
-		bombList = array<BTL>();
+		@bombList = array<BTL>();
 	}
+
 	BTL exp = BTL( this.getDamageOwnerPlayer(), this, radius, damage, toCall);
 	bombList.push_back(exp);
+
 
 	rules.set("BTL_DELAY", bombList);
 }
 
 void addToNextTick(CBlob@ this, CRules@ rules, onDieHook@ toCall)
 {
-	BTL[] bombList;
-	if (!rules.get("BTL_DELAY", bombList))
+	BTL[] @bombList;
+	if (!rules.get("BTL_DELAY", @bombList))
 	{
-		bombList = array<BTL>();
+		@bombList = array<BTL>();
 	}
 
 	BTL exp = BTL( this.getDamageOwnerPlayer(), this, toCall);
@@ -57,10 +58,10 @@ void addToNextTick(CBlob@ this, CRules@ rules, onDieHook@ toCall)
 
 void addToNextTick(CBlob@ this, CRules@ rules, Vec2f velocity, onDieVelocityHook@ toCall)
 {
-	BTL[] bombList;
-	if (!rules.get("BTL_DELAY", bombList))
+	BTL[] @bombList;
+	if (!rules.get("BTL_DELAY", @bombList))
 	{
-		bombList = array<BTL>();
+		@bombList = array<BTL>();
 	}
 	BTL exp = BTL( this.getDamageOwnerPlayer(), this, velocity, toCall);
 	bombList.push_back(exp);
