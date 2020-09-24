@@ -11,23 +11,28 @@
 
 void onTick(CRules@ this)
 {
-    u16[] toErase;
-    BTL[] @expList;
+    int expCount = 0;
+	BTL[] @bombList;
 
-	this.get("BTL_DELAY", @expList);
-    if (expList is null || expList.size() == 0) { return; } 
+	if (!this.get("BTL_DELAY", @bombList))
+	{
+		@bombList = array<BTL>();
+	}
 
-    int expCount = this.get_u16("explosion_count");
+    this.set_u16("explosion_count", 0); // each new tick, set explosion_count to 0
+    
+    if (bombList.size() == 0) { return; } 
 
-    for (int a = 0; a < expList.size(); a++)
+    print("hi new tick");
+    
+    for (int a = 0; a < bombList.size(); a++)
     {
-        BTL@ explosion = expList[a];
+        BTL @explosion = bombList[a];
         
         if (explosion.time == getGameTime()) { continue; }
-        
-        expCount += 1;
-
         if (expCount > MAX_BOMBS_PER_TICK) { break; } // exit out if we have done more then 5 this tick
+
+        expCount += 1;
 
         CBlob@ blob = explosion.original_blob;
 
@@ -46,22 +51,14 @@ void onTick(CRules@ this)
         }
         else 
         {
+            print("hi " + a);
             explosion.CallHookPls(); // explode 
         }
 
-        toErase.push_back(a);
+        bombList.erase(a);
+        a -= 1;
     }
 
-    if (toErase.size() != 0) 
-    {
-        toErase.reverse(); // crashes here if size is 0 :dagger:
-
-        for (int a = 0; a < toErase.size(); a++) // erase all
-        {
-            expList.erase(toErase[a]);
-        }
-    }
-
-    this.set("BTL_DELAY", expList);
-    this.set_u16("explosion_count", 0); 
+    this.set("BTL_DELAY", @bombList);   
+    this.set_u16("explosion_count", expCount);
 }
