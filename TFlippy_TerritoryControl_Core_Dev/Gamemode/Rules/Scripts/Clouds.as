@@ -56,8 +56,18 @@ void onRestart(CRules@ this)
 	V_CLOUDS.clear();
 
 	LAST_ATTEMPT = 0;
-	CLEAR_WIDTH_POS = (getMap().tilemapwidth * 8) + PADDING;
-	SPAWN_VARIATION_HEIGHT = getMap().tilemapwidth / 2;
+
+	CMap@ map = getMap(); // Somehow is null in localhost semi randomly..?
+
+	if (map !is null)
+	{
+		CLEAR_WIDTH_POS = (map.tilemapwidth * 8) + PADDING;
+		SPAWN_VARIATION_HEIGHT = map.tilemapwidth / 2;
+	}
+	else 
+	{
+		error("MAP WAS NULL, SPAWN HEIGHT AND CLEARPOS IS NOW INCORRECT");
+	}
 }
 
 // Very useful for debugging, don't remove 
