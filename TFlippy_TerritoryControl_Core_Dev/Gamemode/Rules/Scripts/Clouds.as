@@ -42,7 +42,13 @@ u16 LAST_ATTEMPT = 0;
 
 void onInit(CRules@ this)
 {
-	this.addCommandID("new_cloud"); 
+	this.addCommandID("new_cloud"); // still register command so its in sync with server
+	
+	if (v_fastrender) // then remove script if we dont want clouds
+	{
+		this.RemoveScript("clouds.as");
+	}
+
 
 	int callback = Render::addScript(Render::layer_background, "Clouds", "RenderClouds", -10000.0f);
 	this.set_u16("callback", callback);
