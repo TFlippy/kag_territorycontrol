@@ -26,7 +26,7 @@ Vertex[] V_CLOUDS;
 
 const Vec2f MOVE_VEL = Vec2f(0.5,0);
 const u16 CLOUD_COOLDOWN = 150;
-const u16 PADDING = 250;
+const u16 PADDING = 350;
 
 SColor CLOUDS_COL = color_white; // temp col, get's changed based on time
 
@@ -94,7 +94,7 @@ void onTick(CRules@ this)
 			{
 				CBitStream cbs;
 				cbs.write_s16(RAND.NextRanged(SPAWN_VARIATION_HEIGHT)); // only send y instead of vec2f, saves space
-				cbs.write_u16(getGameTime());
+				cbs.write_u16(gametime);
 				cbs.write_u8(RAND.NextRanged(5));
 
 				this.SendCommand(this.getCommandID("new_cloud"), cbs); 
@@ -148,6 +148,8 @@ void RenderClouds(int id)
 		C_CLOUDS[a].SendToRenderer();
 	}
 
+	if (V_CLOUDS.size() == 0) { return; }
+
 	Render::SetAlphaBlend(true); // alpha required to look more 'cloudy'
 	Render::SetZBuffer(true, true); // required to show up being tiles 
 	Render::RawQuads("cloudsall.png", V_CLOUDS);
@@ -169,12 +171,12 @@ class Clouds
 		goalPos = position;
 		oldPos = position;
 
-		for (int a = 0; a < spriteType; a++) // Texture uv 'hacks'
+		for (u8 a = 0; a < spriteType; a++) // Texture uv 'hacks'
 		{
 			spriteXPos += 0.25;
 		}
 
-		for (int a = creationTick; a < getGameTime(); a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
+		for (u16 a = creationTick; a < getGameTime(); a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
 		{
 			moveCloud(); // sync clouds positions by catching up
 		}  
@@ -214,10 +216,10 @@ class Clouds
 	bool isOnScreen(Vec2f parralexPos)
 	{
 		Driver@ driver = getDriver();
-		const Vec2f pos = driver.getScreenPosFromWorldPos(parralexPos + Vec2f(100, 100)); // (+100 100 based on sprite size per cloud)
+		const Vec2f pos = driver.getScreenPosFromWorldPos(parralexPos + Vec2f(100, 100)); // gets center of the cloud
 
-        if(((pos.x > -300 && pos.x < driver.getScreenWidth() * 1.2) && 
-			(pos.y > -150 && pos.y < driver.getScreenHeight() * 1.2))) // Tweak these settings more
+        if(((pos.x > -100 && pos.x < driver.getScreenWidth() + 100) && 
+			(pos.y > -100 && pos.y < driver.getScreenHeight() + 100))) // Tweak these settings more
         {
 			return true;
         }
