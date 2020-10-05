@@ -81,6 +81,9 @@ void onReload(CRules@ this)
 
 void onTick(CRules@ this) 
 {
+	CLEAR_WIDTH_POS = (getMap().tilemapwidth * 8) + PADDING; // TEMP WORK AROUND
+	SPAWN_VARIATION_HEIGHT = (getMap().tilemapheight * 8) / 2;
+
 	if (isServer())
 	{
 		uint gametime = getGameTime();
@@ -102,9 +105,6 @@ void onTick(CRules@ this)
 
 	if (isClient())
 	{
-		CLEAR_WIDTH_POS = (map.tilemapwidth * 8) + PADDING; // TEMP WORK AROUND
-		SPAWN_VARIATION_HEIGHT = map.tilemapwidth / 2;
-
 		FRAME_TIME = 0;
 		UpdateCloudColor();
 		
