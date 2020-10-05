@@ -13,13 +13,12 @@
 //
 //
 // TODO
-// -> Check if we are on screen based on middle of 
 // -> Different cloud sizes (?)
 // -> More cloud sprites (?)
-// -> Allow variable editing through .cfg
+// -> Allow variable editing through .cfg (?)
 // -> Colour changes based on rain (?)
 //
-//
+// END
 
 Random@ RAND = Random();
 Clouds@[] C_CLOUDS;
@@ -199,16 +198,16 @@ class Clouds
 	}
 
 	void SendToRenderer() // TODO -> Check if its on screen before passing it to be rendered
-	{
-		if (!isOnScreen()) 
-		{
-			return;
-		}
-		
+	{	
 		Vec2f TopLeft = Vec2f_lerp(oldPos, goalPos, FRAME_TIME);
 		oldPos = TopLeft;
 
 		TopLeft.x += (CAMERA_X * PARRALEX_EFFECT);
+
+		if (!isOnScreen(TopLeft)) 
+		{
+			return;
+		}
 
 		Vec2f BotRight = TopLeft + Vec2f(200, 200);
 
@@ -218,10 +217,10 @@ class Clouds
 		V_CLOUDS.push_back(Vertex(TopLeft.x,  BotRight.y, 1, spriteXPos,          1, CLOUDS_COL));
 	}
 
-	bool isOnScreen()
+	bool isOnScreen(Vec2f parralexPos)
 	{
 		Driver@ driver = getDriver();
-		const Vec2f pos = driver.getScreenPosFromWorldPos(goalPos + Vec2f(100, 100)); // (+100 100 based on sprite size per cloud)
+		const Vec2f pos = driver.getScreenPosFromWorldPos(parralexPos + Vec2f(100, 100)); // (+100 100 based on sprite size per cloud)
 
         if(((pos.x > -300 && pos.x < driver.getScreenWidth() * 1.2) && 
 			(pos.y > -150 && pos.y < driver.getScreenHeight() * 1.2))) // Tweak these settings more
