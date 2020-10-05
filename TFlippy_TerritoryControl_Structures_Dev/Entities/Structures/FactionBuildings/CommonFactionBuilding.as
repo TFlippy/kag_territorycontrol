@@ -76,7 +76,7 @@ void onTick(CBlob@ this)
 	SetMinimap(this);   //needed for under raid check
 	if (this.get_bool("base_allow_alarm")) SetAlarm(this, this.get_bool("base_alarm_manual") || this.hasTag(raid_tag));
 	
-	if (getGameTime() % 30 == 0 && this.get_bool("base_demolition"))
+	if (this.get_bool("base_demolition") && getGameTime() % 30 == 0)
 	{
 		if (isServer())
 		{
@@ -779,8 +779,21 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 			if (cmd == this.getCommandID("faction_captured")) {
 			team = inParams.read_s32();
 			}
+
 			bool defeat = inParams.read_bool();
-			if (defeat) uncap_team(team);
+			bool self_destroy = this.get_bool("base_demolition");
+
+			if (defeat)
+			{
+				if (self_destroy) 
+				{
+					peasant_team(team);
+				}
+				else 
+				{
+					uncap_team(team);
+				}
+			}
 		}
 		else if (cmd == this.getCommandID("name"))
 		{
@@ -870,11 +883,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 			bool defeat = inParams.read_bool();
 
 			if (rules is null) return;
-			if (team < 7) {
+
+			if (team < 7) 
+			{
 				string teamName = rules.getTeam(team).getName();
 				client_AddToChat(teamName + "'s "+this.getInventoryName()+" has been destroyed!", SColor(0xff444444));
 
-				if (defeat) {
+				if (defeat) 
+				{
 					client_AddToChat(teamName + " has been defeated!", SColor(0xff444444));
 					CPlayer@ ply = getLocalPlayer();
 					int myTeam = ply.getTeamNum();
