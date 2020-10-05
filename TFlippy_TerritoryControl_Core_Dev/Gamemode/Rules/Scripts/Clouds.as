@@ -45,8 +45,8 @@ void onInit(CRules@ this)
 	if (v_fastrender) // then remove script if we dont want clouds
 	{
 		this.RemoveScript("clouds.as");
+		return;
 	}
-
 
 	int callback = Render::addScript(Render::layer_background, "Clouds", "RenderClouds", -10000.0f);
 	this.set_u16("callback", callback);
@@ -60,17 +60,15 @@ void onRestart(CRules@ this)
 	V_CLOUDS.clear();
 
 	LAST_ATTEMPT = 0;
+	CLEAR_WIDTH_POS = 0;
+	SPAWN_VARIATION_HEIGHT = 0;
 
-	CMap@ map = getMap(); // Somehow is null in localhost semi randomly..?
+	CMap@ map = getMap();
 
 	if (map !is null)
 	{
 		CLEAR_WIDTH_POS = (map.tilemapwidth * 8) + PADDING;
 		SPAWN_VARIATION_HEIGHT = map.tilemapwidth / 2;
-	}
-	else 
-	{
-		error("MAP WAS NULL, SPAWN HEIGHT AND CLEARPOS IS NOW INCORRECT");
 	}
 }
 
@@ -111,6 +109,13 @@ void onTick(CRules@ this)
 
 	if (isClient())
 	{
+		CMap@ map = getMap();
+		if (map !is null && CLEAR_WIDTH_POS == 0)
+		{
+			CLEAR_WIDTH_POS = (map.tilemapwidth * 8) + PADDING;
+			SPAWN_VARIATION_HEIGHT = map.tilemapwidth / 2;
+		}
+
 		FRAME_TIME = 0;
 		UpdateCloudColor();
 		
