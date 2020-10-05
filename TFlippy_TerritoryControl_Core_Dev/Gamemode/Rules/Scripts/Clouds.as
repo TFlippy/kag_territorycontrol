@@ -13,11 +13,10 @@
 //
 //
 // TODO
-// -> Check if cloud is on screen before passing to render queue
+// -> Check if we are on screen based on middle of 
 // -> Different cloud sizes (?)
 // -> More cloud sprites (?)
 // -> Allow variable editing through .cfg
-// -> Disable clouds on fast renderer
 // -> Colour changes based on rain (?)
 //
 //
@@ -118,7 +117,7 @@ void onTick(CRules@ this)
 		
 		for (int a = 0; a < C_CLOUDS.size(); a++)
 		{
-			if (!C_CLOUDS[a].MoveCloud()) // return's false if its out the map
+			if (!C_CLOUDS[a].moveCloud()) // return's false if its out the map
 			{
 				C_CLOUDS.erase(a);
 				a--;
@@ -184,11 +183,11 @@ class Clouds
 
 		for (int a = creationTick; a < getGameTime(); a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
 		{
-			MoveCloud(); // sync clouds
+			moveCloud(); // sync clouds positions by catching up
 		}  
 	}
 
-	bool MoveCloud() // Updated every tick
+	bool moveCloud() // Updated every tick
 	{
 		if (goalPos.x > CLEAR_WIDTH_POS)
 		{
@@ -201,6 +200,11 @@ class Clouds
 
 	void SendToRenderer() // TODO -> Check if its on screen before passing it to be rendered
 	{
+		if (!isOnScreen()) 
+		{
+			return;
+		}
+		
 		Vec2f TopLeft = Vec2f_lerp(oldPos, goalPos, FRAME_TIME);
 		oldPos = TopLeft;
 
@@ -212,6 +216,20 @@ class Clouds
 		V_CLOUDS.push_back(Vertex(BotRight.x, TopLeft.y,  1, spriteXPos + 0.25,   0, CLOUDS_COL));
 		V_CLOUDS.push_back(Vertex(BotRight.x, BotRight.y, 1, spriteXPos + 0.25,   1, CLOUDS_COL));
 		V_CLOUDS.push_back(Vertex(TopLeft.x,  BotRight.y, 1, spriteXPos,          1, CLOUDS_COL));
+	}
+
+	bool isOnScreen()
+	{
+		Driver@ driver = getDriver();
+		const Vec2f pos = driver.getScreenPosFromWorldPos(goalPos + Vec2f(100, 100)); // (+100 100 based on sprite size per cloud)
+
+        if(((pos.x > -300 && pos.x < driver.getScreenWidth() * 1.2) && 
+			(pos.y > -150 && pos.y < driver.getScreenHeight() * 1.2))) // Tweak these settings more
+        {
+			return true;
+        }
+
+		return false;
 	}
 }
 
