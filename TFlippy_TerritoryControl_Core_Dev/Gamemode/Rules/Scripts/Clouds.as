@@ -63,13 +63,6 @@ void onRestart(CRules@ this)
 	CLEAR_WIDTH_POS = 0;
 	SPAWN_VARIATION_HEIGHT = 0;
 
-	CMap@ map = getMap();
-
-	if (map !is null)
-	{
-		CLEAR_WIDTH_POS = (map.tilemapwidth * 8) + PADDING;
-		SPAWN_VARIATION_HEIGHT = map.tilemapwidth / 2;
-	}
 }
 
 // Very useful for debugging, don't remove 
@@ -109,12 +102,8 @@ void onTick(CRules@ this)
 
 	if (isClient())
 	{
-		CMap@ map = getMap();
-		if (map !is null && CLEAR_WIDTH_POS == 0)
-		{
-			CLEAR_WIDTH_POS = (map.tilemapwidth * 8) + PADDING;
-			SPAWN_VARIATION_HEIGHT = map.tilemapwidth / 2;
-		}
+		CLEAR_WIDTH_POS = (map.tilemapwidth * 8) + PADDING; // TEMP WORK AROUND
+		SPAWN_VARIATION_HEIGHT = map.tilemapwidth / 2;
 
 		FRAME_TIME = 0;
 		UpdateCloudColor();
