@@ -153,7 +153,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Sell Gold Ingot (1)", "$COIN$", "coin-45", "Sell 1 Gold Ingot for 45 coins.");
+		ShopItem@ s = addShopItem(this, "Sell Gold Ingot (1)", "$COIN$", "coin-90", "Sell 1 Gold Ingot for 90 coins.");
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
 		s.spawnNothing = true;
 	}
