@@ -17,6 +17,7 @@
 // -> More cloud sprites (?)
 // -> Allow variable editing through .cfg (?)
 // -> Colour changes based on rain (?)
+// -> Todo: turn it into SMesh to help with performance
 //
 // END
 
@@ -99,7 +100,6 @@ void onTick(CRules@ this)
 
 				this.SendCommand(this.getCommandID("new_cloud"), cbs); 
 			}
-
 		}
 	}
 
@@ -176,10 +176,10 @@ class Clouds
 			spriteXPos += 0.25;
 		}
 
-		for (u16 a = creationTick; a < getGameTime(); a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
+		/*for (u16 a = creationTick; a < getGameTime(); a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
 		{
 			moveCloud(); // sync clouds positions by catching up
-		}  
+		} */ 
 	}
 
 	bool moveCloud() // Updated every tick
