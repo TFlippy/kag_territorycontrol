@@ -44,7 +44,9 @@ const string[] names =
 	"Tinka",
 	"Woodet",
 	"Monsieur Moustache",
-	"Ma' Hisha"
+	"Ma' Hisha",
+	"Pirate-rob",
+	"Rajang"
 };
 
 const string[] surnames = {
