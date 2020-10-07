@@ -258,12 +258,34 @@ class Clouds
 
 		TopLeft  = driver.getScreenPosFromWorldPos(TopLeft);
 		BotRight = driver.getScreenPosFromWorldPos(BotRight);
+		const Vec2f center = TopLeft + BotRight / 2;
+
+		if (dontBotherChecking(center)) // 
+		{
+			return false;
+		}
 
 		if (isVectorOnScreen(TopLeft) || 
 			isVectorOnScreen(BotRight) || 
 			isVectorOnScreen(Vec2f(TopLeft.x, BotRight.y)) || 
 			isVectorOnScreen(Vec2f(BotRight.x, TopLeft.y)) ||
-			isVectorOnScreen(TopLeft + BotRight / 2))
+			isVectorOnScreen(center))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	bool dontBotherChecking(const Vec2f &in pos)
+	{
+		const f32 posx = pos.x;
+		const f32 posy = pos.y;
+
+		if (posx > SCREEN_HEIGHT + 400 && 
+			posy > SCREEN_HEIGHT + 400 ||
+			posx < -400 &&
+			posy < -400)
 		{
 			return true;
 		}
