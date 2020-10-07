@@ -7,6 +7,9 @@
 // this should help prevent crashes, and lower lag spikes
 //
 
+
+////// NOTE - DISABLED UNTIL WE USE ASU'S BUILD, CRASHES DUE TO BUG IN OlDER ANGELSCRIPT VERSIONS
+
 #include "BTL_Include.as";
 
 void onTick(CRules@ this)
