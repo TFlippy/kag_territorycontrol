@@ -8,9 +8,6 @@
 
 void onInit(CBlob@ this)
 {
-	//Adding awootism check in rain
-	this.addCommandID("removeAwootism");
-
 	this.getShape().SetStatic(true);
 	this.getCurrentScript().tickFrequency = 1;
 	
@@ -162,27 +159,6 @@ void onTick(CBlob@ this)
 		// print("" + (fog * modifier));
 		
 		//this.getShape().SetAngleDegrees(10 + sine);
-
-		//Awootism check
-		CPlayer@ player = getLocalPlayer();
-		CBlob@ blob = getLocalPlayerBlob();
-		if(player !is null && blob !is null)
-		{
-			if(player.hasTag("awootism"))
-			{
-				if(!map.rayCastSolidNoBlobs(blob.getPosition(), Vec2f(blob.getPosition().x,0)))
-				{
-					CBitStream params;
-					params.write_u16(blob.getNetworkID());
-					params.write_u16(player.getNetworkID());
-					this.SendCommand(this.getCommandID("removeAwootism"),params);
-					client_AddToChat("You have been cured from awootism!", SColor(255, 255, 0, 0));
-					player.Untag("awootism");
-					blob.Tag("infectOver");
-				}
-			}
-		}
-		//End
 	}
 	
 	if (isServer())
