@@ -71,10 +71,10 @@ void onRestart(CRules@ this)
 
 	LAST_ATTEMPT = 0;
 	CLEAR_WIDTH_POS = 0;
-	SPAWN_VARIATION_HEIGHT = 0;
+	SPAWN_VARIATION_HEIGHT.y = 0;
 }
 
-// Very useful for debugging, don't remove 
+// Very useful for debugging
 void onReload(CRules@ this)
 {
 	onRestart(this);
@@ -84,10 +84,15 @@ void onReload(CRules@ this)
 		Render::RemoveScript(this.get_u16("callback"));
 		int callback = Render::addScript(Render::layer_background, "Clouds", "RenderClouds", -10000.0f);
 		this.set_u16("callback", callback);
+
+		CLEAR_WIDTH_POS = (getMap().tilemapwidth * 8) + PADDING;
+		SPAWN_VARIATION_HEIGHT.y = (getMap().tilemapheight * 8) / 2;
 		
+		// TEMP
 		for (int a = 0; a < 50; a++)
 		{
-			C_CLOUDS.push_back(Clouds(Vec2f(XORRandom(getMap().tilemapwidth * 8),  XORRandom((getMap().tilemapheight * 8) / 2)), getGameTime(), XORRandom(5), XORRandom(20)));
+			f32 spawnPosY = RAND.NextRanged(SPAWN_VARIATION_HEIGHT.y + -SPAWN_VARIATION_HEIGHT.x) + SPAWN_VARIATION_HEIGHT.x;
+			C_CLOUDS.push_back(Clouds(Vec2f(XORRandom(getMap().tilemapwidth * 8),  spawnPosY), getGameTime(), XORRandom(5), XORRandom(20)));
 		}
 	}
 }
@@ -95,8 +100,11 @@ void onReload(CRules@ this)
 
 void onTick(CRules@ this) 
 {
-	CLEAR_WIDTH_POS = (getMap().tilemapwidth * 8) + PADDING; // TEMP WORK AROUND
-	SPAWN_VARIATION_HEIGHT = (getMap().tilemapheight * 8) / 2;
+	if (CLEAR_WIDTH_POS == 0) // Required here because map is null in onInit and onRestart
+	{
+		CLEAR_WIDTH_POS = (getMap().tilemapwidth * 8) + PADDING;
+		SPAWN_VARIATION_HEIGHT.y = (getMap().tilemapheight * 8) / 2;
+	}
 
 	if (isServer())
 	{
@@ -106,10 +114,14 @@ void onTick(CRules@ this)
 			LAST_ATTEMPT = gametime + CLOUD_COOLDOWN;
 			if (RAND.NextRanged(100) < 50)
 			{
+				s16 spawnPosY = RAND.NextRanged(SPAWN_VARIATION_HEIGHT.y + -SPAWN_VARIATION_HEIGHT.x);
+				spawnPosY += SPAWN_VARIATION_HEIGHT.x;
+
 				CBitStream cbs;
-				cbs.write_s16(RAND.NextRanged(SPAWN_VARIATION_HEIGHT)); // only send y instead of vec2f, saves space
+				cbs.write_s16(spawnPosY); // only send y instead of vec2f, saves space
 				cbs.write_u16(gametime);
 				cbs.write_u8(RAND.NextRanged(5));
+				cbs.write_u8(RAND.NextRanged(20));
 
 				this.SendCommand(this.getCommandID("new_cloud"), cbs); 
 			}
@@ -140,9 +152,12 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 	{
 		s16 yPos = params.read_s16();
 		u16 gameTime = params.read_u16();
-		u16 spriteType = params.read_u8();
+		u8 spriteType = params.read_u8();
+		u8 zLayer = params.read_u8();
 
-		C_CLOUDS.push_back(Clouds(Vec2f(-PADDING, yPos), gameTime, spriteType));
+		C_CLOUDS.push_back(
+			Clouds(Vec2f(-PADDING, yPos), gameTime, spriteType, zLayer)
+		);
 	}
 }
 
@@ -150,11 +165,13 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 void RenderClouds(int id)
 {
 	int size = C_CLOUDS.size();
-
 	if (size == 0) { return; } // dont waste a draw call on an empty size
 
-	CAMERA_X = getCamera().getPosition().x; // Safe to say we won't be rendering if we don't have a camera
 	FRAME_TIME += Render::getRenderDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
+
+	Vec2f camPos = getCamera().getPosition(); // Safe to say we won't be rendering if we don't have a camera
+	CAMERA_X = camPos.x; 
+	CAMERA_Y = camPos.y; 
 
 	for (int a = 0; a < size; a++)
 	{
@@ -180,7 +197,7 @@ class Clouds
 	f32 spriteXPos = 0;
 	u8 zLevel = 0; // the higher this is, the lower the z level;
 
-	Clouds (Vec2f position, u16 creationTick, u8 spriteType, u8 zLayer = 0) 
+	Clouds (Vec2f position, u16 creationTick, u8 spriteType, u8 zLayer) 
 	{
 		goalPos = position;
 		oldPos = position;
@@ -205,21 +222,25 @@ class Clouds
 		}
 
 		goalPos += MOVE_VEL;
+		goalPos.x += ((zLevel/2) * 0.05f); // some move faster based on z level
+
 		return true;
 	}
 
-	void SendToRenderer() // TODO -> Check if its on screen before passing it to be rendered
+	void SendToRenderer() // Checks that our cloud is on screen then passes it to render
 	{	
 		Vec2f TopLeft = Vec2f_lerp(oldPos, goalPos, FRAME_TIME);
 		oldPos = TopLeft;
-		TopLeft.x += (CAMERA_X * (PARRALEX_EFFECT - (zLevel * 0.01f)));
+
+		TopLeft.x += CAMERA_X * (PARRALEX_EFFECT - (zLevel * 0.01f));
+		TopLeft.y += CAMERA_Y * (PARRALEX_EFFECT - (zLevel * 0.01f)) / 2;
+
+		Vec2f BotRight = TopLeft + Vec2f(200, 200);
 
 		if (!isOnScreen(TopLeft)) 
 		{
 			return;
 		}
-
-		Vec2f BotRight = TopLeft + Vec2f(200, 200);
 
 		V_CLOUDS.push_back(Vertex(TopLeft.x,  TopLeft.y,  1, spriteXPos,          0, CLOUDS_COL));
 		V_CLOUDS.push_back(Vertex(BotRight.x, TopLeft.y,  1, spriteXPos + 0.25,   0, CLOUDS_COL));
@@ -227,8 +248,10 @@ class Clouds
 		V_CLOUDS.push_back(Vertex(TopLeft.x,  BotRight.y, 1, spriteXPos,          1, CLOUDS_COL));
 	}
 
+	// TODO -> fix crap code (i dont like how its done atm, very hit and miss)
 	bool isOnScreen(Vec2f parralexPos)
 	{
+		return true;
 		Driver@ driver = getDriver();
 		const Vec2f pos = driver.getScreenPosFromWorldPos(parralexPos + Vec2f(100, 100)); // gets center of the cloud
 
