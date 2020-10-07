@@ -195,20 +195,20 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 
 class Clouds
 {
-	Vec2f goalPos = Vec2f(0,0);
-	Vec2f oldPos = Vec2f(0,0);
-	f32 spriteXPos = 0;
-	u8 zLevel = 0; // the higher this is, the lower the z level;
+	Vec2f GoalPos = Vec2f(0,0);
+	Vec2f OldPos = Vec2f(0,0);
+	f32 SpriteXPos = 0;
+	u8 ZLevel = 0; // the higher this is, the lower the z level;
 
 	Clouds (Vec2f position, u16 creationTick, u8 spriteType, u8 zLayer) 
 	{
-		goalPos = position;
-		oldPos = position;
-		zLevel = zLayer;
+		GoalPos = position;
+		OldPos = position;
+		ZLevel = zLayer;
 
 		for (u8 a = 0; a < spriteType; a++) // Texture uv 'hacks'
 		{
-			spriteXPos += 0.25;
+			SpriteXPos += 0.25;
 		}
 
 		u16 gametime = getGameTime();
@@ -220,36 +220,36 @@ class Clouds
 
 	bool moveCloud() // Updated every tick
 	{
-		if (goalPos.x > CLEAR_WIDTH_POS)
+		if (GoalPos.x > CLEAR_WIDTH_POS)
 		{
 			return false;
 		}
 
-		goalPos += MOVE_VEL;
-		goalPos.x += ((zLevel/2) * 0.05f); // some move faster based on z level
+		GoalPos += MOVE_VEL;
+		GoalPos.x += ((ZLevel / 2) * 0.05f); // some move faster based on z level
 
 		return true;
 	}
 
 	void SendToRenderer() // Checks that our cloud is on screen then passes it to render
 	{	
-		Vec2f TopLeft = Vec2f_lerp(oldPos, goalPos, FRAME_TIME);
-		oldPos = TopLeft;
+		Vec2f topLeft = Vec2f(Maths::lerp(OldPos.x, GoalPos.x, FRAME_TIME), Maths::lerp(OldPos.y, GoalPos.y, FRAME_TIME));
+		OldPos = topLeft;
 
-		TopLeft.x += CAMERA_X * (PARRALEX_EFFECT - (zLevel * 0.01f));
-		TopLeft.y += CAMERA_Y * (PARRALEX_EFFECT - (zLevel * 0.01f)) / 2;
+		topLeft.x += CAMERA_X * (PARRALEX_EFFECT - (ZLevel * 0.01f));
+		topLeft.y += CAMERA_Y * (PARRALEX_EFFECT - (ZLevel * 0.01f)) / 2;
 
-		Vec2f BotRight = TopLeft + Vec2f(200, 200);
+		Vec2f botRight = topLeft + Vec2f(200, 200);
 
-		if (!isOnScreen(TopLeft, BotRight)) 
+		if (!isOnScreen(topLeft, botRight)) 
 		{
 			return;
 		}
 
-		V_CLOUDS.push_back(Vertex(TopLeft.x,  TopLeft.y,  1, spriteXPos,          0, CLOUDS_COL));
-		V_CLOUDS.push_back(Vertex(BotRight.x, TopLeft.y,  1, spriteXPos + 0.25,   0, CLOUDS_COL));
-		V_CLOUDS.push_back(Vertex(BotRight.x, BotRight.y, 1, spriteXPos + 0.25,   1, CLOUDS_COL));
-		V_CLOUDS.push_back(Vertex(TopLeft.x,  BotRight.y, 1, spriteXPos,          1, CLOUDS_COL));
+		V_CLOUDS.push_back(Vertex(topLeft.x,  topLeft.y,  1, SpriteXPos,          0, CLOUDS_COL));
+		V_CLOUDS.push_back(Vertex(botRight.x, topLeft.y,  1, SpriteXPos + 0.25,   0, CLOUDS_COL));
+		V_CLOUDS.push_back(Vertex(botRight.x, botRight.y, 1, SpriteXPos + 0.25,   1, CLOUDS_COL));
+		V_CLOUDS.push_back(Vertex(topLeft.x,  botRight.y, 1, SpriteXPos,          1, CLOUDS_COL));
 	}
 
 	bool isOnScreen(Vec2f &in TopLeft, Vec2f &in BotRight)
@@ -258,9 +258,15 @@ class Clouds
 
 		TopLeft  = driver.getScreenPosFromWorldPos(TopLeft);
 		BotRight = driver.getScreenPosFromWorldPos(BotRight);
-		const Vec2f center = TopLeft + BotRight / 2;
+		const Vec2f center = Vec2f((TopLeft + BotRight) / 2);
 
-		if (dontBotherChecking(center)) // 
+		/*CParticle@ p = ParticlePixelUnlimited(driver.getWorldPosFromScreenPos(center), Vec2f(0,0), color_white, true); 
+		if (p !is null) // DEBUG CODE, USEFUL FOR SEEING THE CENTRE
+		{
+			p.gravity = Vec2f(0,0);
+		}*/
+
+		if (dontBotherChecking(center)) 
 		{
 			return false;
 		}
@@ -282,10 +288,8 @@ class Clouds
 		const f32 posx = pos.x;
 		const f32 posy = pos.y;
 
-		if (posx > SCREEN_HEIGHT + 400 && 
-			posy > SCREEN_HEIGHT + 400 ||
-			posx < -400 &&
-			posy < -400)
+		if (posx < -250 || posx > SCREEN_WIDTH + 250 ||
+			posy < -250 || posy > SCREEN_HEIGHT + 250)
 		{
 			return true;
 		}
@@ -329,4 +333,9 @@ void UpdateCloudColor()
 		255,
 		255
 	);
+}
+
+f32 lerp(f32 a,f32 b,f32 time)
+{
+	return a+(b-a)*Maths::Min(1.0,Maths::Max(0.0,time));
 }
