@@ -395,10 +395,10 @@ void onRenderScoreboard(CRules@ this)
 		TeamData[]@ team_list;
 
 		this.get("team_list", @team_list);
-		u8 maxTeams = team_list.length;
 		
 		if (team_list !is null)
 		{
+			u8 maxTeams = team_list.length;
 			u8 team_len = 0;
 			for (u8 i = 0; i < team_list.length; i++)
 			{
