@@ -7,6 +7,18 @@ const uint pure_neutral_team = 255;
 void uncap_team(uint teamnum, uint target_team = pure_neutral_team) {
 	if (!isServer()) return;
 
+	TeamData[]@ team_list;
+	getRules().get("team_list", @team_list);
+	if (team_list !is null)
+	{
+		if (team_list[teamnum].player_count < 3)
+		{
+			peasant_team(teamnum, target_team);
+			return;
+		}
+	}
+		
+
 	//non-players get converted to chicken faction
 	CBlob@[] blobs;
 	getBlobsByTag("capturable", @blobs);
@@ -67,6 +79,7 @@ void peasant_team(uint teamnum, uint target_team = pure_neutral_team) {
 
 			if (blob !is null) 
 			{
+				if (blob.getName() != "builder") { return; }
 				CBlob@ tempo = server_CreateBlob("peasant", team, blob.getPosition());
 				if (tempo is null) { return; } // we tried :(
 				
