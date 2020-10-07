@@ -275,7 +275,7 @@ void UpdateCloudColor()
 
 	if (worldTime > 255) 
 	{
-		worldTime -= (worldTime % 255) * 2.0f;
+		worldTime -= (worldTime % 256) * 2.0f;
 	}
 
 	worldTime = Maths::Min(150, worldTime);
