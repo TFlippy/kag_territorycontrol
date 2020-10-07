@@ -20,7 +20,7 @@ void onInit(CBlob@ this)
 
 	if (isServer())
 	{
-		this.server_SetTimeToDie(300);
+		this.server_SetTimeToDie(150 + XORRandom(300));
 	}
 	
 	if (isClient())
