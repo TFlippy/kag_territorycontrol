@@ -94,7 +94,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Building for Dummies", "$artisancertificate$", "artisancertificate", "Simplified Builder manuscript for those dumb peasants.", true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 300);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 		
 		s.spawnNothing = true;
 	}
