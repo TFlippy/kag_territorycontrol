@@ -46,7 +46,14 @@ const string[] names =
 	"Monsieur Moustache",
 	"Ma' Hisha",
 	"Pirate-rob",
-	"Rajang"
+	"Rajang",
+	"Gman",
+	"Razi",
+	"Riza",
+	"SwagLag",
+	"Sylw",
+	"Gokke",
+	"Olimarrex"
 };
 
 const string[] surnames = {
