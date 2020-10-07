@@ -223,11 +223,11 @@ class Clouds
 		Driver@ driver = getDriver();
 		const Vec2f pos = driver.getScreenPosFromWorldPos(parralexPos + Vec2f(100, 100)); // gets center of the cloud
 
-        if(((pos.x > -100 && pos.x < driver.getScreenWidth() * 1.2) && 
+		if(((pos.x > -100 && pos.x < driver.getScreenWidth() * 1.2) && 
 			(pos.y > -100 && pos.y < driver.getScreenHeight() * 1.2))) // Tweak these settings more
-        {
+		{
 			return true;
-        }
+		}
 
 		return false;
 	}
