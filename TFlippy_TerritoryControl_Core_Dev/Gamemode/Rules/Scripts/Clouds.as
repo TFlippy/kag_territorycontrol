@@ -17,27 +17,36 @@
 // -> More cloud sprites (?)
 // -> Allow variable editing through .cfg (?)
 // -> Colour changes based on rain (?)
-// -> Todo: turn it into SMesh to help with performance
+// -> instead of clearing vertex array, edit last values (less resizing)
+// -> Todo: turn it into SMesh to help with performance (will do after next 3d update)
 //
 // END
 
+// Important vars
 Random@ RAND = Random();
 Clouds@[] C_CLOUDS;
 Vertex[] V_CLOUDS;
+//
 
-const Vec2f MOVE_VEL = Vec2f(0.5,0);
-const u16 CLOUD_COOLDOWN = 150;
+// Consts
+const Vec2f MOVE_VEL = Vec2f(0.4,0); // Base speed
+const f32 PARRALEX_EFFECT = 0.2f; // Base effect, each cloud will have a custom one based on this
+const u16 CLOUD_COOLDOWN = 50;
 const u16 PADDING = 200;
-const f32 PARRALEX_EFFECT = 0.2f;
+//
 
-SColor CLOUDS_COL = color_white; // temp col, get's changed based on time
+// Var's that change over time
+SColor CLOUDS_COL = color_white; // colour that changes over time
 
-f32 FRAME_TIME = 0.0f;
-f32 CAMERA_X = 0.0f;
+Vec2f SPAWN_VARIATION_HEIGHT = Vec2f(-400,0); // x = highest, y = lowest
+
+f32 FRAME_TIME = 0.0f; // last frame time
+f32 CAMERA_X = 0.0f; 
 f32 CAMERA_Y = 0.0f;
+
 u16 CLEAR_WIDTH_POS = 0;
-u16 SPAWN_VARIATION_HEIGHT = 0;
-u16 LAST_ATTEMPT = 0;
+u16 LAST_ATTEMPT = 0;  // getGameTime() last attempt
+// 
 
 void onInit(CRules@ this)
 {
