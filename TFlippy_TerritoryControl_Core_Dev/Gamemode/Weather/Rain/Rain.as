@@ -27,24 +27,13 @@ void onInit(CBlob@ this)
 			Texture::createFromFile("RAIN", "rain.png");
 		if(!Texture::exists("FOG"))
 			Texture::createFromFile("FOG", "pixel.png");
-	}
-	
-	getRules().set_bool("raining", true);
-	client_AddToChat("A rainstorm has formed! Heavy wind will now blow away aerial vehicles and promote plant growth.", SColor(255, 255, 0, 0));
-}
 
-const int spritesize = 512;
-f32 uvs;
-Vertex[] Rain_vs;
-Vertex[] Fog_vs;
+		client_AddToChat("A rainstorm has formed! Heavy wind will now blow away aerial vehicles and promote plant growth.", SColor(255, 255, 0, 0));
 
-void onInit(CSprite@ this)
-{
-	this.getConsts().accurateLighting = false;
-	if (isClient())
-	{
-		this.SetEmitSound("rain_loop.ogg");
-		this.SetEmitSoundPaused(false);
+		CSprite@ sprite = this.getSprite();
+		sprite.getConsts().accurateLighting = false;
+		sprite.SetEmitSound("rain_loop.ogg");
+		sprite.SetEmitSoundPaused(false);
 		CMap@ map = getMap();
 		uvs = 2048.0f/f32(spritesize);
 		
@@ -60,7 +49,14 @@ void onInit(CSprite@ this)
 		BigQuad[0].z = BigQuad[1].z = BigQuad[2].z = BigQuad[3].z = 1500;
 		Fog_vs = BigQuad;
 	}
+	
+	getRules().set_bool("raining", true);
 }
+
+const int spritesize = 512;
+f32 uvs;
+Vertex[] Rain_vs;
+Vertex[] Fog_vs;
 
 f32 sine;
 
@@ -91,8 +87,8 @@ void onTick(CBlob@ this)
 		fogTarget = 50 + XORRandom(150);
 	}
 	
-	wind = Lerp(wind, windTarget, 0.02f);
-	fog = Lerp(fog, fogTarget, 0.01f);
+	wind = Maths::Lerp(wind, windTarget, 0.02f);
+	fog = Maths::Lerp(fog, fogTarget, 0.01f);
 		
 	sine = (Maths::Sin((getGameTime() * 0.0125f)) * 8.0f);
 	Vec2f sineDir = Vec2f(0, 1).RotateBy(sine * 20);
@@ -140,7 +136,7 @@ void onTick(CBlob@ this)
 				modifierTarget = 1;
 			}
 			
-			modifier = Lerp(modifier, modifierTarget, 0.10f);
+			modifier = Maths::Lerp(modifier, modifierTarget, 0.10f);
 			fogHeightModifier = 1.00f - ((cam_pos.y*2) / (map.tilemapheight * map.tilesize));
 			
 			//if (getGameTime() % 5 == 0) ShakeScreen(Maths::Abs(wind) * 0.03f * modifier, 90, cam_pos);
@@ -244,12 +240,6 @@ void onCommand(CBlob@ this,u8 cmd,CBitStream @params)
 		ourBlob.Tag("infectOver");
 		ourBlob.Sync("infectOver",false);
 	}
-}
-
-
-f32 Lerp(f32 v0, f32 v1, f32 t) 
-{
-	return v0 + t * (v1 - v0);
 }
 
 void onDie(CBlob@ this)
