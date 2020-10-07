@@ -233,7 +233,7 @@ class Clouds
 
 	void SendToRenderer() // Checks that our cloud is on screen then passes it to render
 	{	
-		Vec2f topLeft = Vec2f(Maths::lerp(OldPos.x, GoalPos.x, FRAME_TIME), Maths::lerp(OldPos.y, GoalPos.y, FRAME_TIME));
+		Vec2f topLeft = Vec2f(Maths::Lerp(OldPos.x, GoalPos.x, FRAME_TIME), Maths::Lerp(OldPos.y, GoalPos.y, FRAME_TIME));
 		OldPos = topLeft;
 
 		topLeft.x += CAMERA_X * (PARRALEX_EFFECT - (ZLevel * 0.01f));
@@ -333,9 +333,4 @@ void UpdateCloudColor()
 		255,
 		255
 	);
-}
-
-f32 lerp(f32 a,f32 b,f32 time)
-{
-	return a+(b-a)*Maths::Min(1.0,Maths::Max(0.0,time));
 }
