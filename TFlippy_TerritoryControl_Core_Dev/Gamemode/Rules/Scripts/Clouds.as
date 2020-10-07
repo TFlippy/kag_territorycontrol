@@ -162,24 +162,26 @@ void RenderClouds(int id)
 
 class Clouds
 {
-	Vec2f goalPos;
-	Vec2f oldPos;
-	f32 spriteXPos;
+	Vec2f goalPos = Vec2f(0,0);
+	Vec2f oldPos = Vec2f(0,0);
+	f32 spriteXPos = 0;
+	u8 zLevel = 0; // the higher this is, the lower the z level;
 
-	Clouds (Vec2f position, u16 creationTick, u8 spriteType) 
+	Clouds (Vec2f position, u16 creationTick, u8 spriteType, u8 zLayer = 0) 
 	{
 		goalPos = position;
 		oldPos = position;
+		zLevel = zLayer;
 
 		for (u8 a = 0; a < spriteType; a++) // Texture uv 'hacks'
 		{
 			spriteXPos += 0.25;
 		}
 
-		/*for (u16 a = creationTick; a < getGameTime(); a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
+		for (u16 a = creationTick; a < getGameTime(); a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
 		{
 			moveCloud(); // sync clouds positions by catching up
-		} */ 
+		}
 	}
 
 	bool moveCloud() // Updated every tick
