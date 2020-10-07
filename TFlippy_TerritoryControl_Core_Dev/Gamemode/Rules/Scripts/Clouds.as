@@ -17,7 +17,7 @@
 // -> More cloud sprites (?)
 // -> Allow variable editing through .cfg (?)
 // -> Colour changes based on rain (?)
-// -> instead of clearing vertex array, edit last values (less resizing)
+// -> Instead of clearing vertex array, edit last values (less resizing) 
 // -> Todo: turn it into SMesh to help with performance (will do after next 3d update)
 //
 // END
@@ -28,14 +28,12 @@ Clouds@[] C_CLOUDS;
 Vertex[] V_CLOUDS;
 //
 
-// Consts
+// Cloud vars
 const Vec2f MOVE_VEL = Vec2f(0.4,0); // Base speed
 const f32 PARRALEX_EFFECT = 0.2f; // Base effect, each cloud will have a custom one based on this
-const u16 CLOUD_COOLDOWN = 50;
+const u16 CLOUD_COOLDOWN = 100;
 const u16 PADDING = 200;
-//
 
-// Var's that change over time
 SColor CLOUDS_COL = color_white; // colour that changes over time
 
 Vec2f SPAWN_VARIATION_HEIGHT = Vec2f(-400,0); // x = highest, y = lowest
@@ -46,7 +44,10 @@ f32 CAMERA_Y = 0.0f;
 
 u16 CLEAR_WIDTH_POS = 0;
 u16 LAST_ATTEMPT = 0;  // getGameTime() last attempt
-// 
+
+u16 SCREEN_HEIGHT = 0;
+u16 SCREEN_WIDTH = 0;
+//
 
 void onInit(CRules@ this)
 {
@@ -84,16 +85,6 @@ void onReload(CRules@ this)
 		Render::RemoveScript(this.get_u16("callback"));
 		int callback = Render::addScript(Render::layer_background, "Clouds", "RenderClouds", -10000.0f);
 		this.set_u16("callback", callback);
-
-		CLEAR_WIDTH_POS = (getMap().tilemapwidth * 8) + PADDING;
-		SPAWN_VARIATION_HEIGHT.y = (getMap().tilemapheight * 8) / 2;
-		
-		// TEMP
-		for (int a = 0; a < 50; a++)
-		{
-			f32 spawnPosY = RAND.NextRanged(SPAWN_VARIATION_HEIGHT.y + -SPAWN_VARIATION_HEIGHT.x) + SPAWN_VARIATION_HEIGHT.x;
-			C_CLOUDS.push_back(Clouds(Vec2f(XORRandom(getMap().tilemapwidth * 8),  spawnPosY), getGameTime(), XORRandom(5), XORRandom(20)));
-		}
 	}
 }
 //
@@ -104,6 +95,14 @@ void onTick(CRules@ this)
 	{
 		CLEAR_WIDTH_POS = (getMap().tilemapwidth * 8) + PADDING;
 		SPAWN_VARIATION_HEIGHT.y = (getMap().tilemapheight * 8) / 2;
+		if (isClient())
+		{
+			for (int a = 0; a < 50; a++) // TEMP CLOUD SPAWNER, IS DESYNCED FOR NOW
+			{
+				f32 spawnPosY = RAND.NextRanged(SPAWN_VARIATION_HEIGHT.y + -SPAWN_VARIATION_HEIGHT.x) + SPAWN_VARIATION_HEIGHT.x;
+				C_CLOUDS.push_back(Clouds(Vec2f(XORRandom(getMap().tilemapwidth * 8), spawnPosY), getGameTime(), XORRandom(5), XORRandom(20)));
+			}
+		}
 	}
 
 	if (isServer())
@@ -144,6 +143,37 @@ void onTick(CRules@ this)
 	}
 }
 
+void RenderClouds(int id)
+{
+	int size = C_CLOUDS.size();
+	if (size == 0) { return; } // dont waste a draw call on an empty size
+
+	// Setting data so we dont need to repeat it multiple times a frame
+	FRAME_TIME += Render::getRenderDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
+
+	Vec2f camPos = getCamera().getPosition(); // Safe to say we won't be rendering if we don't have a camera
+	CAMERA_X = camPos.x; 
+	CAMERA_Y = camPos.y; 
+
+	Driver@ driver = getDriver();
+	SCREEN_WIDTH = driver.getScreenWidth();
+	SCREEN_HEIGHT = driver.getScreenHeight();
+	//
+
+	for (int a = 0; a < size; a++)
+	{
+		C_CLOUDS[a].SendToRenderer();
+	}
+
+	if (V_CLOUDS.size() == 0) { return; }
+	
+	Render::SetAlphaBlend(true); // alpha required to look more 'cloudy'
+	Render::SetZBuffer(true, true); // required to show up being tiles 
+	Render::RawQuads("cloudsall.png", V_CLOUDS);
+
+	V_CLOUDS.clear(); // clear after rendering
+}
+
 void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 {
 	if (!isClient()) { return; }
@@ -160,33 +190,6 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 		);
 	}
 }
-
-
-void RenderClouds(int id)
-{
-	int size = C_CLOUDS.size();
-	if (size == 0) { return; } // dont waste a draw call on an empty size
-
-	FRAME_TIME += Render::getRenderDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
-
-	Vec2f camPos = getCamera().getPosition(); // Safe to say we won't be rendering if we don't have a camera
-	CAMERA_X = camPos.x; 
-	CAMERA_Y = camPos.y; 
-
-	for (int a = 0; a < size; a++)
-	{
-		C_CLOUDS[a].SendToRenderer();
-	}
-
-	if (V_CLOUDS.size() == 0) { return; }
-
-	Render::SetAlphaBlend(true); // alpha required to look more 'cloudy'
-	Render::SetZBuffer(true, true); // required to show up being tiles 
-	Render::RawQuads("cloudsall.png", V_CLOUDS);
-
-	V_CLOUDS.clear(); // clear after rendering
-}
-
 
 
 
@@ -208,7 +211,8 @@ class Clouds
 			spriteXPos += 0.25;
 		}
 
-		for (u16 a = creationTick; a < getGameTime(); a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
+		u16 gametime = getGameTime();
+		for (u16 a = creationTick; a <= gametime; a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
 		{
 			moveCloud(); // sync clouds positions by catching up
 		}
@@ -237,7 +241,7 @@ class Clouds
 
 		Vec2f BotRight = TopLeft + Vec2f(200, 200);
 
-		if (!isOnScreen(TopLeft)) 
+		if (!isOnScreen(TopLeft, BotRight)) 
 		{
 			return;
 		}
@@ -248,19 +252,36 @@ class Clouds
 		V_CLOUDS.push_back(Vertex(TopLeft.x,  BotRight.y, 1, spriteXPos,          1, CLOUDS_COL));
 	}
 
-	// TODO -> fix crap code (i dont like how its done atm, very hit and miss)
-	bool isOnScreen(Vec2f parralexPos)
+	bool isOnScreen(Vec2f &in TopLeft, Vec2f &in BotRight)
 	{
-		return true;
 		Driver@ driver = getDriver();
-		const Vec2f pos = driver.getScreenPosFromWorldPos(parralexPos + Vec2f(100, 100)); // gets center of the cloud
 
-		if(((pos.x > -100 && pos.x < driver.getScreenWidth() * 1.2) && 
-			(pos.y > -100 && pos.y < driver.getScreenHeight() * 1.2))) // Tweak these settings more
+		TopLeft  = driver.getScreenPosFromWorldPos(TopLeft);
+		BotRight = driver.getScreenPosFromWorldPos(BotRight);
+
+		if (isVectorOnScreen(TopLeft) || 
+			isVectorOnScreen(BotRight) || 
+			isVectorOnScreen(Vec2f(TopLeft.x, BotRight.y)) || 
+			isVectorOnScreen(Vec2f(BotRight.x, TopLeft.y)) ||
+			isVectorOnScreen(TopLeft + BotRight / 2))
 		{
 			return true;
 		}
 
+		return false;
+	}
+
+	bool isVectorOnScreen(const Vec2f &in pos)
+	{
+		const f32 posx = pos.x;
+		const f32 posy = pos.y;
+
+		if (posx > 0 && posx < SCREEN_WIDTH && 
+			posy > 0 && posy < SCREEN_HEIGHT)
+		{
+			return true;
+		}
+		
 		return false;
 	}
 }
