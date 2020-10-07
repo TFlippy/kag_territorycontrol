@@ -53,7 +53,8 @@ const string[] names =
 	"SwagLag",
 	"Sylw",
 	"Gokke",
-	"Olimarrex"
+	"Olimarrex",
+	"Poep Snuifer"
 };
 
 const string[] surnames = {
