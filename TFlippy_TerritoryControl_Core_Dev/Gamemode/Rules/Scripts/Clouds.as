@@ -27,14 +27,14 @@ Vertex[] V_CLOUDS;
 
 const Vec2f MOVE_VEL = Vec2f(0.5,0);
 const u16 CLOUD_COOLDOWN = 150;
-const u16 PADDING = 350;
+const u16 PADDING = 200;
+const f32 PARRALEX_EFFECT = 0.2f;
 
 SColor CLOUDS_COL = color_white; // temp col, get's changed based on time
 
 f32 FRAME_TIME = 0.0f;
 f32 CAMERA_X = 0.0f;
 f32 CAMERA_Y = 0.0f;
-f32 PARRALEX_EFFECT = 0.2f;
 u16 CLEAR_WIDTH_POS = 0;
 u16 SPAWN_VARIATION_HEIGHT = 0;
 u16 LAST_ATTEMPT = 0;
@@ -63,7 +63,6 @@ void onRestart(CRules@ this)
 	LAST_ATTEMPT = 0;
 	CLEAR_WIDTH_POS = 0;
 	SPAWN_VARIATION_HEIGHT = 0;
-
 }
 
 // Very useful for debugging, don't remove 
@@ -71,11 +70,16 @@ void onReload(CRules@ this)
 {
 	onRestart(this);
 
-	if (isClient())
+	if (isClient()) // Assume we are in localhost mode
 	{
 		Render::RemoveScript(this.get_u16("callback"));
 		int callback = Render::addScript(Render::layer_background, "Clouds", "RenderClouds", -10000.0f);
 		this.set_u16("callback", callback);
+		
+		for (int a = 0; a < 50; a++)
+		{
+			C_CLOUDS.push_back(Clouds(Vec2f(XORRandom(getMap().tilemapwidth * 8),  XORRandom((getMap().tilemapheight * 8) / 2)), getGameTime(), XORRandom(5), XORRandom(20)));
+		}
 	}
 }
 //
@@ -199,8 +203,7 @@ class Clouds
 	{	
 		Vec2f TopLeft = Vec2f_lerp(oldPos, goalPos, FRAME_TIME);
 		oldPos = TopLeft;
-
-		TopLeft.x += (CAMERA_X * PARRALEX_EFFECT);
+		TopLeft.x += (CAMERA_X * (PARRALEX_EFFECT - (zLevel * 0.01f)));
 
 		if (!isOnScreen(TopLeft)) 
 		{
@@ -220,8 +223,8 @@ class Clouds
 		Driver@ driver = getDriver();
 		const Vec2f pos = driver.getScreenPosFromWorldPos(parralexPos + Vec2f(100, 100)); // gets center of the cloud
 
-        if(((pos.x > -100 && pos.x < driver.getScreenWidth() + 100) && 
-			(pos.y > -100 && pos.y < driver.getScreenHeight() + 100))) // Tweak these settings more
+        if(((pos.x > -100 && pos.x < driver.getScreenWidth() * 1.2) && 
+			(pos.y > -100 && pos.y < driver.getScreenHeight() * 1.2))) // Tweak these settings more
         {
 			return true;
         }
