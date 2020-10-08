@@ -593,7 +593,7 @@ const SColor c_thickStone = SColor(255, 102, 88, 70);
 const SColor c_bedrock = SColor(255, 71, 71, 61);
 const SColor c_gold = SColor(255, 237, 190, 47);
 
-const SColor c_castle = SColor(0xff647160);
+const SColor c_castle = SColor(0xff656e70);
 const SColor c_castle_moss = SColor(0xff292a2b);
 const SColor c_wood = SColor(0xff845235);
 const SColor c_grass = SColor(0xff8bd21a);
