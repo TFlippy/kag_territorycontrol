@@ -11,7 +11,7 @@ void uncap_team(uint teamnum, uint target_team = pure_neutral_team) {
 	getRules().get("team_list", @team_list);
 	if (team_list !is null)
 	{
-		if (team_list[teamnum].player_count < 3)
+		if (team_list.size() > teamnum && team_list[teamnum].player_count < 3)
 		{
 			peasant_team(teamnum, target_team);
 			return;
