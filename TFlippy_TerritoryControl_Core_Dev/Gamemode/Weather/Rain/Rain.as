@@ -75,6 +75,8 @@ f32 fogDarkness = 0;
 
 Vec2f rainpos = Vec2f(0,0);
 f32 uvMove = 0;
+f32 last_uvMove = 0;
+f32 lastFrameTime = 0;
 
 void onTick(CBlob@ this)
 {
@@ -109,6 +111,7 @@ void onTick(CBlob@ this)
 
 	if (isClient())
 	{	
+		lastFrameTime = 0;
 		CCamera@ cam = getCamera();
 		fogHeightModifier = 0.00f;
 		
@@ -117,8 +120,8 @@ void onTick(CBlob@ this)
 			Vec2f cam_pos = cam.getPosition();
 			rainpos = Vec2f(int(cam_pos.x / spritesize) * spritesize + (spritesize/2), int(cam_pos.y / spritesize) * spritesize + (spritesize/2));
 			this.setPosition(cam_pos);
-			uvMove = (uvMove - 0.05f)  % uvs;
-			
+
+			uvMove -= 0.05f;
 			if (XORRandom(500) == 0)
 			{
 				Sound::Play("thunder_distant" + XORRandom(4));
@@ -197,8 +200,13 @@ void RenderRain(CBlob@ this, int id)
 {
 	Render::SetTransformWorldspace();
 	Render::SetAlphaBlend(true);
-	Rain_vs[0].v = Rain_vs[1].v = uvMove;
-	Rain_vs[2].v = Rain_vs[3].v = uvMove + uvs;
+	
+	lastFrameTime += Render::getRenderDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
+
+	last_uvMove = Maths::Lerp(last_uvMove, uvMove, lastFrameTime);
+
+	Rain_vs[0].v = Rain_vs[1].v = last_uvMove;
+	Rain_vs[2].v = Rain_vs[3].v = last_uvMove + uvs;
 	float[] model;
 	Matrix::MakeIdentity(model);
 	Matrix::SetRotationDegrees(model,
