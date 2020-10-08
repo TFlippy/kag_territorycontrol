@@ -43,7 +43,6 @@ f32 CAMERA_X = 0.0f;
 f32 CAMERA_Y = 0.0f;
 
 u16 CLEAR_WIDTH_POS = 0;
-u16 LAST_ATTEMPT = 0;  // getGameTime() last attempt
 
 u16 SCREEN_HEIGHT = 0;
 u16 SCREEN_WIDTH = 0;
@@ -70,7 +69,6 @@ void onRestart(CRules@ this)
 	C_CLOUDS.clear();
 	V_CLOUDS.clear();
 
-	LAST_ATTEMPT = 0;
 	CLEAR_WIDTH_POS = 0;
 	SPAWN_VARIATION_HEIGHT.y = 0;
 }
@@ -108,22 +106,18 @@ void onTick(CRules@ this)
 	if (isServer())
 	{
 		uint gametime = getGameTime();
-		if (LAST_ATTEMPT < gametime)
+		if (gametime % CLOUD_COOLDOWN == 0 && RAND.NextRanged(100) < 50)
 		{
-			LAST_ATTEMPT = gametime + CLOUD_COOLDOWN;
-			if (RAND.NextRanged(100) < 50)
-			{
-				s16 spawnPosY = RAND.NextRanged(SPAWN_VARIATION_HEIGHT.y + -SPAWN_VARIATION_HEIGHT.x);
-				spawnPosY += SPAWN_VARIATION_HEIGHT.x;
+			s16 spawnPosY = RAND.NextRanged(SPAWN_VARIATION_HEIGHT.y + -SPAWN_VARIATION_HEIGHT.x);
+			spawnPosY += SPAWN_VARIATION_HEIGHT.x;
 
-				CBitStream cbs;
-				cbs.write_s16(spawnPosY); // only send y instead of vec2f, saves space
-				cbs.write_u16(gametime);
-				cbs.write_u8(RAND.NextRanged(5));
-				cbs.write_u8(RAND.NextRanged(20));
+			CBitStream cbs;
+			cbs.write_s16(spawnPosY); // only send y instead of vec2f, saves space
+			cbs.write_u16(gametime);
+			cbs.write_u8(RAND.NextRanged(5));
+			cbs.write_u8(RAND.NextRanged(20));
 
-				this.SendCommand(this.getCommandID("new_cloud"), cbs); 
-			}
+			this.SendCommand(this.getCommandID("new_cloud"), cbs); 
 		}
 	}
 
