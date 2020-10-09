@@ -31,7 +31,7 @@ void onTick(CBlob@ this)
 			this.Tag("sound_played");
 
 			float volume = (1.5f + distance / 50.0f);
-			printFloat("lightning volume", volume);
+			//printFloat("lightning volume", volume);
 
 			if(volume > 0.1f)
 			{
