@@ -113,7 +113,7 @@ void onTick(CRules@ this)
 
 			CBitStream cbs;
 			cbs.write_s16(spawnPosY); // only send y instead of vec2f, saves space
-			cbs.write_u16(gametime);
+			cbs.write_u32(gametime);
 			cbs.write_u8(RAND.NextRanged(5));
 			cbs.write_u8(RAND.NextRanged(20));
 
@@ -175,7 +175,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("new_cloud"))
 	{
 		s16 yPos = params.read_s16();
-		u16 gameTime = params.read_u16();
+		u32 gameTime = params.read_u32();
 		u8 spriteType = params.read_u8();
 		u8 zLayer = params.read_u8();
 
@@ -194,7 +194,7 @@ class Clouds
 	f32 SpriteXPos = 0;
 	u8 ZLevel = 0; // the higher this is, the lower the z level;
 
-	Clouds (Vec2f position, u16 creationTick, u8 spriteType, u8 zLayer) 
+	Clouds (Vec2f position, u32 creationTick, u8 spriteType, u8 zLayer) 
 	{
 		GoalPos = position;
 		OldPos = position;
@@ -205,8 +205,8 @@ class Clouds
 			SpriteXPos += 0.25;
 		}
 
-		u16 gametime = getGameTime();
-		for (u16 a = creationTick; a <= gametime; a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
+		u32 gametime = getGameTime();
+		for (u32 a = creationTick; a <= gametime; a++) // maybe add some sort of cap, could cause stutters if we get a packet that was delayed
 		{
 			moveCloud(); // sync clouds positions by catching up
 		}
