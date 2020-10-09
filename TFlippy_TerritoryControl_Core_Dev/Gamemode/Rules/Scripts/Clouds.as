@@ -31,12 +31,12 @@ Vertex[] V_CLOUDS;
 // Cloud vars
 const Vec2f MOVE_VEL = Vec2f(0.4,0); // Base speed
 const f32 PARRALEX_EFFECT = 0.2f; // Base effect, each cloud will have a custom one based on this
-const u16 CLOUD_COOLDOWN = 100;
+const u16 CLOUD_COOLDOWN = 150;
 const u16 PADDING = 200;
 
 SColor CLOUDS_COL = color_white; // colour that changes over time
 
-Vec2f SPAWN_VARIATION_HEIGHT = Vec2f(-400,0); // x = highest, y = lowest
+Vec2f SPAWN_VARIATION_HEIGHT = Vec2f(0,0); // x = highest, y = lowest
 
 f32 FRAME_TIME = 0.0f; // last frame time
 f32 CAMERA_X = 0.0f; 
