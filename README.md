@@ -21,7 +21,7 @@
   <li><b>Sylw</b> - Scripting, mapping, spriting</li>
   <li><b>Caesar</b> - Spriting</li>
   <li><b>Olimarrex</b> - Scripting</li>
-  <li><b>Gingerbeard</b> - Mapping, Scripting</li>
+  <li><b>Gingerbeard</b> - Mapping, scripting</li>
   <li><b>Jenny</b> - Spriting</li>
   <li><b>Jammer</b> - Scripting</li>
   <li><b>Hobey</b> - Scripting</li>
