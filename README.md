@@ -14,15 +14,17 @@
 <ul>
   <li><b>TFlippy</b> - Project management, scripting, spriting, sounds, mapping</li>
   <li><b>Pirate-Rob</b> - Scripting, voice acting</li>
-  <li><b>Vamist</b> - Server hosting, sripting</li>
+  <li><b>Vamist</b> - Server hosting, scripting</li>
   <li><b>Mirsario</b> - Scripting, Juggernaut mod, sounds</li>
   <li><b>Koi</b> - Scripting, mapping</li>
   <li><b>GoldenGuy</b> - Scripting</li>
   <li><b>Sylw</b> - Scripting, mapping, spriting</li>
   <li><b>Caesar</b> - Spriting</li>
   <li><b>Olimarrex</b> - Scripting</li>
-  <li><b>Gingerbeard</b> - Mapping</li>
+  <li><b>Gingerbeard</b> - Mapping, Scripting</li>
   <li><b>Jenny</b> - Spriting</li>
+  <li><b>Jammer</b> - Scripting</li>
+  <li><b>Hobey</b> - Scripting</li>
 </ul>
 
 
