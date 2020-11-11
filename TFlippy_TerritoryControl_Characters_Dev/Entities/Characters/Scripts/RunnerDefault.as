@@ -153,7 +153,7 @@ void onTick(CBlob@ this)
 							fireball.setPosition(this.getPosition());
 							fireball.setVelocity(vel);
 							fireball.server_setTeamNum(this.getTeamNum());
-							fireball.set_f32("power", 1.00f + Maths::Sqrt(power * 0.00002f));
+							fireball.set_f32("power", power);
 							fireball.Init();
 						}
 						

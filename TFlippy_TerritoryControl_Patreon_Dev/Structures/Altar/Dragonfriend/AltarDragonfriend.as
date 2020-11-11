@@ -77,7 +77,7 @@ void onInit(CBlob@ this)
 const f32 power_fire_immunity_max = 100000.00f;
 
 // const u32 stonks_update_frequency = 30 * 5;
-const u32 stonks_update_frequency = 30 * 5;
+const u32 stonks_update_frequency = 30;
 // const u32 stonks_update_frequency = 3;
 const f32 stonks_base_value_min = 100.00f;
 const f32 stonks_base_value_max = 2000.00f;
@@ -148,8 +148,8 @@ void onTick(CBlob@ this)
 			if ((XORRandom(100) * 0.01f) > Maths::Pow(stonks_volatility, 2.00f)) stonks_growth *= 0.80f;
 			if ((XORRandom(100) * 0.01f) > Maths::Pow(stonks_volatility, 3.00f)) stonks_growth *= 1.25f;
 		
-			f32 stonks_volatility_new = (XORRandom(100) < 20) ? Maths::Pow(XORRandom(100) * 0.01f, 1.50f) : (stonks_volatility);
-			f32 stonks_growth_new = stonks_growth + (((1000 - XORRandom(2000)) / 1000.00f) * (stonks_volatility_new * stonks_volatility_new * 0.05f));
+			f32 stonks_volatility_new = (XORRandom(100) < 10) ? Maths::Pow(XORRandom(100) * 0.01f, 1.50f) : (stonks_volatility);
+			f32 stonks_growth_new = stonks_growth + (((1000 - XORRandom(2000)) / 1000.00f) * (stonks_volatility_new * stonks_volatility_new * 0.10f));
 			f32 stonks_value_new = Maths::Clamp(stonks_value * (1.00f + stonks_growth_new), stonks_base_value_min, stonks_value_max);
 		
 			CBitStream stream;

@@ -26,7 +26,7 @@ void onInit(CBlob@ this)
 	this.SetLightRadius(48.0f);
 	this.SetLightColor(SColor(255, 255, 200, 50));
 	
-	if (!this.exists("power")) this.set_f32("power", 1.00f);
+	if (!this.exists("power")) this.set_f32("power", 100000.00f);
 }
 
 void onTick(CSprite@ this)
@@ -60,13 +60,13 @@ void DoExplosion(CBlob@ this)
 	}
 	
 	f32 random = XORRandom(8);
-	f32 modifier = this.get_f32("power");
+	f32 modifier = 1.00f + Maths::Sqrt(this.get_f32("power") * 0.00002f);
 	// print("Modifier: " + modifier);
 
-	this.set_f32("map_damage_radius", (16.0f + random) * Maths::Sqrt(modifier));
+	this.set_f32("map_damage_radius", (16.0f + random) * modifier);
 	this.set_f32("map_damage_ratio", 0.50f);
 	
-	Explode(this, 32.0f * Maths::Sqrt(modifier), 2.0f * modifier);
+	Explode(this, 32.0f * modifier, 2.0f * modifier);
 	
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
