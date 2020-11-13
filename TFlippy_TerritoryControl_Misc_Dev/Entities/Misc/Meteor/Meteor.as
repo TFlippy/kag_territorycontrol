@@ -1,6 +1,5 @@
 #include "Explosion.as";
 #include "Hitters.as";
-#include "DeityCommon.as";
 #include "MakeMat.as";
 
 void onInit(CBlob@ this)
