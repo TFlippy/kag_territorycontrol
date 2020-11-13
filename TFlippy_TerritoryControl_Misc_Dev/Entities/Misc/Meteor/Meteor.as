@@ -182,12 +182,8 @@ void onHitGround(CBlob@ this)
 		this.Tag("collided");
 	}
 
-	CBlob@ altar = getBlobByName("altar_dragonfriend");
+
 	f32 boomRadius = 48.0f * power;
-	if (altar !is null)
-	{
-		boomRadius *= 1.00f + Maths::Min(Maths::Sqrt(altar.get_f32("deity_power") * 0.000005f), 1.5);
-	}
 	this.set_f32("map_damage_radius", boomRadius);
 	Explode(this, boomRadius, 20.0f);
 
