@@ -308,7 +308,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	BuildBlock[] page_1;
 	blocks.push_back(page_1);
 	{
-		BuildBlock b(0, "quarters", "$quarters$", "Quarters\n" + descriptions[59] + "\n\nIncreases Upkeep cap by 10.");
+		BuildBlock b(0, "quarters", "$quarters$", "Quarters\n" + descriptions[59] + "For resting purposes");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 50);
 		b.buildOnGround = true;
 		b.size.Set(40, 24);
@@ -332,7 +332,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[1].push_back(b);
 	}
 	{
-		BuildBlock b(0, "armory", "$armory$", "Armory\nA workshop where you can craft cheap equipment. Automatically stores nearby dropped weapons.\n\nCosts 5 Upkeep.");
+		BuildBlock b(0, "armory", "$armory$", "Armory\nA workshop where you can craft cheap equipment. Automatically stores nearby dropped weapons.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 100);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
 		// AddRequirement(b.reqs, "blob", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
