@@ -11,9 +11,6 @@
 
 void onInit(CBlob@ this)
 {
-	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 0);
-	this.set_u8("upkeep cost", 50);
 
 	this.Tag("big shop");
 	this.Tag("invincible");

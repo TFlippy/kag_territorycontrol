@@ -15,8 +15,8 @@ void onInit(CBlob@ this)
 	Random@ rand = Random(this.getNetworkID());
 
 	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 0);
-	this.set_u8("upkeep cost", 10);
+	this.set_u8("upkeep cap increase", 1);
+	this.set_u8("upkeep cost", 0);
 
 	this.Tag("invincible");
 	

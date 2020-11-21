@@ -179,7 +179,7 @@ void onTick(CRules@ this)
 				TeamData@ team = team_list[i];
 
 				team.upkeep = 0;
-				team.upkeep_cap = 30;
+				team.upkeep_cap = 4;
 				team.player_count = 0;
 				team.wealth = 0;
 				team.controlled_count = 0;
@@ -194,7 +194,7 @@ void onTick(CRules@ this)
 					u8 team = p.getTeamNum();
 					if (team >= maxTeams) continue;
 					
-					team_list[team].upkeep += 10 + (team_list[team].player_count * 5);
+					team_list[team].upkeep += 1; // + (team_list[team].player_count * 5)
 					team_list[team].player_count++;
 					team_list[team].wealth += p.getCoins();
 				}
@@ -240,7 +240,7 @@ void onTick(CRules@ this)
 					u8 slaver_team = blob.get_u8("slaver_team");
 	
 					if (slaver_team > maxTeams) continue;
-					if (!blob.hasTag("dead")) team_list[slaver_team].upkeep += 50;
+					if (!blob.hasTag("dead")) team_list[slaver_team].upkeep += 1;
 				}
 			}
 				

@@ -235,8 +235,8 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "iron_door", "$iron_door$", "Iron Door\nDoesn't have to be placed next to walls!");
-		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 4);
+		BuildBlock b(0, "iron_door", "$iron_door$", "Iron Door\nDoes have to be placed next to walls");
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 8);
 		blocks[0].push_back(b);
 	}
 	{

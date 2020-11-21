@@ -67,10 +67,6 @@ void onInit(CBlob@ this)
 
 	this.Tag("change team on fort capture");
 	
-	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 10);
-	this.set_u8("upkeep cost", 0);
-	
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
 

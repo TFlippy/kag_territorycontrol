@@ -39,7 +39,7 @@ void onInit(CBlob@ this)
 	
 	this.Tag("upkeep building");
 	this.set_u8("upkeep cap increase", 0);
-	this.set_u8("upkeep cost", 10);
+	this.set_u8("upkeep cost", 1);
 	
 	//this.set_Vec2f("nobuild extend", Vec2f(0.0f, 8.0f));
 	this.set_Vec2f("travel button pos", Vec2f(3.5f, 4));
