@@ -433,7 +433,7 @@ void Shoot(CBlob@ this)
 							{
 								if (!blob.hasTag("isWeapon"))
 								{
-									f32 dmg = damage*Maths::Max(0.1,falloff)*(blob.hasTag("door") ? 0.2f : 1.0f);
+									f32 dmg = damage*Maths::Max(0.1,falloff)*(blob.hasTag("door") ? 0.7f : 0.4f);
 									Vec2f dir = blob.getPosition() - this.getPosition();
 									dir.Normalize();
 									
