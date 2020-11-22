@@ -26,7 +26,7 @@
 	// // }
 // };
 
-const u16 UPKEEP_COST_PLAYER = 10;
+const u16 UPKEEP_COST_PLAYER = 1;
 
 const f32 UPKEEP_RATIO_BONUS_COIN_GAIN = 0.40f;
 const f32 UPKEEP_RATIO_BONUS_MINING = 0.45f;
@@ -69,7 +69,7 @@ shared class TeamData
 	{
 		team = inTeam;
 		upkeep = 0;
-		upkeep_cap = 10;
+		upkeep_cap = 1;
 		wealth = 0;
 		controlled_count = 0;
 		
