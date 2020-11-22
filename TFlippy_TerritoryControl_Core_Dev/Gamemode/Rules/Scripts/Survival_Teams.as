@@ -179,7 +179,7 @@ void onTick(CRules@ this)
 				TeamData@ team = team_list[i];
 
 				team.upkeep = 0;
-				team.upkeep_cap = 4;
+				team.upkeep_cap = 1;
 				team.player_count = 0;
 				team.wealth = 0;
 				team.controlled_count = 0;
