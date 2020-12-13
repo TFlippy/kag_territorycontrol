@@ -201,7 +201,7 @@ void RenderRain(CBlob@ this, int id)
 	Render::SetTransformWorldspace();
 	Render::SetAlphaBlend(true);
 	
-	lastFrameTime += Render::getRenderDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
+	lastFrameTime += getRenderDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
 
 	last_uvMove = Maths::Lerp(last_uvMove, uvMove, lastFrameTime);
 

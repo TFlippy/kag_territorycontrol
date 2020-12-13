@@ -143,7 +143,7 @@ void RenderClouds(int id)
 	if (size == 0) { return; } // dont waste a draw call on an empty size
 
 	// Setting data so we dont need to repeat it multiple times a frame
-	FRAME_TIME += Render::getRenderDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
+	FRAME_TIME += getRenderDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
 
 	Vec2f camPos = getCamera().getPosition(); // Safe to say we won't be rendering if we don't have a camera
 	CAMERA_X = camPos.x; 
