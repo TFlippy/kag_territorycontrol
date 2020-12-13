@@ -28,19 +28,19 @@ void onInit(CBlob@ this)
 
 	for (int i = 0; i < 8 * 4; ++i) AddIconToken(generate_token(i / 4, i / 2 % 2 == 1, i % 2 == 1), icon_path, frame_dims, i);
 
-	if (!this.exists("travel button pos"))
-	{
-		this.set_Vec2f("travel button pos", Vec2f_zero);
-	}
+//	if (!this.exists("travel button pos"))
+//	{
+//		this.set_Vec2f("travel button pos", Vec2f_zero);
+//	}
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	// if (this.isOverlapping(caller) && this.getTeamNum() < getRules().getTeamsNum() && this.hasTag("travel tunnel") && (this.hasTag("teamlocked tunnel") ? this.getTeamNum() == caller.getTeamNum() : true))
-	if (this.isOverlapping(caller) && this.hasTag("travel tunnel") && (this.getTeamNum() >= 100 ? (caller.getTeamNum() >= 100) : (caller.getTeamNum() == this.getTeamNum())))
-	{
-		MakeTravelButton(this, caller, this.get_Vec2f("travel button pos"), "Travel", "Travel (requires Transport Tunnels)");
-	}
+//	if (this.isOverlapping(caller) && this.hasTag("travel tunnel") && (this.getTeamNum() >= 100 ? (caller.getTeamNum() >= 100) : (caller.getTeamNum() == this.getTeamNum())))
+//	{
+//		MakeTravelButton(this, caller, this.get_Vec2f("travel button pos"), "Travel", "Travel (requires Transport Tunnels)");
+//	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
