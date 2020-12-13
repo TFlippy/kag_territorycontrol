@@ -300,15 +300,15 @@ void DecayStuff()
 				{
 					if (isTileConcrete(tile))
 					{
-						map.server_SetTile(pos, CMap::tile_mossyconcrete + XORRandom(2));
+						map.server_SetTile(hit, CMap::tile_mossyconcrete + XORRandom(2));
 					}
 					else if (isTileBConcrete(tile))
 					{
-						map.server_SetTile(pos, CMap::tile_mossybconcrete + XORRandom(2));
+						map.server_SetTile(hit, CMap::tile_mossybconcrete + XORRandom(2));
 					}
 					else if (isTileIron(tile))
 					{
-						map.server_SetTile(pos, CMap::tile_rustyiron + XORRandom(2));
+						map.server_SetTile(hit, CMap::tile_rustyiron + XORRandom(2));
 					}
 				}
 				break;
