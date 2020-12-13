@@ -2,20 +2,20 @@
 
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 {
-    tcpr("[LOG] Player joined-> Username:" +
+    tcpr("[LOG] Player joined-> Username: " +
         player.getUsername() +
-        " |Char name: " +
+        " | Char name: " +
         player.getCharacterName() +
-        " |IP: " + 
+        " | IP: " + 
         player.server_getIP() +
-        " |HWID: " +
+        " | HWID: " +
         player.server_getHWID()
     );
 }
 
 void onPlayerLeave(CRules@ this, CPlayer@ player) 
 {
-    tcpr("[LOG] Player left-> Username:" + player.getUsername());
+    tcpr("[LOG] Player left-> Username: " + player.getUsername());
 }
 
 bool onServerProcessChat(CRules@ this, const string &in textIn, string &out textOut, CPlayer@ player) {
