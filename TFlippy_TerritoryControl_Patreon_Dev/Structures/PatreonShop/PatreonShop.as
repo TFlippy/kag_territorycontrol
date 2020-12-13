@@ -20,6 +20,11 @@ void onInit(CBlob@ this)
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	
+	// this.Tag("upkeep building");
+	// this.set_u8("upkeep cap increase", 0);
+	// this.set_u8("upkeep cost", 5);
+	
+	
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
 
