@@ -16,7 +16,7 @@ class HarvestBlobPair
 
 HarvestBlobPair[] pairs =
 {
-	HarvestBlobPair("log", 40.0f, 0.0f),
+	HarvestBlobPair("log", 90.0f, 0.0f),
 	HarvestBlobPair("wooden_door", 5.0f, 0.0f),
 	HarvestBlobPair("stone_door", 0.0f, 5.0f),
 	HarvestBlobPair("trap_block", 0.0f, 2.5f),

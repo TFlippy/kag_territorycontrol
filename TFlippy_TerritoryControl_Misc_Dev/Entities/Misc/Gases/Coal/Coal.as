@@ -22,10 +22,10 @@ void onInit(CBlob@ this)
 {
 	this.Tag("gas");
 
-	this.getShape().SetGravityScale(0.03f);
+	this.getShape().SetGravityScale(0.67f);
 
 	// this.getSprite().setRenderStyle(RenderStyle::additive);
-	this.getSprite().SetZ(10.0f);
+	this.getSprite().SetZ(7.0f);
 
 	this.set_string("custom_explosion_sound", "shockmine_explode.ogg");
 	this.set_bool("map_damage_raycast", true);
@@ -49,14 +49,14 @@ void onInit(CBlob@ this)
 
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
 
-	this.server_SetTimeToDie(100 + XORRandom(100));
+	this.server_SetTimeToDie(17 + XORRandom(17));
 }
 
 void onTick(CBlob@ this)
 {
 	if(isClient())
 	{
-		CParticle@ particle = ParticleAnimated("Coal.png", this.getPosition(), Vec2f(), 1.0f, 1, 6, 0.0f, false);
+		CParticle@ particle = ParticleAnimated("Coal.png", this.getPosition(), this.getOldVelocity() / 7, 1.0f, 1, 6, 0.0f, false);
 		if (particle !is null) 
 		{
 			particle.frame = XORRandom(7);
@@ -76,7 +76,7 @@ void onTick(CBlob@ this)
 		{
 			this.server_Die();
 		}
-		else if (this.isOnGround())
+		else if (this.isOnGround() || this.isInWater())
 		{
 			this.server_Die();
 			CBlob@ blob = server_CreateBlob("mat_coal", -1, this.getPosition());
@@ -173,6 +173,7 @@ void onDie(CBlob@ this)
 	{
 		DoExplosion(this);
 	}
+	
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)

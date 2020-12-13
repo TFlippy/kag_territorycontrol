@@ -18,7 +18,7 @@ void onDie(CBlob@ this)
 		for (int i = 0; i < (5 + XORRandom(5)); i++)
 		{
 			CBlob@ blob = server_CreateBlob("mat_wood", this.getTeamNum(), this.getPosition() - Vec2f(0, XORRandom(64)));
-			blob.server_SetQuantity(5 + XORRandom(25));
+			blob.server_SetQuantity(1 + XORRandom(4));
 			blob.setVelocity(Vec2f(XORRandom(4) - 2, -2 - XORRandom(3)));
 		}
 	}

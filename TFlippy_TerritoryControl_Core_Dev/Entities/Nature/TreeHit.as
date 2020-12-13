@@ -19,10 +19,15 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	{
 		damage *= 0.5f;
 	}
+	
+	if (customData == Hitters::builder)
+	{
+		damage *= 4.0f;
+	}
 
 	if (isServer())
 	{
-		if ((customData == Hitters::fire || customData == Hitters::burn || customData == HittersTC::radiation) && damage >= this.getHealth())
+		if ((customData == Hitters::fire || customData == Hitters::burn || customData == HittersTC::radiation || customData == Hitters::explosion) && damage >= this.getHealth())
 		{
 			CBlob@ tree = server_CreateBlob("deadtree", this.getTeamNum(), this.getPosition() + Vec2f(0, -32));
 			
