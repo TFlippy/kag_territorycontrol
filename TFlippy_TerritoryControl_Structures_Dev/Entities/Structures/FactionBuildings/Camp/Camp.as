@@ -33,7 +33,7 @@ void onInit(CBlob@ this)
 
 	this.set_f32("capture_speed_modifier", 0.80f);
 	
-	//this.set_Vec2f("travel button pos", Vec2f(0.5f, 1));
+	this.set_Vec2f("travel button pos", Vec2f(0.5f, 1));
 	
 	// Respawning & class changing
 	this.Tag("respawn");

@@ -37,7 +37,7 @@ void onInit(CBlob@ this)
 	
 	this.set_f32("capture_speed_modifier", 2.50f);
 	
-	//this.set_Vec2f("travel button pos", Vec2f(0.5f, 0));
+	this.set_Vec2f("travel button pos", Vec2f(0.5f, 0));
 	
 	// Respawning & class changing
 	InitRespawnCommand(this);
