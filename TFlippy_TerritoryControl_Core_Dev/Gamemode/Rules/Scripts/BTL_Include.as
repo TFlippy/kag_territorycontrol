@@ -1,5 +1,8 @@
 /// To be included with everything that requires it, this just helps reduce on copy pasted code 
 
+
+// DISABLED, MESSY DUE TO DEBUGGING NIGHTMARE CAUSED BY ANGELSCRIPT
+
 const u8 MAX_BOMBS_PER_TICK = 10; 
 
 bool shouldExplode(CBlob@ this, CRules@ rules)
