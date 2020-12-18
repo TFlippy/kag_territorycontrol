@@ -29,7 +29,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (isClient() && this.isOnScreen())
+	if (isClient())
 	{
 		MakeParticle(this, "FalloutGas.png");
 	}

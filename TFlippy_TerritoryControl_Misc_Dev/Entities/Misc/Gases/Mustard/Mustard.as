@@ -51,10 +51,7 @@ void onTick(CBlob@ this)
 
 	if(isClient())
 	{
-		if (this.isOnScreen()) 
-		{
-			MakeParticle(this, "Mustard.png");
-		}
+		MakeParticle(this, "Mustard.png");
 	}
 }
 

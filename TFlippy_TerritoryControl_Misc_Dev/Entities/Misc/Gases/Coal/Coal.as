@@ -127,13 +127,9 @@ void DoExplosion(CBlob@ this)
 	{
 		// this.getSprite().PlaySound("shockmine_explode.ogg", 0.80f, 1.10f);
 		ShakeScreen(100, 60, this.getPosition());
-
-		if (this.isOnScreen()) 
+		for (int i = 0; i < 4; i++)
 		{
-			for (int i = 0; i < 4; i++)
-			{
-				MakeParticle(this, this.getPosition() + getRandomVelocity(0, random.NextRanged(6), 360), getRandomVelocity(0, random.NextRanged(3), 360), particles[XORRandom(particles.length)]);
-			}
+			MakeParticle(this, this.getPosition() + getRandomVelocity(0, random.NextRanged(6), 360), getRandomVelocity(0, random.NextRanged(3), 360), particles[XORRandom(particles.length)]);
 		}
 	}
 	

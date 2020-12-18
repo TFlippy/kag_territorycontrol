@@ -60,7 +60,7 @@ void onTick(CBlob@ this)
 		}
 	}
 
-	if (isClient() && this.isOnScreen())
+	if (isClient())
 	{
 		MakeParticle(this, "RippioGas.png");
 	}

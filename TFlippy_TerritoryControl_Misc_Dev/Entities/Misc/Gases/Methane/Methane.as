@@ -32,7 +32,7 @@ void onTick(CBlob@ this)
 {
 	if (isServer() && this.getPosition().y < 0) { this.server_Die(); }
 	
-	if (isClient() && this.isOnScreen())
+	if (isClient())
 	{
 		MakeParticle(this, "Methane.png");
 	}
