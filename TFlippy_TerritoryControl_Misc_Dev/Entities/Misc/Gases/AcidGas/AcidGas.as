@@ -99,11 +99,14 @@ void onTick(CBlob@ this)
 			if (client)
 			{
 				this.getSprite().PlaySound("Steam", 1, 1);
-				MakeSmokeParticle(this, hit_position, Vec2f(0, -1), "LargeSmoke");
+				if (this.isOnScreen())
+				{
+					MakeSmokeParticle(this, hit_position, Vec2f(0, -1), "LargeSmoke");
+				}
 			}
 		}
 		
-		if (client)
+		if (client && this.isOnScreen())
 		{
 			MakeParticle(this, "AcidGas.png");
 		}

@@ -121,7 +121,7 @@ void DoExplosion(CBlob@ this)
 		}
 	}
 	
-	if (isClient())
+	if (isClient() && this.isOnScreen())
 	{
 		for (int i = 0; i < 80; i++)
 		{

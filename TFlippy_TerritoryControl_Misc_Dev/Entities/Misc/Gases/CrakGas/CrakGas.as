@@ -61,7 +61,7 @@ void onTick(CBlob@ this)
 		}
 	}
 
-	if (isClient() )
+	if (isClient() && this.isOnScreen())
 	{
 		MakeParticle(this, "CrakGas.png");
 	}
