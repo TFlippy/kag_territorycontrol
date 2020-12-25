@@ -12,7 +12,10 @@ void onInit(CBlob@ this)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	CBlob@ carried = forBlob.getCarriedBlob();
-	if (carried !is null) return carried.hasTag("mat_gas");
-	else return true;
+	return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
+	{
+		CBlob@ carried = forBlob.getCarriedBlob();
+		if (carried !is null) return carried.hasTag("mat_gas");
+		else return true;
+	}
 }
