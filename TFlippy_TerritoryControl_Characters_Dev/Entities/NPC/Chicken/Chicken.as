@@ -1,15 +1,14 @@
-
 //script for a chicken
 
 #include "AnimalConsts.as";
 
 const u8 DEFAULT_PERSONALITY = SCARED_BIT;
-const int MAX_EGGS = 2; //maximum symultaneous eggs
-const int MAX_CHICKENS = 6;
-const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
+//const int MAX_EGGS = 2; //maximum symultaneous eggs
+//const int MAX_CHICKENS = 6;
+//const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
 
 int g_lastSoundPlayedTime = 0;
-int g_layEggInterval = 0;
+//int g_layEggInterval = 0;
 
 //sprite
 
@@ -97,7 +96,9 @@ void onInit(CBlob@ this)
 	this.set_f32("gib health", -0.0f);
 	this.Tag("flesh");
 
-	this.getShape().SetOffset(Vec2f(0, 6));
+	this.getShape().SetOffset(Vec2f(0, 0));
+	
+	this.set_u8("number of steaks", 1);
 
 	this.getCurrentScript().runFlags |= Script::tick_blob_in_proximity;
 	this.getCurrentScript().runProximityTag = "player";
@@ -112,7 +113,7 @@ void onInit(CBlob@ this)
 	// movement
 	
 	this.server_setTeamNum(250);
-	
+
 	AnimalVars@ vars;
 	if (!this.get("vars", @vars))
 		return;
@@ -127,12 +128,13 @@ void onInit(CBlob@ this)
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
-	return true; //maybe make a knocked out state? for loading to cata?
+	return true;
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return !blob.hasTag("flesh");
+	return blob !is null && (blob.isCollidable() && !blob.hasTag("player"));
+	//return !blob.hasTag("flesh");
 }
 
 void onTick(CBlob@ this)
@@ -183,9 +185,9 @@ void onTick(CBlob@ this)
 	{
 		this.getSprite().PlaySound("/Pluck");
 		g_lastSoundPlayedTime =  getGameTime();
-
-		// lay eggs
-		if (isServer())
+		
+		// lay eggs 
+		/*if (isServer())
 		{
 			g_layEggInterval++;
 			if (g_layEggInterval % 13 == 0)
@@ -223,7 +225,7 @@ void onTick(CBlob@ this)
 					server_CreateBlob("egg", this.getTeamNum(), this.getPosition() + Vec2f(0.0f, 5.0f));
 				}
 			}
-		}
+		}*/
 	}
 }
 
@@ -238,4 +240,3 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		g_lastSoundPlayedTime = getGameTime();
 	}
 }
-
