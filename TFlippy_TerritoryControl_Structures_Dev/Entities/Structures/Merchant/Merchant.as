@@ -43,7 +43,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 30 * 3;
 	
 	// SHOP
-	this.set_Vec2f("shop offset", Vec2f(0, 8));
+	this.set_Vec2f("shop offset", Vec2f(0, 0));
 	this.set_Vec2f("shop menu size", Vec2f(6, 5));
 	this.set_string("shop description", "Merchant");
 	this.set_u8("shop icon", 25);
@@ -121,19 +121,19 @@ void onInit(CBlob@ this)
 	}
 	
 	{
-		u32 cost = getRandomCost(@rand, 100, 400);
+		u32 cost = getRandomCost(@rand, 150, 250);
 		ShopItem@ s = addShopItem(this, "Sell Pumpkin (1)", "$COIN$", "coin-" + cost, "Sell 1 pumpkin for " + cost + " coins.");
 		AddRequirement(s.requirements, "blob", "pumpkin", "Pumpkin", 1);
 		s.spawnNothing = true;
 	}
 	{
-		u32 cost = getRandomCost(@rand, 100, 500);
+		u32 cost = getRandomCost(@rand, 300, 400);
 		ShopItem@ s = addShopItem(this, "Sell Oil Drum (50 l)", "$COIN$", "coin-" + cost, "Sell 50 litres of oil for " + cost + " coins.");
 		AddRequirement(s.requirements, "blob", "mat_oil", "Oil Drum (50 l)", 50);
 		s.spawnNothing = true;
 	}
 	{
-		u32 cost = getRandomCost(@rand, 50, 300);
+		u32 cost = getRandomCost(@rand, 140, 180);
 		ShopItem@ s = addShopItem(this, "Sell Scrub's Chow (1)", "$COIN$", "coin-" + cost, "Sell 1 Scrub's Chow for " + cost + " coins.");
 		AddRequirement(s.requirements, "blob", "foodcan", "Scrub's Chow", 1);
 		s.spawnNothing = true;
@@ -160,12 +160,12 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Kitten", "$icon_kitten$", "kitten", "A cute little kitten! Take care of it!", false, true);
-		AddRequirement(s.requirements, "coin", "", "Coins", getRandomCost(@rand, 150, 500));
+		AddRequirement(s.requirements, "coin", "", "Coins", getRandomCost(@rand, 250, 350));
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Tree Seed", "$seed$", "seed", "A tree seed. Trees don't have seeds, though.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 50);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 		s.spawnNothing = true;
 	}
 	{
@@ -417,7 +417,7 @@ void onTick(CSprite@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	this.set_Vec2f("shop offset", Vec2f(2,0));
+	//this.set_Vec2f("shop offset", Vec2f(2,0));
 	this.set_bool("shop available", this.isOverlapping(caller));
 }
 
