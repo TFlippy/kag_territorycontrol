@@ -28,7 +28,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$badger$", "Badger.png", Vec2f(32, 16), 0);
 	AddIconToken("$icon_banditpistol$", "BanditPistol.png", Vec2f(16, 8), 0);
 	
-	this.set_Vec2f("shop offset", Vec2f(4, 0));
+	this.set_Vec2f("shop offset", Vec2f(0, 0));
 	this.set_Vec2f("shop menu size", Vec2f(2, 1));
 	this.set_string("shop description", "Badger Den");
 	this.set_u8("shop icon", 25);
