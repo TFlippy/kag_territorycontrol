@@ -164,7 +164,7 @@ void onInit(CBlob@ this)
 		items.push_back(i);
 	}
 	{
-		AssemblerItem i("foodcan", 2, "Scrub's Chow (4)");
+		AssemblerItem i("foodcan", 2, "Scrub's Chow (2)");
 		AddRequirement(i.reqs, "blob", "mat_meat", "Mystery Meat", 10);
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 1);
 		items.push_back(i);
