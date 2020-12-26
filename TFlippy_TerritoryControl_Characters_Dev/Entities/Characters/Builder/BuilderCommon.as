@@ -241,6 +241,15 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 							bp.setPosition(this.getPosition());
 						}
 					}
+					else if (b.name == "chemlab")
+					{
+						CBlob@ bp = server_CreateBlob("bp_chemistry", myTeam, this.getPosition());
+						 
+						if (!this.server_PutInInventory(bp))
+						{
+							bp.setPosition(this.getPosition());
+						}
+					}
 					else if(b.name == "banner")
 					{
 						CPlayer@ p = this.getPlayer();
