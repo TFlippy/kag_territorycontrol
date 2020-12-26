@@ -18,11 +18,11 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer() && this.getTickSinceCreated() > grow_time)
+	if (isServer() && this.getTickSinceCreated() > grow_time)
 	{
 		int chickenCount = 0;
 		CBlob@[] blobs;
-		this.getMap().getBlobsInRadius(this.getPosition(), CHICKEN_LIMIT_RADIUS, @blobs);
+		getMap().getBlobsInRadius(this.getPosition(), CHICKEN_LIMIT_RADIUS, @blobs);
 		for (uint step = 0; step < blobs.length; ++step)
 		{
 			CBlob@ other = blobs[step];
@@ -50,7 +50,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			s.Gib();
 		}
 
-		if (getNet().isServer())
+		if (isServer())
 		{
 			this.server_SetHealth(-1);
 			this.server_Die();
