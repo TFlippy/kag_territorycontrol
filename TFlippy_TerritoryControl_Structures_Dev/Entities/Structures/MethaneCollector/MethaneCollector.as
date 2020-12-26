@@ -45,7 +45,7 @@ void onTick(CBlob@ this)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	return forBlob !is null && this.getDistanceTo(forBlob) < 32;
+	return ((this.getTeamNum() > 100 ? true : forBlob.getTeamNum() == this.getTeamNum()) && this.getDistanceTo(forBlob) < 32);
 }
 
 CBlob@ FindStorage(u8 team)
