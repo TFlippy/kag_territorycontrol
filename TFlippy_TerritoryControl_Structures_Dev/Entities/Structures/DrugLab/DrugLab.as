@@ -20,6 +20,8 @@ void onInit(CBlob@ this)
 	
 	this.inventoryButtonPos = Vec2f(7, 13);
 	
+	this.Tag("builder always hit");
+	
 	this.getCurrentScript().tickFrequency = 10;
 	this.getSprite().SetZ(-10.0f);
 	
@@ -78,7 +80,6 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	}
 }
 
-
 void React(CBlob@ this)
 {
 	if (getGameTime() >= this.get_u32("next_react"))
@@ -93,11 +94,13 @@ void React(CBlob@ this)
 			const f32 oil_count = inv.getCount("mat_oil");
 			const f32 sulphur_count = inv.getCount("mat_sulphur");
 			const f32 meat_count = inv.getCount("mat_meat");
+			const f32 dangermeat_count = inv.getCount("mat_dangerousmeat");
 			const f32 methane_count = inv.getCount("mat_methane");
 			const f32 mustard_count = inv.getCount("mat_mustard");
 			const f32 dirt_count = inv.getCount("mat_dirt");
 			const f32 coal_count = inv.getCount("mat_coal");
 			const f32 protopopov_count = inv.getCount("mat_protopopov");
+			const f32 ganja_count = inv.getCount("mat_ganja");
 			
 			const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
 			const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
@@ -110,6 +113,7 @@ void React(CBlob@ this)
 			CBlob@ fuel_blob = inv.getItem("mat_fuel");
 			CBlob@ mustard_blob = inv.getItem("mat_mustard");
 			CBlob@ meat_blob = inv.getItem("mat_meat");
+			CBlob@ dangermeat_blob = inv.getItem("mat_dangerousmeat");
 			CBlob@ mithril_blob = inv.getItem("mat_mithril");
 			CBlob@ sulphur_blob = inv.getItem("mat_sulphur");
 			CBlob@ dirt_blob = inv.getItem("mat_dirt");
@@ -120,6 +124,9 @@ void React(CBlob@ this)
 			CBlob@ vodka_blob = inv.getItem("vodka");
 			CBlob@ fiks_blob = inv.getItem("fiks");
 			CBlob@ grain_blob = inv.getItem("grain");
+			CBlob@ rippio_blob = inv.getItem("rippio");
+			CBlob@ ganja_blob = inv.getItem("mat_ganja");
+			CBlob@ ganjapod_blob = inv.getItem("ganjapod");
 
 			bool hasOil = oil_blob !is null;
 			bool hasMethane = methane_blob !is null;
@@ -127,6 +134,7 @@ void React(CBlob@ this)
 			bool hasAcid = acid_blob !is null;
 			bool hasMithrilEnriched = e_mithril_blob !is null;
 			bool hasMeat = meat_blob !is null;
+			bool hasDangerMeat = dangermeat_blob !is null;
 			bool hasDirt = dirt_blob !is null;
 			bool hasSulphur = sulphur_blob !is null;
 			bool hasMustard = mustard_blob !is null;
@@ -137,19 +145,62 @@ void React(CBlob@ this)
 			bool hasVodka = vodka_blob !is null;
 			bool hasFiks = fiks_blob !is null;
 			bool hasGrain = grain_blob !is null;
-			
-			if (meat_count > 0 && meat_blob !is null)
+			bool hasRippio = rippio_blob !is null;
+			bool hasGanja = ganja_blob !is null;
+			bool hasGanjaPod = ganjapod_blob !is null;
+			// Boof Gas Recipe
+			if (pressure > 1000 && heat > 700 && hasGanjaPod)
 			{
-				f32 explodium_amount = meat_blob.get_f32("explodium_amount");
-				
 				if (isServer())
 				{
-					Material::createFor(this, "mat_explodium", Maths::Ceil(explodium_amount));
+					ganjapod_blob.server_Die();
+					
+					Material::createFor(this, "mat_boof", 15 + XORRandom(5));
 				}
 				
-				meat_blob.set_f32("explodium_amount", 0.00f);
+				ShakeScreen(20.0f, 30, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Gas.ogg", 1.00f, 1.00f);
+			}
+			// Boof Recipe
+			if (pressure > 1000 && heat < 500 && hasGanja && hasDirt && ganja_count >= 20 && dirt_count >= 20)
+			{
+				if (isServer())
+				{
+					ganja_blob.server_SetQuantity(Maths::Max(ganja_blob.getQuantity() - 20, 0));
+					dirt_blob.server_SetQuantity(Maths::Max(dirt_blob.getQuantity() - 20, 0));
+					
+					Material::createFor(this, "boof", 1 + XORRandom(2));
+				}
 				
-				ShakeScreen(60.0f, 30, this.getPosition());
+				ShakeScreen(20.0f, 30, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Creamy.ogg", 1.00f, 1.00f);
+			}
+			// Gooby Recipe
+			if (pressure > 25000 && heat > 1000 && hasRippio && hasFiks && hasDangerMeat && dangermeat_count >= 45)
+			{
+				if (isServer())
+				{
+					rippio_blob.server_Die();
+					fiks_blob.server_Die();
+					dangermeat_blob.server_SetQuantity(Maths::Max(dangermeat_blob.getQuantity() - 45, 0));
+					
+					Material::createFor(this, "gooby", 1 + XORRandom(2));
+				}
+				
+				ShakeScreen(20.0f, 30, this.getPosition());
+				this.getSprite().PlaySound("DrugLab_Create_Solid.ogg", 1.00f, 1.00f);
+			}
+			
+			if (heat < 300 && hasDangerMeat && dangermeat_count >= 15)
+			{
+				if (isServer())
+				{
+					dangermeat_blob.server_SetQuantity(Maths::Max(dangermeat_blob.getQuantity() - 15, 0));
+					Material::createFor(this, "mat_explodium", 1 + XORRandom(2));
+					Material::createFor(this, "mat_meat", 9 + XORRandom(5));
+				}
+				
+				ShakeScreen(40.0f, 30, this.getPosition());
 				this.getSprite().PlaySound("DrugLab_Create_Gas.ogg", 1.00f, 1.00f);
 			}
 			
@@ -165,7 +216,7 @@ void React(CBlob@ this)
 				this.getSprite().PlaySound("DrugLab_Create_Acidic.ogg", 1.00f, 1.00f);
 			}
 			
-			if (heat > 500 && hasFiks)
+			if (pressure < 5000 && heat > 500  && hasFiks)
 			{
 				if (isServer())
 				{
@@ -266,7 +317,7 @@ void React(CBlob@ this)
 			if (pressure > 70000 && heat > 1300 && hasCoal)
 			{
 				f32 count = Maths::Min(coal_count, pressure * 0.0002f);
-				print("coal");
+				//print("coal");
 				
 				if (isServer())
 				{
