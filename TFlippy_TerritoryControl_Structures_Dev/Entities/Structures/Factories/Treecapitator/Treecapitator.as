@@ -51,20 +51,13 @@ void onTick(CBlob@ this)
 						}
 					}
 				}
-				else if (bname == "log" || bname == "pumpkin" || bname == "grain" )
+				else if (bname == "log" || bname == "pumpkin" || bname == "grain" || bname == "ganjapod" )
 				{
 					this.server_PutInInventory(b);
 				}
-				else if (bname == "pumpkin_plant")
+				else if (bname == "pumpkin_plant" || bname == "ganja_plant" || bname == "grain_plant" )
 				{
-					if (b.hasTag("has pumpkin"))
-					{
-						this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 1.00f, Hitters::saw);
-					}
-				}
-				else if (bname == "grain_plant")
-				{
-					if (b.hasTag("has grain"))
+					if (b.hasTag("has pumpkin") || b.hasTag("has pod") || b.hasTag("has grain"))
 					{
 						this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 1.00f, Hitters::saw);
 					}
