@@ -31,6 +31,7 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$bp_automation_advanced$", "Blueprints.png", Vec2f(16, 16), 0);
 	AddIconToken("$bp_energetics$", "Blueprints.png", Vec2f(16, 16), 1);
 	AddIconToken("$bp_mechanist$", "Blueprints.png", Vec2f(16, 16), 2);
+	AddIconToken("$bp_chemistry$", "Blueprints.png", Vec2f(16, 16), 7);
 	AddIconToken("$mat_goldingot$", "Material_GoldIngot.png", Vec2f(16, 16), 1);
 	AddIconToken("$musicdisc$", "MusicDisc.png", Vec2f(8, 8), 0);
 	AddIconToken("$seed$", "Seed.png",Vec2f(8,8),0);
