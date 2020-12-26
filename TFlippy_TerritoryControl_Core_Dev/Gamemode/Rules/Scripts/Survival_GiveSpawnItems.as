@@ -242,6 +242,9 @@ void onTick(CRules@ this)
 		getBlobsByName("buildershop", @spots);
 		getBlobsByName("knightshop", @spots);
 		getBlobsByName("archershop", @spots);
+		getBlobsByName("convent", @spots);
+		getBlobsByName("citadel", @spots);
+		getBlobsByName("stronghold", @spots);
 		getBlobsByName("fortress", @spots);
 		getBlobsByName("camp", @spots);
 		for (uint step = 0; step < spots.length; ++step)
