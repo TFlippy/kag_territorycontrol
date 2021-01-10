@@ -67,6 +67,12 @@ void onInit(CBlob@ this)
 			CBlob@ bp_sdr = server_CreateBlob("bp_energetics", -1, this.getPosition());
 			this.server_PutInInventory(bp_sdr);
 		}
+		
+		if (XORRandom(100) < 10) 
+		{
+			CBlob@ bp_chem = server_CreateBlob("bp_chemistry", -1, this.getPosition());
+			this.server_PutInInventory(bp_chem);
+		}
 
 		if (XORRandom(100) < 20)
 		{

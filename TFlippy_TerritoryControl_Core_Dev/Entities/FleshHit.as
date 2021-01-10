@@ -241,16 +241,26 @@ void onDie(CBlob@ this)
 			if (isServer())
 			{
 				Vec2f vel = Vec2f(XORRandom(4) - 2, -2 - XORRandom(4));
-			
-				CBlob@ blob = server_CreateBlob("mat_meat", this.getTeamNum(), this.getPosition());
-				if (blob !is null)
+				
+				if (explodium_amount > 0.00f)
 				{
-					if (explodium_amount > 0.00f) blob.set_f32("explodium_amount", explodium_amount);
+					CBlob@ blob = server_CreateBlob("mat_dangerousmeat", this.getTeamNum(), this.getPosition());
+					blob.server_SetQuantity(1 + (frac * 0.60f + XORRandom(frac)));
+					//blob.setVelocity(vel);
+				}
+				else
+				{
+					CBlob@ blob = server_CreateBlob("mat_meat", this.getTeamNum(), this.getPosition());
+
+					if (blob !is null)
+					{
+					//if (explodium_amount > 0.00f) blob.set_f32("explodium_amount", explodium_amount);
 
 					// print("" + explodium_amount);
 				
 					blob.server_SetQuantity(1 + (frac * 0.25f + XORRandom(frac)));
 					blob.setVelocity(vel);
+					}
 				}
 			}
 		}

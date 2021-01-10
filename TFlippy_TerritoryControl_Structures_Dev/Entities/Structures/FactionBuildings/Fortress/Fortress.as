@@ -65,7 +65,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_repair$", "InteractionIcons.png", Vec2f(32, 32), 15);
 	
 	{
-		ShopItem@ s = addShopItem(this, "Upgrade to a Stronghold", "$icon_upgrade$", "stronghold", "Upgrade to a Stronghold.\n\n+ Even higher player & inventory capacity\n+ Extra durability\n+ Longer capture time");
+		ShopItem@ s = addShopItem(this, "Upgrade to a Stronghold", "$icon_upgrade$", "stronghold", "Upgrade to a Stronghold.\n\n+ Larger inventory capacity\n+ Extra durability\n+ Longer capture time\n+ Material pickup");
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 50);
 		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 30);
 		AddRequirement(s.requirements, "coin", "", "Coins", 700);

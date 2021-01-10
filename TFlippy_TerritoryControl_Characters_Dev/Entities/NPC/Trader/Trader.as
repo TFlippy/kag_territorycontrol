@@ -223,12 +223,17 @@ void onInit(CBlob@ this)
 		}
 		{
 			ShopItem@ s = addShopItem(this, "Tree Seed", "$seed$", "seed", "A tree seed. Trees don't have seeds, though.");
-			AddRequirement(s.requirements, "coin", "", "Coins", 50);
+			AddRequirement(s.requirements, "coin", "", "Coins", 150);
 			s.spawnNothing = true;
 		}
 		{
-			ShopItem@ s = addShopItem(this, "Sell Pumpkin (1)", "$COIN$", "coin-80", "Sell 1 pumpkin for 80 coins.");
+			ShopItem@ s = addShopItem(this, "Sell Pumpkin (1)", "$COIN$", "coin-100", "Sell 1 pumpkin for 100 coins.");
 			AddRequirement(s.requirements, "blob", "pumpkin", "Pumpkin", 1);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Sell Scrub's Chow", "$COIN$", "coin-120", "Sell 1 Scrub's Chow for 120 coins");
+			AddRequirement(s.requirements, "blob", "foodcan", "Scrub's Chow", 1);
 			s.spawnNothing = true;
 		}
 	}

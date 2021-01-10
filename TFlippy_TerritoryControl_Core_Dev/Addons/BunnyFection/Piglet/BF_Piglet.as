@@ -69,7 +69,7 @@ void onInit(CBlob@ this)
 	vars.jumpForce.Set(0.0f, -20.0f);
 	vars.maxVelocity = 2.2f;
 	
-	this.set_u8("number of steaks", 2);
+	this.set_u8("number of steaks", 3);
 	this.set_u32("next oink", getGameTime());
 	this.set_u32("next squeal", getGameTime());
 	

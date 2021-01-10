@@ -95,7 +95,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
 		b.buildOnGround = true;
-		b.size.Set(40, 32);
+		b.size.Set(40, 24);
 		blocks[0].push_back(b);
 	}
 	{

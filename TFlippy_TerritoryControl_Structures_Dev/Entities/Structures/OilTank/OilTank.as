@@ -9,3 +9,8 @@ void onInit(CBlob@ this)
 	this.Tag("change team on fort capture");
 	this.Tag("oil_tank");
 }
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return ((this.getTeamNum() > 100 ? true : forBlob.getTeamNum() == this.getTeamNum()) && forBlob.isOverlapping(this));
+}

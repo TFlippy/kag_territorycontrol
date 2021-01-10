@@ -74,7 +74,7 @@ void onInit(CBlob@ this)
 	this.Tag("badger");
 	this.Tag("dangerous");
 	
-	this.set_u8("number of steaks", 2);
+	this.set_u8("number of steaks", 3);
 	
 	this.getShape().SetOffset(Vec2f(0, 0));
 	
@@ -82,6 +82,16 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().runProximityTag = "player";
 	this.getCurrentScript().runProximityRadius = 320.0f;
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
+	
+	//movement
+	AnimalVars@ vars;
+	if (!this.get("vars", @vars))
+		return;
+	vars.walkForce.Set(43.0f, -4.4f);
+	vars.runForce.Set(96.0f, -43.0f);
+	vars.slowForce.Set(12.0f, 0.0f);
+	vars.jumpForce.Set(0.0f, -200.0f);
+	vars.maxVelocity = 1.8f;
 	
 	AttachmentPoint@[] aps;
 	if (this.getAttachmentPoints(@aps))

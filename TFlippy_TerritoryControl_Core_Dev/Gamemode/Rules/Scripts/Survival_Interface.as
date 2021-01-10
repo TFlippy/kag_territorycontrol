@@ -722,6 +722,7 @@ string getRank(string &in username, SColor &out col, CPlayer@ p)
 		case -1980129081://goldenguy
 		case -1959624089://koi_
 		case 1002491121://jammer312
+		case -210526304://mrhobo
 		{
 			col = SColor(255, 95, 151, 239);
 			return "TC Developer";
@@ -731,7 +732,6 @@ string getRank(string &in username, SColor &out col, CPlayer@ p)
 		case -1913766845://cesar0
 		case -445244992://sylw
 		case 306188315://sjd360
-		case 1111849941://mr_hobo
 		case 494034411://turtlecake
 		case -608852120://hobey
 		case 926613433://blackguy123

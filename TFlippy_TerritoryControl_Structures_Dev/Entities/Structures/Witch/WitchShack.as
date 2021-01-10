@@ -6,6 +6,8 @@
 #include "CheckSpam.as";
 #include "CTFShopCommon.as";
 #include "MakeMat.as";
+#include "MakeSeed.as";
+
 
 Random traderRandom(Time());
 
@@ -27,6 +29,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$mat_lancerod$", "Material_LanceRod.png", Vec2f(16, 8), 0);
 	AddIconToken("$card_pack$", "CardPack.png", Vec2f(9, 9), 0);
 	AddIconToken("$icon_mysterybox$", "MysteryBox.png", Vec2f(24, 16), 0);
+	AddIconToken("$icon_animalbox$", "AnimalBox.png", Vec2f(24, 16), 0);
 	
 	AddIconToken("$choker_gem$", "Choker.png", Vec2f(10, 10), 0);
 	AddIconToken("$bubble_gem$", "BubbleGem.png", Vec2f(10, 10), 0);
@@ -34,8 +37,8 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 30 * 5;
 	
 	// SHOP
-	this.set_Vec2f("shop offset", Vec2f(0, 8));
-	this.set_Vec2f("shop menu size", Vec2f(2, 3));
+	this.set_Vec2f("shop offset", Vec2f(0, 0));
+	this.set_Vec2f("shop menu size", Vec2f(2, 4));
 	this.set_string("shop description", "Witch's Dilapidated Shack");
 	this.set_u8("shop icon", 25);
 	
@@ -58,13 +61,14 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Funny Magical Card Booster Pack", "$card_pack$", "card_pack", "A full pack of fun!");
-		AddRequirement(s.requirements, "coin", "", "Coins", 30);
+		ShopItem@ s = addShopItem(this, "Mystery Box", "$icon_mysterybox$", "mysterybox", "What's inside?\nInconceivable wealth, eternal suffering, upset badgers? Who knows! Only for 75 coins!");
+		AddRequirement(s.requirements, "coin", "", "Coins", 75);
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Mystery Box", "$icon_mysterybox$", "mysterybox", "What's inside?\nInconceivable wealth, eternal suffering, upset badgers? Who knows! Only for 75 coins!");
-		AddRequirement(s.requirements, "coin", "", "Coins", 75);
+		ShopItem@ s = addShopItem(this, "Companion Box", "$icon_animalbox$", "animalbox", "What's inside?\nI crammed this box with some sort of creature you may take a liking to!");
+		AddRequirement(s.requirements, "blob", "grain", "Grain", 5);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 		s.spawnNothing = true;
 	}
 	
@@ -79,12 +83,19 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingots", 2);
 		s.spawnNothing = true;
 	}
-	
-	// {
-		// ShopItem@ s = addShopItem(this, "Sell Grain (1)", "$COIN$", "coin-30", "Sell 1 Grain for 30 coins.");
-		// AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
-		// s.spawnNothing = true;
-	// }
+	{
+		ShopItem@ s = addShopItem(this, "Funny Magical Card Booster Pack", "$card_pack$", "card_pack", "A full pack of fun!");
+		AddRequirement(s.requirements, "coin", "", "Coins", 30);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Ganja Weed", "$ganjapod$", "ganja_seed", "With these ingredients I may conjure a magical plant of valuable properties.");
+		AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
+		AddRequirement(s.requirements, "blob", "mat_copper", "Copper", 50);
+		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 30);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+		s.spawnNothing = true;
+	}
 	
 
 	
@@ -217,6 +228,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				
 				callerPlayer.server_setCoins(callerPlayer.getCoins() +  parseInt(spl[1]));
 			}
+			else if(spl[0] == "ganja_seed")
+			{
+				Random rand(getGameTime());
+				server_MakeSeedsFor(@callerBlob, "ganja_plant", rand.NextRanged(0)+1);
+			}
 			else if (name.findFirst("mat_") != -1)
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
@@ -314,7 +330,7 @@ void onTick(CSprite@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	this.set_Vec2f("shop offset", Vec2f(2,0));
+	//this.set_Vec2f("shop offset", Vec2f(2,0));
 	this.set_bool("shop available", this.isOverlapping(caller));
 }
 

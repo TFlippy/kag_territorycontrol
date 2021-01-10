@@ -87,6 +87,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_filter$", "Filter.png", Vec2f(24, 8), 0);
 	AddIconToken("$icon_launcher$", "Launcher.png", Vec2f(8, 8), 0);
+	AddIconToken("$icon_jumper$", "Jumper.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_autoforge$", "AutoForge.png", Vec2f(24, 32), 0);
 	AddIconToken("$icon_inductionfurnace$", "InductionFurnace.png", Vec2f(40, 32), 0);
 	AddIconToken("$icon_assembler$", "Assembler.png", Vec2f(40, 24), 0);
@@ -120,7 +121,10 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_oiltank$","OilTank.png",Vec2f(32, 16),0);
 	AddIconToken("$icon_gastank$","GasTank.png",Vec2f(16, 24),0);
 	AddIconToken("$icon_druglab$","DrugLab.png",Vec2f(32, 40),0);
+	AddIconToken("$icon_chemlab$","ChemLab.png",Vec2f(48, 24),0);
 	AddIconToken("$icon_banner$","ClanBanner.png",Vec2f(16, 32),0);
+	AddIconToken("$icon_nursery$","Nursery.png",Vec2f(40, 32),0);
+	AddIconToken("$icon_smallsign$","sign.png",Vec2f(16, 16),0);
 	// AddIconToken("$icon_cargocontainer$", "CargoContainer.png", Vec2f(64, 24), 0);
 
 	
@@ -407,6 +411,15 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(80, 24);
 		blocks[1].push_back(b);
 	}
+	{
+		BuildBlock b(0, "nursery", "$nursery$", "Nursery\nRaise plants and crops for various purposes.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
+		AddRequirement(b.reqs, "blob", "mat_dirt", "Dirt", 50);
+		b.buildOnGround = true;
+		b.size.Set(40, 32);
+		blocks[1].push_back(b);
+	}
 
 	
 	BuildBlock[] page_2;
@@ -433,6 +446,12 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		BuildBlock b(0, "filter", "$icon_filter$", "Filter\nItems matching the filter won't collide with this.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 25);
+		blocks[2].push_back(b);
+	}
+	{
+		BuildBlock b(0, "jumper", "$icon_jumper$", "Jumper\nItems that collide will be launched up.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
 		blocks[2].push_back(b);
 	}
 	{
@@ -517,6 +536,17 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "bp_automation_advanced", "Blueprint (Advanced Automation)", 1);
 		b.buildOnGround = true;
 		b.size.Set(56, 24);
+		blocks[2].push_back(b);
+	}
+	{
+		BuildBlock b(0, "chemlab", "$icon_chemlab$", "Chemical Production Machine\nA machine capable of manufacturing basic drugs and chemicals.");
+		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
+		AddRequirement(b.reqs, "blob", "mat_copperingot", "Copper Ingot", 40);
+		// AddRequirement(b.reqs, "tech", "tech_automation_advanced", "Technology (Advanced Automation)", 1);
+		AddRequirement(b.reqs, "blob", "bp_chemistry", "Blueprint (Chemistry)", 1);
+		b.buildOnGround = true;
+		b.size.Set(48, 24);
 		blocks[2].push_back(b);
 	}
 	{
@@ -659,6 +689,14 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(64, 16);
 		blocks[3].push_back(b);
 	}
+	{
+		BuildBlock b(0, "smallsign", "$icon_smallsign$", "Sign\nType '!write -text-' in chat and then use it on the sign. Writing on a piece of paper costs 50 coins.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 60);
+		
+		b.buildOnGround = true;
+		b.size.Set(16, 16);
+		blocks[3].push_back(b);
+	}
 	// {
 		// BuildBlock b(0, "cargocontainer", "$icon_cargocontainer$", "Cargo Container\nA large shipping container with a huge storage capacity.\nCan be moved around by vehicles.\nActs as a remote inventory.");
 		// AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 50);
@@ -683,7 +721,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[3].push_back(b);
 	}	
 	{
-		BuildBlock b(0, "banner", "$icon_banner$", "Clan Banner\nSpecial banner for those who are in a clan.");
+		BuildBlock b(0, "banner", "$icon_banner$", "Banner\nBanner to show off your team's color.");
 		AddRequirement(b.reqs, "coin", "", "Coins", 150);
 		b.size.Set(16, 32);
 		blocks[3].push_back(b);
@@ -709,7 +747,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 10);
 		AddRequirement(b.reqs, "blob", "mat_copperingot", "Copper Ingot", 30);
 		b.buildOnGround = true;
-		b.size.Set(24, 40);
+		b.size.Set(32, 40);
 		blocks[3].push_back(b);
 	}	
 	{
