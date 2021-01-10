@@ -65,6 +65,11 @@ void BuildRespawnMenuFor(CBlob@ this, CBlob @caller)
 	}
 }
 
+void buildSpawnMenu(CBlob@ this, CBlob@ caller)
+{
+	BuildRespawnMenuFor(this, caller);
+}
+
 void onRespawnCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 
