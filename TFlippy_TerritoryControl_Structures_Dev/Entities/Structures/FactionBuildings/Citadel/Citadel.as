@@ -95,7 +95,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
-		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, -2.5f), this, SpawnCmd::buildMenu, "Change class", params);
+		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, -2.5f), this, BuildRespawnMenuFor, "Change class");
 				
 		CInventory @inv = caller.getInventory();
 		if(inv is null) return;
