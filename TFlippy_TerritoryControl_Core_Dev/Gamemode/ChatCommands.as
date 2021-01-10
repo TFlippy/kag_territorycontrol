@@ -248,7 +248,8 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 	{
 		if (showMessage)
 		{
-			print("Command by player "+player.getUsername()+" (Team "+player.getTeamNum()+"): "+text_in);
+			//print("Command by player "+player.getUsername()+" (Team "+player.getTeamNum()+"): "+text_in);
+			tcpr("[MISC] Command by player" +player.getUsername()+" (Team "+player.getTeamNum()+"): "+text_in);
 		}
 		
 		string[]@ tokens = text_in.split(" ");
