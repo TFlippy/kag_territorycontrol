@@ -219,8 +219,6 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 60;
 
 	this.Tag("builder always hit");
-
-	this.addCommandID("menu");
 	this.addCommandID("set");
 
 	this.set_u8("crafting",0);
@@ -233,47 +231,44 @@ void GetButtonsFor( CBlob@ this, CBlob@ caller )
 	CBitStream params;
 	params.write_u16(caller.getNetworkID());
 
-	CButton@ button = caller.CreateGenericButton(15, Vec2f(0,-8), this, this.getCommandID("menu"), "Set Item", params);
+	CButton@ button = caller.CreateGenericButton(15, Vec2f(0,-8), this, AssemblerMenu, "Set Item");
 }
 
-void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
+void AssemblerMenu(CBlob@ this, CBlob@ caller)
 {
-	if (cmd == this.getCommandID("menu"))
+	if(caller.isMyPlayer())
 	{
-		CBlob@ caller = getBlobByNetworkID(params.read_u16());
-		if (caller !is null)
+		CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 5), "Set Assembly");
+		if (menu !is null)
 		{
-			if(caller.isMyPlayer())
+			AssemblerItem[] items = getItems(this);
+			for(uint i = 0; i < items.length; i += 1)
 			{
-				CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 5), "Set Assembly");
-				if (menu !is null)
+				AssemblerItem item = items[i];
+
+				CBitStream pack;
+				pack.write_u8(i);
+				AddIconToken("$assembler_icon" + i + "$", "AssemblerIcons.png", Vec2f(16, 16), i);
+
+				string text = "Set to Assemble: " + item.title;
+				if(this.get_u8("crafting") == i)
 				{
-					AssemblerItem[] items = getItems(this);
-					for(uint i = 0; i < items.length; i += 1)
-					{
-						AssemblerItem item = items[i];
+					text = "Already Assembling: " + item.title;
+				}
 
-						CBitStream pack;
-						pack.write_u8(i);
-						AddIconToken("$assembler_icon" + i + "$", "AssemblerIcons.png", Vec2f(16, 16), i);
-
-						string text = "Set to Assemble: " + item.title;
-						if(this.get_u8("crafting") == i)
-						{
-							text = "Already Assembling: " + item.title;
-						}
-
-						CGridButton @butt = menu.AddButton("$assembler_icon" + i + "$", text, this.getCommandID("set"), pack);
-						butt.hoverText = item.title + "\n" + getButtonRequirementsText(item.reqs, false);
-						if(this.get_u8("crafting") == i)
-						{
-							butt.SetEnabled(false);
-						}
-					}
+				CGridButton @butt = menu.AddButton("$assembler_icon" + i + "$", text, this.getCommandID("set"), pack);
+				butt.hoverText = item.title + "\n" + getButtonRequirementsText(item.reqs, false);
+				if(this.get_u8("crafting") == i)
+				{
+					butt.SetEnabled(false);
 				}
 			}
 		}
 	}
+}
+
+void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
+{
 	if (cmd == this.getCommandID("set"))
 	{
 		u8 setting = params.read_u8();
