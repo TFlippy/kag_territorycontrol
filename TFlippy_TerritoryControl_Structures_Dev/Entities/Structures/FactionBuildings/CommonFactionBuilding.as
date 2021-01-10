@@ -13,7 +13,6 @@ void onInit(CBlob@ this)
 	
 	this.addCommandID("faction_captured");
 	this.addCommandID("faction_destroyed");
-	this.addCommandID("faction_menu");
 	this.addCommandID("faction_menu_button");
 	this.addCommandID("faction_player_button");
 	this.addCommandID("button_join");
@@ -264,7 +263,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			CBitStream params_menu;
 			params_menu.write_u16(caller.getNetworkID());
 			// CButton@ button_menu = caller.CreateGenericButton(11, Vec2f(14, 5), this, this.getCommandID("faction_menu"), "Faction Management", params_menu);
-			CButton@ button_menu = caller.CreateGenericButton(11, Vec2f(1, -8), this, this.getCommandID("faction_menu"), "Faction Management", params_menu);
+			CButton@ button_menu = caller.CreateGenericButton(11, Vec2f(1, -8), this, Faction_Menu, "Faction Management");
 
 			CBlob@ carried = caller.getCarriedBlob();
 			if(carried !is null && carried.getName() == "paper")
@@ -295,209 +294,207 @@ void SetAlarm(CBlob@ this, bool inState)
 	sprite.PlaySound("LeverToggle.ogg");
 }
 
-void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
-{		
-	if (cmd == this.getCommandID("faction_menu"))
+
+void Faction_Menu(CBlob@ this, CBlob@ caller)
+{
+	CPlayer@ myPly = caller.getPlayer();
+	if (myPly !is null && caller.isMyPlayer())
 	{
-		CBlob@ caller = getBlobByNetworkID(inParams.read_u16());
-		if (caller !is null)
+		TeamData@ team_data;
+		GetTeamData(this.getTeamNum(), @team_data);
+	
+		const bool isLeader = team_data.leader_name == myPly.getUsername();
+		
+		const bool recruitment_enabled = team_data.recruitment_enabled;
+		const bool tax_enabled = team_data.tax_enabled;
+		const bool storage_enabled = team_data.storage_enabled;
+		const bool lockdown_enabled = team_data.lockdown_enabled;
+		const bool f2p_enabled = team_data.f2p_enabled;
+		const bool slavery_enabled = team_data.slavery_enabled;
+		const bool reserved_1_enabled = team_data.lockdown_enabled;
+		const bool reserved_2_enabled = team_data.lockdown_enabled;
+		
+		const bool base_demolition = this.get_bool("base_demolition");
+		const bool base_alarm = this.get_bool("base_alarm");
+	
 		{
-			CPlayer@ myPly = caller.getPlayer();
-			if (myPly !is null && caller.isMyPlayer())
+			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 3), "Faction Policies");
+			if (menu !is null)
 			{
-				TeamData@ team_data;
-				GetTeamData(this.getTeamNum(), @team_data);
-			
-				const bool isLeader = team_data.leader_name == myPly.getUsername();
-				
-				const bool recruitment_enabled = team_data.recruitment_enabled;
-				const bool tax_enabled = team_data.tax_enabled;
-				const bool storage_enabled = team_data.storage_enabled;
-				const bool lockdown_enabled = team_data.lockdown_enabled;
-				const bool f2p_enabled = team_data.f2p_enabled;
-				const bool slavery_enabled = team_data.slavery_enabled;
-				const bool reserved_1_enabled = team_data.lockdown_enabled;
-				const bool reserved_2_enabled = team_data.lockdown_enabled;
-				
-				const bool base_demolition = this.get_bool("base_demolition");
-				const bool base_alarm = this.get_bool("base_alarm");
-			
 				{
-					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 3), "Faction Policies");
-					if (menu !is null)
+					CBitStream params;
+					params.write_u16(caller.getNetworkID());
+					
+					if (team_data.leader_name == myPly.getUsername())
 					{
-						{
-							CBitStream params;
-							params.write_u16(caller.getNetworkID());
-							
-							if (team_data.leader_name == myPly.getUsername())
-							{
-								params.write_u8(0);
-								params.write_u8(0);
-							
-								CGridButton@ butt = menu.AddButton("$faction_resign_leader$", "Renounce Leadership", this.getCommandID("faction_menu_button"), Vec2f(4, 1), params);
-								butt.hoverText = "Renounce yourself as the leader of this faction, leaving a spot for someone more competent.";
-								butt.SetEnabled(isLeader);
-							}
-							else
-							{
-								params.write_u8(0);
-								params.write_u8(1);
-							
-								CGridButton@ butt = menu.AddButton("$faction_become_leader$", "Claim Leadership", this.getCommandID("faction_menu_button"), Vec2f(4, 1), params);
-								butt.hoverText = "Claim leadership of this faction, giving yourself access to various management tools.";
-								butt.SetEnabled(team_data.leader_name == "");
-							}
-						}
-						
-						{
-							CBitStream params;
-							params.write_u16(caller.getNetworkID());
-							params.write_u8(1);
-							params.write_u8(recruitment_enabled ? 0 : 1);
-							
-							CGridButton@ butt = menu.AddButton("$faction_bed_" + !recruitment_enabled + "$", (recruitment_enabled ? "Disable" : "Enable") + " Recruitment", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							butt.hoverText = (recruitment_enabled ? "Disallows" : "Allows") + " new players to join your faction.";
-							butt.SetEnabled(isLeader);
-						}
-						
-						{
-							CBitStream params;
-							params.write_u16(caller.getNetworkID());
-							params.write_u8(2);
-							params.write_u8(lockdown_enabled ? 0 : 1);
-							
-							CGridButton@ butt = menu.AddButton("$faction_lock_" + !lockdown_enabled + "$", (lockdown_enabled ? "Disable" : "Enable") + " Lockdown", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							butt.hoverText = (lockdown_enabled ? "Allows" : "Disallows") + " neutrals to pass through your doors.";
-							butt.SetEnabled(isLeader);
-						}
-						
-						{
-							CBitStream params;
-							params.write_u16(caller.getNetworkID());
-							params.write_u8(3);
-							params.write_u8(tax_enabled ? 0 : 1);
-							
-							CGridButton@ butt = menu.AddButton("$faction_coin_" + !tax_enabled + "$", (tax_enabled ? "Disable" : "Enable") + " 50% Murder Tax", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							butt.hoverText = (tax_enabled ? "Disallows" : "Allows") + " the leader to claim 50% of your teammates' coins obtained by killing enemies.";
-							butt.SetEnabled(isLeader);
-						}
-						
-						{
-							CBitStream params;
-							params.write_u16(caller.getNetworkID());
-							params.write_u8(4);
-							params.write_u8(storage_enabled ? 0 : 1);
-							
-							CGridButton@ butt = menu.AddButton("$faction_crate_" + !storage_enabled + "$", (storage_enabled ? "Disable" : "Enable") + " Remote Storage", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " remote storage.";
-							butt.SetEnabled(isLeader);
-						}
-						
-						{
-							CBitStream params;
-							params.write_u16(caller.getNetworkID());
-							params.write_u8(5);
-							params.write_u8(f2p_enabled ? 0 : 1);
-							
-							CGridButton@ butt = menu.AddButton("$faction_f2p_" + !f2p_enabled + "$", (f2p_enabled ? "Disable" : "Enable") + " Free to Play Recruitment", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							butt.hoverText = (f2p_enabled ? "Disallows" : "Allows") + " Free-to-Play players to join your faction.";
-							butt.SetEnabled(isLeader);
-						}
-						
-						{
-							CBitStream params;
-							params.write_u16(caller.getNetworkID());
-							params.write_u8(6);
-							params.write_u8(slavery_enabled ? 0 : 1);
-							
-							CGridButton@ butt = menu.AddButton("$faction_slavery_" + !slavery_enabled + "$", (storage_enabled ? "Disable" : "Enable") + " Slavery", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " usage of shackles on other players by your team members.";
-							butt.SetEnabled(isLeader);
-						}
-						
-						
-						
-						
-						{
-							CBitStream params;
-							params.write_u16(caller.getNetworkID());
-							params.write_u8(9);
-							params.write_u8(base_demolition ? 0 : 1);
-							
-							CGridButton@ butt = menu.AddButton("$faction_remove$", (base_demolition ? "Cancel" : "Commence") + " demolition of this building", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							butt.hoverText = (base_demolition ? "Cancels" : "Commences") + " demolition of this building, destroying it over course of several seconds.";
-							butt.SetEnabled(isLeader);
-						}
-						
-						{
-							CBitStream params;
-							params.write_u16(caller.getNetworkID());
-							params.write_u8(10);
-							params.write_u8(base_alarm ? 0 : 1);
-							
-							CGridButton@ butt = menu.AddButton("$faction_alarm_" + !base_alarm + "$", (base_alarm ? "Turn off" : "Turn on") + " the emergency mode.", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
-							butt.hoverText = (base_alarm ? "Turns off" : "Turn on") + " the emergency mode, which alerts your team members and sets off the alarm.";
-							butt.SetEnabled(isLeader && this.get_bool("base_allow_alarm"));
-						}
-						
+						params.write_u8(0);
+						params.write_u8(0);
+					
+						CGridButton@ butt = menu.AddButton("$faction_resign_leader$", "Renounce Leadership", this.getCommandID("faction_menu_button"), Vec2f(4, 1), params);
+						butt.hoverText = "Renounce yourself as the leader of this faction, leaving a spot for someone more competent.";
+						butt.SetEnabled(isLeader);
+					}
+					else
+					{
+						params.write_u8(0);
+						params.write_u8(1);
+					
+						CGridButton@ butt = menu.AddButton("$faction_become_leader$", "Claim Leadership", this.getCommandID("faction_menu_button"), Vec2f(4, 1), params);
+						butt.hoverText = "Claim leadership of this faction, giving yourself access to various management tools.";
+						butt.SetEnabled(team_data.leader_name == "");
 					}
 				}
 				
 				{
-					CPlayer@[] players;
-					for (int i = 0; i < getPlayerCount(); i++)
-					{
-						CPlayer@ p = getPlayer(i);
-						if (p.getTeamNum() == this.getTeamNum()) players.push_back(p);
-					}
+					CBitStream params;
+					params.write_u16(caller.getNetworkID());
+					params.write_u8(1);
+					params.write_u8(recruitment_enabled ? 0 : 1);
+					
+					CGridButton@ butt = menu.AddButton("$faction_bed_" + !recruitment_enabled + "$", (recruitment_enabled ? "Disable" : "Enable") + " Recruitment", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+					butt.hoverText = (recruitment_enabled ? "Disallows" : "Allows") + " new players to join your faction.";
+					butt.SetEnabled(isLeader);
+				}
 				
-					// print("" + players.length);
-					int yOffset = ((players.length - 1) * 24) - 48;
-					// print("" + yOffset);
+				{
+					CBitStream params;
+					params.write_u16(caller.getNetworkID());
+					params.write_u8(2);
+					params.write_u8(lockdown_enabled ? 0 : 1);
+					
+					CGridButton@ butt = menu.AddButton("$faction_lock_" + !lockdown_enabled + "$", (lockdown_enabled ? "Disable" : "Enable") + " Lockdown", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+					butt.hoverText = (lockdown_enabled ? "Allows" : "Disallows") + " neutrals to pass through your doors.";
+					butt.SetEnabled(isLeader);
+				}
 				
-					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(200.00f + 40.00f, yOffset), this, Vec2f(6, players.length), "Faction Member Management");
-					if (menu !is null)
+				{
+					CBitStream params;
+					params.write_u16(caller.getNetworkID());
+					params.write_u8(3);
+					params.write_u8(tax_enabled ? 0 : 1);
+					
+					CGridButton@ butt = menu.AddButton("$faction_coin_" + !tax_enabled + "$", (tax_enabled ? "Disable" : "Enable") + " 50% Murder Tax", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+					butt.hoverText = (tax_enabled ? "Disallows" : "Allows") + " the leader to claim 50% of your teammates' coins obtained by killing enemies.";
+					butt.SetEnabled(isLeader);
+				}
+				
+				{
+					CBitStream params;
+					params.write_u16(caller.getNetworkID());
+					params.write_u8(4);
+					params.write_u8(storage_enabled ? 0 : 1);
+					
+					CGridButton@ butt = menu.AddButton("$faction_crate_" + !storage_enabled + "$", (storage_enabled ? "Disable" : "Enable") + " Remote Storage", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+					butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " remote storage.";
+					butt.SetEnabled(isLeader);
+				}
+				
+				{
+					CBitStream params;
+					params.write_u16(caller.getNetworkID());
+					params.write_u8(5);
+					params.write_u8(f2p_enabled ? 0 : 1);
+					
+					CGridButton@ butt = menu.AddButton("$faction_f2p_" + !f2p_enabled + "$", (f2p_enabled ? "Disable" : "Enable") + " Free to Play Recruitment", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+					butt.hoverText = (f2p_enabled ? "Disallows" : "Allows") + " Free-to-Play players to join your faction.";
+					butt.SetEnabled(isLeader);
+				}
+				
+				{
+					CBitStream params;
+					params.write_u16(caller.getNetworkID());
+					params.write_u8(6);
+					params.write_u8(slavery_enabled ? 0 : 1);
+					
+					CGridButton@ butt = menu.AddButton("$faction_slavery_" + !slavery_enabled + "$", (storage_enabled ? "Disable" : "Enable") + " Slavery", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+					butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " usage of shackles on other players by your team members.";
+					butt.SetEnabled(isLeader);
+				}
+				
+				
+				
+				
+				{
+					CBitStream params;
+					params.write_u16(caller.getNetworkID());
+					params.write_u8(9);
+					params.write_u8(base_demolition ? 0 : 1);
+					
+					CGridButton@ butt = menu.AddButton("$faction_remove$", (base_demolition ? "Cancel" : "Commence") + " demolition of this building", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+					butt.hoverText = (base_demolition ? "Cancels" : "Commences") + " demolition of this building, destroying it over course of several seconds.";
+					butt.SetEnabled(isLeader);
+				}
+				
+				{
+					CBitStream params;
+					params.write_u16(caller.getNetworkID());
+					params.write_u8(10);
+					params.write_u8(base_alarm ? 0 : 1);
+					
+					CGridButton@ butt = menu.AddButton("$faction_alarm_" + !base_alarm + "$", (base_alarm ? "Turn off" : "Turn on") + " the emergency mode.", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
+					butt.hoverText = (base_alarm ? "Turns off" : "Turn on") + " the emergency mode, which alerts your team members and sets off the alarm.";
+					butt.SetEnabled(isLeader && this.get_bool("base_allow_alarm"));
+				}
+				
+			}
+		}
+		
+		{
+			CPlayer@[] players;
+			for (int i = 0; i < getPlayerCount(); i++)
+			{
+				CPlayer@ p = getPlayer(i);
+				if (p.getTeamNum() == this.getTeamNum()) players.push_back(p);
+			}
+		
+			// print("" + players.length);
+			int yOffset = ((players.length - 1) * 24) - 48;
+			// print("" + yOffset);
+		
+			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(200.00f + 40.00f, yOffset), this, Vec2f(6, players.length), "Faction Member Management");
+			if (menu !is null)
+			{
+				{
+					for (int i = 0; i < players.length; i++)
 					{
+						CPlayer@ ply = players[i];
+					
 						{
-							for (int i = 0; i < players.length; i++)
-							{
-								CPlayer@ ply = players[i];
-							
-								{
-									CBitStream params;
-									menu.AddTextButton(ply.getUsername(), 0, Vec2f(4, 1), params);
-								}
-								
-								{
-									CBitStream params;
-									params.write_u8(0);
-									params.write_u16(myPly.getNetworkID());
-									params.write_u16(ply.getNetworkID());
-							
-									CGridButton@ butt = menu.AddButton("$faction_remove$", "Kick " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
-									butt.hoverText = "Remove " + ply.getUsername() + " from your faction.";
-									butt.SetEnabled(isLeader || ply.getUsername() == myPly.getUsername());
-								}
-								
-								{
-									CBitStream params;
-									params.write_u8(1);
-									params.write_u16(myPly.getNetworkID());
-									params.write_u16(ply.getNetworkID());
-							
-									CGridButton@ butt = menu.AddButton("$faction_enslave$", "Enslave " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
-									butt.hoverText = "Enslave " + ply.getUsername() + ".";
-									butt.SetEnabled(isLeader);
-								}
-							}
+							CBitStream params;
+							menu.AddTextButton(ply.getUsername(), 0, Vec2f(4, 1), params);
+						}
+						
+						{
+							CBitStream params;
+							params.write_u8(0);
+							params.write_u16(myPly.getNetworkID());
+							params.write_u16(ply.getNetworkID());
+					
+							CGridButton@ butt = menu.AddButton("$faction_remove$", "Kick " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
+							butt.hoverText = "Remove " + ply.getUsername() + " from your faction.";
+							butt.SetEnabled(isLeader || ply.getUsername() == myPly.getUsername());
+						}
+						
+						{
+							CBitStream params;
+							params.write_u8(1);
+							params.write_u16(myPly.getNetworkID());
+							params.write_u16(ply.getNetworkID());
+					
+							CGridButton@ butt = menu.AddButton("$faction_enslave$", "Enslave " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
+							butt.hoverText = "Enslave " + ply.getUsername() + ".";
+							butt.SetEnabled(isLeader);
 						}
 					}
 				}
 			}
 		}
 	}
-	else if (cmd == this.getCommandID("faction_menu_button"))
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
+{		
+	if (cmd == this.getCommandID("faction_menu_button"))
 	{
 		CBlob@ caller = getBlobByNetworkID(inParams.read_u16());
 		const u8 type = inParams.read_u8();
