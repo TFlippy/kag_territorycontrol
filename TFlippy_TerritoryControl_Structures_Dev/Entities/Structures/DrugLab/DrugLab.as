@@ -55,7 +55,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
 			const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
 			
-			print_log(this, "Heat; P: " + pressure + "; H: " + heat);
+			//print_log(this, "Heat; P: " + pressure + "; H: " + heat);
 		}
 	}
 }
@@ -102,7 +102,7 @@ void React(CBlob@ this)
 			const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
 			const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
 			
-			print_log(this, "React; P: " + pressure + "; H: " + heat);
+			//print_log(this, "React; P: " + pressure + "; H: " + heat);
 			
 			CBlob@ oil_blob = inv.getItem("mat_oil");
 			CBlob@ methane_blob = inv.getItem("mat_methane");

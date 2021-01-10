@@ -2,7 +2,7 @@
 {
 	if (isServer())
 	{
-		tcpr("[LOG] " + this.getConfig() + " has set team to " + this.getTeamNum());
+		tcpr("[BTC] " + this.getConfig() + " has set team to " + this.getTeamNum());
 	}
 
 	if (this.getTeamNum() == 250)
@@ -15,7 +15,7 @@ void onChangeTeam(CBlob@ this, const int oldTeam)
 {
 	if (isServer())
 	{
-		tcpr("[LOG] " + this.getConfig() + " has changed team to " + this.getTeamNum());
+		tcpr("[BTC] " + this.getConfig() + " has changed team to " + this.getTeamNum());
 	}
 	
 	if (this.getTeamNum() == 250)

@@ -242,7 +242,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CPlayer@ ply = callerBlob.getPlayer();
 			if (ply !is null)
 			{
-				tcpr(ply.getUsername() + " has purchased " + name);
+				tcpr("[PBI] " + ply.getUsername() + " has purchased " + name);
 			}
 		
 			string[] spl = name.split("-");

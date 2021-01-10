@@ -363,15 +363,17 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	this.getSprite().PlaySound("/Pickup.ogg");
 
-	if (attached !is null)
+	if (attached !is null && isServer())
 	{
-		CRules@ r = getRules();
-		if(r.get_bool("log"))
+		CPlayer@ player = this.getPlayer();
+		if (player !is null)
 		{
-			print_log(this, "has picked up " + attached.getName());
+			tcpr("[PPU] " + player.getUsername() + " has picked up " + attached.getName());
 		}
-		// print_log(player.getUsername() + " (" + this.getName() + ") has picked up " + attached.getName()
-		
+		else
+		{
+			tcpr("[BPU] " + this.getName() + " has picked up " + attached.getName());
+		}
 	}
 	
 	if (isClient())
@@ -395,9 +397,17 @@ bool isDangerous(CBlob@ blob)
 // set the Z back
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
-	if (detached !is null)
+	if (detached !is null && isServer())
 	{
-		print_log(this, "has dropped " + detached.getName());
+		CPlayer@ player = this.getPlayer();
+		if (player !is null)
+		{
+			tcpr("[PDI] " + player.getUsername() + " has dropped " + detached.getName());
+		}
+		else
+		{
+			tcpr("[BDI] " + this.getName() + " has dropped " + detached.getName());
+		}
 	}
 
 	this.getSprite().SetZ(0.0f);

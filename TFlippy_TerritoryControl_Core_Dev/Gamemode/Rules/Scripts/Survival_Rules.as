@@ -113,7 +113,7 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 				// sleeper.Sync("sleeper_name", false);
 				// sleeper.Sync("sleeper_coins", false);
 
-				tcpr("[LOG] "+playerName + " joined, respawning him at sleeper " + sleeper.getName());
+				tcpr("[MISC] "+playerName + " joined, respawning him at sleeper " + sleeper.getName());
 			}
 		}
 	}
@@ -143,17 +143,17 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 
 void onBlobCreated(CRules@ this, CBlob@ blob)
 {
-	if (getGameTime() > 150 && !blob.hasTag("material"))
+	if (isServer() && getGameTime() > 150 && !blob.hasTag("material"))
 	{
-		print_log(blob, "has been created");
+		tcpr("[NBM] " + blob.getName());
 	}
 }
 
 void onBlobDie(CRules@ this, CBlob@ blob)
 {
-	if (getGameTime() > 150 && !blob.hasTag("material"))
+	if (isServer() && getGameTime() > 150 && !blob.hasTag("material"))
 	{
-		print_log(blob, "has been destroyed");
+		tcpr("[NBD] " + blob.getName());
 	}
 }
 
@@ -237,7 +237,10 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	string victimName = victim.getUsername() + " (team " + victim.getTeamNum() + ")";
 	string attackerName = attacker !is null ? (attacker.getUsername() + " (team " + attacker.getTeamNum() + ")") : "world";
 
-	print_log(victim, "has been killed by " + attackerName + "; damage type: " + customData);
+	if (isServer())
+	{
+		tcpr("[PDB] "+victimName +" has been killed by " + attackerName + "; damage type: " + customData);
+	}
 	// printf(victimName + " has been killed by " + attackerName + "; damage type: " + customData);
 
 	u8 victimTeam = victim.getTeamNum();
@@ -463,7 +466,7 @@ void onTick(CRules@ this)
 							f32 ruins_ratio = 1.00f - (f32(ruins_count) / f32(ruins.length));
 							f32 chicken_chance = ruins_ratio * ruins_ratio;
 
-							tcpr("[Respawn] Chicken Chance: " + (chicken_chance * 100) + "%");
+							tcpr("[CCC] Chicken Chance: " + (chicken_chance * 100) + "%");
 
 							if (XORRandom(100) < (chicken_chance * 100))
 							{

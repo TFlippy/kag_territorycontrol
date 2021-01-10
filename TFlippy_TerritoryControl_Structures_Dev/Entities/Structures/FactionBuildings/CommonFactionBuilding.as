@@ -760,7 +760,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						
 						if (isServer())
 						{	
-							tcpr("[LOG]  " + p.getUsername() + " has joined " + getRules().getTeam(myTeam).getName());
+							tcpr("[PJT]  " + p.getUsername() + " has joined " + getRules().getTeam(myTeam).getName());
 							p.server_setTeamNum(myTeam);
 							CBlob@ newPlayer = server_CreateBlob("builder", myTeam, blob.getPosition());
 							newPlayer.server_SetPlayer(p);

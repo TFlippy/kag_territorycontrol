@@ -5,6 +5,29 @@
 // Data is mostly used for alt logging, debug logging and every now and then for some cool stats (like how many unique players joined).
 // We may let users opt out in the future
 
+// KEYS for tcpr logs
+
+// [BDC] - Blob Does Collide
+// [BDI] - Blob Dropped Item
+// [BOC] - Blob On Collision
+// [BPL] - Blob Print Log
+// [BPU] - Blob Picked Up
+// [BTC] - Blob Team Change
+// [CCC] - Current Chicken Chance
+// [DEBUG] - DEBUG SOME DUMB INFO FOR DUMB BUGS
+// [MISC] - Other info
+// [NBD] - New Blob Death
+// [NBM] - New Blob Made
+// [NPJ] - New Player Joined
+// [NPL] - New Player Left
+// [PBI] - Player Brought Item
+// [PC]  - Player Chat
+// [PDB] - Player Died by
+// [PDI] - Player Dropped Item
+// [PJT] - Player Joined Team
+// [PPL] - Player Print Log
+// [PPU] - Player Picked Up
+// [RGE] - Random Game Event
 
 #define SERVER_ONLY
 

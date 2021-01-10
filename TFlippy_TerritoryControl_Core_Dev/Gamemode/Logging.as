@@ -17,11 +17,11 @@ void print_log(CBlob@ blob, string text)
 			CPlayer@ player = blob.getPlayer();
 			if (player !is null)
 			{
-				print_log("<" + player.getUsername() + "; " + blob.getName() + "; team " + blob.getTeamNum() + "> " + text);
+				tcpr("[PPL] <" + player.getUsername() + "; " + blob.getName() + "; team " + blob.getTeamNum() + "> " + text);
 			}
 			else
 			{
-				print_log("<" + blob.getName() + "; team " + blob.getTeamNum() + "> " + text);
+				print_log("[BPL] <" + blob.getName() + "; team " + blob.getTeamNum() + "> " + text);
 			}
 		}		
 	}
@@ -37,11 +37,11 @@ void print_log(CPlayer@ player, string text)
 			CBlob@ blob = player.getBlob();
 			if (blob !is null)
 			{
-				print_log("<" + player.getUsername() + "; " + blob.getName() + "; team " + player.getTeamNum() + "> " + text);
+				print_log("[PPL] <" + player.getUsername() + "; " + blob.getName() + "; team " + player.getTeamNum() + "> " + text);
 			}
 			else
 			{
-				print_log("<" + player.getUsername() + "; team " + player.getTeamNum() + "> " + text);
+				print_log("[BPL] <" + player.getUsername() + "; team " + player.getTeamNum() + "> " + text);
 			}
 		}
 	}
