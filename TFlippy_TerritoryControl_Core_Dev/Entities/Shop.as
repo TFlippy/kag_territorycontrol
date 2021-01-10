@@ -55,16 +55,25 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		params.write_u16(caller.getNetworkID());
 
 		CButton@ button = caller.CreateGenericButton(
-		this.get_u8("shop icon"),                   // icon token
-		this.get_Vec2f("shop offset"),              // button offset
-		this,                                       // button attachment
-		this.getCommandID("shop menu"),             // command id
-		getTranslatedString(this.get_string("shop description")),        // description
-		params);                                    // bit stream
+			this.get_u8("shop icon"),                                // icon token
+			this.get_Vec2f("shop offset"),                           // button offset
+			this,                                                    // shop blob
+			createMenu,                                              // func callback
+			getTranslatedString(this.get_string("shop description")) // description
+		);                             // bit stream
 
 		button.enableRadius = this.get_u8("shop button radius");
 	}
 }
+
+void createMenu(CBlob@ this, CBlob@ caller)
+{
+	if (this.hasTag("shop disabled"))
+		return;
+
+	BuildShopMenu(this, caller, this.get_string("shop description"), Vec2f(0, 0), this.get_Vec2f("shop menu size"));
+}
+
 
 bool isInRadius(CBlob@ this, CBlob @caller)
 {
