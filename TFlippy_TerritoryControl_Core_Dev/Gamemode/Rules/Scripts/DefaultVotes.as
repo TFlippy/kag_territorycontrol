@@ -324,7 +324,7 @@ VoteObject@ Create_VoteNextmap(CPlayer@ byplayer, string reason)
 
 void onMainMenuCreated(CRules@ this, CContextMenu@ menu)
 {
-	print("menu");
+	//print("menu");
 
 	//get our player first - if there isn't one, move on
 	CPlayer@ me = getLocalPlayer();

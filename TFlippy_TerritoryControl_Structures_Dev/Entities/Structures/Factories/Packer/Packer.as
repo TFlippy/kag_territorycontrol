@@ -23,7 +23,6 @@ void onInit(CBlob@ this)
 	this.set_u8("packer mode", 0);
 	
 	this.addCommandID("set packer mode");
-	this.addCommandID("menu");
 }
 
 void onTick(CBlob@ this)
@@ -90,46 +89,44 @@ void GetButtonsFor( CBlob@ this, CBlob@ caller )
 	CBitStream params;
 	params.write_u16(caller.getNetworkID());
 
-	CButton@ button = caller.CreateGenericButton(24, Vec2f(0, -8), this, this.getCommandID("menu"), "Change packing mode", params);
+	CButton@ button = caller.CreateGenericButton(24, Vec2f(0, -8), this, PackerMenu, "Change packing mode");
 }
 
-void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
+void PackerMenu(CBlob@ this, CBlob@ caller)
 {
-	if (cmd == this.getCommandID("menu"))
-	{
-		if (isClient())
-		{	
-			CBlob@ caller = getBlobByNetworkID(params.read_u16());
+	CBlob@ caller = getBlobByNetworkID(params.read_u16());
 			
-			if (caller !is null)
+	if (caller !is null)
+	{
+		if (caller.isMyPlayer())
+		{
+			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 1), "Set packing mode");
+			
+			if (menu !is null)
 			{
-				if (caller.isMyPlayer())
+				for (uint i = 0; i < 4; i++)
 				{
-					CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 1), "Set packing mode");
-					
-					if (menu !is null)
-					{
-						for (uint i = 0; i < 4; i++)
-						{
-							CBitStream params;
-							params.write_u8(i);
+					CBitStream params;
+					params.write_u8(i);
 
-							string text = "Set Packer Mode to " + (1 + i) + " stacks.";
-							
-							AddIconToken("$packer_icon_" + i + "$", "Packer_Icons.png", Vec2f(16, 16), i);
-							
-							CGridButton @butt = menu.AddButton("$packer_icon_" + i + "$", text, this.getCommandID("set packer mode"), params);
-							butt.hoverText = "Packer will pack items into crates if " + (i + 1) + "/4 slots in its inventory are full.";
-							if (this.get_u8("packer mode") == i)
-							{
-								butt.SetEnabled(false);
-							}
-						}
+					string text = "Set Packer Mode to " + (1 + i) + " stacks.";
+					
+					AddIconToken("$packer_icon_" + i + "$", "Packer_Icons.png", Vec2f(16, 16), i);
+					
+					CGridButton @butt = menu.AddButton("$packer_icon_" + i + "$", text, this.getCommandID("set packer mode"), params);
+					butt.hoverText = "Packer will pack items into crates if " + (i + 1) + "/4 slots in its inventory are full.";
+					if (this.get_u8("packer mode") == i)
+					{
+						butt.SetEnabled(false);
 					}
 				}
 			}
 		}
 	}
+}
+
+void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
+{
 	if (cmd == this.getCommandID("set packer mode"))
 	{	
 		u8 setting = params.read_u8();
