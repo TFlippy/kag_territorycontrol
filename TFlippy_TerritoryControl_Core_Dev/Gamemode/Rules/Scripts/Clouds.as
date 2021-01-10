@@ -220,7 +220,7 @@ class Clouds
 		}
 
 		GoalPos += MOVE_VEL;
-		GoalPos.x += ((ZLevel / 2) * 0.05f); // some move faster based on z level
+		GoalPos += Vec2f(MOVE_VEL.x,MOVE_VEL.y)*(ZLevel / 20.0f); // some move faster based on z level
 
 		return true;
 	}
@@ -230,10 +230,10 @@ class Clouds
 		Vec2f topLeft = Vec2f(Maths::Lerp(OldPos.x, GoalPos.x, FRAME_TIME), Maths::Lerp(OldPos.y, GoalPos.y, FRAME_TIME));
 		OldPos = topLeft;
 
-		topLeft.x += CAMERA_X * (PARRALEX_EFFECT - (ZLevel * 0.01f));
-		topLeft.y += CAMERA_Y * (PARRALEX_EFFECT - (ZLevel * 0.01f)) / 2;
+		topLeft.x += CAMERA_X * ((20-ZLevel) / 40.0f);
+		topLeft.y += CAMERA_Y * ((20-ZLevel) / 40.0f) / 2;
 
-		Vec2f botRight = topLeft + Vec2f(200, 200);
+		Vec2f botRight = topLeft + Vec2f(50, 50) + Vec2f(150, 150)*(ZLevel/20.0f);
 
 		if (!isOnScreen(topLeft, botRight)) 
 		{
