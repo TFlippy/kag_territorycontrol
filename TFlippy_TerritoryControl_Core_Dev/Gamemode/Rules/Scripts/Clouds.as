@@ -1,6 +1,7 @@
 /////////////////////////////////////////////
 // Cloud controller made by Vamist
-// No stealing without perms, its in BETA >:(
+// Its a bit messy, will update in the future. It got messy after a wave of random bugs
+// like smoke screen clouds appeared.
 // 
 //
 // Clouds are synced
