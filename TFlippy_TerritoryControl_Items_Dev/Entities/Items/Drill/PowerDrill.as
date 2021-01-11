@@ -181,7 +181,6 @@ void onTick(CBlob@ this)
 		this.Sync(heat_prop, true);
 	}
 	sprite.SetEmitSoundPaused(true);
-
 	if (this.isAttached())
 	{
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
@@ -404,6 +403,23 @@ void onTick(CBlob@ this)
 		}
 		this.set_u8(heat_prop, heat);
 		this.Sync(heat_prop, true);
+	}
+	else
+	{
+		this.set_bool(buzz_prop, false);
+		if (heat <= 0)
+		{
+			this.getCurrentScript().runFlags |= Script::tick_not_sleeping;
+		}
+	}
+}
+
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	if (customData == Hitters::fire)
+	{
+		this.set_u8(heat_prop, heat_max);
+		makeSteamPuff(this);
 	}
 
 	if (customData == Hitters::water)
