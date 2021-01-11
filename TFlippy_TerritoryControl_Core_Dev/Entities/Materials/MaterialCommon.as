@@ -176,30 +176,59 @@ namespace Material
     }
   }
 
-  // Server-side: Get material from a blob
-  void fromBlob(CBlob@ this, CBlob@ blob, float &in damage)
-  {
-    if (damage <= 0.0f) return;
+  // Server-side: Create material from a blob
+	void fromBlob(CBlob@ this, CBlob@ blob, float &in damage, CBlob@ damageBlob = null)
+	{
+		if (damage <= 0.f) return;
 
-    // Return unless it's a harvest blob
-    if (not blob.exists('harvest')) return;
+		// Return unless it's a harvest blob
+		if (not blob.exists('harvest')) return;
+		dictionary harvest;
+		blob.get('harvest', harvest);
+		u16 maxHarvest = -1;//keep -1 unless we want a cap
 
-    dictionary harvest;
-    blob.get('harvest', harvest);
+		if(damageBlob !is null)
+		{
+			//if we are going to have more blobs, move to switch
+			string name = blob.getName();
+			if(name ==  "wooden_door" && damageBlob.exists("harvestWoodDoorCap"))
+			{
+				maxHarvest = damageBlob.get_u16("harvestWoodDoorCap");
+			}
+			else if(name == "stone_door" && damageBlob.exists("harvestStoneDoorCap"))
+			{
+				maxHarvest = damageBlob.get_u16("harvestStoneDoorCap");
+			}
+			else if(name == "wooden_platform" && damageBlob.exists("harvestPlatformCap"))
+			{
+				maxHarvest = damageBlob.get_u16("harvestPlatformCap");
+			}
+			else if(name == "bridge" && damageBlob.exists("harvestPlatformCap"))
+			{
+				maxHarvest = damageBlob.get_u16("harvestPlatformCap");
+			}
+		}
 
-    string[]@ names = harvest.getKeys();
+		array<string>@ names = harvest.getKeys();
 
-    // Create all harvested materials
-    for (uint8 i = 0; i < names.length; ++ i)
-    {
-      string name = names[i];
+		// Create all harvested materials
+		for (uint8 i = 0; i < names.length; ++ i)
+		{
+			string name = names[i];
 
-      uint16 quantity;
-      harvest.get(name, quantity);
+			uint16 quantity;
+			harvest.get(name, quantity);
+			u16 harvestAmount = quantity * damage;
 
-      createFor(this, name, quantity * damage);
-    }
-  }
+			if(maxHarvest != -1 && harvestAmount > maxHarvest)//do we have the cap? if so are we over it
+			{
+				harvestAmount = maxHarvest;
+			}
+
+			createFor(this, name, harvestAmount);
+		}
+	}
+
 
   // Server-side: Create material from a tile
   void fromTile(CBlob@ this, uint16 &in type, float &in damage)
