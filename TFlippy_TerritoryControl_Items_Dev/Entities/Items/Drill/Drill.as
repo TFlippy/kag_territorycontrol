@@ -186,7 +186,7 @@ void onTick(CBlob@ this)
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder = point.getOccupied();
 
-		if (holder is null) return;
+		if (holder is null || holder.getTeamNum() >= 100) return;
 
 		AimAtMouse(this, holder); // aim at our mouse pos
 
