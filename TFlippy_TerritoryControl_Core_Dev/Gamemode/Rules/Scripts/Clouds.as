@@ -51,6 +51,13 @@ u16 SCREEN_WIDTH = 0;
 
 void onInit(CRules@ this)
 {
+
+#ifdef STAGING
+	error("Staging build detected, removing clouds.as for now :)");
+	this.RemoveScript("clouds.as");
+	return;
+#endif
+
 	this.addCommandID("new_cloud"); // still register command so its in sync with server
 	
 	if (v_fastrender) // then remove script if we dont want clouds
