@@ -399,8 +399,11 @@ void onTick(CBlob@ this)
 							hitblob = false;
 						}
 					}
-					holder.getSprite().PlaySound("NoAmmo.ogg", 0.5);
-makeSteamPuff(this);
+				}
+			}
+		}
+		this.set_u8(heat_prop, heat);
+		this.Sync(heat_prop, true);
 	}
 
 	if (customData == Hitters::water)
