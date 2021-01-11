@@ -8,9 +8,11 @@
 
 void onInit(CBrain@ this)
 {
+
 	CBlob @blob = this.getBlob();
 	blob.set_u8(delay_property , 5 + XORRandom(5));
 	blob.set_u8(state_property, MODE_IDLE);
+	blob.Tag("animal");
 
 	if (!blob.exists(terr_rad_property))
 	{
