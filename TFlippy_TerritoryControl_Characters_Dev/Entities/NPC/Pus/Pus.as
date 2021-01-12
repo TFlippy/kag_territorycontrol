@@ -101,14 +101,17 @@ void onDie(CBlob@ this)
 	this.getSprite().Gib();
 
 	Explode(this, 16.0f, 8.0f);
-		
-	for (int i = 0; i < 6; i++)
-	{
-		CBlob@ blob = server_CreateBlob("acidgas", this.getTeamNum(), this.getPosition());
-		
-		if (blob !is null)
+	
+	if (isServer())
+	{			
+		for (int i = 0; i < 6; i++)
 		{
-			blob.setVelocity(Vec2f(4 - XORRandom(8), - XORRandom(4)));
+			CBlob@ blob = server_CreateBlob("acidgas", this.getTeamNum(), this.getPosition());
+			
+			if (blob !is null)
+			{
+				blob.setVelocity(Vec2f(4 - XORRandom(8), - XORRandom(4)));
+			}
 		}
 	}
 }
