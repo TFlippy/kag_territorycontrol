@@ -1,3 +1,5 @@
+#define SERVER_ONLY
+
 #include "MakeMat.as";
 #include "Hitters.as";
 
@@ -23,10 +25,7 @@ HarvestBlobPair[] pairs =
 };
 
 void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitBlob, u8 customData)
-{
-	if (!isServer() || hitBlob is null)
-		return;
-	
+{	
 	if (customData == Hitters::drill || customData == Hitters::builder)
 	{
 		if (damage > 0.0f)

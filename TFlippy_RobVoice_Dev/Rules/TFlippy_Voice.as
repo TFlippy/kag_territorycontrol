@@ -1,4 +1,5 @@
 // Made by TFlippy, voiced by Rob
+#define CLIENT_ONLY
 
 array<string> wordreplace =
 {
