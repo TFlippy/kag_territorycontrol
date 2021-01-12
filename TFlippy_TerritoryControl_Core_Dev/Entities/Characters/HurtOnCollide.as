@@ -1,4 +1,5 @@
-#define SERVER_ONLY
+// TEMP REMOVEAL TO STOP PRINT SPAM
+// #define SERVER_ONLY
 
 // set "hit dmg modifier" in your blob to modify blob hit damage
 // set "map dmg modifier" in your blob to modify map hit damage
