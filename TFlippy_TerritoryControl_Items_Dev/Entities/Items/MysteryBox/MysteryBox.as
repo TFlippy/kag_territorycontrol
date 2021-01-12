@@ -63,7 +63,7 @@ LootItem@[] c_items =
 	LootItem("gyromat", 1, 1, 500),
 	LootItem("bp_chemistry", 1, 1, 175),
 	LootItem("hobo", 1, 1, 122),
-	LootItem("cube", 1, 1, 6) //poggers
+	LootItem("cube", 1, 0, 1) //poggers
 };
 
 void onInit(CBlob@ this)
