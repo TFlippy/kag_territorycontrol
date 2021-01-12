@@ -32,8 +32,7 @@ void onInit(CBlob@ this)
 	
 	this.getSprite().PlaySound("Huuu.ogg", 1.0f, 0.8f);
 	
-	CBitStream stream;
-	this.SendCommand(this.getCommandID("reload_head"), stream);
+	this.SendCommand(this.getCommandID("reload_head"));
 }
 
 void onTick(CBlob@ this)
