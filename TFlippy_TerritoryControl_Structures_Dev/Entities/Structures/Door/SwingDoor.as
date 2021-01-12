@@ -110,6 +110,7 @@ void onTick(CBlob@ this)
 			Vec2f direction = Vec2f(1, 0);
 			direction.RotateBy(this.getAngleDegrees());
 			setOpen(this, true, ((pos - other_pos) * direction) < 0.0f);
+			break;
 		}
 	}
 	// close it
