@@ -30,8 +30,6 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-
-	if(!isClient()){return;}
 	f32 camX = this.get_f32("camX");
 	f32 camY = this.get_f32("camY");
 	f32 camZ = this.get_f32("camZ");
