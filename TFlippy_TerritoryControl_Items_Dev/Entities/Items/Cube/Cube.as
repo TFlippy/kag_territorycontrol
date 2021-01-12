@@ -1,3 +1,5 @@
+#define CLIENT_ONLY;
+
 const f32 soundMaxDist = 256.0f;
 
 void onInit(CSprite@ this)
