@@ -365,16 +365,23 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 
 void onDie(CBlob@ this)
 {
-	if(!isClient()){return;}
-	HideParachute(this);
-	this.getSprite().Gib();
-	Vec2f pos = this.getPosition();
-	Vec2f vel = this.getVelocity();
-	//custom gibs
-	string fname = "Crate.png";
-	for (int i = 0; i < 4; i++)
+	if (isServer())
 	{
-		CParticle@ temp = makeGibParticle(fname, pos, vel + getRandomVelocity(90, 1 , 120), 9, 2 + i, Vec2f(16, 16), 2.0f, 20, "Sounds/material_drop.ogg", 0);
+		HideParachute(this);
+		this.getSprite().Gib();
+		Vec2f pos = this.getPosition();
+		Vec2f vel = this.getVelocity();
+		//custom gibs
+		string fname = "Crate.png";
+		for (int i = 0; i < 4; i++)
+		{
+			makeGibParticle(fname, pos, vel + getRandomVelocity(90, 1 , 120), 9, 2 + i, Vec2f(16, 16), 2.0f, 20, "Sounds/material_drop.ogg", 0);
+		}
+	}
+
+	if (isServer() && !this.hasTag("unpacking"))
+	{
+		Unpack(this);
 	}
 }
 
