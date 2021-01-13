@@ -187,12 +187,12 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	
-	if (rand.NextRanged(100) < 50)
+	/*if (rand.NextRanged(100) < 50)
 	{
 		ShopItem@ s = addShopItem(this, "big cuffs", "$shackles$", "shackles", "tie that fool up");
 		AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
 		s.spawnNothing = true;
-	}
+	}8/
 	
 	if (rand.NextRanged(100) < 50)
 	{

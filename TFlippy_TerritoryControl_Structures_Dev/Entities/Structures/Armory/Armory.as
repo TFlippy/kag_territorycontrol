@@ -56,7 +56,7 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
-	{
+	/*{
 		ShopItem@ s = addShopItem(this, "Slavemaster's Kit", "$icon_shackles$", "shackles", "A kit containing shackles, shiny iron ball, elegant striped pants, noisy chains and a slice of cheese.");
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
@@ -66,7 +66,7 @@ void onInit(CBlob@ this)
 		s.buttonheight = 1;
 		
 		s.spawnNothing = true;
-	}
+	}*/
 	{
 		ShopItem@ s = addShopItem(this, "Water Bomb (1)", "$waterbomb$", "mat_waterbombs-1", descriptions[52], true);
 		AddRequirement(s.requirements, "coin", "", "Coins", 30);
