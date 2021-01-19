@@ -35,7 +35,7 @@ void onTick(CBlob@ this)
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
 		{
-			moveVars.walkFactor *= 0.60f;;
+			moveVars.walkFactor *= 0.60f - (true_level * 0.10f);
 			moveVars.jumpFactor *= 0.70f;
 		}	
 		
@@ -48,8 +48,17 @@ void onTick(CBlob@ this)
 			
 				ShakeScreen2(5.0f, 5.0f, this.getPosition());
 				if (getGameTime() % 5 == 0) SetScreenFlash(50, 10, 60, 50);
-			
-				if (XORRandom(500) == 0)
+				
+				if (XORRandom(300) == 0)
+				{
+					if (isClient()) 
+					{
+						this.getSprite().PlaySound("/cough" + XORRandom(5) + ".ogg", 0.6f, this.getSexNum() == 0 ? 1.0f : 2.0f);
+						if (this.isMyPlayer()) ShakeScreen(400, 5, this.getPosition());
+					}
+				}
+				
+				if (XORRandom(400) == 0)
 				{		
 					u8 emote = 0;
 							
