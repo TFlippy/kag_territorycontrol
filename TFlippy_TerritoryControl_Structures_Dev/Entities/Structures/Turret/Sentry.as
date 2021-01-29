@@ -12,7 +12,12 @@ const u32 delay = 90;
 
 void onInit(CBlob@ this)
 {
+	this.Tag("upkeep building");
+	this.set_u8("upkeep cap increase", 0);
+	this.set_u8("upkeep cost", 1);
+	
 	this.Tag("builder always hit");
+	this.Tag("medium weight");
 
 	this.set_f32("pickup_priority", 16.00f);
 	this.getShape().SetRotationsAllowed(false);
@@ -135,7 +140,7 @@ void onTick(CBlob@ this)
 			f32 dist = (b.getPosition() - this.getPosition()).LengthSquared();
 			
 			if (myTeam == 250 && b.get_u8("deity_id") == Deity::foghorn) continue;
-			if (team != myTeam && dist < s_dist && b.hasTag("flesh") && !b.hasTag("dead") && isVisible(this, b))
+			if (team != myTeam && dist < s_dist && (b.hasTag("flesh") || b.hasTag("ruins")) && !b.hasTag("dead") && isVisible(this, b))
 			{
 				s_dist = dist;
 				index = i;
