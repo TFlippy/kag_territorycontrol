@@ -11,7 +11,7 @@ void onInit(CBlob@ this)
 	this.Tag("ignore extractor");
 
 	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 0);
+	this.set_u8("upkeep cap increase", 1);
 	this.set_u8("upkeep cost", 0);
 
 	this.set_TileType("background tile", CMap::tile_wood_back);
@@ -33,7 +33,7 @@ void onInit(CBlob@ this)
 
 	this.set_f32("capture_speed_modifier", 0.80f);
 	
-	//this.set_Vec2f("travel button pos", Vec2f(0.5f, 1));
+	this.set_Vec2f("travel button pos", Vec2f(0.5f, 1));
 	
 	// Respawning & class changing
 	this.Tag("respawn");
@@ -64,7 +64,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_repair$", "InteractionIcons.png", Vec2f(32, 32), 15);
 	
 	{
-		ShopItem@ s = addShopItem(this, "Upgrade to a Fortress", "$icon_upgrade$", "fortress", "Upgrade to a more durable Fortress.\n\n+ Higher inventory capacity\n+ Extra durability\n+ Tunnel travel");
+		ShopItem@ s = addShopItem(this, "Upgrade to a Fortress", "$icon_upgrade$", "fortress", "Upgrade to a more durable Fortress.\n\n+ Higher inventory capacity\n+ Extra durability\n+ Tunnel travel\n+ 1 Upkeep");
 		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 750);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 300);
 		AddRequirement(s.requirements, "coin", "", "Coins", 250);
@@ -92,7 +92,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
-		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, -2.5f), this, SpawnCmd::buildMenu, "Change class", params);
+		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, -2.5f), this, BuildRespawnMenuFor, "Change class");
 				
 		CInventory @inv = caller.getInventory();
 		if(inv is null) return;
