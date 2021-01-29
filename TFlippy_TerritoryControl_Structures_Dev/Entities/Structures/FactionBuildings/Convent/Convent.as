@@ -14,7 +14,7 @@ void onInit(CBlob@ this)
 	this.Tag("blocks spawn");
 	
 	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 50);
+	this.set_u8("upkeep cap increase", 6);
 	this.set_u8("upkeep cost", 0);
 
 	this.set_TileType("background tile", CMap::tile_bplasteel);
@@ -37,7 +37,7 @@ void onInit(CBlob@ this)
 	
 	this.set_f32("capture_speed_modifier", 2.50f);
 	
-	//this.set_Vec2f("travel button pos", Vec2f(0.5f, 0));
+	this.set_Vec2f("travel button pos", Vec2f(0.5f, 0));
 	
 	// Respawning & class changing
 	InitRespawnCommand(this);
@@ -84,7 +84,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
-		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, -2.5f), this, SpawnCmd::buildMenu, "Change class", params);
+		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, -2.5f), this, BuildRespawnMenuFor,"Change class");
 				
 		CInventory @inv = caller.getInventory();
 		if(inv is null) return;
