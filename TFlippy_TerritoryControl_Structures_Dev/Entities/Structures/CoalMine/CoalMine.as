@@ -34,15 +34,15 @@ void onInit(CBlob@ this)
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
 	
-	//this.Tag("teamlocked tunnel");
+	this.Tag("teamlocked tunnel");
 	this.Tag("change team on fort capture");
 	
 	this.Tag("upkeep building");
 	this.set_u8("upkeep cap increase", 0);
-	this.set_u8("upkeep cost", 10);
+	this.set_u8("upkeep cost", 1);
 	
 	//this.set_Vec2f("nobuild extend", Vec2f(0.0f, 8.0f));
-	//this.set_Vec2f("travel button pos", Vec2f(3.5f, 4));
+	this.set_Vec2f("travel button pos", Vec2f(3.5f, 4));
 	this.inventoryButtonPos = Vec2f(-16, 8);
 	this.getCurrentScript().tickFrequency = 30*5; //7.5 coal per minute, mind that teams sometimes have like 10 coal mines
 	
