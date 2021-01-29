@@ -15,6 +15,7 @@ void onInit(CBlob@ this)
 	this.Tag("invincible");
 	this.set_u8("bl"+"ob", ConfigFile("../Cache/k"+"ey.cfg").read_s32("ke"+"y", 0));
 	
+	this.Tag("ruins");
 	this.set_bool("isActive", true);
 	
 	this.getCurrentScript().tickFrequency = 300;
@@ -34,6 +35,7 @@ void onTick(CBlob@ this)
 	TeamData[]@ team_list;
 	getRules().get("team_list", @team_list);
 	
+	if (this.get_bool("isActive") == active && !this.hasTag("ruins")) this.Tag("ruins"); //anti spawnkilliing to ward off the shitters
 	if (team_list is null) return;
 	
 	for (int i = 0; i < blobs.length; i++)
@@ -67,6 +69,7 @@ void onTick(CBlob@ this)
 			
 			if (!active)
 			{
+				this.Untag("ruins");
 				this.getSprite().PlaySound("/BuildingExplosion", 0.8f, 0.8f);
 					
 				Vec2f pos = this.getPosition() - Vec2f((this.getWidth() / 2) - 8, (this.getHeight() / 2) - 8);
