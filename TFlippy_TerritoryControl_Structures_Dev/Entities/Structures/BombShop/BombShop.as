@@ -11,9 +11,9 @@ void onInit(CBlob@ this)
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 
-	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 0);
-	this.set_u8("upkeep cost", 5);
+	//this.Tag("upkeep building");
+	//this.set_u8("upkeep cap increase", 0);
+	//this.set_u8("upkeep cost", 5);
 
 	// this.set_string("required class", "sapper");
 	// this.set_Vec2f("class offset", Vec2f(0, 8));
@@ -275,7 +275,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CPlayer@ ply = callerBlob.getPlayer();
 			if (ply !is null)
 			{
-				tcpr(ply.getUsername() + " has purchased " + name);
+				tcpr("[PBI] " + ply.getUsername() + " has purchased " + name);
 			}
 		
 			string[] spl = name.split("-");
