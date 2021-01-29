@@ -119,7 +119,7 @@ void onTick(CBlob@ this)
 				u8 team = b.getTeamNum();
 				
 				if (myTeam == 250 && b.get_u8("deity_id") == Deity::foghorn) continue;
-				if (team != myTeam && b.hasTag("flesh") && !b.hasTag("dead") && !map.rayCastSolid(this.getPosition(), b.getPosition()) || b.hasTag("ruins") && !map.rayCastSolid(this.getPosition(), b.getPosition()))
+				if (team != myTeam && (b.hasTag("flesh") && !b.hasTag("dead") || b.hasTag("ruins")) && !map.rayCastSolid(this.getPosition(), b.getPosition()))
 				{
 					f32 dist = (b.getPosition() - this.getPosition()).Length();
 					if (dist < s_dist)
