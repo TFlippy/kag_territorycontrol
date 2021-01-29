@@ -138,15 +138,16 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 				{
 					CBlob@[] blobs;
 					getBlobsByTag("faction_base", @blobs);
+					getBlobsByTag("upf_base", @blobs);
 					for (int i = 0; i < blobs.length; i++)
 					{
 						CBlob@ e = blobs[i];
 						Vec2f vector = e.getPosition() - pos;
 						f32 distance = vector.getLength();
-						if(e.getTeamNum() != this.getTeamNum() && distance <= 256 && distance >= 8)
+						if(/*e.getTeamNum() != this.getTeamNum() &&*/distance <= 256 && distance >= 8)
 						{
 							fail = true;
-							if (this.isMyPlayer()) client_AddToChat("There is an enemy faction base near!", SColor(0xff444444));
+							if (this.isMyPlayer()) client_AddToChat("There is a faction base too close!", SColor(0xff444444));
 							break;
 						}
 					}
