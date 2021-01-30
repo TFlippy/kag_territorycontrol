@@ -51,11 +51,8 @@ void onTick(CBlob@ this)
 				
 				if (XORRandom(300) == 0)
 				{
-					if (isClient()) 
-					{
-						this.getSprite().PlaySound("/cough" + XORRandom(5) + ".ogg", 0.6f, this.getSexNum() == 0 ? 1.0f : 2.0f);
-						if (this.isMyPlayer()) ShakeScreen(400, 5, this.getPosition());
-					}
+					this.getSprite().PlaySound("/cough" + XORRandom(5) + ".ogg", 0.6f, this.getSexNum() == 0 ? 1.0f : 2.0f);
+					if (this.isMyPlayer()) ShakeScreen(400, 5, this.getPosition());
 				}
 				
 				if (XORRandom(400) == 0)
