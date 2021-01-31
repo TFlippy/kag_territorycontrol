@@ -594,6 +594,17 @@ void React(CBlob@ this)
 	this.set_u32("next_react", getGameTime() + 15);
 }
 
+void onRender(CSprite@ this)
+{
+	CBlob@ local = getLocalPlayerBlob();
+	CBlob@ b = this.getBlob();
+	if(local.isMyPlayer() && getMap().getBlobAtPosition(getControls().getMouseWorldPos()) is b)
+	{
+		GUI::SetFont("MENU");
+		GUI::DrawText(b.get_string("drawText"), b.getInterpolatedScreenPos() + Vec2f(16,-24), SColor(255,255,50,50).getInterpolated(SColor(255,50,255,50), b.get_f32("percentageToMax")));
+	}
+}
+
 void onTick(CBlob@ this)
 {
 	if (this.hasTag("dead")) return;
@@ -614,8 +625,9 @@ void onTick(CBlob@ this)
 		const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
 		const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
 		
-		this.setInventoryName(this.get_string("inventory_name") + "\n\nPressure: " + Maths::Round(pressure) + " / " + max_pressure + "\nHeat: " + heat);
-				
+		//this.setInventoryName();
+		this.set_string("drawText",this.get_string("inventory_name") + "\n\nPressure: " + Maths::Round(pressure) + " / " + max_pressure + "\nHeat: " + heat);
+		this.set_f32("percentageToMax", pressure/max_pressure);
 		if (isClient())
 		{
 			CSprite@ sprite = this.getSprite();
