@@ -312,7 +312,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	BuildBlock[] page_1;
 	blocks.push_back(page_1);
 	{
-		BuildBlock b(0, "quarters", "$quarters$", "Quarters\n" + descriptions[59] + "\n\nIncreases Upkeep cap by 10.");
+		BuildBlock b(0, "quarters", "$quarters$", "Quarters\n" + descriptions[59]);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 50);
 		b.buildOnGround = true;
 		b.size.Set(40, 24);
@@ -327,7 +327,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[1].push_back(b);
 	}
 	{
-		BuildBlock b(0, "tinkertable", "$tinkertable$", "Mechanist's Workshop\nA place where you can construct various trinkets and advanced machinery. Repairs adjacent vehicles. \n\nCosts 5 Upkeep.");
+		BuildBlock b(0, "tinkertable", "$tinkertable$", "Mechanist's Workshop\nA place where you can construct various trinkets and advanced machinery. Repairs adjacent vehicles.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 70);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
 		// AddRequirement(b.reqs, "blob", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
@@ -336,7 +336,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[1].push_back(b);
 	}
 	{
-		BuildBlock b(0, "armory", "$armory$", "Armory\nA workshop where you can craft cheap equipment. Automatically stores nearby dropped weapons.\n\nCosts 5 Upkeep.");
+		BuildBlock b(0, "armory", "$armory$", "Armory\nA workshop where you can craft cheap equipment. Automatically stores nearby dropped weapons.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 100);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
 		// AddRequirement(b.reqs, "blob", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
@@ -345,7 +345,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[1].push_back(b);
 	}
 	{
-		BuildBlock b(0, "gunsmith", "$gunsmith$", "Gunsmith's Workshop\nA workshop for those who enjoy making holes. Slowly produces bullets.\n\nCosts 5 Upkeep.");
+		BuildBlock b(0, "gunsmith", "$gunsmith$", "Gunsmith's Workshop\nA workshop for those who enjoy making holes. Slowly produces bullets.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 150);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
 		// AddRequirement(b.reqs, "coin", "", "Coins", 75);
@@ -355,7 +355,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[1].push_back(b);
 	}
 	{
-		BuildBlock b(0, "bombshop", "$bombshop$", "Demolitionist's Workshop\nFor those with an explosive personality.\n\nCosts 5 Upkeep.");
+		BuildBlock b(0, "bombshop", "$bombshop$", "Demolitionist's Workshop\nFor those with an explosive personality.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 100);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
 		// AddRequirement(b.reqs, "coin", "", "Coins", 50);
@@ -402,7 +402,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[1].push_back(b);
 	}
 	{
-		BuildBlock b(0, "camp", "$icon_camp$", "Camp\nA basic faction base. Can be upgraded to gain\nspecial functions and more durability.\n\nIncreases Upkeep cap by 15.");
+		BuildBlock b(0, "camp", "$icon_camp$", "Camp\nA basic faction base. Can be upgraded to gain\nspecial functions and more durability.\n\nIncreases Upkeep cap by 1.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 500);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 500);
 		AddRequirement(b.reqs, "coin", "", "Coins", 100);

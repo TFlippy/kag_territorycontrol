@@ -1,4 +1,3 @@
-// Princess brain
 
 #include "Hitters.as";
 #include "HittersTC.as";
@@ -11,7 +10,12 @@ const u32 delay = 90;
 
 void onInit(CBlob@ this)
 {
+	this.Tag("upkeep building");
+	this.set_u8("upkeep cap increase", 0);
+	this.set_u8("upkeep cost", 1);
+	
 	this.Tag("builder always hit");
+	this.Tag("medium weight");
 
 	this.set_f32("pickup_priority", 16.00f);
 	this.getShape().SetRotationsAllowed(false);
@@ -115,7 +119,7 @@ void onTick(CBlob@ this)
 				u8 team = b.getTeamNum();
 				
 				if (myTeam == 250 && b.get_u8("deity_id") == Deity::foghorn) continue;
-				if (team != myTeam && b.hasTag("flesh") && !b.hasTag("dead") && !map.rayCastSolid(this.getPosition(), b.getPosition()))
+				if (team != myTeam && (b.hasTag("flesh") && !b.hasTag("dead") || b.hasTag("ruins")) && !map.rayCastSolid(this.getPosition(), b.getPosition()))
 				{
 					f32 dist = (b.getPosition() - this.getPosition()).Length();
 					if (dist < s_dist)

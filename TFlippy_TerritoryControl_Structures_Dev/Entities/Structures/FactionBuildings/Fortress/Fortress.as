@@ -12,7 +12,7 @@ void onInit(CBlob@ this)
 	this.Tag("blocks spawn");
 	
 	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 15);
+	this.set_u8("upkeep cap increase", 2);
 	this.set_u8("upkeep cost", 0);
 
 	this.set_TileType("background tile", CMap::tile_castle_back);
@@ -65,7 +65,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_repair$", "InteractionIcons.png", Vec2f(32, 32), 15);
 	
 	{
-		ShopItem@ s = addShopItem(this, "Upgrade to a Stronghold", "$icon_upgrade$", "stronghold", "Upgrade to a Stronghold.\n\n+ Larger inventory capacity\n+ Extra durability\n+ Longer capture time\n+ Material pickup");
+		ShopItem@ s = addShopItem(this, "Upgrade to a Stronghold", "$icon_upgrade$", "stronghold", "Upgrade to a Stronghold.\n\n+ Larger inventory capacity\n+ Extra durability\n+ Longer capture time\n+ Material pickup\n+ 1 Upkeep");
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 50);
 		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 30);
 		AddRequirement(s.requirements, "coin", "", "Coins", 700);

@@ -110,7 +110,7 @@ void RenderUpkeepHUD(CBlob@ this)
 	
 	string msg = "";
 		
-	if (upkeep_ratio >= 0.75f) msg += "Your upkeep is too high, build\nmore Quarters, Camps or Fortresses!\n";
+	if (upkeep_ratio >= 0.75f) msg += "Your upkeep is too high, upgrade or\nbuild more Camps!";
 	else msg += "Your upkeep is balanced, therefore\nyour team will receive extra bonuses.";
 	
 	GUI::DrawText(msg, Vec2f(scWidth - 352, 62 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));

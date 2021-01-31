@@ -13,6 +13,10 @@ Random traderRandom(Time());
 
 void onInit(CBlob@ this)
 {
+	this.Tag("upkeep building");
+	this.set_u8("upkeep cap increase", 1);
+	this.set_u8("upkeep cost", 0);
+	
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
 	

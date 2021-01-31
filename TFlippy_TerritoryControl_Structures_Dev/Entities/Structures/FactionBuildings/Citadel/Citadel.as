@@ -13,7 +13,7 @@ void onInit(CBlob@ this)
 	this.Tag("blocks spawn");
 	
 	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 35);
+	this.set_u8("upkeep cap increase", 4);
 	this.set_u8("upkeep cost", 0);
 
 	this.set_TileType("background tile", CMap::tile_biron);
@@ -66,7 +66,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_repair$", "InteractionIcons.png", Vec2f(32, 32), 15);
 	
 	{
-		ShopItem@ s = addShopItem(this, "Upgrade to the Convent", "$icon_upgrade$", "convent", "Upgrade to the powerful faction tier of the Convent.\n\n+ Larger inventory capacity\n+ Extra durability\n+ Increased maximum player health\n+ Longer capture time");
+		ShopItem@ s = addShopItem(this, "Upgrade to the Convent", "$icon_upgrade$", "convent", "Upgrade to the powerful faction tier of the Convent.\n\n+ Larger inventory capacity\n+ Extra durability\n+ Increased maximum player health\n+ Longer capture time\n+ 2 Upkeep");
 		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel", 250);
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 50);
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);

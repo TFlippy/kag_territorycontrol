@@ -11,7 +11,12 @@ const u32 delay = 90;
 
 void onInit(CBlob@ this)
 {
+	this.Tag("upkeep building");
+	this.set_u8("upkeep cap increase", 0);
+	this.set_u8("upkeep cost", 1);
+	
 	this.Tag("builder always hit");
+	this.Tag("heavy weight");
 
 	this.set_f32("pickup_priority", 16.00f);
 	this.getShape().SetRotationsAllowed(false);
