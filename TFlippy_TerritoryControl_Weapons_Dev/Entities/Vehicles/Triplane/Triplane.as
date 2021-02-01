@@ -572,13 +572,15 @@ void onRender(CSprite@ this)
 	}
 	
 	CBlob@ blob = this.getBlob();
+	Vec2f mouseWorld = getControls().getMouseWorldPos();
+	bool mouseOnBlob = (mouseWorld - blob.getPosition()).getLength() < this.getBlob().getRadius();
 	f32 fuel = blob.get_f32("fuel_count");
-	if (fuel <= 0)
+	if (fuel <= 0 && mouseOnBlob)
 	{
 		Vec2f pos = blob.getScreenPos();
 		
 		GUI::SetFont("menu");
-		GUI::DrawTextCentered("This vehicle requires fuel to fly!", Vec2f(pos.x, pos.y + 85 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
+		GUI::DrawTextCentered("Requires fuel!", Vec2f(pos.x, pos.y + 85 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
 		GUI::DrawTextCentered("(Oil, Methane, Fuel)", Vec2f(pos.x, pos.y + 105 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
 	}
 }
