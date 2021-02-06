@@ -7,6 +7,7 @@
 void onInit(CBlob@ this)
 {
 	this.SetFacingLeft(this.getNetworkID() % 2 == 0);
+	this.getSprite().SetZ(-100.0f);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1, Vec2f point2)
