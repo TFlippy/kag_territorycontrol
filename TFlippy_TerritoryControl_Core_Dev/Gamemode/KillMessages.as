@@ -1,6 +1,7 @@
 // SHOW KILL MESSAGES ON CLIENT
 
 #include "Hitters.as";
+#include "HittersTC.as";
 #include "TeamColour.as";
 #include "HoverMessage.as";
 
@@ -138,7 +139,25 @@ class KillFeed
 				case Hitters::ballista: 		hitterIcon = "$killfeed_ballista$"; break;
 
 				case Hitters::boulder:
+				case Hitters::cata_stones:
 				case Hitters::cata_boulder:  	hitterIcon = "$killfeed_boulder$"; break;
+				
+				case Hitters::drill:			hitterIcon = "$killfeed_drill$"; break;
+				case Hitters::saw:				hitterIcon = "$killfeed_saw$"; break;
+				
+				// TC HITTER ICONS
+				case HittersTC::bullet_low_cal:
+				case HittersTC::bullet_high_cal:
+				case HittersTC::railgun_lance:
+				case HittersTC::shotgun:  			hitterIcon = "$killfeed_bullet$"; break;
+				case HittersTC::radiation:  			hitterIcon = "$killfeed_rad$"; break;
+				case HittersTC::magix:  			hitterIcon = "$killfeed_magic$"; break;
+				case HittersTC::poison:  		
+				case HittersTC::disease:			hitterIcon = "$killfeed_poison$"; break;
+				case HittersTC::electric:
+				case HittersTC::forcefield:			hitterIcon = "$killfeed_electric$"; break;
+				case HittersTC::hammer:				hitterIcon = "$killfeed_hammer$"; break;
+				case HittersTC::staff:				hitterIcon = "$killfeed_staff$"; break;
 
 				default: 						hitterIcon = "$killfeed_fall$";
 			}
@@ -193,6 +212,9 @@ void onInit(CRules@ this)
 	AddIconToken("$killfeed_water$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 2);
 	AddIconToken("$killfeed_fire$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 3);
 	AddIconToken("$killfeed_stomp$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 4);
+	
+	AddIconToken("$killfeed_saw$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 5);
+	AddIconToken("$killfeed_drill$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 6);
 
 	AddIconToken("$killfeed_builder$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 8);
 	AddIconToken("$killfeed_axe$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 9);
@@ -207,6 +229,15 @@ void onInit(CRules@ this)
 
 	AddIconToken("$killfeed_arrow$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 16);
 	AddIconToken("$killfeed_ballista$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 17);
+	
+	//TC HITTER ICONS
+	AddIconToken("$killfeed_bullet$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 19);
+	AddIconToken("$killfeed_rad$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 20);
+	AddIconToken("$killfeed_magic$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 21);
+	AddIconToken("$killfeed_poison$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 22);
+	AddIconToken("$killfeed_electric$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 23);
+	AddIconToken("$killfeed_hammer$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 24);
+	AddIconToken("$killfeed_staff$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 25);
 }
 
 void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ killer, u8 customdata)
