@@ -18,6 +18,8 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		{
 			button.SetEnabled(carried.hasTag("forcefeed_always") || canBeForceFed(this));
 		}
+
+		button.offset = Vec2f(0,-16);
 	}
 }
 
