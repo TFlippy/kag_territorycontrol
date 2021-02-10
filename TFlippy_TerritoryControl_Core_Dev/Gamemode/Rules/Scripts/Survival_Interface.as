@@ -167,8 +167,8 @@ void onRenderScoreboard(CRules@ this)
 		GUI::DrawText("- Do not grief or sabotage your team, such as by wasting resources or stealing the leadership or kicking everyone out.", Vec2f(tO, tl.y + 30), white);
 		GUI::DrawText("- Intentionally crashing the server will result in a lengthy ban.", Vec2f(tO, tl.y + 45), white);
 		GUI::DrawText("- Automated spawnkilling and spawnblocking is not allowed - neutrals must be able to leave their spawn.", Vec2f(tO, tl.y + 60), white);
-		GUI::DrawText("- Try not hoard too many slaves, general rule of thumb is to only slave people either for being a murderhobo or annoying.", Vec2f(tO, tl.y + 75), white);
-		GUI::DrawText("- Do not ruin the fun for other team members or the whole server.", Vec2f(tO,tl.y+90), white);
+		//GUI::DrawText("- Try not hoard too many slaves, general rule of thumb is to only slave people either for being a murderhobo or annoying.", Vec2f(tO, tl.y + 75), white);
+		GUI::DrawText("- Do not ruin the fun for other team members or the whole server.", Vec2f(tO,tl.y + 75), white);
 	
 	}
 	
@@ -446,9 +446,9 @@ void onRenderScoreboard(CRules@ this)
 					GUI::DrawText("Wealth", Vec2f(bottomright.x  		- base_offset + 200, topleft.y), white);
 					GUI::DrawText("Recruitment", Vec2f(bottomright.x	- base_offset + 300, topleft.y), white);
 					GUI::DrawText("Murder Tax", Vec2f(bottomright.x 	- base_offset + 450, topleft.y), white);
-					GUI::DrawText("Slavery", Vec2f(bottomright.x 		- base_offset + 550, topleft.y), white);
-					GUI::DrawText("Lockdown", Vec2f(bottomright.x 		- base_offset + 650, topleft.y), white);
-					GUI::DrawText("Land Owned", Vec2f(bottomright.x 	- base_offset + 750, topleft.y), white);
+					//GUI::DrawText("Slavery", Vec2f(bottomright.x 		- base_offset + 550, topleft.y), white);
+					GUI::DrawText("Lockdown", Vec2f(bottomright.x 		- base_offset + 550, topleft.y), white);
+					GUI::DrawText("Land Owned", Vec2f(bottomright.x 	- base_offset + 650, topleft.y), white);
 				}
 
 				topleft.y += stepheight * 0.5f;
@@ -519,9 +519,9 @@ void onRenderScoreboard(CRules@ this)
 						GUI::DrawText(team.wealth + " coins", Vec2f(bottomright.x - base_offset + 200, topleft.y), tempGrey);
 						GUI::DrawText(recOn					, Vec2f(bottomright.x - base_offset + 300, topleft.y), tempGrey);
 						GUI::DrawText(taxOn					, Vec2f(bottomright.x - base_offset + 450, topleft.y), tempGrey);
-						GUI::DrawText(slaOn					, Vec2f(bottomright.x - base_offset + 550, topleft.y), tempGrey);
-						GUI::DrawText(lockOn				, Vec2f(bottomright.x - base_offset + 650, topleft.y), tempGrey);
-						GUI::DrawText(Maths::Round((f32(team.controlled_count) / f32(total_capturables)) * 100.00f) + "%", Vec2f(bottomright.x - base_offset + 750, topleft.y), tempGrey);
+						//GUI::DrawText(slaOn					, Vec2f(bottomright.x - base_offset + 550, topleft.y), tempGrey);
+						GUI::DrawText(lockOn				, Vec2f(bottomright.x - base_offset + 550, topleft.y), tempGrey);
+						GUI::DrawText(Maths::Round((f32(team.controlled_count) / f32(total_capturables)) * 100.00f) + "%", Vec2f(bottomright.x - base_offset + 650, topleft.y), tempGrey);
 					}
 
 				}
