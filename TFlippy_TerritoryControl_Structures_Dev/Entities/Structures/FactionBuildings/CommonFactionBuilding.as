@@ -318,7 +318,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 		const bool base_alarm = this.get_bool("base_alarm");
 	
 		{
-			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 3), "Faction Policies");
+			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(3, 3), "Faction Policies");
 			if (menu !is null)
 			{
 				{
@@ -330,7 +330,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 						params.write_u8(0);
 						params.write_u8(0);
 					
-						CGridButton@ butt = menu.AddButton("$faction_resign_leader$", "Renounce Leadership", this.getCommandID("faction_menu_button"), Vec2f(4, 1), params);
+						CGridButton@ butt = menu.AddButton("$faction_resign_leader$", "Renounce Leadership", this.getCommandID("faction_menu_button"), Vec2f(3, 1), params);
 						butt.hoverText = "Renounce yourself as the leader of this faction, leaving a spot for someone more competent.";
 						butt.SetEnabled(isLeader);
 					}
@@ -339,7 +339,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 						params.write_u8(0);
 						params.write_u8(1);
 					
-						CGridButton@ butt = menu.AddButton("$faction_become_leader$", "Claim Leadership", this.getCommandID("faction_menu_button"), Vec2f(4, 1), params);
+						CGridButton@ butt = menu.AddButton("$faction_become_leader$", "Claim Leadership", this.getCommandID("faction_menu_button"), Vec2f(3, 1), params);
 						butt.hoverText = "Claim leadership of this faction, giving yourself access to various management tools.";
 						butt.SetEnabled(team_data.leader_name == "");
 					}
@@ -378,7 +378,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 					butt.SetEnabled(isLeader);
 				}
 				
-				{
+				/*{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
 					params.write_u8(4);
@@ -387,7 +387,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 					CGridButton@ butt = menu.AddButton("$faction_crate_" + !storage_enabled + "$", (storage_enabled ? "Disable" : "Enable") + " Remote Storage", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " remote storage.";
 					butt.SetEnabled(isLeader);
-				}
+				}*/
 				
 				{
 					CBitStream params;
@@ -400,7 +400,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 					butt.SetEnabled(isLeader);
 				}
 				
-				{
+				/*{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
 					params.write_u8(6);
@@ -409,7 +409,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 					CGridButton@ butt = menu.AddButton("$faction_slavery_" + !slavery_enabled + "$", (storage_enabled ? "Disable" : "Enable") + " Slavery", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " usage of shackles on other players by your team members.";
 					butt.SetEnabled(isLeader);
-				}
+				}*/
 				
 				
 				
@@ -451,7 +451,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 			int yOffset = ((players.length - 1) * 24) - 48;
 			// print("" + yOffset);
 		
-			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(200.00f + 40.00f, yOffset), this, Vec2f(6, players.length), "Faction Member Management");
+			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(200.00f + 40.00f, yOffset), this, Vec2f(5, players.length), "Faction Member Management");
 			if (menu !is null)
 			{
 				{
@@ -475,7 +475,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 							butt.SetEnabled(isLeader || ply.getUsername() == myPly.getUsername());
 						}
 						
-						{
+						/*{
 							CBitStream params;
 							params.write_u8(1);
 							params.write_u16(myPly.getNetworkID());
@@ -484,7 +484,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 							CGridButton@ butt = menu.AddButton("$faction_enslave$", "Enslave " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
 							butt.hoverText = "Enslave " + ply.getUsername() + ".";
 							butt.SetEnabled(isLeader);
-						}
+						}*/
 					}
 				}
 			}
