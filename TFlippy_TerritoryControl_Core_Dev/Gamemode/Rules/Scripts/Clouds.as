@@ -2,7 +2,7 @@
 // Cloud controller made by Vamist
 // Its a bit messy, will update in the future. It got messy after a wave of random bugs
 // like smoke screen clouds appeared.
-// 
+//
 //
 // Clouds are synced
 // Server will send a command when its time to spawn in a new cloud
@@ -18,7 +18,7 @@
 // -> More cloud sprites (?)
 // -> Allow variable editing through .cfg (?)
 // -> Colour changes based on rain (?)
-// -> Instead of clearing vertex array, edit last values (less resizing) 
+// -> Instead of clearing vertex array, edit last values (less resizing)
 // -> Todo: turn it into SMesh to help with performance (will do after next 3d update)
 //
 // END
@@ -40,7 +40,7 @@ SColor CLOUDS_COL = color_white; // colour that changes over time
 Vec2f SPAWN_VARIATION_HEIGHT = Vec2f(0,0); // x = highest, y = lowest
 
 f32 FRAME_TIME = 0.0f; // last frame time
-f32 CAMERA_X = 0.0f; 
+f32 CAMERA_X = 0.0f;
 f32 CAMERA_Y = 0.0f;
 
 u16 CLEAR_WIDTH_POS = 0;
@@ -53,13 +53,13 @@ void onInit(CRules@ this)
 {
 
 #ifdef STAGING
-	error("Staging build detected, removing clouds.as for now :)");
+	error("Staging build detected, removing clouds.as");
 	this.RemoveScript("clouds.as");
 	return;
 #endif
 
 	this.addCommandID("new_cloud"); // still register command so its in sync with server
-	
+
 	if (v_fastrender) // then remove script if we dont want clouds
 	{
 		this.RemoveScript("clouds.as");
@@ -95,7 +95,7 @@ void onReload(CRules@ this)
 }
 //
 
-void onTick(CRules@ this) 
+void onTick(CRules@ this)
 {
 	if (CLEAR_WIDTH_POS == 0) // Required here because map is null in onInit and onRestart
 	{
@@ -125,7 +125,7 @@ void onTick(CRules@ this)
 			cbs.write_u8(RAND.NextRanged(5));
 			cbs.write_u8(RAND.NextRanged(20));
 
-			this.SendCommand(this.getCommandID("new_cloud"), cbs); 
+			this.SendCommand(this.getCommandID("new_cloud"), cbs);
 		}
 	}
 
@@ -133,7 +133,7 @@ void onTick(CRules@ this)
 	{
 		FRAME_TIME = 0;
 		UpdateCloudColor();
-		
+
 		for (int a = 0; a < C_CLOUDS.size(); a++)
 		{
 			if (!C_CLOUDS[a].moveCloud()) // return's false if its out the map
@@ -154,8 +154,8 @@ void RenderClouds(int id)
 	FRAME_TIME += getRenderApproximateCorrectionFactor();  // We are using this because ApproximateCorrectionFactor is lerped
 
 	Vec2f camPos = getCamera().getPosition(); // Safe to say we won't be rendering if we don't have a camera
-	CAMERA_X = camPos.x; 
-	CAMERA_Y = camPos.y; 
+	CAMERA_X = camPos.x;
+	CAMERA_Y = camPos.y;
 
 	Driver@ driver = getDriver();
 	SCREEN_WIDTH = driver.getScreenWidth();
@@ -168,9 +168,9 @@ void RenderClouds(int id)
 	}
 
 	if (V_CLOUDS.size() == 0) { return; }
-	
+
 	Render::SetAlphaBlend(true); // alpha required to look more 'cloudy'
-	Render::SetZBuffer(true, true); // required to show up being tiles 
+	Render::SetZBuffer(true, true); // required to show up being tiles
 	Render::RawQuads("cloudsall.png", V_CLOUDS);
 
 	V_CLOUDS.clear(); // clear after rendering
@@ -202,7 +202,7 @@ class Clouds
 	f32 SpriteXPos = 0;
 	u8 ZLevel = 0; // the higher this is, the lower the z level;
 
-	Clouds (Vec2f position, u32 creationTick, u8 spriteType, u8 zLayer) 
+	Clouds (Vec2f position, u32 creationTick, u8 spriteType, u8 zLayer)
 	{
 		GoalPos = position;
 		OldPos = position;
@@ -234,7 +234,7 @@ class Clouds
 	}
 
 	void SendToRenderer() // Checks that our cloud is on screen then passes it to render
-	{	
+	{
 		Vec2f topLeft = Vec2f(Maths::Lerp(OldPos.x, GoalPos.x, FRAME_TIME), Maths::Lerp(OldPos.y, GoalPos.y, FRAME_TIME));
 		OldPos = topLeft;
 
@@ -243,7 +243,7 @@ class Clouds
 
 		Vec2f botRight = topLeft + Vec2f(50, 50) + Vec2f(150, 150)*(ZLevel/20.0f);
 
-		if (!isOnScreen(topLeft, botRight)) 
+		if (!isOnScreen(topLeft, botRight))
 		{
 			return;
 		}
@@ -262,20 +262,20 @@ class Clouds
 		BotRight = driver.getScreenPosFromWorldPos(BotRight);
 		const Vec2f center = Vec2f((TopLeft + BotRight) / 2);
 
-		/*CParticle@ p = ParticlePixelUnlimited(driver.getWorldPosFromScreenPos(center), Vec2f(0,0), color_white, true); 
+		/*CParticle@ p = ParticlePixelUnlimited(driver.getWorldPosFromScreenPos(center), Vec2f(0,0), color_white, true);
 		if (p !is null) // DEBUG CODE, USEFUL FOR SEEING THE CENTRE
 		{
 			p.gravity = Vec2f(0,0);
 		}*/
 
-		if (dontBotherChecking(center)) 
+		if (dontBotherChecking(center))
 		{
 			return false;
 		}
 
-		if (isVectorOnScreen(TopLeft) || 
-			isVectorOnScreen(BotRight) || 
-			isVectorOnScreen(Vec2f(TopLeft.x, BotRight.y)) || 
+		if (isVectorOnScreen(TopLeft) ||
+			isVectorOnScreen(BotRight) ||
+			isVectorOnScreen(Vec2f(TopLeft.x, BotRight.y)) ||
 			isVectorOnScreen(Vec2f(BotRight.x, TopLeft.y)) ||
 			isVectorOnScreen(center))
 		{
@@ -304,12 +304,12 @@ class Clouds
 		const f32 posx = pos.x;
 		const f32 posy = pos.y;
 
-		if (posx > 0 && posx < SCREEN_WIDTH && 
+		if (posx > 0 && posx < SCREEN_WIDTH &&
 			posy > 0 && posy < SCREEN_HEIGHT)
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
 }
@@ -322,7 +322,7 @@ void UpdateCloudColor()
 {
 	f32 worldTime = (getMap().getDayTime() * 256.0f) * 2.0f;
 
-	if (worldTime > 255) 
+	if (worldTime > 255)
 	{
 		worldTime -= (worldTime % 256) * 2.0f;
 	}
