@@ -9,6 +9,22 @@
 
 const string required_space = "required space";
 
+const string[] packnames = { 
+	"catapult",
+	"bomber",
+	"ballista",
+	"mounted_bow",
+	"longboat",
+	"warboat",
+	"steamtank",
+	"gatlinggun",
+	"mortar",
+	"howitzer",
+	"triplane",
+	"armoredbomber",
+	"rocketlauncher"
+};
+	
 void onInit(CBlob@ this)
 {
 	this.addCommandID("unpack");
@@ -36,56 +52,57 @@ void onInit(CBlob@ this)
 		string packed = this.get_string("packed");
 
 		// GIANT HACK!!!
-		if (packed == "catapult" || packed == "bomber" || packed == "ballista" || packed == "mounted_bow" || packed == "longboat" || packed == "warboat" || packed == "steamtank" || packed == "gatlinggun" || packed == "mortar" || packed == "howitzer")	 // HACK:
+		for (int i = 0; i < 13; i++)
 		{
-			CSpriteLayer@ icon = this.getSprite().addSpriteLayer("icon", "/MiniIcons.png" , 16, 16, this.getTeamNum(), -1);
-			if (icon !is null)
-			{
-				Animation@ anim = icon.addAnimation("display", 0, false);
-				anim.AddFrame(frame);
-
-				icon.SetOffset(Vec2f(-2, 1));
-				icon.SetRelativeZ(1);
-			}
-			this.getSprite().SetAnimation("label");
-
-			// help
-			const string iconToken = "$crate_" + packed + "$";
-			AddIconToken("$crate_" + packed + "$", "MiniIcons.png", Vec2f(16, 16), frame);
-			SetHelp(this, "help use", "", iconToken + "Unpack " + packed + "   $KEY_E$", "", 4);
-		}
-		else
-		{
-			u8 newFrame = 0;
-
-			if (packed == "kitchen")
-				newFrame = FactoryFrame::kitchen;
-			if (packed == "nursery")
-				newFrame = FactoryFrame::nursery;
-			if (packed == "tunnel")
-				newFrame = FactoryFrame::tunnel;
-			if (packed == "healing")
-				newFrame = FactoryFrame::healing;
-			if (packed == "factory")
-				newFrame = FactoryFrame::factory;
-			if (packed == "storage")
-				newFrame = FactoryFrame::storage;
-
-			if (newFrame > 0)
+			if (packed == packnames[i])	 // HACK:
 			{
 				CSpriteLayer@ icon = this.getSprite().addSpriteLayer("icon", "/MiniIcons.png" , 16, 16, this.getTeamNum(), -1);
 				if (icon !is null)
 				{
-					icon.SetFrame(newFrame);
+					Animation@ anim = icon.addAnimation("display", 0, false);
+					anim.AddFrame(frame);
+
 					icon.SetOffset(Vec2f(-2, 1));
 					icon.SetRelativeZ(1);
 				}
 				this.getSprite().SetAnimation("label");
+
+				// help
+				const string iconToken = "$crate_" + packed + "$";
+				AddIconToken("$crate_" + packed + "$", "MiniIcons.png", Vec2f(16, 16), frame);
+				SetHelp(this, "help use", "", iconToken + "Unpack " + packed + "   $KEY_E$", "", 4);
 			}
+			else
+			{
+				u8 newFrame = 0;
 
-		}	 //END OF HACK
+				if (packed == "kitchen")
+					newFrame = FactoryFrame::kitchen;
+				if (packed == "nursery")
+					newFrame = FactoryFrame::nursery;
+				if (packed == "tunnel")
+					newFrame = FactoryFrame::tunnel;
+				if (packed == "healing")
+					newFrame = FactoryFrame::healing;
+				if (packed == "factory")
+					newFrame = FactoryFrame::factory;
+				if (packed == "storage")
+					newFrame = FactoryFrame::storage;
+
+				if (newFrame > 0)
+				{
+					CSpriteLayer@ icon = this.getSprite().addSpriteLayer("icon", "/MiniIcons.png" , 16, 16, this.getTeamNum(), -1);
+					if (icon !is null)
+					{
+						icon.SetFrame(newFrame);
+						icon.SetOffset(Vec2f(-2, 1));
+						icon.SetRelativeZ(1);
+					}
+					this.getSprite().SetAnimation("label");
+				}
+			}	 //END OF HACK
+		}
 	}
-
 	const uint unpackSecs = 3;
 	this.set_u32("unpack secs", unpackSecs);
 	this.set_u32("unpack time", 0);
