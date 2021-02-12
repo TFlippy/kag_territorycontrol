@@ -108,58 +108,54 @@ class KillFeed
 
 			switch (message.hitter)
 			{
-				case Hitters::fall:     		hitterIcon = "$killfeed_fall$"; break;
-
-				case Hitters::drown:     		hitterIcon = "$killfeed_water$"; break;
+				case Hitters::fall:			hitterIcon = "$killfeed_fall$"; break;
+				case Hitters::drown:		hitterIcon = "$killfeed_water$"; break;
+				case Hitters::stomp:		hitterIcon = "$killfeed_stomp$"; break;
+				case Hitters::builder:  	hitterIcon = "$killfeed_builder$"; break;
+				case Hitters::spikes: 		hitterIcon = "$killfeed_spikes$"; break;
+				case Hitters::sword:    	hitterIcon = "$killfeed_sword$"; break;
+				case Hitters::shield:   	hitterIcon = "$killfeed_shield$"; break;
+				case Hitters::keg: 			hitterIcon = "$killfeed_keg$"; break;
+				case Hitters::arrow:    	hitterIcon = "$killfeed_arrow$"; break;
+				case Hitters::ballista: 	hitterIcon = "$killfeed_ballista$"; break;
+				case Hitters::mine:         hitterIcon = "$killfeed_mine$"; break;
+				case Hitters::mine_special: hitterIcon = "$killfeed_mine$"; break;
+				case Hitters::drill:		hitterIcon = "$killfeed_drill$"; break;
+				case Hitters::saw:			hitterIcon = "$killfeed_saw$"; break;
 
 				case Hitters::fire:
-				case Hitters::burn:     		hitterIcon = "$killfeed_fire$"; break;
-
-				case Hitters::stomp:    		hitterIcon = "$killfeed_stomp$"; break;
-
-				case Hitters::builder:  		hitterIcon = "$killfeed_builder$"; break;
-
-				case Hitters::spikes:  			hitterIcon = "$killfeed_spikes$"; break;
-
-				case Hitters::sword:    		hitterIcon = "$killfeed_sword$"; break;
-
-				case Hitters::shield:   		hitterIcon = "$killfeed_shield$"; break;
+				case Hitters::burn:     	hitterIcon = "$killfeed_fire$"; break;
 
 				case Hitters::bomb:
 				case Hitters::bomb_arrow:
-				case Hitters::explosion:     	hitterIcon = "$killfeed_bomb$"; break;
-
-				case Hitters::keg:     			hitterIcon = "$killfeed_keg$"; break;
-
-				case Hitters::mine:             hitterIcon = "$killfeed_mine$"; break;
-				case Hitters::mine_special:     hitterIcon = "$killfeed_mine$"; break;
-
-				case Hitters::arrow:    		hitterIcon = "$killfeed_arrow$"; break;
-
-				case Hitters::ballista: 		hitterIcon = "$killfeed_ballista$"; break;
+				case Hitters::explosion:    hitterIcon = "$killfeed_bomb$"; break;
 
 				case Hitters::boulder:
 				case Hitters::cata_stones:
-				case Hitters::cata_boulder:  	hitterIcon = "$killfeed_boulder$"; break;
-				
-				case Hitters::drill:			hitterIcon = "$killfeed_drill$"; break;
-				case Hitters::saw:				hitterIcon = "$killfeed_saw$"; break;
-				
+				case Hitters::cata_boulder: hitterIcon = "$killfeed_boulder$"; break;
+
+
+
 				// TC HITTER ICONS
+				case HittersTC::hammer:			hitterIcon = "$killfeed_hammer$"; break;
+				case HittersTC::staff:			hitterIcon = "$killfeed_staff$"; break;
+				case HittersTC::radiation:  	hitterIcon = "$killfeed_rad$"; break;
+				case HittersTC::magix:  		hitterIcon = "$killfeed_magic$"; break;
+
+				case HittersTC::electric:
+				case HittersTC::forcefield:		hitterIcon = "$killfeed_electric$"; break;
+
+				case HittersTC::poison:
+				case HittersTC::disease:		hitterIcon = "$killfeed_poison$"; break;
+
 				case HittersTC::bullet_low_cal:
 				case HittersTC::bullet_high_cal:
 				case HittersTC::railgun_lance:
-				case HittersTC::shotgun:  			hitterIcon = "$killfeed_bullet$"; break;
-				case HittersTC::radiation:  			hitterIcon = "$killfeed_rad$"; break;
-				case HittersTC::magix:  			hitterIcon = "$killfeed_magic$"; break;
-				case HittersTC::poison:  		
-				case HittersTC::disease:			hitterIcon = "$killfeed_poison$"; break;
-				case HittersTC::electric:
-				case HittersTC::forcefield:			hitterIcon = "$killfeed_electric$"; break;
-				case HittersTC::hammer:				hitterIcon = "$killfeed_hammer$"; break;
-				case HittersTC::staff:				hitterIcon = "$killfeed_staff$"; break;
+				case HittersTC::shotgun:		hitterIcon = "$killfeed_bullet$"; break;
 
-				default: 						hitterIcon = "$killfeed_fall$";
+				default:
+					hitterIcon = "$killfeed_fall$";
+				break;
 			}
 
 			//draw hitter icon
@@ -219,7 +215,7 @@ void onInit(CRules@ this)
 	AddIconToken("$killfeed_water$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 2);
 	AddIconToken("$killfeed_fire$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 3);
 	AddIconToken("$killfeed_stomp$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 4);
-	
+
 	AddIconToken("$killfeed_saw$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 5);
 	AddIconToken("$killfeed_drill$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 6);
 
@@ -236,7 +232,7 @@ void onInit(CRules@ this)
 
 	AddIconToken("$killfeed_arrow$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 16);
 	AddIconToken("$killfeed_ballista$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 17);
-	
+
 	//TC HITTER ICONS
 	AddIconToken("$killfeed_bullet$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 19);
 	AddIconToken("$killfeed_rad$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 20);
@@ -255,7 +251,7 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ killer, u8 customdata)
 		if (this.get("KillFeed", @feed) && feed !is null)
 		{
 			KillMessage message(victim, killer, customdata);
-			
+
 			if (killer is null){
 				CBlob@ victimblob = victim.getBlob();
 				if(victimblob !is null){
@@ -267,7 +263,7 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ killer, u8 customdata)
 					}
 				}
 			}
-			
+
 			feed.killMessages.push_back(message);
 		}
 
