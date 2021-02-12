@@ -45,7 +45,7 @@ bool draw_tier = false;
 
 void onInit(CRules@ this)
 {
-	onRestart(this);	
+	onRestart(this);
 	Driver@ driver = getDriver();
 	//driver.RemoveShader("hq2x");
 	/*driver.AddShader("palette", 1001.0f);
@@ -72,7 +72,7 @@ void onRestart(CRules@ this)
 	CNet@ net = getNet();
 	CMap@ map = getMap();
 	serverIP = net.joined_ip;
-	
+
 	mapName = map is null ? "Blame vamist, error" : getMap().getMapName();
 }
 
@@ -111,31 +111,31 @@ void onRenderScoreboard(CRules@ this)
 	}
 
 	f32 y_offset = 0;
-	
+
 	// Server Info
 	{
 		f32 width = 200;
 		f32 height = 120;
-		
+
 		GUI::SetFont("menu");
 
 
 		string title =  "";
 		string mapname = "";
-		
+
 		Vec2f dim;
 		GUI::GetTextDimensions(serverName, dim);
 		if (dim.x + 15 > width) width = dim.x + 25;
 
 		GUI::GetTextDimensions(mapName, dim);
 		if (dim.x + 15 > width) width = dim.x + 25;
-	
+
 		const Vec2f tl = Vec2f(100, 60);
 		const Vec2f br = Vec2f(width, height) + tl;
 		Vec2f mid = Vec2f(width * 0.50f, 0) + tl;
 
 		y_offset = tl.x + width;//required otherwise the rules tab overlaps us
-		
+
 		GUI::DrawFramedPane(tl, br);
 
 		mid.y += 20;
@@ -147,10 +147,10 @@ void onRenderScoreboard(CRules@ this)
 		mid.y += 20;
 		GUI::DrawTextCentered(getTranslatedString("Match time: {TIME}").replace("{TIME}", "" + timestamp((getRules().exists("match_time") ? getRules().get_u32("match_time") : getGameTime())/getTicksASecond())), mid, white);
 	}
-	
+
 	const f32 stepheight = 20;
 	const f32 playerList_yOffset = (sortedplayers.length + 3.5) * stepheight;
-	
+
 	// Server rules
 	{
 		const f32 width = getScreenWidth() - 100 - y_offset - 10;
@@ -169,20 +169,20 @@ void onRenderScoreboard(CRules@ this)
 		GUI::DrawText("- Automated spawnkilling and spawnblocking is not allowed - neutrals must be able to leave their spawn.", Vec2f(tO, tl.y + 60), white);
 		//GUI::DrawText("- Try not hoard too many slaves, general rule of thumb is to only slave people either for being a murderhobo or annoying.", Vec2f(tO, tl.y + 75), white);
 		GUI::DrawText("- Do not ruin the fun for other team members or the whole server.", Vec2f(tO,tl.y + 75), white);
-	
+
 	}
-	
+
 	// player scoreboard
 	{
-		
+
 		Vec2f topleft(100, 190);
 		Vec2f bottomright(getScreenWidth() - 100, topleft.y + playerList_yOffset);
-		
-		
+
+
 		GUI::DrawFramedPane(topleft, bottomright);
-			
+
 		y_offset = bottomright.y;
-			
+
 		//offset border
 
 		topleft.x += stepheight;
@@ -226,7 +226,7 @@ void onRenderScoreboard(CRules@ this)
 
 		CControls@ controls = getControls();
 		const Vec2f mousePos = controls.getMouseScreenPos();
-		
+
 		//draw players
 		for (u8 i = 0; i < sortedplayers.length; i++)
 		{
@@ -234,8 +234,8 @@ void onRenderScoreboard(CRules@ this)
 			if (p is null) continue;
 
 			bool playerHover = mousePos.y > topleft.y + 20 && mousePos.y < topleft.y + 40;
-			
-			
+
+
 			topleft.y += stepheight;
 			bottomright.y = topleft.y + stepheight;
 			const Vec2f lineoffset = Vec2f(0, -2);
@@ -255,7 +255,7 @@ void onRenderScoreboard(CRules@ this)
 			{
 				playercolour = grey2;
 			}
-			
+
 			if (playerHover)
 			{
 				customCol = white;
@@ -263,12 +263,12 @@ void onRenderScoreboard(CRules@ this)
 				tempGrey = white;
 			}
 			//End
-			
+
 			//Fancy under line
 			GUI::DrawLine2D(Vec2f(topleft.x, bottomright.y + 1) + lineoffset, Vec2f(bottomright.x, bottomright.y + 1) + lineoffset, lBlack);
 			GUI::DrawLine2D(Vec2f(topleft.x, bottomright.y) + lineoffset, bottomright + lineoffset, SColor(playercolour));
 			//End
-			
+
 			//Icon
 			string tex = "";
 			u16 frame = 0;
@@ -289,7 +289,7 @@ void onRenderScoreboard(CRules@ this)
 			//End
 
 
-			
+
 
 			if(getScreenWidth() < 1461)
 			{
@@ -395,7 +395,7 @@ void onRenderScoreboard(CRules@ this)
 		TeamData[]@ team_list;
 
 		this.get("team_list", @team_list);
-		
+
 		if (team_list !is null)
 		{
 			u8 maxTeams = team_list.length;
@@ -404,18 +404,18 @@ void onRenderScoreboard(CRules@ this)
 			{
 				if (team_list[i].player_count > 0) team_len++;
 			}
-		
+
 			if (team_len > 0)
 			{
 				const f32 stepheight = 20;
 				const f32 base_offset = 850;
-				
+
 				Vec2f topleft(100, 200 + playerList_yOffset);
 				Vec2f bottomright(getScreenWidth() - 100, topleft.y + ((team_len + 3.5) * stepheight));
 				GUI::DrawFramedPane(topleft, bottomright);
-					
+
 				y_offset = bottomright.y;
-					
+
 				//offset border
 				topleft.x += stepheight;
 				bottomright.x -= stepheight;
@@ -455,37 +455,37 @@ void onRenderScoreboard(CRules@ this)
 
 				CControls@ controls = getControls();
 				Vec2f mousePos = controls.getMouseScreenPos();
-				
+
 				const u16 total_capturables = this.get_u16("total_capturables");
-				
+
 				for (u32 i = 0; i < team_list.length; i++)
 				{
 					TeamData@ team = team_list[i];
 					if (team.player_count == 0) continue;
-					
+
 					CTeam@ cTeam = this.getTeam(i);
 
 					if (team is null) continue;
-					
+
 					bool hover = mousePos.y > topleft.y + 20 && mousePos.y < topleft.y + 40;
-					
+
 
 					topleft.y += stepheight;
 					bottomright.y = topleft.y + stepheight;
 
 					const Vec2f lineoffset = Vec2f(0, -2);
 
-				
+
 
 					SColor tempGrey = grey;
 					SColor color = teamColourArray[i];
-					
+
 					if (hover)
 					{
 						tempGrey = white;
 						color = white;
 					}
-					
+
 					GUI::DrawLine2D(Vec2f(topleft.x, bottomright.y + 1) + lineoffset, Vec2f(bottomright.x, bottomright.y + 1) + lineoffset, lBlack);
 					GUI::DrawLine2D(Vec2f(topleft.x, bottomright.y) + lineoffset, bottomright + lineoffset, color);
 
@@ -528,35 +528,35 @@ void onRenderScoreboard(CRules@ this)
 			}
 		}
 	}
-	
+
 	// Discord Button
 	{
 		f32 width = 100;
 		f32 height = 40;
-		
+
 		const string text = "Go to Vamist's Discord Server";
-		
+
 		Vec2f dim;
 		GUI::GetTextDimensions(text, dim);
-	
+
 		width = dim.x + 20;
-	
+
 		Vec2f tl = Vec2f(getScreenWidth() - 100 - width, y_offset + 10);
 		Vec2f br = Vec2f(getScreenWidth() - 100, tl.y + height);
-		
+
 		CControls@ controls = getControls();
 		Vec2f mousePos = controls.getMouseScreenPos();
-		
+
 		bool hover = mousePos.x > tl.x && mousePos.x < br.x && mousePos.y > tl.y && mousePos.y < br.y;
-		
+
 		if (hover)
 		{
 			GUI::DrawButton(tl, br);
-			
+
 			if (controls.isKeyJustPressed(KEY_LBUTTON))
 			{
 				Sound::Play("option");
-			
+
 				OpenWebsite("https://discord.gg/ZSazrXz");
 				// Engine::AcceptWebsiteOpen(true);
 				// Menu::CloseAllMenus();
@@ -566,38 +566,38 @@ void onRenderScoreboard(CRules@ this)
 		{
 			GUI::DrawPane(tl, br, 0xffcfcfcf);
 		}
-		
+
 		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
 	}
-	
+
 	// Blog Button
 	{
 		f32 width = 100;
 		f32 height = 40;
-		
+
 		const string text = "TFlippy's Patreon";
-		
+
 		Vec2f dim;
 		GUI::GetTextDimensions(text, dim);
-	
+
 		width = dim.x + 20;
-	
+
 		Vec2f tl = Vec2f(getScreenWidth() - 340 - width, y_offset + 10);
 		Vec2f br = Vec2f(getScreenWidth() - 340, tl.y + height);
-		
+
 		CControls@ controls = getControls();
 		Vec2f mousePos = controls.getMouseScreenPos();
-		
+
 		bool hover = mousePos.x > tl.x && mousePos.x < br.x && mousePos.y > tl.y && mousePos.y < br.y;
-		
+
 		if (hover)
 		{
 			GUI::DrawButton(tl, br);
-			
+
 			if (controls.isKeyJustPressed(KEY_LBUTTON))
 			{
 				Sound::Play("option");
-			
+
 				OpenWebsite("https://www.patreon.com/tflippy");
 				// Engine::AcceptWebsiteOpen(true);
 				// Menu::CloseAllMenus();
@@ -607,38 +607,38 @@ void onRenderScoreboard(CRules@ this)
 		{
 			GUI::DrawPane(tl, br, 0xffcfcfcf);
 		}
-		
+
 		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
 	}
-	
+
 	// GitHub Button
 	{
 		f32 width = 100;
 		f32 height = 40;
-		
+
 		const string text = "GitHub Repository";
-		
+
 		Vec2f dim;
 		GUI::GetTextDimensions(text, dim);
-	
+
 		width = dim.x + 20;
-	
+
 		Vec2f tl = Vec2f(getScreenWidth() - 500 - width, y_offset + 10);
 		Vec2f br = Vec2f(getScreenWidth() - 500, tl.y + height);
-		
+
 		CControls@ controls = getControls();
 		Vec2f mousePos = controls.getMouseScreenPos();
-		
+
 		bool hover = mousePos.x > tl.x && mousePos.x < br.x && mousePos.y > tl.y && mousePos.y < br.y;
-		
+
 		if (hover)
 		{
 			GUI::DrawButton(tl, br);
-			
+
 			if (controls.isKeyJustPressed(KEY_LBUTTON))
 			{
 				Sound::Play("option");
-			
+
 				OpenWebsite("https://github.com/TFlippy/kag_territorycontrol");
 				// Engine::AcceptWebsiteOpen(true);
 				// Menu::CloseAllMenus();
@@ -648,14 +648,14 @@ void onRenderScoreboard(CRules@ this)
 		{
 			GUI::DrawPane(tl, br, 0xffcfcfcf);
 		}
-		
+
 		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
 	}
 
 	CControls@ controls = getControls();
 	Vec2f mousePos = controls.getMouseScreenPos();
 
-	
+
 	if(hovered_accolade > -1) drawHoverExplanation(hovered_accolade, hovered_age, hovered_tier, mousePos + Vec2f(0,30));
 }
 
@@ -669,7 +669,7 @@ void drawHoverExplanation(int hovered_accolade, int hovered_age, int hovered_tie
 	}
 
 	string desc = getTranslatedString(
-			accolade_description[hovered_accolade] 
+			accolade_description[hovered_accolade]
 
 	);
 
@@ -689,73 +689,80 @@ void drawHoverExplanation(int hovered_accolade, int hovered_age, int hovered_tie
 }
 
 string getRank(string &in username, SColor &out col, CPlayer@ p)
-{	
+{
+
+	// Note for anybody in the future:
+	// Usernames are lower case
+	// To get the hash of your username, do:
+	// print('username'.getHash()+''); in rcon locally
+
 	switch(username.getHash())
 	{
-		case -739620667://vamist
+		case -739620667: // vamist
 		{
 			col = SColor(255, 102, 255, 147);
 			return "Server Host";
 		}
 		break;
 
-		case -1006374661://tflippy
+		case -1006374661: // tflippy
 		{
 			col = SColor(255, 247, 255, 102);
 			return "TC Creator";
 		}
 		break;
 
-		case 2037779103://digga
+		case 2037779103: // digga
 		{
 			col = SColor(255,255,100,100);
 			return "Community Manager";
 		}
 
-		case 916202166://pirate-rob
+		case 916202166: // pirate-rob
 		{
 			col = SColor(255, 117, 166, 244);
 			return "RoS Creator";
 		}
 
-		case 1793967571://merser433
-		case -1980129081://goldenguy
-		case -1959624089://koi_
-		case 1002491121://jammer312
-		case -210526304://mrhobo
+		case 1793967571: // merser433
+		case -1980129081: // goldenguy
+		case -1959624089: // koi_
+		case 1002491121: // jammer312
+		case -210526304: // mrhobo
 		{
 			col = SColor(255, 95, 151, 239);
 			return "TC Developer";
 		}
 		break;
 
-		case -1913766845://cesar0
-		case -445244992://sylw
-		case 306188315://sjd360
-		case 494034411://turtlecake
-		case -608852120://hobey
-		case 926613433://blackguy123
-		case -1384627824://oolmbalol
+		case -1913766845: // cesar0
+		case -445244992: // sylw
+		case 306188315: // sjd360
+		case 494034411: // turtlecake
+		case -608852120: // hobey
+		case 926613433: // blackguy123
+		case -1384627824: // oolmbalol
+		case -1483665587: // zable
 		{
 			col = SColor(255, 247, 156, 44);
 			return "TC Contributor";
 		}
 		break;
 
-		case 498824156://gokke
-		case -1528101978://ollimarrex
-		case 1931891399://sniper2001
+		case 498824156: // gokke
+		case -1528101978: // ollimarrex
+		case 1931891399: // sniper2001
 		{
 			col = SColor(255, 244, 122, 66);
 			return "Super Administrator";
 		}
 
-		case -1913960806://geti
-		case 1613635087://mm
-		case -702206699://flieslikeabrick
-		case 1839286352://furai
-		case -1618040870://jrgp
-		case 745727592://asu
+		case -1913960806: // geti
+		case 1613635087: // mm
+		case -702206699: // flieslikeabrick
+		case 1839286352: // furai
+		case -1618040870: // jrgp
+		case 745727592: // asu
 		{
 			col = SColor(255, 196, 86, 247);
 			return "KAG Developer";
