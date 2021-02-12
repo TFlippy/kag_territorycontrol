@@ -108,20 +108,20 @@ class KillFeed
 
 			switch (message.hitter)
 			{
-				case Hitters::fall:			hitterIcon = "$killfeed_fall$"; break;
+				case Hitters::fall:		 hitterIcon = "$killfeed_fall$"; break;
 				case Hitters::drown:		hitterIcon = "$killfeed_water$"; break;
 				case Hitters::stomp:		hitterIcon = "$killfeed_stomp$"; break;
 				case Hitters::builder:  	hitterIcon = "$killfeed_builder$"; break;
-				case Hitters::spikes: 		hitterIcon = "$killfeed_spikes$"; break;
+				case Hitters::spikes: 	  hitterIcon = "$killfeed_spikes$"; break;
 				case Hitters::sword:    	hitterIcon = "$killfeed_sword$"; break;
 				case Hitters::shield:   	hitterIcon = "$killfeed_shield$"; break;
-				case Hitters::keg: 			hitterIcon = "$killfeed_keg$"; break;
+				case Hitters::keg: 		 hitterIcon = "$killfeed_keg$"; break;
 				case Hitters::arrow:    	hitterIcon = "$killfeed_arrow$"; break;
 				case Hitters::ballista: 	hitterIcon = "$killfeed_ballista$"; break;
 				case Hitters::mine:         hitterIcon = "$killfeed_mine$"; break;
 				case Hitters::mine_special: hitterIcon = "$killfeed_mine$"; break;
 				case Hitters::drill:		hitterIcon = "$killfeed_drill$"; break;
-				case Hitters::saw:			hitterIcon = "$killfeed_saw$"; break;
+				case Hitters::saw:		  hitterIcon = "$killfeed_saw$"; break;
 
 				case Hitters::fire:
 				case Hitters::burn:     	hitterIcon = "$killfeed_fire$"; break;
@@ -137,13 +137,13 @@ class KillFeed
 
 
 				// TC HITTER ICONS
-				case HittersTC::hammer:			hitterIcon = "$killfeed_hammer$"; break;
-				case HittersTC::staff:			hitterIcon = "$killfeed_staff$"; break;
+				case HittersTC::hammer:		 hitterIcon = "$killfeed_hammer$"; break;
+				case HittersTC::staff:		  hitterIcon = "$killfeed_staff$"; break;
 				case HittersTC::radiation:  	hitterIcon = "$killfeed_rad$"; break;
 				case HittersTC::magix:  		hitterIcon = "$killfeed_magic$"; break;
 
 				case HittersTC::electric:
-				case HittersTC::forcefield:		hitterIcon = "$killfeed_electric$"; break;
+				case HittersTC::forcefield:	 hitterIcon = "$killfeed_electric$"; break;
 
 				case HittersTC::poison:
 				case HittersTC::disease:		hitterIcon = "$killfeed_poison$"; break;
