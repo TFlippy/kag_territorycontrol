@@ -10,6 +10,16 @@
 [![Discord Chat](https://img.shields.io/discord/361255623456849923?label=Discord&logo=discord&logoColor=ffffff&labelColor=7289DA&color=2c2f33)]()
 
 
+## How to contribute
+There is a type of 'DRM', but it's extremely basic and designed to stop kids from re-hosting.
+If you any amount of programming knowledge, you can find a way to bypass it.
+
+With that out the way:
+- Talk to the community about what you plan to change and why
+- Keep code style consistent <a href="https://github.com/transhumandesign/kag-base/blob/master/CONTRIBUTING.md">(Check this out for KAG's coding style)</a>
+- Any PR should focus on one thing, and only that thing
+- Every PR should include a change list (this makes it easier for us to review & make a change log)
+
 <h2>Credits</h2>
 <ul>
   <li><b>TFlippy</b> - Project management, scripting, spriting, sounds, mapping</li>
