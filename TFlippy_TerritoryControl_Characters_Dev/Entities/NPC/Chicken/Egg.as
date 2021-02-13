@@ -1,8 +1,8 @@
 
 const int grow_time = 50 * getTicksASecond();
 
-//const int MAX_CHICKENS_TO_HATCH = 5;
-//const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
+const int MAX_CHICKENS_TO_HATCH = 15;
+const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
 
 void onInit(CBlob@ this)
 {
@@ -20,7 +20,7 @@ void onTick(CBlob@ this)
 {
 	if (isServer() && this.getTickSinceCreated() > grow_time)
 	{
-		/*int chickenCount = 0;
+		int chickenCount = 0;
 		CBlob@[] blobs;
 		getMap().getBlobsInRadius(this.getPosition(), CHICKEN_LIMIT_RADIUS, @blobs);
 		for (uint step = 0; step < blobs.length; ++step)
@@ -30,9 +30,9 @@ void onTick(CBlob@ this)
 			{
 				chickenCount++;
 			}
-		}*/
+		}
 
-		//if (chickenCount < MAX_CHICKENS_TO_HATCH)
+		if (chickenCount < MAX_CHICKENS_TO_HATCH)
 		{
 			this.SendCommand(this.getCommandID("hatch"));
 		}
