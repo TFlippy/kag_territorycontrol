@@ -26,6 +26,7 @@ void ManageCursors( CBlob@ this )
 		}
 		else {
 			getHUD().SetCursorImage("Entities/Characters/Knight/KnightCursor.png", Vec2f(32,32));
+			getHUD().SetCursorOffset( Vec2f(-22, -22) );
 		}
 	}
 }
@@ -60,6 +61,8 @@ void onRender( CSprite@ this )
 	DrawCoinsOnHUD( blob, coins, tl, slotsSize-2 );
 
 	// draw class icon
-	GUI::DrawIcon( iconsFilename, 1, Vec2f(16, 16), Vec2f(10, 10), 1.0f);
+	int team_num = blob.getTeamNum();
+	if (team_num > 6) team_num = 7;
+	GUI::DrawIcon( iconsFilename, 1, Vec2f(16, 16), Vec2f(10, 10), 1.0f, team_num);
 }
 
