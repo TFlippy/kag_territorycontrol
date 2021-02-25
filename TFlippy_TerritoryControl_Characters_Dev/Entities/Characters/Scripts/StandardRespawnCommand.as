@@ -37,17 +37,10 @@ bool canChangeClass(CBlob@ this, CBlob@ blob)
 // default classes
 void InitClasses(CBlob@ this)
 {
-	AddIconToken("$builder_class_icon$", "ClassIcons.png", Vec2f(32, 32), 0);
-	AddIconToken("$knight_class_icon$", "ClassIcons.png", Vec2f(32, 32), 1);
-	AddIconToken("$archer_class_icon$", "ClassIcons.png", Vec2f(32, 32), 2);
-	// AddIconToken("$sapper_class_icon$", "ClassIcons.png", Vec2f(32, 32), 5);
-	
 	AddIconToken("$change_class$", "/GUI/InteractionIcons.png", Vec2f(32, 32), 12, 2);
-	
 	addPlayerClass(this, "Builder", "$builder_class_icon$", "builder", "Build ALL the towers.");
 	addPlayerClass(this, "Knight", "$knight_class_icon$", "knight", "Hack and Slash.");
 	addPlayerClass(this, "Archer", "$archer_class_icon$", "archer", "The Ranged Advantage.");
-	// addPlayerClass(this, "Sapper", "$sapper_class_icon$", "sapper", "Sacrifice yourself to Geti.");
 }
 
 void BuildRespawnMenuFor(CBlob@ this, CBlob @caller)
@@ -67,6 +60,11 @@ void BuildRespawnMenuFor(CBlob@ this, CBlob @caller)
 
 void buildSpawnMenu(CBlob@ this, CBlob@ caller)
 {
+	int team_num = caller.getTeamNum();
+	if (team_num > 6) team_num = 7;
+	AddIconToken("$builder_class_icon$", "ClassIcons.png", Vec2f(32, 32), 0, team_num);
+	AddIconToken("$knight_class_icon$", "ClassIcons.png", Vec2f(32, 32), 1, team_num);
+	AddIconToken("$archer_class_icon$", "ClassIcons.png", Vec2f(32, 32), 2, team_num);
 	BuildRespawnMenuFor(this, caller);
 }
 
