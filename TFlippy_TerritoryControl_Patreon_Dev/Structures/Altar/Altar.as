@@ -33,7 +33,8 @@ void onInit(CSprite@ this)
 void onInit(CBlob@ this)
 {
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
-
+	this.set_TileType("background tile", CMap::tile_castle_back);
+	
 	if (!this.exists("deity_id")) this.set_u8("deity_id", Deity::none);
 	
 	if (this.getName() == "altar")
