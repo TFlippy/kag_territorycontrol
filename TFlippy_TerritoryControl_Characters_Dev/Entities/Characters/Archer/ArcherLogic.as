@@ -984,6 +984,13 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 // arrow pick menu
 void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu @gridmenu)
 {
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+	AddIconToken("$Arrow$", "Entities/Characters/Archer/ArcherIcons.png", Vec2f(16, 32), 0, teamnum);
+	AddIconToken("$WaterArrow$", "Entities/Characters/Archer/ArcherIcons.png", Vec2f(16, 32), 1, teamnum);
+	AddIconToken("$FireArrow$", "Entities/Characters/Archer/ArcherIcons.png", Vec2f(16, 32), 2, teamnum);
+	AddIconToken("$BombArrow$", "Entities/Characters/Archer/ArcherIcons.png", Vec2f(16, 32), 3, teamnum);
+	
 	if (arrowTypeNames.length == 0)
 	{
 		return;
