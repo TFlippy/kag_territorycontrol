@@ -39,33 +39,39 @@
 const string blocks_property = "blocks";
 const string inventory_offset = "inventory offset";
 
-void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
+void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num)
 {
 	AddIconToken("$forge$", "Forge.png", Vec2f(24, 24), 0);
-	AddIconToken("$tinkertable$", "TinkerTable.png", Vec2f(40, 24), 0);
+	AddIconToken("$tinkertable$", "TinkerTable.png", Vec2f(40, 24), 0, team_num);
 	AddIconToken("$icon_lamppost$", "LampPost.png", Vec2f(8, 24), 0);
 	AddIconToken("$icon_ironanvil$", "IronAnvil.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_workshop$", "Building.png", Vec2f(40, 24), 0);
-	AddIconToken("$ironlocker$", "IronLocker.png", Vec2f(16, 24), 0);
-	AddIconToken("$woodchest$", "WoodChest.png", Vec2f(16, 16), 0);
+	AddIconToken("$ironlocker$", "IronLocker.png", Vec2f(16, 24), 0, team_num);
+	AddIconToken("$woodchest$", "WoodChest.png", Vec2f(16, 16), 0, team_num);
 	AddIconToken("$hedgehog$", "Hedgehog.png", Vec2f(16, 16), 0);
 	AddIconToken("$barbedwire$", "BarbedWire.png", Vec2f(16, 16), 0);
-	AddIconToken("$teamlamp$", "TeamLamp.png", Vec2f(8, 8), 0);
-	AddIconToken("$industriallamp$", "IndustrialLamp.png", Vec2f(8, 8), 0);
-	AddIconToken("$bombshop$", "BombShop.png", Vec2f(40, 24), 0);
-	AddIconToken("$icon_drillrig$", "DrillRig.png", Vec2f(24, 24), 0);
-	AddIconToken("$icon_siren$", "Siren.png", Vec2f(24, 32), 0);
-	AddIconToken("$icon_textsign$", "TextSign_Large.png", Vec2f(64, 16), 0);
+	AddIconToken("$teamlamp$", "TeamLamp.png", Vec2f(8, 8), 0, team_num);
+	AddIconToken("$industriallamp$", "IndustrialLamp.png", Vec2f(8, 8), 0, team_num);
+	AddIconToken("$bombshop$", "BombShop.png", Vec2f(40, 24), 0, team_num);
+	AddIconToken("$buildershop$", "BuilderShop.png", Vec2f(40, 24), 0, team_num);
+	AddIconToken("$quarters$", "Quarters.png", Vec2f(40, 24), 2, team_num);
+	AddIconToken("$storage$", "Storage.png", Vec2f(40, 24), 3, team_num);
+	AddIconToken("$icon_drillrig$", "DrillRig.png", Vec2f(24, 24), 0, team_num);
+	AddIconToken("$icon_siren$", "Siren.png", Vec2f(24, 32), 0, team_num);
+	AddIconToken("$icon_textsign$", "TextSign_Large.png", Vec2f(64, 16), 0, team_num);
 	AddIconToken("$icon_ironplatform$", "IronPlatform.png", Vec2f(8, 8), 0);
-	AddIconToken("$armory$", "Armory.png", Vec2f(40, 24), 0);
-	AddIconToken("$gunsmith$", "Gunsmith.png", Vec2f(40, 24), 0);
+	AddIconToken("$armory$", "Armory.png", Vec2f(40, 24), 0, team_num);
+	AddIconToken("$gunsmith$", "Gunsmith.png", Vec2f(40, 24), 0, team_num);
 	AddIconToken("$wood_triangle$", "WoodTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$stone_triangle$", "StoneTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$concrete_triangle$", "ConcreteTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$iron_triangle$", "IronTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$stone_halfblock$", "StoneHalfBlock.png", Vec2f(8, 8), 0);
 	AddIconToken("$iron_halfblock$", "IronHalfBlock.png", Vec2f(8, 8), 0);
-	AddIconToken("$iron_door$", "1x1IronDoor.png", Vec2f(16, 8), 0);
+	AddIconToken("$iron_door$", "1x1IronDoor.png", Vec2f(16, 8), 0, team_num);
+	AddIconToken("$stone_door$", "1x1StoneDoor.png", Vec2f(16, 8), 0, team_num);
+	AddIconToken("$woodendoor$", "1x1WoodDoor.png", Vec2f(16, 8), 0, team_num);
+	AddIconToken("$trap_block$", "TrapBlock.png", Vec2f(8, 8), 0, team_num);
 	AddIconToken("$iron_block$", "World.png", Vec2f(8, 8), CMap::tile_iron);
 	AddIconToken("$glass_block$", "World.png", Vec2f(8, 8), CMap::tile_glass);
 	AddIconToken("$bglass_block$", "World.png", Vec2f(8, 8), CMap::tile_bglass);
@@ -77,52 +83,52 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$ground_block$", "World.png", Vec2f(8, 8), 16);
 	AddIconToken("$sand_block$", "World.png", Vec2f(8, 8), 220);
 	AddIconToken("$plasteel_door$", "1x1PlasteelDoor.png", Vec2f(16, 8), 0);
-	AddIconToken("$ironladder$", "IronLadder_Icon.png", Vec2f(16, 16), 0);
+	AddIconToken("$ironladder$", "IronLadder_Icon.png", Vec2f(16, 16), 0, team_num);
 	AddIconToken("$concrete_block$", "World.png", Vec2f(8, 8), CMap::tile_concrete);
 	AddIconToken("$bconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_bconcrete);
 	AddIconToken("$reinforcedconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_reinforcedconcrete);
-	AddIconToken("$patreonshop$", "PatreonShop.png", Vec2f(40, 40), 0);
+	AddIconToken("$patreonshop$", "PatreonShop.png", Vec2f(40, 40), 0, team_num);
 	
-	AddIconToken("$icon_conveyor$", "Conveyor.png", Vec2f(8, 8), 0);
-	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 0);
-	AddIconToken("$icon_filter$", "Filter.png", Vec2f(24, 8), 0);
-	AddIconToken("$icon_launcher$", "Launcher.png", Vec2f(8, 8), 0);
-	AddIconToken("$icon_jumper$", "Jumper.png", Vec2f(8, 8), 0);
-	AddIconToken("$icon_autoforge$", "AutoForge.png", Vec2f(24, 32), 0);
-	AddIconToken("$icon_inductionfurnace$", "InductionFurnace.png", Vec2f(40, 32), 0);
-	AddIconToken("$icon_assembler$", "Assembler.png", Vec2f(40, 24), 0);
-	AddIconToken("$icon_hopper$", "Hopper.png", Vec2f(24, 24), 0);
-	AddIconToken("$icon_fetcher$", "Fetcher.png", Vec2f(24, 24), 0);
-	AddIconToken("$icon_extractor$", "Extractor.png", Vec2f(16, 24), 0);
-	AddIconToken("$icon_filterextractor$", "FilterExtractor.png", Vec2f(24, 24), 0);
-	AddIconToken("$icon_grinder$", "Grinder.png", Vec2f(40, 24), 0);
-	AddIconToken("$icon_stonepile$", "StonePile.png", Vec2f(24, 40), 3);
-	AddIconToken("$icon_packer$", "Packer.png", Vec2f(24, 16), 0);
-	AddIconToken("$icon_compactor$", "Compactor.png", Vec2f(24, 32), 0);
+	AddIconToken("$icon_conveyor$", "Conveyor.png", Vec2f(8, 8), 0, team_num);
+	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 0, team_num);
+	AddIconToken("$icon_filter$", "Filter.png", Vec2f(24, 8), 0, team_num);
+	AddIconToken("$icon_launcher$", "Launcher.png", Vec2f(8, 8), 0, team_num);
+	AddIconToken("$icon_jumper$", "Jumper.png", Vec2f(8, 8), 0, team_num);
+	AddIconToken("$icon_autoforge$", "AutoForge.png", Vec2f(24, 32), 0, team_num);
+	AddIconToken("$icon_inductionfurnace$", "InductionFurnace.png", Vec2f(40, 32), 0, team_num);
+	AddIconToken("$icon_assembler$", "Assembler.png", Vec2f(40, 24), 0, team_num);
+	AddIconToken("$icon_hopper$", "Hopper.png", Vec2f(24, 24), 0, team_num);
+	AddIconToken("$icon_fetcher$", "Fetcher.png", Vec2f(24, 24), 0, team_num);
+	AddIconToken("$icon_extractor$", "Extractor.png", Vec2f(16, 24), 0, team_num);
+	AddIconToken("$icon_filterextractor$", "FilterExtractor.png", Vec2f(24, 24), 0, team_num);
+	AddIconToken("$icon_grinder$", "Grinder.png", Vec2f(40, 24), 0, team_num);
+	AddIconToken("$icon_stonepile$", "StonePile.png", Vec2f(24, 40), 3, team_num);
+	AddIconToken("$icon_packer$", "Packer.png", Vec2f(24, 16), 0, team_num);
+	AddIconToken("$icon_compactor$", "Compactor.png", Vec2f(24, 32), 0, team_num);
 	AddIconToken("$icon_inserter$", "Inserter.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_floater$", "Floater.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_treecapitator$", "Treecapitator.png", Vec2f(24, 8), 0);	
 	AddIconToken("$icon_mithrilreactor$", "MithrilReactor.png", Vec2f(24, 24), 0);	
-	AddIconToken("$icon_metaldetector$", "MetalDetector.png", Vec2f(24, 24), 0);	
-	AddIconToken("$icon_chickenassembler$", "ChickenAssembler.png", Vec2f(56, 24), 0);
-	AddIconToken("$icon_securitystation$", "SecurityStation.png", Vec2f(24, 24), 0);	
+	AddIconToken("$icon_metaldetector$", "MetalDetector.png", Vec2f(24, 24), 0, team_num);	
+	AddIconToken("$icon_chickenassembler$", "ChickenAssembler.png", Vec2f(56, 24), 0, team_num);
+	AddIconToken("$icon_securitystation$", "SecurityStation.png", Vec2f(24, 24), 0, team_num);	
 	AddIconToken("$icon_ceilinglamp$", "CeilingLamp.png", Vec2f(16, 8), 0);	
-	AddIconToken("$icon_beamtower$", "BeamTower.png", Vec2f(32, 96), 0);	
+	AddIconToken("$icon_beamtower$", "BeamTower.png", Vec2f(32, 96), 0, team_num);	
 	AddIconToken("$icon_beamtowermirror$", "BeamTowerMirror.png", Vec2f(16, 24), 0);	
 	
-	AddIconToken("$icon_1x5blastdoor$", "1x5BlastDoor.png", Vec2f(8, 40), 0);
+	AddIconToken("$icon_1x5blastdoor$", "1x5BlastDoor.png", Vec2f(8, 40), 0, team_num);
 	AddIconToken("$icon_barricade$", "Barricade.png", Vec2f(8, 24), 0);
 	
 	AddIconToken("$icon_altar$", "Altar.png", Vec2f(24, 32), 0);
 	
 	AddIconToken("$markettable$", "MarketTable.png", Vec2f(16, 16), 3);
-	AddIconToken("$constructionyard$", "ConstructionYardIcon.png", Vec2f(16, 16), 0);
-	AddIconToken("$icon_camp$", "Camp.png", Vec2f(80, 24), 0);
-	AddIconToken("$icon_oiltank$","OilTank.png",Vec2f(32, 16),0);
-	AddIconToken("$icon_gastank$","GasTank.png",Vec2f(16, 24),0);
+	AddIconToken("$constructionyard$", "ConstructionYardIcon.png", Vec2f(16, 16), 0, team_num);
+	AddIconToken("$icon_camp$", "Camp.png", Vec2f(80, 24), 0, team_num);
+	AddIconToken("$icon_oiltank$","OilTank.png",Vec2f(32, 16),0, team_num);
+	AddIconToken("$icon_gastank$","GasTank.png",Vec2f(16, 24),0, team_num);
 	AddIconToken("$icon_druglab$","DrugLab.png",Vec2f(32, 40),0);
-	AddIconToken("$icon_chemlab$","ChemLab.png",Vec2f(48, 24),0);
-	AddIconToken("$icon_banner$","ClanBanner.png",Vec2f(16, 32),0);
+	AddIconToken("$icon_chemlab$","ChemLab.png",Vec2f(48, 24),0, team_num);
+	AddIconToken("$icon_banner$","ClanBanner.png",Vec2f(16, 32),0, team_num);
 	AddIconToken("$icon_nursery$","Nursery.png",Vec2f(40, 32),0);
 	AddIconToken("$icon_smallsign$","sign.png",Vec2f(16, 16),0);
 	// AddIconToken("$icon_cargocontainer$", "CargoContainer.png", Vec2f(64, 24), 0);
@@ -209,7 +215,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "wooden_door", "$wooden_door$", "Wooden Door\nPlace next to walls");
+		BuildBlock b(0, "wooden_door", "$woodendoor$", "Wooden Door\nPlace next to walls");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 30);
 		blocks[0].push_back(b);
 	}
