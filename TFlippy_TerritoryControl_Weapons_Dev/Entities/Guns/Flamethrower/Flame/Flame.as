@@ -91,3 +91,12 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		}
 	}
 }
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	if (customData == Hitters::water)
+	{
+		if (isServer()) this.server_Die();
+	}
+
+	return damage;
+}
