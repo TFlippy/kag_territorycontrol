@@ -7,8 +7,8 @@ string[] particles =
 	"SmallSmoke2.png",
 	"SmallExplosion1.png",
 	"SmallExplosion2.png",
-	"SmallExplosion3.png"
-	"SmallFire1.png"
+	"SmallExplosion3.png",
+	"SmallFire1.png",
 	"SmallFire2.png"
 };
 
