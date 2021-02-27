@@ -14,6 +14,33 @@ void Take(CBlob@ this, CBlob@ blob)
 	{
 		if ((this.getDamageOwnerPlayer() is blob.getPlayer()) || getGameTime() > blob.get_u32("autopick time"))
 		{
+			bool add = true;
+			if (blob.hasTag("ammo")) //only add ammo if we have something that can use it.
+			{
+				CBlob@[] items;
+				if (this.getCarriedBlob() != null)
+				{
+					items.push_back(this.getCarriedBlob());
+				}
+				CInventory@ inv = this.getInventory();
+				for (int i = 0; i < inv.getItemsCount(); i++)
+				{
+					CBlob@ item = inv.getItem(i);
+					items.push_back(item);
+				}
+				for(int i = 0; i < items.size(); i++)
+				{
+					CBlob@ item = items[i];
+					string ammoType = item.get_string("gun_ammoItem");
+					if(ammoType == blob.getName())
+					{
+						add = true;
+						break;
+					}
+					add = false;
+				}
+			}
+			if(!add){return;}
 			if (!this.server_PutInInventory(blob))
 			{
 				// we couldn't fit it in
