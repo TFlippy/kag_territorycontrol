@@ -40,7 +40,7 @@ void onTick(CBlob@ this)
 	
 	if (!flying)
 	{
-		if (this.isKeyPressed(key_action3) && !isknocked)
+		if (this.isKeyJustPressed(key_up) && !isknocked && !this.isOnGround())
 		{
 			Vec2f dir = this.getAimPos() - this.getPosition();
 			dir.Normalize();
