@@ -17,6 +17,7 @@ void Take(CBlob@ this, CBlob@ blob)
 			bool add = true;
 			if (blob.hasTag("ammo")) //only add ammo if we have something that can use it.
 			{
+				add = false;
 				CBlob@[] items;
 				if (this.getCarriedBlob() != null)
 				{
@@ -37,7 +38,6 @@ void Take(CBlob@ this, CBlob@ blob)
 						add = true;
 						break;
 					}
-					add = false;
 				}
 			}
 			if(!add){return;}
