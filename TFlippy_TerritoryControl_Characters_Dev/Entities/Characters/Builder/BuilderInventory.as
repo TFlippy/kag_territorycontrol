@@ -48,6 +48,13 @@ void onInit(CInventory@ this)
 	CBlob@ blob = this.getBlob();
 	if(blob is null) return;
 
+	if(!blob.exists(blocks_property))
+	{
+		BuildBlock[][] blocks;
+		addCommonBuilderBlocks(blocks);
+		blob.set(blocks_property, blocks);
+	}
+
 	if(!blob.exists(inventory_offset))
 	{
 		blob.set_Vec2f(inventory_offset, Vec2f(0, 256));
@@ -77,15 +84,6 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 {
 	CBlob@ blob = this.getBlob();
 	if(blob is null) return;
-	
-	if(!blob.exists(blocks_property))
-	{
-		BuildBlock[][] blocks;
-		int team_num = blob.getTeamNum();
-		if (team_num > 6) team_num = 7;
-		addCommonBuilderBlocks(blocks, team_num);
-		blob.set(blocks_property, blocks);
-	}
 
 	BuildBlock[][]@ blocks;
 	blob.get(blocks_property, @blocks);
