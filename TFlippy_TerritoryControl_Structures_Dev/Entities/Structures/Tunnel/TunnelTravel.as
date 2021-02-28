@@ -26,8 +26,6 @@ void onInit(CBlob@ this)
 	this.addCommandID("server travel to");
 	this.Tag("travel tunnel");
 
-	for (int i = 0; i < 8 * 4; ++i) AddIconToken(generate_token(i / 4, i / 2 % 2 == 1, i % 2 == 1), icon_path, frame_dims, i);
-
 	if (!this.exists("travel button pos"))
 	{
 		this.set_Vec2f("travel button pos", Vec2f_zero);
@@ -36,6 +34,9 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
+	int team_num = caller.getTeamNum();
+	if (team_num > 6) team_num = 0; // icon coloration
+	for (int i = 0; i < 8 * 4; ++i) AddIconToken(generate_token(i / 4, i / 2 % 2 == 1, i % 2 == 1), icon_path, frame_dims, i, team_num);
 	// if (this.isOverlapping(caller) && this.getTeamNum() < getRules().getTeamsNum() && this.hasTag("travel tunnel") && (this.hasTag("teamlocked tunnel") ? this.getTeamNum() == caller.getTeamNum() : true))
 	if (this.isOverlapping(caller) && this.hasTag("travel tunnel") && (this.getTeamNum() >= 100 ? (caller.getTeamNum() >= 100) : (caller.getTeamNum() == this.getTeamNum())))
 	{

@@ -13,6 +13,7 @@ void onInit(CBlob@ this)
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 
+	AddIconToken("$filled_bucket$", "bucket.png", Vec2f(16, 16), 1);
 	// this.Tag("upkeep building");
 	// this.set_u8("upkeep cap increase", 0);
 	// this.set_u8("upkeep cost", 5);
@@ -21,6 +22,7 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().mapCollisions = false;
 
 	this.Tag("builder always hit");
+	this.Tag("change team on fort capture");
 	
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
 
@@ -42,6 +44,12 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 10);
 		
 		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Filled Bucket", "$filled_bucket$", "filled_bucket", Descriptions::filled_bucket, false);
+		s.spawnNothing = true;
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 10);
+		AddRequirement(s.requirements, "coin", "", "Coins", 10);
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Sponge", "$sponge$", "sponge", descriptions[53], false);
@@ -163,6 +171,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						mat.setPosition(callerBlob.getPosition());
 					}
 				}
+			}
+			else if (name == "filled_bucket")
+			{
+				CBlob@ b = server_CreateBlobNoInit("bucket");
+				b.setPosition(callerBlob.getPosition());
+				b.server_setTeamNum(callerBlob.getTeamNum());
+				b.Tag("_start_filled");
+				b.Init();
+				callerBlob.server_Pickup(b);
 			}
 			else
 			{

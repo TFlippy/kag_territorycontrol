@@ -21,6 +21,7 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().mapCollisions = false;
 
 	this.Tag("builder always hit");
+	this.Tag("change team on fort capture");
 	
 	this.getCurrentScript().tickFrequency = 300;
 	

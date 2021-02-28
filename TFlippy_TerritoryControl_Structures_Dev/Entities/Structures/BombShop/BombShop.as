@@ -22,6 +22,7 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().mapCollisions = false;
 
 	this.Tag("builder always hit");
+	this.Tag("change team on fort capture");
 
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_castle_back);
 

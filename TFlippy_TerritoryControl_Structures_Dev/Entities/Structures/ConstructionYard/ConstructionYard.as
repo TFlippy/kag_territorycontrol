@@ -15,6 +15,8 @@ const s32 cost_ballista_ammo_upgrade_gold = 60;
 void onInit(CBlob@ this)
 {
 	this.Tag("builder always hit");
+	this.Tag("change team on fort capture");
+
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
 

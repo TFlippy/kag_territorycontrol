@@ -219,6 +219,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 60;
 
 	this.Tag("builder always hit");
+	this.Tag("change team on fort capture");
 	this.addCommandID("set");
 
 	this.set_u8("crafting",0);
