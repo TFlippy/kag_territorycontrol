@@ -63,7 +63,7 @@ void onTick(CRules@ this)
 				break;
 			}
 		}
-		map.SetBorderColourTop(SColor(has_solid_tiles ? 0x000000 : 0x000000));
+		map.SetBorderColourTop(0x000000);
 	}
 }
 
