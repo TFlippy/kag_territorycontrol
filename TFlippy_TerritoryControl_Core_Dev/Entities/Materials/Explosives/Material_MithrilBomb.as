@@ -67,6 +67,19 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
 	}
 }
 
+void onThisRemoveFromInventory(CBlob@ this, CBlob@ missile) //cruise missile compatibility
+{
+	if (missile.getName() == "cruisemissile")
+	{
+		this.setVelocity(missile.getVelocity() * 0.4f);
+		if (missile.getVelocity().Length() > 1.0f)
+		{
+			this.Tag("DoExplode");
+			this.server_Die();
+		}
+	}
+}
+
 void DoExplosion(CBlob@ this)
 {
 	CRules@ rules = getRules();
