@@ -16,7 +16,7 @@ void onInit(CBlob@ this)
 	this.set_Vec2f("explosion_offset", Vec2f(0, 0));
 	
 	this.set_u8("stack size", 1);
-	this.set_f32("bomb angle", 90);
+	//this.set_f32("bomb angle", 90);
 	
 	this.Tag("map_damage_dirt");
 	this.Tag("explosive");
@@ -56,8 +56,21 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
 	if (vellen >= 8.0f) 
 	{
 		this.Tag("DoExplode");
-		this.set_f32("bomb angle", -this.getOldVelocity().Angle());
+		//this.set_f32("bomb angle", -this.getOldVelocity().Angle());
 		this.server_Die();
+	}
+}
+
+void onThisRemoveFromInventory(CBlob@ this, CBlob@ missile) //cruise missile compatibility
+{
+	if (missile.getName() == "cruisemissile")
+	{
+		this.setVelocity(missile.getVelocity() * 0.4f);
+		if (missile.getVelocity().Length() > 1.0f)
+		{
+			this.Tag("DoExplode");
+			this.server_Die();
+		}
 	}
 }
 
@@ -72,7 +85,7 @@ void DoExplosion(CBlob@ this)
 	
 	f32 random = XORRandom(16);
 	f32 modifier = 1 + Maths::Log(this.getQuantity());
-	f32 angle = 180 + this.get_f32("bomb angle");
+	f32 angle = 180 - this.getOldVelocity().Angle();
 	f32 vellen = Maths::Min(this.getVelocity().Length(), 8);
 	
 	// print("Modifier: " + modifier + "; Quantity: " + this.getQuantity());
