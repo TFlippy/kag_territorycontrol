@@ -72,7 +72,12 @@ void onInit(CBlob@ this)
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
 		items.push_back(i);
 	}
-	
+	{
+		AssemblerItem i("sar", 4, "UPF Semiautomatic Rifle (4)");
+		AddRequirement(i.reqs, "blob", "mat_steelingot", "Steel Ingot", 25);
+		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 12);
+		items.push_back(i);
+	}
 	
 	{
 		AssemblerItem i("mat_sammissile", 4, "SAM Missile (4)");
@@ -97,7 +102,7 @@ void onInit(CBlob@ this)
 		items.push_back(i);
 	}
 	
-	{
+	/*{
 		AssemblerItem i("cruisemissilenuke", 1, "L.O.L. Cruise Missile (1)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
 		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
@@ -140,7 +145,7 @@ void onInit(CBlob@ this)
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
 		AddRequirement(i.reqs, "blob", "mat_clusterbomb", "Cluster Bomb", 1);
 		items.push_back(i);
-	}
+	}*/
 	
 	this.set("items", items);
 
@@ -149,6 +154,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 150;
 
 	this.Tag("builder always hit");
+	this.Tag("change team on fort capture");
 
 	this.addCommandID("set");
 
@@ -169,7 +175,7 @@ void ChickenAssemblerMenu(CBlob@ this, CBlob@ caller)
 {
 	if(caller.isMyPlayer())
 	{
-		CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 7), "Set Assembly");
+		CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 5), "Set Assembly");
 		if (menu !is null)
 		{
 			AssemblerItem[] items = getItems(this);
