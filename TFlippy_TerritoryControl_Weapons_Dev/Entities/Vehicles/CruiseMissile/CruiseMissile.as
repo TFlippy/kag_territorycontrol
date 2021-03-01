@@ -1,10 +1,11 @@
 
+#include "Hitters.as";
+#include "HittersTC.as";
 const u32 fuel_timer_max = 30 * 5;
 
 void onInit(CBlob@ this)
 {
 	this.Tag("usable by anyone");
-	this.Tag("aerial");
 	
 	this.Tag("explosive");
 	this.Tag("heavy weight");
@@ -22,10 +23,117 @@ void onInit(CBlob@ this)
 	this.getShape().SetRotationsAllowed(true);
 }
 
+void onAddToInventory(CBlob@ this, CBlob@ blob)
+{
+	const string[] blobnames = 
+	{
+		"mat_mininuke",
+		"mat_mustard",
+		"mat_fuel",
+		"mat_acid",
+		"mat_clusterbomb",
+		"mat_paxilon",
+		"mat_rippio",
+		"mat_methane",
+		"mat_cocokbomb",
+		"mat_dynamite",
+		"mat_mithrilbomb",
+		"mat_boof",
+		"mat_crak",
+		"firejob",
+		"mat_incendiarybomb",
+		"mat_dirtybomb",
+		"mat_bunkerbuster",
+		"mat_antimatter",
+		"mat_explodium",
+		"mat_mithrilenriched",
+		"mat_stunbomb",
+		"mat_smokegrenade"
+	};
+
+	CSprite@ sprite = this.getSprite();
+	string blobname = blob.getName();
+	
+	for (int i = 0; i < blobnames.length; i++)
+	{
+		if(isClient())
+		{
+			this.setInventoryName(blob.getInventoryName() + " Missile");
+			if (blobname == blobnames[i])
+			{
+				sprite.SetFrameIndex(i + 1);
+				this.SetInventoryIcon(sprite.getConsts().filename, i + 1, Vec2f(16, 32));
+				//print("set frame to " + (i + 1));
+				break;
+			}
+			if (blobname == "firework" || blobname == "patreonfirework")
+			{
+				sprite.SetFrameIndex(14);
+				this.SetInventoryIcon(sprite.getConsts().filename, 14, Vec2f(16, 32));
+			}
+		}
+	}
+}
+
+void onRemoveFromInventory(CBlob@ this, CBlob@ blob )
+{
+	if (isClient())
+	{	
+		CSprite@ sprite = this.getSprite();
+		sprite.SetFrameIndex(0);
+		this.SetInventoryIcon(sprite.getConsts().filename, 0, Vec2f(16, 32));
+		this.setInventoryName("Cruise Missile");
+	}
+}
+
 void onTick(CBlob@ this)
 {
+	// payload ignition
+	if (this.getHealth() <= 0.0f || this.isKeyJustPressed(key_action1))
+	{
+		CInventory@ inv = this.getInventory();
+		CBlob@ payload = inv.getItem(0);
+		if (payload !is null)
+		{
+			//print("payload is " + payload.getName());
+			Vec2f velocity = this.getVelocity();
+			f32 angle = velocity.getAngleDegrees();
+			f32 quantity = 100;
+			// special payloads
+			if (payload.getName() == "mat_smokegrenade")
+			{
+				if (isClient()) this.getSprite().PlaySound("gas_leak.ogg");
+				for (int i = 0; i < (quantity / 2) ; i++)
+				{
+					if (isServer())
+					{
+						CBlob@ smoke = server_CreateBlob("smokegas", -1, this.getPosition());
+						smoke.setVelocity(velocity + Vec2f(20 - XORRandom(40), 5 - XORRandom(10)).RotateByDegrees(angle));
+						payload.server_Die();
+					}
+				}
+			}
+			if (payload.getName() == "mat_dynamite")
+			{
+				if(isServer())
+				{
+					CBlob@ dynamite = server_CreateBlob("dynamite", this.getTeamNum(), this.getPosition());
+					payload.server_Die();
+				}
+			}
+			if (payload.getName() == "fragmine")
+			{
+				payload.Tag("exploding");
+			}
+			else if (payload.getName() != "mat_bunkerbuster" && payload.getName() != "mat_mithrilbomb")
+			{
+				if(isServer()) this.server_Hit(payload, payload.getPosition(), Vec2f(0, 0), 50.0, Hitters::burn, true);
+			}
+		}
+	}
 	if (this.hasTag("offblast"))
 	{
+		if (!this.hasTag("aerial")) this.Tag("aerial");
 		Vec2f dir;
 	
 		if (this.get_u32("fuel_timer") > getGameTime())
@@ -54,7 +162,7 @@ void onTick(CBlob@ this)
 			Vec2f nDir = (this.get_Vec2f("direction") * (1.00f - ratio)) + (dir * ratio);
 			nDir.Normalize();
 			
-			this.SetFacingLeft(false);
+			//this.SetFacingLeft(false); //causes bugs with sprite for some odd reason
 			
 			this.set_f32("velocity", Maths::Min(this.get_f32("velocity") + 0.75f, 20.0f));
 			this.set_Vec2f("direction", nDir);
@@ -70,7 +178,7 @@ void onTick(CBlob@ this)
 			this.getSprite().SetEmitSoundPaused(true);
 		}		
 		
-		if (this.isKeyJustPressed(key_action1))
+		if (this.isKeyJustPressed(key_action1) || this.getHealth() <= 0.0f)
 		{
 			if (isServer())
 			{
@@ -123,7 +231,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			params.write_u16(caller.getNetworkID());
 			params.write_u16(ply.getNetworkID());
 			
-			caller.CreateGenericButton(11, Vec2f(0.0f, 0.0f), this, this.getCommandID("offblast"), "Off blast!", params);
+			caller.CreateGenericButton(11, Vec2f(0.0f, -5.0f), this, this.getCommandID("offblast"), "Off blast!", params);
 		}
 	}
 }
@@ -143,7 +251,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		this.Tag("projectile");
 		this.Tag("offblast");
 		
-		this.set_u32("no_explosion_timer", getGameTime() + 30);
+		this.set_u32("no_explosion_timer", getGameTime() + 10);
 		this.set_u32("fuel_timer", getGameTime() + fuel_timer_max);
 		
 		this.set_u16("controller_blob_netid", caller_netid);
@@ -185,7 +293,12 @@ void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSt
 	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	if (customData == HittersTC::bullet_high_cal)
+	{
+		return damage *= 1.5f;
+	}
 
-
-
-			
+	return damage;
+}
