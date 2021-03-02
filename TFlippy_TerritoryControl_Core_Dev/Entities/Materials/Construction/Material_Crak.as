@@ -43,6 +43,16 @@ void DoExplosion(CBlob@ this)
 	}
 }
 
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	if (customData == Hitters::fire || customData == Hitters::burn)
+	{
+		if (isServer()) this.server_Die();
+	}
+
+	return damage;
+}
+
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (isServer())
