@@ -199,8 +199,13 @@ class Clouds
 {
 	Vec2f GoalPos = Vec2f(0,0);
 	Vec2f OldPos = Vec2f(0,0);
+
 	f32 SpriteXPos = 0;
+
 	u8 ZLevel = 0; // the higher this is, the lower the z level;
+
+	bool OnScreen = false;
+
 
 	Clouds (Vec2f position, u32 creationTick, u8 spriteType, u8 zLayer)
 	{
@@ -224,29 +229,44 @@ class Clouds
 	{
 		if (GoalPos.x > CLEAR_WIDTH_POS)
 		{
+			OnScreen = false;
 			return false;
 		}
 
+		// Force an update on OldPos
+		OldPos = GoalPos;
+
+		// Move cloud in a direction
 		GoalPos += MOVE_VEL;
 		GoalPos += Vec2f(MOVE_VEL.x,MOVE_VEL.y)*(ZLevel / 20.0f); // some move faster based on z level
+
+		// Calc BotRight pos based on ZLevel
+		Vec2f botRightLerpHackThingyLetsSeeHowLongWeCanGo = OldPos;
+
+		botRightLerpHackThingyLetsSeeHowLongWeCanGo.x += CAMERA_X * ((20-ZLevel) / 40.0f);
+		botRightLerpHackThingyLetsSeeHowLongWeCanGo.y += CAMERA_Y * ((20-ZLevel) / 40.0f) / 2;
+		botRightLerpHackThingyLetsSeeHowLongWeCanGo += Vec2f(200, 200)*(ZLevel/20.0f);
+
+		// Update isOnScreen
+		OnScreen = isOnScreen(OldPos, botRightLerpHackThingyLetsSeeHowLongWeCanGo);
 
 		return true;
 	}
 
 	void SendToRenderer() // Checks that our cloud is on screen then passes it to render
 	{
+		if (!OnScreen)
+		{
+			return;
+		}
+
 		Vec2f topLeft = Vec2f(Maths::Lerp(OldPos.x, GoalPos.x, FRAME_TIME), Maths::Lerp(OldPos.y, GoalPos.y, FRAME_TIME));
 		OldPos = topLeft;
 
 		topLeft.x += CAMERA_X * ((20-ZLevel) / 40.0f);
 		topLeft.y += CAMERA_Y * ((20-ZLevel) / 40.0f) / 2;
 
-		Vec2f botRight = topLeft + Vec2f(50, 50) + Vec2f(150, 150)*(ZLevel/20.0f);
-
-		if (!isOnScreen(topLeft, botRight))
-		{
-			return;
-		}
+		Vec2f botRight = topLeft + Vec2f(200, 200)*(ZLevel/20.0f);
 
 		V_CLOUDS.push_back(Vertex(topLeft.x,  topLeft.y,  1, SpriteXPos,          0, CLOUDS_COL));
 		V_CLOUDS.push_back(Vertex(botRight.x, topLeft.y,  1, SpriteXPos + 0.25,   0, CLOUDS_COL));
@@ -256,28 +276,22 @@ class Clouds
 
 	bool isOnScreen(Vec2f &in TopLeft, Vec2f &in BotRight)
 	{
+		// Only update once every x ticks if we are not on screen
+		if (!OnScreen && getGameTime() % 3 != 0)
+		{
+			return false;
+		}
+
 		Driver@ driver = getDriver();
 
 		TopLeft  = driver.getScreenPosFromWorldPos(TopLeft);
 		BotRight = driver.getScreenPosFromWorldPos(BotRight);
-		const Vec2f center = Vec2f((TopLeft + BotRight) / 2);
-
-		/*CParticle@ p = ParticlePixelUnlimited(driver.getWorldPosFromScreenPos(center), Vec2f(0,0), color_white, true);
-		if (p !is null) // DEBUG CODE, USEFUL FOR SEEING THE CENTRE
-		{
-			p.gravity = Vec2f(0,0);
-		}*/
-
-		if (dontBotherChecking(center))
-		{
-			return false;
-		}
 
 		if (isVectorOnScreen(TopLeft) ||
 			isVectorOnScreen(BotRight) ||
 			isVectorOnScreen(Vec2f(TopLeft.x, BotRight.y)) ||
 			isVectorOnScreen(Vec2f(BotRight.x, TopLeft.y)) ||
-			isVectorOnScreen(center))
+			isVectorOnScreen(Vec2f((TopLeft + BotRight) / 2)))
 		{
 			return true;
 		}
@@ -285,7 +299,7 @@ class Clouds
 		return false;
 	}
 
-	bool dontBotherChecking(const Vec2f &in pos)
+	/*bool dontBotherChecking(const Vec2f &in pos)
 	{
 		const f32 posx = pos.x;
 		const f32 posy = pos.y;
@@ -297,7 +311,7 @@ class Clouds
 		}
 
 		return false;
-	}
+	}*/
 
 	bool isVectorOnScreen(const Vec2f &in pos)
 	{
