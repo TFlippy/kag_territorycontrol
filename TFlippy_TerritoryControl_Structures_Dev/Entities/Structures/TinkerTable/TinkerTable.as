@@ -7,7 +7,6 @@
 #include "CTFShopCommon.as";
 
 #include "MakeMat.as";
-#include "TCTechs.as";
 
 Random traderRandom(Time());
 
@@ -269,8 +268,6 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
 		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 4);
 		AddRequirement(s.requirements, "coin", "", "Coins", 200);
-		
-		// AddRequirement(s.requirements, "tech", "tech_test", "Test", 1);
 
 		s.spawnNothing = true;
 	}
