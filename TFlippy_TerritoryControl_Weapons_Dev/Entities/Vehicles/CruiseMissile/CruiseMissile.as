@@ -256,21 +256,24 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		
 		this.set_u16("controller_blob_netid", caller_netid);
 		this.set_u16("controller_player_netid", player_netid);
-		
-		CSprite@ sprite = this.getSprite();
-		sprite.SetEmitSound("CruiseMissile_Loop.ogg");
-		sprite.SetEmitSoundSpeed(1.0f);
-		sprite.SetEmitSoundVolume(0.3f);
-		sprite.SetEmitSoundPaused(false);
-		sprite.PlaySound("CruiseMissile_Launch.ogg", 2.00f, 1.00f);
-		
-		this.SetLight(true);
-		this.SetLightRadius(128.0f);
-		this.SetLightColor(SColor(255, 255, 100, 0));
-		
+				
 		if (isServer() && ply !is null)
 		{
 			this.server_SetPlayer(ply);
+		}
+
+		if (isClient())
+		{
+			CSprite@ sprite = this.getSprite();
+			sprite.SetEmitSound("CruiseMissile_Loop.ogg");
+			sprite.SetEmitSoundSpeed(1.0f);
+			sprite.SetEmitSoundVolume(0.3f);
+			sprite.SetEmitSoundPaused(false);
+			sprite.PlaySound("CruiseMissile_Launch.ogg", 2.00f, 1.00f);
+			
+			this.SetLight(true);
+			this.SetLightRadius(128.0f);
+			this.SetLightColor(SColor(255, 255, 100, 0));
 		}
 	}
 }
