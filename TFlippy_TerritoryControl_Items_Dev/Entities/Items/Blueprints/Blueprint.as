@@ -1,8 +1,6 @@
 #include "Requirements.as"
 #include "Requirements_Tech.as"
 
-#include "TCTechs.as"
-
 void onInit(CBlob@ this)
 {
 	this.Tag("blueprint");
