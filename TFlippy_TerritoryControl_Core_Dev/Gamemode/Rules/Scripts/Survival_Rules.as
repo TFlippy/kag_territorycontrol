@@ -493,8 +493,33 @@ void onTick(CRules@ this)
 
 void onInit(CRules@ this)
 {
+	// Todo: Maybe let's not make it so obvious ;)
 	CSecurity@ sec = getSecurity();
 	sec.unBan("TFlippy");
+
+
+	// Print out a message to anybody running TC server/localhost
+	if (isServer() && !isClient())
+	{
+		print(""" 
+==============================================================================================================
+		Territory Control Server is initializing.
+		Please make sure you obtain permission before hosting publically!
+		Also consider contributing at : github.com/TFlippy/kag_territorycontrol
+==============================================================================================================
+		""", SColor(0xff91ff81));
+	}
+
+	if (isServer() && isClient())
+	{
+		print(""" 
+==============================================================================================================
+		Territory Control is initializing.
+		Make sure you set the gamemode correctly, and disabled the DRM (otherwise you may crash).
+		Also consider contributing at : github.com/TFlippy/kag_territorycontrol
+==============================================================================================================
+		""", SColor(0xff91ff81));
+	}
 
 	Reset(this);
 }
