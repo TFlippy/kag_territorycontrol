@@ -68,9 +68,7 @@ void onTick(CBlob@ this)
 }
 
 void onReload(CBlob@ this)
-{
-	print("reload");
-	
+{	
 	CMixer@ mixer = getMixer();
 	if (mixer !is null) AddGameMusic(this, mixer);
 }
