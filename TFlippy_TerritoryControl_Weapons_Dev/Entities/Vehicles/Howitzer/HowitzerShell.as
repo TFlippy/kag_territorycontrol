@@ -147,7 +147,7 @@ void DoExplosion(CBlob@ this)
 	this.set_f32("map_damage_radius", 32.0f);
 	this.set_f32("map_damage_ratio", 0.25f);
 	
-	Explode(this, 64.0f, 4.0f);
+	Explode(this, 64.0f, 6.0f);
 	
 	for (int i = 0; i < 8; i++) 
 	{
@@ -155,7 +155,7 @@ void DoExplosion(CBlob@ this)
 		dir.x *= 2;
 		dir.Normalize();
 		
-		LinearExplosion(this, dir, 32.0f + XORRandom(16) + (modifier * 8), 24 + XORRandom(24), 4, 3.00f, Hitters::explosion);
+		LinearExplosion(this, dir, 32.0f + XORRandom(16) + (modifier * 8), 24 + XORRandom(24), 4, 4.00f, Hitters::explosion);
 	}
 	
 	if(isClient())
