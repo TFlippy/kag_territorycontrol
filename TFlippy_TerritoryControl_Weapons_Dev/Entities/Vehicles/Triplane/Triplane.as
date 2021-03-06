@@ -487,9 +487,9 @@ s32 getHeight(CBlob@ this)
 void drawFuelCount(CBlob@ this)
 {
 	// draw ammo count
-	Vec2f pos2d1 = this.getScreenPos() - Vec2f(0, 10);
+	Vec2f pos2d1 = this.getInterpolatedScreenPos() - Vec2f(0, 10);
 
-	Vec2f pos2d = this.getScreenPos() - Vec2f(0, 60);
+	Vec2f pos2d = this.getInterpolatedScreenPos() - Vec2f(0, 60);
 	Vec2f dim = Vec2f(20, 8);
 	const f32 y = this.getHeight() * 2.4f;
 	f32 charge_percent = 1.0f;
@@ -523,7 +523,7 @@ void drawFuelCount(CBlob@ this)
 
 	// GUI::DrawRectangle(upperleft, lowerright);
 	GUI::SetFont("menu");
-	GUI::DrawTextCentered(reqsText, this.getScreenPos() + Vec2f(0, 40), color_white);
+	GUI::DrawTextCentered(reqsText, this.getInterpolatedScreenPos() + Vec2f(0, 40), color_white);
 				
 	// CMap@ map = getMap();
 	// s32 landY = map.getLandYAtX(this.getPosition().x / 8.00f);
@@ -534,8 +534,8 @@ void drawFuelCount(CBlob@ this)
 
 	// GUI::DrawRectangle(upperleft, lowerright);
 	GUI::SetFont("menu");
-	GUI::DrawTextCentered("Speed: " + int(this.getVelocity().getLength() * 3.60f) + " km/h", this.getScreenPos() + Vec2f(0, 56), color_white);
-	GUI::DrawTextCentered("Consumption: " + taken + "/s", this.getScreenPos() + Vec2f(-8, 68), color_white);
+	GUI::DrawTextCentered("Speed: " + int(this.getVelocity().getLength() * 3.60f) + " km/h", this.getInterpolatedScreenPos() + Vec2f(0, 56), color_white);
+	GUI::DrawTextCentered("Consumption: " + taken + "/s", this.getInterpolatedScreenPos() + Vec2f(-8, 68), color_white);
 				
 	// GUI::DrawText("Therefore, you are unable to join another faction for " + secs + " " + units + "." ,
 		// Vec2f(getScreenWidth() / 2 - 220.0f, getScreenHeight() / 3 + offset + 20.0f + Maths::Sin(getGameTime() / 5.0f) * 5.0f),
@@ -577,7 +577,7 @@ void onRender(CSprite@ this)
 	f32 fuel = blob.get_f32("fuel_count");
 	if (fuel <= 0 && mouseOnBlob)
 	{
-		Vec2f pos = blob.getScreenPos();
+		Vec2f pos = blob.getInterpolatedScreenPos();
 		
 		GUI::SetFont("menu");
 		GUI::DrawTextCentered("Requires fuel!", Vec2f(pos.x, pos.y + 85 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));

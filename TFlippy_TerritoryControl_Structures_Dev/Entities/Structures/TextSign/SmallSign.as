@@ -71,7 +71,7 @@ void onRender(CSprite@ this)
 	if (getHUD().menuState != 0) return;
 
 	CBlob@ localBlob = getLocalPlayerBlob();
-	Vec2f pos2d = blob.getScreenPos();
+	Vec2f pos2d = blob.getInterpolatedScreenPos();
 
 	if (localBlob is null) return;
 

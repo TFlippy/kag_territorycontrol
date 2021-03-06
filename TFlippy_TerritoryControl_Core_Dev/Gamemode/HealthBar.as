@@ -15,7 +15,7 @@ void onRender(CSprite@ this)
 	if (mouseOnBlob)
 	{
 		//VV right here VV
-		Vec2f pos2d = blob.getScreenPos() + Vec2f(0, 20);
+		Vec2f pos2d = blob.getInterpolatedScreenPos() + Vec2f(0, 20);
 		Vec2f dim = Vec2f(24, 8);
 		const f32 y = blob.getHeight() * 2.4f;
 		const f32 initialHealth = blob.getInitialHealth();

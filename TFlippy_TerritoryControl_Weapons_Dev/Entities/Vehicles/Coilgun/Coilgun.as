@@ -329,9 +329,9 @@ void onRender(CSprite@ this)
 void drawAmmoCount(CBlob@ this)
 {
 	// draw ammo count
-	Vec2f pos2d1 = this.getScreenPos() - Vec2f(0, 10);
+	Vec2f pos2d1 = this.getInterpolatedScreenPos() - Vec2f(0, 10);
 
-	Vec2f pos2d = this.getScreenPos() - Vec2f(0, 60);
+	Vec2f pos2d = this.getInterpolatedScreenPos() - Vec2f(0, 60);
 	Vec2f dim = Vec2f(20, 8);
 	const f32 y = this.getHeight() * 2.4f;
 	f32 charge_percent = 1.0f;

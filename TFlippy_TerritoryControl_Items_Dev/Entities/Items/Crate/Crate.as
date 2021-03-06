@@ -456,7 +456,7 @@ void onRender(CSprite@ this)
 	CBlob@ blob = this.getBlob();
 	if (!(blob.exists("packed")) || blob.get_string("packed name").size() == 0) return;
 
-	Vec2f pos2d = blob.getScreenPos();
+	Vec2f pos2d = blob.getInterpolatedScreenPos();
 	u32 gameTime = getGameTime();
 	u32 unpackTime = blob.get_u32("unpack time");
 

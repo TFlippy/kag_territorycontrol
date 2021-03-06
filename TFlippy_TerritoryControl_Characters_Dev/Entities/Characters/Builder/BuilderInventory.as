@@ -348,7 +348,7 @@ void onRender(CSprite@ this)
 				if (bc.blockActive || bc.blobActive)
 				{
 					Vec2f pos = blob.getPosition();
-					Vec2f myPos =  blob.getScreenPos() + Vec2f(0.0f,(pos.y > blob.getAimPos().y) ? -blob.getRadius() : blob.getRadius());
+					Vec2f myPos =  blob.getInterpolatedScreenPos() + Vec2f(0.0f,(pos.y > blob.getAimPos().y) ? -blob.getRadius() : blob.getRadius());
 					Vec2f aimPos2D = getDriver().getScreenPosFromWorldPos( blob.getAimPos() );
 
 					if (!bc.hasReqs)
