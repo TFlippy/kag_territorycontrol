@@ -121,17 +121,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				u16 remain = GiveFuel(this, carried.getQuantity(), fuel_modifier);
 					
-				if (isServer())
+				if (remain == 0)
 				{
-					if (remain == 0)
-					{
-						carried.Tag("dead");
-						carried.server_Die();
-					}
-					else
-					{
-						carried.server_SetQuantity(remain);
-					}
+					carried.Tag("dead");
+					carried.server_Die();
+				}
+				else
+				{
+					carried.server_SetQuantity(remain);
 				}
 			}
 		}
