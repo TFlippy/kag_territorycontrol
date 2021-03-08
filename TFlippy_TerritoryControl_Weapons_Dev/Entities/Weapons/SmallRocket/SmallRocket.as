@@ -104,7 +104,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (isServer())
 	{
-		if (this.getTickSinceCreated() > 10 && (solid ? true : (blob !is null && blob.isCollidable())))
+		if (this.getTickSinceCreated() > 10 && (solid ? true : (blob !is null && blob.isCollidable() && this.getTeamNum() != blob.getTeamNum())))
 		{
 			this.server_Die();
 		}
