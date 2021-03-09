@@ -186,8 +186,6 @@ void onTick(CBlob@ this)
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder = point.getOccupied();
 
-		if (holder is null || holder.getTeamNum() >= 100) return;
-
 		AimAtMouse(this, holder); // aim at our mouse pos
 
 		// cool faster if holder is moving
@@ -204,7 +202,15 @@ void onTick(CBlob@ this)
 			sprite.PlaySound("DrillOverheat.ogg");
 		}
 
-		if (!holder.isKeyPressed(key_action1) || isKnocked(holder))
+		if (holder.getName() != "engineer")
+		{
+			if (point.isKeyPressed(key_action1) && getGameTime() % 5 == 0)
+				Sound::Play("NoAmmo.ogg");
+
+			return;
+		}
+
+		if (!(point.isKeyPressed(key_action1) || holder.isKeyJustPressed(key_action1)) || isKnocked(holder))
 		{
 			this.set_bool(buzz_prop, false);
 			return;
@@ -231,7 +237,7 @@ void onTick(CBlob@ this)
 		u8 delay_amount = 8;
 		if (this.get_bool("just hit dirt")) delay_amount = 10;
 		if (inwater) delay_amount = 20;
-		
+
 		bool skip = (gametime < this.get_u32(last_drill_prop) + delay_amount);
 
 		if (skip)
@@ -241,7 +247,7 @@ void onTick(CBlob@ this)
 		else
 		{
 			this.set_u32(last_drill_prop, gametime); // update last drill time
-			this.set_bool("just hit dirt", false);	
+			this.set_bool("just hit dirt", false);
 			this.Sync("just hit dirt", true);
 		}
 
@@ -342,8 +348,8 @@ void onTick(CBlob@ this)
 									{
 										Material::fromTile(holder, tile, 0.75f);
 									}
-									
-									if (map.isTileGround(tile) || map.isTileStone(tile) || map.isTileThickStone(tile)) 
+
+									if (map.isTileGround(tile) || map.isTileStone(tile) || map.isTileThickStone(tile))
 									{
 										this.set_bool("just hit dirt", true);
 										this.Sync("just hit dirt", true);
