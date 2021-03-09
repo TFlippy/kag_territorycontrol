@@ -236,14 +236,18 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 
 	string victimName = victim.getUsername() + " (team " + victim.getTeamNum() + ")";
 	string attackerName = attacker !is null ? (attacker.getUsername() + " (team " + attacker.getTeamNum() + ")") : "world";
+	u8 victimTeam = victim.getTeamNum();
+	int coins = victim.getCoins();
 
 	if (isServer())
 	{
 		tcpr("[PDB] "+victimName +" has been killed by " + attackerName + "; damage type: " + customData);
+
+		if (victimTeam >= 100)
+			victim.server_setCoins(0);
 	}
 	// printf(victimName + " has been killed by " + attackerName + "; damage type: " + customData);
 
-	u8 victimTeam = victim.getTeamNum();
 	s32 respawn_time = 30 * 4;
 
 	if (victimTeam >= 100) respawn_time += 30 * 4;
@@ -268,6 +272,9 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	CBlob@ blob = victim.getBlob();
 	if(blob !is null)
 	{
+		if (victimTeam >= 100)
+			server_DropCoins(blob.getPosition(), (coins + 1) / 2);
+
 		if(!(blob.getName().find("corpse") != -1))
 		{
 			victim.set_string("classAtDeath",blob.getName());
@@ -501,7 +508,7 @@ void onInit(CRules@ this)
 	// Print out a message to anybody running TC server/localhost
 	if (isServer() && !isClient())
 	{
-		print(""" 
+		print("""
 ==============================================================================================================
 		Territory Control Server is initializing.
 		Please make sure you obtain permission before hosting publically!
@@ -512,7 +519,7 @@ void onInit(CRules@ this)
 
 	if (isServer() && isClient())
 	{
-		print(""" 
+		print("""
 ==============================================================================================================
 		Territory Control is initializing.
 		Make sure you set the gamemode correctly, and disabled the DRM (otherwise you may crash).
