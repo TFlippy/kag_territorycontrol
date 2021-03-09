@@ -179,7 +179,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			{
 				CBlob@[] forts;
 				getBlobsByTag("faction_base", @forts);
-				
+
 				//there are only 7 teams, not 8
 				//u8[] teamForts = {0, 0, 0, 0, 0, 0, 0, 0};
 				u8[] teamForts = {0, 0, 0, 0, 0, 0, 0};
@@ -187,27 +187,35 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 				u8 newTeam;
 
 				Random@ rand = Random(this.getNetworkID());
-				
+
 				for(uint i = 0; i < forts.length; i++)
 				{
 					u8 team = forts[i].getTeamNum();
 					if (team < getRules().getTeamsNum()) teamForts[team]++;
 				}
-				
+
 				//since there were 8 elements in teamForts before, it was possible for 7 to be pushed on emptyTeams
 				//but only 0-6 should be pushed on emptyTeams
 				for(uint i = 0; i < teamForts.length; i++)
 				{
 					if (teamForts[i] == 0) emptyTeams.push_back(i);
 				}
-					
+
 				newTeam = emptyTeams[rand.NextRanged(emptyTeams.length)];
 
 				if (newTeam < getRules().getTeamsNum())
 				{
 					CBlob@ blockBlob = server_CreateBlob(b.name, newTeam, pos);
 					this.getPlayer().server_setTeamNum(newTeam);
-					
+
+					CBitStream params;
+
+					params.write_u16(this.getNetworkID());
+					params.write_u8(0);
+					params.write_u8(1);
+
+					blockBlob.SendCommand(blockBlob.getCommandID("faction_menu_button"), params);
+
 					CBlob@ newPlayer = server_CreateBlob("builder", newTeam, this.getPosition());
 					newPlayer.server_SetPlayer(this.getPlayer());
 					this.server_Die();
@@ -223,11 +231,11 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 				{
 					if (this.getPlayer() !is null)
 					blockBlob.set_string("builder", this.getPlayer().getUsername());
-				
+
 					if (b.name == "chickenassembler")
 					{
 						CBlob@ bp = server_CreateBlob("bp_automation_advanced", myTeam, this.getPosition());
-						 
+
 						if (!this.server_PutInInventory(bp))
 						{
 							bp.setPosition(this.getPosition());
@@ -236,7 +244,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 					else if (b.name == "beamtower")
 					{
 						CBlob@ bp = server_CreateBlob("bp_energetics", myTeam, this.getPosition());
-						 
+
 						if (!this.server_PutInInventory(bp))
 						{
 							bp.setPosition(this.getPosition());
@@ -245,7 +253,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 					else if (b.name == "chemlab")
 					{
 						CBlob@ bp = server_CreateBlob("bp_chemistry", myTeam, this.getPosition());
-						 
+
 						if (!this.server_PutInInventory(bp))
 						{
 							bp.setPosition(this.getPosition());
@@ -265,9 +273,9 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 						}
 					}
 
-					
+
 					if (blockBlob.hasTag("building")) return null;
-					
+
 					if(blockBlob !is null && this !is null)
 					{
 						this.server_Pickup(blockBlob);
@@ -277,12 +285,12 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 					{
 						blockBlob.Tag("temp blob");
 					}
-					
+
 					if (b.name == "teamlamp")
 					{
 						blockBlob.server_setTeamNum(myTeam);
 					}
-					
+
 					return blockBlob;
 				}
 				else return null;
