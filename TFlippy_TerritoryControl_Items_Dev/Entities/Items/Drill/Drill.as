@@ -29,8 +29,6 @@ const f32 max_heatbar_view_range = 65;
 
 const bool show_heatbar_when_idle = false;
 
-const string required_class = "builder";
-
 void onInit(CSprite@ this)
 {
 	CSpriteLayer@ heat = this.addSpriteLayer("heat", this.getFilename(), 32, 16);
@@ -489,11 +487,17 @@ void onRender(CSprite@ this)
 	CBlob@ holderBlob = holder.getBlob();
 	if (holderBlob is null){return;}
 
-	if (holderBlob.getName() != required_class && sv_gamemode != "TDM"){return;}
-
 	Vec2f mousePos = getControls().getMouseWorldPos();
 	Vec2f blobPos = blob.getPosition();
 	Vec2f localPos = localBlob.getPosition();
+
+
+	if (holderBlob.getName() != "engineer")
+	{
+		Vec2f pos = holderBlob.getInterpolatedScreenPos() + (blob.getScreenPos() - holderBlob.getScreenPos()) + Vec2f(0, -40);
+		GUI::DrawTextCentered("Only an engineer can use this drill!", pos, SColor(255, 183, 51, 51));
+		return;
+	}
 
 	bool inRange = (blobPos - localPos).getLength() < max_heatbar_view_range;
 	bool hover = (mousePos - blobPos).getLength() < blob.getRadius() * 1.50f;
