@@ -184,6 +184,9 @@ void onTick(CBlob@ this)
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder = point.getOccupied();
 
+		if (holder is null)
+			return;
+
 		AimAtMouse(this, holder); // aim at our mouse pos
 
 		// cool faster if holder is moving
