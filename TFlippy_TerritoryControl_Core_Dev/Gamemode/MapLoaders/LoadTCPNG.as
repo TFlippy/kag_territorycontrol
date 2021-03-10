@@ -621,7 +621,7 @@ SColor[] fire_colors =
 void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out col)
 {
 	const int w = this.tilemapwidth;
-	const int h = this.PPtilemapheight;
+	const int h = this.tilemapheight;
 
 	const int x = offset % w;
 	const int y = offset / w;
@@ -638,6 +638,7 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 	bool solid = flags & Tile::SOLID != 0;
 
 	// if (this.isTileGround(tile) || this.isTileStone(tile) || this.isTileBedrock(tile) || this.isTileGold(tile) || this.isTileThickStone(tile) || this.isTileCastle(tile) || this.isTileWood(tile))
+
 	if (!air)
 	{
 		TileType l = this.getTile(offset - 1).type;
@@ -645,97 +646,381 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 		TileType u = this.getTile(offset - w).type;
 		TileType d = this.getTile(offset + w).type;
 
-		if (this.isTileGround(type) || this.isTileGroundBack(type))
+		// TODO: Shove damage frame numbers into an enum
+		switch(type)
 		{
-			col = c_dirt;
-			if (this.isTileGrass(u))
-			{
-				col = col.getInterpolated(c_grass, 0.50f);
-			}
-		}
-		else if (this.isTileThickStone(type))
-		{
-			col = c_thickStone;
-		}
-		else if (this.isTileStone(type))
-		{
-			col = c_stone;
-		}
-		else if (this.isTileBedrock(type))
-		{
-			col = c_bedrock;
-		}
-		else if (this.isTileGold(type))
-		{
-			col = c_thickStone;
-		}
-		else if (type >= CMap::tile_castle_moss && type <= CMap::tile_castle_moss + 16)
-		{
-			col = c_castle_moss;
-		}
-		else if (this.isTileCastle(type) || (type >= 64 && type <= 80))
-		{
-			col = c_castle;
-		}
-		else if (this.isTileWood(type) || (type >= CMap::tile_wood_back && type <= CMap::tile_wood_back +2))
-		{
-			col = c_wood;
-		}
-		else if (this.isTileGrass(type))
-		{
-			col = c_grass;
-			col = col.getInterpolated(c_white, (x % 2) * 1.00f);
-		}
-		else if ((type >= CMap::tile_iron && type <= CMap::tile_iron_d8) || (type >= CMap::tile_biron && type <= CMap::tile_biron_d8))
-		{
-			col = c_iron;
-		}
-		else if ((type >= CMap::tile_glass && type <= CMap::tile_glass_d0) || (type >= CMap::tile_bglass && type <= CMap::tile_bglass_d0))
-		{
-			col = c_glass;
-			col = col.getInterpolated(c_sky, 0.25f);
-		}
-		else if ((type >= CMap::tile_plasteel && type <= CMap::tile_plasteel_d14) || (type >= CMap::tile_bplasteel && type <= CMap::tile_bplasteel_d14))
-		{
-			col = c_plasteel;
-		}
-		else if (type >= CMap::tile_rustyiron && type <= CMap::tile_rustyiron_d4)
-		{
-			col = c_rustyiron;
-		}
-		else if ((type >= CMap::tile_concrete && type <= CMap::tile_concrete_d7) || (type >= CMap::tile_bconcrete && type <= CMap::tile_bconcrete_d7))
-		{
-			col = c_concrete;
-		}
-		else if ((type >= CMap::tile_mossyconcrete && type <= CMap::tile_mossyconcrete_d4) || (type >= CMap::tile_mossybconcrete && type <= CMap::tile_mossybconcrete_d4))
-		{
-			col = c_mossyconcrete;
-		}
-		else if (type >= CMap::tile_reinforcedconcrete && type <= CMap::tile_reinforcedconcrete_d15)
-		{
-			col = c_reinforcedconcrete;
-		}
-		else if (isTileSnowPile(type) || isTileSnow(type))
-		{
-			col = c_snow;
-		}
-		else if (type >= CMap::tile_rail_0 && type <= CMap::tile_rail_0_bg )
-		{
-			col = c_track;
-		}
-		else if (type >= CMap::tile_matter && type <= CMap::tile_matter_d2)
-		{
-			col = c_matter;
-		}
-		else
-		{
-			col = c_missing;
+			// DIRT
+			case CMap::tile_ground:
+			case CMap::tile_ground_d1:
+			case 30:
+			case CMap::tile_ground_d0:
+			case CMap::tile_ground_back:
+				col = c_dirt;
+				if (this.isTileGrass(u))
+				{
+					col = col.getInterpolated(c_grass, 0.50f);
+				}
+			break;
+
+			// THICKSTONE
+			case CMap::tile_thickstone:
+			case CMap::tile_thickstone_d1:
+			case 215:
+			case 216: // OTHER DAMAGE FRAMES
+			case 217:
+			case CMap::tile_thickstone_d0:
+				col = c_thickStone;
+			break;
+
+			// STONE
+			case CMap::tile_stone:
+			case CMap::tile_stone_d1:
+			case 101:
+			case 102:
+			case 103:
+			case CMap::tile_stone_d0:
+				col = c_stone;
+			break;
+
+			// BEDROCK
+			case CMap::tile_bedrock:
+				col = c_bedrock;
+			break;
+
+			// GOLD
+			case CMap::tile_gold:
+			case 90:
+			case 92:
+			case 93:
+			case 94:
+				col = c_thickStone;
+			break;
+
+			// MOSS
+			case CMap::tile_castle_moss:
+			case 225:
+			case 226:
+			case 227:
+			case 228:
+			case 229:
+			case 230:
+			case 231:
+			case 232:
+			case 233:
+			case 234:
+			case 235:
+			case 236:
+			case 237:
+			case 238:
+			case 239:
+			case 340:
+				col = c_castle_moss;
+			break;
+
+			// CASTLE
+			case CMap::tile_castle:
+			case CMap::tile_castle_d1:
+			case 59:
+			case 60:
+			case 61:
+			case 62:
+			case CMap::tile_castle_d0:
+			case 64:
+			case 65:
+			case 66:
+			case 67:
+			case 68:
+			case 69:
+			case 70:
+			case 71:
+			case 72:
+			case 73:
+			case 74:
+			case 75:
+			case 76:
+			case 77:
+			case 78:
+			case 79:
+				col = c_castle;
+			break;
+
+			// WOOD
+			case CMap::tile_wood:
+			case 199:
+			case CMap::tile_wood_d1:
+			case 201:
+			case 202:
+			case CMap::tile_wood_d0:
+			case CMap::tile_wood_back:
+			case 206:
+			case 207:
+				col = c_wood;
+			break;
+
+			// GRASS
+			case CMap::tile_grass:
+			case 26:
+			case 27:
+			case 28:
+				col = c_grass;
+				col = col.getInterpolated(c_white, (x % 2) * 1.00f);
+			break;
+
+			// IRON
+			case CMap::tile_iron:
+			case CMap::tile_iron_v0:
+			case CMap::tile_iron_v1:
+			case CMap::tile_iron_v2:
+			case CMap::tile_iron_v3:
+			case CMap::tile_iron_v4:
+			case CMap::tile_iron_v5:
+			case CMap::tile_iron_v6:
+			case CMap::tile_iron_v7:
+			case CMap::tile_iron_v8:
+			case CMap::tile_iron_v9:
+			case CMap::tile_iron_v10:
+			case CMap::tile_iron_v11:
+			case CMap::tile_iron_v12:
+			case CMap::tile_iron_v13:
+			case CMap::tile_iron_v14:
+
+			case CMap::tile_biron:
+			case CMap::tile_biron_u:
+			case CMap::tile_biron_d:
+			case CMap::tile_biron_m:
+			case CMap::tile_biron_d0:
+			case CMap::tile_biron_d1:
+			case CMap::tile_biron_d2:
+			case CMap::tile_biron_d3:
+			case CMap::tile_biron_d4:
+			case CMap::tile_biron_d5:
+			case CMap::tile_biron_d6:
+			case CMap::tile_biron_d7:
+			case CMap::tile_biron_d8:
+				col = c_iron;
+			break;
+
+			// GLASS
+			case CMap::tile_glass:
+			case CMap::tile_glass_v1:
+			case CMap::tile_glass_v2:
+			case CMap::tile_glass_v3:
+			case CMap::tile_glass_v4:
+			case CMap::tile_glass_v5:
+			case CMap::tile_glass_v6:
+			case CMap::tile_glass_v7:
+			case CMap::tile_glass_v8:
+			case CMap::tile_glass_v9:
+			case CMap::tile_glass_v10:
+			case CMap::tile_glass_v11:
+			case CMap::tile_glass_v12:
+			case CMap::tile_glass_v13:
+			case CMap::tile_glass_v14:
+			case CMap::tile_glass_d0:
+
+			case CMap::tile_bglass:
+			case CMap::tile_bglass_v0:
+			case CMap::tile_bglass_v1:
+			case CMap::tile_bglass_v2:
+			case CMap::tile_bglass_v3:
+			case CMap::tile_bglass_v4:
+			case CMap::tile_bglass_v5:
+			case CMap::tile_bglass_v6:
+			case CMap::tile_bglass_v7:
+			case CMap::tile_bglass_v8:
+			case CMap::tile_bglass_v9:
+			case CMap::tile_bglass_v10:
+			case CMap::tile_bglass_v11:
+			case CMap::tile_bglass_v12:
+			case CMap::tile_bglass_v13:
+			case CMap::tile_bglass_v14:
+			case CMap::tile_bglass_d0:
+				col = c_glass;
+				col = col.getInterpolated(c_sky, 0.25f);
+			break;
+
+			// PLASTEEL
+			case CMap::tile_plasteel:
+			case CMap::tile_plasteel_d0:
+			case CMap::tile_plasteel_d1:
+			case CMap::tile_plasteel_d2:
+			case CMap::tile_plasteel_d3:
+			case CMap::tile_plasteel_d4:
+			case CMap::tile_plasteel_d5:
+			case CMap::tile_plasteel_d6:
+			case CMap::tile_plasteel_d7:
+			case CMap::tile_plasteel_d8:
+			case CMap::tile_plasteel_d9:
+			case CMap::tile_plasteel_d10:
+			case CMap::tile_plasteel_d11:
+			case CMap::tile_plasteel_d12:
+			case CMap::tile_plasteel_d13:
+			case CMap::tile_plasteel_d14:
+
+			case CMap::tile_bplasteel:
+			case CMap::tile_bplasteel_v0:
+			case CMap::tile_bplasteel_d0:
+			case CMap::tile_bplasteel_d1:
+			case CMap::tile_bplasteel_d2:
+			case CMap::tile_bplasteel_d3:
+			case CMap::tile_bplasteel_d4:
+			case CMap::tile_bplasteel_d5:
+			case CMap::tile_bplasteel_d6:
+			case CMap::tile_bplasteel_d7:
+			case CMap::tile_bplasteel_d8:
+			case CMap::tile_bplasteel_d9:
+			case CMap::tile_bplasteel_d10:
+			case CMap::tile_bplasteel_d11:
+			case CMap::tile_bplasteel_d12:
+			case CMap::tile_bplasteel_d13:
+			case CMap::tile_bplasteel_d14:
+				col = c_plasteel;
+			break;
+
+			// RUSTYIRON
+			case CMap::tile_rustyiron:
+			case CMap::tile_rustyiron_d0:
+			case CMap::tile_rustyiron_d1:
+			case CMap::tile_rustyiron_d2:
+			case CMap::tile_rustyiron_d3:
+			case CMap::tile_rustyiron_d4:
+				col = c_rustyiron;
+			break;
+
+			// CONCRETE
+			case CMap::tile_concrete:
+			case CMap::tile_concrete_v0:
+			case CMap::tile_concrete_v1:
+			case CMap::tile_concrete_v2:
+			case CMap::tile_concrete_v3:
+			case CMap::tile_concrete_v4:
+			case CMap::tile_concrete_v5:
+			case CMap::tile_concrete_v6:
+			case CMap::tile_concrete_v7:
+			case CMap::tile_concrete_v8:
+			case CMap::tile_concrete_v9:
+			case CMap::tile_concrete_v10:
+			case CMap::tile_concrete_v11:
+			case CMap::tile_concrete_v12:
+			case CMap::tile_concrete_v13:
+			case CMap::tile_concrete_v14:
+
+			case CMap::tile_bconcrete:
+			case CMap::tile_bconcrete_v0:
+			case CMap::tile_bconcrete_v1:
+			case CMap::tile_bconcrete_v2:
+			case CMap::tile_bconcrete_v3:
+			case CMap::tile_bconcrete_v4:
+			case CMap::tile_bconcrete_v5:
+			case CMap::tile_bconcrete_v6:
+			case CMap::tile_bconcrete_v7:
+			case CMap::tile_bconcrete_v8:
+			case CMap::tile_bconcrete_v9:
+			case CMap::tile_bconcrete_v10:
+			case CMap::tile_bconcrete_v11:
+			case CMap::tile_bconcrete_v12:
+			case CMap::tile_bconcrete_v13:
+			case CMap::tile_bconcrete_v14:
+				col = c_concrete;
+			break;
+
+			// MOSSY CONCRETE
+			case CMap::tile_mossyconcrete:
+			case CMap::tile_mossyconcrete_d0:
+			case CMap::tile_mossyconcrete_d1:
+			case CMap::tile_mossyconcrete_d2:
+			case CMap::tile_mossyconcrete_d3:
+			case CMap::tile_mossyconcrete_d4:
+
+			case CMap::tile_mossybconcrete:
+			case CMap::tile_mossybconcrete_d0:
+			case CMap::tile_mossybconcrete_d1:
+			case CMap::tile_mossybconcrete_d2:
+			case CMap::tile_mossybconcrete_d3:
+			case CMap::tile_mossybconcrete_d4:
+				col = c_mossyconcrete;
+			break;
+
+			// REINFORCE CONCRETE
+			case CMap::tile_reinforcedconcrete:
+			case CMap::tile_reinforcedconcrete_v0:
+			case CMap::tile_reinforcedconcrete_v1:
+			case CMap::tile_reinforcedconcrete_v2:
+			case CMap::tile_reinforcedconcrete_v3:
+			case CMap::tile_reinforcedconcrete_v4:
+			case CMap::tile_reinforcedconcrete_v5:
+			case CMap::tile_reinforcedconcrete_v6:
+			case CMap::tile_reinforcedconcrete_v7:
+			case CMap::tile_reinforcedconcrete_v8:
+			case CMap::tile_reinforcedconcrete_v9:
+			case CMap::tile_reinforcedconcrete_v10:
+			case CMap::tile_reinforcedconcrete_v11:
+			case CMap::tile_reinforcedconcrete_v12:
+			case CMap::tile_reinforcedconcrete_v13:
+			case CMap::tile_reinforcedconcrete_v14:
+
+			case CMap::tile_reinforcedconcrete_d0:
+			case CMap::tile_reinforcedconcrete_d1:
+			case CMap::tile_reinforcedconcrete_d2:
+			case CMap::tile_reinforcedconcrete_d3:
+			case CMap::tile_reinforcedconcrete_d4:
+			case CMap::tile_reinforcedconcrete_d5:
+			case CMap::tile_reinforcedconcrete_d6:
+			case CMap::tile_reinforcedconcrete_d7:
+			case CMap::tile_reinforcedconcrete_d8:
+			case CMap::tile_reinforcedconcrete_d9:
+			case CMap::tile_reinforcedconcrete_d10:
+			case CMap::tile_reinforcedconcrete_d11:
+			case CMap::tile_reinforcedconcrete_d12:
+			case CMap::tile_reinforcedconcrete_d13:
+			case CMap::tile_reinforcedconcrete_d14:
+			case CMap::tile_reinforcedconcrete_d15:
+				col = c_reinforcedconcrete;
+			break;
+
+			// SNOW
+			case CMap::tile_snow_pile:
+			case CMap::tile_snow_pile_v0:
+			case CMap::tile_snow_pile_v1:
+			case CMap::tile_snow_pile_v2:
+			case CMap::tile_snow_pile_v3:
+			case CMap::tile_snow_pile_v4:
+			case CMap::tile_snow_pile_v5:
+
+			case CMap::tile_snow:
+			case CMap::tile_snow_v0:
+			case CMap::tile_snow_v1:
+			case CMap::tile_snow_v2:
+			case CMap::tile_snow_v3:
+			case CMap::tile_snow_v4:
+			case CMap::tile_snow_v5:
+			case CMap::tile_snow_d0:
+			case CMap::tile_snow_d1:
+			case CMap::tile_snow_d2:
+			case CMap::tile_snow_d3:
+				col = c_snow;
+			break;
+
+			case CMap::tile_rail_0:
+			case CMap::tile_rail_1:
+			case CMap::tile_rail_0_bg:
+			case CMap::tile_rail_1_bg:
+				col = c_track;
+			break;
+
+			case CMap::tile_matter:
+			case CMap::tile_matter_d0:
+			case CMap::tile_matter_d1:
+			case CMap::tile_matter_d2:
+				col = c_matter;
+			break;
+
+
+			default:
+				col = c_missing;
+			break;
 		}
 
-		// else
-		// {
-			// col = c_missing;
-		// }
 
 		if (!solid)
 		{

@@ -8,16 +8,16 @@ const f32 radius = 96.0f;
 void onInit(CBlob@ this)
 {
 	this.Tag("builder always hit");
-	
+
 	this.addCommandID("teleport");
-	
+
 	if (!this.exists("teleporter_pair_netid"))
 	{
 		if (isClient())
 		{
 			this.set_u16("teleporter_pair_netid", 0);
 		}
-	
+
 		if (isServer())
 		{
 			CBlob@ tp = server_CreateBlobNoInit("teleporter");
@@ -25,12 +25,12 @@ void onInit(CBlob@ this)
 			tp.setPosition(this.getPosition());
 			tp.set_u16("teleporter_pair_netid", this.getNetworkID());
 			tp.Init();
-			
+
 			this.set_u16("teleporter_pair_netid", tp.getNetworkID());
 			this.Sync("teleporter_pair_netid", true);
 		}
 	}
-	
+
 	this.inventoryButtonPos = Vec2f(0.5f, 0);
 }
 
@@ -39,7 +39,7 @@ void onInit(CSprite@ this)
 	// this.SetEmitSound("fieldgenerator_loop.ogg");
 	// this.SetEmitSoundVolume(0.0f);
 	// this.SetEmitSoundSpeed(0.0f);
-	
+
 	// this.SetEmitSoundPaused(false);
 }
 
@@ -68,16 +68,16 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 	{
 		bool server = isServer();
 		bool client = isClient();
-		
+
 		u16 caller_id = params.read_u16();
 		u16 teleporter_id = params.read_u16();
-		
+
 		f32 used_mithril = 0;
 		u32 mithril_count = GetFuel(this);
 		f32 radius = Maths::Sqrt(mithril_count / pi);
 		f32 diameter = radius * 2.00f;
 		u32 size = Maths::Ceil(radius);
-		
+
 		{
 			CBlob@ caller_blob = getBlobByNetworkID(caller_id);
 			if (caller_blob !is null)
@@ -89,37 +89,37 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 				}
 			}
 		}
-		
+
 		CBlob@ teleporter = getBlobByNetworkID(teleporter_id);
 		bool hasDestination = teleporter !is null;
-		
+
 		// if (server)
 		{
 			Vec2f pos_a = this.getPosition();
 			Vec2f pos_b = hasDestination ? teleporter.getPosition() : Vec2f(0, 0);
-			
+
 			pos_a = Vec2f(Maths::Round(pos_a.x), Maths::Round(pos_a.y));
 			pos_b = Vec2f(Maths::Round(pos_b.x), Maths::Round(pos_b.y));
-			
+
 			CMap@ map = getMap();
-		
+
 			CBlob@[] blobs_a;
 			if (map.getBlobsInRadius(pos_a, radius * 8, @blobs_a))
 			{
 				used_mithril += blobs_a.length * 2.50f;
 			}
-				
+
 			CBlob@[] blobs_b;
-			if (hasDestination) 
+			if (hasDestination)
 			{
 				if (map.getBlobsInRadius(pos_b, radius * 8, @blobs_b))
 				{
 					used_mithril += blobs_b.length * 2.50f;
 				}
 			}
-				
+
 			for (int i = 0; i < blobs_a.length; i++)
-			{	
+			{
 				CBlob@ b = blobs_a[i];
 				if (b !is null)
 				{
@@ -127,14 +127,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 					{
 						Vec2f relpos = b.getPosition() - pos_a;
 						b.setPosition(pos_b + relpos);
-						
+
 						if (b.hasTag("building") || b.hasTag("door")) AlignToTiles(b);
-						
+
 						// // If the object isn't fully covered by the teleporter area, it'll get cut into 2 parts and die
 						// if (server)
 						// {
 							// print(b.getConfig() + ": Radius = " + radius + "; Distance: " + relpos.Length());
-						
+
 							// if (relpos.Length() > radius)
 							// {
 								// b.server_Die();
@@ -150,22 +150,22 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 					}
 				}
 			}
-							
+
 			if (hasDestination)
-			{				
+			{
 				for (int i = 0; i < blobs_b.length; i++)
-				{	
+				{
 					CBlob@ b = blobs_b[i];
 					if (b !is null)
 					{
 						Vec2f relpos = b.getPosition() - pos_b;
 						b.setPosition(pos_a + relpos);
-						
+
 						if (b.hasTag("building") || b.hasTag("door")) AlignToTiles(b);
 					}
 				}
 			}
-			
+
 			if (server)
 			{
 				for (int x = -radius; x <= radius; x++)
@@ -178,16 +178,16 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 						for (int y = -height; y <= height; y++)
 						{
 							Vec2f wpos_a = pos_a + Vec2f(x * 8, y * 8);
-							
+
 							if (hasDestination)
 							{
 								Vec2f wpos_b = pos_b + Vec2f(x * 8, y * 8);
 								Tile tile_a = map.getTile(wpos_a);
 								Tile tile_b = map.getTile(wpos_b);
-								
+
 								map.server_SetTile(wpos_a, tile_b);
 								map.server_SetTile(wpos_b, tile_a);
-								
+
 								used_mithril += GetTileCost(tile_a.type);
 								used_mithril += GetTileCost(tile_b.type);
 							}
@@ -200,14 +200,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 				}
 			}
 		}
-		
-		
+
+
 		// else
 		// {
 			// if (isServer())
 			// {
 				// used_mithril = mithril_count;
-			
+
 				// CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
 				// boom.setPosition(this.getPosition());
 				// boom.set_u8("boom_start", 0);
@@ -218,35 +218,35 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 				// boom.set_u32("flash_delay", 0);
 				// boom.Init();
 			// }
-			
+
 			// if (isClient())
 			// {
 				// this.getSprite().PlaySound("MithrilBomb_Explode_old.ogg");
 			// }
 		// }
-		
+
 		print("mithril start: " + mithril_count);
 		print("mithril used: " + used_mithril);
-		
+
 		if (client)
 		{
 			ShakeScreen(64, 90, this.getPosition());
 			SetScreenFlash(255, 255, 255, 255);
-			
+
 			this.getSprite().PlaySound("Teleporter_Warp.ogg");
 			if (hasDestination)
 			{
 				teleporter.getSprite().PlaySound("Teleporter_Warp.ogg");
 			}
 		}
-		
+
 		if (server)
 		{
 			TakeFuel(this, used_mithril);
-			
+
 			if (hasDestination)
 			{
-			
+
 			}
 			else
 			{
@@ -274,7 +274,7 @@ u32 GetFuel(CBlob@ this)
 	{
 		return inv.getCount("mat_mithril");
 	}
-	
+
 	return 0;
 }
 
@@ -285,7 +285,7 @@ void TakeFuel(CBlob@ this, s32 amount)
 	{
 		s32 taken = 0;
 		int size = inv.getItemsCount();
-		
+
 		for (int i = 0; i < size; i++)
 		{
 			CBlob@ item = inv.getItem(i);
@@ -301,7 +301,7 @@ void TakeFuel(CBlob@ this, s32 amount)
 				{
 					item.server_Die();
 				}
-				
+
 				taken += Maths::Min(quantity, amount - taken);
 				if (taken >= amount)
 				{
@@ -318,17 +318,17 @@ void TakeFuel(CBlob@ this, s32 amount)
 	// {
 		// CInventory@ inv = this.getInventory();
 		// if (inv != null)
-		// {	
+		// {
 			// u32 count = inv.getItemsCount();
-		
+
 			// for (u32 i = 0; i < count && quantity > 0; i++)
 			// {
 				// CBlob@ item = inv.getItem(i);
-				// if (item !is null) 
+				// if (item !is null)
 				// {
 					// u32 quantity = item.getQuantity();
 					// // u32 item_maxQuantity = item.maxQuantity;
-					
+
 					// if (quantity < amount)
 					// {
 						// item.server_Die();
@@ -339,9 +339,9 @@ void TakeFuel(CBlob@ this, s32 amount)
 						// item.server_setQuantity(;
 						// amount -= quantity;
 					// }
-					
+
 					// print("" + amount + ", took " + quantity);
-					
+
 					// // item.server_SetQuantity(amount);
 				// }
 			// }
@@ -350,14 +350,14 @@ void TakeFuel(CBlob@ this, s32 amount)
 // }
 
 void onTick(CBlob@ this)
-{	
+{
 	// this.inventoryButtonPos = Vec2f(0.5f, 16);
 	this.inventoryButtonPos = Vec2f(0.5f, 0);
 
 	// CBlob@[] blobsInRadius;
 	// if (this.getMap().getBlobsInRadius(this.getPosition(), radius, @blobsInRadius))
 	// {
-		
+
 	// }
 }
 
@@ -367,7 +367,7 @@ f32 GetTileCost(u16 tile)
 	{
 		case CMap::tile_empty:
 			return 0.01f;
-			
+
 		case CMap::tile_ground:
 		case CMap::tile_ground_d0:
 		case CMap::tile_ground_d1:
@@ -395,11 +395,11 @@ f32 GetTileCost(u16 tile)
 		case CMap::tile_thickstone_d0:
 		case CMap::tile_thickstone_d1:
 			return 0.50f;
-			
-		default: 
+
+		default:
 			return 0.50f;
 	}
-	
+
 	return 0.50f;
 }
 
