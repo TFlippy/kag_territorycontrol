@@ -318,6 +318,10 @@ void onTick(CRules@ this)
 {
 	s32 gametime = getGameTime();
 
+
+	if (getGameTime() % 9000 == 0)
+		SpawnEventFireworks();
+
 	for (u8 i = 0; i < getPlayerCount(); i++)
 	{
 		CPlayer@ player = getPlayer(i);
@@ -536,6 +540,7 @@ void onInit(CRules@ this)
 void onRestart(CRules@ this)
 {
 	Reset(this);
+	SpawnEventFireworks();
 }
 
 bool doDefaultSpawn(CPlayer@ player, string blobType, u8 team, bool ignoreDisabledSpawns)
@@ -667,4 +672,26 @@ void Reset(CRules@ this)
 	this.SetCurrentState(GAME);
 
 	server_CreateBlob("tc_soundscapes");
+}
+
+
+
+
+
+void SpawnEventFireworks()
+{
+	CBlob@[] placesToSpawn;
+	getBlobsByName("ruins", @placesToSpawn);
+	getBlobsByName("convent", @placesToSpawn);
+	getBlobsByName("citadel", @placesToSpawn);
+	getBlobsByName("stronghold", @placesToSpawn);
+	getBlobsByName("fortress", @placesToSpawn);
+	getBlobsByName("camp", @placesToSpawn);
+	getBlobsByName("banditshack", @placesToSpawn);
+
+
+	for (int a = 0; a < placesToSpawn.length; a++)
+	{
+		server_CreateBlob("patreonfirework", 0, placesToSpawn[a].getPosition());
+	}
 }

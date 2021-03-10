@@ -104,7 +104,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		//cant build wood on stone background
 		return false;
 	}*/
-	
+
 	if ((buildTile == CMap::tile_glass && backtile.type == CMap::tile_glass_d0) ||																																						//glass block
 		(buildTile == CMap::tile_wood && backtile.type >= CMap::tile_wood_d1 && backtile.type <= CMap::tile_wood_d0) || 																												//wood block
 		(buildTile == CMap::tile_castle && backtile.type >= CMap::tile_castle_d1 && backtile.type <= CMap::tile_castle_d0) ||																											//castle block
@@ -121,7 +121,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 			(((backtile.type >= CMap::tile_concrete && backtile.type <= CMap::tile_concrete_d7) || (backtile.type >= CMap::tile_mossyconcrete && backtile.type <= CMap::tile_mossyconcrete_d4))					&& (buildTile == CMap::tile_iron || buildTile == CMap::tile_reinforcedconcrete || buildTile == CMap::tile_plasteel)) ||
 			((backtile.type >= CMap::tile_iron && backtile.type <= CMap::tile_rustyiron_d4)																														&& (buildTile == CMap::tile_reinforcedconcrete || buildTile == CMap::tile_plasteel)) ||
 			(((backtile.type >= CMap::tile_reinforcedconcrete && backtile.type <= CMap::tile_reinforcedconcrete_d15) || (backtile.type >= CMap::tile_plasteel_d0 && backtile.type <= CMap::tile_plasteel_d14))	&& buildTile == CMap::tile_plasteel) ||
-			
+
 			((backtile.type >= CMap::tile_bglass && backtile.type <= CMap::tile_bglass_d0) 																								&& (buildTile == CMap::tile_wood_back || buildTile == CMap::tile_castle_back || buildTile == CMap::tile_bconcrete || buildTile == CMap::tile_biron || buildTile == CMap::tile_bplasteel)) ||
 			((backtile.type == CMap::tile_wood_back || backtile.type == 207) 																											&& (buildTile == CMap::tile_castle_back || buildTile == CMap::tile_bconcrete || buildTile == CMap::tile_biron || buildTile == CMap::tile_bplasteel)) ||
 			((backtile.type == CMap::tile_castle_back || (backtile.type >= 76 && backtile.type <= 79)) 																					&& (buildTile == CMap::tile_bconcrete || buildTile == CMap::tile_biron || buildTile == CMap::tile_bplasteel)) ||
@@ -139,7 +139,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 	{
 		return false;
 	}
-	
+
 	else if (buildTile == CMap::tile_ground)
 	{
 		if (backtile.type == CMap::tile_ground_back || backtile.type == CMap::tile_ground_d0 || backtile.type == CMap::tile_ground_d1)
@@ -206,7 +206,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		bool isLadder = false;
 		bool isSpikes = false;
 		bool isDummyTile = buildTile > 255 && buildTile < 384;
-		
+
 		if (blob !is null)
 		{
 			const string bname = blob.getName();
