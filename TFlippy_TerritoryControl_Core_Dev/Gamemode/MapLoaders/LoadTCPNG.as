@@ -53,7 +53,7 @@ namespace tc_colors
 		color_train = 0xff08b4b2,
 		color_sat = 0xff08ffb6,
 		color_helichopper = 0xff49ccca,
-		
+
 		color_pirategull = 0xffe4e6bb,
 		color_badger = 0xff5a5546,
 		color_barbedwire = 0xff5f6473,
@@ -69,30 +69,30 @@ namespace tc_colors
 		color_reinforced_concrete_bg = 0xff454642,
 		color_rail = 0xff777d84,
 		color_rail_bg = 0xff494d52,
-		
+
 		color_matter = 0xff50deb1,
 		color_plasteel = 0xffd1c59f,
 		color_plasteel_bg = 0xff6e6753,
-		
+
 		color_rustyiron = 0xff5f4f4f,
 		// color_rustyiron_bg = 0xff453535,
 		color_mossyconcrete = 0xff95aa7e,
 		color_mossyconcrete_bg = 0xff4d6340,
-		
+
 		color_damaged_iron = 0xff2f2f2f,
 		color_damaged_iron_bg = 0xff151515,
 		color_damaged_concrete = 0xff7d7a66,
 		color_damaged_concrete_bg = 0xff353328,
 		color_damaged_glass = 0xff3d6571,
 		color_damaged_glass_bg = 0xff2a4a53,
-		
+
 		color_damaged_reinforced_concrete = 0xff60625a,
 		// color_damaged_reinforced_concrete_bg = 0xff151612,
 		color_damaged_rustyiron = 0xff2f1f1f,
 		// color_damaged_rustyiron_bg = 0xff150505,
 		color_damaged_mossyconcrete = 0xff657a4e,
 		color_damaged_mossyconcrete_bg = 0xff1d3310,
-		
+
 		color_biome_jungle = 0xff327800,
 		color_biome_arctic = 0xff64b4ff,
 		color_biome_desert = 0xffffd364,
@@ -109,7 +109,7 @@ class TCPNGLoader : PNGLoader
 
 	void handlePixel(const SColor &in pixel, int offset) override
 	{
-		
+
 		PNGLoader::handlePixel(pixel, offset);
 
 		switch (pixel.color)
@@ -119,26 +119,26 @@ class TCPNGLoader : PNGLoader
 				spawnBlob(map, "tunnel", offset, -1);
 				break;
 			}
-			
+
 			case tc_colors::color_coalmine_neutral:
 			{
 				spawnBlob(map, "coalmine", offset, -1);
 				break;
 			}
-			
+
 			case tc_colors::color_merchant_neutral:
 			{
 				spawnBlob(map, "merchant", offset, -1);
 				break;
 			}
-			
+
 			case tc_colors::color_trader_neutral:
 			{
 				autotile(offset);
 				spawnBlob(map, "trader", offset, -1);
 				break;
 			}
-			
+
 			case tc_colors::color_hobo_neutral:
 			{
 				autotile(offset);
@@ -151,30 +151,30 @@ class TCPNGLoader : PNGLoader
 				spawnBlob(map, "witchshack", offset, -1);
 				break;
 			}
-			
+
 			case tc_colors::color_pumpjack_neutral:
 			{
 				spawnBlob(map, "pumpjack", offset, -1);
 				break;
 			}
-			
+
 			case tc_colors::color_badgerden:
 			{
 				spawnBlob(map, "badger", offset, -1);
 				break;
 			}
-			
+
 			case tc_colors::color_chickencoop:
 			{
 				autotile(offset);
 				spawnBlob(map, "chickencoop", offset, -1);
 				break;
 			}
-			
+
 			case tc_colors::color_scoutchicken:
 			{
 				autotile(offset);
-			
+
 				f32 rand = XORRandom(100);
 				if (rand < 15)
 				{
@@ -191,17 +191,17 @@ class TCPNGLoader : PNGLoader
 					CBlob@ blob = spawnBlob(map, "scoutchicken", offset, -1);
 					blob.set_bool("raider", XORRandom(100) < 50);
 				}
-			
+
 				break;
 			}
-			
+
 			case tc_colors::color_lootchest:
 			{
 				map.SetTile(offset, CMap::tile_biron);
 				spawnBlob(map, "lootchest", offset, -1);
 				break;
 			}
-			
+
 			case tc_colors::color_lootchest_random:
 			{
 				if (XORRandom(100) < 50)
@@ -211,7 +211,7 @@ class TCPNGLoader : PNGLoader
 				}
 				break;
 			}
-			
+
 			case tc_colors::color_ruin:
 			{
 				spawnBlob(map, "ruins", offset, -1);
@@ -292,7 +292,7 @@ class TCPNGLoader : PNGLoader
 			case tc_colors::color_irondoor_chicken:
 			{
 				map.SetTile(offset, CMap::tile_biron);
-				spawnBlob(map, "iron_door", offset, 250, true);	
+				spawnBlob(map, "iron_door", offset, 250, true);
 				break;
 			}
 			case tc_colors::color_plasteel:
@@ -312,7 +312,7 @@ class TCPNGLoader : PNGLoader
 			}
 			case tc_colors::color_chickenmarket:
 			{
-				CBlob@ blob = spawnBlob(map, "chickenmarket", offset, 250);	
+				CBlob@ blob = spawnBlob(map, "chickenmarket", offset, 250);
 				blob.setPosition(blob.getPosition() + Vec2f(0, -16));
 				break;
 			}
@@ -426,7 +426,7 @@ class TCPNGLoader : PNGLoader
 				map.SetTile(offset, CMap::tile_mossybconcrete);
 				break;
 			}
-			
+
 			case tc_colors::color_damaged_iron:
 			{
 				switch (XORRandom(9))
@@ -569,12 +569,12 @@ bool LoadMap(CMap@ map, const string& in fileName)
 	TCPNGLoader loader();
 
 	bool result = loader.loadMap(map , fileName);
-	
+
 	// if (isServer())
 	// {
 		// server_CreateBlob("info_arctic", 255, Vec2f(0, 0));
 	// }
-	
+
 	return result;
 }
 
@@ -611,7 +611,7 @@ const SColor c_snow = SColor(0xffd3decf);
 const SColor c_track = SColor(0xff474b4d);
 const SColor c_matter = SColor(0xff4d756f);
 
-SColor[] fire_colors = 
+SColor[] fire_colors =
 {
 	SColor(0xfff3ac5c),
 	SColor(0xffdb5743),
@@ -621,18 +621,18 @@ SColor[] fire_colors =
 void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out col)
 {
 	const int w = this.tilemapwidth;
-	const int h = this.tilemapheight;
-	
+	const int h = this.PPtilemapheight;
+
 	const int x = offset % w;
 	const int y = offset / w;
 	const Vec2f pos = Vec2f(x * 8, y * 8);
-	
+
 	const f32 heightGradient = y / f32(h);
-	
+
 	const Tile tile = this.getTile(offset);
-	
+
 	bool air = type == CMap::tile_empty;
-	
+
 	const u8 flags = tile.flags;
 	bool bg = flags & Tile::BACKGROUND != 0;
 	bool solid = flags & Tile::SOLID != 0;
@@ -731,13 +731,13 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 		{
 			col = c_missing;
 		}
-		
+
 		// else
 		// {
 			// col = c_missing;
 		// }
-		
-		if (!solid) 
+
+		if (!solid)
 		{
 			col = col.getInterpolated(c_white, 0.85f);
 			if (l == CMap::tile_empty || r == CMap::tile_empty || u == CMap::tile_empty || d == CMap::tile_empty) col = col.getInterpolated(c_black, 0.70f);
@@ -746,11 +746,11 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 				// col = col.getInterpolated(c_black, 1.00f - ((x + y) % 2) * 0.10f);
 			// }
 		}
-		else if (!this.isTileSolid(l) || !this.isTileSolid(r) || !this.isTileSolid(u) || !this.isTileSolid(d)) 
+		else if (!this.isTileSolid(l) || !this.isTileSolid(r) || !this.isTileSolid(u) || !this.isTileSolid(d))
 		{
 			col = col.getInterpolated(c_black, 0.70f);
 		}
-		
+
 		col = col.getInterpolated(c_white, 1.00f - ((1.00f - heightGradient) * 0.25f));
 	}
 	else
@@ -760,7 +760,7 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 		col = col.getInterpolated(c_sky_top, heightGradient);
 		col = col.getInterpolated(c_sky, 0.75f);
 	}
-	
+
 	if (this.isInWater(pos)) col = col.getInterpolated(SColor(0xff1d85ab), 0.5f);
 	// if (this.isTileInFire(x, y)) col = col.getInterpolated(fire_colors[XORRandom(fire_colors.length)], 0.5f);
 }
@@ -787,9 +787,9 @@ bool onMapTileCollapse(CMap@ map, u32 offset)
 			rules.SendCommand(rules.getCommandID("remove_tile"), params);
 		}
 	}
-	
+
 	// print("collapse");
-	
+
 	return true;
 }
 
@@ -819,7 +819,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_glass_v14:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				map.server_SetTile(pos, CMap::tile_glass_d0);
 
 				for (u8 i = 0; i < 4; i++)
@@ -858,19 +858,19 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 
 			case CMap::tile_matter:
 				return CMap::tile_matter_d0;
-				
+
 			case CMap::tile_matter_d0:
 			case CMap::tile_matter_d1:
 				return oldTileType + 1;
-				
+
 			case CMap::tile_matter_d2:
 				return CMap::tile_empty;
-				
+
 			case CMap::tile_brick_v0:
 			case CMap::tile_brick_v1:
 			case CMap::tile_brick_v2:
 			case CMap::tile_brick_v3:
-				return CMap::tile_brick_v0; 
+				return CMap::tile_brick_v0;
 
 
 			case CMap::tile_bglass:
@@ -893,9 +893,9 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_bglass_v14:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				map.server_SetTile(pos, CMap::tile_bglass_d0);
-				
+
 				for (u8 i = 0; i < 4; i++)
 				{
 					bglass_Update(map, map.getTileWorldPosition(index) + directions[i]);
@@ -915,11 +915,11 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_biron_m:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				map.server_SetTile(pos, CMap::tile_biron_d0);
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::WATER_PASSES | Tile::LIGHT_PASSES);
 				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
-				
+
 				OnBIronTileUpdate(false, true, map, map.getTileWorldPosition(index));
 				return CMap::tile_biron_d0;
 			}
@@ -941,7 +941,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_bplasteel:
 			case CMap::tile_bplasteel_v0:
 				return CMap::tile_bplasteel_d0;
-				
+
 			case CMap::tile_bplasteel_d0:
 			case CMap::tile_bplasteel_d1:
 			case CMap::tile_bplasteel_d2:
@@ -967,7 +967,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 				OnTNTTileHit(map, index, damage, map.isInFire(map.getTileWorldPosition(index)));
 				return CMap::tile_empty;
 			}
-			
+
 			case CMap::tile_concrete:
 				return CMap::tile_concrete_d0;
 
@@ -988,7 +988,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_concrete_v14:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				map.server_SetTile(pos, CMap::tile_concrete_d0);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
@@ -999,7 +999,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 				}
 				return CMap::tile_concrete_d0;
 			}
-			
+
 			case CMap::tile_concrete_d0:
 			case CMap::tile_concrete_d1:
 			case CMap::tile_concrete_d2:
@@ -1013,10 +1013,10 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			{
 				return CMap::tile_empty;
 			}
-			
+
 			case CMap::tile_iron:
 				return CMap::tile_iron_d0;
-				
+
 			case CMap::tile_iron_v0:
 			case CMap::tile_iron_v1:
 			case CMap::tile_iron_v2:
@@ -1034,7 +1034,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_iron_v14:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				map.server_SetTile(pos, CMap::tile_iron_d0);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
@@ -1045,7 +1045,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 				}
 				return CMap::tile_iron_d0;
 			}
-				
+
 			case CMap::tile_iron_d0:
 			case CMap::tile_iron_d1:
 			case CMap::tile_iron_d2:
@@ -1058,19 +1058,19 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 
 			case CMap::tile_iron_d8:
 				return CMap::tile_empty;
-				
+
 			case CMap::tile_rustyiron:
 				return CMap::tile_rustyiron_d0;
-				
+
 			case CMap::tile_rustyiron_d0:
 			case CMap::tile_rustyiron_d1:
 			case CMap::tile_rustyiron_d2:
 			case CMap::tile_rustyiron_d3:
 				return oldTileType + 1;
-				
+
 			case CMap::tile_rustyiron_d4:
 				return CMap::tile_empty;
-			
+
 			case CMap::tile_reinforcedconcrete:
 				return CMap::tile_reinforcedconcrete_d0;
 
@@ -1091,18 +1091,18 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_reinforcedconcrete_v14:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				map.server_SetTile(pos, CMap::tile_reinforcedconcrete_d0);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::FLAMMABLE);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				
+
 				for (u8 i = 0; i < 4; i++)
 				{
 					reinforcedconcrete_Update(map, map.getTileWorldPosition(index) + directions[i]);
 				}
 				return CMap::tile_reinforcedconcrete_d0;
 			}
-			
+
 			case CMap::tile_reinforcedconcrete_d0:
 			case CMap::tile_reinforcedconcrete_d1:
 			case CMap::tile_reinforcedconcrete_d2:
@@ -1122,19 +1122,19 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 
 			case CMap::tile_reinforcedconcrete_d15:
 				return CMap::tile_empty;
-			
+
 			case CMap::tile_mossyconcrete:
 				return CMap::tile_mossyconcrete_d0;
-				
+
 			case CMap::tile_mossyconcrete_d0:
 			case CMap::tile_mossyconcrete_d1:
 			case CMap::tile_mossyconcrete_d2:
 			case CMap::tile_mossyconcrete_d3:
 				return oldTileType + 1;
-				
+
 			case CMap::tile_mossyconcrete_d4:
 				return CMap::tile_empty;
-			
+
 			case CMap::tile_bconcrete:
 				return CMap::tile_bconcrete_d0;
 
@@ -1155,11 +1155,11 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_bconcrete_v14:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				map.server_SetTile(pos, CMap::tile_bconcrete_d0);
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::WATER_PASSES | Tile::LIGHT_PASSES);
 				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
-				
+
 				for (u8 i = 0; i < 4; i++)
 				{
 					bconcrete_Update(map, map.getTileWorldPosition(index) + directions[i]);
@@ -1180,16 +1180,16 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			{
 				return CMap::tile_empty;
 			}
-			
+
 			case CMap::tile_mossybconcrete:
 				return CMap::tile_mossybconcrete_d0;
-				
+
 			case CMap::tile_mossybconcrete_d0:
 			case CMap::tile_mossybconcrete_d1:
 			case CMap::tile_mossybconcrete_d2:
 			case CMap::tile_mossybconcrete_d3:
 				return oldTileType + 1;
-				
+
 			case CMap::tile_mossybconcrete_d4:
 				return CMap::tile_empty;
 
@@ -1201,15 +1201,15 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_snow_v4:
 			case CMap::tile_snow_v5:
 				return CMap::tile_snow_d0;
-				
+
 			case CMap::tile_snow_d0:
 			case CMap::tile_snow_d1:
 			case CMap::tile_snow_d2:
 				return oldTileType + 1;
-			
+
 			case CMap::tile_snow_d3:
 				return CMap::tile_empty;
-			
+
 			case CMap::tile_snow_pile:
 			case CMap::tile_snow_pile_v0:
 			case CMap::tile_snow_pile_v1:
@@ -1246,7 +1246,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				OnMatterTileDestroyed(map, index);
 			else if (tile_old == CMap::tile_snow_d3 || tile_old == CMap::tile_snow_pile_v4 || tile_old == CMap::tile_snow_pile_v5)
 				OnSnowTileDestroyed(map, index);
-			
+
 			if(isTileSnowPile(map.getTile(index-map.tilemapwidth).type) && map.tilemapwidth < index)
 				map.server_SetTile(map.getTileWorldPosition(index-map.tilemapwidth), CMap::tile_empty);
 			break;
@@ -1259,18 +1259,18 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 		map.SetTileSupport(index, 10);
 
 		switch(tile_new)
-		{		
+		{
 			case CMap::tile_glass:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
 				glass_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
 				map.RemoveTileFlag( index, Tile::WATER_PASSES);
-				
+
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 			}
-				
+
 			case CMap::tile_glass_v0:
 			case CMap::tile_glass_v1:
 			case CMap::tile_glass_v2:
@@ -1287,9 +1287,9 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_glass_v13:
 			case CMap::tile_glass_v14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
-				
+
 				break;
-				
+
 			case CMap::tile_glass_d0:
 				OnGlassTileHit(map, index);
 				break;
@@ -1298,10 +1298,10 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_plasteel:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
-				
+
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
-						
+
 			case CMap::tile_plasteel_d0:
 			case CMap::tile_plasteel_d1:
 			case CMap::tile_plasteel_d2:
@@ -1319,39 +1319,39 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_plasteel_d14:
 				OnPlasteelTileHit(map, index);
 				break;
-				
+
 			case CMap::tile_matter:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
-				
+
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
-				
+
 			case CMap::tile_matter_d0:
 			case CMap::tile_matter_d1:
 			case CMap::tile_matter_d2:
 				OnMatterTileHit(map, index);
 				break;
-				
+
 			case CMap::tile_brick_v0:
 			case CMap::tile_brick_v1:
 			case CMap::tile_brick_v2:
 			case CMap::tile_brick_v3:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
-				
+
 				break;
-				
+
 			case CMap::tile_bglass:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
 				bglass_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES | Tile::LIGHT_SOURCE);
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
-				
+
 				break;
 			}
-				
+
 			case CMap::tile_bglass_v0:
 			case CMap::tile_bglass_v1:
 			case CMap::tile_bglass_v2:
@@ -1368,18 +1368,18 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_bglass_v13:
 			case CMap::tile_bglass_v14:
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES | Tile::LIGHT_SOURCE);
-				
+
 				break;
-				
+
 			case CMap::tile_bglass_d0:
 				OnBGlassTileHit(map, index);
 				break;
-				
+
 			case CMap::tile_biron:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
 				OnBIronTileUpdate(false, true, map, pos);
-				
+
 				TileType up = map.getTile(pos - Vec2f( 0.0f, 8.0f)).type;
 				TileType down = map.getTile(pos + Vec2f( 0.0f, 8.0f)).type;
 				bool isUp = (up >= CMap::tile_biron && up <= CMap::tile_biron_m) ? true : false;
@@ -1399,23 +1399,23 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::WATER_PASSES | Tile::LIGHT_PASSES);
 				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
-					
-				
-				
-				
+
+
+
+
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
-				
+
 				break;
 			}
-			
+
 			case CMap::tile_biron_u:
 			case CMap::tile_biron_d:
 			case CMap::tile_biron_m:
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
-				
+
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
-				
+
 			case CMap::tile_biron_d0:
 			case CMap::tile_biron_d1:
 			case CMap::tile_biron_d2:
@@ -1427,14 +1427,14 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_biron_d8:
 				OnBIronTileHit(map, index);
 				break;
-			
+
 			case CMap::tile_bplasteel:
 				if((index / map.tilemapwidth + index % map.tilemapwidth) % 2 == 0) map.SetTile(index, CMap::tile_bplasteel_v0);
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
-				
+
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
-						
+
 			case CMap::tile_bplasteel_d0:
 			case CMap::tile_bplasteel_d1:
 			case CMap::tile_bplasteel_d2:
@@ -1452,27 +1452,27 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_bplasteel_d14:
 				OnBPlasteelTileHit(map, index);
 				break;
-			
+
 			case CMap::tile_tnt:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES | Tile::FLAMMABLE);
 				map.RemoveTileFlag( index, Tile::LIGHT_SOURCE);
-				
+
 				if (isClient()) Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
-				
+
 			case CMap::tile_concrete:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				concrete_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
-				
+
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
-				
+
 				break;
 			}
-			
+
 			case CMap::tile_concrete_v0:
 			case CMap::tile_concrete_v1:
 			case CMap::tile_concrete_v2:
@@ -1491,7 +1491,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				break;
-				
+
 			case CMap::tile_concrete_d0:
 			case CMap::tile_concrete_d1:
 			case CMap::tile_concrete_d2:
@@ -1508,28 +1508,28 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_rail_0:
 			case CMap::tile_rail_1:
 				map.AddTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
-				map.RemoveTileFlag( index, Tile::COLLISION | Tile::SOLID | Tile::FLAMMABLE);			
+				map.RemoveTileFlag( index, Tile::COLLISION | Tile::SOLID | Tile::FLAMMABLE);
 				break;
-			
+
 			case CMap::tile_rail_0_bg:
 			case CMap::tile_rail_1_bg:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::FLAMMABLE);			
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::FLAMMABLE);
 				break;
-			
+
 			case CMap::tile_iron:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				iron_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
-				
+
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
-				
+
 				break;
 			}
-			
+
 			case CMap::tile_iron_v0:
 			case CMap::tile_iron_v1:
 			case CMap::tile_iron_v2:
@@ -1547,13 +1547,13 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_iron_v14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
-				
+
 				break;
 
 			case CMap::tile_iron_d0:
 			case CMap::tile_iron_d1:
 			case CMap::tile_iron_d2:
-			case CMap::tile_iron_d3:	
+			case CMap::tile_iron_d3:
 			case CMap::tile_iron_d4:
 			case CMap::tile_iron_d5:
 			case CMap::tile_iron_d6:
@@ -1563,12 +1563,12 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				OnIronTileHit(map, index);
 				break;
-			
+
 			case CMap::tile_rustyiron:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				break;
-				
+
 			case CMap::tile_rustyiron_d0:
 			case CMap::tile_rustyiron_d1:
 			case CMap::tile_rustyiron_d2:
@@ -1578,20 +1578,20 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				OnIronTileHit(map, index);
 				break;
-			
+
 			case CMap::tile_reinforcedconcrete:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				reinforcedconcrete_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
-				
+
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
-				
+
 				break;
 			}
-			
+
 			case CMap::tile_reinforcedconcrete_v0:
 			case CMap::tile_reinforcedconcrete_v1:
 			case CMap::tile_reinforcedconcrete_v2:
@@ -1610,7 +1610,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				break;
-				
+
 			case CMap::tile_reinforcedconcrete_d0:
 			case CMap::tile_reinforcedconcrete_d1:
 			case CMap::tile_reinforcedconcrete_d2:
@@ -1631,12 +1631,12 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				OnConcreteTileHit(map, index);
 				break;
-			
+
 			case CMap::tile_mossyconcrete:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				break;
-				
+
 			case CMap::tile_mossyconcrete_d0:
 			case CMap::tile_mossyconcrete_d1:
 			case CMap::tile_mossyconcrete_d2:
@@ -1646,17 +1646,17 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.RemoveTileFlag(index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				OnConcreteTileHit(map, index);
 				break;
-			
+
 			case CMap::tile_bconcrete:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				
+
 				bconcrete_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::WATER_PASSES | Tile::LIGHT_PASSES);
 				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
-				
+
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
-				
+
 				break;
 			}
 
@@ -1691,12 +1691,12 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
 				OnBConcreteTileHit(map, index);
 				break;
-			
+
 			case CMap::tile_mossybconcrete:
 				map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
 				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
 				break;
-				
+
 			case CMap::tile_mossybconcrete_d0:
 			case CMap::tile_mossybconcrete_d1:
 			case CMap::tile_mossybconcrete_d2:
@@ -1706,7 +1706,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.RemoveTileFlag(index, Tile::LIGHT_SOURCE | Tile::SOLID | Tile::COLLISION);
 				OnBConcreteTileHit(map, index);
 				break;
-			
+
 			case CMap::tile_snow:
 				if(isClient())
 				{
@@ -1729,7 +1729,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				map.RemoveTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				break;
-				
+
 			case CMap::tile_snow_d0:
 			case CMap::tile_snow_d1:
 			case CMap::tile_snow_d2:
@@ -1739,7 +1739,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.RemoveTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::WATER_PASSES);
 				if(isClient()) OnSnowTileHit(map, index);
 				break;
-			
+
 			case CMap::tile_snow_pile:
 			case CMap::tile_snow_pile_v0:
 			case CMap::tile_snow_pile_v1:
@@ -1760,149 +1760,149 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 }
 
 
-void OnIronTileHit(CMap@ map, u32 index)														
-{																								
-	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);										
-	map.RemoveTileFlag( index, Tile::LIGHT_PASSES );											
-																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-																								
-		Sound::Play("dig_stone.ogg", pos, 1.0f, 1.0f);											
-		sparks(pos, 1, 1);																		
-	}																							
-}																								
-																								
-void OnBIronTileHit(CMap@ map, u32 index)														
-{																								
-	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);			
-																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-																								
-		Sound::Play("dig_stone.ogg", pos, 1.0f, 1.0f);											
-		sparks(pos, 1, 1);																		
-	}																							
-}																								
-																								
-void OnIronTileDestroyed(CMap@ map, u32 index)													
-{																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-																								
-		Sound::Play("destroy_stone.ogg", pos, 1.0f, 1.0f);										
-	}																							
-}																								
-																								
-void OnBIronTileUpdate(bool updateThis, bool updateOthers, CMap@ map, Vec2f pos)				
-{																								
-	TileType up = map.getTile(pos - Vec2f( 0.0f, 8.0f)).type;									
-	TileType down = map.getTile(pos + Vec2f( 0.0f, 8.0f)).type;									
-	bool isUp = (up >= CMap::tile_biron && up <= CMap::tile_biron_m) ? true : false;			
-	bool isDown = (down >= CMap::tile_biron && down <= CMap::tile_biron_m) ? true : false;		
-																								
-	if(updateThis)																				
-	{																							
-		if(isUp && isDown)																		
-			map.server_SetTile(pos, CMap::tile_biron_m);										
-		else if(isUp || isDown)																	
-		{																						
-			if(isUp && !isDown)																	
-				map.server_SetTile(pos, CMap::tile_biron_u);									
-			if(!isUp && isDown)																	
-				map.server_SetTile(pos, CMap::tile_biron_d);									
-		}																						
-		else																					
-			map.server_SetTile(pos, CMap::tile_biron);											
-	}																							
-	if(updateOthers)																			
-	{																							
-		if(isUp)																				
-			OnBIronTileUpdate(true, false, map, pos - Vec2f( 0.0f, 8.0f));						
-		if(isDown)																				
-			OnBIronTileUpdate(true, false, map, pos + Vec2f( 0.0f, 8.0f));						
-	}																							
-}																								
+void OnIronTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+	map.RemoveTileFlag( index, Tile::LIGHT_PASSES );
 
-void iron_SetTile(CMap@ map, Vec2f pos)															
-{																								
-    map.SetTile(map.getTileOffset(pos), CMap::tile_iron + iron_GetMask(map, pos));				
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        iron_Update(map, pos + directions[i]);													
-    }																							
-}																								
-																								
-u8 iron_GetMask(CMap@ map, Vec2f pos)															
-{																								
-    u8 mask = 0;																				
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        if (isIronTile(map, pos + directions[i])) mask |= 1 << i;								
-    }																							
-																								
-    return mask;																				
-}																								
-																								
-void iron_Update(CMap@ map, Vec2f pos)															
-{																								
-    u16 tile = map.getTile(pos).type;															
-    if (isIronTile(map, pos))																	
-		map.SetTile(map.getTileOffset(pos),CMap::tile_iron+iron_GetMask(map,pos));				
-}																								
-																								
-bool isIronTile(CMap@ map, Vec2f pos)															
-{																								
-    u16 tile = map.getTile(pos).type;															
-    return tile >= CMap::tile_iron && tile <= CMap::tile_iron_v14;								
-}																								
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
 
-void OnGlassTileHit(CMap@ map, u32 index)														
-{																								
-	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);					
-																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-																								
-		Sound::Play("GlassBreak2.ogg", pos, 1.0f, 1.0f);										
-		glasssparks(pos, 5 + XORRandom(5));														
-	}																							
-}																								
-																								
-void OnBGlassTileHit(CMap@ map, u32 index)														
-{																								
-	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES);								
-																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-																								
-		Sound::Play("GlassBreak2.ogg", pos, 1.0f, 1.0f);										
-		glasssparks(pos, 3 + XORRandom(2));														
-	}																							
-}																								
-																								
-void OnGlassTileDestroyed(CMap@ map, u32 index)													
-{																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-																								
-		Sound::Play("GlassBreak1.ogg", pos, 1.0f, 1.0f);										
-		glasssparks(pos, 5 + XORRandom(3));														
-	}																							
-}																								
-																								
-void glasssparks(Vec2f at, int amount)															
-{																								
+		Sound::Play("dig_stone.ogg", pos, 1.0f, 1.0f);
+		sparks(pos, 1, 1);
+	}
+}
+
+void OnBIronTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
+
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+
+		Sound::Play("dig_stone.ogg", pos, 1.0f, 1.0f);
+		sparks(pos, 1, 1);
+	}
+}
+
+void OnIronTileDestroyed(CMap@ map, u32 index)
+{
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+
+		Sound::Play("destroy_stone.ogg", pos, 1.0f, 1.0f);
+	}
+}
+
+void OnBIronTileUpdate(bool updateThis, bool updateOthers, CMap@ map, Vec2f pos)
+{
+	TileType up = map.getTile(pos - Vec2f( 0.0f, 8.0f)).type;
+	TileType down = map.getTile(pos + Vec2f( 0.0f, 8.0f)).type;
+	bool isUp = (up >= CMap::tile_biron && up <= CMap::tile_biron_m) ? true : false;
+	bool isDown = (down >= CMap::tile_biron && down <= CMap::tile_biron_m) ? true : false;
+
+	if(updateThis)
+	{
+		if(isUp && isDown)
+			map.server_SetTile(pos, CMap::tile_biron_m);
+		else if(isUp || isDown)
+		{
+			if(isUp && !isDown)
+				map.server_SetTile(pos, CMap::tile_biron_u);
+			if(!isUp && isDown)
+				map.server_SetTile(pos, CMap::tile_biron_d);
+		}
+		else
+			map.server_SetTile(pos, CMap::tile_biron);
+	}
+	if(updateOthers)
+	{
+		if(isUp)
+			OnBIronTileUpdate(true, false, map, pos - Vec2f( 0.0f, 8.0f));
+		if(isDown)
+			OnBIronTileUpdate(true, false, map, pos + Vec2f( 0.0f, 8.0f));
+	}
+}
+
+void iron_SetTile(CMap@ map, Vec2f pos)
+{
+    map.SetTile(map.getTileOffset(pos), CMap::tile_iron + iron_GetMask(map, pos));
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        iron_Update(map, pos + directions[i]);
+    }
+}
+
+u8 iron_GetMask(CMap@ map, Vec2f pos)
+{
+    u8 mask = 0;
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        if (isIronTile(map, pos + directions[i])) mask |= 1 << i;
+    }
+
+    return mask;
+}
+
+void iron_Update(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    if (isIronTile(map, pos))
+		map.SetTile(map.getTileOffset(pos),CMap::tile_iron+iron_GetMask(map,pos));
+}
+
+bool isIronTile(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    return tile >= CMap::tile_iron && tile <= CMap::tile_iron_v14;
+}
+
+void OnGlassTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+
+		Sound::Play("GlassBreak2.ogg", pos, 1.0f, 1.0f);
+		glasssparks(pos, 5 + XORRandom(5));
+	}
+}
+
+void OnBGlassTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES);
+
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+
+		Sound::Play("GlassBreak2.ogg", pos, 1.0f, 1.0f);
+		glasssparks(pos, 3 + XORRandom(2));
+	}
+}
+
+void OnGlassTileDestroyed(CMap@ map, u32 index)
+{
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+
+		Sound::Play("GlassBreak1.ogg", pos, 1.0f, 1.0f);
+		glasssparks(pos, 5 + XORRandom(3));
+	}
+}
+
+void glasssparks(Vec2f at, int amount)
+{
 	switch(XORRandom(4))
-	{		
+	{
 		case 1:
 			at += Vec2f(4, 0);
 			break;
@@ -1915,365 +1915,365 @@ void glasssparks(Vec2f at, int amount)
 		case 4:
 			at += Vec2f(4, 8);
 			break;
-	}																							
-	SColor[] colors = 
-	{	
-		SColor(255, 217, 242, 246),												
-		SColor(255, 255, 255, 255),											
-		SColor(255, 85, 119, 130),											
-		SColor(255, 79, 145, 167),											
-		SColor(255, 48, 60, 65),											
+	}
+	SColor[] colors =
+	{
+		SColor(255, 217, 242, 246),
+		SColor(255, 255, 255, 255),
+		SColor(255, 85, 119, 130),
+		SColor(255, 79, 145, 167),
+		SColor(255, 48, 60, 65),
 		SColor(255, 21, 27, 30)
-	};								
-	
+	};
+
 	if (isClient())
-	{	
-		for (int i = 0; i < amount; i++)															
-		{																							
-			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);										
-			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;	
-			ParticlePixel(at, vel, colors[XORRandom(6)], true);										
+	{
+		for (int i = 0; i < amount; i++)
+		{
+			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);
+			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;
+			ParticlePixel(at, vel, colors[XORRandom(6)], true);
 			makeGibParticle("GlassSparks.png", at, vel, 0, XORRandom(5)-1, Vec2f(4.0f, 4.0f), 2.0f, 1, "GlassBreak1.ogg");
-		}		
-	}	
-}																								
-																								
-u8 glass_GetMask(CMap@ map, Vec2f pos)															
-{																								
-    u8 mask = 0;																				
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        if (isGlassTile(map, pos + directions[i])) mask |= 1 << i;								
-    }																							
-																								
-    return mask;																				
-}																								
-																								
-u8 bglass_GetMask(CMap@ map, Vec2f pos)															
-{																								
-    u8 mask = 0;																				
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        if (isBGlassTile(map, pos + directions[i])) mask |= 1 << i;								
-    }																							
-																								
-    return mask;																				
-}																								
-																								
-void glass_SetTile(CMap@ map, Vec2f pos)														
-{																								
-    map.SetTile(map.getTileOffset(pos), CMap::tile_glass + glass_GetMask(map, pos));			
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        glass_Update(map, pos + directions[i]);													
-    }																							
-}																								
-																								
-void bglass_SetTile(CMap@ map, Vec2f pos)														
-{																								
-    map.SetTile(map.getTileOffset(pos), CMap::tile_bglass + bglass_GetMask(map, pos));			
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        bglass_Update(map, pos + directions[i]);												
-    }																							
-}																								
-																								
-void glass_Update(CMap@ map, Vec2f pos)															
-{																								
-    u16 tile = map.getTile(pos).type;															
-    if (isGlassTile(map, pos))																	
-		map.server_SetTile(pos,CMap::tile_glass+glass_GetMask(map,pos));						
-}																								
-																								
-void bglass_Update(CMap@ map, Vec2f pos)														
-{																								
-    u16 tile = map.getTile(pos).type;															
-    if (isBGlassTile(map, pos))																	
-		map.server_SetTile(pos,CMap::tile_bglass+bglass_GetMask(map,pos));						
-}																								
-																								
-bool isGlassTile(CMap@ map, Vec2f pos)															
-{																								
-    u16 tile = map.getTile(pos).type;															
-    return tile >= CMap::tile_glass && tile <= CMap::tile_glass_v14;							
-}																								
-																								
-bool isBGlassTile(CMap@ map, Vec2f pos)															
-{																								
-    u16 tile = map.getTile(pos).type;															
-    return tile >= CMap::tile_bglass && tile <= CMap::tile_bglass_v14;							
-}																								
+		}
+	}
+}
 
-void OnPlasteelTileHit(CMap@ map, u32 index)													
-{																								
-	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);										
-	map.RemoveTileFlag( index, Tile::LIGHT_PASSES );											
-																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-																								
-		Sound::Play("dig_stone.ogg", pos, 1.0f, 0.7f);											
-	}																							
-}																								
-																								
-void OnBPlasteelTileHit(CMap@ map, u32 index)													
-{																								
-	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);			
-																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-																								
-		Sound::Play("dig_stone.ogg", pos, 1.0f, 1.0f);											
-	}																							
-}																								
-																								
-void OnPlasteelTileDestroyed(CMap@ map, u32 index)												
-{																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-																								
-		Sound::Play("destroy_stone.ogg", pos, 1.0f, 1.0f);										
-	}																							
-}																								
+u8 glass_GetMask(CMap@ map, Vec2f pos)
+{
+    u8 mask = 0;
 
-void OnConcreteTileHit(CMap@ map, u32 index)													
-{																								
-	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);										
-	map.RemoveTileFlag( index, Tile::LIGHT_PASSES );											
-																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-		for (int i = 0; i < 3; i++)																
-		{																						
-			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);									
-			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;
-			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)					
-			: SColor(255, 110, 100, 93);														
-			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);									
-		}																						
-		Sound::Play("PickStone" + (1 + XORRandom(3)), pos, 1.0f, 1.0f);							
-	}																							
-}																								
-																								
-void OnBConcreteTileHit(CMap@ map, u32 index)													
-{																								
-	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);			
-																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-		for (int i = 0; i < 3; i++)																
-		{																						
-			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);									
-			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;
-			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)					
-			: SColor(255, 110, 100, 93);														
-			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);									
-		}																						
-		Sound::Play("PickStone" + (1 + XORRandom(3)), pos, 1.0f, 1.0f);							
-	}																							
-}																								
-																								
-void OnConcreteTileDestroyed(CMap@ map, u32 index)												
-{																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-		for (int i = 0; i < 15; i++)															
-		{																						
-			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);									
-			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;
-			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)					
-			: SColor(255, 110, 100, 93);														
-			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);									
-		}																						
-		ParticleAnimated("Smoke.png", pos+Vec2f(4, 0), 											
-		Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, false);												
-		Sound::Play("destroy_wall.ogg", pos, 1.0f, 1.0f);										
-	}																							
-}																								
-																								
-void concrete_SetTile(CMap@ map, Vec2f pos)														
-{																								
-    map.SetTile(map.getTileOffset(pos), CMap::tile_concrete + concrete_GetMask(map, pos));		
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        concrete_Update(map, pos + directions[i]);												
-    }																							
-}																								
-																								
-u8 concrete_GetMask(CMap@ map, Vec2f pos)														
-{																								
-    u8 mask = 0;																				
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        if (isConcreteTile(map, pos + directions[i])) mask |= 1 << i;							
-    }																							
-																								
-    return mask;																				
-}																								
-																								
-void concrete_Update(CMap@ map, Vec2f pos)														
-{																								
-    u16 tile = map.getTile(pos).type;															
-    if (isConcreteTile(map, pos))																
-		map.SetTile(map.getTileOffset(pos),CMap::tile_concrete+concrete_GetMask(map,pos));		
-}																								
-																								
-bool isConcreteTile(CMap@ map, Vec2f pos)														
-{																								
-    u16 tile = map.getTile(pos).type;															
-    return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_v14;						
-}																								
+    for (u8 i = 0; i < 4; i++)
+    {
+        if (isGlassTile(map, pos + directions[i])) mask |= 1 << i;
+    }
 
-void reinforcedconcrete_SetTile(CMap@ map, Vec2f pos)											
-{																								
+    return mask;
+}
+
+u8 bglass_GetMask(CMap@ map, Vec2f pos)
+{
+    u8 mask = 0;
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        if (isBGlassTile(map, pos + directions[i])) mask |= 1 << i;
+    }
+
+    return mask;
+}
+
+void glass_SetTile(CMap@ map, Vec2f pos)
+{
+    map.SetTile(map.getTileOffset(pos), CMap::tile_glass + glass_GetMask(map, pos));
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        glass_Update(map, pos + directions[i]);
+    }
+}
+
+void bglass_SetTile(CMap@ map, Vec2f pos)
+{
+    map.SetTile(map.getTileOffset(pos), CMap::tile_bglass + bglass_GetMask(map, pos));
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        bglass_Update(map, pos + directions[i]);
+    }
+}
+
+void glass_Update(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    if (isGlassTile(map, pos))
+		map.server_SetTile(pos,CMap::tile_glass+glass_GetMask(map,pos));
+}
+
+void bglass_Update(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    if (isBGlassTile(map, pos))
+		map.server_SetTile(pos,CMap::tile_bglass+bglass_GetMask(map,pos));
+}
+
+bool isGlassTile(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    return tile >= CMap::tile_glass && tile <= CMap::tile_glass_v14;
+}
+
+bool isBGlassTile(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    return tile >= CMap::tile_bglass && tile <= CMap::tile_bglass_v14;
+}
+
+void OnPlasteelTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+	map.RemoveTileFlag( index, Tile::LIGHT_PASSES );
+
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+
+		Sound::Play("dig_stone.ogg", pos, 1.0f, 0.7f);
+	}
+}
+
+void OnBPlasteelTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
+
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+
+		Sound::Play("dig_stone.ogg", pos, 1.0f, 1.0f);
+	}
+}
+
+void OnPlasteelTileDestroyed(CMap@ map, u32 index)
+{
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+
+		Sound::Play("destroy_stone.ogg", pos, 1.0f, 1.0f);
+	}
+}
+
+void OnConcreteTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+	map.RemoveTileFlag( index, Tile::LIGHT_PASSES );
+
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+		for (int i = 0; i < 3; i++)
+		{
+			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);
+			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;
+			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)
+			: SColor(255, 110, 100, 93);
+			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);
+		}
+		Sound::Play("PickStone" + (1 + XORRandom(3)), pos, 1.0f, 1.0f);
+	}
+}
+
+void OnBConcreteTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
+
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+		for (int i = 0; i < 3; i++)
+		{
+			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);
+			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;
+			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)
+			: SColor(255, 110, 100, 93);
+			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);
+		}
+		Sound::Play("PickStone" + (1 + XORRandom(3)), pos, 1.0f, 1.0f);
+	}
+}
+
+void OnConcreteTileDestroyed(CMap@ map, u32 index)
+{
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+		for (int i = 0; i < 15; i++)
+		{
+			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);
+			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;
+			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)
+			: SColor(255, 110, 100, 93);
+			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);
+		}
+		ParticleAnimated("Smoke.png", pos+Vec2f(4, 0),
+		Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, false);
+		Sound::Play("destroy_wall.ogg", pos, 1.0f, 1.0f);
+	}
+}
+
+void concrete_SetTile(CMap@ map, Vec2f pos)
+{
+    map.SetTile(map.getTileOffset(pos), CMap::tile_concrete + concrete_GetMask(map, pos));
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        concrete_Update(map, pos + directions[i]);
+    }
+}
+
+u8 concrete_GetMask(CMap@ map, Vec2f pos)
+{
+    u8 mask = 0;
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        if (isConcreteTile(map, pos + directions[i])) mask |= 1 << i;
+    }
+
+    return mask;
+}
+
+void concrete_Update(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    if (isConcreteTile(map, pos))
+		map.SetTile(map.getTileOffset(pos),CMap::tile_concrete+concrete_GetMask(map,pos));
+}
+
+bool isConcreteTile(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_v14;
+}
+
+void reinforcedconcrete_SetTile(CMap@ map, Vec2f pos)
+{
     map.SetTile(map.getTileOffset(pos), CMap::tile_reinforcedconcrete + reinforcedconcrete_GetMask(map, pos));
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        reinforcedconcrete_Update(map, pos + directions[i]);									
-    }																							
-}																								
-																								
-u8 reinforcedconcrete_GetMask(CMap@ map, Vec2f pos)												
-{																								
-    u8 mask = 0;																				
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        if (isReinforcedConcreteTile(map, pos + directions[i])) mask |= 1 << i;					
-    }																							
-																								
-    return mask;																				
-}																								
-																								
-void reinforcedconcrete_Update(CMap@ map, Vec2f pos)											
-{																								
-    u16 tile = map.getTile(pos).type;															
-    if (isReinforcedConcreteTile(map, pos))														
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        reinforcedconcrete_Update(map, pos + directions[i]);
+    }
+}
+
+u8 reinforcedconcrete_GetMask(CMap@ map, Vec2f pos)
+{
+    u8 mask = 0;
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        if (isReinforcedConcreteTile(map, pos + directions[i])) mask |= 1 << i;
+    }
+
+    return mask;
+}
+
+void reinforcedconcrete_Update(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    if (isReinforcedConcreteTile(map, pos))
 		map.SetTile(map.getTileOffset(pos),CMap::tile_reinforcedconcrete+reinforcedconcrete_GetMask(map,pos));
-}																								
-																								
-bool isReinforcedConcreteTile(CMap@ map, Vec2f pos)												
-{																								
-    u16 tile = map.getTile(pos).type;															
-    return tile >= CMap::tile_reinforcedconcrete && tile <= CMap::tile_reinforcedconcrete_v14;	
-}	
+}
 
-void bconcrete_SetTile(CMap@ map, Vec2f pos)											
-{																								
+bool isReinforcedConcreteTile(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    return tile >= CMap::tile_reinforcedconcrete && tile <= CMap::tile_reinforcedconcrete_v14;
+}
+
+void bconcrete_SetTile(CMap@ map, Vec2f pos)
+{
     map.SetTile(map.getTileOffset(pos), CMap::tile_bconcrete + bconcrete_GetMask(map, pos));
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        bconcrete_Update(map, pos + directions[i]);									
-    }																							
-}																								
-																								
-u8 bconcrete_GetMask(CMap@ map, Vec2f pos)												
-{																								
-    u8 mask = 0;																				
-																								
-    for (u8 i = 0; i < 4; i++)																	
-    {																							
-        if (isBConcreteTile(map, pos + directions[i])) mask |= 1 << i;					
-    }																							
-																								
-    return mask;																				
-}																								
-																								
-void bconcrete_Update(CMap@ map, Vec2f pos)											
-{																								
-    u16 tile = map.getTile(pos).type;															
-    if (isBConcreteTile(map, pos))														
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        bconcrete_Update(map, pos + directions[i]);
+    }
+}
+
+u8 bconcrete_GetMask(CMap@ map, Vec2f pos)
+{
+    u8 mask = 0;
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        if (isBConcreteTile(map, pos + directions[i])) mask |= 1 << i;
+    }
+
+    return mask;
+}
+
+void bconcrete_Update(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    if (isBConcreteTile(map, pos))
 		map.SetTile(map.getTileOffset(pos),CMap::tile_bconcrete+bconcrete_GetMask(map,pos));
-}																								
-																								
-bool isBConcreteTile(CMap@ map, Vec2f pos)												
-{																								
-    u16 tile = map.getTile(pos).type;															
-    return tile >= CMap::tile_bconcrete && tile <= CMap::tile_bconcrete_v14;	
-}	
+}
 
-void tntsparks(Vec2f at)																		
-{																								
-	if(!isClient()){return;}																    
-	at += Vec2f(4, 0);																			
-	for (int i = 0; i < 15; i++)																
-	{																							
-		Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);										
-		vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;	
-		SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 196, 71, 30)						
-		: SColor(255, 142, 42, 9);																
-		ParticlePixel(at, vel, color, true);													
-	}																							
-}																								
-																								
-void OnTNTTileHit(CMap@ map, u32 index, f32 damage, bool onfire)								
-{																								
-	map.AddTileFlag(index, Tile::BACKGROUND);													
-																								
-	Vec2f pos = map.getTileWorldPosition(index);												
-	if(onfire || damage > 1.7f)																	
-	{																							
-		map.server_SetTile(pos,CMap::tile_empty);												
-		
-		WorldExplode(pos, 60, 10);																
-	}																							
-	else																						
-	{																							
-		if (isClient())																
-		{																						
-			Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg",								
-				map.getTileWorldPosition(index), 1.0f, 1.0f);									
-			tntsparks(map.getTileWorldPosition(index));											
-		}																						
-	}																							
-}																								
+bool isBConcreteTile(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    return tile >= CMap::tile_bconcrete && tile <= CMap::tile_bconcrete_v14;
+}
 
-void OnMatterTileHit(CMap@ map, u32 index)														
-{																								
-	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);										
-	map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);						
-																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-		mattersparks(pos, 5);																	
-		Sound::Play("dig_stone.ogg", pos, 0.8f, 1.2f);											
-	}																							
-}																								
-																								
-void OnBrickTileHit(CMap@ map, u32 index)														
-{																								
-	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);										
-																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-																								
-		Sound::Play("dig_stone.ogg", pos, 1.0f, 0.7f);											
-	}																							
-}																								
-																								
-const Vec2f[] directions = 
-{	
-	Vec2f(0, -8),													
-	Vec2f(0, 8),													
-	Vec2f(8, 0),													
+void tntsparks(Vec2f at)
+{
+	if(!isClient()){return;}
+	at += Vec2f(4, 0);
+	for (int i = 0; i < 15; i++)
+	{
+		Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);
+		vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;
+		SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 196, 71, 30)
+		: SColor(255, 142, 42, 9);
+		ParticlePixel(at, vel, color, true);
+	}
+}
+
+void OnTNTTileHit(CMap@ map, u32 index, f32 damage, bool onfire)
+{
+	map.AddTileFlag(index, Tile::BACKGROUND);
+
+	Vec2f pos = map.getTileWorldPosition(index);
+	if(onfire || damage > 1.7f)
+	{
+		map.server_SetTile(pos,CMap::tile_empty);
+
+		WorldExplode(pos, 60, 10);
+	}
+	else
+	{
+		if (isClient())
+		{
+			Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg",
+				map.getTileWorldPosition(index), 1.0f, 1.0f);
+			tntsparks(map.getTileWorldPosition(index));
+		}
+	}
+}
+
+void OnMatterTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+	map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE);
+
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+		mattersparks(pos, 5);
+		Sound::Play("dig_stone.ogg", pos, 0.8f, 1.2f);
+	}
+}
+
+void OnBrickTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
+
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+
+		Sound::Play("dig_stone.ogg", pos, 1.0f, 0.7f);
+	}
+}
+
+const Vec2f[] directions =
+{
+	Vec2f(0, -8),
+	Vec2f(0, 8),
+	Vec2f(8, 0),
 	Vec2f(-8, 0)
-};													
+};
 
 
 void OnMatterTileDestroyed(CMap@ map, u32 index)
@@ -2289,7 +2289,7 @@ void OnMatterTileDestroyed(CMap@ map, u32 index)
 void mattersparks(Vec2f at, int amount)
 {
 	switch(XORRandom(4))
-	{		
+	{
 		case 1:
 			at += Vec2f(4, 0);
 			break;
@@ -2303,16 +2303,16 @@ void mattersparks(Vec2f at, int amount)
 			at += Vec2f(4, 8);
 			break;
 	}
-	SColor[] colors = 
-	{	
-		SColor(255, 34, 149, 42),	
-		SColor(255, 255, 63, 202),	
-		SColor(255, 118, 218, 255),	
-		SColor(255, 229, 179, 255),	
-		SColor(255, 15, 20, 106),	
+	SColor[] colors =
+	{
+		SColor(255, 34, 149, 42),
+		SColor(255, 255, 63, 202),
+		SColor(255, 118, 218, 255),
+		SColor(255, 229, 179, 255),
+		SColor(255, 15, 20, 106),
 		SColor(255, 12, 69, 16)
-	};	
-	
+	};
+
 	if(isClient())
 	{
 		for (int i = 0; i < amount; i++)
@@ -2324,38 +2324,38 @@ void mattersparks(Vec2f at, int amount)
 	}
 }
 
-void OnSnowTileHit(CMap@ map, u32 index)													
-{																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-		for (int i = 0; i < 3; i++)																
-		{																						
-			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);									
+void OnSnowTileHit(CMap@ map, u32 index)
+{
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+		for (int i = 0; i < 3; i++)
+		{
+			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);
 			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;
-			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)					
-			: SColor(255, 110, 100, 93);														
-			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);									
-		}																						
-		Sound::Play("dig_dirt" + (1 + XORRandom(3)), pos, 0.80f, 1.30f);							
-	}																							
-}																								
-																								
-void OnSnowTileDestroyed(CMap@ map, u32 index)												
-{																								
-	if (isClient())																	
-	{ 																							
-		Vec2f pos = map.getTileWorldPosition(index);											
-		for (int i = 0; i < 15; i++)															
-		{																						
-			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);									
+			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)
+			: SColor(255, 110, 100, 93);
+			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);
+		}
+		Sound::Play("dig_dirt" + (1 + XORRandom(3)), pos, 0.80f, 1.30f);
+	}
+}
+
+void OnSnowTileDestroyed(CMap@ map, u32 index)
+{
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+		for (int i = 0; i < 15; i++)
+		{
+			Vec2f vel = getRandomVelocity( 0.6f, 2.0f, 180.0f);
 			vel.y = -Maths::Abs(vel.y)+Maths::Abs(vel.x)/4.0f-2.0f-float(XORRandom(100))/100.0f;
-			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)					
-			: SColor(255, 110, 100, 93);														
-			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);									
-		}																						
-		ParticleAnimated("Smoke.png", pos+Vec2f(4, 0), 											
-		Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, false);												
-		Sound::Play("destroy_dirt.ogg", pos, 0.80f, 1.30f);										
-	}																							
+			SColor color = (XORRandom(10) % 2 == 1) ? SColor(255, 57, 51, 47)
+			: SColor(255, 110, 100, 93);
+			ParticlePixel(pos+Vec2f(4, 0), vel, color, true);
+		}
+		ParticleAnimated("Smoke.png", pos+Vec2f(4, 0),
+		Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, false);
+		Sound::Play("destroy_dirt.ogg", pos, 0.80f, 1.30f);
+	}
 }
