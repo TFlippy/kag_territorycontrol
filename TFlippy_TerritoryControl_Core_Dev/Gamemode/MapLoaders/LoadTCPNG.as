@@ -588,6 +588,7 @@ const SColor c_sky_top = SColor(0xff92e0ec);
 const SColor c_sky_bottom = SColor(0xffcaa58a);
 
 const SColor c_dirt = SColor(255, 191, 145, 87);
+const SColor c_dirt_bg = SColor(255, 150, 115, 69);
 const SColor c_stone = SColor(255, 130, 106, 76);
 const SColor c_thickStone = SColor(255, 102, 88, 70);
 const SColor c_bedrock = SColor(255, 71, 71, 61);
@@ -654,12 +655,17 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 			case CMap::tile_ground_d1:
 			case 30:
 			case CMap::tile_ground_d0:
-			case CMap::tile_ground_back:
 				col = c_dirt;
 				if (this.isTileGrass(u))
 				{
 					col = col.getInterpolated(c_grass, 0.50f);
 				}
+			break;
+
+			// DIRT BACKGROUND
+			case CMap::tile_ground_back:
+				col = c_dirt_bg;
+				//col = col.getInterpolated(c_dirt, heightGradient);
 			break;
 
 			// THICKSTONE
