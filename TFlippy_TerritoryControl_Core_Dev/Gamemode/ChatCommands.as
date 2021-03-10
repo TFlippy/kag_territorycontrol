@@ -15,8 +15,9 @@ void onInit(CRules@ this)
 	this.addCommandID("mute_sv");
 	this.addCommandID("mute_cl");
 	this.addCommandID("playsound");
-	this.addCommandID("startInfection");
-	this.addCommandID("endInfection");
+	//this.addCommandID("startInfection");
+	//this.addCommandID("endInfection");
+	this.addCommandID("SendChatMessage");
 
 	if (isClient())
 	{
@@ -40,23 +41,23 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 	ParticleZombieLightning(destBlob.getPosition());
 	destBlob.getSprite().PlaySound("MagicWand.ogg");*/
 
-	if (cmd == this.getCommandID("teleport")) 
+	if (cmd == this.getCommandID("teleport"))
 	{
 		u16 tpBlobId, destBlobId;
 
-		if (!params.saferead_u16(tpBlobId)) 
+		if (!params.saferead_u16(tpBlobId))
 		{
 			return;
 		}
-		
-		if (!params.saferead_u16(destBlobId)) 
+
+		if (!params.saferead_u16(destBlobId))
 		{
 			return;
 		}
 
 		CBlob@ tpBlob =	getBlobByNetworkID(tpBlobId);
 		CBlob@ destBlob = getBlobByNetworkID(destBlobId);
-		
+
 		if (tpBlob !is null && destBlob !is null)
 		{
 			if (isClient())
@@ -64,9 +65,9 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 				ShakeScreen(64,32,tpBlob.getPosition());
 				ParticleZombieLightning(tpBlob.getPosition());
 			}
-			
+
 			tpBlob.setPosition(destBlob.getPosition());
-			
+
 			if (isClient())
 			{
 				ShakeScreen(64,32,destBlob.getPosition());
@@ -74,53 +75,53 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			}
 		}
 	}
-	else if (cmd==this.getCommandID("addbot")) 
+	else if (cmd==this.getCommandID("addbot"))
 	{
 		string botName;
 		string botDisplayName;
-		
-		if (!params.saferead_string(botName)) 
+
+		if (!params.saferead_string(botName))
 		{
 			return;
 		}
-		
+
 		if (!params.saferead_string(botDisplayName)) {
-		
+
 			return;
 		}
-		
+
 		CPlayer@ bot=AddBot(botName);
 		bot.server_setCharacterName(botDisplayName);
 	}
-	else if (cmd==this.getCommandID("kickPlayer")) 
+	else if (cmd==this.getCommandID("kickPlayer"))
 	{
 		string username;
-		if (!params.saferead_string(username)) 
+		if (!params.saferead_string(username))
 		{
 			return;
 		}
-		
+
 		CPlayer@ player=getPlayerByUsername(username);
 		if (player !is null)
 		{
 			KickPlayer(player);
 		}
 	}
-	else if (cmd==this.getCommandID("playsound")) 
+	else if (cmd==this.getCommandID("playsound"))
 	{
 		string soundname;
 
-		if (!params.saferead_string(soundname)) 
+		if (!params.saferead_string(soundname))
 		{
 			return;
 		}
-		
+
 		f32 volume = 1.00f;
 		f32 pitch = 1.00f;
-		
+
 		params.saferead_f32(volume);
 		params.saferead_f32(pitch);
-		
+
 		if (volume == 0.00f) Sound::Play(soundname);
 		else Sound::Play(soundname, getCamera().getPosition() + getRandomVelocity(0, 8, 360), volume, pitch);
 	}
@@ -130,27 +131,27 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 		{
 			string blob;
 			CPlayer@ lp = getLocalPlayer();
-			
+
 			ConfigFile@ cfg = ConfigFile();
 			if (cfg.loadFile("../Cache/EmoteBindings.cfg"))
 			{
 				blob = cfg.read_string("emote_19", "invalid");
 			}
-			
+
 			CBitStream stream;
 			stream.write_u16(lp.getNetworkID());
 			stream.write_string(blob);
-			
+
 			this.SendCommand(this.getCommandID("mute_cl"), stream);
 		}
-	}	
+	}
 	else if (cmd == this.getCommandID("mute_cl"))
 	{
 		if (isServer())
 		{
 			u16 id;
 			string blob;
-			
+
 			if (params.saferead_netid(id) && params.saferead_string(blob))
 			{
 				CPlayer@ player = getPlayerByNetworkId(id);
@@ -158,9 +159,9 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 				{
 					string name = player.getUsername();
 					string blob_to_name = h2s(blob);
-					
+
 					bool valid = name == blob_to_name;
-					
+
 					if (valid)
 					{
 						print("[NC] (SUCCESS): " + name + " = " + blob + " = " + blob_to_name, SColor(255, 0, 255, 0));
@@ -169,17 +170,23 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 					{
 						print("[NC] (FAILURE): " + name + " = " + blob + " = " + blob_to_name,  SColor(255, 255, 0, 0));
 					}
-					
+
 					string filename = "player_" + name + ".cfg";
-					
+
 					ConfigFile@ cfg = ConfigFile();
 					cfg.loadFile("../Cache/Players/" + filename);
-						
+
 					cfg.add_string("" + Time(), ("(" + (valid ? "SUCCESS" : "FAILURE") + ") " + name + " = " + blob + " = " + blob_to_name + "; CharacterName: " + player.getCharacterName()));
 					cfg.saveFile("Players/" + filename);
 				}
 			}
 		}
+	}
+	else if (cmd == this.getCommandID("SendChatMessage"))
+	{
+		string errorMessage = params.read_string();
+		SColor col = SColor(params.read_u8(), params.read_u8(), params.read_u8(), params.read_u8());
+		client_AddToChat(errorMessage, col);
 	}
 	/*else if (cmd==this.getCommandID("startInfection"))
 	{
@@ -233,27 +240,27 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 	if (blob is null){
 		return true;
 	}
-	
+
 	bool isCool=IsCool(player.getUsername());
 	bool isMod=	player.isMod();
 
-	if (isCool && text_in == "!ripserver") 
+	if (isCool && text_in == "!ripserver")
 	{
 		QuitGame();
 	}
-	
+
 	bool showMessage=(player.getUsername()!="TFlippy" && player.getUsername()!="merser433");
 
-	if (text_in.substr(0,1) == "!") 
+	if (text_in.substr(0,1) == "!")
 	{
 		if (showMessage)
 		{
 			//print("Command by player "+player.getUsername()+" (Team "+player.getTeamNum()+"): "+text_in);
 			tcpr("[MISC] Command by player" +player.getUsername()+" (Team "+player.getTeamNum()+"): "+text_in);
 		}
-		
+
 		string[]@ tokens = text_in.split(" ");
-		if (tokens.length > 0) 
+		if (tokens.length > 0)
 		{
 			if (tokens.length > 1 && tokens[0] == "!write")
 			{
@@ -282,13 +289,13 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 			}
 
 			// print(tokens.length);
-			
+
 			//For at least moderators
 			if (isMod || isCool)
 			{
-				if (tokens[0] == "!admin") 
+				if (tokens[0] == "!admin")
 				{
-					if (blob.getName()!="grandpa") 
+					if (blob.getName()!="grandpa")
 					{
 						player.server_setTeamNum(-1);
 						CBlob@ newBlob = server_CreateBlob("grandpa",-1,blob.getPosition());
@@ -301,30 +308,30 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					}
 					return false;
 				}
-				else if (tokens[0] == "!check") 
+				else if (tokens[0] == "!check")
 				{
 					print("NAME CHECK");
-				
+
 					CBitStream stream;
 					this.SendCommand(this.getCommandID("mute_sv"), stream);
-					
+
 					return false;
 				}
-				else if ((tokens[0]=="!tp")) 
+				else if ((tokens[0]=="!tp"))
 				{
 					if (tokens.length != 2 && (tokens.length != 3 || (tokens.length == 3 && !isCool)))
 					{
 						return false;
 					}
-					
+
 					CPlayer@ tpPlayer =	GetPlayer(tokens[1]);
 					CBlob@ tpBlob =	tokens.length == 2 ? blob : tpPlayer.getBlob();
 					CPlayer@ tpDest = GetPlayer(tokens.length == 2 ? tokens[1] : tokens[2]);
 
-					if (tpBlob !is null && tpDest !is null) 
+					if (tpBlob !is null && tpDest !is null)
 					{
 						CBlob@ destBlob = tpDest.getBlob();
-						if (destBlob !is null) 
+						if (destBlob !is null)
 						{
 							if (isCool || blob.getName() == "grandpa")
 							{
@@ -345,7 +352,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					return false;
 				}
 			}
-			
+
 			if (isCool)
 			{
 				/*if (tokens[0]=="!awootism")
@@ -360,7 +367,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					}
 					else
 					{
-						params.write_u16(player.getNetworkID());	
+						params.write_u16(player.getNetworkID());
 					}
 					this.SendCommand(this.getCommandID("startInfection"),params);
 					return false;
@@ -369,16 +376,16 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				{
 
 					CBitStream params;
-					params.write_u16(player.getNetworkID());	
+					params.write_u16(player.getNetworkID());
 					this.SendCommand(this.getCommandID("endInfection"),params);
 				}*/
-				if (tokens[0]=="!coins") 
+				if (tokens[0]=="!coins")
 				{
 					int amount=	tokens.length>=2 ? parseInt(tokens[1]) : 100;
 					player.server_setCoins(player.getCoins()+amount);
 					return false;
 				}
-				else if (tokens[0] == "!bbe") 
+				else if (tokens[0] == "!bbe")
 				{
 					if (tokens.length > 1)
 					{
@@ -387,7 +394,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 						{
 							CBlob@[] blobs;
 							getBlobsByTag("big shop", @blobs);
-							
+
 							for (int i = 0; i < blobs.length; i++)
 							{
 								CBlob@ blob = blobs[i];
@@ -396,13 +403,13 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 									CBitStream stream;
 									stream.write_u16(seller.getNetworkID());
 									stream.write_string(seller.getUsername());
-									
+
 									blob.SendCommand(blob.getCommandID("buyout"), stream);
 								}
 							}
 						}
 					}
-					
+
 					return false;
 				}
 				else if (tokens[0]=="!playsound")
@@ -417,12 +424,12 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					params.write_string(tokens[1]);
 					params.write_f32(tokens.length > 2 ? parseFloat(tokens[2]) : 0.00f);
 					params.write_f32(tokens.length > 3 ? parseFloat(tokens[3]) : 1.00f);
-					
+
 					this.SendCommand(this.getCommandID("playsound"), params);
 
 					return false;
 				}
-				else if (tokens[0]=="!removebot" || tokens[0]=="!kickbot") 
+				else if (tokens[0]=="!removebot" || tokens[0]=="!kickbot")
 				{
 					int playersAmount=	getPlayerCount();
 					for(int i=0;i<playersAmount;i++){
@@ -436,7 +443,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					}
 					return false;
 				}
-				else if (tokens[0]=="!addbot" || tokens[0]=="!bot") 
+				else if (tokens[0]=="!addbot" || tokens[0]=="!bot")
 				{
 					if (tokens.length<2){
 						return false;
@@ -454,7 +461,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					this.SendCommand(this.getCommandID("addbot"),params);
 					return false;
 				}
-				else if (tokens[0]=="!crate") 
+				else if (tokens[0]=="!crate")
 				{
 					if (tokens.length<2){
 						return false;
@@ -476,12 +483,12 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					server_MakePredefinedScroll(blob.getPosition(),s);
 					return false;
 				}
-				else if (tokens[0]=="!disc") 
+				else if (tokens[0]=="!disc")
 				{
 					if (tokens.length!=2){
 						return false;
 					}
-					
+
 					const u8 trackID = u8(parseInt(tokens[1]));
 					CBlob@ b=server_CreateBlobNoInit("musicdisc");
 					b.server_setTeamNum(-1);
@@ -589,17 +596,17 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					getMap().server_setFloodWaterWorldspace(blob.getPosition(),true);
 					return false;
 				}
-				else if (tokens[0]=="!savefile") 
+				else if (tokens[0]=="!savefile")
 				{
 					ConfigFile cfg;
 					cfg.add_u16("something",1337);
 					cfg.saveFile("TestFile.cfg");
 					return false;
 				}
-				else if (tokens[0]=="!loadfile") 
+				else if (tokens[0]=="!loadfile")
 				{
 					ConfigFile cfg;
-					if (cfg.loadFile("../Cache/TestFile.cfg")) 
+					if (cfg.loadFile("../Cache/TestFile.cfg"))
 					{
 						print("loaded");
 						print("value is " + cfg.read_u16("something"));
@@ -612,22 +619,22 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					LoadNextMap();
 					return false;
 				}
-				else if (tokens[0]=="!loadmap") 
+				else if (tokens[0]=="!loadmap")
 				{
 					LoadMap(getMap(),"lol.png");
 					return false;
 				}
-				else if (tokens[0]=="!savemap") 
+				else if (tokens[0]=="!savemap")
 				{
 					// SaveMap(getMap(),"lol.png");
-					
+
 					ConfigFile maps;
 					maps.add_bool("saved", true);
 					maps.saveFile("t_meta");
-					
+
 					return false;
 				}
-				else if (tokens[0]=="!stoprain") 
+				else if (tokens[0]=="!stoprain")
 				{
 					CBlob@[] blobs;
 					getBlobsByName('rain', @blobs);
@@ -637,8 +644,8 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 						{
 							blobs[i].server_Die();
 						}
-					}					
-					
+					}
+
 					return false;
 				}
 				// else if (tokens.length > 2 && tokens[0] == "!g")
@@ -646,7 +653,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					// string text = "";
 					// for (int i = 1; i < tokens.length; i++) text += tokens[i] + " ";
 					// text = text.substr(0, text.length - 1);
-				
+
 					// this.SetGlobalMessage(text);
 				// }
 				else if (tokens[0] == "!cursor")
@@ -656,10 +663,10 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 						string name = tokens[1];
 
 						CBlob@ newBlob = server_CreateBlob(name, blob.getTeamNum(), blob.getAimPos());
-						if (newBlob !is null && player !is null) 
+						if (newBlob !is null && player !is null)
 						{
 							newBlob.SetDamageOwnerPlayer(player);
-							
+
 							int quantity;
 							if (tokens.length > 2)
 							{
@@ -669,11 +676,11 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 							{
 								quantity = newBlob.maxQuantity;
 							}
-							
+
 							newBlob.server_SetQuantity(quantity);
 						}
 					}
-				
+
 					return false;
 				}
 				else
@@ -683,10 +690,10 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 						string name = tokens[0].substr(1);
 
 						CBlob@ newBlob = server_CreateBlob(name, blob.getTeamNum(), blob.getPosition());
-						if (newBlob !is null && player !is null) 
+						if (newBlob !is null && player !is null)
 						{
 							newBlob.SetDamageOwnerPlayer(player);
-							
+
 							int quantity;
 							if (tokens.length > 1)
 							{
@@ -696,11 +703,11 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 							{
 								quantity = newBlob.maxQuantity;
 							}
-							
+
 							newBlob.server_SetQuantity(quantity);
 						}
 					}
-				
+
 					return false;
 				}
 			}
@@ -749,7 +756,7 @@ const string[] bison_messages =
 	"MOOO!",
 	"Mooooo.. Moo."
 };
-			
+
 string h2s(string s)
 {
 	string o;
@@ -758,11 +765,11 @@ string h2s(string s)
 	{
 		// o[i] = parseInt(s.substr(i * 2, 2), 16, 1);
 		o[i] = parseInt(s.substr(i * 2, 2));
-		
+
 		// o[(i * 2) + 0] = h[byte / 16];
 		// o[(i * 2) + 1] = h[byte % 16];
 	}
-	
+
 	return o;
 }
 

@@ -6,6 +6,7 @@
 #include "MakeMat.as";
 #include "Logging.as";
 // #include "Knocked.as"
+#include "MakeCrate.as";
 
 #include "neutral_team_assigner.as"
 
@@ -690,8 +691,36 @@ void SpawnEventFireworks()
 	getBlobsByName("banditshack", @placesToSpawn);
 
 
-	for (int a = 0; a < placesToSpawn.length; a++)
+	for (int a = 0; a < placesToSpawn.length;)
 	{
-		server_CreateBlob("patreonfirework", 0, placesToSpawn[a].getPosition());
+		Vec2f pos = placesToSpawn[a].getPosition();
+		CBlob@ blob = server_CreateBlobNoInit("crate");
+		blob.setPosition(pos);
+		blob.server_setTeamNum(250);
+		blob.set_string("packed name", "Bundle of joy!");
+		blob.Init();
+
+		int num = 1 + XORRandom(5);
+		for (int b = 0; b < num; b++)
+		{
+			blob.server_PutInInventory(server_CreateBlob("patreonfirework", -1, pos));
+		}
+
+		// Skip some spawns
+		a += 1+XORRandom(3);
 	}
+
+		CBitStream params;
+		params.write_string("UPF has delivered crates of joy!");
+
+		// List is reverse so we can read it correctly into SColor when reading
+		params.write_u8(50);
+		params.write_u8(50);
+		params.write_u8(255);
+		params.write_u8(255);
+
+		for (int a = 0; a < getPlayerCount(); a++)
+		{
+			getRules().SendCommand(getRules().getCommandID("SendChatMessage"), params, getPlayer(a));
+		}
 }
