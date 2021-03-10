@@ -243,8 +243,9 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	{
 		tcpr("[PDB] "+victimName +" has been killed by " + attackerName + "; damage type: " + customData);
 
-		if (victimTeam >= 100)
-			victim.server_setCoins(0);
+		// Drop 50% on death + what ever else kag takes away on death
+		if (victimTeam >= 100 && coins != 0)
+			victim.server_setCoins(coins / 2);
 	}
 	// printf(victimName + " has been killed by " + attackerName + "; damage type: " + customData);
 
@@ -272,8 +273,9 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	CBlob@ blob = victim.getBlob();
 	if(blob !is null)
 	{
-		if (victimTeam >= 100)
-			server_DropCoins(blob.getPosition(), (coins + 1) / 2);
+		// Drop 50% of that 50% lost
+		if (victimTeam >= 100 && coins != 0)
+			server_DropCoins(blob.getPosition(), coins / 2);
 
 		if(!(blob.getName().find("corpse") != -1))
 		{
