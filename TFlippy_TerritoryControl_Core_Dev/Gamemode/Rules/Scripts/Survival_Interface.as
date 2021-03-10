@@ -46,25 +46,6 @@ bool draw_tier = false;
 void onInit(CRules@ this)
 {
 	onRestart(this);
-	Driver@ driver = getDriver();
-	//driver.RemoveShader("hq2x");
-	/*driver.AddShader("palette", 1001.0f);
-	driver.SetShader("palette", true);
-	driver.SetShaderFloat("palette", "res_x", getScreenWidth());
-	driver.SetShaderFloat("palette", "res_y", getScreenHeight());
-	driver.SetShaderFloat("palette", "scroll_x", 0);
-	driver.SetShaderFloat("palette", "tick", 0);
-	driver.SetShaderExtraTexture("palette", CFileMatcher("default_palette.png").getFirst());*/
-	/*driver.AddShader("drunk", 1100.1f);
-	driver.SetShader("drunk", true);
-	driver.SetShaderFloat("drunk", "res_x", getScreenWidth());
-	driver.SetShaderFloat("drunk", "res_y", getScreenHeight());
-	driver.SetShaderFloat("drunk", "scroll_x", 0);
-	driver.SetShaderFloat("drunk", "time", 0);
-	driver.SetShaderFloat("drunk", "amount", 0);
-	driver.SetShaderTextureFilter("drunk", true);*/
-	//driver.AddShader("chrom_ab", 1100.1f);
-	//was testing shaders
 }
 
 void onRestart(CRules@ this)
@@ -73,15 +54,7 @@ void onRestart(CRules@ this)
 	CMap@ map = getMap();
 	serverIP = net.joined_ip;
 
-	mapName = map is null ? "Blame vamist, error" : getMap().getMapName();
-}
-
-void onTick(CRules@ this)
-{
-	/*f32 cam_x = getCamera().getPosition().x * getCamera().targetDistance;
-	getDriver().SetShaderFloat("drunk", "time", getGameTime()/2);
-	getDriver().SetShaderFloat("drunk", "scroll_x", cam_x);
-	getDriver().SetShaderFloat("drunk", "amount", getGameTime() % 5);*/
+	mapName = map is null ? "Error: Blame KAG" : getMap().getMapName();
 }
 
 void onRenderScoreboard(CRules@ this)
