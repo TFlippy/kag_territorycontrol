@@ -205,7 +205,7 @@ void onTick(CBlob@ this)
 
 		if (holder.getName() != "engineer")
 		{
-			if (point.isKeyPressed(key_action1) && getGameTime() % 5 == 0)
+			if (holder.isMyPlayer() && point.isKeyPressed(key_action1) && getGameTime() % 5 == 0)
 				Sound::Play("NoAmmo.ogg");
 
 			return;
