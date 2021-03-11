@@ -790,6 +790,15 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 			case CMap::tile_iron_v13:
 			case CMap::tile_iron_v14:
 
+			case CMap::tile_iron_d0:
+			case CMap::tile_iron_d1:
+			case CMap::tile_iron_d3:
+			case CMap::tile_iron_d4:
+			case CMap::tile_iron_d5:
+			case CMap::tile_iron_d6:
+			case CMap::tile_iron_d7:
+			case CMap::tile_iron_d8:
+
 			case CMap::tile_biron:
 			case CMap::tile_biron_u:
 			case CMap::tile_biron_d:
@@ -911,6 +920,15 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 			case CMap::tile_concrete_v13:
 			case CMap::tile_concrete_v14:
 
+			case CMap::tile_concrete_d0:
+			case CMap::tile_concrete_d1:
+			case CMap::tile_concrete_d2:
+			case CMap::tile_concrete_d3:
+			case CMap::tile_concrete_d4:
+			case CMap::tile_concrete_d5:
+			case CMap::tile_concrete_d6:
+			case CMap::tile_concrete_d7:
+
 			case CMap::tile_bconcrete:
 			case CMap::tile_bconcrete_v0:
 			case CMap::tile_bconcrete_v1:
@@ -927,6 +945,17 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 			case CMap::tile_bconcrete_v12:
 			case CMap::tile_bconcrete_v13:
 			case CMap::tile_bconcrete_v14:
+
+			case CMap::tile_bconcrete_d0:
+			case CMap::tile_bconcrete_d1:
+			case CMap::tile_bconcrete_d2:
+			case CMap::tile_bconcrete_d3:
+			case CMap::tile_bconcrete_d4:
+			case CMap::tile_bconcrete_d5:
+			case CMap::tile_bconcrete_d6:
+			case CMap::tile_bconcrete_d7:
+
+
 				col = c_concrete;
 			break;
 
