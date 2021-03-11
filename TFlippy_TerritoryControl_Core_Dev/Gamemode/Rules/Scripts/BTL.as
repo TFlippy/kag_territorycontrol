@@ -22,7 +22,7 @@ void onInit(CRules@ this)
 
 void onTick(CRules@ this)
 {
-    int expCount = 0;
+    /*int expCount = 0;
     Holder@ holder;
 
     this.get("BTL_DELAY", @holder);
@@ -63,7 +63,7 @@ void onTick(CRules@ this)
 
         holder.bombList.erase(a);
         a -= 1;
-    }
+    }*/
 
     //this.set("BTL_DELAY", holder);
     //this.set_u16("explosion_count", 0);

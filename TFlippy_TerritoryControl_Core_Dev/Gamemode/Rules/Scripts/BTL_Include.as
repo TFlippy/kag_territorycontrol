@@ -7,6 +7,7 @@ const u8 MAX_BOMBS_PER_TICK = 10 - 1; // -1 otherwise game will think its 11
 
 bool shouldExplode(CBlob@ this, CRules@ rules)
 {
+	return true;
 	u16 explosionCount = rules.get_u16("explosion_count");
 
 	if (explosionCount > MAX_BOMBS_PER_TICK) // is this explosion over the limit?
@@ -25,10 +26,10 @@ void addToNextTick(CBlob@ this, f32 radius, f32 damage, CRules@ rules, explosion
 {
 	Holder@ holder;
 	rules.get("BTL_DELAY", @holder);
+    BTL@ btl = BTL();
+	//holder.bombList.push_back(btl);
 
-	holder.bombList.push_back(BTL(this.getDamageOwnerPlayer(), this, radius, damage, toCall));
-
-	rules.set("BTL_DELAY", holder);
+	//rules.set("BTL_DELAY", holder);
 }
 
 void addToNextTick(CBlob@ this, CRules@ rules, onDieHook@ toCall)
@@ -36,10 +37,11 @@ void addToNextTick(CBlob@ this, CRules@ rules, onDieHook@ toCall)
 	Holder@ holder;
 	rules.get("BTL_DELAY", @holder);
 
-	holder.bombList.push_back(BTL( this.getDamageOwnerPlayer(), this, toCall));
+    BTL@ btl = BTL( );
 
+	holder.bombList.push_back(btl);
 
-	rules.set("BTL_DELAY", holder);
+	//rules.set("BTL_DELAY", holder);
 }
 
 
@@ -47,10 +49,10 @@ void addToNextTick(CBlob@ this, CRules@ rules, Vec2f velocity, onDieVelocityHook
 {
 	Holder@ holder;
 	rules.get("BTL_DELAY", @holder);
+    BTL@ btl = BTL( );
+	holder.bombList.push_back(btl);
 
-	holder.bombList.push_back(BTL( this.getDamageOwnerPlayer(), this, velocity, toCall));
-
-	rules.set("BTL_DELAY", holder);
+	//rules.set("BTL_DELAY", holder);
 }
 
 
@@ -63,9 +65,9 @@ funcdef void onDieVelocityHook(CBlob@, Vec2f);
 class BTL
 {
 	/// Call back hooks are used if original blobs are still alive
-	onDieVelocityHook@ VelCallback;
-	explosionHook@ ExpCallback;
-	onDieHook@ DieCallback;
+	//onDieVelocityHook@ VelCallback;
+	//explosionHook@ ExpCallback;
+	//onDieHook@ DieCallback;
 
 	CPlayer@ damage_owner;
 	CBlob@ original_blob;
@@ -80,14 +82,15 @@ class BTL
 
 	BTL () {}
 
-	BTL (CPlayer@ damageOwner, CBlob@ blob, f32 exp_radius, f32 exp_damage, explosionHook@ toCall)
+	/*BTL (CPlayer@ damageOwner, CBlob@ blob, f32 exp_radius, f32 exp_damage, explosionHook@ toCall)
 	{
-		@damage_owner = damageOwner;
-		@original_blob = blob;
-		@ExpCallback = toCall;
-
+        print("hi");
+		@damage_owner = @damageOwner;
+		@original_blob = @blob;
+		@ExpCallback = @toCall;
+        print("bye");
 		SetDeadBlobSettings(blob);
-
+        print("pog");
 		radius = exp_radius;
 		damage = exp_damage;
 	}
@@ -110,7 +113,7 @@ class BTL
 		velocity = bomb_vel;
 
 		SetDeadBlobSettings(blob);
-	}
+	}*/
 
 
 	void SetDeadBlobSettings(CBlob@ this)
@@ -121,7 +124,7 @@ class BTL
 		time = getGameTime();
 	}
 
-	bool CallHookPls()
+	/*bool CallHookPls()
 	{
 		if (original_blob is null)
 		{
@@ -146,7 +149,7 @@ class BTL
 
 
 		return false;
-	}
+	}*/
 }
 
 
