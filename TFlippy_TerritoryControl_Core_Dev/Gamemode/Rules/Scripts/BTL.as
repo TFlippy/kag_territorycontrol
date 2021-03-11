@@ -12,36 +12,42 @@
 
 #include "BTL_Include.as";
 
+
+
+void onInit(CRules@ this)
+{
+    BTL[] bombList;
+    this.set("BTL_DELAY", bombList);
+}
+
 void onTick(CRules@ this)
 {
     int expCount = 0;
-	BTL[] @bombList;
+	   BTL[]@ bombList;
 
-	if (!this.get("BTL_DELAY", @bombList))
-	{
-		@bombList = array<BTL>();
-	}
+    this.get("BTL_DELAY", @bombList);
 
+    expCount = this.get_u16("explosion_count");
     this.set_u16("explosion_count", 0); // each new tick, set explosion_count to 0
-    
-    if (bombList.size() == 0) { return; } 
 
-    print("hi new tick");
-    
+    if (bombList.size() == 0) { return; }
+
+    print("hi new tick - " + bombList.size());
+
     for (int a = 0; a < bombList.size(); a++)
     {
         BTL @explosion = bombList[a];
-        
-        if (explosion.time == getGameTime()) { continue; }
-        if (expCount > MAX_BOMBS_PER_TICK) { break; } // exit out if we have done more then 5 this tick
 
+        //if (explosion.time == getGameTime()) { continue; }
+        if (expCount > MAX_BOMBS_PER_TICK - 1) { break; } // exit out if we have done too much
+        print("processed");
         expCount += 1;
 
         CBlob@ blob = explosion.original_blob;
 
         if (blob is null) // blob's have around '30 ticks' before they die
         {
-            if (!isServer()) { continue;} 
+            if (!isServer()) { continue;}
 
             CBlob@ blob = server_CreateBlob( explosion.blob_name, explosion.team, explosion.position ); // optimize this later
 
@@ -52,16 +58,15 @@ void onTick(CRules@ this)
 
             blob.server_Die(); // sorry little one, such a short life
         }
-        else 
+        else
         {
-            print("hi " + a);
-            explosion.CallHookPls(); // explode 
+            explosion.CallHookPls(); // explode
         }
 
         bombList.erase(a);
         a -= 1;
     }
 
-    this.set("BTL_DELAY", @bombList);   
-    this.set_u16("explosion_count", expCount);
+    this.push("BTL_DELAY", bombList);
+    //this.set_u16("explosion_count", 0);
 }

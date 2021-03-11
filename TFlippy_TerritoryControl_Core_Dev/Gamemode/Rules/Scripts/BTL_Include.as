@@ -1,13 +1,12 @@
-/// To be included with everything that requires it, this just helps reduce on copy pasted code 
+/// To be included with everything that requires it, this just helps reduce on copy pasted code
 
 
 // DISABLED, MESSY DUE TO DEBUGGING NIGHTMARE CAUSED BY ANGELSCRIPT
 
-const u8 MAX_BOMBS_PER_TICK = 10; 
+const u8 MAX_BOMBS_PER_TICK = 10;
 
 bool shouldExplode(CBlob@ this, CRules@ rules)
 {
-	return true;
 	u16 explosionCount = rules.get_u16("explosion_count");
 	if (explosionCount > MAX_BOMBS_PER_TICK) // is this explosion over the limit?
 	{
@@ -17,96 +16,66 @@ bool shouldExplode(CBlob@ this, CRules@ rules)
 	}
 
 	rules.add_u16("explosion_count", 1);
-	
-    return true;
+
+	return true;
 }
 
 void addToNextTick(CBlob@ this, f32 radius, f32 damage, CRules@ rules, explosionHook@ toCall)
 {
-	print("hi");
-	BTL[] @bombList;
-	if (!getRules().get("BTL_DELAY", @bombList))
-	{
-		print("new array time");
-		@bombList = array<BTL>();
-	}
+ BTL[]@ bombList;
 
+ rules.get("BTL_DELAY", @bombList);
 
+	bombList.push_back(BTL(this.getDamageOwnerPlayer(), this, radius, damage, toCall));
 
-	//print(bombList.size() + " | " + this.getName() + " | " + (bombList is null));
-	//BTL @exp = BTL( this.getDamageOwnerPlayer(), this, radius, damage, toCall);
-	//print("pushing  " + (exp is null) + " | " + (@exp is null));
-	//bombList.push_back(BTL());
-	const BTL@ exp = BTL();
-	print(bombList.size()+'');
-	bombList.resize(bombList.size() + 1);
-	bombList[bombList.size() - 1] = BTL(this.getDamageOwnerPlayer(), this, radius, damage, toCall);
-	//bombList.push_back(exp);
-
-	print("about to set");
-	getRules().set("BTL_DELAY", @bombList);
-	print("bye");
+	rules.push("BTL_DELAY", bombList);
 }
 
 void addToNextTick(CBlob@ this, CRules@ rules, onDieHook@ toCall)
 {
-	BTL[] @bombList;
-	if (!rules.get("BTL_DELAY", @bombList))
-	{
-		@bombList = array<BTL>();
-	}
+	BTL[]@ bombList;
+ rules.get("BTL_DELAY", @bombList);
 
-	bombList.resize(bombList.size() + 1);
-	bombList[bombList.size() - 1] = BTL( this.getDamageOwnerPlayer(), this, toCall);
-
-	//BTL exp = BTL( this.getDamageOwnerPlayer(), this, toCall);
-	//bombList.push_back(exp);
+	bombList.push_back(BTL( this.getDamageOwnerPlayer(), this, toCall));
 
 
-	rules.set("BTL_DELAY", bombList);
+	rules.push("BTL_DELAY", bombList);
 }
 
 
 void addToNextTick(CBlob@ this, CRules@ rules, Vec2f velocity, onDieVelocityHook@ toCall)
 {
-	BTL[] @bombList;
-	if (!rules.get("BTL_DELAY", @bombList))
-	{
-		@bombList = array<BTL>();
-	}
+	BTL[]@ bombList;
+	rules.get("BTL_DELAY", @bombList);
 
-	bombList.resize(bombList.size() + 1);
-	bombList[bombList.size() - 1] = BTL( this.getDamageOwnerPlayer(), this, velocity, toCall);
+	bombList.push_back(BTL( this.getDamageOwnerPlayer(), this, velocity, toCall));
 
-	//BTL exp = BTL( this.getDamageOwnerPlayer(), this, velocity, toCall);
-	//bombList.push_back(exp);
-
-	rules.set("BTL_DELAY", bombList);
+	rules.push("BTL_DELAY", bombList);
 }
 
 
 
 /// BTL data
-funcdef void onDieHook(CBlob@); // sorry, this is the hacky way around without an engine change :)
-funcdef void explosionHook(CBlob@, f32, f32); 
-funcdef void onDieVelocityHook(CBlob@, Vec2f); 
+funcdef void onDieHook(CBlob@);
+funcdef void explosionHook(CBlob@, f32, f32);
+funcdef void onDieVelocityHook(CBlob@, Vec2f);
 
 class BTL
 {
 	/// Call back hooks are used if original blobs are still alive
 	onDieVelocityHook@ VelCallback;
-	explosionHook@ ExpCallback; 
+	explosionHook@ ExpCallback;
 	onDieHook@ DieCallback;
 
 	CPlayer@ damage_owner;
 	CBlob@ original_blob;
 
-	string blob_name; 
+	string blob_name;
 	Vec2f velocity;
 	Vec2f position;
 	f32 radius;
 	f32 damage;
-	u32 time; 
+	u32 time;
 	int team;
 
 	BTL () {}
@@ -154,7 +123,7 @@ class BTL
 
 	bool CallHookPls()
 	{
-		if (original_blob is null) 
+		if (original_blob is null)
 		{
 			return false;
 		}
