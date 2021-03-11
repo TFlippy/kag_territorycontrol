@@ -16,32 +16,30 @@
 
 void onInit(CRules@ this)
 {
-    BTL[] bombList;
-    this.set("BTL_DELAY", bombList);
+    Holder holder;
+    this.set("BTL_DELAY", holder);
 }
 
 void onTick(CRules@ this)
 {
     int expCount = 0;
-	   BTL[]@ bombList;
+    Holder@ holder;
 
-    this.get("BTL_DELAY", @bombList);
+    this.get("BTL_DELAY", @holder);
 
     expCount = this.get_u16("explosion_count");
     this.set_u16("explosion_count", 0); // each new tick, set explosion_count to 0
 
-    if (bombList.size() == 0) { return; }
+    if (holder.bombList.size() == 0 || expCount == MAX_BOMBS_PER_TICK) { return; }
 
-    print("hi new tick - " + bombList.size());
+    print("Size: " + holder.bombList.size() + " | Current count:" + expCount);
 
-    for (int a = 0; a < bombList.size(); a++)
+    for (int a = 0; a < holder.bombList.size(); a++)
     {
-        BTL @explosion = bombList[a];
+        BTL@ explosion = holder.bombList[a];
 
-        //if (explosion.time == getGameTime()) { continue; }
-        if (expCount > MAX_BOMBS_PER_TICK - 1) { break; } // exit out if we have done too much
-        print("processed");
-        expCount += 1;
+        // Note when a bomb explodes, it re-calls shouldExplode, thus updating the counter
+        if (this.get_u16("explosion_count") > MAX_BOMBS_PER_TICK) { break; } // exit out if we have done too much
 
         CBlob@ blob = explosion.original_blob;
 
@@ -63,10 +61,10 @@ void onTick(CRules@ this)
             explosion.CallHookPls(); // explode
         }
 
-        bombList.erase(a);
+        holder.bombList.erase(a);
         a -= 1;
     }
 
-    this.push("BTL_DELAY", bombList);
+    //this.set("BTL_DELAY", holder);
     //this.set_u16("explosion_count", 0);
 }

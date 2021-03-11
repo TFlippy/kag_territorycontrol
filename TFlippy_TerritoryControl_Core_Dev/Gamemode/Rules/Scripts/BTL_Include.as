@@ -3,11 +3,12 @@
 
 // DISABLED, MESSY DUE TO DEBUGGING NIGHTMARE CAUSED BY ANGELSCRIPT
 
-const u8 MAX_BOMBS_PER_TICK = 10;
+const u8 MAX_BOMBS_PER_TICK = 10 - 1; // -1 otherwise game will think its 11
 
 bool shouldExplode(CBlob@ this, CRules@ rules)
 {
 	u16 explosionCount = rules.get_u16("explosion_count");
+
 	if (explosionCount > MAX_BOMBS_PER_TICK) // is this explosion over the limit?
 	{
 		// OI MATE, YOU GOT A LICENSE FOR THAT BOMB?
@@ -22,35 +23,34 @@ bool shouldExplode(CBlob@ this, CRules@ rules)
 
 void addToNextTick(CBlob@ this, f32 radius, f32 damage, CRules@ rules, explosionHook@ toCall)
 {
- BTL[]@ bombList;
+	Holder@ holder;
+	rules.get("BTL_DELAY", @holder);
 
- rules.get("BTL_DELAY", @bombList);
+	holder.bombList.push_back(BTL(this.getDamageOwnerPlayer(), this, radius, damage, toCall));
 
-	bombList.push_back(BTL(this.getDamageOwnerPlayer(), this, radius, damage, toCall));
-
-	rules.push("BTL_DELAY", bombList);
+	rules.set("BTL_DELAY", holder);
 }
 
 void addToNextTick(CBlob@ this, CRules@ rules, onDieHook@ toCall)
 {
-	BTL[]@ bombList;
- rules.get("BTL_DELAY", @bombList);
+	Holder@ holder;
+	rules.get("BTL_DELAY", @holder);
 
-	bombList.push_back(BTL( this.getDamageOwnerPlayer(), this, toCall));
+	holder.bombList.push_back(BTL( this.getDamageOwnerPlayer(), this, toCall));
 
 
-	rules.push("BTL_DELAY", bombList);
+	rules.set("BTL_DELAY", holder);
 }
 
 
 void addToNextTick(CBlob@ this, CRules@ rules, Vec2f velocity, onDieVelocityHook@ toCall)
 {
-	BTL[]@ bombList;
-	rules.get("BTL_DELAY", @bombList);
+	Holder@ holder;
+	rules.get("BTL_DELAY", @holder);
 
-	bombList.push_back(BTL( this.getDamageOwnerPlayer(), this, velocity, toCall));
+	holder.bombList.push_back(BTL( this.getDamageOwnerPlayer(), this, velocity, toCall));
 
-	rules.push("BTL_DELAY", bombList);
+	rules.set("BTL_DELAY", holder);
 }
 
 
@@ -147,4 +147,13 @@ class BTL
 
 		return false;
 	}
+}
+
+
+// CRASH FIX
+class Holder
+{
+	BTL[] bombList;
+	Holder()
+	{}
 }
