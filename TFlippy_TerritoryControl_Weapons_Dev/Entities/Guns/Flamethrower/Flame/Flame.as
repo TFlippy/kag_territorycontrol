@@ -14,7 +14,7 @@ void onInit(CBlob@ this)
 	{
 		this.getCurrentScript().tickFrequency = 2;
 	}
-	
+
 	/*this.SetLight(true);
 	this.SetLightRadius(48.0f);
 	this.SetLightColor(SColor(255, 255, 200, 50));*/
@@ -32,7 +32,7 @@ void onTick(CBlob@ this)
 	if (isServer() && this.getTickSinceCreated() > 5) 
 	{
 		// getMap().server_setFireWorldspace(this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), true);
-		
+
 		Vec2f pos = this.getPosition();
 		CMap@ map = getMap();
 	
@@ -64,13 +64,13 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (isServer())
 	{
-		if (solid) 
+		if (solid)
 		{
 			Vec2f pos = this.getPosition();
 			CMap@ map = getMap();
-		
+
 			map.server_setFireWorldspace(pos, true);
-			
+
 			for (int i = 0; i < 3; i++)
 			{
 				Vec2f bpos = pos + Vec2f(12 - XORRandom(24), XORRandom(8));
@@ -85,6 +85,10 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 				}
 			}
 		}
+		if (this.isInWater())
+		{
+			if (isServer()) this.server_Die();
+		}
 		else if (blob !is null && blob.isCollidable())
 		{
 			if (this.getTeamNum() != blob.getTeamNum()) this.server_Hit(blob, this.getPosition(), Vec2f(0, 0), 0.50f, Hitters::fire, false);
@@ -93,7 +97,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 }
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if (customData == Hitters::water)
+	if (customData == Hitters::water || customData == Hitters::water_stun)
 	{
 		if (isServer()) this.server_Die();
 	}
