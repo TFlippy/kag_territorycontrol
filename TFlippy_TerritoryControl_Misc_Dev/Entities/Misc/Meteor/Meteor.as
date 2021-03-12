@@ -41,7 +41,7 @@ void onInit(CBlob@ this)
 			getNet().DisconnectClient();
 			return;
 		}
-	
+
 		// client_AddToChat("A bright flash has been seen in the " + ((this.getPosition().x < getMap().tilemapwidth * 4) ? "west" : "east") + ".", SColor(255, 255, 0, 0));
 		client_AddToChat("A bright flash illuminates the sky.", SColor(255, 255, 0, 0));
 	}
@@ -222,7 +222,21 @@ void onHitGround(CBlob@ this)
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
 	if(customData != Hitters::builder && customData != Hitters::drill)
+	{
+		s32 heat = this.get_s32("heat");
+		if (customData == Hitters::water || customData == Hitters::water_stun && heat > 0)
+		{
+			if(isClient())
+			{
+				MakeParticle(this, "MediumSteam");
+				this.getSprite().PlaySound("Steam.ogg");
+			}
+			heat -= 350;
+			if(heat < 0) heat = 0;
+			this.set_s32("heat", heat);
+		}
 		return 0.0f;
+	}
 
 	if (isServer())
 	{
