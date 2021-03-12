@@ -9,21 +9,16 @@ void onInit(CBlob@ this)
 
 	this.getShape().SetGravityScale(-0.025f);
 
-	this.getSprite().setRenderStyle(RenderStyle::additive);
-	this.getSprite().SetZ(10.0f);
-
 	this.set_f32("map_damage_ratio", 0.2f);
 	this.set_f32("map_damage_radius", 64.0f);
-	this.set_string("custom_explosion_sound", "methane_explode.ogg");
-	this.set_u8("custom_hitter", Hitters::burn);
+	//this.set_string("custom_explosion_sound", "methane_explode.ogg");
+	//this.set_u8("custom_hitter", Hitters::burn);
 
 	if (!this.exists("toxicity")) this.set_f32("toxicity", 0.125f);
-	
+
 	// this.SetMapEdgeFlags(CBlob::map_collide_left | CBlob::map_collide_right | CBlob::map_collide_up | CBlob::map_collide_down);
 	this.SetMapEdgeFlags(CBlob::map_collide_sides);
 	this.getCurrentScript().tickFrequency = 15 + XORRandom(15);
-
-	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
 
 	this.server_SetTimeToDie(50 + XORRandom(40));
 }
@@ -31,7 +26,7 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	if (isServer() && this.getPosition().y < 0) { this.server_Die(); }
-	
+
 	if (isClient() && this.isOnScreen())
 	{
 		MakeParticle(this, "Methane.png");
@@ -43,40 +38,62 @@ void Boom(CBlob@ this)
 	if (!this.hasTag("lit")) return;
 	if (this.hasTag("dead")) return;
 
+	this.Tag("dead");
+
 	CMap@ map = getMap();
 	Vec2f pos = this.getPosition();
 
 	if (isServer())
 	{
-		CBlob@[] blobs;
+		HitInfo@[] hitlist;
 
-		if (map.getBlobsInRadius(pos, 32.0f, @blobs))
+		if (map.getHitInfosFromCircle(pos, 32.0f, this, @hitlist))
 		{
-			for (int i = 0; i < blobs.length; i++)
+			for (int i = 0; i < hitlist.length; i++)
 			{
-				CBlob@ blob = blobs[i];
-				if (blob !is null && (blob.hasTag("flesh") || blob.hasTag("plant")))
+				CBlob@ blob = hitlist[i].blob;
+				Vec2f pos = hitlist[i].hitpos;
+				if (blob !is null)
 				{
-					map.server_setFireWorldspace(blob.getPosition(), true);
-					blob.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.5f, Hitters::fire);
+					if (!blob.hasTag("dead") && (blob.hasTag("gas") || blob.hasTag("flesh") || blob.hasTag("plant")))
+					{
+						// Much faster to check isInFire then to constantly set 1 position on fire
+						if (!map.isInFire(pos))
+							map.server_setFireWorldspace(pos, true);
+
+						blob.server_Hit(blob, pos, Vec2f(0, 0), 1.5f, Hitters::burn);
+					}
+				}
+				else
+				{
+					u16 tile = hitlist[i].tile;
+					switch(tile)
+					{
+						case CMap::tile_bedrock:
+							continue;
+
+						default:
+							this.server_HitMap(pos, Vec2f(0, 0), 1.0f, Hitters::burn);
+							map.server_setFireWorldspace(pos, true);
+					}
 				}
 			}
 		}
-
-		for (int i = 0; i < 24; i++)
-		{
-			map.server_setFireWorldspace(this.getPosition() + getRandomVelocity(0, 8 + XORRandom(48), 360), true);
-		}
 	}
 
-	Explode(this, 32.0f, 0.1f);
+	if (isClient())
+	{
+		Vec2f pos = this.getPosition();
 
-	this.Tag("dead");
+		Sound::Play("methane_explode.ogg", pos);
+		ShakeScreen(1.5f * 64.0f, 40.00f * Maths::FastSqrt(1.5f / 5.00f), pos);
+		makeLargeExplosionParticle(pos);
+	}
 }
 
  bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
  {
-	return blob.hasTag("gas");
+ 	return blob.hasTag("gas");
  }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
@@ -104,7 +121,12 @@ void onDie(CBlob@ this)
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob is null) return;
-	if (blob.hasTag("gas")) return;
+
+	if (blob.hasTag("gas"))
+	{
+		this.setVelocity(getRandomVelocity(0.0f, 0.5f, 360.0f));
+		return;
+	}
 
 	if ((blob.getName() == "lantern" ? blob.isLight() : false) ||
 		blob.getName() == "fireplace" ||
@@ -118,7 +140,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 void MakeParticle(CBlob@ this, const string filename = "LargeSmoke")
 {
 	CParticle@ particle = ParticleAnimated(filename, this.getPosition() + Vec2f(16 - XORRandom(32), 8 - XORRandom(32)), Vec2f(), float(XORRandom(360)), 1.0f + (XORRandom(50) / 100.0f), 4, 0.00f, false);
-	if (particle !is null) 
+	if (particle !is null)
 	{
 		particle.collides = false;
 		particle.deadeffect = 1;
