@@ -122,7 +122,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[0].push_back(b);
 	}
 	{	//Report fil, he stole my fireplace // Ye ~Fil
-		BuildBlock b(0, "fireplace", "$fireplace$", "Campfire");
+		BuildBlock b(0, "fireplace", "$fireplace$", "Campfire\nCan be used to cook various foods.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 50);
 		b.buildOnGround = true;
