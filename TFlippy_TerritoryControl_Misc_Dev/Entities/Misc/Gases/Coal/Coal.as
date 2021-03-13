@@ -3,13 +3,13 @@
 #include "Explosion.as";
 #include "ArcherCommon.as";
 
-// string[] particles = 
+// string[] particles =
 // {
 	// "LargeSmoke.png",
 	// "Explosion.png"
 // };
 
-string[] particles = 
+string[] particles =
 {
 	"SmallSmoke1.png",
 	"SmallSmoke2.png",
@@ -32,9 +32,9 @@ void onInit(CBlob@ this)
 	this.set_u8("custom_hitter", Hitters::explosion);
 
 	this.Tag("map_damage_dirt");
-	
+
 	if (!this.exists("toxicity")) this.set_f32("toxicity", 0.80f);
-	
+
 	// this.SetMapEdgeFlags(CBlob::map_collide_left | CBlob::map_collide_right | CBlob::map_collide_up | CBlob::map_collide_down);
 	this.SetMapEdgeFlags(CBlob::map_collide_sides);
 	if(isClient())
@@ -57,7 +57,7 @@ void onTick(CBlob@ this)
 	if(isClient())
 	{
 		CParticle@ particle = ParticleAnimated("Coal.png", this.getPosition(), this.getOldVelocity() / 7, 1.0f, 1, 6, 0.0f, false);
-		if (particle !is null) 
+		if (particle !is null)
 		{
 			particle.frame = XORRandom(7);
 			particle.collides = false;
@@ -81,9 +81,9 @@ void onTick(CBlob@ this)
 			this.server_Die();
 			CBlob@ blob = server_CreateBlob("mat_coal", -1, this.getPosition());
 			blob.server_SetQuantity(1 + XORRandom(6));
+			blob.Tag("dusted");
 		}
 	}
-
 }
 
 void DoExplosion(CBlob@ this)
@@ -94,41 +94,41 @@ void DoExplosion(CBlob@ this)
 		addToNextTick(this, rules, DoExplosion);
 		return;
 	}
-	
+
 	Random@ random = Random(this.getNetworkID());
 	f32 angle = this.get_f32("bomb angle");
 
 	this.set_f32("map_damage_radius", (32.0f + random.NextRanged(32)));
 	this.set_f32("map_damage_ratio", 0.25f);
 	Explode(this, 40.0f, 1.2f);
-	
+
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
-		
+
 	if (isServer())
 	{
 		CBlob@[] blobs;
-		
+
 		if (map.getBlobsInRadius(pos, 15.0f, @blobs))
 		{
 			for (int i = 0; i < blobs.length; i++)
-			{		
+			{
 				CBlob@ blob = blobs[i];
-				if (blob !is null) 
+				if (blob !is null)
 				{
 					map.server_setFireWorldspace(blob.getPosition(), true);
 					blob.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.5f, Hitters::fire);
 				}
 			}
 		}
-	}	
-	
+	}
+
 	if (isClient())
 	{
 		// this.getSprite().PlaySound("shockmine_explode.ogg", 0.80f, 1.10f);
 		ShakeScreen(100, 60, this.getPosition());
 
-		if (this.isOnScreen()) 
+		if (this.isOnScreen())
 		{
 			for (int i = 0; i < 4; i++)
 			{
@@ -136,7 +136,7 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 	}
-	
+
 	this.getSprite().Gib();
 }
 
@@ -173,7 +173,6 @@ void onDie(CBlob@ this)
 	{
 		DoExplosion(this);
 	}
-	
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
