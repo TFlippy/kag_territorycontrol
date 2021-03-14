@@ -71,23 +71,23 @@ void onTick(CBlob@ this)
 		this.set_string("reload_script", "");
 	}
 
-	CSpriteLayer@ pack = this.getSprite().getSpriteLayer("pack");
-	if (pack !is null)
+	if (isClient())
 	{
-		Vec2f headoffset(this.getSprite().getFrameWidth() / 2, -this.getSprite().getFrameHeight() / 2);
-		Vec2f head_offset = getHeadOffset(this, -1, 0);
-		
-		headoffset += this.getSprite().getOffset();
-		headoffset += Vec2f(-head_offset.x, head_offset.y);
-		headoffset += Vec2f(6, 4);
-		pack.SetOffset(headoffset);
-
-		if (deployavailable && candeploy && !pack.isVisible())
+		CSpriteLayer@ pack = this.getSprite().getSpriteLayer("pack");
+		if (pack !is null)
 		{
-			if (isClient())
+			Vec2f headoffset(this.getSprite().getFrameWidth() / 2, -this.getSprite().getFrameHeight() / 2);
+			Vec2f head_offset = getHeadOffset(this, -1, 0);
+
+			headoffset += this.getSprite().getOffset();
+			headoffset += Vec2f(-head_offset.x, head_offset.y);
+			headoffset += Vec2f(6, 4);
+			pack.SetOffset(headoffset);
+
+			if (deployavailable && candeploy && !pack.isVisible())
 			{
 				pack.SetVisible(true);
-				this.getSprite().PlaySound("switch");
+				this.getSprite().PlaySound("thud");
 			}
 		}
 	}
@@ -97,11 +97,15 @@ void onTick(CBlob@ this)
 		//Slow down the player's fall speed
 		Vec2f vel = this.getVelocity();
 		this.setVelocity(Vec2f(vel.x, vel.y * 0.8f));
-		
+
 		ShowParachute(this);
-		if (pack !is null && pack.isVisible())
+		if (isClient())
 		{
-			if (isClient()) pack.SetVisible(false);
+			CSpriteLayer@ pack = this.getSprite().getSpriteLayer("pack");
+			if (pack !is null && pack.isVisible())
+			{
+				pack.SetVisible(false);
+			}
 		}
 		if (candeploy)
 		{
@@ -120,7 +124,6 @@ void ShowParachute(CBlob@ this)
 	if (isClient())
 	{
 		CSpriteLayer@ parachute = this.getSprite().getSpriteLayer("parachute");
-
 		if (parachute !is null && !parachute.isVisible())
 		{
 			parachute.SetVisible(true);
