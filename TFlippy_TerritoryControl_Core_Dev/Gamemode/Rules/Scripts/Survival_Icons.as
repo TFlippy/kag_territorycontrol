@@ -21,12 +21,12 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_badgerstatue$", "BadgerStatue.png", Vec2f(32, 32), 0);
 	AddIconToken("$icon_pigeonstatue$", "PigeonStatue.png", Vec2f(32, 32), 0);
 	AddIconToken("$icon_discoball$", "Discoball.png", Vec2f(8, 8), 3);
-	
+
 	// TC Icons
 	// Components
 	AddIconToken("$mat_copperwire$", "Material_CopperWire.png", Vec2f(9, 11), 0);
 	AddIconToken("$icon_tankshell$", "Material_TankShell.png", Vec2f(16, 16), 3);
-	
+
 	// Merchant
 	AddIconToken("$bp_automation_advanced$", "Blueprints.png", Vec2f(16, 16), 0);
 	AddIconToken("$bp_energetics$", "Blueprints.png", Vec2f(16, 16), 1);
@@ -38,7 +38,7 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_cake$", "Cake.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_car$", "Icon_Car.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_kitten$", "Kitten.png", Vec2f(16, 16), 0);
-	
+
 	// Chicken Market
 	AddIconToken("$bobomax$", "Bobomax.png", Vec2f(8, 8), 0);
 	AddIconToken("$badgerplushie$", "BadgerPlushie.png", Vec2f(16, 16), 0);
@@ -53,14 +53,14 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_sentry$", "Sentry_Icon.png", Vec2f(32, 24), 0);
 	AddIconToken("$sammissile$", "SAM_Missile.png", Vec2f(8, 16), 0);
 	AddIconToken("$zapper$", "Zapper.png", Vec2f(24, 24), 0);
-	
+
 	// Ammo
 	AddIconToken("$icon_gatlingammo$", "Material_GatlingAmmo.png", Vec2f(16, 16), 2);
 	AddIconToken("$icon_rifleammo$", "Material_RifleAmmo.png", Vec2f(16, 16), 3);
 	AddIconToken("$icon_shotgunammo$", "Material_ShotgunAmmo.png", Vec2f(16, 16), 3);
 	AddIconToken("$icon_pistolammo$", "Material_PistolAmmo.png", Vec2f(16, 16), 3);
 	AddIconToken("$icon_howitzershell$", "Material_HowitzerShell.png", Vec2f(16, 8), 0);
-	
+
 	// Explosives
 	AddIconToken("$icon_smallbomb$", "Material_SmallBomb.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_incendiarybomb$", "Material_IncendiaryBomb.png", Vec2f(16, 16), 0);
@@ -87,13 +87,13 @@ void ReloadIcons(CRules@ this)
 
 	AddIconToken("$mat_wood_1x$", "Materials.png", Vec2f(16, 16), 9);
 	AddIconToken("$mat_wood_10x$", "Materials.png", Vec2f(16, 16), 25);
-	
+
 	AddIconToken("$mat_stone_1x$", "Materials.png", Vec2f(16, 16), 8);
 	AddIconToken("$mat_stone_10x$", "Materials.png", Vec2f(16, 16), 24);
-	
+
 	AddIconToken("$mat_goldingot_1x$", "Material_GoldIngot.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_goldingot_10x$", "Material_GoldIngot.png", Vec2f(16, 16), 3);
-	
+
 	// Metal
 	AddIconToken("$mat_copperingot$", "Material_CopperIngot.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_ironingot$", "Material_IronIngot.png", Vec2f(16, 16), 1);
@@ -111,7 +111,7 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$mat_concrete$", "Material_Concrete.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_mithril$", "Material_Mithril.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_mithrilenriched$", "Material_MithrilEnriched.png", Vec2f(16, 16), 1);
-	
+
 	// Builder shop
 	AddIconToken("$gramophone$", "Gramophone.png", Vec2f(16, 16), 0);
 	AddIconToken("$powerdrill$", "PowerDrill.png", Vec2f(32, 16), 0);
@@ -130,7 +130,8 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_combatboots$", "CombatBoots.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_rendeboots$", "RendeBoots.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_rendezook$", "Rendezook.png", Vec2f(18, 6), 0);
-	
+	AddIconToken("$icon_parachute$", "ParachutePack.png", Vec2f(16, 16), 0);
+
 	// Mechanist
 	AddIconToken("$icon_klaxon$", "Klaxon.png", Vec2f(24, 16), 0);
 	AddIconToken("$icon_automat$", "Automat.png", Vec2f(16, 16), 0);
@@ -158,11 +159,11 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_lighter$", "Lighter.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_oof$", "Oof.png", Vec2f(40, 16), 0);
 	AddIconToken("$icon_gyromat$", "Gyromat.png", Vec2f(16, 16), 0);
-	
+
 	// Fabricator
 	AddIconToken("$icon_hoverbike$", "Hoverbike.png", Vec2f(24, 16), 2);
 	AddIconToken("$icon_teleporter$", "Teleporter.png", Vec2f(32, 32), 0);
-	
+
 	// Gunsmith
 	AddIconToken("$rifle$", "Rifle.png", Vec2f(24, 8), 0);
 	AddIconToken("$leverrifle$", "LeverRifle.png", Vec2f(24, 8), 0);
@@ -200,7 +201,6 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_princess$", "Princess.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_beamtowertargeter$", "BeamTowerTargeter.png", Vec2f(8, 16), 0);
 
-	
 	// Drugs
 	AddIconToken("$icon_domino$", "Domino.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_foof$", "Foof.png", Vec2f(8, 8), 0);
