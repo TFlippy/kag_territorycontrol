@@ -14,7 +14,7 @@ void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 		ShapeConsts@ consts = shape.getConsts();
 		consts.collidable = false;
 		consts.mapCollisions = false;
-	}	
+	}
 }
 
 void onThisRemoveFromInventory(CBlob@ this, CBlob@ inventoryBlob)
@@ -36,4 +36,7 @@ void onThisRemoveFromInventory(CBlob@ this, CBlob@ inventoryBlob)
 void onBlobCreated(CRules@ this, CBlob@ blob)
 {
 	blob.AddScript("DisableInventoryCollisions");
+
+	if (blob.isInInventory())
+		onThisAddToInventory(blob, null);
 }
