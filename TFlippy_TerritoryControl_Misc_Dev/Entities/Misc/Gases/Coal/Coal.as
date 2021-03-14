@@ -82,6 +82,7 @@ void onTick(CBlob@ this)
 			CBlob@ blob = server_CreateBlob("mat_coal", -1, this.getPosition());
 			blob.server_SetQuantity(1 + XORRandom(6));
 			blob.Tag("dusted");
+			blob.setInventoryName("Coal Dust");
 		}
 	}
 }
