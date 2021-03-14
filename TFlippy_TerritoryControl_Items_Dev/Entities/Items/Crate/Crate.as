@@ -538,5 +538,6 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 		this.setAngleDegrees(0.0f);
 		this.inventoryButtonPos = Vec2f(0, 0);
 		this.getCurrentScript().tickFrequency = 1;
+		if (isClient()) this.getSprite().PlaySound("thud", 2.0f, 1.0f);
 	}
 }
