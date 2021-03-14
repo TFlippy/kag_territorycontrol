@@ -955,8 +955,6 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 			case CMap::tile_bconcrete_d5:
 			case CMap::tile_bconcrete_d6:
 			case CMap::tile_bconcrete_d7:
-
-
 				col = c_concrete;
 			break;
 
