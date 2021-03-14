@@ -11,7 +11,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		this.set_bool("lite", false);
 		if(isServer())
-        {
+		{
     		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 			if(point is null){return;}
     		CBlob@ holder = point.getOccupied();
