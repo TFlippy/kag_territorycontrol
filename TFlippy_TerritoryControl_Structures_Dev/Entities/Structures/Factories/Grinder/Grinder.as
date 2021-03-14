@@ -221,6 +221,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 		case -324721731://mat_coal
 		{
 			blob.Tag("dusted");
+			blob.setInventoryName("Coal Dust");
 			this.server_PutInInventory(blob);
 
 			if(isClient())
