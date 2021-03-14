@@ -199,12 +199,11 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Gauss Rifle", "$icon_gaussrifle$", "gaussrifle", "A modified toy used to kill people.\n\nUses Steel Ingots.");
+		ShopItem@ s = addShopItem(this, "Gauss Rifle", "$icon_gaussrifle$", "gaussrifle", "A modified toy used to kill people.\n\nUses Mithril Ingots.");
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
 		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 50);
 		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 10);
 		AddRequirement(s.requirements, "coin", "", "Coins", 850);
-
 
 		s.customButton = true;
 		s.buttonwidth = 2;
@@ -255,7 +254,6 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Acidthrower", "$icon_acidthrower$", "acidthrower", "A tool used for dissolving plants, buildings and people.\n\nUses Acid.");
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
 		AddRequirement(s.requirements, "coin", "", "Coins", 1250);
-
 
 		s.customButton = true;
 		s.buttonwidth = 2;
