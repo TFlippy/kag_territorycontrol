@@ -7,41 +7,41 @@ void onInit(CBlob@ this)
 	this.SetLight(true);
 	this.SetLightRadius(24.0f);
 	this.SetLightColor(SColor(255, 25, 255, 100));
-	
+
 	this.maxQuantity = 250;
-	
+
 	this.getCurrentScript().tickFrequency = 1;
 	this.getCurrentScript().runFlags |= Script::tick_not_inwater | Script::tick_not_ininventory;
-	
+
 	this.Tag("dangerous");
 }
 
 void onTick(CBlob@ this)
-{	
+{
 	if (this.getTickSinceCreated() < 120 || this.getQuantity() < 30) return;
 
 	this.getCurrentScript().tickFrequency = (125 / Maths::Max(1, (this.getQuantity() / 2))) * 10.0f;
-	
+
 	// print("Freq: " + this.getCurrentScript().tickFrequency + "; Quantity: " + this.getQuantity());
-	
+
 	const f32 radius = 256 *  this.getQuantity() / 250.0f;
 	// this.SetLightRadius(radius * 0.35f); // re-enable when asu's build releases it
-	
+
 	if (this.getQuantity() < 60) return;
-	
-	if (XORRandom(100) < 50) 
+
+	if (XORRandom(100) < 50)
 	{
 		if (isClient())
 		{
 			float mag = this.getQuantity() / 250.0f;
 			MakeParticle(this, mag);
 		}
-	
+
 		if (isServer())
 		{
-			this.server_SetQuantity(this.getQuantity() - 1);
+			this.server_SetQuantity(this.getQuantity() - 2);
 			CMap@ map = getMap();
-		
+
 			CBlob@[] blobsInRadius;
 			if (map.getBlobsInRadius(this.getPosition(), radius, @blobsInRadius))
 			{
@@ -62,10 +62,10 @@ void onTick(CBlob@ this)
 						{
 							if (map.isTileSolid(pos + dir * i)) counter++;
 						}
-						
+
 						const f32 distMod = Maths::Max(0, (1.00f - ((pos - bpos).Length() / radius)));
-						
-						if (XORRandom(100) < 100.0f * distMod) 
+
+						if (XORRandom(100) < 100.0f * distMod)
 						{
 							this.server_Hit(blob, bpos, Vec2f(0, 0), 0.125f / counter, HittersTC::radiation, true);
 						}
