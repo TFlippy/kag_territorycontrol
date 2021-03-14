@@ -792,6 +792,7 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 
 			case CMap::tile_iron_d0:
 			case CMap::tile_iron_d1:
+			case CMap::tile_iron_d2:
 			case CMap::tile_iron_d3:
 			case CMap::tile_iron_d4:
 			case CMap::tile_iron_d5:
