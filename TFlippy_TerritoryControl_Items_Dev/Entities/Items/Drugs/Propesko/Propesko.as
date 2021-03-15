@@ -24,6 +24,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			if (!caller.hasScript("Propeskoed.as")) caller.AddScript("Propeskoed.as");
 			caller.add_f32("propeskoed", 1);
+			caller.add_f32("propeskorate", 0.001);
 			
 			if (isServer())
 			{
