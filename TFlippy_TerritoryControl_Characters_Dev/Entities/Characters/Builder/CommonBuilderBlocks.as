@@ -439,7 +439,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "autoforge", "$icon_autoforge$", "Auto-Forge\nProcesses raw materials and alloys just for you. Has a chance for a double yield.");
+		BuildBlock b(0, "autoforge", "$icon_autoforge$", "Auto-Forge\nProcesses raw materials and alloys just for you. Has a chance for a double yield.\nRequires coal to produce steel.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
 		b.buildOnGround = true;
