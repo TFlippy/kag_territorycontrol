@@ -44,11 +44,9 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$forge$", "Forge.png", Vec2f(24, 24), 0);
 	AddIconToken("$tinkertable$", "TinkerTable.png", Vec2f(40, 24), 0);
 	AddIconToken("$icon_lamppost$", "LampPost.png", Vec2f(8, 24), 0);
-	AddIconToken("$icon_ironanvil$", "IronAnvil.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_workshop$", "Building.png", Vec2f(40, 24), 0);
 	AddIconToken("$ironlocker$", "IronLocker.png", Vec2f(16, 24), 0);
 	AddIconToken("$woodchest$", "WoodChest.png", Vec2f(16, 16), 0);
-	AddIconToken("$hedgehog$", "Hedgehog.png", Vec2f(16, 16), 0);
 	AddIconToken("$barbedwire$", "BarbedWire.png", Vec2f(16, 16), 0);
 	AddIconToken("$teamlamp$", "TeamLamp.png", Vec2f(8, 8), 0);
 	AddIconToken("$industriallamp$", "IndustrialLamp.png", Vec2f(8, 8), 0);
@@ -82,7 +80,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$bconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_bconcrete);
 	AddIconToken("$reinforcedconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_reinforcedconcrete);
 	AddIconToken("$patreonshop$", "PatreonShop.png", Vec2f(40, 40), 0);
-	
+
 	AddIconToken("$icon_conveyor$", "Conveyor.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_filter$", "Filter.png", Vec2f(24, 8), 0);
@@ -100,7 +98,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_packer$", "Packer.png", Vec2f(24, 16), 0);
 	AddIconToken("$icon_compactor$", "Compactor.png", Vec2f(24, 32), 0);
 	AddIconToken("$icon_inserter$", "Inserter.png", Vec2f(16, 16), 0);
-	AddIconToken("$icon_floater$", "Floater.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_treecapitator$", "Treecapitator.png", Vec2f(24, 8), 0);	
 	AddIconToken("$icon_mithrilreactor$", "MithrilReactor.png", Vec2f(24, 24), 0);	
 	AddIconToken("$icon_metaldetector$", "MetalDetector.png", Vec2f(24, 24), 0);	
@@ -109,13 +106,10 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_ceilinglamp$", "CeilingLamp.png", Vec2f(16, 8), 0);	
 	AddIconToken("$icon_beamtower$", "BeamTower.png", Vec2f(32, 96), 0);	
 	AddIconToken("$icon_beamtowermirror$", "BeamTowerMirror.png", Vec2f(16, 24), 0);	
-	
 	AddIconToken("$icon_1x5blastdoor$", "1x5BlastDoor.png", Vec2f(8, 40), 0);
-	AddIconToken("$icon_barricade$", "Barricade.png", Vec2f(8, 24), 0);
-	
+
 	AddIconToken("$icon_altar$", "Altar.png", Vec2f(24, 32), 0);
-	
-	AddIconToken("$markettable$", "MarketTable.png", Vec2f(16, 16), 3);
+
 	AddIconToken("$constructionyard$", "ConstructionYardIcon.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_camp$", "Camp.png", Vec2f(80, 24), 0);
 	AddIconToken("$icon_oiltank$","OilTank.png",Vec2f(32, 16),0);
@@ -127,7 +121,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$icon_smallsign$","sign.png",Vec2f(16, 16),0);
 	// AddIconToken("$icon_cargocontainer$", "CargoContainer.png", Vec2f(64, 24), 0);
 
-	
 	BuildBlock[] page_0;
 	blocks.push_back(page_0);
 	{
@@ -140,7 +133,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 2);
 		blocks[0].push_back(b);
 	}
-	
 	{
 		BuildBlock b(CMap::tile_wood, "wood_block", "$wood_block$", "Wood Block\nCheap block\nwatch out for fire!");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 5);
@@ -202,7 +194,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_plasteel", "Plasteel Sheet", 1);
 		blocks[0].push_back(b);
 	}
-	
 	{
 		BuildBlock b(0, "stone_door", "$stone_door$", "Stone Door\nPlace next to walls");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
@@ -283,14 +274,11 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 3);
 		blocks[0].push_back(b);
 	}
-	
 	// {
 		// BuildBlock b(CMap::tile_tnt, "tnt_block", "$tnt_block$", "Explosives\nSet off by other explosions and fire.");
 		// AddRequirement(b.reqs, "blob", "mat_dirt", "Dirt", 0);
 		// blocks[0].push_back(b);
 	// }
-
-
 	// {
 		// BuildBlock b(CMap::tile_brick_v0, "brick_block", "$brick_block$", "Bricks\nA cheap but durable wall.");
 		// AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 5);
@@ -307,8 +295,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		// // AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 2);
 		// blocks[0].push_back(b);
 	// }
-	
-	
+
 	BuildBlock[] page_1;
 	blocks.push_back(page_1);
 	{
@@ -381,7 +368,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.buildOnGround = true;
 		b.size.Set(64, 56);
 		blocks[1].push_back(b);
-
 	}
 	{
 		BuildBlock b(0, "storage", "$storage$", "Storage\nA storage than can hold materials and items.\nCan be only accessed by the owner team.");
@@ -406,7 +392,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 500);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 500);
 		AddRequirement(b.reqs, "coin", "", "Coins", 100);
-		
 		b.buildOnGround = true;
 		b.size.Set(80, 24);
 		blocks[1].push_back(b);
@@ -421,7 +406,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[1].push_back(b);
 	}
 
-	
 	BuildBlock[] page_2;
 	blocks.push_back(page_2);
 	{
@@ -556,7 +540,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "inductionfurnace", "$icon_inductionfurnace$", "Induction Furnace\nA heavy-duty furnace that uses copper coils to smelt metal. Produces up to 4x more ingots at cost of lower speed.");
+		BuildBlock b(0, "inductionfurnace", "$icon_inductionfurnace$", "Industrial Furnace\nA heavy-duty that produces up to 4x more ingots at cost of lower speed.\nRequires coal to smelt metal.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 60);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 20);
 		// AddRequirement(b.reqs, "blob", "mat_battery", "Voltron Battery Plus", 50);
@@ -572,7 +556,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.buildOnGround = true;
 		b.size.Set(32, 16);
 		blocks[2].push_back(b);
-	}	
+	}
 	{
 		BuildBlock b(0, "stonepile", "$icon_stonepile$", "Stone Silo\nAutomatically collects ores from all of your team's mines.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 300);
@@ -605,8 +589,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(24, 24);
 		blocks[2].push_back(b);
 	}
-		
-		
+
 	BuildBlock[] page_3;
 	blocks.push_back(page_3);
 	{
@@ -684,7 +667,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	{
 		BuildBlock b(0, "textsign", "$icon_textsign$", "Sign\nType '!write -text-' in chat and then use it on the sign. Writing on a piece of paper costs 50 coins.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
-		
 		b.buildOnGround = true;
 		b.size.Set(64, 16);
 		blocks[3].push_back(b);
@@ -692,7 +674,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	{
 		BuildBlock b(0, "smallsign", "$icon_smallsign$", "Sign\nType '!write -text-' in chat and then use it on the sign. Writing on a piece of paper costs 50 coins.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 60);
-		
 		b.buildOnGround = true;
 		b.size.Set(16, 16);
 		blocks[3].push_back(b);
@@ -705,7 +686,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		// b.buildOnGround = true;
 		// // b.size.Set(32, 16);
 		// blocks[3].push_back(b);
-	// }	
+	// }
 	// {
 		// BuildBlock b(CMap::tile_tnt, "tnt_block", "$tnt_block$", "Explosives\nSet off by other explosions and fire.");
 		// AddRequirement(b.reqs, "coin", "", "Coins", 50);
@@ -719,7 +700,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.buildOnGround = true;
 		b.size.Set(24, 24);
 		blocks[3].push_back(b);
-	}	
+	}
 	{
 		BuildBlock b(0, "banner", "$icon_banner$", "Banner\nBanner to show off your team's color.");
 		AddRequirement(b.reqs, "coin", "", "Coins", 150);
@@ -749,7 +730,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.buildOnGround = true;
 		b.size.Set(32, 40);
 		blocks[3].push_back(b);
-	}	
+	}
 	{
 		BuildBlock b(0, "1x5blastdoor", "$icon_1x5blastdoor$", "Blast Door\nA large heavy blast door.\n\nCan be only opened by a Security Station.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 35);
@@ -774,7 +755,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 2);
 		blocks[3].push_back(b);
 	}
-	
 	{
 		BuildBlock b(0, "altar", "$icon_altar$", "Altar\nWorship your idols here. Needs to be carved first.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 2000);
@@ -782,8 +762,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.buildOnGround = true;
 		b.size.Set(24, 32);
 		blocks[3].push_back(b);
-	}	
-	
+	}
 	// {
 		// BuildBlock b(0, "barricade", "$icon_barricade$", "Barricade\neee");
 		// AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 100);
@@ -791,16 +770,13 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		// b.size.Set(8, 24);
 		// blocks[3].push_back(b);
 	// }
-
-
-	
 	// {
 		// BuildBlock b(0, "floater", "$icon_floater$", "Floater\nActs as a supporting structure - useful for sky islands and bridges.");
 		// // AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 20);
 		// // AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 50);
 		// blocks[2].push_back(b);
 	// }
-	
+
 	// BuildBlock[] page_4;
 	// blocks.push_back(page_4);
 	// {
