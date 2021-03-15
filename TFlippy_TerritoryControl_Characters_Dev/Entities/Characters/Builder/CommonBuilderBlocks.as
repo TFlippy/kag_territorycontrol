@@ -540,7 +540,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "inductionfurnace", "$icon_inductionfurnace$", "Industrial Furnace\nA heavy-duty that produces up to 4x more ingots at cost of lower speed.\nRequires coal to smelt metal.");
+		BuildBlock b(0, "inductionfurnace", "$icon_inductionfurnace$", "Industrial Furnace\nA heavy-duty furnace that produces up to 4x more ingots at cost of lower speed.\nRequires coal to smelt metal.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 60);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 20);
 		// AddRequirement(b.reqs, "blob", "mat_battery", "Voltron Battery Plus", 50);
