@@ -17,14 +17,14 @@ void onInit(CBlob@ this)
 
 	this.Tag("big shop");
 	this.Tag("invincible");
-	
+
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
-	
+
 	this.Tag("change team on fort capture");
-	
+
 	this.set_Vec2f("nobuild extend", Vec2f(0.0f, 0.0f));
-	
+
 	getMap().server_SetTile(this.getPosition(), CMap::tile_castle_back);
 
 	this.SetMinimapOutsideBehaviour(CBlob::minimap_snap);
@@ -32,26 +32,27 @@ void onInit(CBlob@ this)
 	this.SetMinimapRenderAlways(true);
 
 	this.getCurrentScript().tickFrequency = 30 * 3;
-	
+
 	this.SetLight(true);
 	this.SetLightRadius(160.0f);
 	this.SetLightColor(SColor(255, 255, 200, 110));
-	
+
 	// SHOP
 	this.set_Vec2f("shop offset", Vec2f(0, 4));
 	this.set_Vec2f("shop menu size", Vec2f(4, 6));
 	this.set_string("shop description", "United Poultry Federation Department Store");
 	this.set_u8("shop icon", 25);
-	
+
 	// {
 		// ShopItem@ s = addShopItem(this, "Sell Grain (1)", "$COIN$", "coin-40", "Sell 1 Grain for 40 coins.");
 		// AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
 		// s.spawnNothing = true;
 	// }
-	
+
 	this.set_string("shop_owner", "");
 	this.addCommandID("buyout");
-	
+	this.addCommandID("write");
+
 	{
 		ShopItem@ s = addShopItem(this, "UPF Department Store Partnership Card", "$buyshop$", "buyshop", "Become an UPF Department Store Partner and receive 20% of its sales.", false, true);
 		AddRequirement(s.requirements, "coin", "", "Coins", 999);
@@ -131,7 +132,6 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", 1999);
 		s.spawnNothing = true;
 	}
-	
 	// {
 		// ShopItem@ s = addShopItem(this, "Buy Stone (250)", "$mat_stone$", "mat_stone-250", "Buy 250 stone for 125 coins.");
 		// AddRequirement(s.requirements, "coin", "", "Coins", 125);
@@ -142,7 +142,6 @@ void onInit(CBlob@ this)
 		// AddRequirement(s.requirements, "coin", "", "Coins", 90);
 		// s.spawnNothing = true;
 	// }
-	
 	// {
 		// ShopItem@ s = addShopItem(this, "Sell Gold Ingot (1)", "$COIN$", "coin-100", "Sell 1 Gold Ingot for 100 coins.");
 		// AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
@@ -158,7 +157,6 @@ void onInit(CBlob@ this)
 		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 250);
 		// s.spawnNothing = true;
 	// }
-	
 	// // {
 		// // ShopItem@ s = addShopItem(this, "Buy Blueprint (Mechanist's Workshop)", "$bp_mechanist$", "bp_mechanist", "Buy Blueprint (Mechanist's Workshop) for 100 coins.");
 		// // AddRequirement(s.requirements, "coin", "", "Coins", 100);
@@ -188,7 +186,7 @@ void onInit(CBlob@ this)
 		// ShopItem@ s = addShopItem(this, "Mototorized Horse", "$icon_car$", "car", "Makes you extremely cool.", false, true);
 		// AddRequirement(s.requirements, "coin", "", "Coins", 1000);
 		// s.crate_icon = 0;
-		
+
 		// s.customButton = true;
 		// s.buttonwidth = 1;
 		// s.buttonheight = 1;
@@ -204,15 +202,15 @@ void onTick(CBlob@ this)
 {
 	// CBlob@[] players;
 	// getBlobsByTag("player", @players);
-	
+
 	// u8 myTeam = this.getTeamNum();
-	
+
 	// for (uint i = 0; i < players.length; i++)
 	// {
 		// if (players[i].getTeamNum() == myTeam)
 		// {
 			// CPlayer@ ply = players[i].getPlayer();
-		
+
 			// if (ply !is null) ply.server_setCoins(ply.getCoins() + 10);
 		// }
 	// }
@@ -223,26 +221,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("shop made item"))
 	{
 		this.getSprite().PlaySound("/ChaChing.ogg");
-		
+
 		u16 caller, item;
-		
+
 		if(!params.saferead_netid(caller) || !params.saferead_netid(item))
 			return;
-		
+
 		string name = params.read_string();
 		CBlob@ callerBlob = getBlobByNetworkID(caller);
-		
+
 		if (callerBlob is null) return;
-		
+
 		if (isServer())
 		{
 			string[] spl = name.split("-");
-			
+
 			if (spl[0] == "coin")
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;
-				
+
 				callerPlayer.server_setCoins(callerPlayer.getCoins() +  parseInt(spl[1]));
 			}
 			else if(spl[0] == "lotteryticket")
@@ -252,9 +250,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				blob.setPosition(this.getPosition());
 				blob.server_setTeamNum(-1);
 				blob.Init();
-				
+
 				if (blob is null) return;
-			   
+
 				if (!blob.canBePutInInventory(callerBlob))
 				{
 					callerBlob.server_Pickup(blob);
@@ -268,24 +266,24 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;
-				
+
 				if (isServer())
 				{
 					this.server_setTeamNum(callerPlayer.getTeamNum());
 					this.set_string("shop_owner", callerPlayer.getUsername());
 				}
-				
+
 				Sound::Play("ChickenMarket_Purchase.ogg");
-				
+
 				client_AddToChat("" + callerPlayer.getCharacterName() + " has has purchased an UPF Department Store Partnership Card and from now on will receive 20 percent of its sales!", SColor(255, 255, 100, 0));
 			}
 			else if (name.findFirst("mat_") != -1)
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;
-				
+
 				CBlob@ mat = server_CreateBlob(spl[0]);
-							
+
 				if (mat !is null)
 				{
 					mat.Tag("do not set materials");
@@ -294,11 +292,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					{
 						mat.setPosition(callerBlob.getPosition());
 					}
-					
+
 					if (this.get_string("shop_owner") != "")
 					{
 						CPlayer@ owner = getPlayerByUsername(this.get_string("shop_owner"));
-					
+
 						if (owner !is null)
 						{
 							owner.server_setCoins(owner.getCoins() + parseInt(spl[2]));
@@ -309,19 +307,19 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			else
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
-				
+
 				if (blob is null) return;
-			   
-			    if (this.get_string("shop_owner") != "")
+
+				if (this.get_string("shop_owner") != "")
 				{
 					CPlayer@ owner = getPlayerByUsername(this.get_string("shop_owner"));
-					
+
 					if (owner !is null)
 					{
 						owner.server_setCoins(owner.getCoins() + parseInt(spl[1]));
 					}
 				}
-			   
+
 				if (!blob.canBePutInInventory(callerBlob))
 				{
 					callerBlob.server_Pickup(blob);
@@ -333,13 +331,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 	}
+	if (cmd == this.getCommandID("write"))
+	{
+		if (isServer())
+		{
+			CBlob @caller = getBlobByNetworkID(params.read_u16());
+			CBlob @carried = getBlobByNetworkID(params.read_u16());
+
+			this.set_string("text", carried.get_string("text"));
+			this.setInventoryName(this.get_string("text"));
+			this.set_string("shop description", this.get_string("text"));
+			carried.server_Die();
+		}
+	}
 	else if (cmd == this.getCommandID("buyout"))
 	{
 		if (isClient())
 		{
 			u16 id;
 			string name;
-			
+
 			if (params.saferead_netid(id) && params.saferead_string(name))
 			{
 				CPlayer@ player = getLocalPlayer();
@@ -353,4 +364,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	this.set_bool("shop available", this.isOverlapping(caller));
+
+	if (caller is null) return;
+	if (!this.isOverlapping(caller)) return;
+
+	//rename the market
+	CBlob@ carried = caller.getCarriedBlob();
+	if(carried !is null && carried.getName() == "paper" && caller.getTeamNum() == this.getTeamNum())
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		params.write_u16(carried.getNetworkID());
+
+		CButton@ buttonWrite = caller.CreateGenericButton("$icon_paper$", Vec2f(0, -8), this, this.getCommandID("write"), "Rename the market.", params);
+	}
 }
