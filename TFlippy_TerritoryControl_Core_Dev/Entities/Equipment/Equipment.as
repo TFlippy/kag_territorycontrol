@@ -16,21 +16,21 @@ void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu@ gridmenu)
 	const string name = this.getName();
 
 	Vec2f MENU_POS;
-	
+
 	if (name == "builder" || name == "peasant") MENU_POS = gridmenu.getUpperLeftPosition() + Vec2f(-84, -204);
 	else if (name == "archer") MENU_POS = gridmenu.getUpperLeftPosition() + Vec2f(-84, -56);
 	else MENU_POS = gridmenu.getUpperLeftPosition() + Vec2f(-36, -56);
 
 	CGridMenu@ equipments = CreateGridMenu(MENU_POS, this, Vec2f(1, 3), "equipment");
-	
+
 	string HeadImage = "Equipment.png";
 	string TorsoImage = "Equipment.png";
 	string BootsImage = "Equipment.png";
-	
+
 	int HeadFrame = 0;
 	int TorsoFrame = 1;
 	int BootsFrame = 2;
-	
+
 	if(this.get_string("equipment_head") != "")
 	{
 		HeadImage = this.get_string("equipment_head")+"_icon.png";
@@ -46,7 +46,7 @@ void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu@ gridmenu)
 		BootsImage = this.get_string("equipment_boots")+"_icon.png";
 		BootsFrame = 0;
 	}
-	
+
 	if(equipments !is null)
 	{
 		equipments.SetCaptionEnabled(false);
@@ -102,7 +102,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		CBlob@ item = caller.getCarriedBlob();
 		if(item !is null && getEquipmentType(item) == "head")
 			holdingequipment = true;
-		
+
 		if(caller.get_string("equipment_head") != "")
 		{
 			removeHead(caller, caller.get_string("equipment_head"));
@@ -143,7 +143,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		CBlob@ item = caller.getCarriedBlob();
 		if(item !is null && getEquipmentType(item) == "boots")
 			holdingequipment = true;
-		
+
 		if(caller.get_string("equipment_boots") != "")
 		{
 			removeBoots(caller, caller.get_string("equipment_boots"));
@@ -184,7 +184,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		CBlob@ item = caller.getCarriedBlob();
 		if(item !is null && getEquipmentType(item) == "torso")
 			holdingequipment = true;
-		
+
 		if(caller.get_string("equipment_torso") != "")
 		{
 			removeTorso(caller, caller.get_string("equipment_torso"));
@@ -267,7 +267,7 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 			playerblob.SetLight(false);
 		}
 	}
-	
+
 	if(headname == "crown")
 	{
 		CSpriteLayer@ crown = playerblob.getSprite().getSpriteLayer("crown");
@@ -276,7 +276,7 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 			playerblob.getSprite().RemoveSpriteLayer("crown");
 		}
 	}
-	
+
 	if(headname == "militaryhelmet")
 	{
 		CSpriteLayer@ milhelmet = playerblob.getSprite().getSpriteLayer("milhelmet");
@@ -285,7 +285,7 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 			playerblob.getSprite().RemoveSpriteLayer("milhelmet");
 		}
 	}
-	
+
 	if(headname == "bucket")
 	{
 		CSpriteLayer@ buckethead = playerblob.getSprite().getSpriteLayer("buckethead");
@@ -294,7 +294,7 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 			playerblob.getSprite().RemoveSpriteLayer("buckethead");
 		}
 	}
-	
+
 	if(headname == "pumpkin")
 	{
 		CSpriteLayer@ pumpkinhead = playerblob.getSprite().getSpriteLayer("pumpkinhead");
@@ -303,7 +303,7 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 			playerblob.getSprite().RemoveSpriteLayer("pumpkinhead");
 		}
 	}
-	
+
 	playerblob.Untag(headname);
 	if(isServer())
 	{
@@ -354,7 +354,7 @@ void removeTorso(CBlob@ playerblob, string torsoname)		//Same stuff with removin
 			playerblob.getSprite().RemoveSpriteLayer("svest");
 		}
 	}
-	
+
 	if(torsoname == "backpack")
 	{
 		CSpriteLayer@ backpack = playerblob.getSprite().getSpriteLayer("backpack");
@@ -366,7 +366,24 @@ void removeTorso(CBlob@ playerblob, string torsoname)		//Same stuff with removin
 		if (backpackblob !is null)
 			backpackblob.server_Die();
 	}
-	
+
+	if(torsoname == "parachutepack")
+	{
+		CSpriteLayer@ pack = playerblob.getSprite().getSpriteLayer("pack");
+		if (pack !is null)
+		{
+			playerblob.getSprite().RemoveSpriteLayer("pack");
+		}
+		CSpriteLayer@ parachute = playerblob.getSprite().getSpriteLayer("parachute");
+		if (parachute !is null)
+		{
+			if (parachute.isVisible()) ParticlesFromSprite(parachute);
+			if (playerblob.hasTag("parachute")) playerblob.getSprite().PlaySound("join");
+			playerblob.getSprite().RemoveSpriteLayer("parachute");
+		}
+		playerblob.Untag("parachute");
+	}
+
 	if(torsoname == "keg")
 	{
 		CSpriteLayer@ barrel = playerblob.getSprite().getSpriteLayer("barrel");
@@ -375,7 +392,7 @@ void removeTorso(CBlob@ playerblob, string torsoname)		//Same stuff with removin
 			playerblob.getSprite().RemoveSpriteLayer("barrel");
 		}
 	}
-	
+
 	playerblob.Untag(torsoname);
 	if(isServer())
 	{
@@ -414,7 +431,7 @@ void removeBoots(CBlob@ playerblob, string bootsname)		//I think you should alre
 			moveVars.swimspeed -= 10.0f;
 		}
 	}
-	
+
 	playerblob.Untag(bootsname);
 	if(isServer())
 	{
