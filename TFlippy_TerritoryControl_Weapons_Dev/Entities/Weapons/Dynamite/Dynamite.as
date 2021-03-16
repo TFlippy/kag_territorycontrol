@@ -67,20 +67,16 @@ bool canBePutInInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	// No chain reactions, as they cause crashes
-	if (customData == Hitters::explosion || customData == Hitters::water || customData == Hitters::water_stun)
+	if (customData == Hitters::water || customData == Hitters::water_stun)
 	{
 		this.Tag("exploded");
 		if (isServer())
 		{
-			if (customData != Hitters::explosion)
-			{
-				CBlob@ blob = server_CreateBlob("mat_dynamite", this.getTeamNum(), this.getPosition());
-			}
+			CBlob@ blob = server_CreateBlob("mat_dynamite", this.getTeamNum(), this.getPosition());
 			this.server_Die();
 		}
 	}
-	
+
 	return damage;
 }
 
@@ -98,7 +94,7 @@ void DoExplosion(CBlob@ this)
 		addToNextTick(this, rules, DoExplosion);
 		return;
 	}
-	
+
 	if (this.hasTag("exploded")) return;
 
 	f32 random = XORRandom(16);
@@ -122,7 +118,6 @@ void DoExplosion(CBlob@ this)
 
 	if(isClient())
 	{
-
 
 		Vec2f pos = this.getPosition();
 		CMap@ map = getMap();

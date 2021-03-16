@@ -7,7 +7,7 @@ const int MAX_GRINDABLE_AT_ONCE = 5;
 void onInit(CSprite@ this)
 {
 	this.SetZ(10);
-	
+
 	this.SetEmitSound("Grinder_Loop.ogg");
 	this.SetEmitSoundVolume(0.3f);
 	this.SetEmitSoundSpeed(0.9f);
@@ -24,7 +24,7 @@ void onInit(CSprite@ this)
 		chop_left.SetRelativeZ(-1.0f);
 		chop_left.SetOffset(Vec2f(5.0f, -1.0f));
 	}
-	
+
 	CSpriteLayer@ chop_right = this.addSpriteLayer("chop_right", "/Saw.png", 16, 16);
 
 	if (chop_right !is null)
@@ -38,16 +38,16 @@ void onInit(CSprite@ this)
 	}
 }
 void onInit(CBlob@ this)
-{	
+{
 	this.Tag("builder always hit");
-	
+
 	this.getShape().SetOffset(Vec2f(0, 4));
-		
+
 	{
 		Vec2f offset(-24, 8);
-	
-		Vec2f[] shape = 
-		{ 
+
+		Vec2f[] shape =
+		{
 			Vec2f(0.0f, 0.0f) - offset,
 			Vec2f(8.0f, 0.0f) - offset,
 			Vec2f(8.0f, 23.0f) - offset,
@@ -55,12 +55,12 @@ void onInit(CBlob@ this)
 		};
 		this.getShape().AddShape(shape);
 	}
-	
+
 	{
 		Vec2f offset(8, 8);
-	
-		Vec2f[] shape = 
-		{ 
+
+		Vec2f[] shape =
+		{
 			Vec2f(0.0f, 0.0f) - offset,
 			Vec2f(8.0f, 0.0f) - offset,
 			Vec2f(8.0f, 23.0f) - offset,
@@ -68,7 +68,7 @@ void onInit(CBlob@ this)
 		};
 		this.getShape().AddShape(shape);
 	}
-	
+
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
 	this.getCurrentScript().tickFrequency = 5;
@@ -82,22 +82,21 @@ void onTick(CBlob@ this)
 		ShapeConsts@ consts = this.getShape().getConsts();
 		consts.collidable = true;
 	}
-	
 
 	CBlob@[] blobs;
-	if (getMap().getBlobsInRadius(this.getPosition()+Vec2f(0,-2) ,6.0f, @blobs))
+	if (getMap().getBlobsInRadius(this.getPosition()+Vec2f(0,-2) ,6.4f, @blobs))
 	{
 		int length = (blobs.length > MAX_GRINDABLE_AT_ONCE ? MAX_GRINDABLE_AT_ONCE : blobs.length);
-		
+
 		for (uint i = 0; i < length; i++)
 		{
 			CBlob@ blob = blobs[i];
 			if (blob is null) { continue; }
-			
+
 			if (canSaw(this, blob))
 			{
 				Blend(this, blob);
-				if (isServer()) 
+				if (isServer())
 				{ 
 					this.server_Hit(blob, blob.getPosition(), Vec2f(0, -2), 2.00f, Hitters::saw, true); 
 				}
@@ -115,10 +114,8 @@ void onTick(CBlob@ this)
 	}
 }
 
-
 void onTick(CSprite@ this)
 {
-
 	if (this.getBlob().getTickSinceCreated() < 90) { return; }
 
 	CSpriteLayer@ chop_left = this.getSpriteLayer("chop_left");
@@ -130,7 +127,7 @@ void onTick(CSprite@ this)
 
 bool canSaw(CBlob@ this, CBlob@ blob)
 {
-	if (this.getTickSinceCreated() < 90 || blob.hasTag("sawed") || blob.getShape().isStatic() || blob.getName() == "grinder" || (blob.getName() == "mat_stone" ? false : blob.hasTag("invincible"))) return false;
+	if (this.getTickSinceCreated() < 90 || blob.hasTag("sawed") || blob.getShape().isStatic() || blob.getName() == "grinder" || (blob.getName() == "mat_stone" || blob.getName() == "mat_coal" ? false : blob.hasTag("invincible"))) return false;
 
 	if (blob.hasTag("flesh") && isClient() && !g_kidssafe)
 	{
@@ -143,7 +140,7 @@ bool canSaw(CBlob@ this, CBlob@ blob)
 		
 		sprite.SetAnimation("blood");
 	}
-	
+
 	return true;
 }
 
@@ -154,7 +151,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 	bool kill = false;
 	const string name = blob.getName();
 	const int hash = name.getHash();
-	
+
 	switch(hash)
 	{
 		case 1062293841://log
@@ -163,7 +160,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 			{
 				MakeMat(this, this.getPosition(), "mat_wood", 60 + XORRandom(40));
 			}
-		
+
 			this.getSprite().PlaySound("SawLog.ogg", 0.8f, 0.9f);
 			kill = true;
 		}
@@ -174,7 +171,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 			if (isServer())
 			{
 				u32 quantity = blob.getQuantity();
-			
+
 				MakeMat(this, this.getPosition(), "mat_stone", 		quantity * 0.50f + XORRandom(quantity * 0.25f));
 				MakeMat(this, this.getPosition(), "mat_concrete", 	quantity * 0.125f + XORRandom(quantity * 0.125f));
 				MakeMat(this, this.getPosition(), "mat_iron", 		XORRandom(quantity * 0.20f));
@@ -183,12 +180,12 @@ void Blend(CBlob@ this, CBlob@ blob)
 				MakeMat(this, this.getPosition(), "mat_gold",	 	XORRandom(quantity * 0.06f));
 				MakeMat(this, this.getPosition(), "mat_mithril", 	XORRandom(quantity * 0.05f));
 			}
-		
+
 			if(isClient())
 			{
 				this.getSprite().PlaySound("rocks_explode" + (1 + XORRandom(2)) + ".ogg", 1.5f, 1.0f);
-				
-				if (XORRandom(100) < 75) 
+
+				if (XORRandom(100) < 75)
 				{
 					ParticleAnimated("Smoke.png", this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
 				}
@@ -203,8 +200,6 @@ void Blend(CBlob@ this, CBlob@ blob)
 			{
 				MakeMat(this, this.getPosition(), "mat_plasteel", 5 + XORRandom(20));
 				MakeMat(this, this.getPosition(), "mat_steelingot", 1 + XORRandom(3));
-				
-				
 			}
 			kill = true;
 		}
@@ -217,9 +212,27 @@ void Blend(CBlob@ this, CBlob@ blob)
 			{
 				MakeMat(this, this.getPosition(), "mat_meat", 20 + XORRandom(10));
 			}
-			
+
 			this.getSprite().PlaySound("SawLog.ogg", 0.8f, 1.0f);
 			kill = true;
+		}
+		break;
+
+		case -324721731://mat_coal
+		{
+			blob.Tag("dusted");
+			blob.setInventoryName("Coal Dust");
+			this.server_PutInInventory(blob);
+
+			if(isClient())
+			{
+				this.getSprite().PlaySound("rocks_explode" + (1 + XORRandom(2)) + ".ogg", 1.5f, 1.0f);
+
+				if (XORRandom(100) < 75)
+				{
+					ParticleAnimated("LargeSmoke.png", this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+				}
+			}
 		}
 		break;
 
@@ -231,11 +244,11 @@ void Blend(CBlob@ this, CBlob@ blob)
 				{
 					f32 amount = ((blob.getRadius() + XORRandom(blob.getMass() / 3.0f)) / blob.getInitialHealth()) * 0.35f;
 					amount += XORRandom(amount) * 0.50f;
-					
+
 					// print("" + amount);
-					
+
 					blob.setVelocity(Vec2f(1 - XORRandom(2), -0.25f));
-					
+
 					MakeMat(this, this.getPosition(), "mat_meat", amount);
 				}
 			}
@@ -243,9 +256,9 @@ void Blend(CBlob@ this, CBlob@ blob)
 			{
 				if (isServer())
 				{
-					MakeMat(this, this.getPosition(), "mat_iron", 20 + XORRandom(60));
-					MakeMat(this, this.getPosition(), "mat_wood", 10 + XORRandom(40));
-					
+					MakeMat(this, this.getPosition(), "mat_ironingot", 1);
+					MakeMat(this, this.getPosition(), "mat_wood", 10 + XORRandom(30));
+
 					kill = true;
 				}
 			}
@@ -258,18 +271,17 @@ void Blend(CBlob@ this, CBlob@ blob)
 		}
 		break;
 	}
-	
-	
+
 	if (kill)
 	{
 		blob.Tag("sawed");
-	
+
 		CSprite@ s = blob.getSprite();
 		if (s !is null)
 		{
 			s.Gib();
 		}
-	
+
 		blob.server_SetHealth(-1.0f);
 		blob.server_Die();
 	}
@@ -283,7 +295,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 	// Vec2f bpos = blob.getPosition();
 
 	// if ((bpos.x > pos.x + 9) || (bpos.x < pos.x - 9) || bpos.y > pos.y) return;
-	
+
 	// if (canSaw(this, blob))
 	// {
 		// Blend(this, blob);
