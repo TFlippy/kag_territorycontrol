@@ -54,9 +54,7 @@ const string[] names =
 	"Sylw",
 	"Gokke",
 	"Olimarrex",
-	"Poep Snuifer",
-	"K1t",
-	"Kit"
+	"Poep Snuifer"
 };
 
 const string[] surnames = {
@@ -69,14 +67,13 @@ const string[] surnames = {
 	"small tiger",
 	"pussy",
 	"puss",
-	"dog cat",
-	"depot escapee"
+	"dog cat"
 };
 
 //sprite
 void onInit(CSprite@ this)
 {
-    this.ReloadSprites(0,0);
+	this.ReloadSprites(0,0);
 	this.SetZ(-20.0f);
 }
 
@@ -100,7 +97,7 @@ void onTick(CSprite@ this)
 		{
 			this.SetAnimation("idle");
 		}
-		
+
 		if (blob.get_u32("next meow") < getGameTime() && XORRandom(100) < 30) 
 		{
 			blob.set_u32("next meow", getGameTime() + 120);
@@ -114,19 +111,20 @@ void onInit(CBlob@ this)
 	Random@ rand = Random(this.getNetworkID());
 	string name = names[rand.NextRanged(names.length)] + " the " + surnames[rand.NextRanged(surnames.length)];
 	this.setInventoryName(name);
+	this.addCommandID("write");
 
 	this.set_f32("bite damage", 0.1f);
-	
+
 	//brain
 	this.set_u8(personality_property, SCARED_BIT);
 	this.getBrain().server_SetActive(true);
 	this.set_f32(target_searchrad_property, 30.0f);
 	this.set_f32(terr_rad_property, 75.0f);
 	this.set_u8(target_lose_random, 14);
-	
+
 	//for shape
 	this.getShape().SetRotationsAllowed(false);
-	
+
 	//for flesh hit
 	this.set_f32("gib health", -2.0f);	  	
 	this.Tag("flesh");
@@ -134,20 +132,20 @@ void onInit(CBlob@ this)
 	this.getShape().SetOffset(Vec2f(0, 2));
 
 	this.set_u8( "maxStickiedTime", 40 );
-	
+
 	AnimalVars@ vars;
 	if (!this.get( "vars", @vars )) return;
-		
+
 	vars.walkForce.Set(25.0f, -0.1f);
 	vars.runForce.Set(40.0f, -1.0f);
 	vars.slowForce.Set(10.0f, 0.0f);
 	vars.jumpForce.Set(0.0f, -30.0f);
 	vars.maxVelocity = 3.2f;
-	
+
 	this.set_u8("number of steaks", 2);
 	this.set_u32("next meow", getGameTime());
 	this.set_u32("next screech", getGameTime());
-	
+
 	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 1.70f);
 }
 
@@ -155,7 +153,7 @@ void onTick(CBlob@ this)
 {
 	if (!this.hasTag("dead"))
 	{
-		f32 x = this.getVelocity().x;		
+		f32 x = this.getVelocity().x;
 		if (Maths::Abs(x) > 1.0f)
 		{
 			this.SetFacingLeft(x < 0);
@@ -171,7 +169,7 @@ void onTick(CBlob@ this)
 				this.SetFacingLeft(false);
 			}
 		}
-		
+
 		if (this.getHealth() < 0)
 		{
 			this.getSprite().SetAnimation("dead");
@@ -179,7 +177,7 @@ void onTick(CBlob@ this)
 			this.Tag("dead");
 			// this.getCurrentScript().removeIfTag = "dead";
 		}
-		
+
 		if (this.isInInventory())
 		{
 			CBlob@ inventoryBlob = this.getInventoryBlob();
@@ -227,7 +225,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		this.set_u32("next screech", getGameTime() + 30);
 		this.AddForce(Vec2f(0.0f, -180.0f));
 	}
-	
+
 	return damage;
 }
 
@@ -248,8 +246,6 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 	if (blob.getName() == "mat_mithril" && blob.getQuantity() > 50)
 	{
-		
-		
 		if (isServer())
 		{
 			CBlob@ bagel = server_CreateBlob("pus", this.getTeamNum(), this.getPosition());
@@ -259,5 +255,40 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		{
 			ParticleZombieLightning(this.getPosition());
 		}
+	}
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+{
+	if (cmd == this.getCommandID("write"))
+	{
+		if (isServer())
+		{
+			Random@ rand = Random(this.getNetworkID());
+			CBlob @caller = getBlobByNetworkID(params.read_u16());
+			CBlob @carried = getBlobByNetworkID(params.read_u16());
+
+			this.set_string("text", carried.get_string("text"));
+			this.setInventoryName(this.get_string("text") + " the " + surnames[rand.NextRanged(surnames.length)]);
+
+			carried.server_Die();
+		}
+	}
+}
+
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (caller is null) return;
+	if (!this.isOverlapping(caller)) return;
+
+	//rename the kitten
+	CBlob@ carried = caller.getCarriedBlob();
+	if(carried !is null && carried.getName() == "paper")
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		params.write_u16(carried.getNetworkID());
+
+		CButton@ buttonWrite = caller.CreateGenericButton("$icon_paper$", Vec2f(0, 0), this, this.getCommandID("write"), "Rename", params);
 	}
 }
