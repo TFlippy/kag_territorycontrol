@@ -22,18 +22,20 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CBlob @caller = getBlobByNetworkID(params.read_u16());
 			CBlob @carried = getBlobByNetworkID(params.read_u16());
 
-			if (cmd == this.getCommandID("addwrite"))
+			if (caller !is null && carried !is null)
 			{
-				this.set_string("text", this.get_string("text") + " " + carried.get_string("text"));
+				if (cmd == this.getCommandID("addwrite"))
+				{
+					this.set_string("text", this.get_string("text") + " " + carried.get_string("text"));
+				}
+				else
+				{
+					this.set_string("text", carried.get_string("text"));
+				}
+				this.Sync("text", true);
+				this.getSprite().SetAnimation("written");
+				carried.server_Die();
 			}
-			else
-			{
-				this.set_string("text", carried.get_string("text"));
-			}
-			this.Sync("text", true);
-			this.getSprite().SetAnimation("written");
-
-			carried.server_Die();
 		}
 	}
 }

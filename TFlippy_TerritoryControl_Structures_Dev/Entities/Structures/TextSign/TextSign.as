@@ -21,10 +21,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CBlob @caller = getBlobByNetworkID(params.read_u16());
 			CBlob @carried = getBlobByNetworkID(params.read_u16());
 
-			this.set_string("text", carried.get_string("text"));
-			this.Sync("text", true);
-
-			carried.server_Die();
+			if (caller !is null && carried !is null)
+			{
+				this.set_string("text", carried.get_string("text"));
+				this.Sync("text", true);
+				carried.server_Die();
+			}
 		}
 	}
 }

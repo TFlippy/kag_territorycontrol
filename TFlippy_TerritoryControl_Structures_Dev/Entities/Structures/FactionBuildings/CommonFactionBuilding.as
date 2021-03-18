@@ -779,19 +779,22 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 			CBlob @caller = getBlobByNetworkID(inParams.read_u16());
 			CBlob @carried = getBlobByNetworkID(inParams.read_u16());
 
-			string base_name = carried.get_string("text");
-			this.set_string("base_name", base_name);
-			string old_name = this.getInventoryName();
-			this.setInventoryName(this.get_string("initial_base_name") + (base_name == "" ? "" : " \"" + base_name + "\""));
-			this.Sync("base_name", true);
+			if (caller !is null && carried !is null)
+			{
+				string base_name = carried.get_string("text");
+				this.set_string("base_name", base_name);
+				string old_name = this.getInventoryName();
+				this.setInventoryName(this.get_string("initial_base_name") + (base_name == "" ? "" : " \"" + base_name + "\""));
+				this.Sync("base_name", true);
 
-			CBitStream params;
-			params.write_u16(caller.getNetworkID());
-			params.write_string(old_name);
-			params.write_string(this.getInventoryName());
-			this.SendCommand(this.getCommandID("renamed"), params);
+				CBitStream params;
+				params.write_u16(caller.getNetworkID());
+				params.write_string(old_name);
+				params.write_string(this.getInventoryName());
+				this.SendCommand(this.getCommandID("renamed"), params);
 
-			carried.server_Die();
+				carried.server_Die();
+			}
 		}
 	}
 
