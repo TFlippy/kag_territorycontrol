@@ -1,4 +1,5 @@
 #include "Survival_Structs.as";
+#include "Survival_Icons.as";
 #include "Hitters.as";
 #include "Logging.as";
 
@@ -10,7 +11,7 @@ const u32[] teamcolours = {0xff0000ff, 0xffff0000, 0xff00ff00, 0xffff00ff, 0xfff
 void onInit(CBlob@ this)
 {
 	this.Tag("faction_base");
-	
+
 	this.addCommandID("faction_captured");
 	this.addCommandID("faction_destroyed");
 	this.addCommandID("faction_menu_button");
@@ -26,45 +27,45 @@ void onInit(CBlob@ this)
 	this.set_bool("base_demolition", false);
 	this.set_bool("base_alarm", false);
 	this.set_bool("base_alarm_manual", false);
-	
+
 	AddIconToken("$faction_become_leader$", "FactionIcons.png", Vec2f(16, 16), 0);
 	AddIconToken("$faction_resign_leader$", "FactionIcons.png", Vec2f(16, 16), 1);
 	AddIconToken("$faction_remove$", "FactionIcons.png", Vec2f(16, 16), 2);
 	AddIconToken("$faction_enslave$", "FactionIcons.png", Vec2f(16, 16), 3);
-	
+
 	AddIconToken("$faction_bed_true$", "FactionIcons.png", Vec2f(16, 16), 4);
 	AddIconToken("$faction_bed_false$", "FactionIcons.png", Vec2f(16, 16), 5);
-	
+
 	AddIconToken("$faction_lock_true$", "FactionIcons.png", Vec2f(16, 16), 6);
 	AddIconToken("$faction_lock_false$", "FactionIcons.png", Vec2f(16, 16), 7);
-	
+
 	AddIconToken("$faction_coin_true$", "FactionIcons.png", Vec2f(16, 16), 8);
 	AddIconToken("$faction_coin_false$", "FactionIcons.png", Vec2f(16, 16), 9);
-	
+
 	AddIconToken("$faction_crate_true$", "FactionIcons.png", Vec2f(16, 16), 10);
 	AddIconToken("$faction_crate_false$", "FactionIcons.png", Vec2f(16, 16), 11);
-	
+
 	AddIconToken("$faction_f2p_true$", "FactionIcons.png", Vec2f(16, 16), 12);
 	AddIconToken("$faction_f2p_false$", "FactionIcons.png", Vec2f(16, 16), 13);
-	
+
 	AddIconToken("$faction_slavery_true$", "FactionIcons.png", Vec2f(16, 16), 14);
 	AddIconToken("$faction_slavery_false$", "FactionIcons.png", Vec2f(16, 16), 15);
-	
+
 	AddIconToken("$faction_reserved1_true$", "FactionIcons.png", Vec2f(16, 16), 16);
 	AddIconToken("$faction_reserved1_false$", "FactionIcons.png", Vec2f(16, 16), 17);
-	
+
 	AddIconToken("$faction_reserved2_true$", "FactionIcons.png", Vec2f(16, 16), 18);
 	AddIconToken("$faction_reserved2_false$", "FactionIcons.png", Vec2f(16, 16), 19);
-	
+
 	AddIconToken("$faction_alarm_true$", "FactionIcons.png", Vec2f(16, 16), 20);
 	AddIconToken("$faction_alarm_false$", "FactionIcons.png", Vec2f(16, 16), 21);
-	
+
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Faction_Alarm.ogg");
 	sprite.SetEmitSoundPaused(true);
 	sprite.SetEmitSoundSpeed(1.0f);
 	sprite.SetEmitSoundVolume(2.0f);
-	
+
 	this.SetLight(false);
 	this.SetLightRadius(256.0f);
 	this.SetLightColor(SColor(255, 255, 0, 0));
@@ -74,20 +75,20 @@ void onTick(CBlob@ this)
 {
 	SetMinimap(this);   //needed for under raid check
 	if (this.get_bool("base_allow_alarm")) SetAlarm(this, this.get_bool("base_alarm_manual") || this.hasTag(raid_tag));
-	
+
 	if (this.get_bool("base_demolition") && getGameTime() % 30 == 0)
 	{
 		if (isServer())
 		{
 			this.server_Hit(this, this.getPosition(), Vec2f(0, 1), this.getInitialHealth() * 0.05f, Hitters::builder, true);
 		}
-		
+
 		if (isClient())
-		{	
+		{
 			this.getSprite().PlaySound("/BuildingExplosion", 0.8f, 0.8f);
-			
+
 			Vec2f pos = this.getPosition() - Vec2f((this.getWidth() / 2) - 8, (this.getHeight() / 2) - 8);
-			
+
 			for (int y = 0; y < this.getHeight(); y += 16)
 			{
 				for (int x = 0; x < this.getWidth(); x += 16)
@@ -115,7 +116,7 @@ void SetMinimap(CBlob@ this)
 	else
 	{
 		this.SetMinimapOutsideBehaviour(CBlob::minimap_arrow);
-		
+
 		if (this.hasTag("minimap_large")) this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", this.get_u8("minimap_index"), Vec2f(16, 8));
 		else if (this.hasTag("minimap_small")) this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", this.get_u8("minimap_index"), Vec2f(8, 8));
 	}
@@ -132,15 +133,15 @@ void onChangeTeam(CBlob@ this, const int oldTeam)
 	int totalFortCount = forts.length;
 	int oldTeamForts = 0;
 	int newTeamForts = 0;
-	
+
 	CRules@ rules = getRules();
-	
+
 	SetNearbyBlobsToTeam(this, oldTeam, newTeam);
-	
+
 	for(uint i = 0; i < totalFortCount; i++)
 	{
 		int fortTeamNum = forts[i].getTeamNum();
-	
+
 		if (fortTeamNum == newTeam)
 		{
 			newTeamForts++;
@@ -150,7 +151,7 @@ void onChangeTeam(CBlob@ this, const int oldTeam)
 			oldTeamForts++;
 		}
 	}
-	
+
 	if (oldTeamForts <= 0 || this.get_string("base_name") != "")
 	{
 		if (isServer())
@@ -161,7 +162,7 @@ void onChangeTeam(CBlob@ this, const int oldTeam)
 			bt.write_bool(oldTeamForts == 0);
 
 			this.SendCommand(this.getCommandID("faction_captured"), bt);
-						
+
 			// for(u8 i = 0; i < getPlayerCount(); i++)
 			// {
 				// CPlayer@ p = getPlayer(i);
@@ -204,18 +205,18 @@ void onDie(CBlob@ this)
 	CRules@ rules = getRules();
 	int teamForts = 0; // Current fort is being faction_destroyed
 	u8 team = this.getTeamNum();
-	
+
 	for(uint i = 0; i < forts.length; i++)
 	{
 		if (forts[i].getTeamNum() == team) teamForts++;
 	}
-	
+
 	if (isServer() && (teamForts <= 0 || this.get_string("base_name") != ""))
 	{
 		CBitStream bt;
 		bt.write_s32(team);
 		bt.write_bool(teamForts <= 0);
-	
+
 		this.SendCommand(this.getCommandID("faction_destroyed"), bt);
 	}
 }
@@ -228,20 +229,20 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		{
 			TeamData@ team_data;
 			GetTeamData(this.getTeamNum(), @team_data);
-			
+
 			CPlayer@ ply = caller.getPlayer();
-			
+
 			if (team_data !is null && ply !is null)
 			{
 				// bool deserter = caller.getPlayer() !is null && caller.getPlayer().get_u32("teamkick_time") > getGameTime();
 				bool recruitment_enabled = team_data.recruitment_enabled;
 				bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
 				bool is_premium = true; //ply.getSupportTier() > 0; // TODO
-				
+
 				print("" + ply.getSupportTier());
-				
+
 				bool can_join = recruitment_enabled && upkeep_gud && is_premium;
-			
+
 				string msg = "";
 				if (!can_join)
 				{
@@ -249,15 +250,15 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 					if (!recruitment_enabled) msg += "This faction is not accepting any new members.\n";
 					if (!upkeep_gud) msg += "Faction's upkeep is too high.\n";
 					if (!is_premium) msg += "Factions are restricted to Premium accounts only.\n";
-				}				
-				
+				}
+
 				CBitStream params;
 				params.write_u16(caller.getNetworkID());
 				CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("button_join"), "Join the Faction" + msg, params);
 				button.SetEnabled(can_join);
 			}
 		}
-		
+
 		if (caller.getTeamNum() == this.getTeamNum() && this.getTeamNum() < 100)
 		{
 			CBitStream params_menu;
@@ -271,11 +272,10 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 				CBitStream params_menu;
 				params_menu.write_u16(caller.getNetworkID());
 				params_menu.write_u16(carried.getNetworkID());
-			
-				caller.CreateGenericButton(11, Vec2f(7, -8), this, this.getCommandID("name"), "Rename the base.", params_menu);
+
+				caller.CreateGenericButton("$icon_paper$", Vec2f(7, -8), this, this.getCommandID("name"), "Rename the base.", params_menu);
 			}
 		}
-
 	}
 }
 
@@ -287,13 +287,12 @@ void SetAlarm(CBlob@ this, bool inState)
 	if (isServer()) this.Sync("base_alarm", true);
 
 	this.SetLight(inState);
-							
+
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSoundPaused(!inState);
 	sprite.RewindEmitSound();
 	sprite.PlaySound("LeverToggle.ogg");
 }
-
 
 void Faction_Menu(CBlob@ this, CBlob@ caller)
 {
@@ -302,9 +301,9 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 	{
 		TeamData@ team_data;
 		GetTeamData(this.getTeamNum(), @team_data);
-	
+
 		const bool isLeader = team_data.leader_name == myPly.getUsername();
-		
+
 		const bool recruitment_enabled = team_data.recruitment_enabled;
 		const bool tax_enabled = team_data.tax_enabled;
 		const bool storage_enabled = team_data.storage_enabled;
@@ -313,10 +312,10 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 		const bool slavery_enabled = team_data.slavery_enabled;
 		const bool reserved_1_enabled = team_data.lockdown_enabled;
 		const bool reserved_2_enabled = team_data.lockdown_enabled;
-		
+
 		const bool base_demolition = this.get_bool("base_demolition");
 		const bool base_alarm = this.get_bool("base_alarm");
-	
+
 		{
 			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(3, 3), "Faction Policies");
 			if (menu !is null)
@@ -324,12 +323,12 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 				{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
-					
+
 					if (team_data.leader_name == myPly.getUsername())
 					{
 						params.write_u8(0);
 						params.write_u8(0);
-					
+
 						CGridButton@ butt = menu.AddButton("$faction_resign_leader$", "Renounce Leadership", this.getCommandID("faction_menu_button"), Vec2f(3, 1), params);
 						butt.hoverText = "Renounce yourself as the leader of this faction, leaving a spot for someone more competent.";
 						butt.SetEnabled(isLeader);
@@ -338,107 +337,95 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 					{
 						params.write_u8(0);
 						params.write_u8(1);
-					
+
 						CGridButton@ butt = menu.AddButton("$faction_become_leader$", "Claim Leadership", this.getCommandID("faction_menu_button"), Vec2f(3, 1), params);
 						butt.hoverText = "Claim leadership of this faction, giving yourself access to various management tools.";
 						butt.SetEnabled(team_data.leader_name == "");
 					}
 				}
-				
 				{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
 					params.write_u8(1);
 					params.write_u8(recruitment_enabled ? 0 : 1);
-					
+
 					CGridButton@ butt = menu.AddButton("$faction_bed_" + !recruitment_enabled + "$", (recruitment_enabled ? "Disable" : "Enable") + " Recruitment", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (recruitment_enabled ? "Disallows" : "Allows") + " new players to join your faction.";
 					butt.SetEnabled(isLeader);
 				}
-				
 				{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
 					params.write_u8(2);
 					params.write_u8(lockdown_enabled ? 0 : 1);
-					
+
 					CGridButton@ butt = menu.AddButton("$faction_lock_" + !lockdown_enabled + "$", (lockdown_enabled ? "Disable" : "Enable") + " Lockdown", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (lockdown_enabled ? "Allows" : "Disallows") + " neutrals to pass through your doors.";
 					butt.SetEnabled(isLeader);
 				}
-				
 				{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
 					params.write_u8(3);
 					params.write_u8(tax_enabled ? 0 : 1);
-					
+
 					CGridButton@ butt = menu.AddButton("$faction_coin_" + !tax_enabled + "$", (tax_enabled ? "Disable" : "Enable") + " 50% Murder Tax", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (tax_enabled ? "Disallows" : "Allows") + " the leader to claim 50% of your teammates' coins obtained by killing enemies.";
 					butt.SetEnabled(isLeader);
 				}
-				
 				/*{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
 					params.write_u8(4);
 					params.write_u8(storage_enabled ? 0 : 1);
-					
+
 					CGridButton@ butt = menu.AddButton("$faction_crate_" + !storage_enabled + "$", (storage_enabled ? "Disable" : "Enable") + " Remote Storage", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " remote storage.";
 					butt.SetEnabled(isLeader);
 				}*/
-				
 				{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
 					params.write_u8(5);
 					params.write_u8(f2p_enabled ? 0 : 1);
-					
+
 					CGridButton@ butt = menu.AddButton("$faction_f2p_" + !f2p_enabled + "$", (f2p_enabled ? "Disable" : "Enable") + " Free to Play Recruitment", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (f2p_enabled ? "Disallows" : "Allows") + " Free-to-Play players to join your faction.";
 					butt.SetEnabled(isLeader);
 				}
-				
 				/*{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
 					params.write_u8(6);
 					params.write_u8(slavery_enabled ? 0 : 1);
-					
+
 					CGridButton@ butt = menu.AddButton("$faction_slavery_" + !slavery_enabled + "$", (storage_enabled ? "Disable" : "Enable") + " Slavery", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (storage_enabled ? "Disables" : "Allows") + " usage of shackles on other players by your team members.";
 					butt.SetEnabled(isLeader);
 				}*/
-				
-				
-				
-				
 				{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
 					params.write_u8(9);
 					params.write_u8(base_demolition ? 0 : 1);
-					
+
 					CGridButton@ butt = menu.AddButton("$faction_remove$", (base_demolition ? "Cancel" : "Commence") + " demolition of this building", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (base_demolition ? "Cancels" : "Commences") + " demolition of this building, destroying it over course of several seconds.";
 					butt.SetEnabled(isLeader);
 				}
-				
 				{
 					CBitStream params;
 					params.write_u16(caller.getNetworkID());
 					params.write_u8(10);
 					params.write_u8(base_alarm ? 0 : 1);
-					
+
 					CGridButton@ butt = menu.AddButton("$faction_alarm_" + !base_alarm + "$", (base_alarm ? "Turn off" : "Turn on") + " the emergency mode.", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (base_alarm ? "Turns off" : "Turn on") + " the emergency mode, which alerts your team members and sets off the alarm.";
 					butt.SetEnabled(isLeader && this.get_bool("base_allow_alarm"));
 				}
-				
 			}
 		}
-		
+
 		{
 			CPlayer@[] players;
 			for (int i = 0; i < getPlayerCount(); i++)
@@ -446,11 +433,11 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 				CPlayer@ p = getPlayer(i);
 				if (p.getTeamNum() == this.getTeamNum()) players.push_back(p);
 			}
-		
+
 			// print("" + players.length);
 			int yOffset = ((players.length - 1) * 24) - 48;
 			// print("" + yOffset);
-		
+
 			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(200.00f + 40.00f, yOffset), this, Vec2f(5, players.length), "Faction Member Management");
 			if (menu !is null)
 			{
@@ -458,29 +445,29 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 					for (int i = 0; i < players.length; i++)
 					{
 						CPlayer@ ply = players[i];
-					
+
 						{
 							CBitStream params;
 							menu.AddTextButton(ply.getUsername(), 0, Vec2f(4, 1), params);
 						}
-						
+
 						{
 							CBitStream params;
 							params.write_u8(0);
 							params.write_u16(myPly.getNetworkID());
 							params.write_u16(ply.getNetworkID());
-					
+
 							CGridButton@ butt = menu.AddButton("$faction_remove$", "Kick " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
 							butt.hoverText = "Remove " + ply.getUsername() + " from your faction.";
 							butt.SetEnabled(isLeader || ply.getUsername() == myPly.getUsername());
 						}
-						
+
 						/*{
 							CBitStream params;
 							params.write_u8(1);
 							params.write_u16(myPly.getNetworkID());
 							params.write_u16(ply.getNetworkID());
-					
+
 							CGridButton@ butt = menu.AddButton("$faction_enslave$", "Enslave " + ply.getUsername(), this.getCommandID("faction_player_button"), Vec2f(1, 1), params);
 							butt.hoverText = "Enslave " + ply.getUsername() + ".";
 							butt.SetEnabled(isLeader);
@@ -493,39 +480,39 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
-{		
+{
 	if (cmd == this.getCommandID("faction_menu_button"))
 	{
 		CBlob@ caller = getBlobByNetworkID(inParams.read_u16());
 		const u8 type = inParams.read_u8();
 		const u8 data = inParams.read_u8();
-	
+
 		if (caller !is null)
 		{
 			CPlayer@ ply = caller.getPlayer();
-		
+
 			if (ply !is null)
 			{
 				TeamData@ team_data;
 				GetTeamData(this.getTeamNum(), @team_data);
-			
+
 				// Fuck this bug already, I'm fixing this for like 5th time
 				if (team_data is null) return;
 				if (ply.getTeamNum() > 6) return;
-			
+
 				bool isLeader = ply.getUsername() == team_data.leader_name;
-			
+
 				string teamName = getRules().getTeam(ply.getTeamNum()).getName();
 				SColor teamColor = getRules().getTeam(ply.getTeamNum()).color;
-			
+
 				switch (type)
 				{
-					case 0:						
+					case 0:
 						if (data == 0 && isLeader)
 						{
 							client_AddToChat(ply.getUsername() + " has resigned as the leader of the " + teamName + "!", teamColor);
 							print_log(ply, "has resigned as the leader of the " + teamName);
-							
+
 							team_data.leader_name = "";
 						}
 						else if (data == 1 && team_data.leader_name == "")
@@ -535,8 +522,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							print_log(ply, "has become the leader of " + teamName);
 						}
 						break;
-						
-						
+
 					case 1:
 						if (isLeader) 
 						{
@@ -544,7 +530,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							print_log(ply, "set Recruitment to " + (data > 0));
 						}
 						break;
-						
+
 					case 2:
 						if (isLeader) 
 						{
@@ -552,7 +538,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							print_log(ply, "set Lockdown to " + (data > 0));
 						}
 						break;
-						
+
 					case 3:
 						if (isLeader) 
 						{
@@ -560,7 +546,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							print_log(ply, "set Murder Tax to " + (data > 0));
 						}
 						break;
-						
+
 					case 4:
 						if (isLeader) 
 						{
@@ -568,7 +554,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							print_log(ply, "set Remote Storage to " + (data > 0));
 						}
 						break;
-						
+
 					case 5:
 						if (isLeader) 
 						{
@@ -576,7 +562,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							print_log(ply, "set F2P Recruitment to " + (data > 0));
 						}
 						break;
-						
+
 					case 6:
 						if (isLeader) 
 						{
@@ -584,7 +570,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							print_log(ply, "set Slavery to " + (data > 0));
 						}
 						break;
-						
+
 					case 7:
 						if (isLeader) 
 						{
@@ -592,7 +578,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							print_log(ply, "set RESERVED1 to " + (data > 0));
 						}
 						break;
-						
+
 					case 8:
 						if (isLeader) 
 						{
@@ -601,10 +587,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 						}
 						break;
 
-						
 					case 9:
 						if (isLeader)
-						{	
+						{
 							this.set_bool("base_demolition", data > 0);
 
 							print_log(ply, (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName());
@@ -613,7 +598,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							if (isClient())
 							{
 								client_AddToChat(ply.getUsername() + " has " + (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName() + "!", teamColor);
-								
+
 								// if (ply !is null && this.getTeamNum() == ply.getTeamNum() && data > 0) 
 								// {
 									// client_AddToChat(ply.getUsername() + " has " + (data == 1 ? "commenced" : "cancelled") + " demolition of " + teamName + "'s " + this.getInventoryName() + "!", teamColor);
@@ -621,19 +606,19 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 							}
 						}
 						break;
-						
+
 					case 10:
 						if (isLeader)
-						{	
+						{
 							this.set_bool("base_alarm_manual", data > 0);
 							if (isServer()) this.Sync("base_alarm_manual", true);
-						
+
 							if (isClient())
 							{
 								SetAlarm(this, data > 0);
-								
+
 								// client_AddToChat(ply.getUsername() + " has set off the alarm at one of your bases and requires your assistance!", teamColor);
-								
+
 								// CPlayer@ ply = getLocalPlayer();
 								if (ply !is null && this.getTeamNum() == ply.getTeamNum() && data > 0) 
 								{
@@ -651,30 +636,27 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		const u8 type = inParams.read_u8();
 		const u16 caller_netid = inParams.read_u16();
 		const u16 player_netid = inParams.read_u16();
-		
+
 		CPlayer@ caller = getPlayerByNetworkId(caller_netid);
 		CPlayer@ ply = getPlayerByNetworkId(player_netid);
-	
+
 		CRules@ rules = getRules();
-	
+
 		if (rules !is null && ply !is null && getRules() !is null && ply.getTeamNum() < 7)
 		{
 			CTeam@ team = rules.getTeam(ply.getTeamNum());
-			
+
 			if (team is null) return;
-		
+
 			TeamData@ team_data;
 			GetTeamData(this.getTeamNum(), @team_data);
-		
+
 			bool isLeader = caller.getUsername() == team_data.leader_name;
 
-			
-			
 			SColor teamColor = ply.getTeamNum() < 7 ? team.color : SColor(255, 128, 128, 128);
-			
-			
+
 			// SColor teamColor = ply.getTeamNum() < getRules().getTeamsNum() ? getRules().getTeam(ply.getTeamNum()).color : SColor(255, 128, 128, 128);
-		
+
 			switch (type)
 			{
 				case 0:
@@ -682,40 +664,40 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					{
 						string teamName = rules.getTeam(caller.getTeamNum()).getName();
 						printf(ply.getUsername() + " has been kicked out of the " + teamName + " by " + caller.getUsername());
-						
+
 						if (isServer())
 						{
 							ply.server_setTeamNum(100 + XORRandom(100));
 							if (ply.getBlob() !is null) ply.getBlob().server_Die();
 						}
-						
+
 						if (isClient())
 						{
 							client_AddToChat(ply.getUsername() + " has been kicked out of the " + teamName + " by " + caller.getUsername() + "!", teamColor);
 						}
 					}
 					break;
-					
+
 				case 1:
 					if (isLeader)
 					{
 						string teamName = rules.getTeam(caller.getTeamNum()).getName();
 						printf(ply.getUsername() + " has been enslaved by " + caller.getUsername());
-												
+
 						if (isServer())
 						{
 							CBlob@ playerBlob = ply.getBlob();
-							
+
 							CBlob@ slave = server_CreateBlob("slave", this.getTeamNum(), playerBlob !is null ? playerBlob.getPosition() : this.getPosition());
 							slave.set_u8("slaver_team", this.getTeamNum());
-							
+
 							if (slave !is null)
 							{
 								slave.server_SetPlayer(ply);
 								if (playerBlob !is null) playerBlob.server_Die();
 							}
 						}
-						
+
 						if (isClient())
 						{
 							client_AddToChat(ply.getUsername() + " has been enslaved by " + caller.getUsername() + "!", teamColor);
@@ -733,7 +715,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		CBlob@ blob = getBlobByNetworkID(id);
 		
 		u8 myTeam = this.getTeamNum();
-	
+
 		if (myTeam < 7 && blob !is null && this.isOverlapping(blob) && blob.hasTag("player") && !blob.hasTag("ignore_flags"))
 		{
 			CPlayer@ p = blob.getPlayer();
@@ -741,27 +723,27 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 			{
 				TeamData@ team_data;
 				GetTeamData(myTeam, @team_data);
-			
+
 				if (p.getTeamNum() >= 100 && team_data !is null)
 				{
 					// bool deserter = p.get_u32("teamkick_time") > getGameTime();
 					bool upkeep_gud = team_data.upkeep + UPKEEP_COST_PLAYER <= team_data.upkeep_cap;
 					bool recruitment_enabled = team_data.recruitment_enabled;
 					bool is_premium = p.getOldGold();
-					
+
 					bool can_join = upkeep_gud && recruitment_enabled;
-					
+
 					if (can_join)
 					{
 						this.getSprite().PlaySound("party_join.ogg");
-						
+
 						if (isServer())
-						{	
+						{
 							tcpr("[PJT]  " + p.getUsername() + " has joined " + getRules().getTeam(myTeam).getName());
 							p.server_setTeamNum(myTeam);
 							CBlob@ newPlayer = server_CreateBlob("builder", myTeam, blob.getPosition());
 							newPlayer.server_SetPlayer(p);
-							
+
 							blob.server_Die();
 						}
 					}
@@ -769,7 +751,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 			}
 		}
 	}
-	
+
 	if (isServer()) {
 		if (cmd == this.getCommandID("faction_captured") || cmd == this.getCommandID("faction_destroyed")) {
 			int team = inParams.read_s32();
@@ -813,7 +795,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		}
 	}
 
-
 	if (isClient())
 	{
 		if (cmd == this.getCommandID("renamed")) {
@@ -839,28 +820,28 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		else if (cmd == this.getCommandID("faction_captured"))
 		{
 			CRules@ rules = getRules();
-		
+
 			int newTeam = inParams.read_s32();
 			int oldTeam = inParams.read_s32();
 			bool defeat = inParams.read_bool();
-			
+
 			if (rules is null) return;
-			
+
 			// if (!(oldTeam < getRules().getTeamsNum())) return;
-			
+
 			if (oldTeam < 7 && newTeam < 7)
 			{
 				string oldTeamName = rules.getTeam(oldTeam).getName();
 				string newTeamName = rules.getTeam(newTeam).getName();
-				
+
 				client_AddToChat(oldTeamName + "'s "+this.getInventoryName()+" has captured by the " + newTeamName + "!", SColor(0xff444444));
 				if (defeat)
 				{
 					client_AddToChat(oldTeamName + " has been defeated by the " + newTeamName + "!", SColor(0xff444444));
-					
+
 					CPlayer@ ply = getLocalPlayer();
 					int myTeam = ply.getTeamNum();
-					
+
 					if (oldTeam == myTeam)
 					{
 						Sound::Play("FanfareLose.ogg");
@@ -875,7 +856,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		else if (cmd == this.getCommandID("faction_destroyed"))
 		{
 			CRules@ rules = getRules();
-		
+
 			int team = inParams.read_s32();
 			bool defeat = inParams.read_bool();
 
@@ -891,7 +872,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					client_AddToChat(teamName + " has been defeated!", SColor(0xff444444));
 					CPlayer@ ply = getLocalPlayer();
 					int myTeam = ply.getTeamNum();
-					
+
 					if (team == myTeam)
 					{
 						Sound::Play("FanfareLose.ogg");
