@@ -24,6 +24,13 @@ const int[] matRatio = {
 	10,
 	10,
 	25,
+	6
+};
+
+const int[] coalRatio = {
+	2,
+	2,
+	3,
 	4
 };
 
@@ -32,10 +39,10 @@ void onInit(CBlob@ this)
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
 	this.getCurrentScript().tickFrequency = 90;
-	
+
 	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
-	
+
 	CSprite@ sprite = this.getSprite();
 	if (sprite !is null)
 	{
@@ -51,7 +58,7 @@ void onTick(CBlob@ this)
 
 	for (int i = 0; i < 4; i++)
 	{
-		if (this.hasBlob(matNames[i], matRatio[i]))
+		if (this.hasBlob(matNames[i], matRatio[i]) && this.hasBlob("mat_coal", coalRatio[i]))
 		{
 			if (isServer())
 			{
@@ -59,10 +66,9 @@ void onTick(CBlob@ this)
 				mat.server_SetQuantity(4);
 				mat.Tag("justmade");
 				this.TakeBlob(matNames[i], matRatio[i]);
-				
-				if (i == 1) this.TakeBlob("mat_coal", 1);
+				this.TakeBlob("mat_coal", coalRatio[i]);
 			}
-			
+
 			this.getSprite().PlaySound("ProduceSound.ogg");
 			this.getSprite().PlaySound("BombMake.ogg");
 		}
@@ -77,14 +83,14 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		blob.Untag("justmade");
 		return;
 	}
-	
+
 	for(int i = 0;i < 4; i += 1)
 	if (!blob.isAttached() && blob.hasTag("material") && blob.getName() == matNames[i])
 	{
 		if (isServer()) this.server_PutInInventory(blob);
 		if (isClient()) this.getSprite().PlaySound("bridge_open.ogg");
 	}
-	
+
 	if (!blob.isAttached() && blob.hasTag("material") && blob.getName() == "mat_coal")
 	{
 		if (isServer()) this.server_PutInInventory(blob);
@@ -108,6 +114,6 @@ void onAddToInventory( CBlob@ this, CBlob@ blob )
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if(blob.getName() != "gyromat") return;
-	
+
 	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

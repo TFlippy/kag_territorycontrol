@@ -1,5 +1,5 @@
 void TryToAttachCargo(CBlob@ blob, CBlob@ toBlob = null)
-{	
+{
 	if (blob !is null && blob.getAttachments() !is null)
 	{
 		AttachmentPoint@ bap1 = blob.getAttachments().getAttachmentPointByName("CARGO");
@@ -20,15 +20,24 @@ void TryToAttachCargo(CBlob@ blob, CBlob@ toBlob = null)
 						for (uint j = 0; j < points.length; j++)
 						{
 							AttachmentPoint@ att = points[j];
-							
+
 							// print("count: " + points.length);
 							// print("" + att.name + "/end");
 							// print("" + (att is null ? "att is null" : "att is gud") + " " + (att.name.findFirst("VEHICLE") != -1) + "");
-							
+
 							if (att !is null && att.socket && att.name.findFirst("CARGO") != -1 && att.getOccupied() is null)
 							{
-								b.server_AttachTo(blob, att);
-								return;
+								if (b.getName() == "triplane") //triplane crate only
+								{
+									if (blob.getName() == "crate") //&& !blob.hasTag("parachute")
+									{
+										b.server_AttachTo(blob, att);
+									}
+								}
+								else
+								{
+									b.server_AttachTo(blob, att);
+								}
 							}
 						}
 					}

@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "Explosion.as";
+#include "VehicleFuel.as";
 
 // const u32 fuel_timer_max = 30 * 600;
 const f32 SPEED_MAX = 100;
@@ -390,30 +391,6 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 	else return true;
 }
 
-void TakeFuel(CBlob@ this, f32 amount)
-{
-	f32 max_fuel = this.get_f32("max_fuel");
-	this.set_f32("fuel_count", Maths::Max(0, Maths::Min(max_fuel, this.get_f32("fuel_count") - amount)));
-	this.Sync("fuel_count", true);
-}
-
-f32 GiveFuel(CBlob@ this, f32 amount, f32 modifier)
-{
-	f32 max_fuel = this.get_f32("max_fuel");
-	f32 remain = Maths::Max(0, s32(this.get_f32("fuel_count")) + s32(amount) - s32(max_fuel));
-
-	this.set_f32("fuel_count", Maths::Max(0, Maths::Min(max_fuel, this.get_f32("fuel_count") + (amount * modifier))));	
-	this.Sync("fuel_count", true);
-	
-	// print("A: " + amount + "; R: " + remain);
-	return remain;
-}
-
-f32 GetFuel(CBlob@ this)
-{
-	return this.get_f32("fuel_count");
-}
-
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("load_fuel"))
@@ -427,26 +404,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			f32 fuel_modifier = 1.00f;
 			bool isValid = false;
 			
-			if (fuel_name == "mat_wood")
-			{
-				fuel_modifier = 1.00f;
-				isValid = true;
-			}
-			else if (fuel_name == "mat_coal")
-			{
-				fuel_modifier = 4.00f * 5.00f; // More coal than oil in a drum
-				isValid = true;
-			}
-			else if (fuel_name == "mat_oil")
-			{
-				fuel_modifier = 3.00f * 5.00f;
-				isValid = true;
-			}
-			else if (fuel_name == "mat_fuel")
-			{
-				fuel_modifier = 100.00f;
-				isValid = true;
-			}
+			fuel_modifier = GetFuelModifier(fuel_name, isValid, 0);
 			
 			if (isValid)
 			{

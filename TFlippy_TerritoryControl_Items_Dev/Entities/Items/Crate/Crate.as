@@ -3,6 +3,7 @@
 
 #include "CrateCommon.as";
 #include "VehicleAttachmentCommon.as";
+#include "CargoAttachmentCommon.as";
 #include "MiniIconsInc.as";
 #include "Help.as";
 #include "MakeMat.as";
@@ -24,7 +25,7 @@ const string[] packnames = {
 	"armoredbomber",
 	"rocketlauncher"
 };
-	
+
 void onInit(CBlob@ this)
 {
 	this.addCommandID("unpack");
@@ -117,6 +118,17 @@ void onInit(CBlob@ this)
 	{
 		this.set_Vec2f(required_space, Vec2f(5, 4));
 	}
+	
+	CSprite@ sprite = this.getSprite();
+	CSpriteLayer@ parachute = sprite.addSpriteLayer("parachute",   32, 32);
+
+	if (parachute !is null)
+	{
+		Animation@ anim = parachute.addAnimation("default", 0, true);
+		anim.AddFrame(4);
+		parachute.SetOffset(Vec2f(0.0f, - 17.0f));
+		parachute.SetVisible(false);
+	}
 
 	this.getSprite().SetZ(-10.0f);
 }
@@ -127,10 +139,10 @@ void onTick(CBlob@ this)
 
 	if (this.hasTag("parachute"))		// wont work with the tick frequency
 	{
-		if (this.getSprite().getSpriteLayer("parachute") is null)
-		{
-			ShowParachute(this);
-		}
+		CSprite@ sprite = this.getSprite();
+		CSpriteLayer@ parachute = sprite.getSpriteLayer("parachute");
+		
+		parachute.SetVisible(true);
 
 		// para force + swing in wind
 		this.AddForce(Vec2f(Maths::Sin(getGameTime() * 0.03f) * 1.0f, -30.0f * this.getVelocity().y));
@@ -173,8 +185,15 @@ void onTick(CBlob@ this)
 void Land(CBlob@ this)
 {
 	this.Untag("parachute");
-	HideParachute(this);
 
+	CSprite@ sprite = this.getSprite();
+	CSpriteLayer@ parachute = sprite.getSpriteLayer("parachute");
+
+	if (parachute !is null && parachute.isVisible())
+	{
+		parachute.SetVisible(false);
+		ParticlesFromSprite(parachute);
+	}
 	// unpack immediately
 	if (this.exists("packed") && this.hasTag("unpack on land"))
 	{
@@ -216,9 +235,9 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	Vec2f buttonpos(0, 0);
 	/*if (this.getInventory().getItemsCount() > 0 && this.getInventory().getItem(0) is caller)    // fix - iterate if more stuff in crate
 	{
-	    CBitStream params;
-	    params.write_u16( caller.getNetworkID() );
-	    caller.CreateGenericButton( 6, Vec2f(0,0), this, this.getCommandID("getout"), "Get out", params );
+		CBitStream params;
+		params.write_u16( caller.getNetworkID() );
+		caller.CreateGenericButton( 6, Vec2f(0,0), this, this.getCommandID("getout"), "Get out", params );
 	}
 	else*/
 	if (this.hasTag("unpackall"))
@@ -251,9 +270,9 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	}
 	/*else if (this.getInventory().getItemsCount() == 0 && caller.getCarriedBlob() is null)
 	{
-	    CBitStream params;
-	    params.write_u16( caller.getNetworkID() );
-	    caller.CreateGenericButton( 4, Vec2f(0,0), this, this.getCommandID("getin"), "Get inside", params );
+		CBitStream params;
+		params.write_u16( caller.getNetworkID() );
+		caller.CreateGenericButton( 4, Vec2f(0,0), this, this.getCommandID("getin"), "Get inside", params );
 	}*/
 }
 
@@ -281,18 +300,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	/*else if (cmd == this.getCommandID("getin"))
 	{
-	    CBlob @caller = getBlobByNetworkID( params.read_u16() );
+		CBlob @caller = getBlobByNetworkID( params.read_u16() );
 
-	    if (caller !is null) {
-	        this.server_PutInInventory( caller );
-	    }
+		if (caller !is null) {
+			this.server_PutInInventory( caller );
+		}
 	} else if (cmd == this.getCommandID("getout"))
 	{
-	    CBlob @caller = getBlobByNetworkID( params.read_u16() );
+		CBlob @caller = getBlobByNetworkID( params.read_u16() );
 
-	    if (caller !is null) {
-	        this.server_PutOutInventory( caller );
-	    }
+		if (caller !is null) {
+			this.server_PutOutInventory( caller );
+		}
 	}*/
 }
 
@@ -303,9 +322,9 @@ void Unpack(CBlob@ this)
 	if (this.hasTag("unpacking")) return;
 
 	this.Tag("unpacking");
-	
+
 	u8 count = this.exists("count") ? this.get_u8("count") : 1;
-	
+
 	if (this.get_string("packed").findFirst("mat_") != -1)
 	{
 		MakeMat(this, this.getPosition(), this.get_string("packed"), count);
@@ -335,7 +354,7 @@ void Unpack(CBlob@ this)
 			}
 		}
 	}
-	
+
 	this.server_SetHealth(-1.0f); // TODO: wont gib on client
 	this.server_Die();
 }
@@ -343,32 +362,6 @@ void Unpack(CBlob@ this)
 bool isUnpacking(CBlob@ this)
 {
 	return getGameTime() <= this.get_u32("unpack time");
-}
-
-void ShowParachute(CBlob@ this)
-{
-	CSprite@ sprite = this.getSprite();
-	CSpriteLayer@ parachute = sprite.addSpriteLayer("parachute",   32, 32);
-
-	if (parachute !is null)
-	{
-		Animation@ anim = parachute.addAnimation("default", 0, true);
-		anim.AddFrame(4);
-		parachute.SetOffset(Vec2f(0.0f, - 17.0f));
-	}
-}
-
-void HideParachute(CBlob@ this)
-{
-	if(!isClient()){return;}
-	CSprite@ sprite = this.getSprite();
-	CSpriteLayer@ parachute = sprite.getSpriteLayer("parachute");
-
-	if (parachute !is null && parachute.isVisible())
-	{
-		parachute.SetVisible(false);
-		ParticlesFromSprite(parachute);
-	}
 }
 
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
@@ -384,7 +377,6 @@ void onDie(CBlob@ this)
 {
 	if (isServer())
 	{
-		HideParachute(this);
 		this.getSprite().Gib();
 		Vec2f pos = this.getPosition();
 		Vec2f vel = this.getVelocity();
@@ -513,6 +505,11 @@ void onRender(CSprite@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
+	if (blob !is null)
+	{
+		TryToAttachCargo(this, blob);
+	}
+	
 	if (blob !is null ? !blob.isCollidable() : !solid) return;
 
 	f32 vellen = this.getOldVelocity().Length();
@@ -520,5 +517,27 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	if (isServer() && vellen > 5.0f)
 	{
 		Unpack(this);
+	}
+}
+
+void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
+{
+	if (this.isAttachedToPoint("CARGO"))
+	{
+		this.Tag("paradetach");
+		this.inventoryButtonPos = Vec2f(-10, 1);
+	}
+}
+
+void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
+{
+	if (this.hasTag("paradetach"))
+	{
+		this.Tag("parachute");
+		this.Untag("paradetach");
+		this.setAngleDegrees(0.0f);
+		this.inventoryButtonPos = Vec2f(0, 0);
+		this.getCurrentScript().tickFrequency = 1;
+		if (isClient()) this.getSprite().PlaySound("thud", 2.0f, 1.0f);
 	}
 }
