@@ -289,7 +289,7 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 			f32 distance = dir.getLength();
 			dir.Normalize();
 			
-			hit_blob.AddForce(dir * Maths::Min(force * (1.00f - (distance / explosion_radius)), hit_blob.getMass() * 4.00f));
+			hit_blob.AddForce(dir * Maths::Min(force * (1.00f - (distance / explosion_radius)), hit_blob.getMass() * (hit_blob.getName() == "mat_dangerousmeat" ? 0.25f : 4.00f)));
 		
 			if (distance <= radius)
 			{
