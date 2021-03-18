@@ -54,7 +54,9 @@ const string[] names =
 	"Sylw",
 	"Gokke",
 	"Olimarrex",
-	"Poep Snuifer"
+	"Poep Snuifer",
+	"K1t",
+	"Kit"
 };
 
 const string[] surnames = {
@@ -67,7 +69,8 @@ const string[] surnames = {
 	"small tiger",
 	"pussy",
 	"puss",
-	"dog cat"
+	"dog cat",
+	"depot escapee"
 };
 
 //sprite
