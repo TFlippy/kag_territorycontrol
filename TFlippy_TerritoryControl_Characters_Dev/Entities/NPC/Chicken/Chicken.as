@@ -26,7 +26,7 @@ void onTick(CSprite@ this)
 	{
 		if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
 			return;
-		}	
+		}
 
 		f32 x = Maths::Abs(blob.getVelocity().x);
 		if (blob.isAttached())
@@ -111,7 +111,7 @@ void onInit(CBlob@ this)
 	att.SetKeysToTake(key_action1);*/
 
 	// movement
-	
+
 	this.server_setTeamNum(250);
 
 	AnimalVars@ vars;
@@ -122,7 +122,7 @@ void onInit(CBlob@ this)
 	vars.slowForce.Set(1.0f, 0.0f);
 	vars.jumpForce.Set(0.0f, -20.0f);
 	vars.maxVelocity = 1.1f;
-	
+
 	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 2.00f);
 }
 
@@ -238,5 +238,41 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	{
 		this.getSprite().PlaySound("/ScaredChicken");
 		g_lastSoundPlayedTime = getGameTime();
+	}
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+{
+	if (cmd == this.getCommandID("write"))
+	{
+		if (isServer())
+		{
+			CBlob @caller = getBlobByNetworkID(params.read_u16());
+			CBlob @carried = getBlobByNetworkID(params.read_u16());
+
+			if (caller !is null && carried !is null)
+			{
+				this.set_string("text", carried.get_string("text"));
+				this.setInventoryName(this.get_string("text") + " the chicken");
+				carried.server_Die();
+			}
+		}
+	}
+}
+
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (caller is null) return;
+	if (!this.isOverlapping(caller)) return;
+
+	//rename the chicken
+	CBlob@ carried = caller.getCarriedBlob();
+	if(carried !is null && carried.getName() == "paper")
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		params.write_u16(carried.getNetworkID());
+
+		CButton@ buttonWrite = caller.CreateGenericButton("$icon_paper$", Vec2f(0, 0), this, this.getCommandID("write"), "Rename", params);
 	}
 }
