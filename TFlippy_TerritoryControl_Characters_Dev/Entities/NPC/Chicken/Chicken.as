@@ -89,6 +89,8 @@ void onInit(CBlob@ this)
 	this.set_f32(terr_rad_property, 75.0f);
 	this.set_u8(target_lose_random, 14);
 
+	this.addCommandID("write");
+
 	//for shape
 	this.getShape().SetRotationsAllowed(false);
 
@@ -97,7 +99,7 @@ void onInit(CBlob@ this)
 	this.Tag("flesh");
 
 	this.getShape().SetOffset(Vec2f(0, 0));
-	
+
 	this.set_u8("number of steaks", 1);
 
 	this.getCurrentScript().runFlags |= Script::tick_blob_in_proximity;
