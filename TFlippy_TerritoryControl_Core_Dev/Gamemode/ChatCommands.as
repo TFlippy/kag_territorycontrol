@@ -262,9 +262,13 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 		string[]@ tokens = text_in.split(" ");
 		if (tokens.length > 0)
 		{
-			if (tokens.length > 1 && tokens[0] == "!write")
+			if (tokens.length > 1 && tokens[0] == "!write" && getGameTime() > this.get_u32("nextwrite"))
 			{
-				if (player.getCoins() < 50) return false;
+				if (player.getCoins() < 50)
+				{
+					if (player.isMyPlayer()) client_AddToChat("Not enough coins!", SColor(0xff444444));
+					return false;
+				}
 
 				string text = "";
 
@@ -275,7 +279,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				Vec2f dimensions;
 				GUI::GetTextDimensions(text, dimensions);
 
-				if (dimensions.x > 120) return false;
+				if (dimensions.x > 250) return false; //character limit
 
 				CBlob@ paper = server_CreateBlobNoInit("paper");
 				paper.setPosition(blob.getPosition());
@@ -284,8 +288,14 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				paper.Init();
 
 				player.server_setCoins(player.getCoins() - 50);
+				this.set_u32("nextwrite", getGameTime() + 100);
 
 				return true;
+			}
+			else
+			{
+				this.set_u32("nextwrite", getGameTime() + 30);
+				if (player.isMyPlayer()) client_AddToChat("Wait and try again.", SColor(0xff444444));
 			}
 
 			// print(tokens.length);
