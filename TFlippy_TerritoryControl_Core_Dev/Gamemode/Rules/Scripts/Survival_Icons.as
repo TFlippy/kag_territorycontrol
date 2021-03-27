@@ -109,7 +109,9 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$mat_coal$", "Material_Coal.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_concrete$", "Material_Concrete.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_mithril$", "Material_Mithril.png", Vec2f(16, 16), 1);
+	AddIconToken("$mat_mithril_10x$", "Material_Mithril.png", Vec2f(16, 16), 3);
 	AddIconToken("$mat_mithrilenriched$", "Material_MithrilEnriched.png", Vec2f(16, 16), 1);
+	AddIconToken("$mat_mithrilenriched_10x$", "Material_MithrilEnriched.png", Vec2f(16, 16), 3);
 
 	// Builder shop
 	AddIconToken("$gramophone$", "Gramophone.png", Vec2f(16, 16), 0);
