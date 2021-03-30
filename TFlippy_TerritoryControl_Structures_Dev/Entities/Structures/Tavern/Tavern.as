@@ -100,7 +100,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	//rename the tavern
 	CBlob@ carried = caller.getCarriedBlob();
 	CPlayer@ player = caller.getPlayer();
-	if(carried !is null && carried.getName() == "paper" && player.getUsername() == this.get_string("Owner"))
+	if(carried !is null && player !is null && carried.getName() == "paper" && player.getUsername() == this.get_string("Owner"))
 	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
