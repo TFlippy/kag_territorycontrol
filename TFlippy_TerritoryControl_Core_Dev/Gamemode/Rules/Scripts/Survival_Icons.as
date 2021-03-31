@@ -26,6 +26,7 @@ void ReloadIcons(CRules@ this)
 	// Components
 	AddIconToken("$mat_copperwire$", "Material_CopperWire.png", Vec2f(9, 11), 0);
 	AddIconToken("$icon_tankshell$", "Material_TankShell.png", Vec2f(16, 16), 3);
+	AddIconToken("$icon_paper$", "Paper.png", Vec2f(16, 16), 1);
 
 	// Merchant
 	AddIconToken("$bp_automation_advanced$", "Blueprints.png", Vec2f(16, 16), 0);
@@ -105,12 +106,12 @@ void ReloadIcons(CRules@ this)
 	// Ores
 	AddIconToken("$mat_copper$", "Material_Copper.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_iron$", "Material_Iron.png", Vec2f(16, 16), 1);
-	AddIconToken("$mat_steel$", "Material_Steel.png", Vec2f(16, 16), 1);
-	AddIconToken("$mat_gold$", "Material_Gold.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_coal$", "Material_Coal.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_concrete$", "Material_Concrete.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_mithril$", "Material_Mithril.png", Vec2f(16, 16), 1);
+	AddIconToken("$mat_mithril_10x$", "Material_Mithril.png", Vec2f(16, 16), 3);
 	AddIconToken("$mat_mithrilenriched$", "Material_MithrilEnriched.png", Vec2f(16, 16), 1);
+	AddIconToken("$mat_mithrilenriched_10x$", "Material_MithrilEnriched.png", Vec2f(16, 16), 3);
 
 	// Builder shop
 	AddIconToken("$gramophone$", "Gramophone.png", Vec2f(16, 16), 0);
@@ -175,9 +176,9 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_acidthrower$", "Acidthrower.png", Vec2f(24, 8), 0);
 	AddIconToken("$icon_shotgun$", "Shotgun.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_boomstick$", "Boomstick.png", Vec2f(24, 8), 0);
-	AddIconToken("$icon_grenadelauncher$", "GrenadeLauncher.png", Vec2f(16, 8), 0);		
-	AddIconToken("$icon_mininukelauncher$", "MiniNukeLauncher.png", Vec2f(40, 8), 0);		
-	AddIconToken("$icon_blazethrower$", "Blazethrower.png", Vec2f(24, 8), 0);		
+	AddIconToken("$icon_grenadelauncher$", "GrenadeLauncher.png", Vec2f(16, 8), 0);
+	AddIconToken("$icon_mininukelauncher$", "MiniNukeLauncher.png", Vec2f(40, 8), 0);
+	AddIconToken("$icon_blazethrower$", "Blazethrower.png", Vec2f(24, 8), 0);
 
 	// Bandits
 	AddIconToken("$ratburger$", "RatBurger.png", Vec2f(16, 16), 0);
@@ -210,12 +211,27 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_fumes$", "Fumes.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_rippio$", "Rippio.png", Vec2f(8, 16), 0);
 	AddIconToken("$icon_propesko$", "Propesko.png", Vec2f(8, 8), 0);
+	AddIconToken("$icon_boof$", "Boof.png", Vec2f(11, 7), 0);
 	AddIconToken("$icon_minidruglab$", "MiniDrugLab.png", Vec2f(24, 24), 0);
+
+	// Cooked Foods
+	AddIconToken("$icon_steak$", "Food.png", Vec2f(16, 16), 0);
+	AddIconToken("$icon_fish$", "Food.png", Vec2f(16, 16), 1);
+	AddIconToken("$icon_juice$", "Food.png", Vec2f(16, 16), 2);
+	AddIconToken("$icon_bread$", "Food.png", Vec2f(16, 16), 4);
 
 	// add color tokens
 	AddColorToken("$RED$", SColor(255, 105, 25, 5));
 	AddColorToken("$GREEN$", SColor(255, 5, 105, 25));
 	AddColorToken("$GREY$", SColor(255, 195, 195, 195));
+	AddColorToken("$blue$", SColor(255, 5, 45, 157));
+	AddColorToken("$red$", SColor(255, 150, 15, 25));
+	AddColorToken("$green$", SColor(255, 51, 102, 13));
+	AddColorToken("$purple$", SColor(255, 61, 26, 101));
+	AddColorToken("$orange$", SColor(255, 112, 61, 21));
+	AddColorToken("$cyan$", SColor(255, 43, 73, 83));
+	AddColorToken("$violet$", SColor(255, 32, 28, 122));
+	AddColorToken("$grey$", SColor(255, 65, 65, 65));
 
 	// add default icon tokens
 	string interaction = "/GUI/InteractionIcons.png";
@@ -242,9 +258,9 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$!!!$", "/Emoticons.png", Vec2f(22, 22), 48);
 
 	// classes
-	AddIconToken("$ARCHER$",        "ClassIcons.png",       Vec2f(16, 16), 2);
-	AddIconToken("$KNIGHT$",        "ClassIcons.png",       Vec2f(16, 16), 1);
-	AddIconToken("$BUILDER$",       "ClassIcons.png",       Vec2f(16, 16), 0);
+	AddIconToken("$ARCHER$",        "ClassIcons.png",       Vec2f(32, 32), 2);
+	AddIconToken("$KNIGHT$",        "ClassIcons.png",       Vec2f(32, 32), 1);
+	AddIconToken("$BUILDER$",       "ClassIcons.png",       Vec2f(32, 32), 0);
 
 	// blocks
 	AddIconToken("$stone_block$", "Sprites/World.png", Vec2f(8, 8), CMap::tile_castle);

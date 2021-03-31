@@ -16,8 +16,8 @@ void onTick(CSprite@ this)
 	{
 		if(!this.getSpriteLayer("isOnScreen").isOnScreen()){
 			return;
-		}	
-		
+		}
+
 		Vec2f vel=blob.getVelocity();
 		if(vel.x!=0.0f)
 		{
@@ -57,11 +57,13 @@ void onInit(CBlob@ this)
 
 	this.set_u32("next growl", 0);
 	this.set_u32("next bite", 0);
-	
+
+	this.addCommandID("write");
+
 	if (!this.exists("voice_pitch")) this.set_f32("voice pitch", 0.90f);
-	
+
 	// this.getCurrentScript().removeIfTag = "dead";
-	
+
 	this.getBrain().server_SetActive(true);
 
 	//for shape
@@ -73,16 +75,16 @@ void onInit(CBlob@ this)
 	this.Tag("flesh");
 	this.Tag("badger");
 	this.Tag("dangerous");
-	
+
 	this.set_u8("number of steaks", 3);
-	
+
 	this.getShape().SetOffset(Vec2f(0, 0));
-	
+
 	this.getCurrentScript().runFlags |= Script::tick_blob_in_proximity;
 	this.getCurrentScript().runProximityTag = "player";
 	this.getCurrentScript().runProximityRadius = 320.0f;
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
-	
+
 	//movement
 	AnimalVars@ vars;
 	if (!this.get("vars", @vars))
@@ -92,7 +94,7 @@ void onInit(CBlob@ this)
 	vars.slowForce.Set(12.0f, 0.0f);
 	vars.jumpForce.Set(0.0f, -200.0f);
 	vars.maxVelocity = 1.8f;
-	
+
 	AttachmentPoint@[] aps;
 	if (this.getAttachmentPoints(@aps))
 	{
@@ -127,13 +129,13 @@ void onTick(CBlob@ this)
 			this.Tag("dead");
 			this.setInventoryName("A Mangled Badger");
 		}
-	
+
 		Vec2f vel = this.getVelocity();
 		if (vel.x != 0.0f)
 		{
 			this.SetFacingLeft(vel.x < 0.0f);
 		}
-		
+
 		if (this.isOnGround() && (this.isKeyPressed(key_left) || this.isKeyPressed(key_right)))
 		{
 			if ((this.getNetworkID() + getGameTime()) % 9 == 0)
@@ -151,7 +153,6 @@ void onTick(CBlob@ this)
 						this.getSprite().PlaySound("/StoneStep", volume, 0.75f);
 					}
 				}
-				
 			}
 		}
 	}
@@ -170,7 +171,7 @@ void MadAt(CBlob@ this, CBlob@ hitterBlob)
 
 	this.set_u8(personality_property, DEFAULT_PERSONALITY | AGGRO_BIT);
 	this.set_u8(state_property, MODE_TARGET);
-	
+
 	if (hitterBlob !is this && hitterBlob.getName() != this.getName()) this.set_netid(target_property, hitterBlob.getNetworkID());
 }
 
@@ -186,7 +187,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	if (blob is null) return;
 	if (this.hasTag("dead")) return;
 	if (this.get_u32("next bite") > getGameTime()) return;
-		
+
 	if (blob.getName() != this.getName() && blob.hasTag("flesh"))
 	{
 		const f32 vellen = this.getShape().vellen;
@@ -196,24 +197,22 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			Vec2f vel = this.getVelocity();
 			Vec2f other_pos = blob.getPosition();
 			// Vec2f direction = other_pos - pos;
-			
+
 			// direction.Normalize();
 			vel.Normalize();
 
 			this.getSprite().PlaySound("ZombieBite.ogg", 1.0f, 1.2f);
 			this.getSprite().PlaySound("badger_pissed.ogg", 1, (1 + XORRandom(100) / 400.0f) * this.get_f32("voice pitch"));
 			this.server_Hit(blob, point1, vel, 0.70f, Hitters::bite, false);
-			
+
 			MadAt(this, blob);
-			
+
 			this.set_u32("next bite", getGameTime() + 30);
 			this.set_u32("next growl", getGameTime() + 100);
 		}
 	}
 	else if (blob.getName() == "mat_mithril" && blob.getQuantity() > 25)
 	{
-		
-		
 		if (isServer())
 		{
 			CBlob@ bagel = server_CreateBlob("bagel", this.getTeamNum(), this.getPosition());
@@ -224,5 +223,41 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			ParticleZombieLightning(this.getPosition());
 			this.getSprite().PlaySound("/badger_pissed", 1.5f, 0.5f);
 		}
+	}
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+{
+	if (cmd == this.getCommandID("write"))
+	{
+		if (isServer())
+		{
+			CBlob @caller = getBlobByNetworkID(params.read_u16());
+			CBlob @carried = getBlobByNetworkID(params.read_u16());
+
+			if (caller !is null && carried !is null)
+			{
+				this.set_string("text", carried.get_string("text"));
+				this.setInventoryName(this.get_string("text") + " the badger");
+				carried.server_Die();
+			}
+		}
+	}
+}
+
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (caller is null) return;
+	if (!this.isOverlapping(caller)) return;
+
+	//rename the badger
+	CBlob@ carried = caller.getCarriedBlob();
+	if(carried !is null && carried.getName() == "paper")
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		params.write_u16(carried.getNetworkID());
+
+		CButton@ buttonWrite = caller.CreateGenericButton("$icon_paper$", Vec2f(0, 0), this, this.getCommandID("write"), "Rename", params);
 	}
 }

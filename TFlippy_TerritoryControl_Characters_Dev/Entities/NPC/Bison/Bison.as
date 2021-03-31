@@ -11,7 +11,6 @@ const s16 MAD_TIME = 600;
 void onInit(CSprite@ this)
 {
 	this.ReloadSprites(0, 0); //always blue
-
 }
 
 void onTick(CSprite@ this)
@@ -78,7 +77,8 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 
 	this.addCommandID("bison_fart");
-	
+	this.addCommandID("write");
+
 	AttachmentPoint@[] aps;
 	if (this.getAttachmentPoints(@aps))
 	{
@@ -98,7 +98,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			this.getSprite().PlaySound("drunk_fx3.ogg", 0.50f, 0.80f);
 		}
-	
+
 		if (isServer())
 		{
 			s32 count = 1 + XORRandom(3);
@@ -108,6 +108,21 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				CBlob@ blob = server_CreateBlob("methane", -1, this.getPosition() + Vec2f(16 * flip, XORRandom(8)));
 				blob.setVelocity(this.getVelocity() + Vec2f(i * flip, 0));
+			}
+		}
+	}
+	if (cmd == this.getCommandID("write"))
+	{
+		if (isServer())
+		{
+			CBlob @caller = getBlobByNetworkID(params.read_u16());
+			CBlob @carried = getBlobByNetworkID(params.read_u16());
+
+			if (caller !is null && carried !is null)
+			{
+				this.set_string("text", carried.get_string("text"));
+				this.setInventoryName(this.get_string("text") + " the wisent");
+				carried.server_Die();
 			}
 		}
 	}
@@ -163,7 +178,7 @@ void onTick(CBlob@ this)
 		this.SendCommand(this.getCommandID("bison_fart"));
 		this.set_u32("next_fart", getGameTime() + (30 * 30) + XORRandom(30 * 60));
 	}
-	
+
 	// footsteps
 
 	if (this.isOnGround() && (this.isKeyPressed(key_left) || this.isKeyPressed(key_right)))
@@ -257,13 +272,13 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		if (blob.getName() == "food")
 		{
 			this.getSprite().PlaySound("/Eat.ogg");
-			
+
 			if (isServer())
 			{
 				this.server_SetHealth(this.getInitialHealth());
 				blob.server_Die();
 			}
-			
+
 			//if (blob.getPosition().x < this.getPosition().x)crash
 			//	blob.setKeyPressed( key_left, true );
 			//else
@@ -282,7 +297,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		}
 		else if (blob.getName() == "mat_mithril" && blob.getQuantity() > 25)
 		{
-			
+
 			if (isServer())
 			{
 				CBlob@ cowo = server_CreateBlob("cowo", this.getTeamNum(), this.getPosition());
@@ -304,5 +319,22 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 		Vec2f force = velocity * this.getMass() * 0.35f ;
 		force.y -= 100.0f;
 		hitBlob.AddForce(force);
+	}
+}
+
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (caller is null) return;
+	if (!this.isOverlapping(caller)) return;
+
+	//rename the bison
+	CBlob@ carried = caller.getCarriedBlob();
+	if(carried !is null && carried.getName() == "paper")
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		params.write_u16(carried.getNetworkID());
+
+		CButton@ buttonWrite = caller.CreateGenericButton("$icon_paper$", Vec2f(0, 0), this, this.getCommandID("write"), "Rename", params);
 	}
 }
