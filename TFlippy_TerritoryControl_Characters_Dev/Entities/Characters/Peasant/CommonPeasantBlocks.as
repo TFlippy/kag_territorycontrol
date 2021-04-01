@@ -43,18 +43,17 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$stone_triangle$", "StoneTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$woodchest$", "WoodChest.png", Vec2f(16, 16), 0);
 	AddIconToken("$neutral_door$", "1x1NeutralDoor.png", Vec2f(16, 8), 0);
-	AddIconToken("$banditshack$", "BanditShack.png", Vec2f(40, 32), 0);
-	AddIconToken("$tavern$", "Tavern.png", Vec2f(56, 32), 0);
-	
+	AddIconToken("$icon_banditshack$", "BanditShack.png", Vec2f(40, 32), 0);
+	AddIconToken("$icon_tavern$", "Tavern.png", Vec2f(56, 32), 0);
+
 	BuildBlock[] page_0;
 	blocks.push_back(page_0);
-	
+
 	{
 		BuildBlock b(0, "camp", "$icon_faction$", "Found a Faction!");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
 		AddRequirement(b.reqs, "coin", "", "Coins", 50);
-		
 		b.buildOnGround = true;
 		b.size.Set(80, 24);
 		blocks[0].push_back(b);
@@ -79,7 +78,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 50);
 		blocks[0].push_back(b);
 	}
-	
 	{
 		BuildBlock b(CMap::tile_castle, "stone_block", "$stone_block$", "Stone Block\nBasic building block");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 5);
@@ -91,7 +89,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "banditshack", "$banditshack$", "An Awful Rundown Bandit Shack\nGives you an option to become bandit scum.");
+		BuildBlock b(0, "banditshack", "$icon_banditshack$", "An Awful Rundown Bandit Shack\nGives you an option to become bandit scum.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
 		b.buildOnGround = true;
@@ -114,7 +112,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "tavern", "$tavern$", "Tavern\nA poorly built cozy tavern.\nOther neutrals may set their team here, paying you 20 coins for each spawn.");
+		BuildBlock b(0, "tavern", "$icon_tavern$", "Tavern\nA poorly built cozy tavern.\nOther neutrals may set their team here, paying you 20 coins for each spawn.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 350);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
 		b.buildOnGround = true;
@@ -129,7 +127,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		b.size.Set(16, 16);
 		blocks[0].push_back(b);
 	}
-	
+
 	BuildBlock[] page_1;
 	blocks.push_back(page_1);
 
