@@ -57,7 +57,13 @@ void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu@ gridmenu)
 			CBitStream params;
 			params.write_u16(this.getNetworkID());
 
-			CGridButton@ head = equipments.AddButton(HeadImage, HeadFrame, "", this.getCommandID("equip_head"), Vec2f(1, 1), params);
+			int teamnum = this.getTeamNum();
+			if (teamnum > 6) teamnum = 7;
+			AddIconToken("$headimage$", HeadImage, Vec2f(24, 24), HeadFrame, teamnum);
+			AddIconToken("$torsoimage$", TorsoImage, Vec2f(24, 24), TorsoFrame, teamnum);
+			AddIconToken("$bootsimage$", BootsImage, Vec2f(24, 24), BootsFrame, teamnum);
+
+			CGridButton@ head = equipments.AddButton("$headimage$", "", this.getCommandID("equip_head"), Vec2f(1, 1), params);
 			if(head !is null)
 			{
 				if (this.get_string("equipment_head") != "")
@@ -66,7 +72,7 @@ void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu@ gridmenu)
 					head.SetHoverText("Equip head.\n");
 			}
 
-			CGridButton@ torso = equipments.AddButton(TorsoImage, TorsoFrame, "", this.getCommandID("equip_torso"), Vec2f(1, 1), params);
+			CGridButton@ torso = equipments.AddButton("$torsoimage$", "", this.getCommandID("equip_torso"), Vec2f(1, 1), params);
 			if (torso !is null)
 			{
 				if (this.get_string("equipment_torso") != "")
@@ -75,7 +81,7 @@ void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu@ gridmenu)
 					torso.SetHoverText("Equip torso.\n");
 			}
 
-			CGridButton@ boots = equipments.AddButton(BootsImage, BootsFrame, "", this.getCommandID("equip_boots"), Vec2f(1, 1), params);
+			CGridButton@ boots = equipments.AddButton("$bootsimage$", "", this.getCommandID("equip_boots"), Vec2f(1, 1), params);
 			if (boots !is null)
 			{
 				if (this.get_string("equipment_boots") != "")
@@ -219,7 +225,7 @@ string getEquipmentType(CBlob@ equipment)
 	if(equipment.hasTag("head")) return "head";
 	else if(equipment.hasTag("torso")) return "torso";
 	else if(equipment.hasTag("boots")) return "boots";
-	
+
 	return "nugat";		//haha yes.
 }
 
@@ -243,15 +249,15 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 		// playerblob.set_u8("override head", 30);
 
 	if(headname == "bucket")
-		playerblob.set_u8("override head", 101);
-	
+		playerblob.set_u8("override head", 107);
+
 	if(headname == "pumpkin")
-		playerblob.set_u8("override head", 101);
+		playerblob.set_u8("override head", 108);
 
 	playerblob.setHeadNum((playerblob.getHeadNum()+1) % 3);
 	playerblob.Tag(headname);
 	playerblob.set_string("reload_script", headname);
-	playerblob.AddScript(headname+"_effect.as");
+	if(headname != "pumpkin" && headname != "bucket") playerblob.AddScript(headname+"_effect.as");
 	playerblob.set_string("equipment_head", headname);
 	playerblob.Tag("update head");
 }
