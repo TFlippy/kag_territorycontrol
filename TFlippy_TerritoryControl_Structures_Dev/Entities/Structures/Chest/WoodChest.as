@@ -10,7 +10,7 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().mapCollisions = false;
 	this.getCurrentScript().tickFrequency = 30;
 	this.Tag("builder always hit");
-	
+
 	this.addCommandID("sv_store");
 }
 
@@ -30,13 +30,7 @@ void PickupOverlap(CBlob@ this)
 		for (uint i = 0; i < blobs.length; i++)
 		{
 			CBlob@ blob = blobs[i];
-			if (!blob.isAttached() && blob.isOnGround() && 
-			(blob.getName() == "mat_sand" || blob.getName() == "mat_metal" 
-			|| blob.getName() == "mat_wood" || blob.getName() == "mat_stone"
-			|| blob.getName() == "mat_glass" || blob.getName() == "mat_metalbars"
-			|| blob.getName() == "mat_coal" || blob.getName() == "mat_gold"
-			|| blob.getName() == "mat_bombs" || blob.getName() == "mat_hemp"
-			|| blob.getName() == "mat_waterbombs" || blob.getName() == "keg"))
+			if (!blob.isAttached() && blob.isOnGround() && blob.hasTag("material"))
 			{
 				this.server_PutInInventory(blob);
 			}
@@ -47,7 +41,7 @@ void PickupOverlap(CBlob@ this)
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (this.getMap().rayCastSolid(caller.getPosition(), this.getPosition())) return;
-	
+
 	CBitStream params;
 	params.write_u16(caller.getNetworkID());
 

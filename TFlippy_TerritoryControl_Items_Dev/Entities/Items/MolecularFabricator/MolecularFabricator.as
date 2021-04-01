@@ -9,10 +9,10 @@
 void onInit(CBlob@ this)
 {
 	this.getSprite().SetZ(-25); //background
-	
+
 	AddIconToken("$icon_scythergib$", "ScytherGib.png", Vec2f(16, 16), 2);
-	AddIconToken("$icon_chargerifle$", "ChargeRifle.png", Vec2f(24, 8), 0);
-	AddIconToken("$icon_chargelance$", "ChargeLance.png", Vec2f(24, 8), 0);
+	AddIconToken("$icon_chargerifle$", "ChargeRifle.png", Vec2f(26, 8), 0);
+	AddIconToken("$icon_chargelance$", "ChargeLance.png", Vec2f(32, 16), 0);
 	AddIconToken("$icon_exosuit$", "ExosuitItem.png", Vec2f(16, 10), 0);
 	AddIconToken("$icon_molecularfabricator$", "MolecularFabricator.png", Vec2f(32, 16), 0);
 	AddIconToken("$icon_fieldgenerator$", "FieldGenerator.png", Vec2f(24, 24), 0);
@@ -20,18 +20,18 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_matter_1$", "Material_Matter.png", Vec2f(16, 16), 1);
 	AddIconToken("$icon_matter_2$", "Material_Matter.png", Vec2f(16, 16), 2);
 	AddIconToken("$icon_matter_3$", "Material_Matter.png", Vec2f(16, 16), 3);
-	AddIconToken("$icon_plasteel$", "Material_Plasteel.png", Vec2f(8, 8), 0);
+	AddIconToken("$icon_plasteel$", "Material_Plasteel.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_coilgun$", "Coilgun_Icon.png", Vec2f(48, 16), 0);
 	AddIconToken("$icon_scyther$", "Scyther.png", Vec2f(24, 24), 0);
-	
+
 	this.set_f32("pickup_priority", 8.00f); // The lower, the higher priority
-	
+
 	// SHOP
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
 	this.set_Vec2f("shop menu size", Vec2f(5, 6));
 	this.set_string("shop description", "Molecular Fabricator");
 	this.set_u8("shop icon", 15);
-	
+
 	{
 		ShopItem@ s = addShopItem(this, "Deconstruct 10 Plasteel Sheets", "$icon_matter_0$", "mat_matter-10", "Deconstruct 10 Plasteel Sheets into 10 units of Amazing Technicolor Dust.");
 		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 10);
@@ -62,43 +62,6 @@ void onInit(CBlob@ this)
 		// AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 25);
 		s.spawnNothing = true;
 	}
-	
-	{
-		ShopItem@ s = addShopItem(this, "Reconstruct 10 Plasteel Sheets", "$icon_plasteel$", "mat_plasteel-10", "A durable yet lightweight material.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 10);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 1);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Reconstruct a Busted Scyther Component", "$icon_scythergib$", "scythergib", "A completely useless garbage, brand new.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 25);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 2);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Reconstruct a Charge Rifle", "$icon_chargerifle$", "chargerifle", "A burst-fire energy weapon.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
-		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 25);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Reconstruct a Charge Lance", "$icon_chargelance$", "chargelance", "An extremely powerful rail-assisted handheld cannon.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 150);
-		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 250);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Reconstruct an Exosuit", "$icon_exosuit$", "exosuititem", "A Model II Exosuit with a shield module.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 100);
-		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 25);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 8);
-		s.spawnNothing = true;
-	}
-	
 	{
 		ShopItem@ s = addShopItem(this, "Transmute Stone to Copper", "$mat_iron$", "mat_iron-250", "Transmute 250 Stone into 250 Iron Ore.");
 		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 250);
@@ -130,8 +93,43 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "Reconstruct 10 Plasteel Sheets", "$icon_plasteel$", "mat_plasteel-10", "A durable yet lightweight material.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 10);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 1);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct a Busted Scyther Component", "$icon_scythergib$", "scythergib", "A completely useless garbage, brand new.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 25);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 2);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct an Exosuit", "$icon_exosuit$", "exosuititem", "A Model II Exosuit with a shield module.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 100);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 25);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 8);
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Reconstruct 10 Metal Rods", "$mat_lancerod$", "mat_lancerod-10", "A bundle of 10 charge lance rods.");
 		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct a Charge Rifle", "$icon_chargerifle$", "chargerifle", "A burst-fire energy weapon.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 25);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct a Charge Lance", "$icon_chargelance$", "chargelance", "An extremely powerful rail-assisted handheld cannon.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 150);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 250);
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
 		s.spawnNothing = true;
 	}
@@ -159,6 +157,13 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "Reconstruct a Translocator (2)", "$icon_teleporter$", "teleporter", "A pair of matter exchange-based teleportation devices.\n\nRadius scales with amount of mithril inside.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 50);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Reconstruct a Coilgun", "$icon_coilgun$", "coilgun", "A rapid firing mounted gun. Uses Mithril as ammunition.");
 		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
 		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 50);
@@ -170,13 +175,6 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 40);
 		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 20);
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Reconstruct a Translocator (2)", "$icon_teleporter$", "teleporter", "A pair of matter exchange-based teleportation devices.\n\nRadius scales with amount of mithril inside.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
-		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 50);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
 		s.spawnNothing = true;
 	}
 }
@@ -191,26 +189,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("shop made item"))
 	{
 		this.getSprite().PlaySound("/MolecularFabricator_Create.ogg");
-		
+
 		u16 caller, item;
-		
+
 		if(!params.saferead_netid(caller) || !params.saferead_netid(item))
 			return;
-		
+
 		string name = params.read_string();
 		CBlob@ callerBlob = getBlobByNetworkID(caller);
-		
+
 		if (callerBlob is null) return;
-		
+
 		if (isServer())
 		{
 			string[] spl = name.split("-");
-			
+
 			if (spl[0] == "coin")
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;
-				
+
 				callerPlayer.server_setCoins(callerPlayer.getCoins() +  parseInt(spl[1]));
 			}
 			else if(spl[0] == "scyther")
@@ -218,7 +216,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				CBlob@ crate = server_MakeCrate("scyther", "Scyther Construction Kit", 0, callerBlob.getTeamNum(), this.getPosition(), false);
 				crate.Tag("plasteel");
 				crate.Init();
-				
+
 				callerBlob.server_Pickup(crate);
 			}
 			else if (spl[0] == "molecularfabricator")
@@ -226,7 +224,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				CBlob@ crate = server_MakeCrate("molecularfabricator", "Molecular Fabricator Construction Kit", 0, callerBlob.getTeamNum(), this.getPosition(), false);
 				crate.Tag("plasteel");
 				crate.Init();
-				
+
 				callerBlob.server_Pickup(crate);
 			}
 			else if (spl[0] == "coilgun")
@@ -234,7 +232,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				CBlob@ crate = server_MakeCrate("coilgun", "Coilgun Construction Kit", 0, callerBlob.getTeamNum(), this.getPosition(), false);
 				crate.Tag("plasteel");
 				crate.Init();
-				
+
 				callerBlob.server_Pickup(crate);
 			}
 			else if (name.findFirst("mat_") != -1)
@@ -243,7 +241,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				if (callerPlayer is null) return;
 				
 				CBlob@ mat = server_CreateBlob(spl[0]);
-							
+
 				if (mat !is null)
 				{
 					mat.Tag("do not set materials");
@@ -257,9 +255,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			else
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
-				
+
 				if (blob is null) return;
-			   
+
 				if (!blob.canBePutInInventory(callerBlob))
 				{
 					callerBlob.server_Pickup(blob);

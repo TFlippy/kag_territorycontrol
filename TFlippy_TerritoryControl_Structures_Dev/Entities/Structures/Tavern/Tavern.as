@@ -81,19 +81,13 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		CButton@ buttonOwner = caller.CreateGenericButton(11, Vec2f(2, 3), this, this.getCommandID("sv_setowner"), "Claim", params);
 	}
-	else
+
+	if (caller.getTeamNum() >= 100 && this.get_string("Owner") != "")
 	{
-		if (caller.getTeamNum() >= 100)
-		{
-			if (caller.getPlayer().get_u16("tavern_netid") != this.getNetworkID())
-			{
-				CButton@ buttonOwner = caller.CreateGenericButton(29, Vec2f(2, 3), this, this.getCommandID("sv_setspawn"), "Set this as your current spawn point.\n(Costs 20 coins per respawn)", params);
-			}
-			else
-			{
-				CButton@ buttonOwner = caller.CreateGenericButton(9, Vec2f(2, 3), this, this.getCommandID("sv_unsetspawn"), "Unset this as your current spawn point.", params);
-			}
-		}
+		if (caller.getPlayer().get_u16("tavern_netid") != this.getNetworkID())
+		{ CButton@ buttonOwner = caller.CreateGenericButton(29, Vec2f(2, 3), this, this.getCommandID("sv_setspawn"), "Set this as your current spawn point.\n(Costs 20 coins per respawn)", params); }
+		else
+		{ CButton@ buttonOwner = caller.CreateGenericButton(9, Vec2f(2, 3), this, this.getCommandID("sv_unsetspawn"), "Unset this as your current spawn point.", params); }
 	}
 	//if (!this.isOverlapping(caller)) return;
 
@@ -222,9 +216,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				ply.set_u16("tavern_netid", this.getNetworkID());
 				ply.set_u8("tavern_team", ply.getTeamNum());
-				
+
 				// print("" + ply.getTeamNum());
-				
+
 				if (isServer())
 				{
 					ply.Sync("tavern_netid", true);

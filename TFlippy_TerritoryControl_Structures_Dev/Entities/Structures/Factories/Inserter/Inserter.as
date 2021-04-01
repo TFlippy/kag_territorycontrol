@@ -3,7 +3,7 @@
 void onInit(CSprite@ this)
 {
 	this.SetZ(-50);
-	
+
 	// this.RemoveSpriteLayer("gear");
 	// CSpriteLayer@ gear = this.addSpriteLayer("gear", "Inserter.png", 16, 16, this.getBlob().getTeamNum(), this.getBlob().getSkinNum());
 
@@ -29,9 +29,9 @@ void GetButtonsFor( CBlob@ this, CBlob@ caller )
 	if(caller.getCarriedBlob() !is this){
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
-		
+
 		int icon = !this.isFacingLeft() ? 18 : 17;
-		
+
 		CButton@ button = caller.CreateGenericButton(icon, Vec2f(0, 0), this, this.getCommandID("use"), "Use", params);
 	}
 }
@@ -53,11 +53,11 @@ void onInit(CBlob@ this)
 	// this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
 	this.getCurrentScript().tickFrequency = 60;
-	
+
 	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
 	this.addCommandID("use");
-	
+
 	this.inventoryButtonPos = Vec2f(0, 16);
 }
 
@@ -65,9 +65,9 @@ void onTick(CBlob@ this)
 {
 	const bool cycle = this.get_bool("inserter_cycle");
 	const f32 sign = this.isFacingLeft() ? -1 : 1;
-	
+
 	CMap@ map = getMap();
-	
+
 	if (cycle)
 	{
 		CBlob@ right = map.getBlobAtPosition(this.getPosition() + Vec2f(12 * sign, 0));
@@ -75,13 +75,15 @@ void onTick(CBlob@ this)
 		{
 			CInventory@ inv = right.getInventory();
 			CInventory@ t_inv = this.getInventory();
-			
+
 			if (inv !is null && t_inv !is null)
 			{
 				CBlob@ item = inv.getItem(0);
 				if (item !is null)
 				{
-					if (item.canBePutInInventory(this) && t_inv.getItem(0) is null) 
+					bool blobName = right.getName();
+					if (item.canBePutInInventory(this) && t_inv.getItem(0) is null && 
+					    blobName != "builder" && blobName != "engineer" && blobName != "hazmat" ) //certain classes won't be affected
 					{
 						this.server_PutInInventory(item);
 						this.getSprite().PlaySound("bridge_open.ogg", 1.00f, 1.00f);
@@ -110,6 +112,6 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
-	
+
 	this.set_bool("inserter_cycle", !cycle);
 }
