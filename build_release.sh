@@ -8,8 +8,8 @@ SOUND_FOLDER="TFlippy_TerritoryControl_Sounds"
 
 ## FUNCTIONS
 delete_thing () {
-     echo "Deleting $1"
-     rm -rf $1
+    echo "Deleting $1"
+    rm -rf $1
 }
 
 
