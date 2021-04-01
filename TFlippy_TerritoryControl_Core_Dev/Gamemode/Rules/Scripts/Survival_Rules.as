@@ -319,10 +319,6 @@ void onTick(CRules@ this)
 {
 	s32 gametime = getGameTime();
 
-
-	if (getGameTime() % 9000 == 0)
-		SpawnEventFireworks();
-
 	for (u8 i = 0; i < getPlayerCount(); i++)
 	{
 		CPlayer@ player = getPlayer(i);
@@ -541,7 +537,6 @@ void onInit(CRules@ this)
 void onRestart(CRules@ this)
 {
 	Reset(this);
-	SpawnEventFireworks();
 }
 
 bool doDefaultSpawn(CPlayer@ player, string blobType, u8 team, bool ignoreDisabledSpawns)
@@ -678,7 +673,7 @@ void Reset(CRules@ this)
 
 
 
-
+/*
 void SpawnEventFireworks()
 {
 	CBlob@[] placesToSpawn;
@@ -724,3 +719,4 @@ void SpawnEventFireworks()
 			getRules().SendCommand(getRules().getCommandID("SendChatMessage"), params, getPlayer(a));
 		}
 }
+*/
