@@ -81,7 +81,7 @@ void onTick(CBlob@ this)
 				CBlob@ item = inv.getItem(0);
 				if (item !is null)
 				{
-					bool blobName = right.getName();
+					string blobName = right.getName();
 					if (item.canBePutInInventory(this) && t_inv.getItem(0) is null && 
 					    blobName != "builder" && blobName != "engineer" && blobName != "hazmat" ) //certain classes won't be affected
 					{
