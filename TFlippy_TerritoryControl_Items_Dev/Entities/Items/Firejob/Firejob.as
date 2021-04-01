@@ -15,27 +15,26 @@ const f32 inp_ratio = 0.50f;
 void onInit(CBlob@ this)
 {
 	// this.Tag("aerial");
-	this.Tag("projectile");
 	this.Tag("explosive");
-	
+
 	this.set_f32("bomb angle", 90);
 	this.addCommandID("offblast");
-	
+
 	this.set_f32("map_damage_ratio", 0.5f);
 	this.set_f32("map_damage_radius", 96.0f);
-	
+
 	this.Tag("map_damage_dirt");
 	this.Tag("map_destroy_ground");
 	this.Tag("no explosion particles");
-	
+
 	this.set_string("custom_explosion_sound", "");
 	if (!this.exists("split_chance")) this.set_f32("split_chance", 1.00f);
-	
+
 	// this.set_u32("no_explosion_timer", 0);
 	// this.set_u32("fuel_timer", 0);
 	if (!this.exists("velocity")) this.set_f32("velocity", 0.0f);
 	if (!this.exists("direction")) this.set_Vec2f("direction", Vec2f(0, -1));
-	
+
 	this.getShape().SetRotationsAllowed(true);
 }
 
@@ -45,12 +44,12 @@ void onTick(CBlob@ this)
 	{
 		Vec2f dir = Vec2f((XORRandom(200) - 100) / 100.00f, (XORRandom(200) - 100) / 100.00f);
 		const f32 ratio = 0.10f;
-				
+
 		Vec2f nDir = (this.get_Vec2f("direction") * (1.00f - ratio)) + (dir * ratio);
 		nDir.Normalize();
-		
+
 		this.SetFacingLeft(false);
-		
+
 		this.set_f32("velocity", Maths::Min(this.get_f32("velocity") + 0.1f, 5.0f));
 		this.setAngleDegrees(-nDir.getAngleDegrees() + 90);
 		this.setVelocity(nDir * this.get_f32("velocity"));
@@ -59,15 +58,13 @@ void onTick(CBlob@ this)
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		if(point !is null){
 			CBlob@ holder = point.getOccupied();
-		
+
 			if (holder !is null)
 			{
 				holder.setVelocity(nDir * this.get_f32("velocity"));
 			}
 		}
-		
-		
-		
+
 		if (isServer())
 		{
 			if (getGameTime() >= this.get_u32("explosion_timer") || this.getPosition().y < 64) 
@@ -75,12 +72,12 @@ void onTick(CBlob@ this)
 				this.server_Die();
 			}
 		}
-		
+
 		if (isClient())
 		{
 			MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
 		}
-	}		
+	}
 }
 
 bool doesCollideWithBlob( CBlob@ this, CBlob@ blob )
@@ -98,44 +95,44 @@ void DoExplosion(CBlob@ this)
 		addToNextTick(this, rules, DoExplosion);
 		return;
 	}
-	
+
 	if (this.hasTag("dead")) return;
 
 	f32 random = XORRandom(16);
 	f32 modifier = 1 + Maths::Log(this.getQuantity());
 	f32 angle = -this.get_f32("bomb angle");
-	
+
 	// print("Modifier: " + modifier + "; Quantity: " + this.getQuantity());
 
 	this.set_f32("map_damage_radius", (40.0f + random) * modifier);
 	this.set_f32("map_damage_ratio", 0.25f);
-	
+
 	Explode(this, 100.0f + random, 8.0f);
-	
+
 	for (int i = 0; i < 4 * modifier; i++) 
 	{
 		Vec2f dir = getRandomVelocity(angle, 1, 120);
 		dir.x *= 2;
 		dir.Normalize();
-		
+
 		LinearExplosion(this, dir, 8.0f + XORRandom(16) + (modifier * 8), 8 + XORRandom(24), 3, 0.125f, Hitters::explosion);
 	}
-	
+
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
-		
+
 	CBlob@[] blobs;
 	if (map.getBlobsInRadius(pos, push_radius, @blobs))
 	{
 		for (int i = 0; i < blobs.length; i++)
-		{		
+		{
 			CBlob@ blob = @blobs[i];
 			if (blob !is null && !blob.getShape().isStatic()) 
 			{
 				Vec2f dir = blob.getPosition() - pos;
 				f32 dist = dir.Length();
 				dir.Normalize();
-				
+
 				f32 mod = Maths::Sqrt(Maths::Clamp(dist / push_radius, 0, 1));
 				blob.AddForce(dir * blob.getRadius() * 75 * mod);
 				SetKnocked(blob, 150 * mod);
@@ -145,7 +142,7 @@ void DoExplosion(CBlob@ this)
 
 	if (isServer())
 	{
-		
+
 		f32 chance = this.get_f32("split_chance");
 		if (XORRandom(100) <= (chance * 100))
 		{
@@ -163,18 +160,18 @@ void DoExplosion(CBlob@ this)
 				blob.Init();
 			}
 		}
-		
+
 		int rng = XORRandom(5);
 		for (int i = 0; i < 3 + rng; i++)
 		{
 			CBlob@ blob = @server_CreateBlob("flame", -1, this.getPosition());
 			if (blob is null) { continue; }
-			
+
 			blob.setVelocity(getRandomVelocity(0, XORRandom(8), 360));
 			blob.server_SetTimeToDie(3 + XORRandom(5));
 		}
 	}
-	
+
 	if (isClient())
 	{
 		const u32 count = 360;
@@ -182,13 +179,13 @@ void DoExplosion(CBlob@ this)
 
 		u32 color = this.getTeamNum() < teamcolours.length ? teamcolours[this.getTeamNum()] : teamcolours[XORRandom(teamcolours.length)];
 		// MakePulseParticle(this, Vec2f(0, 0), 30, 32, 0.2f, color);
-		
+
 		for (int i = 0; i < count; i++)
 		{
 			Vec2f dir = Vec2f(Maths::Cos(i * seg), Maths::Sin(i * seg));
 			Vec2f ppos = (pos + dir * 4.00f) + getRandomVelocity(0, 1, 360);
 			f32 vel = XORRandom(100) / 25.00f;
-		
+
 			// CParticle@ p = ParticlePixel(ppos, dir * vel, SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255)), true, 90 + XORRandom(90));
 			// if (p !is null)
 			// {
@@ -196,7 +193,7 @@ void DoExplosion(CBlob@ this)
 				// p.scale = 32.00f + (XORRandom(100) / 25.00f);
 				// p.growth = 0.01f;
 			// }
-			
+
 			f32 size = 3 + ((XORRandom(100) / 100.00f) * 2.00f);
 			// CParticle@ p = ParticleAnimated(CFileMatcher("Sparkle.png").getFirst(), ppos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(8, 8), 1, 0, true);
 			CParticle@ p = ParticleAnimated("pixel.png", ppos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(1, 1), 1, 0, true);
@@ -212,14 +209,14 @@ void DoExplosion(CBlob@ this)
 			}
 			
 		}
-	
+
 		CBlob@ local = getLocalPlayerBlob();
 		if (local !is null)
 		{
 			f32 dmod = 1.00f - ((local.getPosition() - pos).getLength() / 500.00f);
 			Sound::Play("Firejob_Boom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 2.0f - (0.2f * (1 - dmod)), 0.50f + dmod);
 			ShakeScreen(256.0f, 150, this.getPosition());
-			
+
 			if (Maths::Abs(local.getPosition().x - pos.x) < 500)
 			{
 				SColor c = SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255));
@@ -227,7 +224,7 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 	}
-	
+
 	this.Tag("dead");
 	this.getSprite().Gib();
 }
@@ -270,18 +267,19 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		// this.setPosition(this.getPosition() + Vec2f(0, -32)); // Hack
 		this.setAngleDegrees(0);
 		Vec2f pos = this.getPosition();
-		
+
+		this.Tag("projectile");
 		this.Tag("offblast");
 		this.set_u32("explosion_timer", getGameTime() + 90 + XORRandom(15));
 		// this.set_u32("fuel_timer", getGameTime() + fuel_timer_max);
-		
+
 		CSprite@ sprite = this.getSprite();
 		// sprite.SetEmitSound("Rocket_Idle.ogg");
 		// sprite.SetEmitSoundSpeed(1.9f);
 		// sprite.SetEmitSoundVolume(0.2f);
 		// sprite.SetEmitSoundPaused(false);
 		sprite.PlaySound("Rocket_Idle.ogg", 1.00f, 1.80f);
-		
+
 		this.SetLight(true);
 		this.SetLightRadius(128.0f);
 		this.SetLightColor(SColor(255, 255, 100, 0));
@@ -304,12 +302,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	{
 		damage = 0;
 	}
-	
+
 	return damage;
 }
-
-
-
-
-
-			
