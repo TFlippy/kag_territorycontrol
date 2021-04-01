@@ -9,13 +9,13 @@ void onInit(CBlob@ this)
 void Take(CBlob@ this, CBlob@ blob)
 {
 	const string blobName = blob.getName();
-	
+
 	if (!this.isAttached() && blob.hasTag("builder pickup") && !blob.hasTag("no pickup"))
 	{
 		if ((this.getDamageOwnerPlayer() is blob.getPlayer()) || getGameTime() > blob.get_u32("autopick time"))
 		{
 			bool add = true;
-			if (blob.hasTag("ammo")) //only add ammo if we have something that can use it.
+			if (blob.hasTag("ammo")) //only add ammo if we have something that can use it, or if same ammo exists in inventory.
 			{
 				add = false;
 				CBlob@[] items;
@@ -29,18 +29,18 @@ void Take(CBlob@ this, CBlob@ blob)
 					CBlob@ item = inv.getItem(i);
 					items.push_back(item);
 				}
-				for(int i = 0; i < items.size(); i++)
+				for (int i = 0; i < items.size(); i++)
 				{
 					CBlob@ item = items[i];
 					string ammoType = item.get_string("gun_ammoItem");
-					if(ammoType == blob.getName())
+					if (ammoType == blob.getName() || item.getName() == blob.getName())
 					{
 						add = true;
 						break;
 					}
 				}
 			}
-			if(!add){return;}
+			if (!add){return;}
 			if (!this.server_PutInInventory(blob))
 			{
 				// we couldn't fit it in
@@ -90,11 +90,9 @@ void IgnoreCollisionLonger(CBlob@ this, CBlob@ blob)
 
 	const string blobName = blob.getName();
 
-	if (blobName == "mat_gold" || blobName == "mat_stone" ||
-		blobName == "mat_coal" || blobName == "mat_sand" ||
-		blobName == "mat_metal" || blobName == "mat_metalbars" ||
-		blobName == "mat_gunpowder" || blobName == "mat_hemp" ||
-	        blobName == "mat_wood" || blobName == "grain" || blobName == "steak")
+	if (blobName == "grain")
+	//(blobName == "mat_gold" || blobName == "mat_stone" ||
+	// blobName == "mat_coal" || blobName == "mat_wood" || blobName == "mat_sulphur")
 	{
 		blob.set_u32("autopick time", getGameTime() +  getTicksASecond() * 7);
 		blob.SetDamageOwnerPlayer(blob.getPlayer());
