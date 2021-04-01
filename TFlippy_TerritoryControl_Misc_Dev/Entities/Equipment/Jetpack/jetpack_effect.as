@@ -28,33 +28,34 @@ void UpdateScript(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-    if(this.get_string("reload_script") == "jetpack")
+	if(this.get_string("reload_script") == "jetpack")
 	{
 		UpdateScript(this);
 		this.set_string("reload_script", "");
 	}
-	
+
 	const bool isknocked = isKnocked(this);
 	u32 tmp = this.get_u32("nextJetpack");
 	const bool flying = tmp > getGameTime();
-	
+
 	if (!flying)
 	{
-		if (this.isKeyJustPressed(key_up) && !isknocked && !this.isOnGround())
+		CControls@ controls = this.getControls();
+		if (controls !is null && controls.isKeyPressed(KEY_LSHIFT) && !isknocked)
 		{
 			Vec2f dir = this.getAimPos() - this.getPosition();
 			dir.Normalize();
-		
+
 			this.setVelocity(dir * 8.00f);
 
 			Vec2f pos = this.getPosition()+  Vec2f( 0.0f, 4.0f);
 			if(isClient())
 			{
 				MakeDustParticle(pos + Vec2f(2.0f, 0.0f), "Dust.png");
-				
+
 				this.getSprite().PlaySound("/Jetpack_Offblast.ogg");
 			}
-			
+
 			this.set_u32("nextJetpack", getGameTime() + 90);
 		}
 	}
