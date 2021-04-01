@@ -56,7 +56,6 @@ void onInit(CBlob@ this)
 		// ShopItem@ s = addShopItem(this, "S.Y.L.W. 9000 (1)", "$icon_bigbomb$", "mat_bigbomb-1", "A really big bomb. Handle with care. It's indeed a large bomb.");
 		// AddRequirement(s.requirements, "coin", "", "Coins", 1250);
 		// AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 250);
-
 		// s.customButton = true;
 		// s.buttonwidth = 1;
 		// s.buttonheight = 2;
@@ -85,12 +84,6 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	// {
-		// ShopItem@ s = addShopItem(this, "Water Bomb (1)", "$waterbomb$", "mat_waterbombs-1", descriptions[52], true);
-		// AddRequirement(s.requirements, "coin", "", "Coins", 30);
-
-		// s.spawnNothing = true;
-	// }
 	{
 		ShopItem@ s = addShopItem(this, "Small Bomb (4)", "$icon_smallbomb$", "mat_smallbomb-4", "A small iron bomb. Detonates upon strong impact.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
@@ -171,7 +164,7 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-		{
+	{
 		ShopItem@ s = addShopItem(this, "Guided Missile", "$icon_guidedrocket$", "guidedrocket", "A self-guided missile used to down bombers. Due to poorly designed navigation systems, it may display unpredictable behaviour.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
 		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", 20);
@@ -191,7 +184,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Suicide Vest", "$icon_suicidevest$", "suicidevest", "An ugly christmas sweater strapped with explosives.\n\nOccupies the Torso slot\nPress E to blow yourself up.");
+		ShopItem@ s = addShopItem(this, "Suicide Vest", "$icon_suicidevest$", "suicidevest", "An ugly christmas sweater strapped with explosives.\n\nOccupies the Torso slot\nPress [E] to blow yourself up.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 
 		s.spawnNothing = true;
