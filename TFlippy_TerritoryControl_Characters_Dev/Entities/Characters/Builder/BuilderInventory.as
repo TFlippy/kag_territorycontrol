@@ -51,7 +51,7 @@ void onInit(CInventory@ this)
 	if(!blob.exists(blocks_property))
 	{
 		BuildBlock[][] blocks;
-		addCommonBuilderBlocks(blocks);
+		addCommonBuilderBlocks(blocks, 7);
 		blob.set(blocks_property, blocks);
 	}
 
@@ -85,25 +85,29 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 	CBlob@ blob = this.getBlob();
 	if(blob is null) return;
 
-	BuildBlock[][]@ blocks;
+	int teamnum = blob.getTeamNum();
+	if (blob.getTeamNum() > 6) teamnum = 7;
+
+	BuildBlock[][] blocks;
+	addCommonBuilderBlocks(blocks, teamnum);
 	blob.get(blocks_property, @blocks);
 	if(blocks is null) return;
 
 	const Vec2f MENU_CE = Vec2f(0, MENU_SIZE.y * -GRID_SIZE - GRID_PADDING + 48) + INVENTORY_CE;
 
-	CGridMenu@ menu = CreateGridMenu(MENU_CE, blob, MENU_SIZE, "Build");
+	const u8 PAGE = blob.get_u8("build page");
+
+	CGridMenu@ menu = CreateGridMenu(MENU_CE, blob, MENU_SIZE, PAGE_NAME[PAGE]);
 	if(menu !is null)
 	{
 		menu.deleteAfterClick = false;
-
-		const u8 PAGE = blob.get_u8("build page");
 
 		for(u8 i = 0; i < blocks[PAGE].length; i++)
 		{
 			BuildBlock@ b = blocks[PAGE][i];
 			if(b is null) continue;
 
-			CGridButton@ button = menu.AddButton(b.icon, "\n" + b.description, Builder::make_block + i);
+			CGridButton@ button = menu.AddButton(b.icon, PAGE_NAME[PAGE], Builder::make_block + i);
 			if(button is null) continue;
 
 			button.selectOneOnClick = true;

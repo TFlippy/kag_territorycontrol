@@ -5,7 +5,6 @@
 #include "Descriptions.as";
 #include "CheckSpam.as";
 #include "CTFShopCommon.as";
-
 #include "MakeMat.as";
 
 Random traderRandom(Time());
@@ -44,11 +43,13 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Gramophone", "$gramophone$", "gramophone", "A device used to play music from Gramophone Records purchased at the Merchant.");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 80);
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
+
 		s.spawnNothing = false;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Copper Wire (2)", "$mat_copperwire$", "mat_copperwire-2", "A copper wire. Kids' favourite toy.");
 		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
+
 		s.spawnNothing = true;
 	}
 	{
@@ -70,15 +71,17 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Clown's Funny Klaxon", "$icon_klaxon$", "klaxon", "An infernal device housing thousands of lamenting souls.");
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 2);
 		AddRequirement(s.requirements, "coin", "", "Coins", 666);
+
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Copper Wire (10)", "$mat_copperwire$", "mat_copperwire-10", "A bundle of copper wires. Kids' favourite toy.");
 		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 5);
+
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Zapthrottle Gas Extractor", "$icon_gasextractor$", "gasextractor", "A handheld air pump commonly used for cleaning, martial arts and gas cloud extraction.\n\nLeft mouse: Pull\nRight mouse: Push");
+		ShopItem@ s = addShopItem(this, "Zapthrottle Gas Extractor", "$icon_gasextractor$", "gasextractor", "A handheld air pump commonly used for cleaning, martial arts and gas cloud extraction.\n\n[LMB]: Pull\n[RMB]: Push");
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 2);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 1);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 80);
@@ -94,19 +97,22 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Mustard Gas", "$icon_mustard$", "mat_mustard-50", "A bottle of a highly poisonous gas. Causes blisters, blindness and lung damage.");
 		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 50);
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Scuba Gear", "$icon_scubagear$", "scubagear", "Special equipment used for scuba diving.");
+		ShopItem@ s = addShopItem(this, "Scuba Gear", "$icon_scubagear$", "scubagear", "Special equipment used for scuba diving.\nOccupies the Head slot");
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
 		AddRequirement(s.requirements, "coin", "", "Coins", 50);
+
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Mithril-B-Gone", "$icon_radpill$", "radpill", "A piece of medicine that gives you a partial immunity to the adverse effects of Mithril.\nIt's a suppository!");
 		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 25);
 		AddRequirement(s.requirements, "coin", "", "Coins", 75);
+
 		s.spawnNothing = true;
 	}
 	{
@@ -122,14 +128,15 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Rocket Pack", "$icon_jetpack$", "jetpack", "A small rocket-propelled backpack.\nOccupies the Torso slot.\nPress Space to jump!");
+		ShopItem@ s = addShopItem(this, "Rocket Pack", "$icon_jetpack$", "jetpack", "A small rocket-propelled backpack.\nOccupies the Torso slot.\nPress [Shift] to jump!");
 		AddRequirement(s.requirements, "blob", "mat_smallrocket", "Small Rocket", 2);
 		AddRequirement(s.requirements, "blob", "mat_oil", "Oil", 50);
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Flippers", "$icon_flippers$", "flippers", "Cool flippers made of a fishy.");
+		ShopItem@ s = addShopItem(this, "Flippers", "$icon_flippers$", "flippers", "Cool flippers made of a fishy.\n");
 		AddRequirement(s.requirements, "blob", "fishy", "Fishy", 1);
 		AddRequirement(s.requirements, "coin", "", "Coins", 50);
 
@@ -140,10 +147,11 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 3);
 		AddRequirement(s.requirements, "blob", "fishy", "Fishy", 1);
 		AddRequirement(s.requirements, "coin", "", "Coins", 350);
+
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Miner's Helmet", "$icon_minershelmet$", "minershelmet", "Turns you into an illuminati miner.");
+		ShopItem@ s = addShopItem(this, "Miner's Helmet", "$icon_minershelmet$", "minershelmet", "Turns you into an illuminati miner.\nOccupies the Head slot");
 		AddRequirement(s.requirements, "blob", "lantern", "Lantern", 1);
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
 		AddRequirement(s.requirements, "coin", "", "Coins", 50);
@@ -275,50 +283,6 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	// {
-		// ShopItem@ s = addShopItem(this, "Firework (1)", "$icon_firework$", "firework", "Celebrate the new year with this colorful rocket!");
-		// AddRequirement(s.requirements, "coin", "", "Coins", 50);
-
-		// s.spawnNothing = true;
-	// }
-
-	// {
-		// ShopItem@ s = addShopItem(this, "Saw", "$saw$", "saw", descriptions[12], false);
-		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
-		// AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
-
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Lantern", "$lantern$", "lantern", descriptions[9], false);
-		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 10);
-
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Bucket", "$bucket$", "bucket", descriptions[36], false);
-		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 10);
-
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Sponge", "$sponge$", "sponge", descriptions[53], false);
-		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
-
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Trampoline", "$trampoline$", "trampoline", descriptions[30], false);
-		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
-
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Arrows (30)", "$mat_arrows$", "mat_arrows-30", descriptions[2], true);
-		// AddRequirement(s.requirements, "coin", "", "Coins", 15);
-
-		// s.spawnNothing = true;
-	// }
 }
 
 void onTick(CBlob@ this)

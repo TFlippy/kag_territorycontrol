@@ -82,7 +82,14 @@ bool isInRadius(CBlob@ this, CBlob @caller)
 	{
 		offset = this.get_Vec2f("shop offset");
 	}
-	return ((this.getPosition() + Vec2f((this.isFacingLeft() ? -2 : 2)*offset.x, offset.y) - caller.getPosition()).Length() < caller.getRadius() / 2 + this.getRadius());
+	if (this.getName() != "methanedeposit")
+	{
+		return ((this.getPosition() + Vec2f((this.isFacingLeft() ? -2 : 2)*offset.x, offset.y) - caller.getPosition()).Length() < caller.getRadius() / 2 + this.getRadius());
+	}
+	else
+	{
+		return ((this.getPosition() - caller.getPosition()).Length() < caller.getRadius() + this.getRadius() + 16);
+	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

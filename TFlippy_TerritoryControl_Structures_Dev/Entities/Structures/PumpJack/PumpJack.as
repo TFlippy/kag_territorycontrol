@@ -90,7 +90,7 @@ void onTick(CBlob@ this)
 		{
 			MakeMat(storage, this.getPosition(), "mat_oil", XORRandom(3));
 		}
-		else if (!this.getInventory().isFull())
+		else if (this.getInventory().getCount("mat_oil") < 450)
 		{
 			MakeMat(this, this.getPosition(), "mat_oil", XORRandom(3));
 		}
@@ -108,7 +108,7 @@ CBlob@ FindStorage(u8 team)
 
 	for (u32 i = 0; i < blobs.length; i++)
 	{
-		if (blobs[i].getTeamNum() == team && !blobs[i].getInventory().isFull())
+		if (blobs[i].getTeamNum() == team && blobs[i].getInventory().getCount("mat_oil") < 300)
 		{
 			validBlobs.push_back(blobs[i]);
 		}
@@ -137,6 +137,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		CButton@ buttonWrite = caller.CreateGenericButton("$icon_paper$", Vec2f(0, -8), this, this.getCommandID("write"), "Rename the rig.", params);
 	}
 }
+
 void onAddToInventory(CBlob@ this,CBlob@ blob) //i'll keep it just to be sure
 {
 	if(blob.getName()!="mat_oil"){

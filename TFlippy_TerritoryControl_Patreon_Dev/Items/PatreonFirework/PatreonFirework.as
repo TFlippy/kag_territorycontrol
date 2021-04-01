@@ -7,7 +7,6 @@ const f32 max_distance = 150.00f;
 
 void onInit(CBlob@ this)
 {
-	this.Tag("projectile");
 	this.Tag("explosive");
 
 	this.set_f32("bomb angle", 90);
@@ -543,6 +542,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		Vec2f pos = this.getPosition();
 
 		this.Tag("offblast");
+		this.Tag("projectile");
 		this.set_u32("explosion_timer", getGameTime() + 30 + XORRandom(5));
 
 		CSprite@ sprite = this.getSprite();

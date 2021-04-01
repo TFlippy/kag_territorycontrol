@@ -24,10 +24,11 @@ void onInit(CBlob@ this)
 	this.Tag("change team on fort capture");
 
 	this.getCurrentScript().tickFrequency = 300;
-	
+
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
 
-	this.inventoryButtonPos = Vec2f(-8, 0);
+	this.inventoryButtonPos = Vec2f(-8, -4);
+	this.addCommandID("sv_store");
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
 	this.set_Vec2f("shop menu size", Vec2f(3, 4));
@@ -58,7 +59,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Parachute Pack", "$icon_parachute$", "parachutepack", "A piece of fabric to let you fall slowly.\nPress the button while falling to activate.\n\nOccupies the Torso slot.");
+		ShopItem@ s = addShopItem(this, "Parachute Pack", "$icon_parachute$", "parachutepack", "A piece of fabric to let you fall slowly.\nPress [E] while falling to activate.\n\nOccupies the Torso slot.");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 80);
 		AddRequirement(s.requirements, "coin", "", "Coins", 125);
 
@@ -159,6 +160,26 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		this.set_Vec2f("shop offset", Vec2f(4, 0));
 		this.set_bool("shop available", this.isOverlapping(caller));
+
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+
+		CInventory @inv = caller.getInventory();
+		if(inv is null) return;
+
+		if(inv.getItemsCount() > 0)
+		{
+			for (int i = 0; i < inv.getItemsCount(); i++)
+			{
+				CBlob @item = inv.getItem(i);
+				if (item.hasTag("ammo") || item.hasTag("isWeapon"))
+				{
+					params.write_u16(caller.getNetworkID());
+					CButton@ buttonOwner = caller.CreateGenericButton(28, Vec2f(-4, 4), this, this.getCommandID("sv_store"), "Store", params);
+					break;
+				}
+			}
+		}
 	}
 	else
 	{
@@ -226,6 +247,41 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				else if (callerBlob.getInventory() !is null && !callerBlob.getInventory().isFull())
 				{
 					callerBlob.server_PutInInventory(blob);
+				}
+			}
+		}
+	}
+	if (cmd == this.getCommandID("sv_store"))
+	{
+		if (isServer())
+		{
+			CBlob@ caller = getBlobByNetworkID(params.read_u16());
+			if (caller !is null)
+			{
+				CInventory @inv = caller.getInventory();
+				if (caller.getName() == "builder")
+				{
+					CBlob@ carried = caller.getCarriedBlob();
+					if (carried !is null)
+					{
+						if (carried.hasTag("temp blob"))
+						{
+							carried.server_Die();
+						}
+					}
+				}
+				if (inv !is null)
+				{
+					for (int i = 0; i < inv.getItemsCount(); i++)
+					{
+						CBlob @item = inv.getItem(i);
+						if (item.hasTag("ammo") || item.hasTag("isWeapon"))
+						{
+							caller.server_PutOutInventory(item);
+							this.server_PutInInventory(item);
+							i--;
+						}
+					}
 				}
 			}
 		}

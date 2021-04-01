@@ -15,7 +15,6 @@ const f32 inp_ratio = 0.50f;
 void onInit(CBlob@ this)
 {
 	// this.Tag("aerial");
-	this.Tag("projectile");
 	this.Tag("explosive");
 
 	this.set_f32("bomb angle", 90);
@@ -210,6 +209,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		Vec2f pos = this.getPosition();
 
 		this.Tag("offblast");
+		this.Tag("projectile");
 		this.set_u32("explosion_timer", getGameTime() + 30 + XORRandom(15));
 		// this.set_u32("fuel_timer", getGameTime() + fuel_timer_max);
 

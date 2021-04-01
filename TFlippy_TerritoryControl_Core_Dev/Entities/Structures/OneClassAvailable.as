@@ -7,6 +7,8 @@ const string req_tag = "required tag";
 
 void onInit(CBlob@ this)
 {
+	AddIconToken("$change_class$", "/GUI/InteractionIcons.png", Vec2f(32, 32), 12, 2);
+
 	this.Tag("change class drop inventory");
 	if(!this.exists("class offset"))
 		this.set_Vec2f("class offset", Vec2f_zero);
@@ -16,7 +18,7 @@ void onInit(CBlob@ this)
 		CShape@ shape = this.getShape();
 		if(shape !is null)
 		{
-			this.set_u8("class button radius", Maths::Max(this.getRadius(), (shape.getWidth() + shape.getHeight()) / 2));
+			this.set_u8("class button radius", Maths::Max(this.getRadius(), (shape.getWidth() + shape.getHeight())));
 		}
 		else
 		{
@@ -31,7 +33,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		return;
 	}
-	
+
 	bool CanChange = true;
 	
 	if(this.exists(req_tag)){
@@ -61,11 +63,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (this.hasTag("dead")) return;
 
 	onRespawnCommand(this, cmd, params);
-	
+
 	if (this.hasTag("kill on use"))
 	{
 		this.Tag("dead");
-	
+
 		if (isServer()) 
 		{
 			this.server_Die();

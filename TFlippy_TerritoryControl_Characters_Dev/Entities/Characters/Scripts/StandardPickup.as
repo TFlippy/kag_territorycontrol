@@ -177,36 +177,38 @@ void FillAvailable(CBlob@ this, CBlob@[]@ available, CBlob@[]@ pickupBlobs)
 f32 getPriorityPickupScale(CBlob@ this, CBlob@ b, f32 scale)
 {
 	u32 gameTime = getGameTime();
-
+	const string name = b.getName();
 	// 0
-	// exploding stuff + crates unpacking
+	// exploding stuff + crates unpacking + blueprints
 	{
 		u32 unpackTime = b.get_u32("unpack time");
-		if (b.hasTag("exploding") || unpackTime > gameTime)
+		if (b.hasTag("exploding") || b.hasTag("blueprint") || name == "fraggrenade" || name == "dynamite" || unpackTime > gameTime)
 		{
 			scale *= 0.1f;
 		}
 
 		//special stuff - flags etc
-		if (b.hasTag("special"))
+		if (b.hasTag("special") || name == "cube" || name == "shito" || name == "rekt" || name == "juggernauthammer")
 		{
 			scale *= 0.01f;
 		}
 	}
 
 	// 1
-	// combat items, important
-	const string name = b.getName();
+	// combat items, class changers, equipment, important
 	{
-		if (name == "boulder" || name == "drill" || name == "keg" ||
-		        name == "mine" || name == "satchel" || name == "crate")
+		if (name == "drill" || name == "powerdrill" || name == "crate" || name == "mine" || name == "fragmine" || name == "phone" ||
+		    name == "engineertools" || name == "ninjascroll" || name == "hazmatitem" || 
+		    name == "artisancertificate" || name == "royalarmor" || name == "exosuititem" ||
+		    b.hasTag("explosive") || b.hasTag("isWeapon") || b.hasTag("equipment support"))
 		{
 			scale *= 0.41f;
 		}
 	}
 
 	//low priority
-	if (name == "log" || b.hasTag("player"))
+	if (name == "log" || name == "mat_meat" || name == "mat_dirt"|| 
+	    name == "piglet" || name == "kitten" || b.hasTag("player"))
 	{
 		scale *= 5.0f;
 	}
@@ -214,7 +216,7 @@ f32 getPriorityPickupScale(CBlob@ this, CBlob@ b, f32 scale)
 	// super low priority
 	// dead stuff, sick of picking up corpses
 	{
-		if (b.hasTag("dead"))
+		if (b.hasTag("dead") || b.hasTag("furniture") || name == "pigger" || name == "badgerbomb")
 		{
 			scale *= 10.0f;
 		}
@@ -225,9 +227,10 @@ f32 getPriorityPickupScale(CBlob@ this, CBlob@ b, f32 scale)
 	//per class material scaling - done last for perf reasons
 	if (b.hasTag("material"))
 	{
-		if (name == "mat_wood" || name == "mat_stone" || name == "mat_gold")
+		if (name == "mat_gold" || name == "mat_goldingot" || name == "mat_mithril" || name == "mat_mithrilenriched" || 
+		    name == "seed" ||  name == "gyromat" || name == "gasextractor")
 		{
-			if (thisname == "builder" || thisname == "peasant")
+			if (thisname == "builder" || thisname == "peasant" || thisname == "engineer" || thisname == "hazmat")
 			{
 				scale *= 0.25f;
 			}
@@ -237,7 +240,7 @@ f32 getPriorityPickupScale(CBlob@ this, CBlob@ b, f32 scale)
 				scale += 20.0f;
 			}
 		}
-		else if (name == "mat_bombs" || name == "mat_waterbombs")
+		else if (name == "mat_bombs" || name == "mat_waterbombs" || b.hasTag("ammo"))
 		{
 			if (thisname == "knight" || thisname == "royalguard" || thisname == "bandit")
 			{
@@ -271,7 +274,7 @@ f32 getPriorityPickupScale(CBlob@ this, CBlob@ b, f32 scale)
 	{
 		scale *= b.get_f32("pickup_priority");
 	}
-	
+
 	return scale;
 }
 
@@ -367,8 +370,6 @@ bool isInRecentPickups(CBlob@ this, CBlob@ blob)
 
 // SPRITE
 
-
-
 void onInit(CSprite@ this)
 {
 	this.getCurrentScript().runFlags |= Script::tick_myplayer;
@@ -398,9 +399,9 @@ void onRender(CSprite@ this)
 		CBlob@[]@ pickupBlobs;
 		CBlob@[]@ closestBlobs;
 		blob.get("closest blobs", @closestBlobs);
-		
+
 		if (closestBlobs is null) return;
-		
+
 		CBlob@ closestBlob = null;
 		if (closestBlobs.length > 0)
 		{
