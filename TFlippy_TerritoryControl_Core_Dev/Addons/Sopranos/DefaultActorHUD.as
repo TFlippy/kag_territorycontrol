@@ -186,6 +186,10 @@ const string[] teamBombs =
 	"mat_clusterbomb",
 	"mat_mithrilbomb",
 	"mat_cocokbomb",
+	"mat_bigbomb",
+	"mat_bombita",
+	"firejob",
+	"fireboom",
 	"cruisemissile",
 	"guidedrocket"
 };
@@ -201,7 +205,7 @@ const string[] teamAmmo =
 void RenderTeamInventoryHUD(CBlob@ this)
 {
 	Vec2f hudPos = Vec2f(0, 0);
-	Vec2f hudPos2 = Vec2f(-650, 970); //ammo and bombs
+	Vec2f hudPos2 = Vec2f(0, 0); //ammo and bombs
 
 	int playerTeam = this.getTeamNum();
 	if (playerTeam < 7)
@@ -495,16 +499,18 @@ void RenderTeamInventoryHUD(CBlob@ this)
 				continue;
 			}
 
-			Vec2f itemPos = Vec2f(getScreenWidth() - 54 + b * 46, 54) + hudPos2;
-			if (itemName == "cruisemissile" || itemName == "guidedrocket")
+			Vec2f itemPos = Vec2f(getScreenWidth() / 1.52 - 54 + b * 46, getScreenHeight() - 57) + hudPos2;
+			if (itemName == "cruisemissile" || itemName == "guidedrocket" || itemName == "mat_bigbomb" || 
+			    itemName == "mat_bombita" || itemName == "fireboom")
 			{
+				int xPos = (itemName == "fireboom" || itemName == "mat_bombita"  ? -6 : 8);
 				GUI::DrawIcon("GUI/jslot.png", 3, Vec2f(24, 42), itemPos + Vec2f(0, -34));
-				GUI::DrawIcon(bomb.inventoryIconName, bomb.inventoryIconFrame, bomb.inventoryFrameDimension, itemPos + Vec2f(8, -22), 1.0f,this.getTeamNum());
+				GUI::DrawIcon(bomb.inventoryIconName, bomb.inventoryIconFrame, bomb.inventoryFrameDimension, itemPos + Vec2f(xPos, -22), 1.0f, this.getTeamNum());
 			}
 			else
 			{
 				GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), itemPos);
-				GUI::DrawIcon(bomb.inventoryIconName, bomb.inventoryIconFrame, bomb.inventoryFrameDimension, itemPos + Vec2f(8, 8));
+				GUI::DrawIcon(bomb.inventoryIconName, bomb.inventoryIconFrame, bomb.inventoryFrameDimension, itemPos + Vec2f(8, 8), 1.0f, this.getTeamNum());
 			}
 
 			int quantity = itemAmounts[i];
@@ -537,7 +543,7 @@ void RenderTeamInventoryHUD(CBlob@ this)
 				continue;
 			}
 
-			Vec2f itemPos = Vec2f(getScreenWidth() - 104 + b * 46, 54) + hudPos2;
+			Vec2f itemPos = Vec2f(getScreenWidth() / 1.52 - 94 + b * 46, getScreenHeight() - 57) + hudPos2;
 			GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), itemPos);
 
 			GUI::DrawIcon(ammo.inventoryIconName, ammo.inventoryIconFrame, ammo.inventoryFrameDimension, itemPos + Vec2f(8, 8));
