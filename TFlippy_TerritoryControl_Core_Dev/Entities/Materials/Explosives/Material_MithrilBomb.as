@@ -15,17 +15,17 @@ const string[] particles =
 void onInit(CBlob@ this)
 {
 	this.getShape().SetRotationsAllowed(true);
-	
+
 	this.set_string("custom_explosion_sound", "MithrilBomb_Explode.ogg");
 	this.set_bool("map_damage_raycast", true);
 	this.set_Vec2f("explosion_offset", Vec2f(0, 0));
-	
+
 	this.set_u8("stack size", 1);
 	this.set_f32("bomb angle", 90);
-	
+
 	this.Tag("map_damage_dirt");
 	this.Tag("explosive");
-	
+
 	this.maxQuantity = 1;
 }
 
@@ -45,7 +45,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		this.set_f32("bomb angle", 90);
 		this.server_Die();
 	}
-	
+
 	return damage;
 }
 
@@ -60,7 +60,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal)
 	if (vellen >= 8.0f) 
 	{
 		Vec2f dir = Vec2f(-normal.x, normal.y);
-		
+
 		this.Tag("DoExplode");
 		this.set_f32("bomb angle", dir.Angle());
 		this.server_Die();
@@ -88,16 +88,16 @@ void DoExplosion(CBlob@ this)
 		addToNextTick(this, rules, DoExplosion);
 		return;
 	}
-	
+
 	f32 random = XORRandom(16);
-	f32 angle = -this.get_f32("bomb angle");
+	f32 angle = this.getAngleDegrees() - this.get_f32("bomb angle");
 	f32 vellen = this.getVelocity().Length();
-	
+
 	// print("Modifier: " + modifier + "; Quantity: " + this.getQuantity());
 
 	this.set_f32("map_damage_radius", (64.0f + random));
 	this.set_f32("map_damage_ratio", 0.25f);
-	
+
 	Explode(this, 64.0f + random, 150.0f);
 
 	for (int i = 0; i < random; i++) 
@@ -105,10 +105,10 @@ void DoExplosion(CBlob@ this)
 		Vec2f dir = getRandomVelocity(angle, 1, 80);
 		LinearExplosion(this, dir, (16.0f + XORRandom(32) + (modifier * 8)) * vellen, 12 + XORRandom(8), 20 + XORRandom(vellen * 2), 50.0f, Hitters::explosion);
 	}
-	
+
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
-	
+
 	if (isServer())
 	{
 		for (int i = 0; i < 24; i++)
@@ -128,42 +128,40 @@ void DoExplosion(CBlob@ this)
 			blob.server_SetQuantity(amount);
 			blob.setVelocity(Vec2f(4 - XORRandom(8), -2 - XORRandom(5)) * (0.5f));
 		}
-		
+
 		for (int i = 0; i < 256; i++)
 		{
 			Vec2f tpos = getRandomVelocity(angle, 1, 120) * XORRandom(128);
 			if (map.isTileSolid(pos + tpos)) map.server_SetTile(pos + tpos, CMap::tile_matter);
 		}
-		
+
 		CBlob@[] trees;
 		map.getBlobsInRadius(this.getPosition(), 192.0f, @trees);
-		
+
 		for (int i = 0; i < trees.length; i++)
 		{
 			CBlob@ b = trees[i];
-			
+
 			if (b.getName() == "tree_bushy" || b.getName() == "tree_pine")
 			{
 				CBlob@ tree = server_CreateBlob("crystaltree", b.getTeamNum(), b.getPosition() + Vec2f(0, -32));
-					
+
 				b.Tag("no drop");
 				b.server_Die();
 			}
 		}
 	}
-	
+
 	if(isClient())
 	{
 		for (int i = 0; i < 10; i++)
 		{
 			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(500) * 0.01f, 25), particles[XORRandom(particles.length)]);
 		}
-	
+
 		SetScreenFlash(50, 255, 255, 255);
 		this.getSprite().Gib();
 	}
-	
-	
 }
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
