@@ -186,14 +186,24 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", 50 + rand.NextRanged(500));
 		s.spawnNothing = true;
 	}
+<<<<<<< HEAD
 
 	/*if (rand.NextRanged(100) < 50)
+=======
+	
+	if (rand.NextRanged(100) < 50)
+>>>>>>> parent of eb062e8b (Removed shackles)
 	{
 		ShopItem@ s = addShopItem(this, "big cuffs", "$shackles$", "shackles", "tie that fool up");
 		AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(500));
 		s.spawnNothing = true;
+<<<<<<< HEAD
 	}*/
 
+=======
+	}
+	
+>>>>>>> parent of eb062e8b (Removed shackles)
 	if (rand.NextRanged(100) < 50)
 	{
 		ShopItem@ s = addShopItem(this, "sticky stick", "$nightstick$", "nightstick", "a stick for beating up");
