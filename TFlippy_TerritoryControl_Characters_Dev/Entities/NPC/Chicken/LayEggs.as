@@ -1,7 +1,5 @@
 //todo: make it so that blobs can eat multiple types of food
 //script by betelgeuse
-#define SERVER_ONLY;
-
 #include "FoodQueue.as"
 
 const string food_queue = "food_queue";
