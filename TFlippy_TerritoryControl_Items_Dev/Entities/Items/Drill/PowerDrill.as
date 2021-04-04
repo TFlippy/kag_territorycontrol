@@ -51,11 +51,11 @@ void onInit(CSprite@ this)
 void onInit(CBlob@ this)
 {
 	//todo: some tag-based keys to take interference (doesn't work on net atm)
-	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
+	/*AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
 	if (ap !is null)
 	{
 		ap.SetKeysToTake(key_action1 | key_action2 | key_action3);
-	}
+	}*/
 
 	this.set_u32("hittime", 0);
 	this.Tag("place norotate"); // required to prevent drill from locking in place (blame builder code :kag_angry:)
@@ -184,8 +184,12 @@ void onTick(CBlob@ this)
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder = point.getOccupied();
 
+<<<<<<< HEAD
 		if (holder is null)
 			return;
+=======
+		if (holder is null) return;
+>>>>>>> parent of 71cbdbdd (Drills no longer work for neutrals, powerdrill now works with all class)
 
 		AimAtMouse(this, holder); // aim at our mouse pos
 
@@ -203,6 +207,7 @@ void onTick(CBlob@ this)
 			sprite.PlaySound("DrillOverheat.ogg");
 		}
 
+<<<<<<< HEAD
 		if (holder.getName() != "engineer")
 		{
 			if (holder.isMyPlayer() && point.isKeyPressed(key_action1) && getGameTime() % 5 == 0)
@@ -212,29 +217,35 @@ void onTick(CBlob@ this)
 		}
 
 		if (!(point.isKeyPressed(key_action1) || holder.isKeyJustPressed(key_action1)) || isKnocked(holder))
+=======
+		if (holder.getName() == required_class || sv_gamemode == "TDM")
+>>>>>>> parent of 71cbdbdd (Drills no longer work for neutrals, powerdrill now works with all class)
 		{
-			this.set_bool(buzz_prop, false);
-			return;
-		}
+			if (!holder.isKeyPressed(key_action1) || isKnocked(holder))
+			{
+				this.set_bool(buzz_prop, false);
+				return;
+			}
 
-		//set funny sound under water
-		if (inwater)
-		{
-			sprite.SetEmitSoundSpeed(0.8f + (getGameTime() % 13) * 0.01f);
-		}
-		else
-		{
-			sprite.SetEmitSoundSpeed(1.0f);
-		}
+			//set funny sound under water
+			if (inwater)
+			{
+				sprite.SetEmitSoundSpeed(0.8f + (getGameTime() % 13) * 0.01f);
+			}
+			else
+			{
+				sprite.SetEmitSoundSpeed(1.0f);
+			}
 
-		sprite.SetEmitSoundPaused(false);
-		this.set_bool(buzz_prop, true);
+			sprite.SetEmitSoundPaused(false);
+			this.set_bool(buzz_prop, true);
 
-		if (heat < heat_max)
-		{
-			heat++;
-		}
+			if (heat < heat_max)
+			{
+				heat++;
+			}
 
+<<<<<<< HEAD
 		u8 delay_amount = 8;
 		if (this.get_bool("just hit dirt")) delay_amount = 10;
 		if (inwater) delay_amount = 20;
@@ -251,163 +262,200 @@ void onTick(CBlob@ this)
 			this.set_bool("just hit dirt", false);
 			this.Sync("just hit dirt", true);
 		}
+=======
+			u8 delay_amount = 8;
+			if (this.get_bool("just hit dirt")) delay_amount = 10;
+			if (inwater) delay_amount = 20;
+			
+			bool skip = (gametime < this.get_u32(last_drill_prop) + delay_amount);
 
-		// delay drill
-		{
-			const bool facingleft = this.isFacingLeft();
-			Vec2f direction = Vec2f(1, 0).RotateBy(this.getAngleDegrees() + (facingleft ? 180.0f : 0.0f));
-			const f32 sign = (facingleft ? -1.0f : 1.0f);
-
-			const f32 attack_distance = 6.0f;
-			Vec2f attackVel = direction * attack_distance;
-
-			const f32 distance = 20.0f;
-
-			bool hitsomething = false;
-			bool hitblob = false;
-
-			CMap@ map = getMap();
-			if (map !is null)
+			if (skip)
 			{
-				HitInfo@[] hitInfos;
-				if (map.getHitInfosFromArc((this.getPosition() - attackVel), -attackVel.Angle(), 30, distance, this, true, @hitInfos))
+				return;
+			}
+			else
+			{
+				this.set_u32(last_drill_prop, gametime); // update last drill time
+				this.set_bool("just hit dirt", false);	
+				this.Sync("just hit dirt", true);
+			}
+>>>>>>> parent of 71cbdbdd (Drills no longer work for neutrals, powerdrill now works with all class)
+
+			// delay drill
+			{
+				const bool facingleft = this.isFacingLeft();
+				Vec2f direction = Vec2f(1, 0).RotateBy(this.getAngleDegrees() + (facingleft ? 180.0f : 0.0f));
+				const f32 sign = (facingleft ? -1.0f : 1.0f);
+
+				const f32 attack_distance = 6.0f;
+				Vec2f attackVel = direction * attack_distance;
+
+				const f32 distance = 20.0f;
+
+				bool hitsomething = false;
+				bool hitblob = false;
+
+				CMap@ map = getMap();
+				if (map !is null)
 				{
-					bool hit_ground = false;
-					for (uint i = 0; i < hitInfos.length; i++)
+					HitInfo@[] hitInfos;
+					if (map.getHitInfosFromArc((this.getPosition() - attackVel), -attackVel.Angle(), 30, distance, this, true, @hitInfos))
 					{
-						f32 attack_dam = 1.0f;
-						HitInfo@ hi = hitInfos[i];
-						bool hit_constructed = false;
-						CBlob@ b = hi.blob;
-						if (b !is null) // blob
+						bool hit_ground = false;
+						for (uint i = 0; i < hitInfos.length; i++)
 						{
-							// blob ignore list, this stops the drill from overheating f a s t
-							// or blobs to increase damage to (for the future)
-							string name = b.getName();
-
-							if (b.hasTag("invincible"))
+							f32 attack_dam = 1.0f;
+							HitInfo@ hi = hitInfos[i];
+							bool hit_constructed = false;
+							CBlob@ b = hi.blob;
+							if (b !is null) // blob
 							{
-								continue; // carry on onto the next loop, dont waste time & heat on this
-							}
+								// blob ignore list, this stops the drill from overheating f a s t
+								// or blobs to increase damage to (for the future)
+								string name = b.getName();
 
-							//detect
-							const bool is_ground = b.hasTag("blocks sword") && !b.isAttached() && b.isCollidable();
-							if (is_ground)
-							{
-								hit_ground = true;
-							}
-
-							if (b.getTeamNum() == holder.getTeamNum() ||
-									hit_ground && !is_ground)
-							{
-								continue;
-							}
-
-
-							if (isServer())
-							{
-								if (int(heat) > heat_max * 0.7f) // are we at high heat? more damamge!
+								if (b.hasTag("invincible"))
 								{
-									attack_dam += 0.5f;
+									continue; // carry on onto the next loop, dont waste time & heat on this
 								}
 
-								if (b.hasTag("shielded") && blockAttack(b, attackVel, 0.0f)) // are they shielding? reduce damage!
-								{
-									attack_dam /= 2;
-								}
-
-								this.server_Hit(b, hi.hitpos, attackVel, attack_dam, Hitters::drill);
-
-								Material::fromBlob(holder, hi.blob, attack_dam, this);
-							}
-
-							hitsomething = true;
-							hitblob = true;
-						}
-						else // map
-						{
-							if (map.getSectorAtPosition(hi.hitpos, "no build") !is null)
-								continue;
-
-							TileType tile = hi.tile;
-
-							if (isServer())
-							{
-								for (uint i = 0; i < 2; i++)
-								{
-									//tile destroyed last hit
-
-									if (!map.isTileSolid(map.getTile(hi.tileOffset))){ break; }
-
-									map.server_DestroyTile(hi.hitpos, 1.0f, this);
-
-									if (map.isTileCastle(tile) || map.isTileWood(tile) || map.isTileGold(tile))
-									{
-										Material::fromTile(holder, tile, 1.0f);
-									}
-									else
-									{
-										Material::fromTile(holder, tile, 0.75f);
-									}
-
-									if (map.isTileGround(tile) || map.isTileStone(tile) || map.isTileThickStone(tile))
-									{
-										this.set_bool("just hit dirt", true);
-										this.Sync("just hit dirt", true);
-									}
-
-								}
-
-							}
-
-							if (isClient())
-							{
-								if (map.isTileBedrock(tile))
-								{
-									sprite.PlaySound("metal_stone.ogg");
-									sparks(hi.hitpos, attackVel.Angle(), 1.0f);
-								}
-							}
-
-							//only counts as hitting something if its not mats, so you can drill out veins quickly
-							if (!map.isTileStone(tile) || !map.isTileGold(tile))
-							{
-								hitsomething = true;
-								if (map.isTileCastle(tile) || map.isTileWood(tile))
-								{
-									hit_constructed = true;
-								}
-								else
+								//detect
+								const bool is_ground = b.hasTag("blocks sword") && !b.isAttached() && b.isCollidable();
+								if (is_ground)
 								{
 									hit_ground = true;
 								}
-							}
 
-						}
-						if (hitsomething)
-						{
-							if (heat < heat_max)
-							{
-								if (hit_constructed)
+								if (b.getTeamNum() == holder.getTeamNum() ||
+								        hit_ground && !is_ground)
 								{
-									heat += heat_add_constructed;
+									continue;
 								}
-								else if (hitblob)
+
+
+								if (isServer())
 								{
-									heat += heat_add_blob;
+									if (int(heat) > heat_max * 0.7f) // are we at high heat? more damamge!
+									{
+										attack_dam += 0.5f;
+									}
+
+<<<<<<< HEAD
+									if (map.isTileGround(tile) || map.isTileStone(tile) || map.isTileThickStone(tile))
+=======
+									if (b.hasTag("shielded") && blockAttack(b, attackVel, 0.0f)) // are they shielding? reduce damage!
+>>>>>>> parent of 71cbdbdd (Drills no longer work for neutrals, powerdrill now works with all class)
+									{
+										attack_dam /= 2;
+									}
+
+									this.server_Hit(b, hi.hitpos, attackVel, attack_dam, Hitters::drill);
+
+									Material::fromBlob(holder, hi.blob, attack_dam, this);
 								}
-								else
-								{
-									heat += heat_add;
-								}
+
+								hitsomething = true;
+								hitblob = true;
 							}
-							hitsomething = false;
-							hitblob = false;
+							else // map
+							{
+								if (map.getSectorAtPosition(hi.hitpos, "no build") !is null)
+									continue;
+
+								TileType tile = hi.tile;
+
+								if (isServer())
+								{
+									for (uint i = 0; i < 2; i++)
+									{
+										//tile destroyed last hit
+
+										if (!map.isTileSolid(map.getTile(hi.tileOffset))){ break; }
+
+										map.server_DestroyTile(hi.hitpos, 1.0f, this);
+
+										if (map.isTileCastle(tile) || map.isTileWood(tile) || map.isTileGold(tile))
+										{
+											Material::fromTile(holder, tile, 1.0f);
+										}
+										else
+										{
+											Material::fromTile(holder, tile, 0.75f);
+										}
+										
+										if (map.isTileGround(tile) || map.isTileStone(tile) || map.isTileThickStone(tile)) 
+										{
+											this.set_bool("just hit dirt", true);
+											this.Sync("just hit dirt", true);
+										}
+
+									}
+
+								}
+
+								if (isClient())
+								{
+									if (map.isTileBedrock(tile))
+									{
+										sprite.PlaySound("metal_stone.ogg");
+										sparks(hi.hitpos, attackVel.Angle(), 1.0f);
+									}
+								}
+
+								//only counts as hitting something if its not mats, so you can drill out veins quickly
+								if (!map.isTileStone(tile) || !map.isTileGold(tile))
+								{
+									hitsomething = true;
+									if (map.isTileCastle(tile) || map.isTileWood(tile))
+									{
+										hit_constructed = true;
+									}
+									else
+									{
+										hit_ground = true;
+									}
+								}
+
+							}
+							if (hitsomething)
+							{
+								if (heat < heat_max)
+								{
+									if (hit_constructed)
+									{
+										heat += heat_add_constructed;
+									}
+									else if (hitblob)
+									{
+										heat += heat_add_blob;
+									}
+									else
+									{
+										heat += heat_add;
+									}
+								}
+								hitsomething = false;
+								hitblob = false;
+							}
 						}
 					}
 				}
 			}
 		}
+<<<<<<< HEAD
+=======
+		else
+		{
+			if (isClient() &&
+			        holder.isMyPlayer())
+			{
+				if (holder.isKeyJustPressed(key_action1))
+				{
+					holder.getSprite().PlaySound("NoAmmo.ogg", 0.5);
+				}
+			}
+		}
+>>>>>>> parent of 71cbdbdd (Drills no longer work for neutrals, powerdrill now works with all class)
 		this.set_u8(heat_prop, heat);
 		this.Sync(heat_prop, true);
 	}

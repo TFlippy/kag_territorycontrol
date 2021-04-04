@@ -184,8 +184,12 @@ void onTick(CBlob@ this)
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder = point.getOccupied();
 
+<<<<<<< HEAD
 		if (holder is null)
 			return;
+=======
+		if (holder is null) return;
+>>>>>>> parent of 71cbdbdd (Drills no longer work for neutrals, powerdrill now works with all class)
 
 		AimAtMouse(this, holder); // aim at our mouse pos
 
