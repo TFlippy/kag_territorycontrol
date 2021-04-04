@@ -72,6 +72,7 @@ void onThisRemoveFromInventory(CBlob@ this, CBlob@ missile) //cruise missile com
 	if (missile.getName() == "cruisemissile")
 	{
 		this.setVelocity(missile.getVelocity() * 0.4f);
+		this.setAngleDegrees(missile.getAngleDegrees() + 180);
 		if (missile.getVelocity().Length() > 1.0f)
 		{
 			this.Tag("DoExplode");

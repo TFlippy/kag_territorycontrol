@@ -73,7 +73,6 @@ void DoExplosion(CBlob@ this)
 	f32 random = XORRandom(16);
 	f32 modifier = 1 + Maths::Log(this.getQuantity());
 	f32 angle = this.getAngleDegrees() - this.get_f32("bomb angle");
-	print(angle + "");
 
 	this.set_f32("map_damage_radius", (40.0f + random) * modifier);
 	this.set_f32("map_damage_ratio", 0.25f);
