@@ -14,7 +14,7 @@ delete_thing () {
 
 
 ## START
-echo "\# Clearing files"
+echo "# Clearing files"
 
 delete_thing "TerritoryControl_Autumn_Dev.zip"
 delete_thing "README.md"
