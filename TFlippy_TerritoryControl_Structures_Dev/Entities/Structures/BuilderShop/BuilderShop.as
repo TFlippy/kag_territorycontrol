@@ -100,12 +100,12 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
-	//{
-	//	ShopItem@ s = addShopItem(this, "Building for Dummies", "$artisancertificate$", "artisancertificate", "Simplified Builder manuscript for those dumb peasants.", true);
-	//	AddRequirement(s.requirements, "coin", "", "Coins", 200);
-	//	
-	//	s.spawnNothing = true;
-	//}
+	{
+		ShopItem@ s = addShopItem(this, "Building for Dummies", "$artisancertificate$", "artisancertificate", "Simplified Builder manuscript for those dumb peasants.", true);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
+		
+		s.spawnNothing = true;
+	}
 	{
 		ShopItem@ s = addShopItem(this, "Engineer's Tools", "$engineertools$", "engineertools", "Engineer's Tools for real engineers.", true);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
