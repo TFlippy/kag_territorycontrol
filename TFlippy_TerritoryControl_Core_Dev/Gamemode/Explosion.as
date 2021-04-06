@@ -65,7 +65,7 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 	//
 	// shouldExplode sits in BTL_Include.as
 	//
-	
+
 	CRules@ rules = getRules();
 	if (!shouldExplode(this, rules))
 	{
@@ -79,13 +79,14 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 
 	if(isClient())
 	{
+		if (!this.exists("explosion_volume")) this.set_f32("explosion_volume", 1.0f);
 		if (!this.exists("custom_explosion_sound"))
 		{
 			Sound::Play("Bomb.ogg", this.getPosition());
 		}
 		else if (this.get_string("custom_explosion_sound") != "")
 		{
-			Sound::Play(this.get_string("custom_explosion_sound"), this.getPosition());
+			Sound::Play(this.get_string("custom_explosion_sound"), this.getPosition(), this.get_f32("explosion_volume"));
 		}
 	}
 
@@ -137,11 +138,11 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 
 	const bool should_teamkill = this.exists("explosive_teamkill") && this.get_bool("explosive_teamkill");
 	const bool damage_dirt = this.hasTag("map_damage_dirt");
-	
+
 	const int r = (radius * (2.0 / 3.0));
-	
+
 	const bool hitmap = this.hasTag("use hitmap");
-	
+
 	if (hitter == Hitters::water)
 	{
 		int tilesr = (r / map.tilesize) * 0.5f;
@@ -192,7 +193,7 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 		m_pos.x = Maths::Floor(m_pos.x);
 		m_pos.y = Maths::Floor(m_pos.y);
 		m_pos = (m_pos * map.tilesize) + Vec2f(map.tilesize / 2, map.tilesize / 2);
-		
+
 		//explode outwards
 		for (int x_step = 0; x_step <= tile_rad; ++x_step)
 		{
@@ -380,7 +381,7 @@ void LinearExplosion(CBlob@ this, Vec2f _direction, f32 length, const f32 width,
 							if (!justhurt) damaged = true;
 
 							justhurt = justhurt || !(this.hasTag("map_damage_dirt") ? true : canExplosionDestroy(this, map, tpos, t));
-							
+
 							if (hitmap) this.server_HitMap(tpos, Vec2f(0, 0), justhurt ? 5.0f : 100.0f, Hitters::explosion);
 							else map.server_DestroyTile(tpos, justhurt ? 5.0f : 100.0f, this);
 						}
@@ -440,7 +441,6 @@ void LinearExplosion(CBlob@ this, Vec2f _direction, f32 length, const f32 width,
 	{
 		CBlob@ hit_blob = blobs[i];
 		if (hit_blob is null || hit_blob is this) { continue; }
-	
 
 		float rad = Maths::Max(tilesize, hit_blob.getRadius() * 0.25f);
 		Vec2f hit_blob_pos = hit_blob.getPosition();
@@ -566,9 +566,9 @@ bool HitBlob(CBlob@ this, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitt
 	{
 		makeSmallExplosionParticle(hit_blob_pos);
 	}
-	
+
 	// hit_blob.AddForce(bombforce * hit_blob.getRadius());
-	
+
 	return true;
 }
 
@@ -583,7 +583,7 @@ void WorldExplode(Vec2f position, f32 radius, f32 damage, const string explosion
 	f32 map_damage_ratio = 0.5f;
 	bool map_damage_raycast = true;
 	u8 hitter = Hitters::explosion;
-	
+
 	bool should_teamkill = true;
 
 	const int r = (radius * (2.0 / 3.0));
@@ -593,7 +593,7 @@ void WorldExplode(Vec2f position, f32 radius, f32 damage, const string explosion
 	makeLargeExplosionParticle(pos);
 
 	Sound::Play(explosionSound, pos);
-	
+
 	for (int i = 0; i < radius * 0.16; i++)
 	{
 		Vec2f partpos = pos + Vec2f(XORRandom(r * 2) - r, XORRandom(r * 2) - r);
@@ -669,13 +669,13 @@ void WorldExplode(Vec2f position, f32 radius, f32 damage, const string explosion
 								Vec2f tpos = m_pos + offset;
 
 								TileType tile = map.getTile(tpos).type;
-								
+
 								// if (!map.isTileBedrock(tile) && map.getTileNoise(map.getTileOffset(tpos)) != 241)
 								if (!map.isTileBedrock(tile))
 								{
 									if (dist >= rad_thresh || map.isTileGroundStuff(tile)) //  !canExplosionDestroy(this, map, tpos, tile)) // (this.hasTag("map_damage_dirt") ? true : !canExplosionDestroy(this, map, tpos, t))
 									{
-										map.server_DestroyTile(tpos, 1.0f);			
+										map.server_DestroyTile(tpos, 1.0f);
 									}
 									else
 									{
@@ -719,6 +719,6 @@ bool WorldHitBlob(Vec2f position, CBlob@ hit_blob, f32 radius, f32 damage, const
 	{
 		hit_blob.server_Hit(hit_blob, hit_blob_pos, Vec2f(), dam, hitter, true);
 	}
-	
+
 	return true;
 }
