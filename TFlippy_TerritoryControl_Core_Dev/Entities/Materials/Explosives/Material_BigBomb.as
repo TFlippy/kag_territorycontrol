@@ -12,7 +12,7 @@ void onInit(CBlob@ this)
 	this.getShape().SetRotationsAllowed(true);
 
 	this.set_string("custom_explosion_sound", "bigbomb_explosion.ogg");
-	this.set_f32("explosion_volume", 4.0f);
+	this.set_f32("explosion_volume", 3.0f);
 	this.set_bool("map_damage_raycast", true);
 	this.set_Vec2f("explosion_offset", Vec2f(0, 16));
 
