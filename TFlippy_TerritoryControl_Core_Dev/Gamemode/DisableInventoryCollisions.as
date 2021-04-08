@@ -26,6 +26,7 @@ void onThisRemoveFromInventory(CBlob@ this, CBlob@ inventoryBlob)
 	{
 		shape.server_SetActive(true);
 		shape.doTickScripts = true;
+		shape.SetGravityScale(1.0f);
 
 		ShapeConsts@ consts = shape.getConsts();
 		consts.collidable = true;
