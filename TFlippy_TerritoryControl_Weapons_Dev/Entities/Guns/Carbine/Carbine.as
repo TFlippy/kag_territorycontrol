@@ -28,6 +28,7 @@ void onInit(CBlob@ this)
 	
 	this.set_u8("gun_hitter", HittersTC::bullet_high_cal);
 	this.set_f32("scope_zoom", 0.10f);
+	this.getShape().SetOffset(Vec2f(-2, 3));
 }
 
 void onTick(CBlob@ this)

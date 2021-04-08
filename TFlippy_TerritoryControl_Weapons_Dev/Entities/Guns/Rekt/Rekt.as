@@ -26,6 +26,7 @@ void onInit(CBlob@ this)
 	);
 	
 	this.set_bool("gun_force_nonsolid", true);
+	this.getShape().SetOffset(Vec2f(0, 3));
 }
 
 void onTick(CBlob@ this)

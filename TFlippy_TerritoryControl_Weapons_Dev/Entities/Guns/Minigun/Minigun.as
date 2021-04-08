@@ -24,6 +24,8 @@ void onInit(CBlob@ this)
 		0,					//Delay for the delayed sound, in ticks
 		Vec2f(-12.0f, 3.0f)	//Visual offset for raycast bullets
 	);
+
+	this.getShape().SetOffset(Vec2f(0, 4));
 }
 
 void onTick(CBlob@ this)

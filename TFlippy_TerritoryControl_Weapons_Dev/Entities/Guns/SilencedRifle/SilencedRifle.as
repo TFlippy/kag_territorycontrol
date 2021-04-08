@@ -28,6 +28,7 @@ void onInit(CBlob@ this)
 	
 	this.set_string("gun_tracerName", "SilencedRifle_Tracer.png");
 	this.set_u8("gun_hitter", HittersTC::bullet_high_cal);
+	this.getShape().SetOffset(Vec2f(-2, 3));
 	
 	this.set_f32("scope_zoom", 0.20f);
 }

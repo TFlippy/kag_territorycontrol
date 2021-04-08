@@ -27,6 +27,7 @@ void onInit(CBlob@ this)
 	);
 	
 	this.set_u8("gun_hitter", HittersTC::bullet_low_cal);
+	this.getShape().SetOffset(Vec2f(-2, 3));
 }
 
 void onTick(CBlob@ this)

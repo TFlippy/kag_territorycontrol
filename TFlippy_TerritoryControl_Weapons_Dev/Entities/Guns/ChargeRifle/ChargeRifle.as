@@ -28,6 +28,7 @@ void onInit(CBlob@ this)
 	
 	this.set_string("gun_tracerName", "ChargeLance_Tracer.png");
 	this.set_u8("gun_hitter", HittersTC::plasma);
+	this.getShape().SetOffset(Vec2f(0, 3));
 }
 
 void onTick(CBlob@ this)

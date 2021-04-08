@@ -43,6 +43,7 @@ void onInit(CBlob@ this)
 	}
 	
 	this.set_f32("scope_zoom", 0.35f);
+	this.getShape().SetOffset(Vec2f(3, 0));
 }
 
 void onTick(CBlob@ this)

@@ -46,6 +46,7 @@ void onInit(CBlob@ this)
 	}
 	
 	this.set_f32("scope_zoom", 0.35f);
+	this.getShape().SetOffset(Vec2f(3, -1));
 }
 
 const f32 radius = 24.00f;
