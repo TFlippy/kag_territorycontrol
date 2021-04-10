@@ -5,7 +5,7 @@ void onInit(CBlob@ this)
 {
 	this.addCommandID("deploy_chute");
 
-	if(this.get_string("reload_script") != "parachutepack")
+	if (this.get_string("reload_script") != "parachutepack")
 	{
 		UpdateScript(this);
 	}
@@ -20,14 +20,13 @@ void UpdateScript(CBlob@ this)
 		pack.SetRelativeZ(-2);
 		pack.SetOffset(Vec2f(0, 0));
 
-		if(this.getSprite().isFacingLeft())
+		if (this.getSprite().isFacingLeft())
 		{
 			pack.SetFacingLeft(true);
 		}
 	}
 
-	int teamnum = this.getTeamNum();
-	CSpriteLayer@ parachute = this.getSprite().addSpriteLayer("parachute", "parachutepack", 32, 32, teamnum, 0);
+	CSpriteLayer@ parachute = this.getSprite().addSpriteLayer("parachute", "parachutepack", 32, 32);
 	if (parachute !is null)
 	{
 		Animation@ anim = parachute.addAnimation("default", 0, true);
@@ -65,7 +64,7 @@ void onTick(CBlob@ this)
 	bool candeploy = (this.isOnGround() || this.isInWater() || this.isAttached() || this.isOnLadder());
 	bool deployavailable = getGameTime() >= this.get_u32("next use");
 
-	if(this.get_string("reload_script") == "parachutepack")
+	if (this.get_string("reload_script") == "parachutepack")
 	{
 		UpdateScript(this);
 		this.set_string("reload_script", "");
@@ -110,6 +109,9 @@ void onTick(CBlob@ this)
 		if (candeploy)
 		{
 			HideParachute(this);
+
+			//chicken parachute is temporary
+			if (this.hasTag("chicken")) this.RemoveScript("parachutepack_effect.as");
 		}
 	}
 }
