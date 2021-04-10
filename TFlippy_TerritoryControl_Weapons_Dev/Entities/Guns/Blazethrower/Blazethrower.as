@@ -20,7 +20,7 @@ void onInit(CBlob@ this)
 		SoundInfo("FlamethrowerReload",1,1.0f,0.65f),	//Sound to play when reloading
 		SoundInfo(),									//Sound to play some time after firing
 		0,					//Delay for the delayed sound, in ticks
-		Vec2f(0.0f,-4.0f)	//Offset for projectiles
+		Vec2f(8.0f,-4.0f)	//Offset for projectiles
 	);
 }
 void onTick(CBlob@ this)

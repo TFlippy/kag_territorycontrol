@@ -21,7 +21,7 @@ void onInit(CBlob@ this)
 		SoundInfo("GrenadeLauncherCycle",1,1.0f,1.00f),//Sound to play when reloading
 		SoundInfo("",1,1.0f,0.0f),	//Sound to play some time after firing
 		25,					//Delay for the delayed sound, in ticks
-		Vec2f(0.0f,-5.0f)	//Offset for projectiles
+		Vec2f(0.0f,-2.0f)	//Offset for projectiles
 	);
 }
 void onTick(CBlob@ this)

@@ -22,6 +22,7 @@ void onInit(CBlob@ this)
 		25,					//Delay for the delayed sound, in ticks
 		Vec2f(8.0f,-3.0f)	//Offset for projectiles
 	);
+	this.getShape().SetOffset(Vec2f(-2, -3));
 }
 void onTick(CBlob@ this)
 {
