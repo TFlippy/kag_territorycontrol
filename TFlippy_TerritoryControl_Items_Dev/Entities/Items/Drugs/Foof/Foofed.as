@@ -65,7 +65,7 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ h
 		{
 			Vec2f pos = worldPoint + getRandomVelocity(0, XORRandom(Maths::Min(24.00f * true_level, 48)), 360);	
 			
-			if (client && XORRandom(100) < 50)
+			if (client && XORRandom(100) < 50 / Maths::Sqrt(count / 5 + 1))
 			{
 				MakeDustParticle(pos, "dust2.png");
 			}
@@ -80,7 +80,7 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ h
 		{
 			f32 magnitude = damage * level;
 			this.getSprite().PlaySound("FallBig" + (XORRandom(5) + 1), level, 1.00f);
-			ShakeScreen(magnitude * 10.0f, magnitude * 8.0f, this.getPosition());
+			ShakeScreen(magnitude * 10.0f, Maths::Min(magnitude * 8.0f, 30), this.getPosition());
 		}
 		
 		if (hitBlob !is null)
