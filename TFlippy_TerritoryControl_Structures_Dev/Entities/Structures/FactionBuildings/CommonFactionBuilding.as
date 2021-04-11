@@ -239,7 +239,6 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 				bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
 				bool is_premium = true; //ply.getSupportTier() > 0; // TODO
 
-				print("" + ply.getSupportTier());
 				//print("" + ply.getSupportTier());
 
 				bool can_join = recruitment_enabled && upkeep_gud && is_premium;
@@ -325,6 +324,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 		{
 			int fortTeamNum = forts[i].getTeamNum();
 			if (fortTeamNum == this.getTeamNum()) teamForts++;
+		}
 		const bool canDestroy = teamForts != 1;
 
 		{
