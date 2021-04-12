@@ -4,7 +4,7 @@ void onInit(CBlob@ this)
 {
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
-	
+
 	this.Tag("builder always hit");
 	this.Tag("change team on fort capture");
 	this.Tag("oil_tank");
@@ -12,5 +12,5 @@ void onInit(CBlob@ this)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	return ((this.getTeamNum() > 100 ? true : forBlob.getTeamNum() == this.getTeamNum()) && forBlob.isOverlapping(this));
+	return ((this.getTeamNum() > 100 ? true : forBlob.getTeamNum() == this.getTeamNum()));
 }
