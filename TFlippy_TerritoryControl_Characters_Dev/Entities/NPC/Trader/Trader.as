@@ -121,7 +121,7 @@ void onInit(CBlob@ this)
 	Random@ rand = Random(this.getNetworkID());
 	string name = firstnames[rand.NextRanged(firstnames.length)] + " " + surnames[rand.NextRanged(surnames.length)];
 	this.set_string("trader name", name);
-	
+
 	//no spinning
 	this.getShape().SetRotationsAllowed(false);
 	this.set_f32("gib health", -2.0f);
@@ -135,8 +135,10 @@ void onInit(CBlob@ this)
 
 	this.set_u32("nextTalk", getGameTime() + XORRandom(60));
 	this.set_u32("nextFood", 0);
-	
+
 	this.addCommandID("traderChat");
+
+	addTokens(this); //colored shop icons
 
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
 	this.set_Vec2f("shop menu size", Vec2f(4, 4));
@@ -144,9 +146,9 @@ void onInit(CBlob@ this)
 	this.setInventoryName(name + " the Trader");
 	this.set_u8("shop icon", 25);
 	this.getSprite().addSpriteLayer("isOnScreen", "NoTexture.png", 1, 1);
-	
+
 	this.set_u32("lastDanger", 0);
-	
+
 	{
 		ShopItem@ s = addShopItem(this, "Buy Gold Ingot (1)", "$mat_goldingot$", "mat_goldingot-1", "Buy 1 Gold Ingot for 100 coins.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
@@ -157,7 +159,7 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
 		s.spawnNothing = true;
 	}
-	
+
 	// Resource Trader
 	if (rand.NextRanged(100) < 50)
 	{
@@ -182,7 +184,7 @@ void onInit(CBlob@ this)
 			s.spawnNothing = true;
 		}
 	}
-	
+
 	// Misc Trader
 	if (rand.NextRanged(100) < 50)
 	{
@@ -212,7 +214,7 @@ void onInit(CBlob@ this)
 			s.spawnNothing = true;
 		}
 	}
-		
+
 	// Nature Trader
 	if (rand.NextRanged(100) < 50)
 	{
@@ -237,7 +239,7 @@ void onInit(CBlob@ this)
 			s.spawnNothing = true;
 		}
 	}
-	
+
 	// Arms dealer
 	if (rand.NextRanged(100) < 30)
 	{
@@ -257,13 +259,29 @@ void onInit(CBlob@ this)
 			s.spawnNothing = true;
 		}
 	}
-	
+
 	if (isServer() && XORRandom(100) < 25)
 	{
 		server_CreateBlob("kitten", this.getTeamNum(), this.getPosition());
 	}
-	
+
 	//EnsureWantedList();
+}
+
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	// reset shop colors
+	addTokens(this);
+}
+
+void addTokens(CBlob@ this)
+{
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+
+	AddIconToken("$icon_lighter$", "Lighter.png", Vec2f(8, 8), 0, teamnum);
+	AddIconToken("$icon_firework$", "Firework.png", Vec2f(16, 24), 0, teamnum);
+	AddIconToken("$icon_jetpack$", "Jetpack.png", Vec2f(16, 16), 0, teamnum);
 }
 
 void onTick(CBlob@ this)
@@ -272,24 +290,24 @@ void onTick(CBlob@ this)
 	{
 		if (this.getHealth() <= 0)
 		{
-			this.Tag("dead");			
+			this.Tag("dead");
 			return;
 		}
-	
+
 		if (getGameTime() >= this.get_u32("nextTalk"))
 		{
 			this.set_u32("nextTalk", getGameTime() + (30 * 10) + XORRandom(30 * 20));
-			
+
 			u32 lastDanger = this.get_u32("lastDanger");
 			u16 dangerBlobNetID = this.get_u16("danger blob");
-			
+
 			bool danger = dangerBlobNetID > 0 && getGameTime() < (lastDanger + (30 * 30));
-			
+
 			string text = "";
 			if (danger)
 			{
 				// this.set_u32("lastDanger", getGameTime());
-				
+
 				text = textsDanger[XORRandom(textsDanger.size())];
 				this.getSprite().PlaySound(soundsDanger[XORRandom(soundsDanger.size())]);
 			}
@@ -325,48 +343,48 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	else if (cmd == this.getCommandID("shop made item"))
 	{
 		this.getSprite().PlaySound("ChaChing.ogg");
-		
+
 		u16 caller, item;
 		if (!params.saferead_netid(caller) || !params.saferead_netid(item)) return;
-		
+
 		string name = params.read_string();
 		CBlob@ callerBlob = getBlobByNetworkID(caller);
-		
+
 		if (callerBlob is null) return;
-		
+
 		if (isServer())
 		{
 			string[] spl = name.split("-");
-			
+
 			if (spl[0] == "coin")
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;
-				
+
 				callerPlayer.server_setCoins(callerPlayer.getCoins() +  parseInt(spl[1]));
 			}
 			else if(spl[0] == "seed")
-            {
-                CBlob@ blob = server_MakeSeed(this.getPosition(),XORRandom(2)==1 ? "tree_pine" : "tree_bushy");
-                
-                if (blob is null) return;
-               
-                if (!blob.canBePutInInventory(callerBlob))
-                {
-                    callerBlob.server_Pickup(blob);
-                }
-                else if (callerBlob.getInventory() !is null && !callerBlob.getInventory().isFull())
-                {
-                    callerBlob.server_PutInInventory(blob);
-                }
-            }
+			{
+				CBlob@ blob = server_MakeSeed(this.getPosition(),XORRandom(2)==1 ? "tree_pine" : "tree_bushy");
+
+				if (blob is null) return;
+
+				if (!blob.canBePutInInventory(callerBlob))
+				{
+					callerBlob.server_Pickup(blob);
+				}
+				else if (callerBlob.getInventory() !is null && !callerBlob.getInventory().isFull())
+				{
+					callerBlob.server_PutInInventory(blob);
+				}
+			}
 			else if (name.findFirst("mat_") != -1)
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;
-				
+
 				CBlob@ mat = server_CreateBlob(spl[0]);
-							
+
 				if (mat !is null)
 				{
 					mat.Tag("do not set materials");
@@ -452,7 +470,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	this.set_u32("lastDanger", getGameTime());
 	this.set_u16("danger blob", hitterBlob.getNetworkID());
 	this.set_u32("nextTalk", this.get_u32("nextTalk") - (30 * damage * 13));
-	
+
 	return damage;
 }
 
@@ -500,7 +518,7 @@ void onTick(CSprite@ this)
 	bool ended = this.isAnimationEnded();
 
 	bool danger = getGameTime() < (blob.get_u32("lastDanger") + (30 * 30));
-	
+
 	if ((blob.isKeyPressed(key_left) || blob.isKeyPressed(key_right)) || (blob.isOnLadder() && (blob.isKeyPressed(key_up) || blob.isKeyPressed(key_down))))
 	{
 		if (danger)

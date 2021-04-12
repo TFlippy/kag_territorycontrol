@@ -27,6 +27,8 @@ void onInit(CBlob@ this)
 
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
 
+	addTokens(this); //colored shop icons
+
 	this.set_Vec2f("shop offset", Vec2f(0,0));
 	this.set_Vec2f("shop menu size", Vec2f(6, 7));
 	this.set_string("shop description", "Mechanist's Workshop");
@@ -53,7 +55,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Saw", "$saw$", "saw", descriptions[12], false);
+		ShopItem@ s = addShopItem(this, "Saw", "$icon_saw$", "saw", descriptions[12], false);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
 
@@ -200,10 +202,6 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 20);
 		AddRequirement(s.requirements, "coin", "", "Coins", 400);
 
-		s.customButton = true;
-		s.buttonwidth = 1;
-		s.buttonheight = 1;
-
 		s.spawnNothing = true;
 	}
 	{
@@ -283,6 +281,26 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
+}
+
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	// reset shop colors
+	addTokens(this);
+}
+
+void addTokens(CBlob@ this)
+{
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+
+	AddIconToken("$icon_saw$", "VehicleIcons.png", Vec2f(32, 32), 3, teamnum);
+	AddIconToken("$icon_hazmat$", "HazmatItem.png", Vec2f(16, 10), 0, teamnum);
+	AddIconToken("$icon_jetpack$", "Jetpack.png", Vec2f(16, 16), 0, teamnum);
+	AddIconToken("$icon_scubagear$", "ScubaGear.png", Vec2f(16, 16), 0, teamnum);
+	AddIconToken("$icon_automat$", "Automat.png", Vec2f(16, 16), 0, teamnum);
+	AddIconToken("$icon_flippers$", "Flippers.png", Vec2f(16, 16), 0, teamnum);
+	AddIconToken("$icon_backpack$", "Backpack.png", Vec2f(16, 16), 0, teamnum);
 }
 
 void onTick(CBlob@ this)

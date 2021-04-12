@@ -172,6 +172,8 @@ void onInit(CBlob@ this)
 
 	this.addCommandID("traderChat");
 
+	addTokens(this); //colored shop icons
+
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
 	this.set_Vec2f("shop menu size", Vec2f(6, 4));
 	this.set_string("shop description", name + " the Hobo");
@@ -432,6 +434,24 @@ void onInit(CBlob@ this)
 
 	this.set_f32("voice pitch", 0.75f);
 	this.getSprite().PlaySound("drunk_fx4");
+}
+
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	// reset shop colors
+	addTokens(this);
+}
+
+void addTokens(CBlob@ this)
+{
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+
+	AddIconToken("$icon_fireboom$", "FireBoom.png", Vec2f(32, 32), 0, teamnum);
+	AddIconToken("$icon_firejob$", "Firejob.png", Vec2f(16, 24), 0, teamnum);
+	AddIconToken("$icon_firework$", "Firework.png", Vec2f(16, 24), 0, teamnum);
+	AddIconToken("$icon_trader$", "TraderCoot.png", Vec2f(16, 16), 0, teamnum);
+	AddIconToken("$icon_sawrocket$", "Material_SawRocket.png", Vec2f(8, 24), 0, teamnum);
 }
 
 int getRandomCost(Random@ random, int min, int max, int rounding = 10)
