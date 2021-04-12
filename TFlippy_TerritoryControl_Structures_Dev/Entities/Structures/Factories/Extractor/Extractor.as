@@ -31,6 +31,7 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().mapCollisions = false;
 	this.getCurrentScript().tickFrequency = 60;
 
+	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
 }
 
@@ -62,10 +63,19 @@ void onTick(CBlob@ this)
 	}
 }
 
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return forBlob.isOverlapping(this) && (forBlob.getCarriedBlob() is null || forBlob.getCarriedBlob().getName() == "gyromat");
+	//return (forBlob.isOverlapping(this));
+}
 
 void onAddToInventory( CBlob@ this, CBlob@ blob )
 {
-	if(blob.getName() != "gyromat") return;
+	if(blob.getName() != "gyromat")
+	{
+		this.server_PutOutInventory(blob);
+		return;
+	}
 
 	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
