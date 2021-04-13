@@ -27,8 +27,10 @@ void onInit(CBlob@ this)
 
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
 
-	this.inventoryButtonPos = Vec2f(-8, -4);
+	this.inventoryButtonPos = Vec2f(-8, 0);
 	this.addCommandID("sv_store");
+
+	addTokens(this); //colored shop icons
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
 	this.set_Vec2f("shop menu size", Vec2f(3, 4));
@@ -36,14 +38,10 @@ void onInit(CBlob@ this)
 	this.set_u8("shop icon", 15);
 
 	{
-		ShopItem@ s = addShopItem(this, "Royal Guard Armor", "$royalarmor$", "royalarmor", "A heavy armor for that offers high damage resistance at cost of low mobility.");
+		ShopItem@ s = addShopItem(this, "Royal Guard Armor", "$icon_royalarmor$", "royalarmor", "A heavy armor that offers high damage resistance at cost of low mobility. Has a shield which is tough enough to block bullets.");
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 8);
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 2);
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
-
-		s.customButton = true;
-		s.buttonwidth = 1;
-		s.buttonheight = 1;
 
 		s.spawnNothing = true;
 	}
@@ -51,10 +49,6 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Truncheon", "$icon_nightstick$", "nightstick", "A traditional tool used by seal clubbing clubs.");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100);
 		AddRequirement(s.requirements, "coin", "", "Coins", 75);
-
-		s.customButton = true;
-		s.buttonwidth = 1;
-		s.buttonheight = 1;
 
 		s.spawnNothing = true;
 	}
@@ -65,17 +59,6 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	/*{
-		ShopItem@ s = addShopItem(this, "Slavemaster's Kit", "$icon_shackles$", "shackles", "A kit containing shackles, shiny iron ball, elegant striped pants, noisy chains and a slice of cheese.");
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
-
-		s.customButton = true;
-		s.buttonwidth = 1;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}*/
 	{
 		ShopItem@ s = addShopItem(this, "Water Bomb (1)", "$waterbomb$", "mat_waterbombs-1", descriptions[52], true);
 		AddRequirement(s.requirements, "coin", "", "Coins", 30);
@@ -114,6 +97,13 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
+	/*{
+		ShopItem@ s = addShopItem(this, "Slavemaster's Kit", "$icon_shackles$", "shackles", "A kit containing shackles, shiny iron ball, elegant striped pants, noisy chains and a slice of cheese.");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+
+		s.spawnNothing = true;
+	}*/
 	{
 		ShopItem@ s = addShopItem(this, "Rendezook", "$icon_rendezook$", "rendezook", "A replica of a rocket launcher found behind the UPF shop in a trash can.\nDoes not seem to hurt anybody.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 350);
@@ -124,6 +114,21 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
+}
+
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	// reset shop colors
+	addTokens(this);
+}
+
+void addTokens(CBlob@ this)
+{
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+
+	AddIconToken("$icon_parachute$", "Parachutepack.png", Vec2f(16, 16), 0, teamnum);
+	AddIconToken("$icon_royalarmor$", "RoyalArmor.png", Vec2f(16, 8), 0, teamnum);
 }
 
 void onTick(CBlob@ this)
@@ -175,7 +180,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 				if (item.hasTag("ammo") || item.hasTag("isWeapon"))
 				{
 					params.write_u16(caller.getNetworkID());
-					CButton@ buttonOwner = caller.CreateGenericButton(28, Vec2f(-4, 4), this, this.getCommandID("sv_store"), "Store", params);
+					CButton@ buttonOwner = caller.CreateGenericButton(28, Vec2f(-10, 0), this, this.getCommandID("sv_store"), "Store", params);
 					break;
 				}
 			}
