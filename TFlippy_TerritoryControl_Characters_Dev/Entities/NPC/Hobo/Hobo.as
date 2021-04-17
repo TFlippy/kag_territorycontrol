@@ -571,6 +571,8 @@ void onTick(CBlob@ this)
 void onSetPlayer(CBlob@ this, CPlayer@ player)
 {
 	this.set_bool("shop available", false);
+
+	if (player !is null) player.SetScoreboardVars("ScoreboardIcons.png", 20, Vec2f(16, 16));
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

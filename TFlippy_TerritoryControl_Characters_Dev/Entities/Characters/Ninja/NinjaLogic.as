@@ -61,14 +61,14 @@ void onInit(CBlob@ this)
 	ninja_actorlimit_setup(this);
 	this.getShape().SetRotationsAllowed(false);
 	this.getShape().getConsts().net_threshold_multiplier = 0.5f;
-	
+
 	this.Tag("player");
 	this.Tag("flesh");
 	this.Tag("human");
-	
+
 	this.set_s16("jumps", 2);
 	this.set_s16("jump_time", 0);
-	
+
 	// this.push("names to activate", "keg");
 
 	//centered on inventory
@@ -76,7 +76,7 @@ void onInit(CBlob@ this)
 
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	this.getCurrentScript().removeIfTag = "dead";
-	
+
 	this.getSprite().PlaySound("yooooooooooo.ogg", 0.4f, 1.0f);
 }
 
@@ -84,10 +84,10 @@ void onSetPlayer(CBlob@ this, CPlayer@ player)
 {
 	if (player !is null)
 	{
-		player.SetScoreboardVars("ScoreboardIconsMod.png", 8, Vec2f(16, 16));
-		
+		player.SetScoreboardVars("ScoreboardIcons.png", 6, Vec2f(16, 16));
+
 		this.setInventoryName("The Relentless X");
-		
+
 		// if (isServer()) player.server_setCharacterName("The Relentless X");
 	}
 }
@@ -96,8 +96,6 @@ void onSetPlayer(CBlob@ this, CPlayer@ player)
 void onTick(CBlob@ this)
 {
 	u8 knocked = getKnocked(this);
-
-
 
 	if (this.isInInventory())
 		return;
@@ -109,7 +107,7 @@ void onTick(CBlob@ this)
 	{
 		return;
 	}
-	
+
 	moveVars.jumpFactor *= 1.5f;
 	moveVars.walkFactor *= 1.2f;
 
@@ -237,18 +235,18 @@ void onTick(CBlob@ this)
 		if (this.get_bool("can_leap") && getGameTime() > this.get_u32("leap timer"))
 		{
 			this.AddForce(Vec2f(vel.x * -5.0, 0.0f));   //horizontal slowing force (prevents SANICS)
-			
+
 			if (this.isKeyPressed(key_action2))
 			{
 				Vec2f velocity = this.getAimPos() - this.getPosition();
 				velocity.Normalize();
 				// velocity.y *= 0.5f;
-				
+
 				this.setVelocity(velocity * 8);
 				// this.getSprite().PlaySound("Ninja_Attack" + XORRandom(4), 0.75f, 1.00f);
 				this.getSprite().PlaySound("ArgLong");
 				this.set_u32("leap timer", getGameTime() + 40);
-				
+
 				this.set_bool("can_leap", false);
 			}
 		}
@@ -277,7 +275,7 @@ void onTick(CBlob@ this)
 	{
 		this.setAngleDegrees(0);
 	}
-	
+
 	if (myplayer)
 	{
 		// help
@@ -286,15 +284,15 @@ void onTick(CBlob@ this)
 		{
 			SetHelp(this, "help self action", "ninja", "$Slash$ Slash!    $KEY_HOLD$$LMB$", "", 13);
 		}
-		
+
 		if (this.isKeyJustPressed(key_action3))
 		{
 			client_SendThrowOrActivateCommand(this);
 		}
 	}
-	
+
 	if (this.isOnGround()) this.set_bool("can_leap", true);
-	
+
 	// if(this.get_s16("jumps") > 0)
 	// if(!this.hasTag("cant_jump"))
 	// if(knocked <= 0 && (!inair || this.isOnWall()))
@@ -313,7 +311,7 @@ void onTick(CBlob@ this)
 			// this.set_s16("jumps",2);
 		// }
 	// }
-	
+
 	if(knocked > 0 || inair && !this.isOnWall())this.Untag("cant_jump");
 
 	if (!swordState && isServer())
@@ -337,7 +335,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	f32 dmg = damage;
 	const bool miss = int(worldPoint.x * 100 % (worldPoint.y * 100 + (worldPoint.x % 4)) + worldPoint.y) % 3 != 0; // Crappy fake random, but has to be synchronized between client and server
 	// print("" +  int(worldPoint.x % (worldPoint.y + (worldPoint.x % 4)) * worldPoint.y));
-	
+
 	switch (customData)
 	{
 		case HittersTC::bullet_high_cal:
@@ -348,12 +346,12 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				this.getSprite().PlaySound("BulletDodge" + XORRandom(3), 0.75f, 1.00f);
 			}
 			break;
-			
+
 		case Hitters::fall:
 			dmg *= 0.25f;
 			break;
 	}
-	
+
 	return dmg;
 }
 
@@ -543,13 +541,13 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	Vec2f dir = this.getOldVelocity();
 	f32 vellen = dir.Length();
 	dir.Normalize();
-	
+
 	if (vellen < 1.5f || getGameTime() > this.get_u32("leap timer")) return;
-	
+
 	f32 dmg = Maths::Clamp(vellen, 0, 6) / 3.0f;
-	
+
 	blob.setVelocity(dir * vellen * 0.8f);
-	
+
 	if (isClient()) this.getSprite().PlaySound("Ninja_Attack" + XORRandom(4), 0.75f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 	if (isServer()) 
 	{
