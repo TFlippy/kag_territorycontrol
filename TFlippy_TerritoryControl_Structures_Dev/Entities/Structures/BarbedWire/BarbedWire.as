@@ -6,7 +6,7 @@ void onInit(CBlob@ this)
 	CShape@ shape = this.getShape();
 	shape.SetRotationsAllowed(true);
 	shape.getConsts().mapCollisions = false;
-	shape.SetStatic(true);
+	//shape.SetStatic(true);
 	this.getSprite().getConsts().accurateLighting = false;  
 	this.getSprite().RotateBy(XORRandom(4) * 90, Vec2f(0, 0));
 	this.getSprite().SetZ(-50); //background
@@ -35,7 +35,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	return damage;
 }
 
-bool canBePickedUp( CBlob@ this, CBlob@ byBlob )
+bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	return false;
 }
