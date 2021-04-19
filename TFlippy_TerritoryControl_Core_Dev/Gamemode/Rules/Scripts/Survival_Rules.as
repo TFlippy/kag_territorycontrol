@@ -335,17 +335,23 @@ void onTick(CRules@ this)
 				{
 					CBlob@[] bases;
 					getBlobsByTag("faction_base", @bases);
-					getBlobsByTag("respawn", @bases);
+					//getBlobsByTag("respawn", @bases);
 					CBlob@[] spawns;
+					int teamBases = 0;
 					bool has_bases = false;
+
+					for (uint i = 0; i < bases.length; i++)
+					{
+						if (bases[i].getTeamNum() == team) teamBases++;
+					}
+
 					for (uint i = 0; i < bases.length; i++)
 					{
 						CBlob@ base = bases[i];
 						if (base !is null && base.getTeamNum() == team)
 						{
 							has_bases = true;
-							if (!base.hasTag("reinforcements allowed")) continue;
-							spawns.push_back(bases[i]);
+							if (base.hasTag("reinforcements allowed") || teamBases == 1) spawns.push_back(base);
 						}
 					}
 
@@ -371,15 +377,10 @@ void onTick(CRules@ this)
 							}
 						}
 
-						string blobType=player.get_string("classAtDeath");
-						if(blobType=="royalguard")
-						{
-							blobType="knight";
-						}
-						if(blobType!="builder" && blobType!="knight" && blobType!="archer" && blobType!="sapper")
-						{
-							blobType="builder";
-						}
+						string blobType = player.get_string("classAtDeath");
+						if (blobType == "builder" || blobType == "engineer" || blobType == "hazmat" || blobType == "slave" || blobType == "peasant") blobType = "builder";
+						else if (blobType == "archer") blobType = "archer";
+						else blobType = "knight";
 
 						CBlob@ new_blob = server_CreateBlob(blobType);
 
@@ -507,7 +508,6 @@ void onInit(CRules@ this)
 	CSecurity@ sec = getSecurity();
 	sec.unBan("TFlippy");
 
-
 	// Print out a message to anybody running TC server/localhost
 	if (isServer() && !isClient())
 	{
@@ -598,24 +598,28 @@ bool doChickenSpawn(CPlayer@ player)
 	getBlobsByName("chickenconvent", @ruins);
 	getBlobsByName("chickencoop", @ruins);
 
-	if (ruins.length > 0)
+	CBlob@[] bases;
+	getBlobsByName("fortress", @bases);
+	getBlobsByName("stronghold", @bases);
+	getBlobsByName("citadel", @bases);
+	getBlobsByName("convent", @bases);
+
+	if (ruins.length > 0 || bases.length > 0)
 	{
 		string blobType;
 		int minutes = getGameTime() / (60*30);
 		int rand = XORRandom(100) - minutes;
+		if (rand < 5) rand = 4;
+
 		if (rand < 5)
 		{
-			rand = 4;
+			blobType = "commanderchicken";
 		}
-		if (rand < 5)
+		else if (rand < 15)
 		{
 			blobType = "heavychicken";
 		}
-		else if (rand < 25)
-		{
-			blobType = "commmanderchicken";
-		}
-		else if (rand < 50)
+		else if (rand < 45)
 		{
 			blobType = "soldierchicken";
 		}
@@ -628,13 +632,30 @@ bool doChickenSpawn(CPlayer@ player)
 
 		if (new_blob !is null)
 		{
-			CBlob@ r = ruins[XORRandom(ruins.length)];
+			if (ruins.length > 0)
+			{
+				CBlob@ r = ruins[XORRandom(ruins.length)];
 
-			new_blob.setPosition(r.getPosition());
-			new_blob.server_setTeamNum(250);
-			new_blob.server_SetPlayer(player);
+				new_blob.setPosition(r.getPosition());
+				new_blob.server_setTeamNum(250);
+				new_blob.server_SetPlayer(player);
 
-			return true;
+				return true;
+			}
+			else
+			{
+				//parachute chickens!
+				//bots will not parachute correctly on server, only localhost
+				CBlob@ b = bases[XORRandom(bases.length)];
+
+				new_blob.setPosition(Vec2f(b.getPosition().x + (200 - XORRandom(400)), 0.0f));
+				new_blob.server_setTeamNum(250);
+				new_blob.server_SetPlayer(player);
+				new_blob.Tag("parachute");
+				if (isClient()) new_blob.AddScript("parachutepack_effect.as"); //for localhost
+
+				return true;
+			}
 		}
 		else return false;
 	}
@@ -669,9 +690,6 @@ void Reset(CRules@ this)
 
 	server_CreateBlob("tc_soundscapes");
 }
-
-
-
 
 /*
 void SpawnEventFireworks()

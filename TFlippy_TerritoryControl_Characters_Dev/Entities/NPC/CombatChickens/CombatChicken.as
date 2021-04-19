@@ -32,12 +32,14 @@ void onInit(CBlob@ this)
 {
 	Random@ rand = Random(this.getNetworkID());
 	string name = firstnames[rand.NextRanged(firstnames.length)] + " " + surnames[rand.NextRanged(surnames.length)];
-	
+
 	this.set_f32("gib health", -1.50f);
 	if (!this.exists("voice pitch")) this.set_f32("voice pitch", 1.50f);
 	this.set_string("chicken name", name);
 	this.setInventoryName(name);
-	
+
+	if (this.hasTag("parachute")) this.AddScript("parachutepack_effect.as");
+
 	this.Tag("dangerous");
 	this.Tag("chicken");
 }

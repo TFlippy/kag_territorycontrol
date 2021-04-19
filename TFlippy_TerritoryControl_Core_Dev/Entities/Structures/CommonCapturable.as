@@ -17,16 +17,16 @@ void onInit(CBlob@ this)
 {
 	this.addCommandID("convert");
 	this.getCurrentScript().tickFrequency = 30;
-	
+
 	// f32 capture_modifier = this.exists("capture_speed_modifier") ? this.get_f32("capture_speed_modifier") : 1.00f;
 	// u32 capture_seconds = this.getInitialHealth() * capture_modifier;
-	
+
 	this.set_s16(counter_prop, getCaptureSeconds(this));
 	this.set_s16(friendly_prop, 0);
 	this.set_s16(enemy_prop, 0);
-	
+
 	this.set_u16("last_friendly_visit",getGameTime());
-	
+
 	this.Tag("capturable");
 }
 
@@ -77,7 +77,7 @@ void onTick(CBlob@ this)
 					{
 						attackersCount++;
 						attackerTeam = b.getTeamNum();
-						
+
 						if (b.hasTag("combat chicken")) this.Tag(chicken_tag);
 					}
 				}
@@ -125,7 +125,7 @@ void onTick(CBlob@ this)
 					{
 						CBlob@ base = server_CreateBlob("chicken" + this.getName(), 250, this.getPosition());
 						base.server_SetHealth(this.getHealth());
-						
+
 						this.server_Die();
 					}
 				}
@@ -133,7 +133,7 @@ void onTick(CBlob@ this)
 				{
 					this.server_setTeamNum(attackerTeam < 8 ? attackerTeam : -1);
 				}
-			
+
 				reset_timer = true;
 			}
 			else
@@ -159,12 +159,12 @@ void onTick(CBlob@ this)
 		this.set_s16(enemy_prop, 0);
 
 		u32 capture_seconds = getCaptureSeconds(this);
-		
+
 		this.set_s16(counter_prop, capture_seconds);
 		this.Untag(raid_tag);
 		this.Untag(chicken_tag);
 		this.Tag(reinforcements_tag);
-		
+
 		sync = true;
 	}
 
@@ -175,8 +175,9 @@ void onTick(CBlob@ this)
 
 		this.Sync(counter_prop, true);
 		this.Sync(raid_tag, true);
+		this.Sync(reinforcements_tag, true);
 	}
-	
+
 	// if(!this.hasTag("faction_base"))
 	// if(this.get_u16("last_friendly_visit")+30*60*3 < getGameTime()){
 		// if(isServer()){
@@ -207,7 +208,6 @@ void onRender(CSprite@ this)
 	if (blob is null || !blob.hasTag(raid_tag))
 		return;
 
-	
 	Vec2f pos2d = getDriver().getScreenPosFromWorldPos(blob.getPosition() + Vec2f(0.0f, -blob.getHeight()));
 
 	s16 friendlyCount = blob.get_s16(friendly_prop);
@@ -230,10 +230,9 @@ void onRender(CSprite@ this)
 
 	u32 capture_seconds = getCaptureSeconds(blob);
 	if (capture_seconds <= 0) capture_seconds = 1; // ugly hackfix
-		
+
 	//draw capture bar
 	f32 padding = 4.0f;
 	s32 captureTime = blob.get_s16(counter_prop);
 	GUI::DrawProgressBar(Vec2f(pos2d.x - hwidth + padding, pos2d.y + hheight - 18 - padding), Vec2f(pos2d.x + hwidth - padding, pos2d.y + hheight - padding), 1.0f - float(captureTime) / float(capture_seconds));
-
 }

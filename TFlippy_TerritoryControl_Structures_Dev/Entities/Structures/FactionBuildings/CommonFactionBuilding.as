@@ -239,7 +239,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 				bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
 				bool is_premium = true; //ply.getSupportTier() > 0; // TODO
 
-				print("" + ply.getSupportTier());
+				//print("" + ply.getSupportTier());
 
 				bool can_join = recruitment_enabled && upkeep_gud && is_premium;
 
@@ -315,6 +315,17 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 
 		const bool base_demolition = this.get_bool("base_demolition");
 		const bool base_alarm = this.get_bool("base_alarm");
+
+		CBlob@[] forts;
+		getBlobsByTag("faction_base", @forts);
+		int teamForts = 0;
+
+		for(uint i = 0; i < forts.length; i++)
+		{
+			int fortTeamNum = forts[i].getTeamNum();
+			if (fortTeamNum == this.getTeamNum()) teamForts++;
+		}
+		const bool canDestroy = teamForts != 1;
 
 		{
 			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(3, 3), "Faction Policies");
@@ -411,7 +422,7 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 
 					CGridButton@ butt = menu.AddButton("$faction_remove$", (base_demolition ? "Cancel" : "Commence") + " demolition of this building", this.getCommandID("faction_menu_button"), Vec2f(1, 1), params);
 					butt.hoverText = (base_demolition ? "Cancels" : "Commences") + " demolition of this building, destroying it over course of several seconds.";
-					butt.SetEnabled(isLeader);
+					butt.SetEnabled(isLeader && !this.hasTag("under raid") && canDestroy);
 				}
 				{
 					CBitStream params;
@@ -837,7 +848,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 				string oldTeamName = rules.getTeam(oldTeam).getName();
 				string newTeamName = rules.getTeam(newTeam).getName();
 
-				client_AddToChat(oldTeamName + "'s "+this.getInventoryName()+" has captured by the " + newTeamName + "!", SColor(0xff444444));
+				client_AddToChat(oldTeamName + "'s "+this.getInventoryName()+" has been captured by the " + newTeamName + "!", SColor(0xff444444));
 				if (defeat)
 				{
 					client_AddToChat(oldTeamName + " has been defeated by the " + newTeamName + "!", SColor(0xff444444));
