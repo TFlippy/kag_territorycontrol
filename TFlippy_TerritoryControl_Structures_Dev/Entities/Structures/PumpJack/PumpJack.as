@@ -219,10 +219,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (caller !is null && carried !is null)
 			{
 				this.set_string("text", carried.get_string("text"));
-				this.setInventoryName(this.get_string("text"));
+				this.Sync("text", true);
 				this.set_string("shop description", this.get_string("text"));
+				this.Sync("shop description", true);
 				carried.server_Die();
 			}
+		}
+		if (isClient())
+		{
+			this.setInventoryName(this.get_string("text"));
 		}
 	}
 }

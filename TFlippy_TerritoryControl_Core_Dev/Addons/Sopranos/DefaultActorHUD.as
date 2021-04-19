@@ -369,7 +369,7 @@ void RenderTeamInventoryHUD(CBlob@ this)
 			if (quantity != 1)
 			{
 				GUI::SetFont("menu");
-				GUI::DrawText("" + quantity, itemPos + Vec2f(38 - (l * 8), 26), col);
+				GUI::DrawText("" + quantity / 2, itemPos + Vec2f(38 - (l * 8), 26), col);
 			}
 			j++;
 		}
@@ -432,7 +432,7 @@ void RenderTeamInventoryHUD(CBlob@ this)
 			if (quantity != 1)
 			{
 				GUI::SetFont("menu");
-				GUI::DrawText("" + quantity, itemPos + Vec2f(38 - (l * 8), 26), col);
+				GUI::DrawText("" + quantity / 2, itemPos + Vec2f(38 - (l * 8), 26), col);
 			}
 			if (j2 >= jMax)
 			{
@@ -474,7 +474,7 @@ void RenderTeamInventoryHUD(CBlob@ this)
 			if (quantity != 1)
 			{
 				GUI::SetFont("menu");
-				GUI::DrawText("" + quantity, itemPos + Vec2f(38 - (l * 8), 26), col);
+				GUI::DrawText("" + quantity / 2, itemPos + Vec2f(38 - (l * 8), 26), col);
 			}
 			j++;
 		}

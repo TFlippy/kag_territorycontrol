@@ -26,6 +26,8 @@ void onInit(CBlob@ this)
 
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_castle_back);
 
+	addTokens(this); //colored shop icons
+
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
 	this.set_Vec2f("shop menu size", Vec2f(6, 6));
 	this.set_string("shop description", "Demolitionist's Workshop");
@@ -73,7 +75,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Mine", "$mine$", "mine", descriptions[20], false);
+		ShopItem@ s = addShopItem(this, "Mine", "$icon_mine$", "mine", descriptions[20], false);
 		AddRequirement(s.requirements, "coin", "", "Coins", 50);
 
 		s.spawnNothing = true;
@@ -222,6 +224,28 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
+}
+
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	// reset shop colors
+	addTokens(this);
+}
+
+void addTokens(CBlob@ this)
+{
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+
+	AddIconToken("$icon_rocket$", "Rocket.png", Vec2f(24, 40), 0, teamnum);
+	AddIconToken("$icon_mine$", "Mine.png", Vec2f(16, 16), 1, teamnum);
+	AddIconToken("$icon_fragmine$", "FragMine.png", Vec2f(16, 16), 1, teamnum);
+	AddIconToken("$icon_guidedrocket$", "GuidedRocket.png", Vec2f(16, 24), 0, teamnum);
+	AddIconToken("$icon_firework$", "Firework.png", Vec2f(16, 24), 0, teamnum);
+	AddIconToken("$icon_smallrocket$", "Material_SmallRocket.png", Vec2f(8, 16), 0, teamnum);
+	AddIconToken("$icon_claymore$", "Claymore.png", Vec2f(16, 16), 1, teamnum);
+	AddIconToken("$icon_stunbomb$", "Material_StunBomb.png", Vec2f(16, 16), 0, teamnum);
+	AddIconToken("$icon_nuke$", "Nuke.png", Vec2f(40, 32), 0, teamnum);
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

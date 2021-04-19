@@ -71,7 +71,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Buy Coal (25)", "$mat_coal$", "mat_coal-25", "Buy 25 Coal for 250 coins.");
-		AddRequirement(s.requirements,"coin","","Coins", 125); //made it cost a lot, so it's better to just conquer the building
+		AddRequirement(s.requirements,"coin","","Coins", 250); //made it cost a lot, so it's better to just conquer the building
 		s.spawnNothing = true;
 	}
 	{
@@ -139,7 +139,7 @@ CBlob@ FindStorage(u8 team)
 			validBlobs.push_back(blobs[i]);
 		}
 	}
-	
+
 	if (validBlobs.length == 0) return null;
 
 	return validBlobs[XORRandom(validBlobs.length)];
@@ -149,7 +149,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	this.set_Vec2f("shop offset", Vec2f(3, -2));
 	this.set_bool("shop available", this.isOverlapping(caller));
-	
+
 	if (caller is null) return;
 	if (!this.isOverlapping(caller)) return;
 
@@ -244,10 +244,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (caller !is null && carried !is null)
 			{
 				this.set_string("text", carried.get_string("text"));
-				this.setInventoryName(this.get_string("text"));
+				this.Sync("text", true);
 				this.set_string("shop description", this.get_string("text"));
+				this.Sync("shop description", true);
 				carried.server_Die();
 			}
+		}
+		if (isClient())
+		{
+			this.setInventoryName(this.get_string("text"));
 		}
 	}
 }

@@ -3,13 +3,15 @@
 
 void onInit(CBlob @ this)
 {
+	this.set_TileType("background tile", CMap::tile_castle_back);
+
 	this.getShape().SetRotationsAllowed(false);
 	this.Tag("place norotate");
 	// this.Tag("ignore extractor");
 	this.Tag("builder always hit");
-	
+
 	this.getCurrentScript().tickFrequency = 5;
-	
+
 	CSprite@ sprite = this.getSprite();
 	if (sprite !is null)
 	{
@@ -27,18 +29,18 @@ void onTick(CBlob@ this)
 	if (isServer())
 	{
 		CMap@ map = getMap();
-		
+
 		CBlob@[] blobs;
 		map.getBlobsAtPosition(this.getPosition() + Vec2f(8, 0), @blobs);
 		map.getBlobsAtPosition(this.getPosition() + Vec2f(-8, 0), @blobs);
-		
+
 		for (int i = 0; i < blobs.length; i++)
 		{
 			CBlob@ b = blobs[i];
 			if (b !is null)
 			{
 				string bname = b.getName();
-			
+
 				if (b.hasTag("tree"))
 				{
 					TreeVars@ tree;

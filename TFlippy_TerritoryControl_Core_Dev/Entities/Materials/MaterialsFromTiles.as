@@ -5,7 +5,7 @@
 
 void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 customData)
 {
-	if (damage <= 0.0f) return;		
+	if (damage <= 0.0f) return;
 
 	CMap@ map = getMap();
 
@@ -31,21 +31,19 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 			f32 multiplier = this.exists("mining_multiplier") ? this.get_f32("mining_multiplier") : 1.00f;
 			multiplier += Maths::Min(this.get_f32("bobonged"), 4);
 			multiplier += this.get_f32("team_mining_multiplier");
-			
+
 			f32 depth = 1 - ((worldPoint.y / 8) / map.tilemapheight);
-			
 			// print("" + depth);
 			// print("Map height: " +  map.tilemapheight + "Y: " + worldPoint.y);
-					
+
 			if (map.isTileStone(tile))
 			{
 				if (map.isTileThickStone(tile)){
 					MakeMat(this, worldPoint, "mat_stone", (10 + XORRandom(5)) * multiplier);
-					
+
 					if (depth < 0.90f && XORRandom(100) < 70) MakeMat(this, worldPoint, "mat_copper", (1 + XORRandom(3 * (1 - depth))) * multiplier);
 					if (depth < 0.60f && XORRandom(100) < 60) MakeMat(this, worldPoint, "mat_iron", (5 + XORRandom(8)) * multiplier);
 					if (depth < 0.10f && XORRandom(100) < 10) MakeMat(this, worldPoint, "mat_mithril", (2 + XORRandom(6)) * multiplier);
-					// if (depth < 0.20f && XORRandom(100) < 5) MakeMat(this, worldPoint, "mat_wilmet", (1 + XORRandom(3)) * multiplier);
 				} 
 				else 
 				{
@@ -53,15 +51,12 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 					if (depth > 0.40f && depth < 0.80f && XORRandom(100) < 50) MakeMat(this, worldPoint, "mat_copper", (1 + XORRandom(2 * (1 - depth))) * multiplier);
 					if (depth < 0.60f && XORRandom(100) < 30) MakeMat(this, worldPoint, "mat_iron", (3 + XORRandom(6)) * multiplier);
 				}
-							
-				// int chance = XORRandom(200);
-				// print("" + chance);
-							
+
 				if (XORRandom(200) == 0) 
 				{
 					CBlob@[] blobs;
 					getBlobsByName("methanedeposit", @blobs);
-					
+
 					if (blobs.length < 8)
 					{
 						map.server_DestroyTile(worldPoint, 200, this);
@@ -77,7 +72,6 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 				{
 					MakeMat(this, worldPoint, "mat_mithril", (3 + XORRandom(8)) * multiplier * (1.2f - depth));
 				}
-				// if (depth < 0.20f && XORRandom(100) < 10) MakeMat(this, worldPoint, "mat_wilmet", (1 + XORRandom(2)) * multiplier * (1 - depth));
 			}
 			else if (map.isTileGround(tile))
 			{
@@ -88,20 +82,20 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 			}
 			else if (tile >= CMap::tile_matter && tile <= CMap::tile_matter_d2)
 			{
-				MakeMat(this, worldPoint, "mat_matter", (1 + XORRandom(10)) * multiplier);		
+				MakeMat(this, worldPoint, "mat_matter", (1 + XORRandom(10)) * multiplier);
 			}
 			else if (tile == CMap::tile_concrete_d7)
 			{
-				MakeMat(this, worldPoint, "mat_concrete", 3);		
+				MakeMat(this, worldPoint, "mat_concrete", 3);
 			}
-			else if (tile >= CMap::tile_iron && tile <= CMap::tile_iron_d8)
+			else if (tile >= CMap::tile_iron && tile >= CMap::tile_iron_d4)
 			{
-				MakeMat(this, worldPoint, "mat_iron", 3);		
+				MakeMat(this, worldPoint, "mat_iron", 1);
 			}
 
 			if (map.isTileSolid(tile))
 			{
-				if (map.isTileCastle(tile))
+				if (map.isTileCastle(tile) && tile >= CMap::tile_castle_d1 && tile != CMap::tile_castle_d0)
 				{
 					MakeMat(this, worldPoint, "mat_stone", 1);
 				}

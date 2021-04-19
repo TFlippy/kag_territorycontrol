@@ -20,22 +20,13 @@ void onInit(CBlob@ this)
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
 
-	AddIconToken("$vehicleshop_upgradebolts$", "BallistaBolt.png", Vec2f(32, 8), 1);
+	addTokens(this); //colored shop icons
 
-	AddIconToken("$icon_steamtank$", "Icon_SteamTank.png", Vec2f(48, 28), 0);
-	AddIconToken("$icon_bomber$", "Icon_Bomber.png", Vec2f(64, 64), 0);
-	AddIconToken("$icon_armoredbomber$", "Icon_ArmoredBomber.png", Vec2f(64, 64), 0);
-	AddIconToken("$icon_triplane$", "Icon_Triplane.png", Vec2f(64, 32), 0);
-	AddIconToken("$icon_steamtank$", "Icon_Vehicles.png", Vec2f(48, 24), 0);
 	AddIconToken("$icon_gatlinggun$", "Icon_Vehicles.png", Vec2f(24, 24), 2);
 	AddIconToken("$icon_mortar$", "Icon_Vehicles.png", Vec2f(24, 24), 3);
 	AddIconToken("$icon_howitzer$", "Icon_Vehicles.png", Vec2f(24, 24), 4);
-	AddIconToken("$icon_rocketlauncher$", "Icon_Vehicles.png", Vec2f(24, 24), 5);
 
 	AddIconToken("$mat_ironingot$", "Material_IronIngot.png", Vec2f(16, 16), 1);
-
-	AddIconToken("$bp_steamtank$", "Blueprints.png", Vec2f(16, 16), 1);
-	AddIconToken("$buoy_icon$", "Buoy.png", Vec2f(32, 48), 0);
 
 	// SHOP
 	this.set_Vec2f("shop offset", Vec2f(0, 8));
@@ -44,7 +35,7 @@ void onInit(CBlob@ this)
 	this.set_u8("shop icon", 25);
 
 	{
-		ShopItem@ s = addShopItem(this, "Catapult", "$catapult$", "catapult", "$catapult$\n\n\n" + descriptions[5], false, true);
+		ShopItem@ s = addShopItem(this, "Catapult", "$icon_catapult$", "catapult", "$catapult$\n\n\n" + descriptions[5], false, true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
 		AddRequirement(s.requirements, "coin", "", "Coins", 50);
 
@@ -54,7 +45,7 @@ void onInit(CBlob@ this)
 		s.buttonheight = 2;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Ballista", "$ballista$", "ballista", "$ballista$\n\n\n" + descriptions[6], false, true);
+		ShopItem@ s = addShopItem(this, "Ballista", "$icon_ballista$", "ballista", "$ballista$\n\n\n" + descriptions[6], false, true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 200);
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
 
@@ -84,7 +75,7 @@ void onInit(CBlob@ this)
 		// AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 80);
 	// }
 	{
-		ShopItem@ s = addShopItem(this, "Dinghy", "$dinghy$", "dinghy", "$dinghy$\n\n\n" + descriptions[10]);
+		ShopItem@ s = addShopItem(this, "Dinghy", "$icon_dinghy$", "dinghy", "$dinghy$\n\n\n" + descriptions[10]);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100);
 		AddRequirement(s.requirements, "coin", "", "Coins", 30);
 
@@ -101,7 +92,7 @@ void onInit(CBlob@ this)
 		// s.spawnNothing = true;
 	// }
 	{
-		ShopItem@ s = addShopItem(this, "Longboat", "$longboat$", "longboat", "$longboat$\n\n\n" + descriptions[33], false, true);
+		ShopItem@ s = addShopItem(this, "Longboat", "$icon_longboat$", "longboat", "$longboat$\n\n\n" + descriptions[33], false, true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 200);
 		AddRequirement(s.requirements, "coin", "", "Coins", 120);
 
@@ -111,7 +102,7 @@ void onInit(CBlob@ this)
 		s.buttonheight = 2;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "War Boat", "$warboat$", "warboat", "$warboat$\n\n\n" + descriptions[37], false, true);
+		ShopItem@ s = addShopItem(this, "War Boat", "$icon_warboat$", "warboat", "$warboat$\n\n\n" + descriptions[37], false, true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 500);
 		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 
@@ -207,6 +198,32 @@ void onInit(CBlob@ this)
 		s.buttonwidth = 4;
 		s.buttonheight = 2;
 	}
+}
+
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	// reset shop colors
+	addTokens(this);
+}
+
+void addTokens(CBlob@ this)
+{
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+
+	AddIconToken("$icon_catapult$", "VehicleIcons.png", Vec2f(32, 32), 0, teamnum);
+	AddIconToken("$icon_ballista$", "VehicleIcons.png", Vec2f(32, 32), 1, teamnum);
+	AddIconToken("$icon_warboat$", "VehicleIcons.png", Vec2f(32, 32), 2, teamnum);
+	AddIconToken("$icon_longboat$", "VehicleIcons.png", Vec2f(32, 32), 4, teamnum);
+	AddIconToken("$icon_dinghy$", "VehicleIcons.png", Vec2f(32, 32), 5, teamnum);
+
+	AddIconToken("$icon_steamtank$", "Icon_SteamTank.png", Vec2f(48, 28), 0, teamnum);
+	AddIconToken("$icon_bomber$", "Icon_Bomber.png", Vec2f(64, 64), 0, teamnum);
+	AddIconToken("$icon_armoredbomber$", "Icon_ArmoredBomber.png", Vec2f(64, 64), 0, teamnum);
+	AddIconToken("$icon_triplane$", "Icon_Triplane.png", Vec2f(64, 32), 0, teamnum);
+	AddIconToken("$icon_steamtank$", "Icon_Vehicles.png", Vec2f(48, 24), 0, teamnum);
+	AddIconToken("$icon_rocketlauncher$", "Icon_Vehicles.png", Vec2f(24, 24), 5, teamnum);
+	AddIconToken("$icon_cargocontainer$", "CargoContainer.png", Vec2f(64, 24), 0, teamnum);
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

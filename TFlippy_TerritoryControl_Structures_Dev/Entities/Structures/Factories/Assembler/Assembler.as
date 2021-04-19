@@ -249,7 +249,10 @@ void AssemblerMenu(CBlob@ this, CBlob@ caller)
 
 				CBitStream pack;
 				pack.write_u8(i);
-				AddIconToken("$assembler_icon" + i + "$", "AssemblerIcons.png", Vec2f(16, 16), i);
+
+				int teamnum = this.getTeamNum();
+				if (teamnum > 6) teamnum = 7;
+				AddIconToken("$assembler_icon" + i + "$", "AssemblerIcons.png", Vec2f(16, 16), i, teamnum);
 
 				string text = "Set to Assemble: " + item.title;
 				if(this.get_u8("crafting") == i)

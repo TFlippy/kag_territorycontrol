@@ -37,6 +37,8 @@ void onInit(CBlob@ this)
 	this.SetLightRadius(160.0f);
 	this.SetLightColor(SColor(255, 255, 200, 110));
 
+	addTokens(this); //colored shop icons
+
 	// SHOP
 	this.set_Vec2f("shop offset", Vec2f(0, 4));
 	this.set_Vec2f("shop menu size", Vec2f(4, 6));
@@ -93,7 +95,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Zapper", "$zapper$", "zapper-260", "Place this small device in your garden and watch the intruders get fried to crisp!\nRequires Batteries to operate.");
+		ShopItem@ s = addShopItem(this, "Zapper", "$icon_zapper$", "zapper-260", "Place this small device in your garden and watch the intruders get fried to crisp!\nRequires Batteries to operate.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 1299);
 		s.spawnNothing = true;
 	}
@@ -113,7 +115,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "SAM Missile (1)", "$sammissile$", "mat_sammissile-1-56", "Guided missiles for the Portable SAM System.");
+		ShopItem@ s = addShopItem(this, "SAM Missile (1)", "$icon_sammissile$", "mat_sammissile-1-56", "Guided missiles for the Portable SAM System.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 279);
 		s.spawnNothing = true;
 	}
@@ -132,70 +134,25 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", 1999);
 		s.spawnNothing = true;
 	}
-	// {
-		// ShopItem@ s = addShopItem(this, "Buy Stone (250)", "$mat_stone$", "mat_stone-250", "Buy 250 stone for 125 coins.");
-		// AddRequirement(s.requirements, "coin", "", "Coins", 125);
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Buy Wood (250)", "$mat_wood$", "mat_wood-250", "Buy 250 wood for 90 coins.");
-		// AddRequirement(s.requirements, "coin", "", "Coins", 90);
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Sell Gold Ingot (1)", "$COIN$", "coin-100", "Sell 1 Gold Ingot for 100 coins.");
-		// AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Sell Stone (250)", "$COIN$", "coin-100", "Sell 250 stone for 100 coins.");
-		// AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 250);
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Sell Wood (250)", "$COIN$", "coin-75", "Sell 250 wood for 75 coins.");
-		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 250);
-		// s.spawnNothing = true;
-	// }
-	// // {
-		// // ShopItem@ s = addShopItem(this, "Buy Blueprint (Mechanist's Workshop)", "$bp_mechanist$", "bp_mechanist", "Buy Blueprint (Mechanist's Workshop) for 100 coins.");
-		// // AddRequirement(s.requirements, "coin", "", "Coins", 100);
-		// // s.spawnNothing = true;
-	// // }
-	// {
-		// ShopItem@ s = addShopItem(this, "Gramophone Record", "$musicdisc$", "musicdisc", "A random gramophone record.");
-		// AddRequirement(s.requirements, "coin", "", "Coins", 30);
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Sell Oil Drum (50 l)", "$COIN$", "coin-300", "Sell 50 litres of oil for 300 coins.");
-		// AddRequirement(s.requirements, "blob", "mat_oil", "Oil Drum (50 l)", 50);
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Tree Seed", "$seed$", "seed", "A tree seed. Trees don't have seeds, though.");
-		// AddRequirement(s.requirements, "coin", "", "Coins", 50);
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Cinnamon Bun", "$icon_cake$", "cake", "Pastry made with love.");
-		// AddRequirement(s.requirements, "coin", "", "Coins", 50);
-		// s.spawnNothing = true;
-	// }
-	// {
-		// ShopItem@ s = addShopItem(this, "Mototorized Horse", "$icon_car$", "car", "Makes you extremely cool.", false, true);
-		// AddRequirement(s.requirements, "coin", "", "Coins", 1000);
-		// s.crate_icon = 0;
+}
 
-		// s.customButton = true;
-		// s.buttonwidth = 1;
-		// s.buttonheight = 1;
-	// }
-	// // {
-		// // ShopItem@ s = addShopItem(this, "Sell Grain (1)", "$COIN$", "coin-30", "Sell 1 Grain for 30 coins.");
-		// // AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
-		// // s.spawnNothing = true;
-	// // }
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	// reset shop colors
+	addTokens(this);
+}
+
+void addTokens(CBlob@ this)
+{
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+
+	AddIconToken("$icon_zapper$", "Zapper.png", Vec2f(24, 24), 0, teamnum);
+	AddIconToken("$icon_sam$", "SAM_Icon.png", Vec2f(32, 24), 0, teamnum);
+	AddIconToken("$icon_sammissile$", "SAM_Missile.png", Vec2f(8, 16), 0, teamnum);
+	AddIconToken("$icon_lws$", "LWS_Icon.png", Vec2f(32, 24), 0, teamnum);
+	AddIconToken("$icon_sentry$", "Sentry_Icon.png", Vec2f(32, 24), 0, teamnum);
+	AddIconToken("$icon_armoredcar$", "ArmoredCar_Icon.png", Vec2f(48, 32), 0, teamnum);
 }
 
 void onTick(CBlob@ this)
@@ -341,10 +298,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (caller !is null && carried !is null)
 			{
 				this.set_string("text", carried.get_string("text"));
-				this.setInventoryName(this.get_string("text"));
+				this.Sync("text", true);
 				this.set_string("shop description", this.get_string("text"));
+				this.Sync("shop description", true);
 				carried.server_Die();
 			}
+		}
+		if (isClient())
+		{
+			this.setInventoryName(this.get_string("text"));
 		}
 	}
 	else if (cmd == this.getCommandID("buyout"))
