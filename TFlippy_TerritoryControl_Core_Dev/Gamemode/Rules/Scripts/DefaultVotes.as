@@ -256,8 +256,11 @@ VoteObject@ Create_Votekick(CPlayer@ player, CPlayer@ byplayer, string reason)
 
 class VoteNextmapFunctor : VoteFunctor
 {
+	string playername;
+	u8 MapType = 0;
+
 	VoteNextmapFunctor() {} //dont use this
-	VoteNextmapFunctor(CPlayer@ player)
+	VoteNextmapFunctor(CPlayer@ player, u8 type)
 	{
 		string charname = player.getCharacterName();
 		string username = player.getUsername();
@@ -272,16 +275,43 @@ class VoteNextmapFunctor : VoteFunctor
 		{
 			playername = charname;
 		}
+
+
+		MapType = type;
 	}
 
-	string playername;
 	void Pass(bool outcome)
 	{
 		if (outcome)
 		{
 			if (isServer())
 			{
-				LoadNextMap();
+				switch (MapType)
+				{
+					// Official maps
+					case 1:
+					{
+						string[] OffiMaps;
+						getRules().get("maptypes-offi", @OffiMaps);
+
+						LoadMap(OffiMaps[XORRandom(OffiMaps.length)]);
+					}
+					break;
+
+					// Meme maps
+					case 2:
+					break;
+
+					// Old maps
+					case 3:
+					break;
+
+					// If the maptype is invalid or set to default, 
+					// load next map like before
+					default:
+						LoadNextMap();
+					break;
+				}
 			}
 		}
 		else
@@ -302,11 +332,11 @@ class VoteNextmapCheckFunctor : VoteCheckFunctor
 };
 
 //setting up a vote next map object
-VoteObject@ Create_VoteNextmap(CPlayer@ byplayer, string reason)
+VoteObject@ Create_VoteNextmap(CPlayer@ byplayer, string reason, u8 maptype)
 {
 	VoteObject vote;
 
-	@vote.onvotepassed = VoteNextmapFunctor(byplayer);
+	@vote.onvotepassed = VoteNextmapFunctor(byplayer, maptype);
 	@vote.canvote = VoteNextmapCheckFunctor();
 
 	vote.title = "Skip to next map?";
@@ -513,8 +543,8 @@ void onMainMenuCreated(CRules@ this, CContextMenu@ menu)
 	//nextmap menu
 	if (getSecurity().checkAccess_Feature(me, "map_vote"))
 	{
-		if (g_lastNextmapCounter < 60 * getTicksASecond()*required_minutes_nextmap
-		        && (!can_skip_wait || g_haveStartedVote))
+		if (false ) /*g_lastNextmapCounter < 60 * getTicksASecond()*required_minutes_nextmap
+		        && (!can_skip_wait || g_haveStartedVote))*/
 		{
 			Menu::addInfoBox(mapmenu, "Can't Start Vote", "Voting for next map\n" +
 			                 "requires a " + required_minutes_nextmap + " min wait\n" +
@@ -523,19 +553,40 @@ void onMainMenuCreated(CRules@ this, CContextMenu@ menu)
 		}
 		else
 		{
-			Menu::addInfoBox(mapmenu, "Vote Next Map", "Vote to change the map\nto the next in cycle.\n\n" +
-			                 "- report any abuse of this feature.\n" +
-			                 "\nTo Use:\n\n" +
-			                 "- select a reason from the list.\n" +
-			                 "- everyone votes.\n");
+			Menu::addInfoBox(mapmenu, "Vote Next Map Type", "Vote to change the map\nto the next in cycle.\n\n" +
+			                 "- Currently requires 65% of players to vote yes\n" +
+							 "- You can vote for 3 different types of maps");
 
 			Menu::addSeparator(mapmenu);
-			//reasons
+
+
+			CContextMenu@ offi_map_menu = Menu::addContextMenu(mapmenu, "Official Map");
+			CContextMenu@ meme_map_menu = Menu::addContextMenu(mapmenu, "Meme Map");
+			CContextMenu@ old_map_menu = Menu::addContextMenu(mapmenu,  "Old Map");
+
+
 			for (uint i = 0 ; i < nextmap_reason_count; ++i)
 			{
 				CBitStream params;
 				params.write_u8(i);
-				Menu::addContextItemWithParams(mapmenu, nextmap_reason_string[i], "DefaultVotes.as", "Callback_NextMap", params);
+				params.write_u8(1);
+				Menu::addContextItemWithParams(offi_map_menu, nextmap_reason_string[i], "DefaultVotes.as", "Callback_NextMap", params);
+			}
+
+			for (uint i = 0 ; i < nextmap_reason_count; ++i)
+			{
+				CBitStream params;
+				params.write_u8(i);
+				params.write_u8(2);
+				Menu::addContextItemWithParams(meme_map_menu, nextmap_reason_string[i], "DefaultVotes.as", "Callback_NextMap", params);
+			}
+
+			for (uint i = 0 ; i < nextmap_reason_count; ++i)
+			{
+				CBitStream params;
+				params.write_u8(i);
+				params.write_u8(3);
+				Menu::addContextItemWithParams(old_map_menu, nextmap_reason_string[i], "DefaultVotes.as", "Callback_NextMap", params);
 			}
 		}
 	}
@@ -638,6 +689,9 @@ void Callback_NextMap(CBitStream@ params)
 	u8 id;
 	if (!params.saferead_u8(id)) return;
 
+	u8 type;
+	if (!params.saferead_u8(type)) return;
+
 	string reason = "";
 	if (id < nextmap_reason_count)
 	{
@@ -648,6 +702,7 @@ void Callback_NextMap(CBitStream@ params)
 
 	params2.write_u16(me.getNetworkID());
 	params2.write_string(reason);
+	params2.write_u8(type);
 
 	getRules().SendCommand(getRules().getCommandID(votenextmap_id), params2);
 	onPlayerStartedVote();
@@ -693,14 +748,16 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 	{
 		u16 byplayerid;
 		string reason;
+		u8 maptype;
 
 		if (!params.saferead_u16(byplayerid)) return;
 		if (!params.saferead_string(reason)) return;
+		if (!params.saferead_u8(maptype)) return;
 
 		CPlayer@ byplayer = getPlayerByNetworkId(byplayerid);
 
 		if (byplayer !is null)
-			Rules_SetVote(this, Create_VoteNextmap(byplayer, reason));
+			Rules_SetVote(this, Create_VoteNextmap(byplayer, reason, maptype));
 
 		g_lastNextmapCounter = 0;
 	}
