@@ -11,15 +11,16 @@ void onInit(CBlob@ this)
 {
 	this.Tag("no shitty rotation reset");
 	this.Tag("no explosion particles");
-	
+
 	this.Tag("medium weight");
-	
+	this.getShape().SetOffset(Vec2f(4, 0));
+
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
 	if (ap !is null)
 	{
 		ap.SetKeysToTake(key_action1);
 	}
-	
+
 	CSprite@ sprite = this.getSprite();
 	CSpriteLayer@ zap = sprite.addSpriteLayer("zap", "Oof_Bolt.png", 128, 12);
 
@@ -78,52 +79,52 @@ void onTick(CBlob@ this)
 
 				HitInfo@[] hitInfos;
 				bool hitBlobs = false;
-				
+
 				if (map.getHitInfosFromRay(startPos, angle + (flip ? 180 : 0), maxDistance, this, @hitInfos))
 				{
 					for (int i = 0; i < hitInfos.length; i++)
 					{
 						if (hitInfos[i].blob !is null)
-						{	
+						{
 							CBlob@ blob = hitInfos[i].blob;
 							print("" + hitInfos[i].distance);
-							
+
 							if (hitInfos[i].distance > 64 && blob.getTeamNum() != this.getTeamNum() && blob.isCollidable() && !blob.hasTag("invincible")) 
 							{
 								hitBlobs = true;
 								hitPos = hitInfos[i].hitpos;
-								
+
 								if (isServer())
 								{
 									SpawnBoom(this, hitPos);
 								}
-								
+
 								break;
 							}
 						}
 					}
 				}
-				
+
 				if (!hitBlobs)
 				{
 					if (getMap().rayCastSolid(startPos, endPos, hitPos))
 					{
 						CMap@ map = getMap();
-						
+
 						if (isServer())
 						{
 							SpawnBoom(this, hitPos);
 						}
 					}
 				}
-				
+
 				length = (hitPos - startPos).Length() + 8;
 				
 				this.set_u32("nextShoot", getGameTime() + delay);
 
 				ShakeScreen(64, 32, startPos);
 				holder.AddForce(-aimDir * 400.00f);
-				
+
 				if (isClient())
 				{
 					CSpriteLayer@ zap = this.getSprite().getSpriteLayer("zap");

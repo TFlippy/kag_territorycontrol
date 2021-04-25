@@ -14,8 +14,8 @@ void onInit( CBrain@ this )
 {
 	if (isServer())
 	{
-		InitBrain( this );
-		this.server_SetActive( true ); // always running
+		InitBrain(this);
+		this.server_SetActive(true); // always running
 	}
 }
 
@@ -26,23 +26,28 @@ void onInit(CBlob@ this)
 	this.Tag("flesh");
 	this.Tag("dangerous");
 	this.Tag("map_damage_dirt");
-	
+
 	this.set_f32("map_damage_ratio", 0.3f);
 	this.set_f32("map_damage_radius", 32.0f);
 	this.set_bool("map_damage_raycast", true);
-	
+
 	this.SetLight(true);
 	this.SetLightRadius(64.0f);
 	this.SetLightColor(SColor(255, 25, 255, 100));
-	
+
 	this.set_f32("voice pitch", 0.50f);
-	
+
 	this.server_setTeamNum(230);
-	
+
 	this.addCommandID("mg_spawn_pigger");
 	this.addCommandID("mg_explode");
-	
+
 	this.set_u32("next pigger", 0);
+}
+
+void onSetPlayer(CBlob@ this, CPlayer@ player)
+{
+	if (player !is null) player.SetScoreboardVars("ScoreboardIcons.png", 21, Vec2f(16, 16));
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -58,18 +63,18 @@ void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu @gridmenu)
 	this.ClearGridMenusExceptInventory();
 	Vec2f pos = Vec2f(lr.x, ul.y) + Vec2f(-72, 150);
 	CGridMenu@ menu = CreateGridMenu(pos, this, Vec2f(3, 1), "Abilities");
-	
+
 	this.set_Vec2f("InventoryPos",pos);
-	
+
 	AddIconToken("$mg_create_pigger$", "Pigger.png", Vec2f(16, 8), 0);
 	AddIconToken("$mg_explode$", "SmallExplosion2.png", Vec2f(24, 24), 1);
 	// AddIconToken("$deletesymbol$", "RuneSymbols.png", Vec2f(32, 16), 1);
-	
+
 	if (menu !is null)
 	{
 		menu.deleteAfterClick = true;
 		// menu.SetCaptionEnabled(false);
-		
+
 		{
 			CGridButton@ button = menu.AddButton("$mg_create_pigger$", "Spawn a Pigger", this.getCommandID("mg_spawn_pigger"));
 			if (button !is null)
@@ -80,7 +85,6 @@ void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu @gridmenu)
 				button.selectOneOnClick = false;
 			}
 		}
-		
 		{
 			CGridButton@ button = menu.AddButton("$mg_explode$", "Explode", this.getCommandID("mg_explode"));
 			if (button !is null)
@@ -101,7 +105,7 @@ void onTick(CBlob@ this)
 		moveVars.walkFactor *= 0.40f;
 		moveVars.jumpFactor *= 0.75f;
 	}
-		
+
 	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
@@ -113,20 +117,20 @@ void onTick(CBlob@ this)
 			return;
 		}
 	}
-	
+
 	if (isServer())
 	{
 		if (XORRandom(100) == 0)
 		{
 			CBlob@ blob = server_CreateBlob("mat_mithril", this.getTeamNum(), this.getPosition());
 			blob.server_SetQuantity(10 + XORRandom(20));
-		
+
 			this.server_Hit(this, this.getPosition(), Vec2f(), 0.125f, Hitters::stab, true);
 		}
 	}
-	
+
 	if (XORRandom(8) == 0) 
-	{	
+	{
 		if (isServer())
 		{
 			CBlob@[] blobsInRadius;
@@ -136,12 +140,12 @@ void onTick(CBlob@ this)
 				{
 					CBlob@ blob = blobsInRadius[i];
 					if (!blob.hasTag("flesh") || blob.hasTag("dead")) continue;
-					
+
 					f32 distMod = Maths::Max(0, (1.00f - ((this.getPosition() - blob.getPosition()).Length() / 64)));
 					if (XORRandom(100) < 100.0f * distMod) 
 					{
 						this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.25f, HittersTC::radiation, true);
-						
+
 						if (blob.hasTag("human") && !blob.hasTag("transformed") && blob.getHealth() <= 0.25f && XORRandom(3) == 0)
 						{
 							CBlob@ man = server_CreateBlob("mithrilman", blob.getTeamNum(), blob.getPosition());
@@ -168,18 +172,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	else if (cmd == this.getCommandID("mg_spawn_pigger"))
 	{
 		this.set_u32("next pigger", getGameTime() + 30 * 15);
-	
+
 		if (isClient())
 		{
 			this.getSprite().PlaySound("FleshHit.ogg", 1.00f, 1.00f);
 			this.getSprite().PlaySound("Pigger_Pop_" + XORRandom(2), 1.00f, 1.00f);
 			ParticleBloodSplat(this.getPosition(), true);
 		}
-	
+
 		if (isServer())
 		{
 			this.server_Hit(this, this.getPosition(), Vec2f(0, 0), 1.00f + (XORRandom(300) / 100.00f), Hitters::stab, true);
-			
+
 			CBlob@ blob = server_CreateBlob("pigger", this.getTeamNum(), this.getPosition());
 			if (blob !is null)
 			{
@@ -194,34 +198,19 @@ void onDie(CBlob@ this)
 	this.getSprite().Gib();
 
 	Explode(this, 96.0f, 24.0f);
-	
+
 	if (!isServer()) return;
 
 	for (int i = 0; i < 8; i++)
 	{
 		CBlob@ blob = server_CreateBlob("mat_mithril", this.getTeamNum(), this.getPosition());
-		
+
 		if (blob !is null)
 		{
 			blob.server_SetQuantity(10 + XORRandom(40));
 			blob.setVelocity(Vec2f(XORRandom(4) - 2, -2 - XORRandom(4)));
 		}
 	}
-
-	// if (isServer())
-	// {
-		// CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
-		// boom.setPosition(this.getPosition());
-		// boom.set_u8("boom_start", 0);
-		// boom.set_u8("boom_end", 2);
-		// boom.set_f32("mithril_amount", 100);
-		// boom.set_f32("flash_distance", 32);
-		// boom.set_u32("boom_delay", 0);
-		// boom.set_u32("flash_delay", 0);
-		// boom.Tag("no fallout");
-		// boom.Tag("no flash");
-		// boom.Init();
-	// }
 }
 
 void onTick(CBrain@ this)
@@ -229,12 +218,12 @@ void onTick(CBrain@ this)
 	if (!isServer()) return;
 
 	CBlob @blob = this.getBlob();
-	
+
 	if (blob.getPlayer() !is null) return;
-	
+
 	SearchTarget(this, false, true);
 	CBlob @target = this.getTarget();
-	
+
 	this.getCurrentScript().tickFrequency = 30;
 	if (target !is null)
 	{
@@ -243,11 +232,11 @@ void onTick(CBrain@ this)
 		const f32 distance = (target.getPosition() - blob.getPosition()).getLength();
 		f32 visibleDistance;
 		const bool visibleTarget = isVisible( blob, target, visibleDistance);
-		
+
 		if (target.hasTag("dead") || distance > 200.0f) 
 		{
 			CPlayer@ targetPlayer = target.getPlayer();
-			
+
 			this.SetTarget(null);
 			return;
 		}
@@ -255,12 +244,12 @@ void onTick(CBrain@ this)
 		{
 			DefaultChaseBlob(blob, target);
 		}
-		
+
 		LoseTarget(this, target);
 	}
 	else
 	{
-		if (XORRandom(100) < 50) RandomTurn(blob);		
+		if (XORRandom(100) < 50) RandomTurn(blob);
 	}
 
 	FloatInWater(blob); 
@@ -273,12 +262,12 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case HittersTC::radiation:
 			return 0;
 			break;
-		
+
 		// Kill it with fire
 		case Hitters::fire:
 		case Hitters::burn:
 			damage *= 4.00f;
-			break;			
+			break;
 	}
 
 	if (isClient())
@@ -289,16 +278,16 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			this.set_u32("next sound", getGameTime() + 300);
 		}
 	}
-	
+
 	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
-		
+
 		if (brain !is null && hitterBlob !is null)
 		{
 			if (hitterBlob.getTeamNum() != this.getTeamNum()) brain.SetTarget(hitterBlob);
 		}
 	}
-		
+
 	return damage;
 }

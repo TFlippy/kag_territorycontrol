@@ -26,8 +26,9 @@ void onInit(CBlob@ this)
 		Vec2f(-8.0f,2.0f)	//Visual offset for raycast bullets
 	);
 	
-	this.set_string("gun_tracerName", "ChargeLance_Tracer.png");
+	this.set_string("gun_tracerName", "ChargeRifle_Tracer.png");
 	this.set_u8("gun_hitter", HittersTC::railgun_lance);
+	this.getShape().SetOffset(Vec2f(0, 3));
 	
 	this.Tag("medium weight");
 }

@@ -54,7 +54,7 @@ void onInit(CBlob@ this)
 	knight.doubleslash = false;
 	knight.tileDestructionLimiter = 0;
 	this.set("knightInfo", @knight);
-	
+
 	CSprite@ sprite = this.getSprite();
 
 	this.set_f32("voice pitch", 0.80f);
@@ -65,12 +65,12 @@ void onInit(CBlob@ this)
 	this.Tag("flesh");
 	this.Tag("human");
 	this.Tag("gas immune");
-	
+
 	this.set_u8("override head", 102);
 	this.set_Vec2f("inventory offset", Vec2f(0.0f, 0.0f));
-	
+
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
-	
+
 	this.SetLight(false);
 	this.SetLightRadius(64.0f);
 	this.SetLightColor(SColor(255, 10, 250, 200));
@@ -83,10 +83,7 @@ void onInit(CSprite@ this)
 
 void onSetPlayer(CBlob@ this, CPlayer@ player)
 {
-	if (player !is null)
-	{
-		player.SetScoreboardVars("ScoreboardIcons.png", 3, Vec2f(16, 16));
-	}
+	if (player !is null) player.SetScoreboardVars("ScoreboardIcons.png", 12, Vec2f(16, 16));
 }
 
 void onTick(CSprite@ this)
@@ -112,13 +109,13 @@ void onTick(CBlob@ this)
 	const bool inair = (!this.isOnGround() && !this.isOnLadder());
 
 	CMap@ map = getMap();
-	
+
 	bool pressed_a1 = this.isKeyPressed(key_action1) && !this.hasTag("noLMB");
 	bool pressed_a2 = this.isKeyPressed(key_action2);
 	bool walking = (this.isKeyPressed(key_left) || this.isKeyPressed(key_right));
 
 	const bool myplayer = this.isMyPlayer();
-	
+
 	if (myplayer)
 	{
 		if (this.isKeyJustPressed(key_action3))
@@ -129,7 +126,7 @@ void onTick(CBlob@ this)
 
 	moveVars.walkFactor *= 0.90f;
 	moveVars.jumpFactor *= 0.90f;
-		
+
 	if (knocked > 0)
 	{
 		pressed_a1 = false;
@@ -143,18 +140,18 @@ void onTick(CBlob@ this)
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
 	CPlayer@ player = this.getPlayer();
-	
+
 	if (this.hasTag("invincible") || (player !is null && player.freeze)) 
 	{
 		return 0;
 	}
-	
+
 	switch (customData)
 	{
 		case Hitters::suicide:
 			damage *= 10.0f;
 			break;
-	
+
 		case Hitters::explosion:
 		case Hitters::keg:
 		case Hitters::mine:
@@ -164,7 +161,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case Hitters::stab:
 		case Hitters::sword:
 		case Hitters::fall:
-			damage *= 0.90f;	
+			damage *= 0.90f;
 			break;
 
 		case Hitters::burn:
@@ -179,7 +176,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 			
 		default:
-			damage *= 0.80f;	
+			damage *= 0.80f;
 			break;
 	}
 

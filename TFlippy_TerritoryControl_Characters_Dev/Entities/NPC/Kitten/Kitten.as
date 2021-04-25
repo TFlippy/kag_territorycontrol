@@ -242,6 +242,16 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 	return blob !is null && (blob.isCollidable() && !blob.hasTag("player"));
 }
 
+bool canBePutInInventory(CBlob@ this, CBlob@ inventoryBlob)
+{
+	// stop kitten massacre
+	if (inventoryBlob.getName() == "backpackblob")
+	{
+		return false;
+	}
+	else return true;
+}
+
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
 {
 	if (blob is null) return;
@@ -265,18 +275,23 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("write"))
 	{
+		Random@ rand = Random(this.getNetworkID());
+
 		if (isServer())
 		{
-			Random@ rand = Random(this.getNetworkID());
 			CBlob @caller = getBlobByNetworkID(params.read_u16());
 			CBlob @carried = getBlobByNetworkID(params.read_u16());
 
 			if (caller !is null && carried !is null)
 			{
 				this.set_string("text", carried.get_string("text"));
-				this.setInventoryName(this.get_string("text") + " the " + surnames[rand.NextRanged(surnames.length)]);
+				this.Sync("text", true);
 				carried.server_Die();
 			}
+		}
+		if (isClient())
+		{
+			this.setInventoryName(this.get_string("text") + " the " + surnames[rand.NextRanged(surnames.length)]);
 		}
 	}
 }

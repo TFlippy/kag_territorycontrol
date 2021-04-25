@@ -15,9 +15,9 @@ void onInit(CBlob@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (isServer())
+	if (cmd == this.getCommandID("write") || (cmd == this.getCommandID("addwrite")))
 	{
-		if (cmd == this.getCommandID("write") || (cmd == this.getCommandID("addwrite")))
+		if (isServer())
 		{
 			CBlob @caller = getBlobByNetworkID(params.read_u16());
 			CBlob @carried = getBlobByNetworkID(params.read_u16());
@@ -33,10 +33,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					this.set_string("text", carried.get_string("text"));
 				}
 				this.Sync("text", true);
-				this.getSprite().SetAnimation("written");
 				carried.server_Die();
 			}
 		}
+
+		this.getSprite().SetAnimation("written");
 	}
 }
 

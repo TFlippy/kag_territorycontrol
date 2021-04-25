@@ -7,7 +7,6 @@
 
 int fade_time = 300;
 
-
 class KillMessage
 {
 	string victim;
@@ -135,7 +134,6 @@ class KillFeed
 				case Hitters::cata_boulder: hitterIcon = "$killfeed_boulder$"; break;
 
 
-
 				// TC HITTER ICONS
 				case HittersTC::hammer:     hitterIcon = "$killfeed_hammer$"; break;
 				case HittersTC::staff:      hitterIcon = "$killfeed_staff$"; break;
@@ -148,10 +146,12 @@ class KillFeed
 				case HittersTC::poison:
 				case HittersTC::disease:    hitterIcon = "$killfeed_poison$"; break;
 
+				case HittersTC::railgun_lance:
+				case HittersTC::plasma:     hitterIcon = "$killfeed_plasma$"; break;
+
 				case HittersTC::bullet_low_cal:
 				case HittersTC::bullet_high_cal:
-				case HittersTC::railgun_lance:
-				case HittersTC::shotgun:   hitterIcon = "$killfeed_bullet$"; break;
+				case HittersTC::shotgun:    hitterIcon = "$killfeed_bullet$"; break;
 
 				default:
 					hitterIcon = "$killfeed_fall$";
@@ -241,6 +241,7 @@ void onInit(CRules@ this)
 	AddIconToken("$killfeed_electric$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 23);
 	AddIconToken("$killfeed_hammer$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 24);
 	AddIconToken("$killfeed_staff$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 25);
+	AddIconToken("$killfeed_plasma$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 26);
 }
 
 void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ killer, u8 customdata)

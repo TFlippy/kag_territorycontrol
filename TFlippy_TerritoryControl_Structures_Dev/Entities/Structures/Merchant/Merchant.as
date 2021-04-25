@@ -44,6 +44,8 @@ void onInit(CBlob@ this)
 
 	this.getCurrentScript().tickFrequency = 30 * 3;
 
+	addTokens(this); //colored shop icons
+
 	// SHOP
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
 	this.set_Vec2f("shop menu size", Vec2f(6, 5));
@@ -216,6 +218,20 @@ void onInit(CBlob@ this)
 	}
 }
 
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	// reset shop colors
+	addTokens(this);
+}
+
+void addTokens(CBlob@ this)
+{
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+
+	AddIconToken("$icon_car$", "Icon_Car.png", Vec2f(16, 8), 0, teamnum);
+}
+
 int getRandomCost(Random@ random, int min, int max, int rounding = 10)
 {
 	return Maths::Round(f32(min + random.NextRanged(max - min)) / rounding) * rounding;
@@ -363,10 +379,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (caller !is null && carried !is null)
 			{
 				this.set_string("text", carried.get_string("text"));
-				this.setInventoryName(this.get_string("text"));
+				this.Sync("text", true);
 				this.set_string("shop description", this.get_string("text"));
+				this.Sync("shop description", true);
 				carried.server_Die();
 			}
+		}
+		if (isClient())
+		{
+			this.setInventoryName(this.get_string("text"));
 		}
 	}
 }

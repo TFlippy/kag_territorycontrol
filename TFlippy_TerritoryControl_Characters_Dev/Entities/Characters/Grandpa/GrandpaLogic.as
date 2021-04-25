@@ -12,15 +12,15 @@ void onInit(CBlob@ this)
 	//this.Tag("noBubbles"); this is for disabling emoticons, we won't need that.
 	this.Tag("notarget"); //makes AI never target us
 	this.Tag("noCapturing");
-	
+
 	this.Tag("noUseMenu");
 	this.set_f32("gib health", -3.0f);
-	
+
 	this.getShape().getConsts().mapCollisions = false;
 
 	this.Tag("player");
 	this.Tag("invincible");
-	
+
 	CShape@ shape = this.getShape();
 	shape.SetRotationsAllowed(false);
 	shape.getConsts().net_threshold_multiplier = 0.5f;
@@ -29,18 +29,18 @@ void onInit(CBlob@ this)
 
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	this.getCurrentScript().removeIfTag = "dead";
-	
+
 	this.SetLight(true);
 	this.SetLightRadius(80.0f);
 	this.SetLightColor(SColor(255, 255, 200, 0));
-	
+
 	ShakeScreen(64, 32, this.getPosition());
 	this.getSprite().SetAnimation(this.getSexNum() == 0 ? "male" : "female");
-	
+
 	if(!isClient()){return;}
 	ParticleZombieLightning(this.getPosition());
 	this.getSprite().PlaySound("MagicWand.ogg");
-	
+
 }
 
 void onSetPlayer(CBlob@ this, CPlayer@ player)
@@ -49,6 +49,7 @@ void onSetPlayer(CBlob@ this, CPlayer@ player)
 	{
 		/*player.server_setTeamNum(-1);
 		this.server_setTeamNum(-1);*/
+		player.SetScoreboardVars("ScoreboardIcons.png", (this.getSexNum() == 0 ? 8 : 9), Vec2f(16, 16));
 		client_AddToChat(player.getUsername() + " has entered the " + (this.getSexNum() == 0 ? "Grandpa" : "Grandma") + " Administrator mode!", SColor(255, 255, 80, 150));
 	}
 }

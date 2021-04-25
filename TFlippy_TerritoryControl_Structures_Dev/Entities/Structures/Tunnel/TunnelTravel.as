@@ -7,7 +7,9 @@
 const string icon_path = "TunnelIcons.png";
 const Vec2f frame_dims(32, 32);
 
-
+//tags
+const string reinforcements = "reinforcements allowed";
+const string raid = "under raid"; 
 
 string generate_token(int id, bool fortress, bool raid) {
 	const string prefix = "TRAVEL_";
@@ -195,7 +197,7 @@ void onTunnelCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			// instant travel cause there is just one place to go
 			if (tunnels.length == 1)
 			{
-				Travel(this, caller, tunnels[0].getPosition(), !tunnels[0].hasTag("reinforcements allowed"));
+				Travel(this, caller, tunnels[0].getPosition(), !tunnels[0].hasTag(reinforcements));
 			}
 			else
 			{
@@ -212,17 +214,22 @@ void onTunnelCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		        && (this.getPosition() - caller.getPosition()).getLength() < (this.getRadius() + caller.getRadius()) * 2.0f &&
 		        doesFitAtTunnel(this, caller, tunnel))
 		{
-			if (isServer())
+			CBitStream params;
+			params.write_u16(caller.getNetworkID());
+			//params.write_u16(tunnel.getNetworkID());
+			params.write_Vec2f(tunnel.getPosition());
+			params.write_bool(!tunnel.hasTag(reinforcements));
+
+			if (tunnel.hasTag(reinforcements))
 			{
-				CBitStream params;
-				params.write_u16(caller.getNetworkID());
-				//params.write_u16(tunnel.getNetworkID());
-				params.write_Vec2f(tunnel.getPosition());
-				params.write_bool(!tunnel.hasTag("reinforcements allowed"));
-				this.SendCommand(this.getCommandID("server travel to"), params);
+				if (isServer() && tunnel.getTeamNum() == this.getTeamNum())
+				{
+					this.SendCommand(this.getCommandID("server travel to"), params);
+				}
 			}
+			else if (tunnel.hasTag(raid) && caller.isMyPlayer()) Sound::Play("MigrantSayNo.ogg");
 		}
-		else if (caller !is null && caller.isMyPlayer())
+		else if (!doesFitAtTunnel(this, caller, tunnel) && caller !is null && caller.isMyPlayer())
 			Sound::Play("NoAmmo.ogg");
 	}
 	else if (cmd == this.getCommandID("server travel to"))
@@ -280,11 +287,13 @@ string getTravelIcon(CBlob@ this, CBlob@ tunnel)
 	angle += 2 * Maths::Pi; //offset to ensure positiveness
 	int index = angle / (Maths::Pi * 2 / 8);
 	index = index % 8; //ensure index is in bounds
-	return generate_token(index, tunnel.hasTag("faction_base"), tunnel.hasTag("under raid"));
+	return generate_token(index, tunnel.hasTag("faction_base"), tunnel.hasTag(raid));
 
 }
 
 string getTravelDescription(CBlob@ this, CBlob@ tunnel)
 {
-	return "Travel to " + tunnel.getInventoryName() + " (" + int((tunnel.getPosition() - this.getPosition()).Length() / 8) + "m)";
+	string tunnelStatus = (tunnel.hasTag(reinforcements) && tunnel.hasTag(raid) ? " - Contested" : (tunnel.hasTag(raid) ? " - Under attack" : ""));
+
+	return "Travel to " + tunnel.getInventoryName() + " (" + int((tunnel.getPosition() - this.getPosition()).Length() / 8) + "m)" + tunnelStatus;
 }

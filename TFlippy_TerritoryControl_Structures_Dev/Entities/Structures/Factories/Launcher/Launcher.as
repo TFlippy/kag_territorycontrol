@@ -13,20 +13,19 @@ void onInit(CBlob@ this)
 	this.Tag("place norotate");
 
 	//block knight sword
+	this.Tag("builder always hit");
 	this.Tag("blocks sword");
 	this.Tag("blocks water");
 
-	// this.set_TileType("background tile", CMap::tile_castle_back);
+	this.set_TileType("background tile", CMap::tile_castle_back);
 
 	MakeDamageFrame(this);
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
-	
+
 	CSprite@ sprite = this.getSprite();
 	sprite.SetAnimation("forward");
-	
+
 	this.addCommandID("use");
-	
-	this.Tag("builder always hit");
 }
 
 void onSetStatic(CBlob@ this, const bool isStatic)

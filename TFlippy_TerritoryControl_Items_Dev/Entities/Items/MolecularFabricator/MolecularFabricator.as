@@ -13,9 +13,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_scythergib$", "ScytherGib.png", Vec2f(16, 16), 2);
 	AddIconToken("$icon_chargerifle$", "ChargeRifle.png", Vec2f(26, 8), 0);
 	AddIconToken("$icon_chargelance$", "ChargeLance.png", Vec2f(32, 16), 0);
-	AddIconToken("$icon_exosuit$", "ExosuitItem.png", Vec2f(16, 10), 0);
 	AddIconToken("$icon_molecularfabricator$", "MolecularFabricator.png", Vec2f(32, 16), 0);
-	AddIconToken("$icon_fieldgenerator$", "FieldGenerator.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_matter_0$", "Material_Matter.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_matter_1$", "Material_Matter.png", Vec2f(16, 16), 1);
 	AddIconToken("$icon_matter_2$", "Material_Matter.png", Vec2f(16, 16), 2);
@@ -23,6 +21,8 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_plasteel$", "Material_Plasteel.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_coilgun$", "Coilgun_Icon.png", Vec2f(48, 16), 0);
 	AddIconToken("$icon_scyther$", "Scyther.png", Vec2f(24, 24), 0);
+
+	addTokens(this); //colored shop icons
 
 	this.set_f32("pickup_priority", 8.00f); // The lower, the higher priority
 
@@ -177,6 +177,22 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
 		s.spawnNothing = true;
 	}
+}
+
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	// reset shop colors
+	addTokens(this);
+}
+
+void addTokens(CBlob@ this)
+{
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+
+	AddIconToken("$icon_fieldgenerator$", "FieldGenerator.png", Vec2f(24, 24), 0, teamnum);
+	AddIconToken("$icon_exosuit$", "ExosuitItem.png", Vec2f(16, 10), 0, teamnum);
+	AddIconToken("$icon_hoverbike$", "Hoverbike.png", Vec2f(24, 16), 2, teamnum);
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

@@ -459,7 +459,7 @@ void removeBoots(CBlob@ playerblob, string bootsname)		//I think you should alre
 
 void onDie(CBlob@ this)
 {
-    if (isServer())
+	if (isServer())
 	{
 		if (this.get_string("equipment_head") != "")
 		{
@@ -478,9 +478,7 @@ void onDie(CBlob@ this)
 		}
 		if (this.get_string("equipment_boots") != "")
 		{
-			if(this.get_string("equipment_boots") == "combatboots")
-			{ }
-			else server_CreateBlob(this.get_string("equipment_boots"), this.getTeamNum(), this.getPosition());
+			server_CreateBlob(this.get_string("equipment_boots"), this.getTeamNum(), this.getPosition());
 		}
 	}
 }

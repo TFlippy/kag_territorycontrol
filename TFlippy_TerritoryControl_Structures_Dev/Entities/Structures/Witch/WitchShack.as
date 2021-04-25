@@ -30,13 +30,11 @@ void onInit(CBlob@ this)
 
 	AddIconToken("$mat_mithril$", "Material_Mithril.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_mithrilingot$", "Material_MithrilIngot.png", Vec2f(16, 16), 1);
-	AddIconToken("$mat_lancerod$", "Material_LanceRod.png", Vec2f(16, 8), 0);
 	AddIconToken("$card_pack$", "CardPack.png", Vec2f(9, 9), 0);
-	AddIconToken("$icon_mysterybox$", "MysteryBox.png", Vec2f(24, 16), 0);
-	AddIconToken("$icon_animalbox$", "AnimalBox.png", Vec2f(24, 16), 0);
-
 	AddIconToken("$choker_gem$", "Choker.png", Vec2f(10, 10), 0);
 	AddIconToken("$bubble_gem$", "BubbleGem.png", Vec2f(10, 10), 0);
+
+	addTokens(this); //colored shop icons
 
 	this.getCurrentScript().tickFrequency = 30 * 5;
 
@@ -120,6 +118,21 @@ void onInit(CBlob@ this)
 		this.set_u32("move timer", getGameTime() + (traderRandom.NextRanged(5) + 5)*getTicksASecond());
 		this.set_u32("next offset", traderRandom.NextRanged(16));
 	}
+}
+
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	// reset shop colors
+	addTokens(this);
+}
+
+void addTokens(CBlob@ this)
+{
+	int teamnum = this.getTeamNum();
+	if (teamnum > 6) teamnum = 7;
+
+	AddIconToken("$icon_mysterybox$", "MysteryBox.png", Vec2f(24, 16), 0, teamnum);
+	AddIconToken("$icon_animalbox$", "AnimalBox.png", Vec2f(24, 16), 0, teamnum);
 }
 
 void onTick(CBlob@ this)
@@ -276,10 +289,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (caller !is null && carried !is null)
 			{
 				this.set_string("text", carried.get_string("text"));
-				this.setInventoryName(this.get_string("text"));
+				this.Sync("text", true);
 				this.set_string("shop description", this.get_string("text"));
+				this.Sync("shop description", true);
 				carried.server_Die();
 			}
+		}
+		if (isClient())
+		{
+			this.setInventoryName(this.get_string("text"));
 		}
 	}
 }

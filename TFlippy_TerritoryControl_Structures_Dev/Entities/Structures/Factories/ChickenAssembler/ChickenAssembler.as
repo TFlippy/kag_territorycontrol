@@ -44,8 +44,6 @@ void onInit(CBlob@ this)
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 8);
 		items.push_back(i);
 	}
-	
-	
 	{
 		AssemblerItem i("sniper", 2, "UPF Sniper Rifle (2)");
 		AddRequirement(i.reqs, "blob", "mat_steelingot", "Steel Ingot", 24);
@@ -58,8 +56,6 @@ void onInit(CBlob@ this)
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 8);
 		items.push_back(i);
 	}
-	
-	
 	{
 		AssemblerItem i("fuger", 4, "UPF Fuger (4)");
 		AddRequirement(i.reqs, "blob", "mat_steelingot", "Steel Ingot", 16);
@@ -78,7 +74,6 @@ void onInit(CBlob@ this)
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 12);
 		items.push_back(i);
 	}
-	
 	{
 		AssemblerItem i("mat_sammissile", 4, "SAM Missile (4)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 8);
@@ -93,7 +88,6 @@ void onInit(CBlob@ this)
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
 		items.push_back(i);
 	}
-	
 	{
 		AssemblerItem i("cruisemissile", 1, "Cruise Missile (1)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
@@ -101,52 +95,7 @@ void onInit(CBlob@ this)
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
 		items.push_back(i);
 	}
-	
-	/*{
-		AssemblerItem i("cruisemissilenuke", 1, "L.O.L. Cruise Missile (1)");
-		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
-		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
-		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
-		AddRequirement(i.reqs, "blob", "mat_mininuke", "L.O.L. Warhead", 1);
-		items.push_back(i);
-	}
-	
-	{
-		AssemblerItem i("cruisemissilemustard", 1, "Mustard Gas Cruise Missile (1)");
-		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
-		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
-		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
-		AddRequirement(i.reqs, "blob", "mat_mustard", "Mustard Gas", 150);
-		items.push_back(i);
-	}
-	
-	{
-		AssemblerItem i("cruisemissilethermobaric", 1, "Thermobaric Cruise Missile (1)");
-		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
-		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
-		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
-		AddRequirement(i.reqs, "blob", "mat_fuel", "Fuel", 50);
-		items.push_back(i);
-	}
-	
-		{
-		AssemblerItem i("cruisemissileacid", 1, "Acid Cruise Missile (1)");
-		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
-		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
-		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
-		AddRequirement(i.reqs, "blob", "mat_acid", "Acid", 100);
-		items.push_back(i);
-	}
-	
-	{
-		AssemblerItem i("cruisemissilecluster", 1, "Cluster Cruise Missile (1)");
-		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 16);
-		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 50);
-		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
-		AddRequirement(i.reqs, "blob", "mat_clusterbomb", "Cluster Bomb", 1);
-		items.push_back(i);
-	}*/
-	
+
 	this.set("items", items);
 
 	this.set_TileType("background tile", CMap::tile_biron);
@@ -159,7 +108,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("set");
 
 	this.set_u8("crafting", 0);
-	
+
 	this.Tag("ignore extractor");
 }
 
@@ -185,7 +134,10 @@ void ChickenAssemblerMenu(CBlob@ this, CBlob@ caller)
 
 				CBitStream pack;
 				pack.write_u8(i);
-				AddIconToken("$chicken_assembler_icon" + i + "$", "ChickenAssemblerIcons.png", Vec2f(32, 16), i);
+
+				int teamnum = this.getTeamNum();
+				if (teamnum > 6) teamnum = 7;
+				AddIconToken("$chicken_assembler_icon" + i + "$", "ChickenAssemblerIcons.png", Vec2f(32, 16), i, teamnum);
 
 				string text = "Set to Assemble: " + item.title;
 				if(this.get_u8("crafting") == i)
@@ -220,7 +172,7 @@ void onTick(CBlob@ this)
 
 	AssemblerItem[]@ items = getItems(this);
 	if (items.length == 0) return;
-	
+
 	AssemblerItem item = items[crafting];
 	CInventory@ inv = this.getInventory();
 
@@ -253,7 +205,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 	AssemblerItem[]@ items = getItems(this);
 	if (items.length == 0) return;
-	
+
 	AssemblerItem item = items[crafting];
 	CBitStream bs = item.reqs;
 	bs.ResetBitIndex();
@@ -301,6 +253,6 @@ void onAddToInventory( CBlob@ this, CBlob@ blob )
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if(blob.getName() != "gyromat") return;
-	
+
 	this.getCurrentScript().tickFrequency = 150 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

@@ -26,7 +26,7 @@ void onInit(CBlob@ this)
 		Vec2f(-4.0f,2.0f)	//Visual offset for raycast bullets
 	);
 	
-	this.set_string("gun_tracerName", "ChargePistol_Tracer.png");
+	this.set_string("gun_tracerName", "ChargeRifle_Tracer.png");
 	this.set_u8("gun_hitter", HittersTC::plasma);
 }
 

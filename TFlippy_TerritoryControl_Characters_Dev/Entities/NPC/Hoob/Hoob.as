@@ -104,7 +104,7 @@ void onInit(CBlob@ this)
 	string name = titles[rand.NextRanged(titles.length)] + " " + firstnames[rand.NextRanged(firstnames.length)] + " the " + surnames[rand.NextRanged(surnames.length)];
 	this.set_string("trader name", name);
 	this.setInventoryName(name);
-	
+
 	this.getShape().SetRotationsAllowed(false);
 	this.set_f32("gib health", -20.0f);
 	this.set_f32("crak_effect", 2.00f);
@@ -115,33 +115,38 @@ void onInit(CBlob@ this)
 	this.getBrain().server_SetActive(true);
 
 	this.set_u32("nextTalk", getGameTime() + XORRandom(60));
-	
+
 	this.set_u32("nextAttack", 0);
 	this.set_u32("nextJumpStomp", 0);
-	
+
 	this.set_f32("minDistance", 8);
 	this.set_f32("chaseDistance", 300);
 	this.set_f32("maxDistance", 600);
-	
+
 	this.set_f32("inaccuracy", 0.01f);
 	this.set_u8("reactionTime", 20);
 	this.set_u8("attackDelay", 0);
-	
+
 	this.set_f32("voice pitch", 0.60f);
-	
+
 	this.addCommandID("traderChat");
 	this.set_u32("lastDanger", 0);
-	
+
 	if (getNet().isServer())
 	{
 		this.server_setTeamNum(-1);
 	}
 }
 
+void onSetPlayer(CBlob@ this, CPlayer@ player)
+{
+	if (player !is null) player.SetScoreboardVars("ScoreboardIcons.png", 20, Vec2f(16, 16));
+}
+
 void onTick(CBlob@ this)
 {
 	if (!this.hasTag("dead"))
-	{	
+	{
 		bool client = isClient();
 		bool server = isServer();
 
@@ -151,15 +156,15 @@ void onTick(CBlob@ this)
 			moveVars.walkFactor *= 2.00f;
 			moveVars.jumpFactor *= 6.00f;
 		}
-		
+
 		uint time = getGameTime();
 		if (this.getPlayer() is null && time >= this.get_u32("nextTalk"))
 		{
 			this.set_u32("nextTalk", time + (30 * 5) + XORRandom(30 * 10));
-			
+
 			u32 lastDanger = this.get_u32("lastDanger");
 			bool danger = time < (lastDanger + (30 * 5));
-			
+
 			string text = "";
 			if (danger)
 			{
@@ -187,7 +192,7 @@ void onTick(CBlob@ this)
 				this.SendCommand(this.getCommandID("traderChat"), stream);
 			}
 		}
-		
+
 		if (this.isOnGround())
 		{
 			if ((time % 10 == 0) && (this.isKeyPressed(key_left) || this.isKeyPressed(key_right)))
@@ -200,14 +205,14 @@ void onTick(CBlob@ this)
 				this.set_u32("nextJumpStomp", getGameTime() + 15);
 			}
 		}
-		
+
 		if (getGameTime() > this.get_u32("next attack"))
 		{
 			if (this.isKeyPressed(key_action1))
 			{
 				Vec2f dir = this.getAimPos() - this.getPosition();
 				dir.Normalize();
-				
+
 				CBlob@ carried = this.getCarriedBlob();
 				if (carried is null)
 				{
@@ -218,32 +223,32 @@ void onTick(CBlob@ this)
 						{
 							this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 						}
-					
+
 						if (server)
 						{
 							this.server_Pickup(blob);
 						}
-						
+
 						this.set_u32("next attack", getGameTime() + 20);
 					}
 				}
 				else if (carried !is null)
 				{
 					if (carried.getConfig() != "hoobballer")
-					{					
+					{
 						if (client)
 						{
 							this.getSprite().PlaySound("Pus_Attack_2", 1.00f, 0.80f);
 							carried.getSprite().Gib();
 						}
-						
+
 						if (server)
 						{
 							CBlob@ baller = server_CreateBlob("hoobballer", carried.getTeamNum(), carried.getPosition());
 							this.server_Pickup(baller);
 							carried.server_Die();
 						}
-						
+
 						this.set_u32("next attack", getGameTime() + 20);
 					}
 					else
@@ -252,31 +257,31 @@ void onTick(CBlob@ this)
 						{
 							this.getSprite().PlaySound("nightstick_hit2", 1.00f, 0.90f);
 						}
-					
+
 						if (server)
 						{
 							this.DropCarried();
 						}
-						
+
 						Vec2f dir = this.getAimPos() - this.getPosition();
 						dir.Normalize();
-						
+
 						carried.setVelocity(dir * 10.00f);
-						
+
 						this.set_u32("next attack", getGameTime() + 20);
 					}
 				}
 			}
-			
+
 			if (this.isKeyPressed(key_action2))
 			{
 				Vec2f dir = this.getAimPos() - this.getPosition();
 				f32 length = dir.getLength();
 				dir.Normalize();
-				
+
 				Vec2f hitPos = this.getPosition() + (dir * Maths::Min(16.00f, length));
 				getMap().rayCastSolid(this.getPosition(), hitPos, hitPos);
-				
+
 				MegaHit(this, hitPos, dir, 4, Hitters::crush);
 				this.set_u32("next attack", getGameTime() + 10);
 			}
@@ -292,7 +297,7 @@ void onTick(CSprite@ this)
 	{
 		if (!this.isAnimation("dead")) this.PlaySound("Hoob_Death.ogg", 1.50f, 1.00f);
 		this.SetAnimation("dead");
-		
+
 		return;
 	}
 
@@ -348,7 +353,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				this.set_u32("next sound", getGameTime() + 150);
 			}
 		}
-		
+
 		if (isServer())
 		{
 			CBrain@ brain = this.getBrain();
@@ -357,10 +362,10 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				if (hitterBlob.getTeamNum() != this.getTeamNum()) brain.SetTarget(hitterBlob);
 			}
 		}
-		
+
 		this.set_u32("lastDanger", getGameTime());
 	}
-		
+
 	return damage;
 }
 
@@ -377,30 +382,30 @@ void Stomp(CBlob@ this, int count, f32 magnitude)
 	bool client = isClient();
 	bool server = isServer();
 	CMap@ map = getMap();
-	
+
 	Vec2f worldPoint = this.getPosition() + Vec2f(0, 24);
-	
+
 	for (int i = 0; i < count; i++)
 	{
 		Vec2f pos = worldPoint + Vec2f(24 - XORRandom(48), -XORRandom(16));
-		
+
 		if (client && XORRandom(100) < 50)
 		{
 			MakeDustParticle(pos, "dust2.png");
 		}
-		
+
 		if (server)
 		{
 			map.server_DestroyTile(pos, 1);
 		}
 	}
-	
+
 	if (client)
 	{
 		this.getSprite().PlaySound("FallBig" + (XORRandom(5) + 1), 1.00f, 1.00f);
 		ShakeScreen(100.0f, 30.00f, this.getPosition());
 	}
-	
+
 	if (server)
 	{
 		CBlob@[] blobsInRadius;
@@ -423,34 +428,34 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 custo
 
 	bool client = isClient();
 	bool server = isServer();
-	
+
 	Vec2f dir = worldPoint - this.getPosition();
 	f32 len = dir.getLength();
 	dir.Normalize();
 	f32 angle = dir.Angle();
-	
+
 	int count = 20;
-	
+
 	for (int i = 0; i < count; i++)
 	{
 		Vec2f offset = getRandomVelocity(0, XORRandom(len * 2), 90);
 		// offset.y *= 3.00f;
 		offset = offset.RotateBy(-angle);
-		
-		Vec2f pos = worldPoint - offset - (dir * 8.00f);	
-		
+
+		Vec2f pos = worldPoint - offset - (dir * 8.00f);
+
 		if (client && XORRandom(100) < 10)
 		{
 			MakeDustParticle(pos, "dust2.png");
 		}
-		
+
 		if (server)
 		{
 			 getMap().server_DestroyTile(pos, damage);
 			// this.server_HitMap(pos, dir, damage, Hitters::crush);
 		}
 	}
-	
+
 	if (client)
 	{
 		f32 magnitude = damage;
@@ -458,6 +463,3 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 custo
 		ShakeScreen(magnitude * 10.0f, magnitude * 8.0f, this.getPosition());
 	}
 }
-
-
-

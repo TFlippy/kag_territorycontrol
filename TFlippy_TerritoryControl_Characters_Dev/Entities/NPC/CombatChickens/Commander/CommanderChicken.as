@@ -14,62 +14,62 @@ void onInit(CBlob@ this)
 {
 	this.set_u32("nextAttack", 0);
 	this.set_u32("nextBomb", 0);
-	
+
 	this.set_f32("minDistance", 32);
 	this.set_f32("chaseDistance", 200);
 	this.set_f32("maxDistance", 400);
-	
+
 	this.set_f32("inaccuracy", 0.01f);
 	this.set_u8("reactionTime", 20);
 	this.set_u8("attackDelay", 0);
 	this.set_bool("bomber", false);
 	this.set_bool("raider", false);
-	
+
 	// this.set_u32("next_event", getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
-	
+
 	next_commander_event = getGameTime(); // + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
 	this.addCommandID("commander_order_recon_squad");
-	
+
 	this.SetDamageOwnerPlayer(null);
-	
+
 	this.Tag("can open door");
 	this.Tag("combat chicken");
 	this.Tag("npc");
 	this.Tag("flesh");
 	this.Tag("player");
-	
+
 	this.getCurrentScript().tickFrequency = 1;
-	
+
 	this.set_f32("voice pitch", 1.50f);
 	this.getSprite().addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 	if (isServer())
 	{
 		this.set_u16("stolen coins", 850);
-	
+
 		this.server_setTeamNum(250);
-			
+
 		string gun_config;
 		string ammo_config;
-		
+
 		gun_config = "beagle";
 		ammo_config = "mat_pistolammo";
-		
+
 		this.set_u8("reactionTime", 2);
 		this.set_u8("attackDelay", 2);
 		this.set_f32("chaseDistance", 100);
 		this.set_f32("minDistance", 32);
 		this.set_f32("maxDistance", 300);
 		this.set_f32("inaccuracy", 0.00f);
-		
+
 		CBlob@ phone = server_CreateBlob("phone", this.getTeamNum(), this.getPosition());
 		this.server_PutInInventory(phone);
-		
+
 		if (XORRandom(100) < 60) 
 		{
 			CBlob@ bp_auto = server_CreateBlob("bp_automation_advanced", -1, this.getPosition());
 			this.server_PutInInventory(bp_auto);
 		}
-		
+
 		if (XORRandom(100) < 80) 
 		{
 			CBlob@ bp_sdr = server_CreateBlob("bp_energetics", -1, this.getPosition());
@@ -82,7 +82,7 @@ void onInit(CBlob@ this)
 			CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
 			this.server_PutInInventory(ammo);
 		}
-		
+
 		CBlob@ gun = server_CreateBlob(gun_config, this.getTeamNum(), this.getPosition());
 		if(gun !is null)
 		{
@@ -94,6 +94,11 @@ void onInit(CBlob@ this)
 			}
 		}
 	}
+}
+
+void onSetPlayer(CBlob@ this, CPlayer@ player)
+{
+	if (player !is null) player.SetScoreboardVars("ScoreboardIcons.png", 17, Vec2f(16, 16));
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -113,13 +118,13 @@ void onTick(CBlob@ this)
 	if (this.getHealth() < 0.0 && this.hasTag("dead"))
 	{
 		this.getSprite().PlaySound("Wilhelm.ogg", 1.8f, 1.8f);
-		
+
 		if (isServer())
 		{
 			this.server_SetPlayer(null);
 			server_DropCoins(this.getPosition(), Maths::Max(0, Maths::Min(this.get_u16("stolen coins"), 5000)));
 			CBlob@ carried = this.getCarriedBlob();
-			
+
 			if (carried !is null)
 			{
 				carried.server_DetachFrom(this);
@@ -136,7 +141,7 @@ void onTick(CBlob@ this)
 			CBlob@[] bases;
 			getBlobsByTag("faction_base", @bases);
 			u16 base_netid = 0;
-		
+
 			if (bases.length > 0) 
 			{
 				CBlob@ base = bases[XORRandom(bases.length)];
@@ -151,11 +156,11 @@ void onTick(CBlob@ this)
 					{
 						f32 map_width = getMap().tilemapwidth * 8;
 						f32 initial_position_x = Maths::Clamp(base.getPosition().x + (80 - XORRandom(160)) * 8.00f, 256.00f, map_width - 256.00f);
-					
+
 						CBitStream stream;
 						stream.write_u16(base.getNetworkID());
 						this.SendCommand(this.getCommandID("commander_order_recon_squad"), stream);
-					
+
 						for (int i = 0; i < 4; i++)
 						{
 							CBlob@ blob = server_MakeCrateOnParachute("scoutchicken", "SpaceStar Ordering Recon Squad", 0, 250, Vec2f(initial_position_x + (64 - XORRandom(128)), XORRandom(32)));
@@ -172,7 +177,7 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
-	
+
 	if (isClient())
 	{
 		if (getGameTime() > this.get_u32("next sound") && XORRandom(100) < 5)
@@ -193,7 +198,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			this.set_u32("next sound", getGameTime() + 60);
 		}
 	}
-	
+
 	return damage;
 }
 
