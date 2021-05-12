@@ -225,10 +225,8 @@ void onTick(CBlob@ this)
 			f32 length = (hitPos - startPos).Length();
 
 			bool blobHit = getMap().getHitInfosFromRay(startPos, angle, length, this, @hitInfos);
-			print("1");
 			if (blobHit)
 			{
-				print("2");
 				for (u32 i = 0; i < hitInfos.length; i++)
 				{
 					if (hitInfos[i].blob !is null)
