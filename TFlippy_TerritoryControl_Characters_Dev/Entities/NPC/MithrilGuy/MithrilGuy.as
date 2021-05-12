@@ -24,6 +24,7 @@ void onInit(CBlob@ this)
 	// this.Tag("npc");
 	this.getSprite().addSpriteLayer("isOnScreen","NoTexture.png",1,1);
 	this.Tag("flesh");
+	this.Tag("player");
 	this.Tag("dangerous");
 	this.Tag("map_damage_dirt");
 
