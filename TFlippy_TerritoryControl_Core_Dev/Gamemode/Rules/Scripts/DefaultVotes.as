@@ -276,7 +276,6 @@ class VoteNextmapFunctor : VoteFunctor
 			playername = charname;
 		}
 
-
 		MapType = type;
 	}
 
@@ -291,7 +290,7 @@ class VoteNextmapFunctor : VoteFunctor
 					// Official maps
 					case 1:
 					{
-						string[] OffiMaps;
+						string[]@ OffiMaps;
 						getRules().get("maptypes-offi", @OffiMaps);
 
 						LoadMap(OffiMaps[XORRandom(OffiMaps.length)]);
@@ -300,10 +299,22 @@ class VoteNextmapFunctor : VoteFunctor
 
 					// Meme maps
 					case 2:
+					{
+						string[]@ MemeMaps;
+						getRules().get("maptypes-meme", @MemeMaps);
+
+						LoadMap(MemeMaps[XORRandom(MemeMaps.length)]);
+					}
 					break;
 
 					// Old maps
 					case 3:
+					{
+						string[]@ OldMaps;
+						getRules().get("maptypes-old", @OldMaps);
+
+						LoadMap(OldMaps[XORRandom(OldMaps.length)]);
+					}
 					break;
 
 					// If the maptype is invalid or set to default, 

@@ -27,60 +27,34 @@ void onInit(CRules@ this)
 	onRestart(this);
 }
 
-bool need_sky_check = true;
 void onRestart(CRules@ this)
 {
-	//map borders
 	CMap@ map = getMap();
-	if (map !is null)
-	{
-		map.SetBorderFadeWidth(24.0f);
-		map.SetBorderColourTop(SColor(0xff000000));
-		map.SetBorderColourLeft(SColor(0xff000000));
-		map.SetBorderColourRight(SColor(0xff000000));
-		map.SetBorderColourBottom(SColor(0xff000000));
 
-		//do it first tick so the map is definitely there
-		//(it is on server, but not on client unfortunately)
-		need_sky_check = true;
-	}
-}
+	if (map is null) return;
 
-void onTick(CRules@ this)
-{
-	//TODO: figure out a way to optimise so we don't need to keep running this hook
-	if (need_sky_check)
-	{
-		need_sky_check = false;
-		CMap@ map = getMap();
-		//find out if there's any solid tiles in top row
-		// if not - semitransparent sky
-		// if yes - totally solid, looks buggy with "floating" tiles
-		bool has_solid_tiles = false;
-		for(int i = 0; i < map.tilemapwidth; i++) {
-			if(map.isTileSolid(map.getTile(i))) {
-				has_solid_tiles = true;
-				break;
-			}
-		}
-		map.SetBorderColourTop(0x000000);
-	}
+	//preliminary
+	map.SetBorderFadeWidth(24.0f);
+	map.SetBorderColourLeft(0xff000000);
+	map.SetBorderColourRight(0xff000000);
+	map.SetBorderColourTop(0xff000000);
+	map.SetBorderColourBottom(0xff000000);
+
+	this.AddScript("DefaultBorder.as");
 }
 
 //chat stuff!
 
-void onEnterChat(CRules @this)
+void onEnterChat(CRules@ this)
 {
 	if (getChatChannel() != 0) return; //no dots for team chat
 
 	CBlob@ localblob = getLocalPlayerBlob();
-	if (localblob !is null)
-		set_emote(localblob, Emotes::dots, 100000);
+	if (localblob !is null) set_emote(localblob, Emotes::dots, 100000);
 }
 
-void onExitChat(CRules @this)
+void onExitChat(CRules@ this)
 {
 	CBlob@ localblob = getLocalPlayerBlob();
-	if (localblob !is null)
-		set_emote(localblob, Emotes::off);
+	if (localblob !is null) set_emote(localblob, Emotes::off);
 }

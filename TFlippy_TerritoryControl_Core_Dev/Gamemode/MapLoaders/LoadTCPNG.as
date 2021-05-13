@@ -154,6 +154,7 @@ class TCPNGLoader : PNGLoader
 
 			case tc_colors::color_pumpjack_neutral:
 			{
+				autotile(offset);
 				spawnBlob(map, "pumpjack", offset, -1);
 				break;
 			}
@@ -324,6 +325,7 @@ class TCPNGLoader : PNGLoader
 			}
 			case tc_colors::color_barbedwire:
 			{
+				autotile(offset);
 				spawnBlob(map, "barbedwire", offset, -1);
 				break;
 			}
@@ -558,6 +560,30 @@ class TCPNGLoader : PNGLoader
 				map.SetTile(offset, CMap::tile_bglass_d0);
 				break;
 			}
+			case tc_colors::color_biome_desert:
+			{
+				CBlob@ blob = spawnBlob(map, "info_desert", offset, -1);
+				blob.setPosition(Vec2f(0, 0));
+				break;
+			}
+			case tc_colors::color_biome_jungle:
+			{
+				CBlob@ blob = spawnBlob(map, "info_jungle", offset, -1);
+				blob.setPosition(Vec2f(0, 0));
+				break;
+			}
+			case tc_colors::color_biome_arctic:
+			{
+				CBlob@ blob = spawnBlob(map, "info_arctic", offset, -1);
+				blob.setPosition(Vec2f(0, 0));
+				break;
+			}
+			case tc_colors::color_biome_dead:
+			{
+				CBlob@ blob = spawnBlob(map, "info_dead", offset, -1);
+				blob.setPosition(Vec2f(0, 0));
+				break;
+			}
 		};
 	}
 }
@@ -696,6 +722,7 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 			// GOLD
 			case CMap::tile_gold:
 			case 90:
+			case 91:
 			case 92:
 			case 93:
 			case 94:
