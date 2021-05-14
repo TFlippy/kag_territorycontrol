@@ -29,6 +29,10 @@
 // [PPU] - Player Picked Up
 // [RGE] - Random Game Event
 
+// SPECIAL
+
+// [R_STAT] - Responding to server status requests from Razi
+
 #define SERVER_ONLY
 
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
