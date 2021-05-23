@@ -7,7 +7,7 @@ s32 g_lastVoteCounter = 0;
 const float required_minutes = 10; //time you have to wait after joining w/o skip_votewait.
 
 s32 g_lastNextmapCounter = 0;
-const float required_minutes_nextmap = 10; //global nextmap vote cooldown
+const float required_minutes_nextmap = 5; //global nextmap vote cooldown
 
 const s32 VoteKickTime = 30 * 60 * 30; //ticks (30min default)
 const s32 VoteTeamKickNoTeamTime = 10 * 60 * 30; // 10 minutes
@@ -564,8 +564,8 @@ void onMainMenuCreated(CRules@ this, CContextMenu@ menu)
 	//nextmap menu
 	if (getSecurity().checkAccess_Feature(me, "map_vote"))
 	{
-		if (false ) /*g_lastNextmapCounter < 60 * getTicksASecond()*required_minutes_nextmap
-		        && (!can_skip_wait || g_haveStartedVote))*/
+		if (g_lastNextmapCounter < 60 * getTicksASecond() * required_minutes_nextmap
+		        && (!can_skip_wait || g_haveStartedVote))
 		{
 			Menu::addInfoBox(mapmenu, "Can't Start Vote", "Voting for next map\n" +
 			                 "requires a " + required_minutes_nextmap + " min wait\n" +
