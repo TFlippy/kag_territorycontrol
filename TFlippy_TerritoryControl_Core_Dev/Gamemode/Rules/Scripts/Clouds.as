@@ -60,14 +60,20 @@ void onInit(CRules@ this)
 
 	this.addCommandID("new_cloud"); // still register command so its in sync with server
 
-	if (v_fastrender) // then remove script if we dont want clouds
+	if (isClient())
 	{
-		this.RemoveScript("clouds.as");
-		return;
-	}
 
-	int callback = Render::addScript(Render::layer_background, "Clouds", "RenderClouds", -10000.0f);
-	this.set_u16("callback", callback);
+		if (v_fastrender) // then remove script if we dont want clouds
+		{
+			this.RemoveScript("clouds.as");
+			return;
+		}
+
+		int callback = Render::addScript(Render::layer_background, "Clouds", "RenderClouds", -10000.0f);
+		this.set_u16("callback", callback);
+
+		Texture::createFromFile("clouds", "cloudsall.png");
+	}
 
 	onRestart(this);
 }
@@ -171,7 +177,7 @@ void RenderClouds(int id)
 
 	Render::SetAlphaBlend(true); // alpha required to look more 'cloudy'
 	Render::SetZBuffer(true, true); // required to show up being tiles
-	Render::RawQuads("cloudsall.png", V_CLOUDS);
+	Render::RawQuads("clouds", V_CLOUDS);
 
 	V_CLOUDS.clear(); // clear after rendering
 }
