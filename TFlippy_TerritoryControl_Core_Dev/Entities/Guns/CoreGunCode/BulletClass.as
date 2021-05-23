@@ -34,7 +34,6 @@ class BulletObj
 	Vec2f BulletGrav;
 	Vec2f RenderPos;
 	Vec2f OldPos;
-	Vec2f LastPos;
 	Vec2f Gravity;
 	Vec2f KB;
 	f32 StartingAimPos;
@@ -66,7 +65,6 @@ class BulletObj
 		StartingAimPos = angle;
 
 		OldPos    = CurrentPos;
-		LastPos   = CurrentPos;
 		RenderPos = CurrentPos;
 
 		@gunBlob  = gun;
@@ -232,7 +230,7 @@ class BulletObj
 	void JoinQueue() // Every bullet gets forced to join the queue in onRenders, so we use this to calc to position
 	{   
 		// Are we on the screen?
-		const Vec2f xLast = PDriver.getScreenPosFromWorldPos(LastPos);
+		const Vec2f xLast = PDriver.getScreenPosFromWorldPos(OldPos);
 		const Vec2f xNew  = PDriver.getScreenPosFromWorldPos(CurrentPos);
 		if(!(xNew.x > 0 && xNew.x < ScreenX)) // Is our main position still on screen?
 		{
@@ -243,10 +241,10 @@ class BulletObj
 		}
 
 		// Lerp
-		Vec2f newPos = Vec2f_lerp(LastPos, CurrentPos, FRAME_TIME);
-		LastPos = newPos;
+		Vec2f newPos = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
+		//LastPos = newPos;
 
-		f32 angle = Vec2f(CurrentPos.x-newPos.x, CurrentPos.y-newPos.y).getAngleDegrees();//Sets the angle
+		f32 angle = TrueVelocity.getAngleDegrees();//Sets the angle
 
 		Vec2f TopLeft  = Vec2f(newPos.x -0.7, newPos.y-3);
 		Vec2f TopRight = Vec2f(newPos.x -0.7, newPos.y+3);
