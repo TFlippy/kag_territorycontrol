@@ -243,7 +243,6 @@ class BulletObj
 		// Lerp
 		Vec2f newPos = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
 		//LastPos = newPos;
-		print(''+FRAME_TIME);
 
 		f32 angle = TrueVelocity.getAngleDegrees();//Sets the angle
 
