@@ -47,7 +47,7 @@ void onInit(CRules@ this)
 	if (isClient())
 	{
 		Render::addScript(Render::layer_postworld, "BulletMain", "GunRender", 0.0f);
-		Render::addScript(Render::layer_prehud, "BulletMain", "GUIStuff", 0.0f);
+		//Render::addScript(Render::layer_prehud, "BulletMain", "GUIStuff", 0.0f);
 	}
 }
 
