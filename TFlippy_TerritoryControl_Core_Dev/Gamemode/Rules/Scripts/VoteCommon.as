@@ -41,6 +41,7 @@ class VoteObject
 		timeremaining = 30 * 30; //default 30s
 		required_percent = 0.5f; //default 50%
 		cancel_on_restart = false;
+		maptype = "";
 	}
 
 	VoteFunctor@ onvotepassed;
@@ -48,6 +49,7 @@ class VoteObject
 	VotePlayerLeaveFunctor@ playerleave;
 
 	string title;
+	string maptype;
 	string reason;
 	string byuser;
 	string user_to_kick = "";

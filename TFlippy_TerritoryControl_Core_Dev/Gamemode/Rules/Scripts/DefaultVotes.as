@@ -26,6 +26,15 @@ string[] kick_reason_string = { "Griefer", "Hacker", "Teamkiller", "Spammer", "A
 
 string g_kick_reason = kick_reason_string[kick_reason_griefer]; //default
 
+
+const string[] TypeToString = {
+	"Random",
+	"Official",
+	"Meme",
+	"Old"
+};
+
+
 //next map related globals and enums
 enum nextmap_reason
 {
@@ -350,7 +359,8 @@ VoteObject@ Create_VoteNextmap(CPlayer@ byplayer, string reason, u8 maptype)
 	@vote.onvotepassed = VoteNextmapFunctor(byplayer, maptype);
 	@vote.canvote = VoteNextmapCheckFunctor();
 
-	vote.title = "Skip to next map?";
+	vote.title = "Load new map";
+	vote.maptype = TypeToString[maptype % 4];
 	vote.reason = reason;
 	vote.byuser = byplayer.getUsername();
 	vote.forcePassFeature = "nextmap";
