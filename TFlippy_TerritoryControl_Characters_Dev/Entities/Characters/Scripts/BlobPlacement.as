@@ -41,8 +41,6 @@ Vec2f getBottomOfCursor(Vec2f cursorPos, CBlob@ carryBlob)
 
 void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 {
-	if (carryBlob.hasTag("no shitty rotation reset")) return;
-
 	// rotate towards mouse if object allows
 	if (carryBlob.hasTag("place45"))
 	{
@@ -75,7 +73,7 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 	}
 	else
 	{
-		if (!carryBlob.hasTag("place norotate"))
+		if (!carryBlob.hasTag("place norotate") && !carryBlob.hasTag("no shitty rotation reset"))
 		{
 			carryBlob.setAngleDegrees(0.0f);
 			// print("reset 2");
@@ -145,7 +143,7 @@ void onTick(CBlob@ this)
 	}
 
 	CBlob @carryBlob = this.getCarriedBlob();
-	if (carryBlob !is null && !carryBlob.hasTag("no shitty rotation reset"))
+	if (carryBlob !is null)
 	{
 		if(carryBlob.hasTag("place ignore facing"))
 		{
@@ -157,7 +155,7 @@ void onTick(CBlob@ this)
 		{
 			PositionCarried(this, carryBlob);
 		}
-		else
+		else if (!carryBlob.hasTag("no shitty rotation reset"))
 		{
 			if (carryBlob.hasTag("place norotate"))
 			{
