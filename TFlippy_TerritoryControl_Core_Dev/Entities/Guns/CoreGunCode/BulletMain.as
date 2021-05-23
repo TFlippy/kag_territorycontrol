@@ -46,9 +46,14 @@ void onInit(CRules@ this)
 
 	if (isClient())
 	{
-		Render::addScript(Render::layer_postworld, "BulletMain", "GunRender", 0.0f);
+		this.add_u16("temp_id", Render::addScript(Render::layer_postworld, "BulletMain", "GunRender", 0.0f));
 		//Render::addScript(Render::layer_prehud, "BulletMain", "GUIStuff", 0.0f);
 	}
+}
+
+void onReload(CRules@ this)
+{
+	Reset(this);
 }
 
 void onRestart(CRules@ this)
@@ -79,7 +84,7 @@ void onTick(CRules@ this)
 
 void GunRender(int id)
 {
-	FRAME_TIME += Render::getRenderDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
+	FRAME_TIME += getRenderApproximateCorrectionFactor(); //getRenderSmoothDeltaTime() * getTicksASecond();  // We are using this because ApproximateCorrectionFactor is lerped
 	RenderingBullets();
 }
 
