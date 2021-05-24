@@ -36,6 +36,7 @@ class BulletObj
 	Vec2f OldPos;
 	Vec2f Gravity;
 	Vec2f KB;
+	Vec2f LastPos;
 	f32 StartingAimPos;
 	f32 lastDelta;
 	f32 Damage;
@@ -65,6 +66,7 @@ class BulletObj
 		StartingAimPos = angle;
 
 		OldPos    = CurrentPos;
+		LastPos   = CurrentPos;
 		RenderPos = CurrentPos;
 
 		@gunBlob  = gun;
@@ -88,7 +90,7 @@ class BulletObj
 		}
 
 		// Angle update
-		OldPos = CurrentPos;
+		OldPos = LastPos;
 		Gravity -= BulletGrav;
 		const f32 angle = StartingAimPos * (FacingLeft ? 1 : 1);
 		Vec2f dir = Vec2f((FacingLeft ? -1 : 1), 0.0f).RotateBy(angle);
@@ -242,7 +244,7 @@ class BulletObj
 
 		// Lerp
 		Vec2f newPos = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
-		//LastPos = newPos;
+		LastPos = newPos;
 
 		f32 angle = TrueVelocity.getAngleDegrees();//Sets the angle
 
