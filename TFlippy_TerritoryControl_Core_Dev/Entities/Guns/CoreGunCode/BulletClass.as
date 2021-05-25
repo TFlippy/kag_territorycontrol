@@ -28,84 +28,72 @@ class BulletObj
 	CBlob@ gunBlob;
 
 	BulletFade@ Fade;
-
-	Vec2f TrueVelocity;
+	
+	Vec2f CurrentVelocity;
+	Vec2f LastLerpedPos;
 	Vec2f CurrentPos;
 	Vec2f BulletGrav;
-	Vec2f RenderPos;
 	Vec2f OldPos;
 	Vec2f Gravity;
-	Vec2f KB;
-	Vec2f LastPos;
-	f32 StartingAimPos;
-	f32 lastDelta;
-	f32 Damage;
-	u8 TeamNum;
+
+	f32 StartingAimAngle;
+	f32 Angle;
+
 	u8 Speed;
-	u8 AmmoType;
-	string FleshHitSound;
-	string ObjectHitSound;
 	s8 TimeLeft;
-	bool FacingLeft;
 
 
 	BulletObj(CBlob@ humanBlob, CBlob@ gun, f32 angle, Vec2f pos)
 	{
-		CurrentPos = pos;
-		FacingLeft = humanBlob.isFacingLeft();
-		BulletGrav = gun.get_Vec2f("grav");
-		Damage   = gun.get_f32("damage");
-		TeamNum  = gun.getTeamNum();
-		TimeLeft = gun.get_u8("TTL");
-		KB       = gun.get_Vec2f("KB");
-		Speed    = gun.get_u8("speed");
-		AmmoType = gun.get_u8("ammo_type");
-		FleshHitSound  = gun.get_string("flesh_hit_sound");
-		ObjectHitSound = gun.get_string("object_hit_sound");
 		@hoomanShooter = humanBlob;
-		StartingAimPos = angle;
-
-		OldPos    = CurrentPos;
-		LastPos   = CurrentPos;
-		RenderPos = CurrentPos;
-
 		@gunBlob  = gun;
-		lastDelta = 0;
-		//@Fade = BulletGrouped.addFade(CurrentPos);
-	}
 
-	void SetStartAimPos(Vec2f aimPos, bool isFacingLeft)
-	{
-		Vec2f aimvector = aimPos - CurrentPos;
-		StartingAimPos = isFacingLeft ? -aimvector.Angle() + 180.0f : -aimvector.Angle();
+		StartingAimAngle = angle;
+		CurrentPos = pos;
+
+		BulletGrav = gun.get_Vec2f("grav");
+
+		TimeLeft = gun.get_u8("TTL");
+		Speed    = gun.get_u8("speed");
+
+		OldPos  = CurrentPos;
+		LastLerpedPos  = CurrentPos;
+
+		//@Fade = BulletGrouped.addFade(CurrentPos);
 	}
 
 	bool onFakeTick(CMap@ map)
 	{
-		//Time to live check
+		// Kill bullet at start of new tick (we don't instantly remove it so client can render it going splat)
 		TimeLeft--;
 		if (TimeLeft == 0)
 		{
 			return true;
 		}
 
-		// Angle update
-		OldPos = LastPos;
+		// Use the last lerp position to start from (so if client drops a frame, it still appears smooth)
+		OldPos = LastLerpedPos;
+
 		Gravity -= BulletGrav;
-		const f32 angle = StartingAimPos * (FacingLeft ? 1 : 1);
-		Vec2f dir = Vec2f((FacingLeft ? -1 : 1), 0.0f).RotateBy(angle);
+		
+		// Direction shittery
+		Vec2f dir = Vec2f((hoomanShooter.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(StartingAimAngle);
 		CurrentPos = ((dir * Speed) - (Gravity * Speed)) + CurrentPos;
-		TrueVelocity = CurrentPos - OldPos;
+		CurrentVelocity = CurrentPos - OldPos;
+		Angle = -CurrentVelocity.getAngleDegrees();
 
 
 		bool endBullet = false;
-		bool breakLoop = false;
 		HitInfo@[] list;
-		if (map.getHitInfosFromRay(OldPos, -(CurrentPos - OldPos).Angle(), (OldPos - CurrentPos).Length(), hoomanShooter, @list))
+		if (map.getHitInfosFromRay(OldPos, Angle, CurrentVelocity.Length(), hoomanShooter, @list))
 		{
+			f32 damage = gunBlob.get_f32("damage");
+			f32 ammotype = gunBlob.get_u8("ammo_type");
+			
+			bool breakLoop = false;
+			
 			for (int a = 0; a < list.length(); a++)
 			{
-				breakLoop = false;
 				HitInfo@ hit = list[a];
 				Vec2f hitpos = hit.hitpos;
 				CBlob@ blob = @hit.blob;
@@ -126,7 +114,7 @@ class BulletObj
 							{
 								if (hash == 213968596)
 								{
-									map.server_DestroyTile(hitpos, Damage);
+									map.server_DestroyTile(hitpos, damage);
 								}
 							}
 						}
@@ -135,18 +123,18 @@ class BulletObj
 						case 804095823: // platform
 						case 377147311: // iron platform
 						{
-							if (CollidesWithPlatform(blob,TrueVelocity))
+							if (CollidesWithPlatform(blob, CurrentVelocity))
 							{
 								CurrentPos = hitpos;
 								breakLoop = true;
 
 								if (isClient())
 								{
-									Sound::Play(ObjectHitSound, hitpos, 1.5f);
+									Sound::Play(gunBlob.get_string("object_hit_sound"), hitpos, 1.5f);
 								}
 								if (isServer())
 								{
-									hoomanShooter.server_Hit(blob, CurrentPos, Vec2f(0, 0), Damage, AmmoType); 
+									hoomanShooter.server_Hit(blob, CurrentPos, Vec2f(0, 0), damage, ammotype); 
 								}
 							}
 						}
@@ -159,7 +147,7 @@ class BulletObj
 							//todo: change what bullet hits since it can be odd at times
 							if (blob.hasTag("flesh") || blob.isCollidable() || blob.hasTag("vehicle"))
 							{
-								if (blob.getTeamNum() == TeamNum || blob.hasTag("weapon")) { continue; }
+								if (blob.getTeamNum() == gunBlob.getTeamNum() || blob.hasTag("weapon")) { continue; }
 								CurrentPos = hitpos;
 								if (!blob.hasTag("invincible") && !blob.hasTag("seated")) 
 								{
@@ -167,11 +155,11 @@ class BulletObj
 									{
 										CPlayer@ p = hoomanShooter.getPlayer();
 										int coins = 0;
-										hoomanShooter.server_Hit(blob, CurrentPos, Vec2f(0, 0), Damage, AmmoType); 
+										hoomanShooter.server_Hit(blob, CurrentPos, Vec2f(0, 0), damage, ammotype); 
 
 										if (blob.hasTag("flesh"))
 										{
-											SetKnocked(blob, KB.x);
+											SetKnocked(blob, gunBlob.get_Vec2f("KB").x);
 											coins = gunBlob.get_u16("coins_flesh");
 										}
 										else
@@ -186,7 +174,7 @@ class BulletObj
 									}
 									else
 									{
-										Sound::Play(FleshHitSound, CurrentPos, 1.5f); 
+										Sound::Play(gunBlob.get_string("flesh_hit_sound"), CurrentPos, 1.5f); 
 									}
 
 								}
@@ -206,18 +194,17 @@ class BulletObj
 					if (isServer())
 					{
 						Tile tile = map.getTile(hitpos);
-						map.server_DestroyTile(hitpos, Damage);     
+						map.server_DestroyTile(hitpos, damage);     
 					}
 
 					if (isClient())
 					{
-						Sound::Play(ObjectHitSound, hitpos, 1.5f);
+						Sound::Play(gunBlob.get_string("object_hit_sound"), hitpos, 1.5f);
 					}
 
 					CurrentPos = hitpos;
 					endBullet = true;
-					//ParticleFromBullet("Bullet.png",CurrentPos,-TrueVelocity.Angle());
-					ParticleBullet(CurrentPos, TrueVelocity);
+					ParticleBullet(CurrentPos, CurrentVelocity);
 				}
 			}
 		}
@@ -244,16 +231,15 @@ class BulletObj
 
 		// Lerp
 		Vec2f newPos = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
-		LastPos = newPos;
-
-		f32 angle = TrueVelocity.getAngleDegrees();//Sets the angle
+		LastLerpedPos = newPos;
 
 		Vec2f TopLeft  = Vec2f(newPos.x -0.7, newPos.y-3);
 		Vec2f TopRight = Vec2f(newPos.x -0.7, newPos.y+3);
 		Vec2f BotLeft  = Vec2f(newPos.x +0.7, newPos.y-3);
 		Vec2f BotRight = Vec2f(newPos.x +0.7, newPos.y+3);
 
-		angle = -((angle % 360) + 90);
+		// Rotate the sprite to be in the correct pos
+		f32 angle = Angle - 90;
 
 		BotLeft.RotateBy( angle,newPos);
 		BotRight.RotateBy(angle,newPos);
