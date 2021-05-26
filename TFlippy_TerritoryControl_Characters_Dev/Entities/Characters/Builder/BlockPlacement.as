@@ -39,7 +39,7 @@ void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
 					else
 					{
 						altar.add_f32("deity_power", 1);
-						if (isServer()) this.Sync("deity_power", false);
+						if (isServer()) altar.Sync("deity_power", false);
 					}
 				}
 			}
