@@ -13,3 +13,5 @@ namespace Deity
 		foghorn
 	}
 }
+
+const f32 MAX_FREE_BLOCK_CHANCE = 75.0f;
