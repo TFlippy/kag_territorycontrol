@@ -30,8 +30,8 @@ void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
 				CBlob@ altar = getBlobByName("altar_mason");
 				if (altar !is null)
 				{
-					// print("free block chance: " + altar.get_f32("deity_power") * 0.01f);
-					if (XORRandom(100) < altar.get_f32("deity_power") * 0.01f)
+					//print("free block chance: " + Maths::Min((altar.get_f32("deity_power") * 0.01f),MAX_FREE_BLOCK_CHANCE));
+					if (XORRandom(100) < Maths::Min((altar.get_f32("deity_power") * 0.01f),MAX_FREE_BLOCK_CHANCE))
 					{
 						take = false;
 						// print("free block!");		
