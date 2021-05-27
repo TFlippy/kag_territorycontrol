@@ -88,7 +88,7 @@ void onTick(CBlob@ this)
 		{
 			if (this.exists("gyromat_acceleration"))
 			{
-				v.cooldown_time = Maths::Max(0,v.cooldown_time-this.get_f32("gyromat_acceleration"));
+				v.cooldown_time = Maths::Max(0, v.cooldown_time-this.get_f32("gyromat_acceleration"));
 			}
 			else
 			{
