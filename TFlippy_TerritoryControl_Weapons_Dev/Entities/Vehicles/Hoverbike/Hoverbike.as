@@ -75,6 +75,11 @@ void onTick(CBlob@ this)
 			
 			Vec2f vel = Vec2f(h, v);
 			
+			if(this.exists("gyromat_acceleration"))
+			{
+				vel *= Maths::Sqrt(this.get_f32("gyromat_acceleration"));
+			}
+
 			this.AddForce(vel * this.getMass() * 0.50f);
 			this.SetFacingLeft(pilot.getAimPos().x < this.getPosition().x);
 			
