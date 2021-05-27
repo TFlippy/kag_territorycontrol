@@ -319,7 +319,7 @@ void BomberHandling(CBlob@ this,VehicleInfo@ v)
 			}
 		}
 
-		if(this.exists("gyromat_acceleration"))
+		if (this.exists("gyromat_acceleration"))
 		{
 			force.x *= Maths::Sqrt(this.get_f32("gyromat_acceleration"));
 		}

@@ -75,7 +75,7 @@ void onTick(CBlob@ this)
 			
 			Vec2f vel = Vec2f(h, v);
 			
-			if(this.exists("gyromat_acceleration"))
+			if (this.exists("gyromat_acceleration"))
 			{
 				vel *= Maths::Sqrt(this.get_f32("gyromat_acceleration"));
 			}

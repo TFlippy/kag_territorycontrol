@@ -561,7 +561,7 @@ void Vehicle_StandardControls(CBlob@ this, VehicleInfo@ v)
 						}
 
 						// add gyromat effect
-						if(this.exists("gyromat_acceleration"))
+						if (this.exists("gyromat_acceleration"))
 						{
 							moveForce *= Maths::Sqrt(this.get_f32("gyromat_acceleration"));
 						}

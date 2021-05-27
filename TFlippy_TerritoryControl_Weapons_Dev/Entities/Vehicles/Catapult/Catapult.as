@@ -86,7 +86,7 @@ void onTick(CBlob@ this)
 
 		if (v.cooldown_time > 0)
 		{
-			if(this.exists("gyromat_acceleration"))
+			if (this.exists("gyromat_acceleration"))
 			{
 				v.cooldown_time = Maths::Max(0,v.cooldown_time-this.get_f32("gyromat_acceleration"));
 			}
@@ -162,7 +162,7 @@ bool Vehicle_canFire(CBlob@ this, VehicleInfo@ v, bool isActionPressed, bool was
 		if (isActionPressed && charge < v.max_charge_time)
 		{
 			f32 chargeSpeed = 1;
-			if(this.exists("gyromat_acceleration"))
+			if (this.exists("gyromat_acceleration"))
 			{
 				chargeSpeed *= this.get_f32("gyromat_acceleration");
 				//print("ChargeSpeed "+chargeSpeed);
@@ -236,7 +236,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _charge
 		vel += (Vec2f((_r.NextFloat() - 0.5f) * 128, (_r.NextFloat() - 0.5f) * 128) * 0.01f);
 		vel.RotateBy(angle);
 
-		if(this.exists("gyromat_acceleration"))
+		if (this.exists("gyromat_acceleration"))
 		{
 			vel *= Maths::Sqrt(this.get_f32("gyromat_acceleration"));
 		}
@@ -252,7 +252,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _charge
 	// we override the default time because we want to base it on charge
 	int delay = 30 + (charge / (250 / 30));
 	v.fire_delay = delay;
-	if(this.exists("gyromat_acceleration"))
+	if (this.exists("gyromat_acceleration"))
 	{
 		v.fire_delay /= this.get_f32("gyromat_acceleration");
 	}
