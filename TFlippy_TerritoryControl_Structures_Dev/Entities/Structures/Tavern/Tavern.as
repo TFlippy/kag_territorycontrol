@@ -23,6 +23,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("sv_setspawn");
 	this.addCommandID("sv_unsetspawn");
 	this.addCommandID("write");
+	this.addCommandID("sv_togglelight");
 
 	// CSprite@ sprite = this.getSprite();
 	// sprite.SetEmitSound("Tavern_Ambient.ogg");
@@ -61,6 +62,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 
+	this.set_bool("light",true);
 	this.SetLight(true);
 	this.SetLightRadius(72.0f);
 	this.SetLightColor(SColor(255, 255, 150, 50));
@@ -101,6 +103,12 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		params.write_u16(carried.getNetworkID());
 
 		CButton@ buttonWrite = caller.CreateGenericButton("$icon_paper$", Vec2f(0, -8), this, this.getCommandID("write"), "Rename", params);
+	}
+
+	//toggle tavern light
+	if(player !is null && player.getUsername() == this.get_string("Owner"))
+	{
+		CButton@ buttonLight = caller.CreateGenericButton((this.get_bool("light") ? 27 : 23), Vec2f(12, -3), this, this.getCommandID("sv_togglelight"), "Toggle_Light", params);
 	}
 }
 
@@ -268,6 +276,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			this.setInventoryName(this.get_string("text"));
 		}
+	}
+	else if (cmd == this.getCommandID("sv_togglelight"))
+	{
+		this.SetLight(!this.get_bool("light"));
+		this.set_bool("light",!this.get_bool("light"));
 	}
 }
 
