@@ -52,3 +52,8 @@ void move(CBlob@ this, CBlob@ blob)
 		sprite.SetZ(-100.0f);
 	}
 }
+
+bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
+{
+	return false;
+}
