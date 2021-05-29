@@ -1,7 +1,6 @@
 ﻿
 void onInit(CBlob @ this)
 {
-	this.getSprite().SetZ(10);
 
 	this.set_TileType("background tile", CMap::tile_castle_back);
 
@@ -11,7 +10,7 @@ void onInit(CBlob @ this)
 
 	this.set_u32("charge",0);
 	CSprite@ sprite = this.getSprite();
-	sprite.SetAnimation("off");
+	sprite.SetAnimation("off"); //Starts offline
 	sprite.SetZ(-100.0f);
 }
 
@@ -40,7 +39,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void move(CBlob@ this, CBlob@ blob)
 {
-	print("moved");
+	//print("moved");
 	f32 angle = this.getAngleDegrees();
 	Vec2f dir = Vec2f(1.0f, 0.0f).RotateBy(angle + (this.isFacingLeft() ? 180 : 0));
 	if(blob != null)
@@ -50,9 +49,4 @@ void move(CBlob@ this, CBlob@ blob)
 		sprite.SetAnimation("off");
 		sprite.SetZ(-100.0f);
 	}
-}
-
-bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
-{
-	return false;
 }
