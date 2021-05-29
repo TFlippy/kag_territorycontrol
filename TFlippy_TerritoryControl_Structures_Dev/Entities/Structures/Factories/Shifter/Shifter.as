@@ -39,12 +39,14 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void move(CBlob@ this, CBlob@ blob)
 {
-	//print("moved");
+	//print("moved by shifter");
 	f32 angle = this.getAngleDegrees();
 	Vec2f dir = Vec2f(1.0f, 0.0f).RotateBy(angle + (this.isFacingLeft() ? 180 : 0));
 	if(blob != null)
 	{
-		blob.AddForce(dir*Maths::Min(100, blob.getMass())*Maths::Max(1,3-blob.getVelocity().Length()));
+		blob.AddForce(dir * Maths::Min(100, blob.getMass()) * Maths::Max(1, 3 - blob.getVelocity().Length())); 
+		//1 * Mass up too 100 * (3-Velocity) down to 1
+		//Basicly applies greater velocity if the object is really slow
 		CSprite@ sprite = this.getSprite();
 		sprite.SetAnimation("off");
 		sprite.SetZ(-100.0f);
