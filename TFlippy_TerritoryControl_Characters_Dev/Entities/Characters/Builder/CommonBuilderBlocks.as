@@ -587,6 +587,11 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		b.size.Set(24, 24);
 		blocks[2].push_back(b);
 	}
+		{
+		BuildBlock b(0, "shifter", "$shifter$", "Shifter\n Moves things in a set direction, has a cooldown.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
+		blocks[2].push_back(b);
+	}
 
 	BuildBlock[] page_3;
 	blocks.push_back(page_3);
