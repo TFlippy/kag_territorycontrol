@@ -44,8 +44,8 @@ void move(CBlob@ this, CBlob@ blob)
 	Vec2f dir = Vec2f(1.0f, 0.0f).RotateBy(angle + (this.isFacingLeft() ? 180 : 0));
 	if(blob != null)
 	{
-		blob.AddForce(dir * Maths::Min(100, blob.getMass()) * Maths::Max(1, 3 - blob.getVelocity().Length())); 
-		//1 * Mass up too 100 * (3-Velocity) down to 1
+		f32 vel = blob.getVelocity().Length()+1;
+		blob.AddForce(dir *4* Maths::Min(100, blob.getMass()) / Maths::Sqrt(vel)); 
 		//Basicly applies greater velocity if the object is really slow
 		CSprite@ sprite = this.getSprite();
 		sprite.SetAnimation("off");
