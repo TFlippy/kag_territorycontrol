@@ -46,14 +46,20 @@ void move(CBlob@ this, CBlob@ blob)
 	//print("moved by shifter");
 	f32 angle = this.getAngleDegrees();
 	Vec2f dir = Vec2f(1.0f, 0.0f).RotateBy(angle + (this.isFacingLeft() ? 180 : 0));
-	if(blob != null)
+	if (blob != null)
 	{
-		f32 vel = blob.getVelocity().Length()+1;
-		blob.AddForce(dir *4* Maths::Min(100, blob.getMass()) / Maths::Sqrt(vel)); 
-		//Basicly applies greater velocity if the object is really slow
-		CSprite@ sprite = this.getSprite();
-		sprite.SetAnimation("off");
-		sprite.SetZ(-100.0f);
+		Vec2f vecVel = blob.getVelocity();
+		if (blob.hasTag("explosive"))
+		{
+			f32 vel = vecVel.Length();
+			blob.AddForce(dir * 3 * Maths::Min(70, blob.getMass()) / Maths::Pow(Maths::Max(vel, 1), 0.90f)); 
+		}
+		else
+		{
+			Vec2f convertedVel = Vec2f(Maths::Max(0, vecVel.x * dir.x), Maths::Max(0, vecVel.y * dir.y)); //Dont devide by velocity if velocity is going against this (Slows down non explosives easily)
+			f32 vel = convertedVel.Length();
+			blob.AddForce(dir * 3 * Maths::Min(70, blob.getMass()) / Maths::Pow(Maths::Max(vel, 1), 0.70f)); 
+		}
 	}
 }
 
