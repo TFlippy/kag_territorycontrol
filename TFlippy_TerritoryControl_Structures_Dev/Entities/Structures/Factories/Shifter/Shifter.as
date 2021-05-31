@@ -8,31 +8,35 @@ void onInit(CBlob @ this)
 
 	this.Tag("builder always hit");
 
-	this.set_u32("charge",0);
+	//Starts offline
+	this.set_u32("rechargedTime", getGameTime() + RECHARGETIME);
 	CSprite@ sprite = this.getSprite();
-	sprite.SetAnimation("off"); //Starts offline
+	sprite.SetAnimation("off"); 
 	sprite.SetZ(-100.0f);
 }
 
-void onTick(CBlob@ this)
+const u32 RECHARGETIME = 120; //how many ticks till the shifter can activate again
+
+void onTick(CSprite@ this)
 {
-	if (this.get_u32("charge") < 120)
+	CBlob@ blob = this.getBlob();
+	if (getGameTime() >= blob.get_u32("rechargedTime"))
 	{
-		this.add_u32("charge", 1);
+		this.SetAnimation("on");
+		this.SetZ(-100.0f);
 	}
 	else
 	{
-		CSprite@ sprite = this.getSprite();
-		sprite.SetAnimation("on");
-		sprite.SetZ(-100.0f);
+		this.SetAnimation("off");
+		this.SetZ(-100.0f);
 	}
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	if (this.get_u32("charge")>=120)
+	if (getGameTime() >= this.get_u32("rechargedTime"))
 	{
-		this.set_u32("charge", 0);
+		this.set_u32("rechargedTime", getGameTime() + RECHARGETIME);
 		move(this, blob);
 	}
 }
