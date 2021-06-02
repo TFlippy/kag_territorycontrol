@@ -24,6 +24,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	//print(" "+this.getHealth());
 	if (this.isLight() && this.isInWater())
 	{
 		Light(this, false);
