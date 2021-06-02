@@ -21,9 +21,9 @@ class Recoil
 	bool RY;
 	s16 DecayRate;
 
-	Recoil(CBlob@ blob,s16 velocity, u16 TimeToEnd, u16 returnTime, bool randomX, bool randomY)
+	Recoil(CBlob@ blob, s16 velocity, u16 TimeToEnd, u16 returnTime, bool randomX, bool randomY)
 	{
-		if(blob is null || blob.getControls() is null)
+		if (blob is null || blob.getControls() is null)
 		{
 			return;
 		}
@@ -57,17 +57,17 @@ class Recoil
 		if (RX && ReturnTime < TimeToNormal)
 		{
 			int rNum = XORRandom(-DecayRate * 2);
-			if (XORRandom(2) == 0){
+			if (XORRandom(2) == 0)
+			{
 				xTick -= rNum;
 			}
-			else {
+			else
+			{
 				xTick += rNum;
 			}
 		}
 
-		BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + Vec2f(xTick,yTick));
-		ShakeScreen(Vec2f(xTick,yTick),150,Blob.getInterpolatedPosition());
+		BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + Vec2f(xTick, yTick));
+		ShakeScreen(Vec2f(xTick, yTick), 150, Blob.getInterpolatedPosition());
 	}
 }
-
-

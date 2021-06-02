@@ -15,7 +15,8 @@
 #include "BulletCase.as";
 #include "Recoil.as";
 #include "BulletParticle.as";
-#include "knocked.as";
+#include "Knocked.as";
+#include "GunCommon.as";
 
 const SColor trueWhite = SColor(255,255,255,255);
 Driver@ PDriver = getDriver();
@@ -28,13 +29,14 @@ class BulletObj
 	CBlob@ gunBlob;
 
 	BulletFade@ Fade;
-	
+
 	Vec2f CurrentVelocity;
 	Vec2f LastLerpedPos;
 	Vec2f CurrentPos;
 	Vec2f BulletGrav;
 	Vec2f OldPos;
 	Vec2f Gravity;
+	bool FacingLeft;
 
 	f32 StartingAimAngle;
 	f32 Angle;
@@ -42,22 +44,26 @@ class BulletObj
 	u8 Speed;
 	s8 TimeLeft;
 
-
 	BulletObj(CBlob@ humanBlob, CBlob@ gun, f32 angle, Vec2f pos)
 	{
+
 		@hoomanShooter = humanBlob;
-		@gunBlob  = gun;
+		@gunBlob = gun;
+
+		GunSettings@ settings;
+		gun.get("gun_settings", @settings);
 
 		StartingAimAngle = angle;
 		CurrentPos = pos;
 
-		BulletGrav = gun.get_Vec2f("grav");
+		BulletGrav = settings.B_GRAV;
+		FacingLeft = gun.isFacingLeft();
 
-		TimeLeft = gun.get_u8("TTL");
-		Speed    = gun.get_u8("speed");
+		TimeLeft = settings.B_TTL;
+		Speed = settings.B_SPEED;
 
-		OldPos  = CurrentPos;
-		LastLerpedPos  = CurrentPos;
+		OldPos = CurrentPos;
+		LastLerpedPos = CurrentPos;
 
 		//@Fade = BulletGrouped.addFade(CurrentPos);
 	}
@@ -75,51 +81,37 @@ class BulletObj
 		OldPos = LastLerpedPos;
 
 		Gravity -= BulletGrav;
-		
+
 		// Direction shittery
-		Vec2f dir = Vec2f((hoomanShooter.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(StartingAimAngle);
+		Vec2f dir = Vec2f((FacingLeft ? -1 : 1), 0.0f).RotateBy(StartingAimAngle);
 		CurrentPos = ((dir * Speed) - (Gravity * Speed)) + CurrentPos;
 		CurrentVelocity = CurrentPos - OldPos;
 		Angle = -CurrentVelocity.getAngleDegrees();
-
 
 		bool endBullet = false;
 		HitInfo@[] list;
 		if (map.getHitInfosFromRay(OldPos, Angle, CurrentVelocity.Length(), hoomanShooter, @list))
 		{
-			f32 damage = gunBlob.get_f32("damage");
-			f32 ammotype = gunBlob.get_u8("ammo_type");
-			
+			GunSettings@ settings;
+			gunBlob.get("gun_settings", @settings);
+
+			f32 damage = settings.B_DAMAGE;
+			f32 ammotype = settings.B_TYPE;
+			const string S_FLESH_HIT  = gunBlob.exists("CustomSoundFlesh")  ? gunBlob.get_string("CustomSoundFlesh")  : "BulletImpact.ogg";
+			const string S_OBJECT_HIT = gunBlob.exists("CustomSoundObject") ? gunBlob.get_string("CustomSoundObject") : "BulletImpact.ogg";
+
 			bool breakLoop = false;
-			
+
 			for (int a = 0; a < list.length(); a++)
 			{
 				HitInfo@ hit = list[a];
 				Vec2f hitpos = hit.hitpos;
 				CBlob@ blob = @hit.blob;
 				if (blob !is null)
-				{   
+				{
 					int hash = blob.getName().getHash();
 					switch (hash)
 					{
-						/*case 1296319959: // Stone_door
-						case 213968596:  // Wooden_door
-						case 916369496:  // Trapdoor
-						{
-							CurrentPos = hitpos;
-							breakLoop = true;
-							Sound::Play(ObjectHitSound, hitpos, 1.5f);
-
-							if (isServer())
-							{
-								if (hash == 213968596)
-								{
-									map.server_DestroyTile(hitpos, damage);
-								}
-							}
-						}
-						break;*/
-
 						case 804095823: // platform
 						case 377147311: // iron platform
 						{
@@ -130,7 +122,7 @@ class BulletObj
 
 								if (isClient())
 								{
-									Sound::Play(gunBlob.get_string("object_hit_sound"), hitpos, 1.5f);
+									Sound::Play(S_OBJECT_HIT, CurrentPos, 1.5f);
 								}
 								if (isServer())
 								{
@@ -142,42 +134,44 @@ class BulletObj
 
 						default:
 						{
-							//print(blob.getName() + '\n'+blob.getName().getHash()); useful for debugging new tiles to hit
+							//print(blob.getName() + '\n'+blob.getName().getHash()); //useful for debugging new tiles to hit
 
-							//todo: change what bullet hits since it can be odd at times
 							if (blob.hasTag("flesh") || blob.isCollidable() || blob.hasTag("vehicle"))
 							{
-								if (blob.getTeamNum() == gunBlob.getTeamNum() || blob.hasTag("weapon")) { continue; }
+								if (blob.getTeamNum() == gunBlob.getTeamNum() && (blob.hasTag("flesh") || blob.hasTag("vehicle"))) continue;
+								else if (blob.hasTag("weapon") || blob.hasTag("dead") || blob.hasTag("invincible")) continue;
+								else if (blob.getName() == "iron_halfblock" || blob.getName() == "stone_halfblock") continue;
+
 								CurrentPos = hitpos;
-								if (!blob.hasTag("invincible") && !blob.hasTag("seated")) 
+
+								if (isServer())
 								{
-									if (isServer())
-									{
-										CPlayer@ p = hoomanShooter.getPlayer();
-										int coins = 0;
-										hoomanShooter.server_Hit(blob, CurrentPos, Vec2f(0, 0), damage, ammotype); 
+									if (blob.hasTag("door")) damage *= 1.5f;
+									hoomanShooter.server_Hit(blob, CurrentPos, Vec2f(0, 0), damage, ammotype);
 
-										if (blob.hasTag("flesh"))
-										{
-											SetKnocked(blob, gunBlob.get_Vec2f("KB").x);
-											coins = gunBlob.get_u16("coins_flesh");
-										}
-										else
-										{
-											coins = gunBlob.get_u16("coins_object");
-										}
-
-										if (p !is null)
-										{
-											p.server_setCoins(p.getCoins() + coins);
-										}
-									}
-									else
+									if (blob.hasTag("flesh") && gunBlob.exists("CustomKnock"))
 									{
-										Sound::Play(gunBlob.get_string("flesh_hit_sound"), CurrentPos, 1.5f); 
+										SetKnocked(blob, gunBlob.get_u8("CustomKnock"));
 									}
 
+									CPlayer@ p = hoomanShooter.getPlayer();
+									if (p !is null)
+									{
+										if (gunBlob.exists("CustomCoinFlesh"))
+										{
+											if (blob.hasTag("player")) p.server_setCoins(p.getCoins() + gunBlob.get_u32("CustomCoinFlesh"));
+										}
+										if (gunBlob.exists("CustomCoinObject"))
+										{
+											if (blob.hasTag("vehicle")) p.server_setCoins(p.getCoins() + gunBlob.get_u32("CustomCoinObject"));
+										}
+									}
 								}
+								if (isClient())
+								{
+									Sound::Play(S_FLESH_HIT, CurrentPos, 1.5f);
+								}
+
 								breakLoop = true;
 							}
 						}
@@ -194,22 +188,32 @@ class BulletObj
 					if (isServer())
 					{
 						Tile tile = map.getTile(hitpos);
-						map.server_DestroyTile(hitpos, damage);     
+						if (gunBlob.exists("CustomPenetration"))
+						{
+							for (int i = 0; i < gunBlob.get_u8("CustomPenetration"); i++)
+							{
+								map.server_DestroyTile(hitpos, 1.0f);
+							}
+						}
+						else
+						{
+							map.server_DestroyTile(hitpos, 1.0f);
+						}
 					}
 
 					if (isClient())
 					{
-						Sound::Play(gunBlob.get_string("object_hit_sound"), hitpos, 1.5f);
+						Sound::Play(S_OBJECT_HIT, hitpos, 1.5f);
 					}
 
 					CurrentPos = hitpos;
-					endBullet = true;
 					ParticleBullet(CurrentPos, CurrentVelocity);
+					endBullet = true;
 				}
 			}
 		}
 
-		if (endBullet == true)
+		if (endBullet)
 		{
 			TimeLeft = 1;
 		}
@@ -217,13 +221,13 @@ class BulletObj
 	}
 
 	void JoinQueue() // Every bullet gets forced to join the queue in onRenders, so we use this to calc to position
-	{   
+	{
 		// Are we on the screen?
 		const Vec2f xLast = PDriver.getScreenPosFromWorldPos(OldPos);
 		const Vec2f xNew  = PDriver.getScreenPosFromWorldPos(CurrentPos);
-		if(!(xNew.x > 0 && xNew.x < ScreenX)) // Is our main position still on screen?
+		if (!(xNew.x > 0 && xNew.x < ScreenX)) // Is our main position still on screen?
 		{
-			if(!(xLast.x > 0 && xLast.x < ScreenX)) // Was our last position on screen?
+			if (!(xLast.x > 0 && xLast.x < ScreenX)) // Was our last position on screen?
 			{
 				return; // No, lets not stay here then
 			}
@@ -241,10 +245,10 @@ class BulletObj
 		// Rotate the sprite to be in the correct pos
 		f32 angle = Angle - 90;
 
-		BotLeft.RotateBy( angle,newPos);
-		BotRight.RotateBy(angle,newPos);
-		TopLeft.RotateBy( angle,newPos);
-		TopRight.RotateBy(angle,newPos);   
+		BotLeft.RotateBy( angle, newPos);
+		BotRight.RotateBy(angle, newPos);
+		TopLeft.RotateBy( angle, newPos);
+		TopRight.RotateBy(angle, newPos);   
 
 		/*if(FacingLeft)
 		{
@@ -255,14 +259,12 @@ class BulletObj
 			//Fade.JoinQueue(newPos,BotRight);
 		}*/
 
-		v_r_bullet.push_back(Vertex(TopLeft.x,  TopLeft.y,      0, 0, 0,   trueWhite)); // top left
-		v_r_bullet.push_back(Vertex(TopRight.x, TopRight.y,     0, 1, 0,   trueWhite)); // top right
+		v_r_bullet.push_back(Vertex(TopLeft.x,  TopLeft.y,      0, 0, 0, trueWhite)); // top left
+		v_r_bullet.push_back(Vertex(TopRight.x, TopRight.y,     0, 1, 0, trueWhite)); // top right
 		v_r_bullet.push_back(Vertex(BotRight.x, BotRight.y,     0, 1, 1, trueWhite));   // bot right
 		v_r_bullet.push_back(Vertex(BotLeft.x,  BotLeft.y,      0, 0, 1, trueWhite));   // bot left
 	}
-
 }
-
 
 class BulletHolder
 {
@@ -322,11 +324,10 @@ class BulletHolder
 				coil.onFakeTick();
 			}
 		}*/
-
 	}
 
 	BulletFade addFade(Vec2f spawnPos)
-	{   
+	{
 		BulletFade@ fadeToAdd = BulletFade(spawnPos);
 		fade.push_back(fadeToAdd);
 		return fadeToAdd; 
@@ -366,7 +367,7 @@ class BulletHolder
 		this.onFakeTick(map);
 		bullets.push_back(this);
 	}
-	
+
 	void Clean()
 	{
 		bullets.clear();
@@ -380,7 +381,7 @@ class BulletHolder
 
 const bool CollidesWithPlatform(CBlob@ blob, const Vec2f velocity) // Stolen from rock.as
 {
-	const f32 platform_angle = blob.getAngleDegrees();	
+	const f32 platform_angle = blob.getAngleDegrees();
 	Vec2f direction = Vec2f(0.0f, -1.0f);
 	direction.RotateBy(platform_angle);
 	const float velocity_angle = direction.AngleWith(velocity);

@@ -20,21 +20,7 @@ void shootGun(const u16 gunID, const f32 aimangle, const u16 hoomanID, const Vec
 	rules.SendCommand(rules.getCommandID("fireGun"), params);
 }
 
-void shootShotgun(const u16 gunID, const f32 aimangle, const u16 hoomanID, const Vec2f pos) 
-{
-	CRules@ rules = getRules();
-	CBitStream params;
-
-	params.write_netid(hoomanID);
-	params.write_netid(gunID);
-	params.write_f32(aimangle);
-	params.write_Vec2f(pos);
-	params.write_u32(getGameTime());
-
-	rules.SendCommand(rules.getCommandID("fireShotgun"), params);
-}
-
-void reload(CBlob@ this, CBlob@ holder) 
+void Reload(CBlob@ this, CBlob@ holder) 
 {
 	CBitStream params;
 
@@ -43,10 +29,10 @@ void reload(CBlob@ this, CBlob@ holder)
 
 	this.SendCommand(this.getCommandID("reload"), params);
 
-	this.set_u8("clickReload",0);
+	this.set_u8("clickReload", 0);
 }
 
-s32 countAmmo(CBlob@ this, string ammoBlob)
+s32 CountAmmo(CBlob@ this, string ammoBlob)
 {
 	//count how much ammo is in the holder's inventory
 	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
@@ -58,8 +44,7 @@ s32 countAmmo(CBlob@ this, string ammoBlob)
 			CInventory@ inv = holder.getInventory();
 			if (inv !is null)
 			{
-				s32 itemCount = inv.getCount(ammoBlob);
-				return (itemCount);
+				return inv.getCount(ammoBlob);
 			}
 		}
 	}
@@ -71,12 +56,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("reload")) 
 	{
-		//NOTE:: Reloading ammo is WIP still and has large problems as of the moment
 		GunSettings@ settings;
 		this.get("gun_settings", @settings);
 
-		u32 clip = this.get_u8("clip");
-		u32 total = this.get_u8("total");
+		u32 total = settings.TOTAL;
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		if (point is null) return;
@@ -90,41 +73,38 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			u32 count = inv.getItemsCount();
 			for (u32 i = 0; i < count; i++)
 			{
-				//CBlob@ item = inv.getItem(i);
-				CBlob@ item = inv.getItem(settings.AMMO_BLOB);
-				if (item !is null)
+				CBlob@ item = inv.getItem(i);
+				if (item !is null && item.getName() == settings.AMMO_BLOB)
 				{
+					u32 clip = this.get_u8("clip");
 					s32 quantity = item.getQuantity();
-					if (quantity <= 0) return;
 
-					u32 taken = Maths::Min(quantity, Maths::Clamp(total - clip, 0, total));
-					item.server_SetQuantity(quantity - taken);
-					this.set_u8("clip", clip + taken);
+					if (clip >= total) break;
+
+					if (this.hasTag("CustomShotgunReload"))
+					{
+						//Shotgun reload
+						if (quantity == 1) item.server_Die();
+						else item.server_SetQuantity(Maths::Max(quantity - 1, 0));
+						quantity -= 1;
+
+						this.add_u8("clip", 1);
+						if (clip < total || quantity == 1) this.set_bool("beginReload", true); //loop
+
+						break;
+					}
+					else
+					{
+						//Normal reload
+						s32 taken = Maths::Min(quantity, Maths::Clamp(total - clip, 0, total));
+						item.server_SetQuantity(Maths::Max(quantity - taken, 0));
+						this.add_u8("clip", taken);
+					}
 				}
 			}
 		}
+		this.set_bool("doReload", false);
 	}
-}
-
-bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
-{
-	CBlob@ carried = forBlob.getCarriedBlob();
-	if (carried !is null) return (carried.hasTag("gun_attachment"));
-	else return true;
-}
-
-void onAddToInventory(CBlob@ this, CBlob@ blob)
-{
-	if (!blob.hasTag("gun_attachment")) this.server_PutOutInventory(blob);
-	if (blob.getName() == "scope")
-	{
-		this.set_f32("scope_zoom", 0.1f);
-	}
-}
-
-void onRemovefromInventory(CBlob@ this, CBlob@ blob)
-{
-	if (blob.getName() == "scope") this.set_f32("scope_zoom", 0.0f);
 }
 
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint) 
@@ -136,30 +116,27 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	attached.Tag("noLMB");
 	attached.Tag("noShielding");
 
-	if (isClient()) 
+	if (isClient() && this.exists("CustomSoundPickup"))
 	{
 		CSprite@ sprite = this.getSprite();
-		sprite.PlaySound("PickupGun.ogg");
+		sprite.PlaySound(this.get_string("CustomSoundPickup"));
 	}
 }
 
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint @detachedPoint) 
 {
-	if (isServer())
+	if (isClient())
 	{
-		CSprite@ sprite = this.getSprite();
-		sprite.ResetTransform();
-		sprite.animation.frame = 0;
+		this.getSprite().ResetTransform();
 	}
 
 	detached.Untag("noLMB");
 	detached.Untag("noShielding");
 
 	// Set angle when dropped instead of being left or right
-	// Unneeded if we physically set the angle rather than just the sprite
-	/*Vec2f aimvector = detached.getAimPos() - this.getPosition();
+	Vec2f aimvector = detached.getAimPos() - this.getPosition();
 	f32 angle = 0 - aimvector.Angle() + (this.isFacingLeft() == true ? 180.0f : 0);
-	this.setAngleDegrees(angle);*/
+	this.setAngleDegrees(angle);
 
 	// Reset reload and interval
 	this.set_bool("beginReload", false);

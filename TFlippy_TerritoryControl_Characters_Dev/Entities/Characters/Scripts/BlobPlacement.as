@@ -78,7 +78,7 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 			carryBlob.setAngleDegrees(0.0f);
 			// print("reset 2");
 		}
-		
+
 		AttachmentPoint@ hands = this.getAttachments().getAttachmentPointByName("PICKUP");
 		if (hands !is null)
 		{
@@ -109,6 +109,11 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 				{
 					hands.offset.y += 2;
 				}
+			}
+			if (this.isKeyPressed(key_action3) && carryBlob.hasTag("weapon"))
+			{
+				hands.offset.y -= 3;
+				if (this.isKeyPressed(key_down)) hands.offset.y -= 1;
 			}
 		}
 	}
@@ -145,7 +150,7 @@ void onTick(CBlob@ this)
 	CBlob @carryBlob = this.getCarriedBlob();
 	if (carryBlob !is null)
 	{
-		if(carryBlob.hasTag("place ignore facing"))
+		if (carryBlob.hasTag("place ignore facing"))
 		{
 			carryBlob.getSprite().SetFacingLeft(false);
 		}
@@ -155,14 +160,14 @@ void onTick(CBlob@ this)
 		{
 			PositionCarried(this, carryBlob);
 		}
-		else if (!carryBlob.hasTag("no shitty rotation reset"))
+		else
 		{
 			if (carryBlob.hasTag("place norotate"))
 			{
 				this.getCarriedBlob().setAngleDegrees(0.0f);
 				// print("reset 1");
 			}
-			else
+			else if (!carryBlob.hasTag("no shitty rotation reset"))
 			{
 				this.getCarriedBlob().setAngleDegrees(this.get_u16("build_angle"));
 			}
