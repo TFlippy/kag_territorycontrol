@@ -9,11 +9,11 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	ShopItem[] items;
 	this.set(SHOP_ARRAY, items);
 
-	if(target.getName() == "lantern" && !target.hasTag("Sulphur"))
+	if (!target.hasScript("FloatyMod.as"))
 	{
 		//this, name, icon_name, blobname, description,
-		ShopItem@ s = addShopItem(this, "Sulphur Light", "$mat_sulphur$", "Tag-Sulphur", "Add sulphur to make it glow with brighter white light", false);
-		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 20);
+		ShopItem@ s = addShopItem(this, "Floaty", "$mat_methane$", "Script-FloatyMod.as", "Add Methane to make it fall slower", false);
+		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", 30);
 
 		s.spawnNothing = true;
 	}
@@ -28,9 +28,13 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 	{
 		target.Tag(spl[1]);
 	}
+	else if(spl[0] == "Script")
+	{
+		target.AddScript(spl[1]);
+	}
 	else
 	{
-		
+		//Add more bizaar stuff here
 	}	
 
 }
