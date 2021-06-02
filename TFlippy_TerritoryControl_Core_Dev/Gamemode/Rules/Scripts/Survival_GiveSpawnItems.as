@@ -225,7 +225,7 @@ void onTick(CRules@ this)
 	//extremely unoptimized
 	//move to player collision, if they touch x, give x mat
 
-	if (isClient()){
+	if (!isServer()){
 		return;
 	}
 
