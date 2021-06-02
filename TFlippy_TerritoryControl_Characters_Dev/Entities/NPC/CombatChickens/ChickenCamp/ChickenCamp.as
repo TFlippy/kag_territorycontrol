@@ -10,7 +10,6 @@
 	
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
-	this.set_Vec2f("nobuild extend", Vec2f(0.0f, 8.0f));
 	
 	this.Tag("minimap_small");
 	this.set_u8("minimap_index", 26);
