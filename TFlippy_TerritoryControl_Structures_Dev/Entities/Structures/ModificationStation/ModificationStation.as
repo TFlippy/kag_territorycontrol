@@ -51,7 +51,30 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 void createMenu(CBlob@ this, CBlob@ caller)
 {
 	CBlob@ held = caller.getCarriedBlob();
-	//TODO
+	
+	BuildShopMenu(this, caller, held, Vec2f(4.0f, 4.0f)); //Always sized at 4x4 if you want to add more than 16 modifiers for a single item change this
+}
+
+void BuildShopMenu(CBlob@ this, CBlob @caller, CBlob@ target, Vec2f size)
+{
+	if (caller is null || !caller.isMyPlayer())
+		return;
+
+	ShopItem[]@ shopitems;
+
+	//if (!this.get(SHOP_ARRAY, @shopitems)) { return; }
+
+
+	CControls@ controls = caller.getControls();
+	CGridMenu@ menu = CreateGridMenu(caller.getScreenPos(), this, size, "Modifying " + target.getName());
+
+	if (menu !is null)
+	{
+		if (!this.hasTag(SHOP_AUTOCLOSE))
+			menu.deleteAfterClick = false;
+		//addShopItemsToMenu(this, menu, caller);
+	}
+
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
