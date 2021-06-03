@@ -46,42 +46,75 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if(this.get_bool("shop available") && !this.hasTag("shop disabled"))
 	{
-		CBitStream params;
-		params.write_u16(caller.getNetworkID());
-
 		CBlob@ held = caller.getCarriedBlob();
 
-		if (held != null)
+		if (held != null) //Modify held object
 		{
+			CBitStream params;
+			params.write_u16(caller.getNetworkID());
+			params.write_u16(held.getNetworkID());
+
+			CButton@ button = caller.CreateGenericButton(
+				this.get_u8("shop icon"),                                 // icon token
+				this.get_Vec2f("shop offset"),                            // button offset
+				this,                                                     // shop blob
+				this.getCommandID("shop menu"),                           // command
+				"Modify "+getTranslatedString(held.getInventoryName()),   // description
+				params													  // parameters
+			);  				
+		                            								 
+			button.enableRadius = this.get_u8("shop button radius");
+		}
+		else //Modify yourself
+		{
+			CBitStream params;
+			params.write_u16(caller.getNetworkID());
+			params.write_u16(caller.getNetworkID());
 
 			CButton@ button = caller.CreateGenericButton(
 				this.get_u8("shop icon"),                                // icon token
 				this.get_Vec2f("shop offset"),                           // button offset
 				this,                                                    // shop blob
-				createMenu,                                              // func callback
-				getTranslatedString("Modify "+held.getInventoryName())   // description
+				this.getCommandID("shop menu"),                          // command
+				getTranslatedString("Modify Yourself"),   				 // description
+				params													 // parameters
 			);  				
-		                            								 // bit stream
-
+		                            								 
 			button.enableRadius = this.get_u8("shop button radius");
+		}
+
+		//Modify nearby vehicles
+		CBlob@[] blobs;
+		if (getMap().getBlobsInBox(this.getPosition() + Vec2f(96, 64), this.getPosition() + Vec2f(-96, 0), @blobs))
+		{
+			for (uint i = 0; i < blobs.length; i++)
+			{
+				CBlob@ blob = blobs[i];
+
+				// print(blob.getName() + "; " + blob.hasTag("vehicle"));
+
+				if (blob != null && blob.hasTag("vehicle"))
+				{
+					CBitStream params;
+					params.write_u16(caller.getNetworkID());
+					params.write_u16(blob.getNetworkID());
+
+					CButton@ button = caller.CreateGenericButton(
+						this.get_u8("shop icon"),                                // icon token
+						(this.get_Vec2f("shop offset") + Vec2f(0, -8.0f)),                           // button offset
+						this,                                                    // shop blob
+						this.getCommandID("shop menu"),                          // command
+						"Modify "+getTranslatedString(blob.getInventoryName()),  // description
+						params													 // parameters
+					);  				
+																			
+					button.enableRadius = this.get_u8("shop button radius")*2;
+					return; //only uses the first vehicle
+				}
+			}
 		}
 	}
 }
-
-void createMenu(CBlob@ this, CBlob@ caller) //Pass over held object with the button instead of finding it again
-{
-	if (this.hasTag("shop disabled"))
-		return;
-
-	CBlob@ target = caller.getCarriedBlob();
-	if (target != null)
-	{
-		AllPossibleModifiers(this, caller, target);
-	}
-
-	BuildShopMenu(this, caller, "Modifers for "+target.getInventoryName(), Vec2f(0, 0), this.get_Vec2f("shop menu size"));
-}
-
 
 bool isInRadius(CBlob@ this, CBlob @caller)
 {
@@ -90,14 +123,7 @@ bool isInRadius(CBlob@ this, CBlob @caller)
 	{
 		offset = this.get_Vec2f("shop offset");
 	}
-	if (this.getName() != "methanedeposit")
-	{
-		return ((this.getPosition() + Vec2f((this.isFacingLeft() ? -2 : 2)*offset.x, offset.y) - caller.getPosition()).Length() < caller.getRadius() / 2 + this.getRadius());
-	}
-	else
-	{
-		return ((this.getPosition() - caller.getPosition()).Length() < caller.getRadius() + this.getRadius() + 16);
-	}
+	return ((this.getPosition() + Vec2f((this.isFacingLeft() ? -2 : 2)*offset.x, offset.y) - caller.getPosition()).Length() < caller.getRadius() / 2 + this.getRadius());
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -109,7 +135,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		// build menu for them
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
-		BuildShopMenu(this, caller, this.get_string("shop description"), Vec2f(0, 0), this.get_Vec2f("shop menu size"));
+		CBlob@ target = getBlobByNetworkID(params.read_u16());
+
+		AllPossibleModifiers(this, caller, target);
+		this.set_u16("ModificationTarget" ,target.getNetworkID());
+		BuildShopMenu(this, caller, "Modifers for "+target.getInventoryName(), Vec2f(0, 0), this.get_Vec2f("shop menu size"));
 	}
 	else if (cmd == this.getCommandID("shop buy"))
 	{
@@ -141,12 +171,23 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			if (!this.get(SHOP_ARRAY, @shop_items)) { return; }
 			if (s_index >= shop_items.length) { return; }
 			ShopItem@ s = shop_items[s_index];
-
+			//print("REACHED HERE");
 			// production?
 			if (s.ticksToMake > 0)
 			{
 				s.producing = producing;
 				return;
+			}
+
+			if (s.spawnNothing) //is a recepie which actually modifies something instead of creating a new entity
+			{
+				CBlob@ target = getBlobByNetworkID(this.get_u16("ModificationTarget"));
+
+				if(target == null || !isInRadius(this, target)) //No target no paying for stuff
+				{
+					caller.ClearMenus();
+					return;
+				}
 			}
 
 			// check spam
@@ -198,9 +239,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				if (s.spawnNothing)
 				{
-					CBlob@ target = caller.getCarriedBlob();
+					CBlob@ target = getBlobByNetworkID(this.get_u16("ModificationTarget"));
 					//print("Attempted to modify something");
-					if (target != null)
+					if (target != null && !target.hasTag("dead")) //Checks for the target have been done earlier, this is just in case the target was used in the recepie (since thats currently still possible)
 					{
 						ModifyWith(this, caller, target, blobName);
 					}
