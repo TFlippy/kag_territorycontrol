@@ -17,7 +17,7 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		//this currently also includes stuff like pumpkins and buckets but oh well
 	}
 
-	
+	CShape@ shape = target.getShape();
 
 	f32 priceMod = 1; //A general multiplier on costs
 
@@ -36,7 +36,6 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		ShopItem@ s = addShopItem(this, "Floaty", "$mat_methane$", "Script-FloatyMod.as", "Add Methane to make it fall slower", false);
 		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", Maths::Clamp(target.getMass(), 20, 200) * priceMod);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 30 * priceMod);
-
 		s.spawnNothing = true;
 	}
 	if (!target.hasScript("TimedDeathMod.as"))
@@ -44,23 +43,25 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		ShopItem@ s = addShopItem(this, "Timed Death", "$mat_copperwire$", "Script-TimedDeathMod.as", "Dies after exactly 30 seconds", false);
 		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 1 * priceMod);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 1 * priceMod);
-
 		s.spawnNothing = true;
 	}
-	
 	if (!target.hasScript("FragileMod.as"))
 	{
 		AddIconToken("$glass_block$", "World.png", Vec2f(8, 8), CMap::tile_glass);
 		ShopItem@ s = addShopItem(this, "Fragile", "$glass_block$", "Script-FragileMod.as", "Dies when colliding at too high speeds", false);
 		AddRequirement(s.requirements, "coin", "", "Coins", 40 * priceMod);
-
 		s.spawnNothing = true;
 	}
-	if (!target.hasTag("AerodynamicMod"))
+	if (!target.hasTag("AerodynamicMod") && shape.getDrag() > 0)
 	{
-		ShopItem@ s = addShopItem(this, "Aerodynamic", "$mat_wood$", "Reduce Drag", "Reduce the air resistance by rounding off unnessecary corners", false);
+		ShopItem@ s = addShopItem(this, "Aerodynamic", "$chicken$", "Reduce Drag", "Reduce the air resistance by rounding off unnessecary corners", false);
 		AddRequirement(s.requirements, "coin", "", "Coins", 100 * priceMod);
-
+		s.spawnNothing = true;
+	}
+	if (!target.hasTag("BouncyMod") && shape.getElasticity() < 0.8f)
+	{
+		ShopItem@ s = addShopItem(this, "Bouncy", "$sponge$", "Set Elasiticity", "Bounces when colliding with terrain", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200 * priceMod);
 		s.spawnNothing = true;
 	}
 	if (!target.hasTag("explosive") && target.maxQuantity <= 1 && !target.hasTag("flesh"))
@@ -69,9 +70,6 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "blob", "mat_dynamite", "Dynamite", 1);
 		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2 * priceMod);
 		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 50 * priceMod);
-		
-		
-
 		s.spawnNothing = true;
 	}
 }
@@ -102,6 +100,11 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 		{
 			target.Tag("AerodynamicMod");
 			target.getShape().setDrag(target.getShape().getDrag() * 0.3f); //CURRENTLY DIRECT CHANGES LIKE THIS MAY NOT BE STORED IN SAVE FILES but the tag deffinitly would be
+		}
+		else if(name == "Set Elasiticity")
+		{
+			target.Tag("BouncyMod");
+			target.getShape().setElasticity(0.8f);
 		}
 	}	
 

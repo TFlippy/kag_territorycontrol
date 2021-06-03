@@ -74,7 +74,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 				this.get_Vec2f("shop offset"),                           // button offset
 				this,                                                    // shop blob
 				this.getCommandID("shop menu"),                          // command
-				getTranslatedString("Modify Yourself"),   				 // description
+				getTranslatedString("Modify yourself"),   				 // description
 				params													 // parameters
 			);  				
 		                            								 
