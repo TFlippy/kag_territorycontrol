@@ -46,7 +46,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		CBlob@ held = caller.getCarriedBlob();
 
-		if (held != null) //Modify held object
+		if (held != null && !held.hasTag("temp blob")) //Modify held object (ignores temporary objects such as ladders in hand)
 		{
 			CBitStream params;
 			params.write_u16(caller.getNetworkID());
