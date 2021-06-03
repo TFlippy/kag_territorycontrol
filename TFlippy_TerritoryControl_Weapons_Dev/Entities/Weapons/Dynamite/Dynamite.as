@@ -23,6 +23,7 @@ void onInit(CBlob@ this)
 	this.set_bool("map_damage_raycast", true);
 	this.Tag("map_damage_dirt");
 	this.Tag("projectile");
+	this.Tag("explosive");
 
 	this.Tag("use hitmap");
 	this.set_f32("hitmap_chance", hitmap_chance);
