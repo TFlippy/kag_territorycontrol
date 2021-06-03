@@ -2,7 +2,6 @@
 
 void onInit(CBlob@ this)
 {
-	print("Test");
 	this.set_u16("Death Time Mod", getGameTime() + 900);
 }
 

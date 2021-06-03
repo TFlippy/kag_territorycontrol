@@ -63,6 +63,15 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 
 		s.spawnNothing = true;
 	}
+	if (!target.hasTag("Explosive") && target.maxQuantity <= 1 && !target.hasTag("flesh"))
+	{
+		ShopItem@ s = addShopItem(this, "Dynamite Explosion", "$dynamite$", "Script-DynamiteExplosionMod.as", "Explodes when destroyed", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 * priceMod);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2 * priceMod);
+		AddRequirement(s.requirements, "blob", "dynamite", "Dynamite", 1);
+
+		s.spawnNothing = true;
+	}
 }
 
 void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
