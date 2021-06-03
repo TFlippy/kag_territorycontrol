@@ -21,8 +21,6 @@ void onInit(CBlob@ this)
 		this.set_Vec2f("shop offset", Vec2f_zero);
 	if(!this.exists("shop menu size"))
 		this.set_Vec2f("shop menu size", Vec2f(7, 7));
-	if(!this.exists("shop description"))
-		this.set_string("shop description", "Workbench");
 	if(!this.exists("shop icon"))
 		this.set_u8("shop icon", 15);
 	if(!this.exists("shop offset is buy offset"))
@@ -85,7 +83,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 		//Modify nearby vehicles
 		CBlob@[] blobs;
-		if (getMap().getBlobsInBox(this.getPosition() + Vec2f(96, 64), this.getPosition() + Vec2f(-96, 0), @blobs))
+		if (getMap().getBlobsInBox(this.getPosition() + Vec2f(40, 40), this.getPosition() + Vec2f(-40, -40), @blobs))
 		{
 			for (uint i = 0; i < blobs.length; i++)
 			{
