@@ -34,10 +34,10 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 
 		s.spawnNothing = true;
 	}
-	if (!target.hasScript("AirodynamicMod.as"))
+	if (!target.hasTag("AerodynamicMod"))
 	{
-		ShopItem@ s = addShopItem(this, "Airodynamic", "$mat_wood$", "Script-AirodynamicMod.as", "Chisel away some unnessecary corners to make it move faster", false);
-		AddRequirement(s.requirements, "coin", "", "Coins", 300 * priceMod);
+		ShopItem@ s = addShopItem(this, "Aerodynamic", "$mat_wood$", "Reduce Drag", "Reduce the air resistance by rounding off unnessecary corners", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 * priceMod);
 
 		s.spawnNothing = true;
 	}
@@ -60,6 +60,11 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 	}
 	else
 	{
+		if(name == "Reduce Drag")
+		{
+			target.Tag("AirodynamicMod");
+			target.getShape().setDrag(target.getShape().getDrag() * 0.3f); //CURRENTLY DIRECT CHANGES LIKE THIS MAY NOT BE STORED IN SAVE FILES but the tag deffinitly would be
+		}
 		//Add more bizaar stuff here
 	}	
 
