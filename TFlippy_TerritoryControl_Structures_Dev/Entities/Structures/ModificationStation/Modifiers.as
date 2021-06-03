@@ -3,6 +3,7 @@
 
 #include "ShopCommon.as";
 #include "Hitters.as";
+#include "CustomBlocks.as";
 
 void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 {
@@ -35,6 +36,23 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		ShopItem@ s = addShopItem(this, "Floaty", "$mat_methane$", "Script-FloatyMod.as", "Add Methane to make it fall slower", false);
 		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", Maths::Clamp(target.getMass(), 20, 200) * priceMod);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 30 * priceMod);
+
+		s.spawnNothing = true;
+	}
+	if (!target.hasScript("TimedDeathMod.as"))
+	{
+		ShopItem@ s = addShopItem(this, "Timed Death", "$mat_copperwire$", "Script-TimedDeathMod.as", "Dies after exactly 30 seconds", false);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 1 * priceMod);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 1 * priceMod);
+
+		s.spawnNothing = true;
+	}
+	
+	if (!target.hasScript("FragileMod.as"))
+	{
+		AddIconToken("$glass_block$", "World.png", Vec2f(8, 8), CMap::tile_glass);
+		ShopItem@ s = addShopItem(this, "Fragile", "$glass_block$", "Script-FragileMod.as", "Dies when colliding at too high speeds", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 40 * priceMod);
 
 		s.spawnNothing = true;
 	}
