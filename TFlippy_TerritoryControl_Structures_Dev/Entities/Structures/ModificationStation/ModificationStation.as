@@ -31,8 +31,3 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 150;
 
 }
-
-void onChangeTeam(CBlob@ this, const int oldTeam)
-{
-	// reset shop colors
-}
