@@ -25,7 +25,7 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	{
 		priceMod *= 10;
 	}
-	if (target.hasTag("vehicle")) //Vehicles are more expensive since they are larger and generally more powerfull
+	if (target.hasTag("vehicle")) //Vehicles are more expensive
 	{
 		priceMod *= 5;
 	}
@@ -61,10 +61,10 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	if (!target.hasTag("BouncyMod") && shape.getElasticity() < 0.8f)
 	{
 		ShopItem@ s = addShopItem(this, "Bouncy", "$sponge$", "Set Elasiticity", "Bounces when colliding with terrain", false);
-		AddRequirement(s.requirements, "coin", "", "Coins", 200 * priceMod);
+		AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
 		s.spawnNothing = true;
 	}
-	if (!target.hasTag("explosive") && target.maxQuantity <= 1 && !target.hasTag("flesh"))
+	if (!target.hasTag("explosive") && target.maxQuantity <= 1 && !target.hasTag("flesh")) //cannot make fleshy things exlpodes cause a drug already does that
 	{
 		ShopItem@ s = addShopItem(this, "Dynamite Explosion", "$dynamite$", "Script-DynamiteExplosionMod.as", "Explodes when destroyed", false);
 		AddRequirement(s.requirements, "blob", "mat_dynamite", "Dynamite", 1);
