@@ -54,7 +54,7 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 
 bool GiveSpawnResources(CRules@ this, CBlob@ blob, CPlayer@ player, CTFPlayerInfo@ info)
 {
-	bool ret = true;
+	bool ret = false;
 
 	if (blob.getName() == "builder" ||  blob.getName() == "engineer")
 	{
