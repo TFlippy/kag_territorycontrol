@@ -67,7 +67,8 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	}
 	if (!target.hasTag("AerodynamicMod") && shape.getDrag() > 0)
 	{
-		ShopItem@ s = addShopItem(this, "Aerodynamic", "$chicken$", "Reduce Drag", "Reduce the air resistance by rounding off unnessecary corners", false);
+		AddIconToken("$stone_triangle$", "StoneTriangle.png", Vec2f(8, 8), 0);
+		ShopItem@ s = addShopItem(this, "Aerodynamic", "$stone_triangle$", "Reduce Drag", "Reduce the air resistance by rounding off unnessecary corners", false);
 		AddRequirement(s.requirements, "coin", "", "Coins", 100 * priceMod);
 		s.spawnNothing = true;
 	}
@@ -98,7 +99,7 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	if (!target.hasScript("FloatyMod.as"))
 	{
 		//this, name, icon_name, blobname, description,
-		ShopItem@ s = addShopItem(this, "Floaty", "$mat_methane$", "Script-FloatyMod.as", "Add Methane to make it fall slower", false);
+		ShopItem@ s = addShopItem(this, "Floaty", "$chicken$", "Script-FloatyMod.as", "Add Methane to make it fall slower", false);
 		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", Maths::Clamp(target.getMass(), 20, 200) * priceMod);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 30 * priceMod);
 		s.spawnNothing = true;
