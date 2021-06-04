@@ -56,7 +56,7 @@ bool GiveSpawnResources(CRules@ this, CBlob@ blob, CPlayer@ player, CTFPlayerInf
 {
 	bool ret = true;
 
-	if (blob.getName() == "builder")
+	if (blob.getName() == "builder" ||  blob.getName() == "engineer")
 	{
 		ret = SetMaterials(blob, "mat_wood", 100) || ret;
 		ret = SetMaterials(blob, "mat_stone", 30) || ret;
@@ -140,7 +140,7 @@ bool canGetSpawnmats(CRules@ this, CPlayer@ p, CTFPlayerInfo@ info)
 
 		CBlob@ b = p.getBlob();
 		string name = b.getName();
-		if (name == "builder")
+		if (name == "builder" || name == "engineer")
 			flag = ItemFlag::Builder;
 		else if (name == "knight" || name == "sapper")
 			flag = ItemFlag::Knight;
