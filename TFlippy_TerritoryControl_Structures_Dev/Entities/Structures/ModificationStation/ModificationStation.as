@@ -28,6 +28,8 @@ void onInit(CBlob@ this)
 	this.set_u8("shop icon", 23);
 	this.Tag(SHOP_AUTOCLOSE);
 
+	this.set_bool("Unbound Modifiers", false); //Does not start with the unbound modifier
+
 	this.getCurrentScript().tickFrequency = 150;
 
 }
