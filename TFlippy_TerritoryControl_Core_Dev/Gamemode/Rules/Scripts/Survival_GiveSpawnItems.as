@@ -238,7 +238,7 @@ void onTick(CRules@ this)
 					CBlob@ overlapped = overlapping[o_step];
 					if (overlapped !is null && overlapped.hasTag("player")) //Any class can restock at any of these places
 					{
-						print(" "+ overlapped.getName());
+						//print(" "+ overlapped.getName());
 						if (overlapped.getName() == "builder" ||  overlapped.getName() == "engineer")
 						{
 							CPlayer@ p = overlapped.getPlayer();
