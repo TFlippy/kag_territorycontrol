@@ -14,6 +14,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("shop menu");
 	this.addCommandID("shop buy");
 	this.addCommandID("shop made item");
+	this.addCommandID("shop unbound");
 
 	if(!this.exists("shop available"))
 		this.set_bool("shop available", true);
@@ -48,20 +49,66 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 		if (held != null && !held.hasTag("temp blob")) //Modify held object (ignores temporary objects such as ladders in hand)
 		{
-			CBitStream params;
-			params.write_u16(caller.getNetworkID());
-			params.write_u16(held.getNetworkID());
+			if (held.hasTag("blueprint"))
+			{
+				if (held.getName() == "bp_modification")
+				{
+					if (!this.get_bool("Unbound Modifiers"))
+					{
+						CBitStream params;
+						params.write_u16(caller.getNetworkID());
+						params.write_u16(held.getNetworkID());
 
-			CButton@ button = caller.CreateGenericButton(
-				this.get_u8("shop icon"),                                 // icon token
-				this.get_Vec2f("shop offset"),                            // button offset
-				this,                                                     // shop blob
-				this.getCommandID("shop menu"),                           // command
-				"Modify "+getTranslatedString(held.getInventoryName()),   // description
-				params													  // parameters
-			);  				
-		                            								 
-			button.enableRadius = this.get_u8("shop button radius");
+						CButton@ button = caller.CreateGenericButton(
+							3,                                     	                  // icon token
+							this.get_Vec2f("shop offset"),                            // button offset
+							this,                                                     // shop blob
+							this.getCommandID("shop unbound"),                        // command
+							"Unlock all modifiers",   								  // description
+							params													  // parameters
+						);  				
+																				
+						button.enableRadius = this.get_u8("shop button radius");
+					}
+					else
+					{
+						CButton@ button = caller.CreateGenericButton(
+							9,                                     	                  // icon token
+							this.get_Vec2f("shop offset"),                            // button offset
+							this,                                                     // shop blob
+							null,                        							  // command
+							"Already unlocked all modifiers"   					      // description
+						);
+					}
+				}
+				else
+				{
+					CButton@ button = caller.CreateGenericButton(
+					9,                                     	                  // icon token
+					this.get_Vec2f("shop offset"),                            // button offset
+					this,                                                     // shop blob
+					null,                        							  // command
+					"Wrong Blueprint"   					                  // description
+					);
+				}
+			}
+			else
+			{
+				CBitStream params;
+				params.write_u16(caller.getNetworkID());
+				params.write_u16(held.getNetworkID());
+
+				CButton@ button = caller.CreateGenericButton(
+					this.get_u8("shop icon"),                                 // icon token
+					this.get_Vec2f("shop offset"),                            // button offset
+					this,                                                     // shop blob
+					this.getCommandID("shop menu"),                           // command
+					"Modify "+getTranslatedString(held.getInventoryName()),   // description
+					params													  // parameters
+				);  				
+																		
+				button.enableRadius = this.get_u8("shop button radius");
+			}
 		}
 		else //Modify yourself
 		{
@@ -138,6 +185,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		AllPossibleModifiers(this, caller, target);
 		this.set_u16("ModificationTarget" ,target.getNetworkID());
 		BuildShopMenu(this, caller, "Modifers for "+target.getInventoryName(), Vec2f(0, 0), this.get_Vec2f("shop menu size"));
+	}
+	else if (cmd == this.getCommandID("shop unbound"))
+	{
+		print("Test");
+		this.set_bool("Unbound Modifiers", true);
 	}
 	else if (cmd == this.getCommandID("shop buy"))
 	{
