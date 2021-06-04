@@ -24,7 +24,7 @@ void onInit(CBlob@ this)
 	this.Tag("change team on fort capture");
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(3, 3));
+	this.set_Vec2f("shop menu size", Vec2f(4, 4));
 	this.set_u8("shop icon", 23);
 	this.Tag(SHOP_AUTOCLOSE);
 

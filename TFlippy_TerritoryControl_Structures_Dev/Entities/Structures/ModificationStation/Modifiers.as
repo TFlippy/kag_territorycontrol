@@ -38,7 +38,8 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 
 	if (target.maxQuantity <= 1 && !target.hasTag("flesh") && target.getHealth() < target.getInitialHealth()) //obviously cant heal flesh things
 	{
-		ShopItem@ s = addShopItem(this, "Repair", "$mat_ironingot$", "Repair", "Repair 10% of its health", false);
+		AddIconToken("$repair$", "ModificationIcons.png", Vec2f(16, 16), 0);
+		ShopItem@ s = addShopItem(this, "Repair", "$repair$", "Repair", "Repair 10% of health", false);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 1 * priceMod); //price is set at 1 iron ingot regardless of the entity (should be fine though)
 		s.spawnNothing = true;
 	}

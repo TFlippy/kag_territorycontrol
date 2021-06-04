@@ -168,7 +168,7 @@ bool isInRadius(CBlob@ this, CBlob @caller)
 	{
 		offset = this.get_Vec2f("shop offset");
 	}
-	return ((this.getPosition() + Vec2f((this.isFacingLeft() ? -2 : 2)*offset.x, offset.y) - caller.getPosition()).Length() < caller.getRadius() / 2 + this.getRadius());
+	return ((this.getPosition() + Vec2f((this.isFacingLeft() ? -2 : 2)*offset.x, offset.y) - caller.getPosition()).Length() < this.get_u8("shop button radius")*2);
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
