@@ -30,6 +30,12 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		priceMod *= 5;
 	}
 
+	if (target.maxQuantity <= 1 && !target.hasTag("flesh") && target.getHealth() < target.getInitialHealth()) //obviously cant heal flesh things
+	{
+		ShopItem@ s = addShopItem(this, "Repair", "$mat_ironingot$", "Repair", "Repair 10% of its health", false);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 1 * priceMod); //price is set at 1 iron ingot regardless of the entity (should be fine though)
+		s.spawnNothing = true;
+	}
 	if (!target.hasScript("FloatyMod.as"))
 	{
 		//this, name, icon_name, blobname, description,
@@ -64,7 +70,7 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
 		s.spawnNothing = true;
 	}
-	if (!target.hasTag("explosive") && target.maxQuantity <= 1 && !target.hasTag("flesh")) //cannot make fleshy things exlpodes cause a drug already does that
+	if (!target.hasTag("explosive") && target.maxQuantity <= 1 && !target.hasTag("flesh") && target.maxQuantity <= 1) //cannot make fleshy things exlpodes cause a drug already does that
 	{
 		ShopItem@ s = addShopItem(this, "Dynamite Explosion", "$dynamite$", "Script-DynamiteExplosionMod.as", "Explodes when destroyed", false);
 		AddRequirement(s.requirements, "blob", "mat_dynamite", "Dynamite", 1);
@@ -105,6 +111,10 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 		{
 			target.Tag("BouncyMod");
 			target.getShape().setElasticity(0.8f);
+		}
+		else if(name == "Repair")
+		{
+			target.server_Heal(target.getInitialHealth() * 0.1f);
 		}
 	}	
 
