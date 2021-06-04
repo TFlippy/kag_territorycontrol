@@ -18,7 +18,7 @@ void onInit(CBlob@ this)
 	// this.SetMinimapOutsideBehaviour(CBlob::minimap_snap);
 	// this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", 7, Vec2f(16, 16));
 	// this.SetMinimapRenderAlways(true);
-	
+
 	this.getSprite().SetZ(-25); //background
 
 	this.set_f32("map_damage_ratio", 1.0f);
@@ -34,19 +34,19 @@ void onInit(CBlob@ this)
 	this.server_setTeamNum(-1);
 
 	if (isServer())
-	{		
+	{
 		if (XORRandom(100) < 25)
 		{
 			CBlob@ blob = server_CreateBlob("chargepistol", this.getTeamNum(), this.getPosition());
 			this.server_PutInInventory(blob);
 		}
-		
+
 		if (XORRandom(100) < 10)
 		{
 			CBlob@ blob = server_CreateBlob("exosuititem", this.getTeamNum(), this.getPosition());
 			this.server_PutInInventory(blob);
 		}
-		
+
 		if (XORRandom(100) < 3)
 		{
 			MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(8));
@@ -59,7 +59,7 @@ void onInit(CBlob@ this)
 	}
 
 	this.inventoryButtonPos = Vec2f(0, 0);
-	
+
 	CMap@ map = getMap();
 	this.setPosition(Vec2f(this.getPosition().x, 0.0f));
 	this.setVelocity(Vec2f((15 + XORRandom(5)) * (XORRandom(2) == 0 ? 1.00f : -1.00f), 5));
@@ -87,19 +87,19 @@ void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 
 void onTick(CBlob@ this)
 {
-	if(this.getOldVelocity().Length() - this.getVelocity().Length() > 8.0f)
+	if (this.getOldVelocity().Length() - this.getVelocity().Length() > 8.0f)
 	{
 		onHitGround(this);
 	}
 
-	if(this.hasTag("collided") && this.getVelocity().Length() < 2.0f)
+	if (this.hasTag("collided") && this.getVelocity().Length() < 2.0f)
 	{
 		this.Untag("explosive");
 	}
 
 	if (isClient() && this.getTickSinceCreated() < 60) MakeParticle(this, XORRandom(100) < 10 ? "SmallSmoke" : "SmallExplosion");
 
-	if(this.hasTag("collided"))
+	if (this.hasTag("collided"))
 	{
 		this.getShape().SetGravityScale(1.0f);
 		if (!this.hasTag("sound_played") && getGameTime() > (sound_delay * getTicksASecond()))
@@ -107,21 +107,21 @@ void onTick(CBlob@ this)
 			this.Tag("sound_played");
 
 			f32 modifier = 1.00f - (sound_delay / 3.0f);
-			print("modifier: " + modifier);
+			//print("modifier: " + modifier);
 
 			if (modifier > 0.01f && isClient())
 			{
 				Sound::Play("methane_explode.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 1.0f - (0.7f * (1 - modifier)), modifier);
 			}
 
-			this.getCurrentScript().tickFrequency = 30;
+			this.getCurrentScript().tickFrequency = 0; //disable ticks
 		}
 	}
 }
 
 void onHitGround(CBlob@ this)
 {
-	if(!this.hasTag("explosive")) return;
+	if (!this.hasTag("explosive")) return;
 
 	CMap@ map = getMap();
 
@@ -130,7 +130,7 @@ void onHitGround(CBlob@ this)
 
 	f32 power = Maths::Min(vellen * 50.0f, 1.0f);
 
-	if(!this.hasTag("collided"))
+	if (!this.hasTag("collided"))
 	{
 		if (isClient())
 		{
@@ -149,7 +149,7 @@ void onHitGround(CBlob@ this)
 	this.set_f32("map_damage_radius", boomRadius);
 	Explode(this, boomRadius, 20.0f);
 
-	if(isServer())
+	if (isServer())
 	{
 		int radius = int(boomRadius / map.tilesize);
 		for(int x = -radius; x < radius; x++)
@@ -171,24 +171,23 @@ void onHitGround(CBlob@ this)
 
 		CBlob@[] blobs;
 		map.getBlobsInRadius(this.getPosition(), boomRadius, @blobs);
-		for(int i = 0; i < blobs.length; i++)
+		for (int i = 0; i < blobs.length; i++)
 		{
 			map.server_setFireWorldspace(blobs[i].getPosition(), true);
 		}
 
 		this.setVelocity(this.getOldVelocity() / 1.55f);
-		
-		// if (XORRandom(100) < 10) server_CreateBlob("falloutgas", this.getTeamNum(), this.getPosition());
+
 	}
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	if(customData != Hitters::builder && customData != Hitters::drill)
+	if (customData != Hitters::builder && customData != Hitters::drill)
 		return 0.0f;
 
 	if (isServer())
-	{	
+	{
 		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_steelingot", XORRandom(2));
 		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_ironingot", XORRandom(3));
 		if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_plasteel", XORRandom(10));
@@ -200,6 +199,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			blob.setVelocity(Vec2f(100 - XORRandom(200), 100 - XORRandom(200)) / 25.0f);
 		}
 	}
-	
+
 	return damage;
 }
