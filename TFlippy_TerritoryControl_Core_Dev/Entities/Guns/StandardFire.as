@@ -128,18 +128,27 @@ void onTick(CBlob@ this)
 
 				if (CountAmmo(this, settings.AMMO_BLOB) > 0 && this.get_u8("clip") < settings.TOTAL) 
 				{
-					sprite.PlaySound(settings.RELOAD_SOUND);
-				}
-				else if (this.exists("CustomCycle") && this.hasTag("CustomShotgunReload"))
-				{
-					actionInterval = settings.RELOAD_TIME * 2;
-					sprite.PlaySound(this.get_string("CustomCycle"));
+					if (!this.hasTag("CustomShotgunReload")) sprite.PlaySound(settings.RELOAD_SOUND);
 				}
 			}
 			else if (this.get_bool("doReload"))
 			{
+				if (this.hasTag("CustomShotgunReload"))
+				{
+					if (CountAmmo(this, settings.AMMO_BLOB) > 0 && this.get_u8("clip") < settings.TOTAL)
+					{
+						sprite.PlaySound(settings.RELOAD_SOUND);
+					}
+					else if (this.exists("CustomCycle"))
+					{
+						actionInterval = settings.RELOAD_TIME * 2;
+						sprite.PlaySound(this.get_string("CustomCycle"));
+					}
+				}
+
 				//End reload sequence
 				Reload(this, holder);
+				if (this.hasTag("CustomShotgunReload")) this.set_bool("doReload", false);
 			} 
 			else if (pressing_shoot)
 			{

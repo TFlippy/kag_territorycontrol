@@ -86,7 +86,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						//Shotgun reload
 						if (quantity == 1) item.server_Die();
 						else item.server_SetQuantity(Maths::Max(quantity - 1, 0));
-						quantity -= 1;
+						quantity--;
 
 						this.add_u8("clip", 1);
 						if (clip < total || quantity == 1) this.set_bool("beginReload", true); //loop
@@ -103,7 +103,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				}
 			}
 		}
-		this.set_bool("doReload", false);
+		if (!this.hasTag("CustomShotgunReload")) this.set_bool("doReload", false);
 	}
 }
 
