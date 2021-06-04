@@ -16,15 +16,14 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	if (!Unbound) //Can modifiy equipments when unbound cause why the heck not
 	if (target.hasScript("head.as") || target.hasScript("torso.as") || target.hasScript("boots.as"))
 	{
-		return; //Equipment shouldent have modifiers since people might think it applies while beeing worn which is not how the code works
-		//this currently also includes stuff like pumpkins and buckets but oh well
+		return; //Equipment shouldent normally have modifiers since people might think it applies while beeing worn which is not how the code works
 	}
 
 	CShape@ shape = target.getShape();
 
 	f32 priceMod = 1; //A general multiplier on costs
 
-	if (target.hasTag("player")) //Modifying anything with a player should be vastly more expensive (possible even impossible?, for now i left it in cause it is ludacrously expensive and you loose it on death)
+	if (target.hasTag("player")) //Modifying anything with a player should be vastly more expensive
 	{
 		priceMod *= 10;
 		if (!Unbound) //Needs to be Unbound to modify players
@@ -51,15 +50,6 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50 * priceMod);
 		s.spawnNothing = true;
 	}
-	if (Unbound)
-	if (!target.hasScript("FloatyMod.as"))
-	{
-		//this, name, icon_name, blobname, description,
-		ShopItem@ s = addShopItem(this, "Floaty", "$mat_methane$", "Script-FloatyMod.as", "Add Methane to make it fall slower", false);
-		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", Maths::Clamp(target.getMass(), 20, 200) * priceMod);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 30 * priceMod);
-		s.spawnNothing = true;
-	}
 	if (!target.hasScript("TimedDeathMod.as"))
 	{
 		ShopItem@ s = addShopItem(this, "Timed Death", "$mat_copperwire$", "Script-TimedDeathMod.as", "Dies after exactly 30 seconds", false);
@@ -80,13 +70,6 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "coin", "", "Coins", 100 * priceMod);
 		s.spawnNothing = true;
 	}
-	if (Unbound)
-	if (!target.hasTag("BouncyMod") && shape.getElasticity() < 0.8f)
-	{
-		ShopItem@ s = addShopItem(this, "Bouncy", "$sponge$", "Set Elasiticity", "Bounces when colliding with terrain", false);
-		AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
-		s.spawnNothing = true;
-	}
 	if (Unbound || !target.hasTag("explosive"))
 	if (!target.hasScript("DynamiteExplosionMode") && target.maxQuantity <= 1 && !target.hasTag("flesh") && target.maxQuantity <= 1) //cannot make fleshy things exlpodes cause a drug already does that
 	{
@@ -94,6 +77,29 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "blob", "mat_dynamite", "Dynamite", 1); //Always uses exactly 1
 		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2 * priceMod);
 		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 50 * priceMod);
+		s.spawnNothing = true;
+	}
+	if (Unbound)
+	if (!target.hasTag("BouncyMod") && shape.getElasticity() < 0.8f)
+	{
+		ShopItem@ s = addShopItem(this, "Bouncy", "$sponge$", "Set Elasiticity", "Bounces when colliding with terrain", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
+		s.spawnNothing = true;
+	}
+	if (Unbound)
+	if (!target.hasTag("FrictionlessMod") && shape.getFriction() > 0.01f)
+	{
+		ShopItem@ s = addShopItem(this, "Frictionless", "$sponge$", "Reduce Friction", "Add tiny wheels to reduce friction with the ground", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
+		s.spawnNothing = true;
+	}
+	if (Unbound)
+	if (!target.hasScript("FloatyMod.as"))
+	{
+		//this, name, icon_name, blobname, description,
+		ShopItem@ s = addShopItem(this, "Floaty", "$mat_methane$", "Script-FloatyMod.as", "Add Methane to make it fall slower", false);
+		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", Maths::Clamp(target.getMass(), 20, 200) * priceMod);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 30 * priceMod);
 		s.spawnNothing = true;
 	}
 }
@@ -129,6 +135,11 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 		{
 			target.Tag("BouncyMod");
 			target.getShape().setElasticity(0.8f);
+		}
+		else if(name == "Reduce Friction")
+		{
+			target.Tag("FrictionlessMod");
+			target.getShape().setFriction(0.01f);
 		}
 		else if(name == "Repair")
 		{
