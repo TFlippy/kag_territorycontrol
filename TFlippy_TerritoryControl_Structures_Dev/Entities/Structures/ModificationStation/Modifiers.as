@@ -104,6 +104,16 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 30 * priceMod);
 		s.spawnNothing = true;
 	}
+	if (Unbound)
+	if (!target.hasScript("RegenerationMod.as"))
+	{
+		//this, name, icon_name, blobname, description,
+		ShopItem@ s = addShopItem(this, "Regeneration", "$mat_meat$", "Script-RegenerationMod.as", "Do unspeakable things to make it heal hp very very slowly", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
+		AddRequirement(s.requirements, "blob", "mat_meat", "Meat", Maths::Clamp(target.getInitialHealth()*30, 20, 300) * priceMod);
+		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 60 * priceMod);
+		s.spawnNothing = true;
+	}
 }
 
 void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
