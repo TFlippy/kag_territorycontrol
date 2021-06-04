@@ -31,7 +31,7 @@ void onRender(CSprite@ this)
 				}
 				else
 				{
-					hud.SetCursorFrame(Maths::Clamp((clip > 0 ? 1.0f : 0.0f) + Maths::Round((f32(clip) / f32(total)) * 7.0f), 0, 8));
+					hud.SetCursorFrame(Maths::Clamp((clip > 0 ? 1.0f : 0.0f) + Maths::Floor((f32(clip) / f32(total)) * 7.0f), 0, 8));
 				}
 				hud.ShowCursor();
 			}
