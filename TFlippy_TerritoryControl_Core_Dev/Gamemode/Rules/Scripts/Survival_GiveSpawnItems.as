@@ -66,22 +66,6 @@ bool GiveSpawnResources(CRules@ this, CBlob@ blob, CPlayer@ player, CTFPlayerInf
 			info.items_collected |= ItemFlag::Builder;
 		}
 	}
-	else if (blob.getName() == "archer")
-	{
-		// ret = SetMaterials(blob, "mat_arrows", 30) || ret;
-
-		if (ret)
-		{
-			info.items_collected |= ItemFlag::Archer;
-		}
-	}
-	else if (blob.getName() == "knight")
-	{
-		if (ret)
-		{
-			info.items_collected |= ItemFlag::Knight;
-		}
-	}
 
 	return ret;
 }
@@ -142,11 +126,7 @@ bool canGetSpawnmats(CRules@ this, CPlayer@ p, CTFPlayerInfo@ info)
 		string name = b.getName();
 		if (name == "builder" || name == "engineer")
 			flag = ItemFlag::Builder;
-		else if (name == "knight" || name == "sapper")
-			flag = ItemFlag::Knight;
-		else if (name == "archer")
-			flag = ItemFlag::Archer;
-
+		
 		if (info.items_collected & flag == 0)
 		{
 			return true;
@@ -240,8 +220,8 @@ void onTick(CRules@ this)
 		CBlob@[] spots;
 		getBlobsByName(base_name, @spots);
 		getBlobsByName("buildershop", @spots);
-		getBlobsByName("knightshop", @spots);
-		getBlobsByName("archershop", @spots);
+		//getBlobsByName("knightshop", @spots);
+		//getBlobsByName("archershop", @spots);
 		getBlobsByName("convent", @spots);
 		getBlobsByName("citadel", @spots);
 		getBlobsByName("stronghold", @spots);
@@ -253,14 +233,13 @@ void onTick(CRules@ this)
 			CBlob@[] overlapping;
 			if (spot !is null && spot.getOverlapping(overlapping))
 			{
-				string name = spot.getName();
-				bool isShop = (name.find("shop") != -1);
 				for (uint o_step = 0; o_step < overlapping.length; ++o_step)
 				{
 					CBlob@ overlapped = overlapping[o_step];
-					if (overlapped !is null && overlapped.hasTag("player"))
+					if (overlapped !is null && overlapped.hasTag("player")) //Any class can restock at any of these places
 					{
-						if (!isShop || name.find(overlapped.getName()) != -1)
+						print(" "+ overlapped.getName());
+						if (overlapped.getName() == "builder" ||  overlapped.getName() == "engineer")
 						{
 							CPlayer@ p = overlapped.getPlayer();
 							if (p !is null)
