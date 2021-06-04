@@ -114,6 +114,18 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 60 * priceMod);
 		s.spawnNothing = true;
 	}
+	if (Unbound)
+	if (!target.hasScript("ReturningMod.as") && !target.hasTag("player") && !target.hasTag("vehicle")) //can't home in onto itself, also no hopping giant vehicles
+	{
+		//this, name, icon_name, blobname, description,
+		ShopItem@ s = addShopItem(this, "Returning", "$pumpkin$", "ReturningMod", "Slowly jumps back towards you", false);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 20 * priceMod);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 20 * priceMod);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 10 * priceMod);
+		s.spawnNothing = true;
+	}
+
+	
 }
 
 void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
@@ -132,34 +144,39 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 	{
 		target.Tag(spl[1]);
 	}
-	else if(spl[0] == "Script") //Easier add script recepies
+	else if (spl[0] == "Script") //Easier add script recepies
 	{
 		target.AddScript(spl[1]);
 	}
 	else
 	{
-		if(name == "Reduce Drag")
+		if (name == "Reduce Drag")
 		{
 			target.Tag("AerodynamicMod");
 			target.getShape().setDrag(target.getShape().getDrag() * 0.2f); //CURRENTLY DIRECT CHANGES LIKE THIS MAY NOT BE STORED IN SAVE FILES but the tag deffinitly would be
 		}
-		else if(name == "Set Elasiticity")
+		else if (name == "Set Elasiticity")
 		{
 			target.Tag("BouncyMod");
 			target.getShape().setElasticity(0.8f);
 		}
-		else if(name == "Reduce Friction")
+		else if (name == "Reduce Friction")
 		{
 			target.Tag("FrictionlessMod");
 			target.getShape().setFriction(0.01f);
 		}
-		else if(name == "Repair")
+		else if (name == "Repair")
 		{
 			target.server_Heal(target.getInitialHealth() * 0.1f);
 		}
-		else if(name == "Reinforce")
+		else if (name == "Reinforce")
 		{
 			target.server_SetHealth(target.getHealth() + target.getInitialHealth() * 0.5f);
+		}
+		else if (name == "ReturningMod")
+		{
+			target.AddScript("ReturningMod.as");
+			target.set_u16("ReturningMod Target", caller.getNetworkID());
 		}
 	}	
 

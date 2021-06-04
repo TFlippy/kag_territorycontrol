@@ -188,7 +188,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	else if (cmd == this.getCommandID("shop unbound"))
 	{
-		print("Test");
+		//print("Test");
 		this.set_bool("Unbound Modifiers", true);
 	}
 	else if (cmd == this.getCommandID("shop buy"))
