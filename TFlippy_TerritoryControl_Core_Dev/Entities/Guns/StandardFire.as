@@ -24,6 +24,7 @@ void onInit(CBlob@ this)
 
 	// Set commands
 	this.addCommandID("reload");
+	this.addCommandID("fireProj");
 
 	// Set vars
 	this.set_bool("beginReload", false); //Starts a reload
@@ -58,6 +59,7 @@ void onInit(CBlob@ this)
 				anim.AddFrames(frames);
 				flash.SetRelativeZ(1.0f);
 				flash.SetOffset(settings.MUZZLE_OFFSET);
+				flash.SetFacingLeft(this.hasTag("CustomMuzzleLeft"));
 				flash.SetVisible(false);
 				// flash.setRenderStyle(RenderStyle::additive);
 			}
@@ -90,9 +92,14 @@ void onTick(CBlob@ this)
 			                settings.B_TYPE == HittersTC::shotgun         ? "shotgunCase": "";
 			f32 oAngle = (aimangle % 360) + 180;
 
+			//Keys
 			const bool pressing_shoot = this.hasTag("CustomSemiAuto") ?
 			           point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
 			           point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
+			
+			//Sound
+			const f32 reload_pitch = this.exists("CustomReloadPitch") ? this.get_f32("CustomReloadPitch") : 1.0f;
+			const f32 cycle_pitch  = this.exists("CustomCyclePitch")  ? this.get_f32("CustomCyclePitch")  : 1.0f;
 
 			//Start reload sequence when pressing [R]
 			CControls@ controls = holder.getControls();
@@ -128,7 +135,7 @@ void onTick(CBlob@ this)
 
 				if (CountAmmo(this, settings.AMMO_BLOB) > 0 && this.get_u8("clip") < settings.TOTAL) 
 				{
-					if (!this.hasTag("CustomShotgunReload")) sprite.PlaySound(settings.RELOAD_SOUND);
+					if (!this.hasTag("CustomShotgunReload")) sprite.PlaySound(settings.RELOAD_SOUND, 1.0f, reload_pitch);
 				}
 			}
 			else if (this.get_bool("doReload"))
@@ -137,12 +144,12 @@ void onTick(CBlob@ this)
 				{
 					if (CountAmmo(this, settings.AMMO_BLOB) > 0 && this.get_u8("clip") < settings.TOTAL)
 					{
-						sprite.PlaySound(settings.RELOAD_SOUND);
+						sprite.PlaySound(settings.RELOAD_SOUND, 1.0f, reload_pitch);
 					}
 					else if (this.exists("CustomCycle"))
 					{
 						actionInterval = settings.RELOAD_TIME * 2;
-						sprite.PlaySound(this.get_string("CustomCycle"));
+						sprite.PlaySound(this.get_string("CustomCycle"), 1.0f, cycle_pitch);
 					}
 				}
 
@@ -165,9 +172,16 @@ void onTick(CBlob@ this)
 						aimangle += XORRandom(2) != 0 ? -XORRandom(settings.B_SPREAD) : XORRandom(settings.B_SPREAD);
 					}
 
-					shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+					if (this.exists("ProjBlob"))
+					{
+						shootProj(this, aimangle);
+					}
+					else
+					{
+						shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+					}
 
-					this.set_f32("gun_recoil_current", 3); //Todo: add a new var (or use one existing) that will affect this
+					this.set_f32("gun_recoil_current", this.exists("CustomGunRecoil") ? this.get_u32("CustomGunRecoil") : 3);
 
 					CSpriteLayer@ flash = sprite.getSpriteLayer("muzzle_flash");
 					if (flash !is null)
@@ -188,7 +202,7 @@ void onTick(CBlob@ this)
 					actionInterval = settings.RELOAD_TIME;
 					this.set_bool("beginReload", false);
 					this.set_bool("doReload", true);
-					sprite.PlaySound(settings.RELOAD_SOUND);
+					sprite.PlaySound(settings.RELOAD_SOUND, 1.0f, reload_pitch);
 				}
 				else if (!this.get_bool("beginReload") && !this.get_bool("doReload"))
 				{

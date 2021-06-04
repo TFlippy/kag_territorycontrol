@@ -20,6 +20,15 @@ void shootGun(const u16 gunID, const f32 aimangle, const u16 hoomanID, const Vec
 	rules.SendCommand(rules.getCommandID("fireGun"), params);
 }
 
+void shootProj(CBlob@ this, const f32 aimangle) 
+{
+	CBitStream params;
+
+	params.write_f32(aimangle);
+
+	this.SendCommand(this.getCommandID("fireProj"), params);
+}
+
 void Reload(CBlob@ this, CBlob@ holder) 
 {
 	CBitStream params;
@@ -54,11 +63,11 @@ s32 CountAmmo(CBlob@ this, string ammoBlob)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params) 
 {
-	if (cmd == this.getCommandID("reload")) 
-	{
-		GunSettings@ settings;
-		this.get("gun_settings", @settings);
+	GunSettings@ settings;
+	this.get("gun_settings", @settings);
 
+	if (cmd == this.getCommandID("reload"))
+	{
 		u32 total = settings.TOTAL;
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
@@ -104,6 +113,41 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 		if (!this.hasTag("CustomShotgunReload")) this.set_bool("doReload", false);
+	}
+	else if (cmd == this.getCommandID("fireProj"))
+	{
+		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if (point is null) return;
+
+		CBlob@ holder = point.getOccupied();
+		if (holder is null) return;
+
+		if (isServer())
+		{
+			const f32 angle = params.read_f32();
+			Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
+			Vec2f offset = this.exists("ProjOffset") ? this.get_Vec2f("ProjOffset") : settings.MUZZLE_OFFSET;
+			offset.x *= (this.isFacingLeft() ? 1 : -1);
+
+			Vec2f startPos = this.getPosition() + offset.RotateBy(angle);
+
+			CBlob@ blob = server_CreateBlobNoInit(this.get_string("ProjBlob"));
+			blob.setVelocity(dir * settings.B_SPEED);
+			blob.SetDamageOwnerPlayer(holder.getPlayer());
+			blob.server_setTeamNum(holder.getTeamNum());
+			blob.setPosition(startPos);
+			blob.Init();
+
+			blob.setAngleDegrees(angle + 90 + (this.isFacingLeft() ? 180 : 0));
+		}
+		if (isClient())
+		{
+			this.getSprite().PlaySound(settings.FIRE_SOUND, 2.0f);
+
+			//Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+			//coil.onFakeTick();
+		}
+		this.sub_u8("clip", 1);
 	}
 }
 

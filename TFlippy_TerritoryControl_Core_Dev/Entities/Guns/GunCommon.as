@@ -49,8 +49,12 @@ class GunSettings
 	/// this.set_string("CustomSoundPickup", string fileName); //Adds a sound effect for when the gun is picked up
 	/// this.set_string("CustomCycle", string fileName); //Enables cycling sounds when shooting (pumpaction, bolt action etc)
 	///
+	/// this.set_f32("CustomReloadPitch", float pitch); //Changes Reload sound pitch
+	/// this.set_f32("CustomCyclePitch", float pitch); //Changes Cycle sound pitch
+	///
 	/// this.set_u32("CustomCoinFlesh", uint coins) //Coins on hitting flesh (set as players)
 	/// this.set_u32("CustomCoinObject", uint coins) //Coins on hitting objects (set as vehicles)
+	/// this.set_u32("CustomGunRecoil", uint recoil) //Distance the gun "kickbacks" when shot
 	///
 	/// this.set_u8("CustomKnock", int knocktime); //Time in ticks the victim is knocked for
 	/// this.set_u8("CustomPenetration", int penetration); //How much damage to blocks that are shot
@@ -58,6 +62,13 @@ class GunSettings
 	/// this.Tag("CustomSpread"); //Changes a shotgun's accuracy by by setting all bullets in a certain direction- kind of weird
 	/// this.Tag("CustomShotgunReload"); //Switches the gun to use an alternative reloading method
 	/// this.Tag("CustomSemiAuto"); //Switches the gun to become semiautomatic rather than automatic
+	/// this.Tag("CustomMuzzleLeft"); //Sets the muzzle flash sprite in the opposite direction
+
+	/// PROJECTILE SETTINGS
+	/// > These are variables for guns that shoot actual blobs rather than bullets- e.g bazooka
+	///
+	/// this.set_string("ProjBlob"); //Blob that is shot from the gun | enables projectile mode
+	/// this.set_Vec2f("ProjOffset"); //Where the blob starts from | uses MUZZLE_OFFSET if not used
 	///
 
 	GunSettings()
