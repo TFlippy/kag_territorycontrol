@@ -845,6 +845,7 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 
 			// GLASS
 			case CMap::tile_glass:
+			case CMap::tile_glass_v0:
 			case CMap::tile_glass_v1:
 			case CMap::tile_glass_v2:
 			case CMap::tile_glass_v3:
@@ -1860,7 +1861,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_rail_0_bg:
 			case CMap::tile_rail_1_bg:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
-				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::FLAMMABLE);
+				map.RemoveTileFlag( index, Tile::LIGHT_PASSES | Tile::LIGHT_SOURCE | Tile::FLAMMABLE | Tile::WATER_PASSES);
 				break;
 
 			case CMap::tile_iron:
