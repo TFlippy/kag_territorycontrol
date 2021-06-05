@@ -751,6 +751,14 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		b.size.Set(24, 32);
 		blocks[3].push_back(b);
 	}
+	{	
+		BuildBlock b(0, "fireplace", "$fireplace$", "Campfire\nCan be used to cook various foods.");
+		AddRequirement(b.reqs, "blob", "lantern", "Lantern", 1);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200); //This is more expensive than for peasants as the fireplace is an amazing lightsource better than most other lightsources
+		b.buildOnGround = true;
+		b.size.Set(16, 16);
+  }
 	{
 		BuildBlock b(0, "tavern", "$icon_tavern$", "Tavern\nA poorly built cozy tavern.\nNeutrals may set their team here, paying you 20 coins for each spawn.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 350);
