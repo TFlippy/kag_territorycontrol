@@ -54,9 +54,9 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 
 bool GiveSpawnResources(CRules@ this, CBlob@ blob, CPlayer@ player, CTFPlayerInfo@ info)
 {
-	bool ret = true;
+	bool ret = false;
 
-	if (blob.getName() == "builder")
+	if (blob.getName() == "builder" ||  blob.getName() == "engineer")
 	{
 		ret = SetMaterials(blob, "mat_wood", 100) || ret;
 		ret = SetMaterials(blob, "mat_stone", 30) || ret;
@@ -64,22 +64,6 @@ bool GiveSpawnResources(CRules@ this, CBlob@ blob, CPlayer@ player, CTFPlayerInf
 		if (ret)
 		{
 			info.items_collected |= ItemFlag::Builder;
-		}
-	}
-	else if (blob.getName() == "archer")
-	{
-		// ret = SetMaterials(blob, "mat_arrows", 30) || ret;
-
-		if (ret)
-		{
-			info.items_collected |= ItemFlag::Archer;
-		}
-	}
-	else if (blob.getName() == "knight")
-	{
-		if (ret)
-		{
-			info.items_collected |= ItemFlag::Knight;
 		}
 	}
 
@@ -140,13 +124,9 @@ bool canGetSpawnmats(CRules@ this, CPlayer@ p, CTFPlayerInfo@ info)
 
 		CBlob@ b = p.getBlob();
 		string name = b.getName();
-		if (name == "builder")
+		if (name == "builder" || name == "engineer")
 			flag = ItemFlag::Builder;
-		else if (name == "knight" || name == "sapper")
-			flag = ItemFlag::Knight;
-		else if (name == "archer")
-			flag = ItemFlag::Archer;
-
+		
 		if (info.items_collected & flag == 0)
 		{
 			return true;
@@ -225,7 +205,7 @@ void onTick(CRules@ this)
 	//extremely unoptimized
 	//move to player collision, if they touch x, give x mat
 
-	if (isClient()){
+	if (!isServer()){
 		return;
 	}
 
@@ -240,8 +220,8 @@ void onTick(CRules@ this)
 		CBlob@[] spots;
 		getBlobsByName(base_name, @spots);
 		getBlobsByName("buildershop", @spots);
-		getBlobsByName("knightshop", @spots);
-		getBlobsByName("archershop", @spots);
+		//getBlobsByName("knightshop", @spots);
+		//getBlobsByName("archershop", @spots);
 		getBlobsByName("convent", @spots);
 		getBlobsByName("citadel", @spots);
 		getBlobsByName("stronghold", @spots);
@@ -253,14 +233,13 @@ void onTick(CRules@ this)
 			CBlob@[] overlapping;
 			if (spot !is null && spot.getOverlapping(overlapping))
 			{
-				string name = spot.getName();
-				bool isShop = (name.find("shop") != -1);
 				for (uint o_step = 0; o_step < overlapping.length; ++o_step)
 				{
 					CBlob@ overlapped = overlapping[o_step];
-					if (overlapped !is null && overlapped.hasTag("player"))
+					if (overlapped !is null && overlapped.hasTag("player")) //Any class can restock at any of these places
 					{
-						if (!isShop || name.find(overlapped.getName()) != -1)
+						//print(" "+ overlapped.getName());
+						if (overlapped.getName() == "builder" ||  overlapped.getName() == "engineer")
 						{
 							CPlayer@ p = overlapped.getPlayer();
 							if (p !is null)
