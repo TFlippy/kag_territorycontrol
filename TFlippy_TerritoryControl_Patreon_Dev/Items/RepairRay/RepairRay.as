@@ -1,5 +1,6 @@
 #include "Hitters.as";
 #include "Knocked.as";
+#include "DeityCommon.as"
 
 f32 maxDistance = 80;
 
@@ -19,7 +20,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {	
-	if (this.isAttached())
+	if (this.isAttached() && getGameTime() % 3 == 0) //works a bit slower since checking map tiles is quite the lag maker
 	{
 		UpdateAngle(this);
 	
@@ -47,7 +48,20 @@ void onTick(CBlob@ this)
 					if (CountAmmo(inv) > 10)
 					{
 						Vec2f point = holder.getPosition();
-						u32 range = 12; //static number currently not influenced by mason power, though maybe it should be
+
+						u8 deity_id = this.get_u8("deity_id");
+						u32 range = 6;
+						if (deity_id == Deity::mason)
+						{
+							CBlob@ altar = getBlobByName("altar_mason");
+							if (altar !is null)
+							{
+								range = range + Maths::Floor(Maths::Sqrt(altar.get_f32("deity_power") * 0.01f));	
+							}
+						}
+						
+						
+						 //static number currently not influenced by mason power, though maybe it should be
 
 						CMap@ map = getMap();
 
