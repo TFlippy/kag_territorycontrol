@@ -18,9 +18,9 @@ void onInit(CBlob@ this)
 	this.SetMinimapOutsideBehaviour(CBlob::minimap_snap);
 	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", 7, Vec2f(16, 16));
 	this.SetMinimapRenderAlways(true);
-	
+
 	this.getSprite().SetZ(-25); //background
-	
+
 	this.set_Vec2f("shop offset", Vec2f(-6, 0));
 	this.set_Vec2f("shop menu size", Vec2f(5, 4));
 	this.set_string("shop description", "Mysterious Wreckage's Molecular Fabricator");
@@ -38,7 +38,7 @@ void onInit(CBlob@ this)
 	this.Tag("scyther inside");
 
 	this.set_bool("shop available", false);
-	
+
 	this.server_setTeamNum(-1);
 
 	if (isServer())
@@ -51,7 +51,7 @@ void onInit(CBlob@ this)
 				this.server_PutInInventory(blob);
 			}
 		}
-		
+
 		for (int i = 0; i < 6; i++)
 		{
 			if (XORRandom(100) < 50)
@@ -60,7 +60,7 @@ void onInit(CBlob@ this)
 				this.server_PutInInventory(blob);
 			}
 		}
-		
+
 		for (int i = 0; i < 2; i++)
 		{
 			if (XORRandom(100) < 25)
@@ -69,7 +69,7 @@ void onInit(CBlob@ this)
 				this.server_PutInInventory(blob);
 			}
 		}
-		
+
 		for (int i = 0; i < 2; i++)
 		{
 			if (XORRandom(100) < 10)
@@ -80,8 +80,8 @@ void onInit(CBlob@ this)
 				MakeMat(this, this.getPosition(), "mat_lancerod", 50 + XORRandom(50));
 			}
 		}
-		
-			for (int i = 0; i < 2; i++)
+
+		for (int i = 0; i < 2; i++)
 		{
 			if (XORRandom(100) < 50)
 			{
@@ -91,7 +91,7 @@ void onInit(CBlob@ this)
 				MakeMat(this, this.getPosition(), "mat_mithril", 50 + XORRandom(150));
 			}
 		}
-		
+
 		for (int i = 0; i < 5; i++)
 		{
 			if (XORRandom(100) < 35)
@@ -100,22 +100,22 @@ void onInit(CBlob@ this)
 				this.server_PutInInventory(blob);
 			}
 		}
-			
+
 		if (XORRandom(100) < 2)
 		{
 			CBlob@ blob = server_CreateBlob("oof", this.getTeamNum(), this.getPosition());
 			MakeMat(this, this.getPosition(), "mat_antimatter", 10 + XORRandom(25));
 			this.server_PutInInventory(blob);
 		}
-		
+
 		if (XORRandom(100) < 25)
 		{
 			CBlob@ blob = server_CreateBlob("mat_mithrilbomb", this.getTeamNum(), this.getPosition());
 			blob.server_SetQuantity(1 + XORRandom(2));
-			
+
 			this.server_PutInInventory(blob);
 		}
-	
+
 		if (XORRandom(100) < 50)
 		{
 			for (int i = 0; i < 1 + XORRandom(4); i++)
@@ -130,20 +130,20 @@ void onInit(CBlob@ this)
 		MakeMat(this, this.getPosition(), "mat_plasteel", 250 + XORRandom(2000));
 		MakeMat(this, this.getPosition(), "mat_antimatter", XORRandom(15));
 		MakeMat(this, this.getPosition(), "mat_mithril", 50 + XORRandom(750));
-		
+
 		this.set_u8("wreckage_count", 0);
 		this.set_u8("wreckage_count_max", 10 + XORRandom(20));
-	
+
 		Vec2f velocity = Vec2f((15 + XORRandom(5)) * (XORRandom(2) == 0 ? 1.00f : -1.00f), 5);
 		this.setVelocity(velocity);
 		this.set_Vec2f("wreckage_velocity", velocity);
 	}
 
 	this.inventoryButtonPos = Vec2f(6, 0);
-	
+
 	CMap@ map = getMap();
 	this.setPosition(Vec2f((map.tilemapwidth * 8 * 0.50f) + (400 - XORRandom(800)), 0.0f));
-	
+
 	// this.getShape().SetGravityScale(0.0f);
 
 	if (isClient())
@@ -186,7 +186,7 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 				if (XORRandom(100) < 75)
 				{
 					server_CreateBlob("scyther", -1, this.getPosition());
-				}		
+				}
 				else
 				{
 					server_CreateBlob("centipede", -1, this.getPosition());
@@ -195,51 +195,50 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 		}
 		this.Untag("scyther inside");
 	}
-	
+
 	this.set_bool("shop available", true);
 }
 
-void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+/*void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	// print("" + cmd + " = " + this.getCommandID("shop made item"));
 
 	if (cmd == this.getCommandID("shop made item"))
 	{
 		this.getSprite().PlaySound("/ChaChing.ogg");
-		
+
 		u16 caller, item;
-		
+
 		if(!params.saferead_netid(caller) || !params.saferead_netid(item))
 			return;
-		
+
 		string name = params.read_string();
 		CBlob@ callerBlob = getBlobByNetworkID(caller);
-		
+
 		if (callerBlob is null) return;
-		
+
 		if (isServer())
 		{
 			string[] spl = name.split("-");
-			
+
 			if (spl[0] == "coin")
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;
-				
+
 				callerPlayer.server_setCoins(callerPlayer.getCoins() +  parseInt(spl[1]));
 			}
 			else if(spl[0] == "scyther")
 			{
-				print("scyther");
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 			}
 			else if (name.findFirst("mat_") != -1)
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;
-				
+
 				CBlob@ mat = server_CreateBlob(spl[0]);
-							
+
 				if (mat !is null)
 				{
 					mat.Tag("do not set materials");
@@ -253,9 +252,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			else
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
-				
+
 				if (blob is null && callerBlob is null) return;
-			   
+
 				if (!blob.canBePutInInventory(callerBlob))
 				{
 					callerBlob.server_Pickup(blob);
@@ -267,7 +266,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 	}
-}
+}*/
 
 void MakeParticle(CBlob@ this, const string filename = "SmallSteam")
 {
@@ -283,7 +282,7 @@ void onTick(CBlob@ this)
 		const u8 w_count = this.get_u8("wreckage_count");
 		const u8 w_count_max = this.get_u8("wreckage_count_max");
 		const Vec2f velocity = this.get_Vec2f("wreckage_velocity");
-		
+
 		if (w_count < w_count_max)
 		{
 			u32 width = getMap().tilemapwidth * 0.50f * 8;
@@ -292,12 +291,12 @@ void onTick(CBlob@ this)
 			{
 				Vec2f vel = velocity;
 				vel.RotateBy(3 - XORRandom(6));
-				
+
 				blob.setVelocity(vel);
-				
+
 				this.add_u8("wreckage_count", 1);
 			}
-		}		
+		}
 	}
 
 	if(this.getOldVelocity().Length() - this.getVelocity().Length() > 8.0f)
@@ -315,20 +314,20 @@ void onTick(CBlob@ this)
 	if (this.hasTag("collided"))
 	{
 		this.getShape().SetGravityScale(1.0f);
-		
+
 		if (!this.hasTag("sound_played") && getGameTime() > (sound_delay * getTicksASecond()))
 		{
 			this.Tag("sound_played");
 
 			f32 modifier = 1.00f - (sound_delay / 3.0f);
-			print("modifier: " + modifier);
+			// print("modifier: " + modifier);
 
 			if (modifier > 0.01f && isClient())
 			{
 				Sound::Play("Nuke_Kaboom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 1.0f - (0.7f * (1 - modifier)), modifier);
 			}
 
-			// this.getCurrentScript().tickFrequency = 30;
+			this.getCurrentScript().tickFrequency = 0; //disable ticks
 		}
 	}
 }
@@ -390,15 +389,11 @@ void onHitGround(CBlob@ this)
 			map.server_setFireWorldspace(blobs[i].getPosition(), true);
 		}
 
-		//CBlob@ boulder = server_CreateBlob("boulder", this.getTeamNum(), this.getPosition());
-		//boulder.setVelocity(this.getOldVelocity());
-		//this.server_Die();
-		
 		for (int i = 0; i < 3; i++)
 		{
 			server_CreateBlob("falloutgas", this.getTeamNum(), this.getPosition() + getRandomVelocity(0, XORRandom(80), 360));
 		}
-		
+
 		this.setVelocity(this.getOldVelocity() / 1.55f);
 	}
 }
@@ -409,7 +404,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		return 0.0f;
 
 	if (isServer())
-	{	
+	{
 		MakeMat(hitterBlob, worldPoint, "mat_steelingot", XORRandom(4));
 		MakeMat(hitterBlob, worldPoint, "mat_ironingot", XORRandom(6));
 		MakeMat(hitterBlob, worldPoint, "mat_plasteel", XORRandom(20));
@@ -421,6 +416,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			blob.setVelocity(Vec2f(100 - XORRandom(200), 100 - XORRandom(200)) / 25.0f);
 		}
 	}
-	
+
 	return damage;
 }
