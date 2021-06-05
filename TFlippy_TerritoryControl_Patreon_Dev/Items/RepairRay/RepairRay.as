@@ -20,7 +20,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {	
-	if (this.isAttached() && getGameTime() % 3 == 0) //works a bit slower since checking map tiles is quite the lag maker
+	if (this.isAttached()) 
 	{
 		UpdateAngle(this);
 	
@@ -30,7 +30,7 @@ void onTick(CBlob@ this)
 		
 		if (holder is null) {return;}
 
-		if (getKnocked(holder) <= 0)
+		if (getKnocked(holder) <= 0 && getGameTime() % 3 == 0) //works a bit slower since checking map tiles is quite the lag maker
 		{
 			CSprite@ sprite = this.getSprite();
 		
@@ -38,71 +38,65 @@ void onTick(CBlob@ this)
 		
 			if (lmb) //Needs at least 10 stone in inventory to work
 			{
-				Vec2f aimDir = holder.getAimPos() - this.getPosition();
-				aimDir.Normalize();
-				aimDir = aimDir;
-				if (isServer()) //is this nessecary?
+				CInventory@ inv = holder.getInventory();
+				if (CountAmmo(inv) > 10)
 				{
-					CInventory@ inv = holder.getInventory();
+					Vec2f aimDir = holder.getAimPos() - this.getPosition();
+					aimDir.Normalize();
+					aimDir = aimDir;
+				
+					Vec2f point = holder.getPosition();
 
-					if (CountAmmo(inv) > 10)
+					CMap@ map = getMap();
+
+					u32 range = 6;
+					u8 deity_id = this.get_u8("deity_id");
+					if (deity_id == Deity::mason)
 					{
-						Vec2f point = holder.getPosition();
-
-						u8 deity_id = this.get_u8("deity_id");
-						u32 range = 6;
-						if (deity_id == Deity::mason)
+						CBlob@ altar = getBlobByName("altar_mason");
+						if (altar !is null)
 						{
-							CBlob@ altar = getBlobByName("altar_mason");
-							if (altar !is null)
-							{
-								range = range + Maths::Floor(Maths::Sqrt(altar.get_f32("deity_power") * 0.01f));	
-							}
+							range = range + Maths::Floor(Maths::Sqrt(altar.get_f32("deity_power") * 0.01f));	
 						}
-						
-						
-						 //static number currently not influenced by mason power, though maybe it should be
+					}
 
-						CMap@ map = getMap();
+					for (int i = 0; i < range; i++)
+					{
+						point += aimDir * 8; //Move the point forward
+						int x = Maths::Round(point.x);
+						int y = Maths::Round(point.y);
+						Vec2f pos = Vec2f(x, y);
+						Tile tile = map.getTile(pos);
+						//print(" " + x + " " + y + " " + tile.type);
+						u16 type = tile.type;
 
-						for (int i = 0; i < range; i++)
+						if (type == CMap::tile_castle_moss)  //should use stone to do this
 						{
-							point += aimDir * 8; //Move the point forward
-							int x = Maths::Round(point.x);
-							int y = Maths::Round(point.y);
-							Vec2f pos = Vec2f(x, y);
-							Tile tile = map.getTile(pos);
-							//print(" " + x + " " + y + " " + tile.type);
-							u16 type = tile.type;
-
-							if (type == CMap::tile_castle_moss)  //should use stone to do this
-							{
-								tile.type = CMap::tile_castle;
-								map.server_SetTile(pos, tile);
-								makeSteamParticle(this, pos, aimDir);
-								TakeAmmo(inv, 1);
-							}
-							else if (type == CMap::tile_castle_back_moss)
-							{
-								tile.type = CMap::tile_castle_back;
-								map.server_SetTile(pos, tile);
-								makeSteamParticle(this, pos, aimDir);
-								TakeAmmo(inv, 1);
-							}
-							else if (type >= CMap::tile_castle_d1 && type <= CMap::tile_castle_d0)
-							{
-								tile.type = CMap::tile_castle;
-								map.server_SetTile(pos, tile);
-								makeSteamParticle(this, pos, aimDir);
-								TakeAmmo(inv, 1);
-							}
-							else if (type >= 76 && type <= 79)
-							{
-								tile.type = CMap::tile_castle_back;
-								map.server_SetTile(pos, tile);
-								makeSteamParticle(this, pos, aimDir);
-								TakeAmmo(inv, 1);
-							}
+							tile.type = CMap::tile_castle;
+							map.server_SetTile(pos, tile);
+							makeSteamParticle(this, pos, aimDir);
+							TakeAmmo(inv, 1);
+						}
+						else if (type == CMap::tile_castle_back_moss)
+						{
+							tile.type = CMap::tile_castle_back;
+							map.server_SetTile(pos, tile);
+							makeSteamParticle(this, pos, aimDir);
+							TakeAmmo(inv, 1);
+						}
+						else if (type >= CMap::tile_castle_d1 && type <= CMap::tile_castle_d0)
+						{
+							tile.type = CMap::tile_castle;
+							map.server_SetTile(pos, tile);
+							makeSteamParticle(this, pos, aimDir);
+							TakeAmmo(inv, 1);
+						}
+						else if (type >= 76 && type <= 79)
+						{
+							tile.type = CMap::tile_castle_back;
+							map.server_SetTile(pos, tile);
+							makeSteamParticle(this, pos, aimDir);
+							TakeAmmo(inv, 1);
 						}
 					}
 				}
@@ -139,7 +133,12 @@ void makeSteamParticle(CBlob@ this, Vec2f pos, const Vec2f vel)
 {
 	if (!isClient()){ return;}
 
-	ParticleAnimated("SmallSteam", pos, vel, float(XORRandom(360)), 1.0f, 2, 0, false);
+	CParticle@ p = ParticleAnimated("SmallSteam", pos + Vec2f(4, 4), vel, float(XORRandom(360)), 1.0f, 2, 0, false);
+	if (p != null)
+	{
+		p.colour = SColor(255, 120, 120, 120);
+		p.Z = 300;
+	}
 }
 
 void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)
