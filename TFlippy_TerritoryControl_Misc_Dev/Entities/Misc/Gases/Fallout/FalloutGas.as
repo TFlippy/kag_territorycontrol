@@ -19,7 +19,7 @@ void onInit(CBlob@ this)
 
 	if (!this.exists("toxicity")) this.set_f32("toxicity", 5.00f);
 
-	this.server_SetTimeToDie((20 * 35) + XORRandom(20 * 35));
+	this.server_SetTimeToDie((20 * 12) + XORRandom(20 * 7));
 
 	if (isClient())
 	{
