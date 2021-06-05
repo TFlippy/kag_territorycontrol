@@ -8,6 +8,7 @@
 #include "CTFShopCommon.as";
 #include "MakeMat.as";
 #include "MakeSeed.as";
+#include "MakeCrate.as";
 
 void onInit(CBlob@ this)
 {
@@ -218,6 +219,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				{
 					callerBlob.server_PutInInventory(blob);
 				}
+			}
+			else if (spl[0] == "armoredcar")
+			{
+				CBlob@ crate = server_MakeCrate("armoredcar", "Armored Car", 0, callerBlob.getTeamNum(), this.getPosition(), false);
+				crate.Init();
+				callerBlob.server_Pickup(crate);
 			}
 			else if (spl[0] == "buyshop")
 			{
