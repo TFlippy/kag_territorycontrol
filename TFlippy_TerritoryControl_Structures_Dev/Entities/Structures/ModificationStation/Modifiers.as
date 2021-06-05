@@ -25,11 +25,11 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 
 	if (target.hasTag("player")) //Modifying anything with a player should be vastly more expensive
 	{
-		priceMod *= 10;
 		if (!Unbound) //Needs to be Unbound to modify players
 		{
 			return; 
 		}
+		priceMod *= 10;
 	}
 	if (target.hasTag("vehicle")) //Vehicles are more expensive
 	{
@@ -72,7 +72,14 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "coin", "", "Coins", 100 * priceMod);
 		s.spawnNothing = true;
 	}
-	if (Unbound || !target.hasTag("explosive"))
+	if (!target.hasTag("BuoyancyMod") && shape.getConsts().buoyancy < 1)
+	{
+		ShopItem@ s = addShopItem(this, "Floaties", "$sponge$", "Set Buoyancy", "Add little floaties to allow it to float in water", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 * priceMod);
+		AddRequirement(s.requirements, "blob", "sponge", "Sponge", 3);
+		s.spawnNothing = true;
+	}
+	if (Unbound || !target.hasTag("explosive")) //can only make explosives explode more if its unbound
 	if (!target.hasScript("DynamiteExplosionMode") && target.maxQuantity <= 1 && !target.hasTag("flesh") && target.maxQuantity <= 1) //cannot make fleshy things exlpodes cause a drug already does that
 	{
 		ShopItem@ s = addShopItem(this, "Dynamite Explosion", "$dynamite$", "Script-DynamiteExplosionMod.as", "Explodes when destroyed", false);
@@ -98,7 +105,6 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	if (Unbound)
 	if (!target.hasScript("FloatyMod.as"))
 	{
-		//this, name, icon_name, blobname, description,
 		ShopItem@ s = addShopItem(this, "Floaty", "$chicken$", "Script-FloatyMod.as", "Add Methane to make it fall slower", false);
 		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", Maths::Clamp(target.getMass(), 20, 200) * priceMod);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 30 * priceMod);
@@ -107,7 +113,6 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	if (Unbound)
 	if (!target.hasScript("RegenerationMod.as"))
 	{
-		//this, name, icon_name, blobname, description,
 		ShopItem@ s = addShopItem(this, "Regeneration", "$mat_meat$", "Script-RegenerationMod.as", "Do unspeakable things to make it heal hp very very slowly", false);
 		AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
 		AddRequirement(s.requirements, "blob", "mat_meat", "Meat", Maths::Clamp(target.getInitialHealth()*30, 20, 300) * priceMod);
@@ -118,10 +123,10 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	if (!target.hasScript("ReturningMod.as") && !target.hasTag("player") && !target.hasTag("vehicle")) //can't home in onto itself, also no hopping giant vehicles
 	{
 		//this, name, icon_name, blobname, description,
-		ShopItem@ s = addShopItem(this, "Returning", "$pumpkin$", "ReturningMod", "Slowly jumps back towards you", false);
+		ShopItem@ s = addShopItem(this, "Returning", "$mat_smallrocket$", "ReturningMod", "Slowly jumps back towards you", false);
+		AddRequirement(s.requirements, "blob", "mat_smallrocket", "Small Rocket", 5 * priceMod);
 		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 20 * priceMod);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 20 * priceMod);
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 10 * priceMod);
 		s.spawnNothing = true;
 	}
 
@@ -177,6 +182,11 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 		{
 			target.AddScript("ReturningMod.as");
 			target.set_u16("ReturningMod Target", caller.getNetworkID());
+		}
+		else if (name == "Set Buoyancy")
+		{
+			target.Tag("BuoyancyMod");
+			target.getShape().getConsts().buoyancy = 1.2f;
 		}
 	}	
 
