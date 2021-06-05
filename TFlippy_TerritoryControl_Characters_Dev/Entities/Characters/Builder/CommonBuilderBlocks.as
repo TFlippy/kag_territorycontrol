@@ -128,6 +128,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	AddIconToken("$icon_banner$","ClanBanner.png",Vec2f(16, 32), 0, teamnum);
 	AddIconToken("$icon_druglab$","DrugLab.png",Vec2f(32, 40), 0);
 	AddIconToken("$icon_altar$", "Altar.png", Vec2f(24, 32), 0, teamnum);
+	AddIconToken("$icon_tavern$", "Vodka.png", Vec2f(8, 16), 0, teamnum);
 
 	BuildBlock[] page_0;
 	blocks.push_back(page_0);
@@ -755,6 +756,22 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "coin", "", "Coins", 250);
 		b.buildOnGround = true;
 		b.size.Set(24, 32);
+		blocks[3].push_back(b);
+	}
+	{	
+		BuildBlock b(0, "fireplace", "$fireplace$", "Campfire\nCan be used to cook various foods.");
+		AddRequirement(b.reqs, "blob", "lantern", "Lantern", 1);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200); //This is more expensive than for peasants as the fireplace is an amazing lightsource better than most other lightsources
+		b.buildOnGround = true;
+		b.size.Set(16, 16);
+  }
+	{
+		BuildBlock b(0, "tavern", "$icon_tavern$", "Tavern\nA poorly built cozy tavern.\nNeutrals may set their team here, paying you 20 coins for each spawn.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 350);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
+		b.buildOnGround = true;
+		b.size.Set(56, 32);
 		blocks[3].push_back(b);
 	}
 	// {

@@ -318,6 +318,12 @@ void BomberHandling(CBlob@ this,VehicleInfo@ v)
 				force.x*=1.1f;
 			}
 		}
+
+		if (this.exists("gyromat_acceleration"))
+		{
+			force.x *= Maths::Sqrt(this.get_f32("gyromat_acceleration"));
+		}
+				
 		this.AddForce(Vec2f(force.x * fuelModifier, -force.y * fuelModifier));
 	}
 }

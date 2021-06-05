@@ -120,8 +120,16 @@ void SetMinimap(CBlob@ this)
 		if (this.hasTag("minimap_large")) this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", this.get_u8("minimap_index"), Vec2f(16, 8));
 		else if (this.hasTag("minimap_small")) this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", this.get_u8("minimap_index"), Vec2f(8, 8));
 	}
-
-	this.SetMinimapRenderAlways(true);
+	if (this.get_bool("minimap_hidden"))
+	{
+		//print("hidden");
+		this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", -1, Vec2f(8, 8)); //by setting the icon to nothing it is removed, this is a bit hacky but set minimap render doesn't seem to work
+	}
+	else
+	{
+		this.SetMinimapRenderAlways(true);
+	}
+	
 }
 
 void onChangeTeam(CBlob@ this, const int oldTeam)
