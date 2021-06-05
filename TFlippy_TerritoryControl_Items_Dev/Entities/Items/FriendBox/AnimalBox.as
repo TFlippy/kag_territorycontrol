@@ -3,7 +3,6 @@
 // name, amount, bonus, weight
 LootItem@[] c_items =
 {
-	LootItem("chicken", 1, 2, 0), //repeated twice due to bug and im too lazy to fix legitimently
 	LootItem("chicken", 1, 2, 750),
 	LootItem("piglet", 1, 1, 500),
 	LootItem("kitten", 1, 1, 600),

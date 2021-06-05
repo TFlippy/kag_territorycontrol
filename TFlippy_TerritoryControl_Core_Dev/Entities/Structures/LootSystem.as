@@ -19,7 +19,7 @@ class LootItem
 void server_SpawnRandomItem(CBlob@ this, const LootItem@[]@&in items)
 {
     int index = GetRandomItem(@items);
-	if (index > 0 && index < items.length)
+	if (index >= 0 && index < items.length)
 	{
 		LootItem@ item = items[index];
 		MakeMat(this, this.getPosition(), item.blobname, item.base_count + XORRandom(item.bonus_count));

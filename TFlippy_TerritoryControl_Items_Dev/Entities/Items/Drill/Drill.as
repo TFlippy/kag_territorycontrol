@@ -173,7 +173,7 @@ void onTick(CBlob@ this)
 			{
 				makeSteamPuff(this, 0.5f, 5, false);
 			}
-			heat -= heat_cool_amount;
+			heat -= Maths::Min(heat, heat_cool_amount); //Cannot reduce heat below 0 (previously could)
 		}
 		this.set_u8(heat_prop, heat);
 		this.Sync(heat_prop, true);
