@@ -6,7 +6,7 @@
 void onInit(CBlob@ this)
 {
 	this.set_u8("deity_id", Deity::mason);
-	this.set_Vec2f("shop menu size", Vec2f(2, 2));
+	this.set_Vec2f("shop menu size", Vec2f(2, 3));
 
 	this.SetLight(true);
 	this.SetLightRadius(64.0f);
@@ -29,6 +29,14 @@ void onInit(CBlob@ this)
 		s.buttonheight = 2;
 		
 		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "The great mender", "$repairray$", "repairray", "Construct masons mighty stone fixer to repair stone blocks with ease.");
+		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 250);
+		AddRequirement(s.requirements, "blob", "gasextractor", "Gas Extractor", 1);
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;	
 	}
 }
 
