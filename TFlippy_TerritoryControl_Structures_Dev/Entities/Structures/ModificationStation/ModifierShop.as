@@ -8,6 +8,7 @@
 #include "MakeCrate.as"
 #include "CheckSpam.as"
 #include "Modifiers.as"
+#include "ThrowCommon.as"
 
 void onInit(CBlob@ this)
 {
@@ -105,7 +106,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 					this.getCommandID("shop menu"),                           // command
 					"Modify "+getTranslatedString(held.getInventoryName()),   // description
 					params													  // parameters
-				);  				
+				); 			
 																		
 				button.enableRadius = this.get_u8("shop button radius");
 			}
@@ -181,6 +182,19 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		// build menu for them
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 		CBlob@ target = getBlobByNetworkID(params.read_u16());
+
+		AttachmentPoint@[] aps;
+		if (caller.getAttachmentPoints(@aps))
+		{
+			for (uint i = 0; i < aps.length; i++)
+			{
+				AttachmentPoint@ ap = aps[i];
+				if (ap.getOccupied() !is null && ap.name == "PICKUP")
+				{
+					target.server_DetachFrom(caller); //Automaticly detach any item you are holding since menu is likely for them
+				}
+			}
+		}
 
 		AllPossibleModifiers(this, caller, target);
 		this.set_u16("ModificationTarget" ,target.getNetworkID());
