@@ -75,28 +75,28 @@ void onTick(CBlob@ this)
 							tile.type = CMap::tile_castle;
 							map.server_SetTile(pos, tile);
 							makeSteamParticle(this, pos, aimDir);
-							TakeAmmo(inv, 1);
+							TakeAmmo(inv, 3);
 						}
 						else if (type == CMap::tile_castle_back_moss)
 						{
 							tile.type = CMap::tile_castle_back;
 							map.server_SetTile(pos, tile);
 							makeSteamParticle(this, pos, aimDir);
-							TakeAmmo(inv, 1);
+							TakeAmmo(inv, 3);
 						}
 						else if (type >= CMap::tile_castle_d1 && type <= CMap::tile_castle_d0)
 						{
 							tile.type = CMap::tile_castle;
 							map.server_SetTile(pos, tile);
 							makeSteamParticle(this, pos, aimDir);
-							TakeAmmo(inv, 1);
+							TakeAmmo(inv, 3);
 						}
 						else if (type >= 76 && type <= 79)
 						{
 							tile.type = CMap::tile_castle_back;
 							map.server_SetTile(pos, tile);
 							makeSteamParticle(this, pos, aimDir);
-							TakeAmmo(inv, 1);
+							TakeAmmo(inv, 3);
 						}
 					}
 				}
