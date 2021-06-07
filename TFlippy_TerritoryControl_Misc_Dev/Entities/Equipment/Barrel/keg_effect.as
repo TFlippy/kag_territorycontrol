@@ -6,7 +6,7 @@ void onInit(CBlob@ this)
 
 void UpdateScript(CBlob@ this)
 {
-	CSpriteLayer@ barrel = this.getSprite().addSpriteLayer("keg", "KegTorso.png", 16, 16);
+	CSpriteLayer@ barrel = this.getSprite().addSpriteLayer("barrel", "KegTorso.png", 16, 16);
 
 	if (barrel !is null)
 	{
