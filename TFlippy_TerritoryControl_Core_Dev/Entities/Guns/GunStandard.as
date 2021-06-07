@@ -25,6 +25,7 @@ void shootProj(CBlob@ this, const f32 aimangle)
 	CBitStream params;
 
 	params.write_f32(aimangle);
+	params.write_u32(getGameTime());
 
 	this.SendCommand(this.getCommandID("fireProj"), params);
 }
@@ -41,7 +42,7 @@ void Reload(CBlob@ this, CBlob@ holder)
 	this.set_u8("clickReload", 0);
 }
 
-s32 CountAmmo(CBlob@ this, string ammoBlob)
+s32 CountAmmo(CBlob@ this, string ammoBlob = "")
 {
 	//count how much ammo is in the holder's inventory
 	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
@@ -53,12 +54,21 @@ s32 CountAmmo(CBlob@ this, string ammoBlob)
 			CInventory@ inv = holder.getInventory();
 			if (inv !is null)
 			{
-				return inv.getCount(ammoBlob);
+				GunSettings@ settings;
+				this.get("gun_settings", @settings);
+				const string ammo = ammoBlob.empty() ? settings !is null ? settings.AMMO_BLOB : ammoBlob : ammoBlob;
+
+				return inv.getCount(ammo);
 			}
 		}
 	}
 
 	return 0;
+}
+
+const bool HasAmmo(CBlob@ this)
+{
+	return CountAmmo(this) > 0;
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params) 
@@ -140,13 +150,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 			blob.setAngleDegrees(angle + 90 + (this.isFacingLeft() ? 180 : 0));
 		}
-		if (isClient())
-		{
-			this.getSprite().PlaySound(settings.FIRE_SOUND, 2.0f);
 
-			//Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-			//coil.onFakeTick();
-		}
 		this.sub_u8("clip", 1);
 	}
 }

@@ -42,26 +42,37 @@ void onInit(CBlob@ this)
 
 	this.set_u8("clip", settings.CLIP); //Clip u8 for easy maneuverability
 
-	// Add muzzle flash
 	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
 		if (sprite !is null)
 		{
-			const bool hitterType = settings.B_TYPE == HittersTC::plasma || settings.B_TYPE == HittersTC::railgun_lance;
-			const string muzzleflash_file = this.exists("CustomFlash") ? this.get_string("CustomFlash") : hitterType ? "MuzzleFlash_Plasma" : "MuzzleFlash";
-
-			CSpriteLayer@ flash = sprite.addSpriteLayer("muzzle_flash", muzzleflash_file, 16, 8, this.getTeamNum(), 0);
-			if (flash !is null)
+			if (this.hasTag("CustomSoundLoop"))
 			{
-				Animation@ anim = flash.addAnimation("default", 1, false);
-				int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
-				anim.AddFrames(frames);
-				flash.SetRelativeZ(1.0f);
-				flash.SetOffset(settings.MUZZLE_OFFSET);
-				flash.SetFacingLeft(this.hasTag("CustomMuzzleLeft"));
-				flash.SetVisible(false);
-				// flash.setRenderStyle(RenderStyle::additive);
+				sprite.SetEmitSound(settings.FIRE_SOUND);
+				sprite.SetEmitSoundVolume(2.0f);
+				sprite.SetEmitSoundPaused(true);
+			}
+				if (!this.exists("CustomFlash") || (this.exists("CustomFlash") && !this.get_string("CustomFlash").empty()))
+				{
+
+				// Determine muzzleflash sprite
+				const bool hitterType = settings.B_TYPE == HittersTC::plasma || settings.B_TYPE == HittersTC::railgun_lance;
+				const string muzzleflash_file = this.exists("CustomFlash") ? this.get_string("CustomFlash") : hitterType ? "MuzzleFlash_Plasma" : "MuzzleFlash";
+
+				// Add muzzle flash
+				CSpriteLayer@ flash = sprite.addSpriteLayer("muzzle_flash", muzzleflash_file, 16, 8, this.getTeamNum(), 0);
+				if (flash !is null)
+				{
+					Animation@ anim = flash.addAnimation("default", 1, false);
+					int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
+					anim.AddFrames(frames);
+					flash.SetRelativeZ(1.0f);
+					flash.SetOffset(settings.MUZZLE_OFFSET);
+					flash.SetFacingLeft(this.hasTag("CustomMuzzleLeft"));
+					flash.SetVisible(false);
+					// flash.setRenderStyle(RenderStyle::additive);
+				}
 			}
 		}
 	}
@@ -85,27 +96,33 @@ void onTick(CBlob@ this)
 			GunSettings@ settings;
 			this.get("gun_settings", @settings);
 
-			//Case particle the gun uses
+			// Case particle the gun uses
 			string casing = this.exists("CustomCase") ? this.get_string("CustomCase") :
 			                settings.B_TYPE == HittersTC::bullet_high_cal ? "rifleCase":
 			                settings.B_TYPE == HittersTC::bullet_low_cal  ? "pistolCase":
 			                settings.B_TYPE == HittersTC::shotgun         ? "shotgunCase": "";
 			f32 oAngle = (aimangle % 360) + 180;
 
-			//Keys
+			// Keys
 			const bool pressing_shoot = this.hasTag("CustomSemiAuto") ?
 			           point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
 			           point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
 			
-			//Sound
+			// Sound
 			const f32 reload_pitch = this.exists("CustomReloadPitch") ? this.get_f32("CustomReloadPitch") : 1.0f;
 			const f32 cycle_pitch  = this.exists("CustomCyclePitch")  ? this.get_f32("CustomCyclePitch")  : 1.0f;
 
-			//Start reload sequence when pressing [R]
+			// Loop firing sound
+			if (this.hasTag("CustomSoundLoop"))
+			{
+				sprite.SetEmitSoundPaused(!(pressing_shoot && this.get_u8("clip") > 0 && !this.get_bool("doReload")));
+			}
+
+			// Start reload sequence when pressing [R]
 			CControls@ controls = holder.getControls();
 			if (controls !is null && controls.isKeyJustPressed(KEY_KEY_R) &&
 			    !this.get_bool("beginReload") && !this.get_bool("doReload") && 
-			    this.get_u8("clip") < settings.TOTAL && CountAmmo(this, settings.AMMO_BLOB) > 0)
+			    this.get_u8("clip") < settings.TOTAL && HasAmmo(this))
 			{
 				this.set_bool("beginReload", true);
 			}
@@ -113,11 +130,11 @@ void onTick(CBlob@ this)
 			uint8 actionInterval = this.get_u8("actionInterval");
 			if (actionInterval > 0)
 			{
-				actionInterval--; //Timer counts down with ticks
+				actionInterval--; // Timer counts down with ticks
 
 				if (this.exists("CustomCycle"))
 				{
-					//Custom cycle sequence 
+					// Custom cycle sequence 
 					if ((actionInterval == settings.FIRE_INTERVAL / 2) && this.get_bool("justShot"))
 					{
 						sprite.PlaySound(this.get_string("CustomCycle"));
@@ -126,23 +143,23 @@ void onTick(CBlob@ this)
 					}
 				}
 			} 
-			else if (this.get_bool("beginReload"))
+			else if (this.get_bool("beginReload")) // Beginning of reload
 			{
-				//Start reload sequence
+				// Start reload sequence
 				actionInterval = settings.RELOAD_TIME;
 				this.set_bool("beginReload", false);
 				this.set_bool("doReload", true);
 
-				if (CountAmmo(this, settings.AMMO_BLOB) > 0 && this.get_u8("clip") < settings.TOTAL) 
+				if (HasAmmo(this) && this.get_u8("clip") < settings.TOTAL) 
 				{
 					if (!this.hasTag("CustomShotgunReload")) sprite.PlaySound(settings.RELOAD_SOUND, 1.0f, reload_pitch);
 				}
 			}
-			else if (this.get_bool("doReload"))
+			else if (this.get_bool("doReload")) // End of reload
 			{
 				if (this.hasTag("CustomShotgunReload"))
 				{
-					if (CountAmmo(this, settings.AMMO_BLOB) > 0 && this.get_u8("clip") < settings.TOTAL)
+					if (HasAmmo(this) && this.get_u8("clip") < settings.TOTAL)
 					{
 						sprite.PlaySound(settings.RELOAD_SOUND, 1.0f, reload_pitch);
 					}
@@ -153,7 +170,6 @@ void onTick(CBlob@ this)
 					}
 				}
 
-				//End reload sequence
 				Reload(this, holder);
 				if (this.hasTag("CustomShotgunReload")) this.set_bool("doReload", false);
 			} 
@@ -161,7 +177,7 @@ void onTick(CBlob@ this)
 			{
 				if (this.get_u8("clip") > 0)
 				{
-					//Shoot weapon
+					// Shoot weapon
 					actionInterval = settings.FIRE_INTERVAL;
 
 					Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 1);
@@ -175,17 +191,24 @@ void onTick(CBlob@ this)
 					if (this.exists("ProjBlob"))
 					{
 						shootProj(this, aimangle);
+						//Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+						//coil.onFakeTick();
 					}
 					else
 					{
 						shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
 					}
 
+					// Shooting sound
+					if (!this.hasTag("CustomSoundLoop")) sprite.PlaySound(settings.FIRE_SOUND, 2.0f);
+
+					// Gun 'kickback' anim
 					this.set_f32("gun_recoil_current", this.exists("CustomGunRecoil") ? this.get_u32("CustomGunRecoil") : 3);
 
 					CSpriteLayer@ flash = sprite.getSpriteLayer("muzzle_flash");
 					if (flash !is null)
 					{
+						//Turn on muzzle flash
 						flash.SetFrameIndex(0);
 						flash.SetVisible(true);
 					}
@@ -196,9 +219,9 @@ void onTick(CBlob@ this)
 					}
 					else this.set_bool("justShot", true);
 				}
-				else if (this.get_u8("clickReload") == 1 && CountAmmo(this, settings.AMMO_BLOB) > 0)
+				else if (this.get_u8("clickReload") == 1 && HasAmmo(this))
 				{
-					//Start reload sequence if no ammo in gun
+					// Start reload sequence if no ammo in gun
 					actionInterval = settings.RELOAD_TIME;
 					this.set_bool("beginReload", false);
 					this.set_bool("doReload", true);
@@ -206,8 +229,8 @@ void onTick(CBlob@ this)
 				}
 				else if (!this.get_bool("beginReload") && !this.get_bool("doReload"))
 				{
-					//Gun empty
-					sprite.PlaySound("Gun_Empty.ogg");
+					// Gun empty sequence
+					sprite.PlaySound(this.exists("CustomSoundEmpty") ? this.get_string("CustomSoundEmpty") : "Gun_Empty.ogg");
 					actionInterval = NO_AMMO_INTERVAL;
 					this.set_u8("clickReload", 1);
 				}
@@ -223,6 +246,11 @@ void onTick(CBlob@ this)
 	} 
 	else 
 	{
+		if (isClient() && this.hasTag("CustomSoundLoop"))
+		{
+			// Turn off sound if detached
+			this.getSprite().SetEmitSoundPaused(true);
+		}
 		this.getCurrentScript().runFlags |= Script::tick_not_sleeping;
 	}
 }

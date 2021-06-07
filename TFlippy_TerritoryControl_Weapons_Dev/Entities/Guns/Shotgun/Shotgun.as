@@ -34,8 +34,9 @@ void onInit(CBlob@ this)
 	//Offset
 	settings.MUZZLE_OFFSET = Vec2f(-19, -2); //Where the muzzle flash appears
 
+	this.set("gun_settings", @settings);
+
+	//Custom
 	this.set_string("CustomCycle", "ShotgunPump");
 	this.Tag("CustomShotgunReload");
-
-	this.set("gun_settings", @settings);
 }

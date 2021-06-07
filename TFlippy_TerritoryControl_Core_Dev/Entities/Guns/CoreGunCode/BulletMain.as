@@ -256,8 +256,6 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 
 			if (isClient())
 			{
-				gunBlob.getSprite().PlaySound(settings.FIRE_SOUND, 2.0f);
-
 				CBlob@ localBlob = getLocalPlayerBlob();
 				if (localBlob !is null && localBlob is hoomanBlob) // if we are this blob
 				{
