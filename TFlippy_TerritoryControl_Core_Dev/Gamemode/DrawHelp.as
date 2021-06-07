@@ -20,9 +20,9 @@ void onRender(CSprite@ this)
 		if (mouseBlob.hasTag("player")) //players can get the disguised tag
 		{
 			string name = mouseBlob.getInventoryName();
-			if (mouseBlob.hasTag("disguised") && !getLocalPlayer().hasTag("truesight"))
+			if (mouseBlob.hasTag("disguised") && !getLocalPlayer().hasTag("truesight")) //diguised players names can only be seen by admins with true sight enabled
 			{
-				name = mouseBlob.get_string("disguisename");
+				return;
 			}
 			Vec2f dimensions;
 			GUI::SetFont("menu");
