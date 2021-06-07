@@ -240,7 +240,10 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 	}
 
 	if(headname == "scubagear")
+	{
 		playerblob.set_u8("override head", 88);
+		playerblob.Tag("disguised");
+	}
 
 	// if(headname == "minershelmet")
 		// playerblob.set_u8("override head", 30);
@@ -249,10 +252,16 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 		// playerblob.set_u8("override head", 30);
 
 	if(headname == "bucket")
+	{
 		playerblob.set_u8("override head", 107);
-
+		playerblob.Tag("disguised");
+	}
+		
 	if(headname == "pumpkin")
+	{
 		playerblob.set_u8("override head", 108);
+		playerblob.Tag("disguised");
+	}
 
 	playerblob.setHeadNum((playerblob.getHeadNum()+1) % 3);
 	playerblob.Tag(headname);
@@ -260,7 +269,6 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 	if(headname != "pumpkin" && headname != "bucket") playerblob.AddScript(headname+"_effect.as");
 	playerblob.set_string("equipment_head", headname);
 	playerblob.Tag("update head");
-	playerblob.Tag("disguised");
 }
 
 void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side effects when removing helmet (light, spritelayer, your tags, etc).
