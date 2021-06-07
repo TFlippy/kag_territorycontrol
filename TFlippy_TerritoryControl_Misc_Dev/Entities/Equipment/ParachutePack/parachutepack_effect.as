@@ -26,7 +26,7 @@ void UpdateScript(CBlob@ this)
 		}
 	}
 
-	CSpriteLayer@ parachute = this.getSprite().addSpriteLayer("parachute", "parachutepack", 32, 32);
+	CSpriteLayer@ parachute = this.getSprite().addSpriteLayer("parachute", "parachutepack.png", 32, 32);
 	if (parachute !is null)
 	{
 		Animation@ anim = parachute.addAnimation("default", 0, true);

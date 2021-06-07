@@ -18,7 +18,7 @@ void onInit(CBlob@ this)
 
 void UpdateScript(CBlob@ this)
 {
-	CSpriteLayer@ svest = this.getSprite().addSpriteLayer("svest", "SuicideVest.png", 16, 16);
+	CSpriteLayer@ svest = this.getSprite().addSpriteLayer("suicidevest", "SuicideVest.png", 16, 16);
 
 	if (svest !is null)
 	{
@@ -66,7 +66,7 @@ void onTick(CBlob@ this)
 		this.set_string("reload_script", "");
 	}
 	
-	CSpriteLayer@ svest = this.getSprite().getSpriteLayer("svest");
+	CSpriteLayer@ svest = this.getSprite().getSpriteLayer("suicidevest");
 	
 	if (svest !is null)
 	{
