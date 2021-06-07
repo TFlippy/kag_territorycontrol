@@ -11,12 +11,13 @@ void onInit(CSprite@ this)
 
 void onRender(CSprite@ this)
 {
-	if (g_videorecording || !u_showtutorial)
+	CBlob@ mouseBlob = getMap().getBlobAtPosition(getControls().getMouseWorldPos());
+	
+	if (mouseBlob !is null)
+	{
+		if (g_videorecording || (!u_showtutorial && !mouseBlob.hasTag("player"))) //disabling help does not disable player names
 		return;
 
-	CBlob@ mouseBlob = getMap().getBlobAtPosition(getControls().getMouseWorldPos());
-	if (mouseBlob !is null && (!mouseBlob.hasTag("player") || mouseBlob.hasTag("migrant")))
-	{
 		Vec2f dimensions;
 		GUI::SetFont("menu");
 		GUI::GetTextDimensions(mouseBlob.getInventoryName(), dimensions);
