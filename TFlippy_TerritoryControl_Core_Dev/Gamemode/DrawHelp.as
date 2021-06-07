@@ -13,15 +13,26 @@ void onRender(CSprite@ this)
 {
 	CBlob@ mouseBlob = getMap().getBlobAtPosition(getControls().getMouseWorldPos());
 	
+	if (g_videorecording) return;
+
 	if (mouseBlob !is null)
 	{
-		if (g_videorecording || (!u_showtutorial && !mouseBlob.hasTag("player"))) //disabling help does not disable player names
-		return;
 
-		Vec2f dimensions;
-		GUI::SetFont("menu");
-		GUI::GetTextDimensions(mouseBlob.getInventoryName(), dimensions);
-		GUI::DrawText(mouseBlob.getInventoryName(), getDriver().getScreenPosFromWorldPos(mouseBlob.getPosition() - Vec2f(0, -mouseBlob.getHeight() / 2)) - Vec2f(dimensions.x / 2, -8.0f), color_white);					//	mouseBlob.RenderForHUD( RenderStyle::outline_front );
+		if (mouseBlob.hasTag("player")) //disabling help does not disable player names
+		{
+			Vec2f dimensions;
+			GUI::SetFont("menu");
+			GUI::GetTextDimensions(mouseBlob.getInventoryName(), dimensions);
+			GUI::DrawText(mouseBlob.getInventoryName(), getDriver().getScreenPosFromWorldPos(mouseBlob.getPosition() - Vec2f(0, -mouseBlob.getHeight() / 2)) - Vec2f(dimensions.x / 2, -8.0f), color_white);
+		}
+		else if (u_showtutorial)
+		{
+			Vec2f dimensions;
+			GUI::SetFont("menu");
+			GUI::GetTextDimensions(mouseBlob.getInventoryName(), dimensions);
+			GUI::DrawText(mouseBlob.getInventoryName(), getDriver().getScreenPosFromWorldPos(mouseBlob.getPosition() - Vec2f(0, -mouseBlob.getHeight() / 2)) - Vec2f(dimensions.x / 2, -8.0f), color_white);	
+			//	mouseBlob.RenderForHUD( RenderStyle::outline_front );	
+		}	
 	}
 }
 
