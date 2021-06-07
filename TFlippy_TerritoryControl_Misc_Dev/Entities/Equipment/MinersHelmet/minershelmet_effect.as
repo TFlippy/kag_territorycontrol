@@ -13,7 +13,7 @@ void UpdateScript(CBlob@ this) // the same as onInit, works one time when get eq
 	this.SetLightRadius(80.0f);
 	this.SetLightColor(SColor(255, 255, 240, 171));
 	
-	CSpriteLayer@ mhelmet = this.getSprite().addSpriteLayer("mhelmet", "MinersHelmet.png", 16, 16);
+	CSpriteLayer@ mhelmet = this.getSprite().addSpriteLayer("minershelmet", "MinersHelmet.png", 16, 16);
 	
 
 	if (mhelmet !is null)
@@ -33,7 +33,7 @@ void onTick(CBlob@ this)
 		this.set_string("reload_script", "");
 	}
 
-	CSpriteLayer@ mhelmet = this.getSprite().getSpriteLayer("mhelmet");
+	CSpriteLayer@ mhelmet = this.getSprite().getSpriteLayer("minershelmet");
 	
 	if (mhelmet !is null)
 	{
