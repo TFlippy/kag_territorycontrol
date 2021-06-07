@@ -9,7 +9,7 @@ void onInit(CBlob@ this)
 
 void UpdateScript(CBlob@ this) // the same as onInit, works one time when get equiped
 {
-    CSpriteLayer@ milhelmet = this.getSprite().addSpriteLayer("militaryhelmet", "MilitaryHelmet.png", 16, 16);
+    CSpriteLayer@ milhelmet = this.getSprite().addSpriteLayer("milhelmet", "MilitaryHelmet.png", 16, 16);
    
     if (milhelmet !is null)
     {
@@ -33,7 +33,7 @@ void onTick(CBlob@ this)
         this.set_string("reload_script", "");
     }
  
-    CSpriteLayer@ milhelmet = this.getSprite().getSpriteLayer("militaryhelmet");
+    CSpriteLayer@ milhelmet = this.getSprite().getSpriteLayer("milhelmet");
    
     if (milhelmet !is null)
     {
@@ -55,7 +55,7 @@ void onTick(CBlob@ this)
         this.set_f32("mh_health", 0.0f);
 		if (milhelmet !is null)
 		{
-			this.getSprite().RemoveSpriteLayer("militaryhelmet");
+			this.getSprite().RemoveSpriteLayer("milhelmet");
 		}
         this.RemoveScript("militaryhelmet_effect.as");
     }
