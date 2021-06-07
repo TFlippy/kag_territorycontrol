@@ -13,7 +13,9 @@ void onInit(CBlob@ this)
 	this.SetLightColor(SColor(255, 255, 180, 0));
 
 	//this.set_f32("deity_power",10000); //for testing if the cap is actually working
-	
+
+	this.getCurrentScript().tickFrequency = 15;
+
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Disc_MountainKing.ogg");
 	sprite.SetEmitSoundVolume(0.40f);
@@ -39,6 +41,59 @@ void onTick(CSprite@ this)
 
 	const f32 power = blob.get_f32("deity_power");
 	blob.setInventoryName("Altar of Grand Mason\n\nMasonic Power: " + power + "\nFree block chance: " + Maths::Min((power * 0.01f),MAX_FREE_BLOCK_CHANCE) + "%");
+}
+
+void onTick(CBlob@ this)
+{
+	const f32 power = this.get_f32("deity_power");
+	float range = Maths::Sqrt(power) + 10.0f; //area around altar that will be affected by stone autorepair
+	int tileChecks = range / 4 + 5; //the amount of times we'll check random tiles until a tile that is hurt is found
+	//print(range+": Range, "+ tileChecks+": TileChecks");
+
+	Random rand(getGameTime());
+
+	Vec2f pos = this.getPosition();
+	CMap@ map = getMap();
+	Vec2f topLeft = pos - Vec2f((range / 2.0f) * 8.0f, (range / 2.0f) * 8.0f);
+
+	if (isServer())
+	{
+		for (int i = 0; i < tileChecks; i++)
+		{
+			Vec2f tileWorldPos = topLeft + Vec2f(rand.NextFloat() * range * 8.0f, rand.NextFloat() * range * 8.0f); 
+			TileType tile = map.getTile(tileWorldPos).type;
+
+			//Castle back block
+			switch(tile)
+			{
+				case CMap::tile_castle_back + 13:
+				case CMap::tile_castle_back + 14:
+				case CMap::tile_castle_back + 15:
+					map.server_SetTile(tileWorldPos, tile - 1);
+					break;
+				case CMap::tile_castle_back + 12:
+				case CMap::tile_castle_moss:
+					map.server_SetTile(tileWorldPos, CMap::tile_castle_back);
+					break;
+			}
+
+			//Castle block
+			if (map.isTileCastle(tile) && tile != CMap::tile_castle)
+			{
+				if (tile > CMap::tile_castle_d1 && tile != CMap::tile_castle_moss)
+				{
+					//repair by one
+					map.server_SetTile(tileWorldPos, tile - 1);
+				}
+				else
+				{
+					//set to castle block since repairing would mess it up
+					map.server_SetTile(tileWorldPos, CMap::tile_castle);
+				}
+				break;
+			}
+		}
+	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
