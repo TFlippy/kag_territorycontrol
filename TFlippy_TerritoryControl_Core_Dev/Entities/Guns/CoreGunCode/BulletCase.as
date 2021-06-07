@@ -12,7 +12,10 @@
 
 void ParticleCase2(const string particlePic, const Vec2f pos, const f32 angle)
 {
-	CParticle@ p = makeGibParticle(particlePic, pos, getRandomVelocity(angle, 2.0f, 20.0f), 1, 0, Vec2f(2, 3), 2.0f, 3, "ShellDrop.ogg");
+	Vec2f dimensions;
+	GUI::GetImageDimensions(particlePic, dimensions);
+
+	CParticle@ p = makeGibParticle(particlePic, pos, getRandomVelocity(angle, 2.0f, 20.0f), 0, 0, dimensions, 2.0f, 1, "ShellDrop.ogg");
 	if (p !is null)
 	{
 		p.fadeout = true;
@@ -40,7 +43,7 @@ void ParticleBullet(Vec2f CurrentPos, Vec2f Velo)
 	}
 }
 
-void ParticleFromBullet(const string particlePic,const Vec2f pos, const f32 angle)
+void ParticleFromBullet(const string particlePic, const Vec2f pos, const f32 angle)
 {
 	CParticle@ p = ParticleAnimated(particlePic, pos, Vec2f(5, 0), angle, 1.0f, 1, 0.0f, true);
 	if (p !is null)
