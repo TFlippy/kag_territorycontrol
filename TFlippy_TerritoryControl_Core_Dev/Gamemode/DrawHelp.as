@@ -20,7 +20,7 @@ void onRender(CSprite@ this)
 		if (mouseBlob.hasTag("player")) //players can get the disguised tag
 		{
 			string name = mouseBlob.getInventoryName();
-			if (mouseBlob.hasTag("disguised"))
+			if (mouseBlob.hasTag("disguised") && !getLocalPlayer().hasTag("truesight"))
 			{
 				name = mouseBlob.get_string("disguisename");
 			}

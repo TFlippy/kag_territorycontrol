@@ -483,6 +483,17 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					server_MakeCrate(tokens[1],description,frame,-1,blob.getPosition());
 					return false;
 				}
+				else if (tokens[0]=="!truesight")
+				{
+					if (player.hasTag("truesight"))
+					{
+						player.Untag("truesight");
+					}
+					else
+					{
+						player.Tag("truesight");
+					}
+				}
 				else if (tokens[0]=="!scroll")
 				{
 					if (tokens.length<2){
