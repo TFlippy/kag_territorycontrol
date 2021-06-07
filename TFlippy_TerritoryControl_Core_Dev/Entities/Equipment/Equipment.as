@@ -260,6 +260,7 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 	if(headname != "pumpkin" && headname != "bucket") playerblob.AddScript(headname+"_effect.as");
 	playerblob.set_string("equipment_head", headname);
 	playerblob.Tag("update head");
+	playerblob.Tag("disguised");
 }
 
 void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side effects when removing helmet (light, spritelayer, your tags, etc).
@@ -331,6 +332,7 @@ void removeHead(CBlob@ playerblob, string headname)		//Here you can remove side 
 	playerblob.set_string("equipment_head", "");
 	playerblob.RemoveScript(headname+"_effect.as");
 	playerblob.Tag("update head");
+	playerblob.Untag("disguised");
 }
 
 void addTorso(CBlob@ playerblob, string torsoname)			//The same stuff as in head here.

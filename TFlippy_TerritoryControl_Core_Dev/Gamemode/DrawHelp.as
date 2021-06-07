@@ -17,15 +17,19 @@ void onRender(CSprite@ this)
 
 	if (mouseBlob !is null)
 	{
-
-		if (mouseBlob.hasTag("player")) //disabling help does not disable player names
+		if (mouseBlob.hasTag("player")) //players can get the disguised tag
 		{
+			string name = mouseBlob.getInventoryName();
+			if (mouseBlob.hasTag("disguised"))
+			{
+				name = mouseBlob.get_string("disguisename");
+			}
 			Vec2f dimensions;
 			GUI::SetFont("menu");
-			GUI::GetTextDimensions(mouseBlob.getInventoryName(), dimensions);
-			GUI::DrawText(mouseBlob.getInventoryName(), getDriver().getScreenPosFromWorldPos(mouseBlob.getPosition() - Vec2f(0, -mouseBlob.getHeight() / 2)) - Vec2f(dimensions.x / 2, -8.0f), color_white);
+			GUI::GetTextDimensions(name, dimensions);
+			GUI::DrawText(name, getDriver().getScreenPosFromWorldPos(mouseBlob.getPosition() - Vec2f(0, -mouseBlob.getHeight() / 2)) - Vec2f(dimensions.x / 2, -8.0f), color_white);
 		}
-		else if (u_showtutorial)
+		else if (u_showtutorial) //disabling help does not disable player names
 		{
 			Vec2f dimensions;
 			GUI::SetFont("menu");
