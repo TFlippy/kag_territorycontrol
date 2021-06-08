@@ -41,9 +41,28 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	GunSettings@ settings;
 	if(target.get("gun_settings", @settings)) //Is a gun
 	{
+		if (!target.hasTag("MaximumdakkaMod") && settings.FIRE_INTERVAL < 10 && settings.TOTAL > 20) //only works on guns which can already fire quite fast
+		{
+			ShopItem@ s = addShopItem(this, "Maximum dakka", "$smg$", "Gun-Maximumdakka", "Fires way way faster", false);
+			AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2 * priceMod);
+			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5 * priceMod);
+			s.spawnNothing = true;
+		}
+		if (settings.FIRE_SOUND != "") //only works on guns which can already fire quite fast
+		{
+			ShopItem@ s = addShopItem(this, "Silencer", "$mat_ironingot$", "Gun-Silencer", "Removes any sound due to firing the gun", false);
+			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 20 * priceMod);
+			s.spawnNothing = true;
+		}
 
-
-
+		//MORE Bizzar effects
+		if (settings.B_SPEED > 10) //only works on guns which can already fire quite fast
+		{
+			ShopItem@ s = addShopItem(this, "Dilated Bullets", "$mat_mithrilingot$", "Gun-SlowBullets", "Bullets are extremely slow", false);
+			AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10 * priceMod);
+			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5 * priceMod);
+			s.spawnNothing = true;
+		}
 
 	}
 
@@ -177,12 +196,31 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 	{
 		target.RemoveScript(spl[1]);
 	}
-	else if(spl[0] == "Gun") //Guns section
+	else if (spl[0] == "Gun") //Guns section
 	{
 		GunSettings@ settings;
 		if(target.get("gun_settings", @settings))
 		{
-
+			if (spl[1] == "Maximumdakka")
+			{
+				target.Tag("MaximumdakkaMod");
+				settings.FIRE_INTERVAL = settings.FIRE_INTERVAL/2; //halves fire interval but also heavily increases recoil
+				settings.B_SPREAD *= 2;
+				settings.G_RECOIL *= 5;
+				settings.G_BACK_T = 1;
+			}
+			else if (spl[1] == "SlowBullets")
+			{
+				settings.B_SPEED = 10;
+				settings.B_TTL *= 2;
+				settings.B_GRAV *= 2;
+			}
+			else if (spl[1] == "Silencer")
+			{
+				settings.FIRE_SOUND = "";
+				target.set_string("CustomCycle", "");
+				//Does not remove reload sound
+			}
 		}
 	}
 	else
