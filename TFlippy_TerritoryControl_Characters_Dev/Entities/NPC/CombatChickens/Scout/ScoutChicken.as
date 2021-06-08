@@ -40,7 +40,7 @@ void onInit(CBlob@ this)
 
 		this.server_setTeamNum(250);
 
-		string gun_config;
+		/*string gun_config;
 		string ammo_config;
 
 		switch(XORRandom(15))
@@ -155,7 +155,7 @@ void onInit(CBlob@ this)
 				CBitStream stream;
 				gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
 			}
-		}
+		}*/
 
 		// CBrain@ brain = this.getBrain();
 		// if (brain !is null)
