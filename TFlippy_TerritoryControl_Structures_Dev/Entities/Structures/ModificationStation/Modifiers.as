@@ -43,22 +43,28 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	{
 		if (!target.hasTag("MaximumdakkaMod") && settings.FIRE_INTERVAL < 10 && settings.TOTAL > 20) //only works on guns which can already fire quite fast
 		{
-			ShopItem@ s = addShopItem(this, "Maximum dakka", "$smg$", "Gun-Maximumdakka", "Fires way way faster", false);
+			ShopItem@ s = addShopItem(this, "Maximum dakka", "$smg$", "Gun-Maximumdakka", "Fires way way faster at the cost of accuracy", false);
 			AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2 * priceMod);
 			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5 * priceMod);
 			s.spawnNothing = true;
 		}
-		if (settings.FIRE_SOUND != "") //only works on guns which can already fire quite fast
+		if (settings.FIRE_SOUND != "") //only silence guns which still have a sound effect
 		{
 			ShopItem@ s = addShopItem(this, "Silencer", "$mat_ironingot$", "Gun-Silencer", "Removes any sound due to firing the gun", false);
 			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 20 * priceMod);
 			s.spawnNothing = true;
 		}
-
-		//MORE Bizzar effects
-		if (settings.B_SPEED > 10) //only works on guns which can already fire quite fast
+		if (settings.B_DAMAGE > 0.0f)
 		{
-			ShopItem@ s = addShopItem(this, "Dilated Bullets", "$mat_mithrilingot$", "Gun-SlowBullets", "Bullets are extremely slow", false);
+			ShopItem@ s = addShopItem(this, "Harmless Bullets", "$steak$", "Gun-HarmlessBullets", "Gun Bullets no longer deal any damage", false);
+			AddRequirement(s.requirements, "coin", "", "Coins", 50 * priceMod);
+			s.spawnNothing = true;
+		}
+
+		//MORE BIZZAR GUN EFFECTS
+		if (settings.B_SPEED > 10) //only slow guns which need to be slowed
+		{
+			ShopItem@ s = addShopItem(this, "Heavy Bullets", "$mat_mithrilingot$", "Gun-SlowBullets", "Bullets are extremely slow", false);
 			AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10 * priceMod);
 			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5 * priceMod);
 			s.spawnNothing = true;
@@ -204,22 +210,27 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 			if (spl[1] == "Maximumdakka")
 			{
 				target.Tag("MaximumdakkaMod");
-				settings.FIRE_INTERVAL = settings.FIRE_INTERVAL/2; //halves fire interval but also heavily increases recoil
+				settings.FIRE_INTERVAL = settings.FIRE_INTERVAL/2; //halves fire interval but also heavily increases recoil, only on guns with already high firerate
 				settings.B_SPREAD *= 2;
 				settings.G_RECOIL *= 5;
 				settings.G_BACK_T = 1;
 			}
 			else if (spl[1] == "SlowBullets")
 			{
-				settings.B_SPEED = 10;
-				settings.B_TTL *= 2;
-				settings.B_GRAV *= 2;
+				settings.B_SPEED = 10; //Bullets move slower
+				settings.B_TTL *= 2; //Because of this bullets need to be able to exist longer
+				settings.B_GRAV *= 2; //Gravity adjustment due to bullet gravity code
 			}
 			else if (spl[1] == "Silencer")
 			{
 				settings.FIRE_SOUND = "";
 				target.set_string("CustomCycle", "");
 				//Does not remove reload sound
+			}
+			else if (spl[1] == "HarmlessBullets")
+			{
+				settings.B_DAMAGE = 0.0f;
+				target.set_u8("CustomPenetration", 0);
 			}
 		}
 	}
