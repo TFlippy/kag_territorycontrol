@@ -230,7 +230,7 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 			else if (spl[1] == "HarmlessBullets")
 			{
 				settings.B_DAMAGE = 0.0f;
-				target.set_u8("CustomPenetration", 0);
+				target.set_u8("CustomPenetration", 0); //Terrain damage is also 0
 			}
 		}
 	}
