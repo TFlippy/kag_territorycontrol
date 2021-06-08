@@ -12,10 +12,9 @@
 //  Some code here is messy
 //
 
-#include "HittersTC.as";
+#include "GunCommon.as";
 #include "BulletTrails.as";
 #include "BulletClass.as";
-#include "BulletCase.as";
 
 // I would use blob.getNetworkID, but without some major changes
 // It would be the same pattern every time
@@ -37,7 +36,6 @@ int FireGunID;
 int FireShotgunID;
 
 f32 FRAME_TIME = 0;
-//
 
 // Set commands, add render:: (only do this once)
 void onInit(CRules@ this)
@@ -64,8 +62,7 @@ void onRestart(CRules@ this)
 void Reset(CRules@ this)
 {
 	r.Reset(12345);
-	FireGunID     = this.addCommandID("fireGun");
-	FireShotgunID = this.addCommandID("fireShotgun");
+	FireGunID = this.addCommandID("fireGun");
 	v_r_bullet.clear();
 	v_r_fade.clear();
 }
@@ -98,8 +95,21 @@ void RenderingBullets() // Bullets
 	BulletGrouped.FillArray(); // Fill up v_r_bullets
 	if (v_r_bullet.length() > 0) // If there are no bullets on our screen, dont render
 	{
-		Render::RawQuads("bullet.png", v_r_bullet);
+		CBlob@ holder = getLocalPlayerBlob();           
+		if (holder !is null) 
+		{
+			CBlob@ b = holder.getAttachments().getAttachmentPointByName("PICKUP").getOccupied(); 
+			CPlayer@ p = holder.getPlayer(); // get player holding this
 
+			if (b !is null && p !is null) 
+			{
+				if (b.hasTag("weapon") && b.isAttached()) // make sure its a valid gun
+				{
+					string bullet = b.exists("CustomBullet") ? b.get_string("CustomBullet") :"Bullet.png";
+					Render::RawQuads(bullet, v_r_bullet);
+				}
+			}
+		}
 		if (g_debug == 0) // useful for lerp testing
 		{
 			v_r_bullet.clear();
@@ -205,81 +215,24 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 		CBlob@ gunBlob    = getBlobByNetworkID(params.read_netid());
 
 		if (hoomanBlob !is null && gunBlob !is null)
-		{  
-			f32 angle = params.read_f32();
+		{
+			const f32 angle = params.read_f32();
 			const Vec2f pos = params.read_Vec2f();
-			BulletObj@ bullet = BulletObj(hoomanBlob,gunBlob,angle,pos);
-
 			u32 timeSpawnedAt = params.read_u32(); // getGameTime() it spawned at
 			CMap@ map = getMap(); 
-			for (;timeSpawnedAt < getGameTime(); timeSpawnedAt++) // Catch up to everybody else
-			{
-				bullet.onFakeTick(map);
-			}
 
-			BulletGrouped.AddNewObj(bullet);
+			GunSettings@ settings;
+			gunBlob.get("gun_settings", @settings);
 
-			gunBlob.sub_u8("clip",1);
-
-			if (isClient())
-			{
-				gunBlob.getSprite().PlaySound(gunBlob.get_string("sound"), 2.0f);
-
-				u8 bulletType = gunBlob.get_u8("ammo_type");
-				string casing = bulletType == HittersTC::bullet_high_cal ? "rifleCase": 
-				                bulletType == HittersTC::bullet_low_cal ? "pistolCase":
-				                bulletType == HittersTC::shotgun ? "shotgunCase" : ""; //todo: use frames instead?
-
-
-				if (hoomanBlob.isFacingLeft())
-				{
-					f32 oAngle = (angle % 360) + 180;
-					ParticleCase2(casing,pos,oAngle);
-				}
-				else
-				{
-					ParticleCase2(casing,pos,angle);
-				}
-
-				CBlob@ localBlob = getLocalPlayerBlob();
-				if(localBlob !is null && localBlob is hoomanBlob) // if we are this blob
-				{
-					const int recoil = gunBlob.get_s16("recoil");
-					const bool rx = gunBlob.get_bool("recoil_random_x");
-					const bool ry = gunBlob.get_bool("recoil_random_y");
-					const int recoilTime = gunBlob.get_u16("recoilTime");
-					const int recoilBackTime = gunBlob.get_u16("recoilBackTime");
-					Recoil@ coil = Recoil(localBlob,recoil,recoilTime,recoilBackTime,rx,ry);
-					BulletGrouped.NewRecoil(@coil);
-				}
-			}
-		}
-	}
-	else if (cmd == FireShotgunID)
-	{
-		CBlob@ hoomanBlob = getBlobByNetworkID(params.read_netid());  
-		CBlob@ gunBlob    = getBlobByNetworkID(params.read_netid());
-
-		if (hoomanBlob !is null && gunBlob !is null)
-		{  
-			const f32 angle  = params.read_f32();
-			const Vec2f pos  = params.read_Vec2f();
-			const u8 spread  = gunBlob.get_u8("spread");
-			const u8 b_count = gunBlob.get_u8("b_count");
-			const bool sFLB  = gunBlob.get_bool("sFLB");
-			const u32 timeSpawnedAt = params.read_u32(); // getGameTime() it spawned at
-			CMap@ map = getMap(); 
-
-			gunBlob.sub_u8("clip",b_count);
-
-			if(sFLB)
+			if (settings.B_PER_SHOT > 1) //Shotgun firing
 			{
 				f32 tempAngle = angle;
 
-				for (u8 a = 0; a < b_count; a++)
+				for (u8 a = 0; a < settings.B_PER_SHOT; a++)
 				{
-					tempAngle += r.NextRanged(2) != 0 ? -r.NextRanged(spread) : r.NextRanged(spread);
-					BulletObj@ bullet = BulletObj(hoomanBlob,gunBlob,tempAngle,pos);
+					if (!gunBlob.hasTag("CustomSpread")) tempAngle = angle;
+					tempAngle += r.NextRanged(2) != 0 ? -r.NextRanged(settings.B_SPREAD) : r.NextRanged(settings.B_SPREAD);
+					BulletObj@ bullet = BulletObj(hoomanBlob, gunBlob, tempAngle, pos);
 
 					for (u32 timeSpawned = timeSpawnedAt; timeSpawned < getGameTime(); timeSpawned++) // Catch up to everybody else
 					{
@@ -289,51 +242,24 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 					BulletGrouped.AddNewObj(bullet);
 				}
 			}
-			else
+			else //Guns that fire only one bullet
 			{
-				for (u8 a = 0; a < b_count; a++)
+				BulletObj@ bullet = BulletObj(hoomanBlob, gunBlob, angle, pos);
+				for (;timeSpawnedAt < getGameTime(); timeSpawnedAt++) // Catch up to everybody else
 				{
-					f32 tempAngle = angle;
-					tempAngle += r.NextRanged(2) != 0 ? -r.NextRanged(spread) : r.NextRanged(spread);
-					BulletObj@ bullet = BulletObj(hoomanBlob,gunBlob,tempAngle,pos);
-
-					for (u32 timeSpawned = timeSpawnedAt; timeSpawned < getGameTime(); timeSpawned++) // Catch up to everybody else
-					{
-						bullet.onFakeTick(map);
-					}
-
-					BulletGrouped.AddNewObj(bullet);
+					bullet.onFakeTick(map);
 				}
+
+				BulletGrouped.AddNewObj(bullet);
 			}
+			gunBlob.sub_u8("clip", 1);
 
 			if (isClient())
 			{
-				gunBlob.getSprite().PlaySound(gunBlob.get_string("sound"));
-
-				u8 bulletType = gunBlob.get_u8("ammo_type");
-				string casing = bulletType == HittersTC::bullet_high_cal ? "rifleCase": 
-				                bulletType == HittersTC::bullet_low_cal ? "pistolCase":
-				                bulletType == HittersTC::shotgun ? "shotgunCase" : ""; //can find a better way later
-
-				if (hoomanBlob.isFacingLeft())
-				{
-					f32 oAngle = (angle % 360) + 180;
-					ParticleCase2(casing, pos, oAngle);
-				}
-				else
-				{
-					ParticleCase2(casing, pos, angle);
-				}
-
 				CBlob@ localBlob = getLocalPlayerBlob();
-				if (localBlob != null && localBlob is hoomanBlob)
+				if (localBlob !is null && localBlob is hoomanBlob) // if we are this blob
 				{
-					const int recoil = gunBlob.get_s16("recoil");
-					const bool rx = gunBlob.get_bool("recoil_random_x");
-					const bool ry = gunBlob.get_bool("recoil_random_y");
-					const int recoilTime = gunBlob.get_u16("recoilTime");
-					const int recoilBackTime = gunBlob.get_u16("recoilBackTime");
-					Recoil@ coil = Recoil(localBlob,recoil,recoilTime,recoilBackTime,rx,ry);
+					Recoil@ coil = Recoil(localBlob, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
 					BulletGrouped.NewRecoil(@coil);
 				}
 			}
