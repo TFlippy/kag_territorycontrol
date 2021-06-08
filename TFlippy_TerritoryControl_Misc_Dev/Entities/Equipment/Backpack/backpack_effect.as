@@ -1,6 +1,6 @@
 void onInit(CBlob@ this)
 {
-	if(this.get_string("reload_script") != "backpack")
+	if (this.get_string("reload_script") != "backpack")
 		UpdateScript(this);
 }
 
@@ -14,7 +14,7 @@ void UpdateScript(CBlob@ this)
 		backpack.SetRelativeZ(-2);
 		backpack.SetOffset(Vec2f(4, -2));
 		
-		if(this.getSprite().isFacingLeft())
+		if (this.getSprite().isFacingLeft())
 			backpack.SetFacingLeft(true);
 	}
 	
@@ -32,7 +32,7 @@ void UpdateScript(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-    if(this.get_string("reload_script") == "backpack")
+    if (this.get_string("reload_script") == "backpack")
 	{
 		UpdateScript(this);
 		this.set_string("reload_script", "");

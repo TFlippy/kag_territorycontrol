@@ -3,7 +3,7 @@
 
 void onInit(CBlob@ this)
 {
-	if(this.get_string("reload_script") != "minershelmet")
+	if (this.get_string("reload_script") != "minershelmet")
 		UpdateScript(this);
 }
 
@@ -20,14 +20,14 @@ void UpdateScript(CBlob@ this) // the same as onInit, works one time when get eq
 	{
 		mhelmet.SetVisible(true);
 		mhelmet.SetRelativeZ(200);
-		if(this.getSprite().isFacingLeft())
+		if (this.getSprite().isFacingLeft())
 			mhelmet.SetFacingLeft(true);
 	}
 }
 
 void onTick(CBlob@ this)
 {
-    if(this.get_string("reload_script") == "minershelmet")
+    if (this.get_string("reload_script") == "minershelmet")
 	{
 		UpdateScript(this);
 		this.set_string("reload_script", "");

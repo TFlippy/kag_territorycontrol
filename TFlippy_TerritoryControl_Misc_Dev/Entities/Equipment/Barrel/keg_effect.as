@@ -9,7 +9,7 @@ string[] particles =
 void onInit(CBlob@ this)
 {
 	this.set_f32("keg_explode", 0.0f);
-	if(this.get_string("reload_script") != "keg")
+	if (this.get_string("reload_script") != "keg")
 		UpdateScript(this);
 }
 
@@ -23,20 +23,20 @@ void UpdateScript(CBlob@ this)
 		barrel.SetRelativeZ(3);
 		barrel.SetOffset(Vec2f(0, 2));
 		
-		if(this.getSprite().isFacingLeft())
+		if (this.getSprite().isFacingLeft())
 			barrel.SetFacingLeft(true);
 	}
 }
 
 void onTick(CBlob@ this)
 {
-    if(this.get_string("reload_script") == "keg")
+    if (this.get_string("reload_script") == "keg")
 	{
 		UpdateScript(this);
 		this.set_string("reload_script", "");
 	}
 
-	if(this.get_f32("keg_health") >= 7.0f)
+	if (this.get_f32("keg_health") >= 7.0f)
     {
         this.getSprite().PlaySound("woodheavyhit1");
         this.set_string("equipment_head", "");
@@ -44,7 +44,7 @@ void onTick(CBlob@ this)
 		if (this.getSprite().getSpriteLayer("keg") !is null) this.getSprite().RemoveSpriteLayer("keg");
         this.RemoveScript("keg_effect.as");
     }
-    if(getGameTime() >= this.get_f32("keg_explode") && this.get_f32("keg_explode") != 0.0f) this.server_Die();
+    if (getGameTime() >= this.get_f32("keg_explode") && this.get_f32("keg_explode") != 0.0f) this.server_Die();
 }
 
 void onDie(CBlob@ this)
@@ -53,7 +53,7 @@ void onDie(CBlob@ this)
 	if (isServer() && (this.get_f32("keg_explode") == 0.0f))
 	{
 		CBlob@ item = server_CreateBlob("keg", this.getTeamNum(), this.getPosition());
-		if(item !is null) item.set_f32("health", this.get_f32("keg_health"));
+		if (item !is null) item.set_f32("health", this.get_f32("keg_health"));
 	}
 	this.RemoveScript("keg_effect.as");
 }
@@ -86,7 +86,7 @@ void DoExplosion(CBlob@ this)
 		LinearExplosion(this, dir, 16.0f + XORRandom(16) + (modifier * 8), 16 + XORRandom(24), 3, 2.00f, Hitters::explosion);
 	}
 
-	if(isClient())
+	if (isClient())
 	{
 		Vec2f pos = this.getPosition();
 		CMap@ map = getMap();

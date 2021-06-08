@@ -5,7 +5,7 @@
 
 void onInit(CBlob@ this)
 {
-	if(this.get_string("reload_script") != "jetpack")
+	if (this.get_string("reload_script") != "jetpack")
 		UpdateScript(this);
 }
 
@@ -18,7 +18,7 @@ void UpdateScript(CBlob@ this)
 		jetpack.SetVisible(true);
 		jetpack.SetRelativeZ(-2);
 		jetpack.SetOffset(Vec2f(2, 0));
-		if(this.getSprite().isFacingLeft())
+		if (this.getSprite().isFacingLeft())
 			jetpack.SetFacingLeft(true);
 	}
 }
@@ -28,7 +28,7 @@ void UpdateScript(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if(this.get_string("reload_script") == "jetpack")
+	if (this.get_string("reload_script") == "jetpack")
 	{
 		UpdateScript(this);
 		this.set_string("reload_script", "");
@@ -49,7 +49,7 @@ void onTick(CBlob@ this)
 			this.setVelocity(dir * 8.00f);
 
 			Vec2f pos = this.getPosition()+  Vec2f( 0.0f, 4.0f);
-			if(isClient())
+			if (isClient())
 			{
 				MakeDustParticle(pos + Vec2f(2.0f, 0.0f), "Dust.png");
 
@@ -59,11 +59,11 @@ void onTick(CBlob@ this)
 			this.set_u32("nextJetpack", getGameTime() + 90);
 		}
 	}
-	if(isClient())
+	if (isClient())
 	{
 		if ((getGameTime() + 75) < tmp)
 			makeSteamParticle(this, Vec2f(), XORRandom(100) < 30 ? ("SmallFire" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
-		else if(getGameTime() < tmp)
+		else if (getGameTime() < tmp)
 			makeSteamParticle(this, Vec2f(XORRandom(128) - 64, XORRandom(128) - 64) * 0.0015f * this.getRadius(),"SmallSteam",Vec2f(XORRandom(10)-5,XORRandom(10)-5)*0.2*this.getRadius());
 	}
 
