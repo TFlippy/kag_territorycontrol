@@ -36,7 +36,7 @@ void onTick(CBlob@ this)
 		this.set_string("reload_script", "");
 	}
 
-	if(this.get_f32("keg_health") >= 5.0f)
+	if(this.get_f32("keg_health") >= 7.0f)
     {
         this.getSprite().PlaySound("woodheavyhit1");
         this.set_string("equipment_head", "");
