@@ -97,7 +97,8 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 			switch (customData)
 			{
-				case HittersTC::bullet_low_cal: ratio *= 0.80f;
+				case HittersTC::bullet_low_cal:
+					ratio *= 0.80f;
 					break;
 
 				case HittersTC::bullet_high_cal:
@@ -105,10 +106,12 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					ratio *= 0.60f;
 					break;
 
-				case HittersTC::shotgun: ratio *= 0.85f;
+				case HittersTC::shotgun:
+					ratio *= 0.85f;
 					break;
 
-				default: ratio *= 0.30f;
+				default:
+					ratio *= 0.30f;
 					break;
 			}
 			
@@ -127,10 +130,11 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			{
 				this.set_f32("keg_explode", getGameTime() + (30.0f * 1.0f));
 				this.SetLightRadius(this.get_f32("explosive_radius") * 0.5f);
-				this.getSprite().SetEmitSound("/Sparkle.ogg");
-				this.getSprite().SetEmitSoundSpeed(1.0f);
-				this.getSprite().SetEmitSoundVolume(1.0f);
-				this.getSprite().SetEmitSoundPaused(false);
+				CSprite@ sprite = this.getSprite();
+				sprite.SetEmitSound("/Sparkle.ogg");
+				sprite.SetEmitSoundSpeed(1.0f);
+				sprite.SetEmitSoundVolume(1.0f);
+				sprite.SetEmitSoundPaused(false);
 				ratio *= 0.0f;
 			}
 			else ratio *= 0.30f;
@@ -149,7 +153,8 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 			switch (customData)
 			{
-				case HittersTC::bullet_low_cal: ratio *= 0.80f;
+				case HittersTC::bullet_low_cal:
+					ratio *= 0.80f;
 					break;
 
 				case HittersTC::bullet_high_cal:
@@ -157,10 +162,12 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					ratio *= 0.60f;
 					break;
 
-				case HittersTC::shotgun: ratio *= 0.85f;
+				case HittersTC::shotgun:
+					ratio *= 0.85f;
 					break;
 
-				default: ratio *= 0.20f;
+				default:
+					ratio *= 0.20f;
 					break;
 			}
 			
@@ -201,7 +208,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 	if (this.getHealth() <= gibHealth)
 	{
-		this.getSprite().Gib();
+		sprite.Gib();
 		this.Tag("do gib");
 		
 		this.server_Die();
@@ -224,7 +231,7 @@ void onDie(CBlob@ this)
 		{
 			if (isClient())
 			{
-				this.getSprite().PlaySound("Pigger_Gore.ogg", 0.3f, 0.9f);
+				sprite.PlaySound("Pigger_Gore.ogg", 0.3f, 0.9f);
 				ParticleBloodSplat(this.getPosition() + getRandomVelocity(0, radius, 360), true);
 			}
 		

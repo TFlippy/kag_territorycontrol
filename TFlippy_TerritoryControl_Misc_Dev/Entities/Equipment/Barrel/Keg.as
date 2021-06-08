@@ -17,9 +17,7 @@ void onInit(CBlob@ this)
 
 	this.set_u16("_keg_carrier_id", 0xffff);
 
-	CSprite@ sprite = this.getSprite();
-
-	sprite.SetZ(-10);
+	this.getSprite().SetZ(-10);
 
 	CSpriteLayer@ fuse = this.getSprite().addSpriteLayer("fuse", "Keg.png" , 16, 16, 0, 0);
 
