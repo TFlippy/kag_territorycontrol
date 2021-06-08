@@ -4,6 +4,7 @@
 #include "ShopCommon.as";
 #include "Hitters.as";
 #include "CustomBlocks.as";
+#include "GunCommon.as";
 
 void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 {
@@ -36,6 +37,17 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		priceMod *= 5;
 	}
 
+	//GUN MODIFIERS
+	GunSettings@ settings;
+	if(target.get("gun_settings", @settings)) //Is a gun
+	{
+
+
+
+
+	}
+
+	//REPAIR AND REINFORCE
 	if (target.maxQuantity <= 1 && !target.hasTag("flesh") && target.getHealth() < target.getInitialHealth()) //obviously cant heal flesh things
 	{
 		AddIconToken("$repair$", "ModificationIcons.png", Vec2f(16, 16), 0);
@@ -51,6 +63,8 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50 * priceMod);
 		s.spawnNothing = true;
 	}
+
+	//GENERAL MODFIERS
 	if (!target.hasScript("TimedDeathMod.as"))
 	{
 		ShopItem@ s = addShopItem(this, "Timed Death", "$mat_copperwire$", "Script-TimedDeathMod.as", "Dies after exactly 30 seconds", false);
@@ -96,49 +110,47 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 50 * priceMod);
 		s.spawnNothing = true;
 	}
-	if (Unbound)
-	if (!target.hasTag("BouncyMod") && shape.getElasticity() < 0.8f)
-	{
-		ShopItem@ s = addShopItem(this, "Bouncy", "$sponge$", "Set Elasiticity", "Bounces when colliding with terrain", false);
-		AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
-		s.spawnNothing = true;
-	}
-	if (Unbound)
-	if (!target.hasTag("FrictionlessMod") && shape.getFriction() > 0.01f)
-	{
-		ShopItem@ s = addShopItem(this, "Frictionless", "$sponge$", "Reduce Friction", "Add tiny wheels to reduce friction with the ground", false);
-		AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
-		s.spawnNothing = true;
-	}
-	if (Unbound)
-	if (!target.hasScript("FloatyMod.as"))
-	{
-		ShopItem@ s = addShopItem(this, "Floaty", "$chicken$", "Script-FloatyMod.as", "Add Methane to make it fall slower", false);
-		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", Maths::Clamp(target.getMass(), 20, 200) * priceMod);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 30 * priceMod);
-		s.spawnNothing = true;
-	}
-	if (Unbound)
-	if (!target.hasScript("RegenerationMod.as"))
-	{
-		ShopItem@ s = addShopItem(this, "Regeneration", "$mat_meat$", "Script-RegenerationMod.as", "Do unspeakable things to make it heal hp very very slowly", false);
-		AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
-		AddRequirement(s.requirements, "blob", "mat_meat", "Meat", Maths::Clamp(target.getInitialHealth()*30, 20, 300) * priceMod);
-		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 60 * priceMod);
-		s.spawnNothing = true;
-	}
-	if (Unbound)
-	if (!target.hasScript("ReturningMod.as") && !target.hasTag("player") && !target.hasTag("vehicle")) //can't home in onto itself, also no hopping giant vehicles
-	{
-		//this, name, icon_name, blobname, description,
-		ShopItem@ s = addShopItem(this, "Returning", "$mat_smallrocket$", "ReturningMod", "Slowly jumps back towards you", false);
-		AddRequirement(s.requirements, "blob", "mat_smallrocket", "Small Rocket", 5 * priceMod);
-		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 20 * priceMod);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 20 * priceMod);
-		s.spawnNothing = true;
-	}
 
-	
+	//UNBOUND ONLY Modifiers
+	if (Unbound)
+	{
+		if (!target.hasTag("BouncyMod") && shape.getElasticity() < 0.8f)
+		{
+			ShopItem@ s = addShopItem(this, "Bouncy", "$sponge$", "Set Elasiticity", "Bounces when colliding with terrain", false);
+			AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
+			s.spawnNothing = true;
+		}
+		if (!target.hasTag("FrictionlessMod") && shape.getFriction() > 0.01f)
+		{
+			ShopItem@ s = addShopItem(this, "Frictionless", "$sponge$", "Reduce Friction", "Add tiny wheels to reduce friction with the ground", false);
+			AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
+			s.spawnNothing = true;
+		}
+		if (!target.hasScript("FloatyMod.as"))
+		{
+			ShopItem@ s = addShopItem(this, "Floaty", "$chicken$", "Script-FloatyMod.as", "Add Methane to make it fall slower", false);
+			AddRequirement(s.requirements, "blob", "mat_methane", "Methane", Maths::Clamp(target.getMass(), 20, 200) * priceMod);
+			AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 30 * priceMod);
+			s.spawnNothing = true;
+		}
+		if (!target.hasScript("RegenerationMod.as"))
+		{
+			ShopItem@ s = addShopItem(this, "Regeneration", "$mat_meat$", "Script-RegenerationMod.as", "Do unspeakable things to make it heal hp very very slowly", false);
+			AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
+			AddRequirement(s.requirements, "blob", "mat_meat", "Meat", Maths::Clamp(target.getInitialHealth()*30, 20, 300) * priceMod);
+			AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 60 * priceMod);
+			s.spawnNothing = true;
+		}
+		if (!target.hasScript("ReturningMod.as") && !target.hasTag("player") && !target.hasTag("vehicle")) //can't home in onto itself, also no hopping giant vehicles
+		{
+			//this, name, icon_name, blobname, description,
+			ShopItem@ s = addShopItem(this, "Returning", "$mat_smallrocket$", "ReturningMod", "Slowly jumps back towards you", false);
+			AddRequirement(s.requirements, "blob", "mat_smallrocket", "Small Rocket", 5 * priceMod);
+			AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 20 * priceMod);
+			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 20 * priceMod);
+			s.spawnNothing = true;
+		}
+	}
 }
 
 void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
@@ -164,6 +176,14 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 	else if (spl[0] == "RScript") //Easier remove script recepies
 	{
 		target.RemoveScript(spl[1]);
+	}
+	else if(spl[0] == "Gun") //Guns section
+	{
+		GunSettings@ settings;
+		if(target.get("gun_settings", @settings))
+		{
+
+		}
 	}
 	else
 	{
