@@ -95,9 +95,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		if (!params.saferead_u16(callerID)) return;
 		CBlob@ caller = getBlobByNetworkID(callerID);
 		if (caller is null) return;
-		if (caller.get_string("equipment_torso") != "" && cmd == this.getCommandID("equip_torso")) removeTorso(caller, caller.get_string("equipment_torso"));
-		else if (caller.get_string("equipment_boots") != "" && cmd == this.getCommandID("equip_boots")) removeBoots(caller, caller.get_string("equipment_boots"));
-		else if (caller.get_string("equipment_head") != "" && cmd == this.getCommandID("equip_head")) removeHead(caller, caller.get_string("equipment_head"));
+		if (caller.get_string("equipment_torso") != "" && cmd == this.getCommandID("equip_torso"))
+			removeTorso(caller, caller.get_string("equipment_torso"));
+		else if (caller.get_string("equipment_boots") != "" && cmd == this.getCommandID("equip_boots"))
+			removeBoots(caller, caller.get_string("equipment_boots"));
+		else if (caller.get_string("equipment_head") != "" && cmd == this.getCommandID("equip_head"))
+			removeHead(caller, caller.get_string("equipment_head"));
 
 		CBlob@ item = caller.getCarriedBlob();
 		if(item !is null)
