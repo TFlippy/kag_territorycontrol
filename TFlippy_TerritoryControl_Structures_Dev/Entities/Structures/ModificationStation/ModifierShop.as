@@ -111,7 +111,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 				button.enableRadius = this.get_u8("shop button radius");
 			}
 		}
-		else //Modify yourself
+		else if (this.get_bool("Unbound Modifiers")) //Modify yourself only if unbound
 		{
 			CBitStream params;
 			params.write_u16(caller.getNetworkID());

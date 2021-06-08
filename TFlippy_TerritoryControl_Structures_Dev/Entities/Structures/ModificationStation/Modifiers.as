@@ -79,6 +79,14 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "blob", "sponge", "Sponge", 3);
 		s.spawnNothing = true;
 	}
+	if (target.hasScript("DecayInWater"))
+	{
+		ShopItem@ s = addShopItem(this, "Waterproofing", "$mat_oil$", "RScript-DecayInWater.as", "Waterproof the object stopping it from decaying in water", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 * priceMod);
+		AddRequirement(s.requirements, "blob", "sponge", "Sponge", 1);
+		AddRequirement(s.requirements, "blob", "mat_oil", "Oil", 20 * priceMod);
+		s.spawnNothing = true;
+	}
 	if (Unbound || !target.hasTag("explosive")) //can only make explosives explode more if its unbound
 	if (!target.hasScript("DynamiteExplosionMode") && target.maxQuantity <= 1 && !target.hasTag("flesh") && target.maxQuantity <= 1) //cannot make fleshy things exlpodes cause a drug already does that
 	{
@@ -152,6 +160,10 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 	else if (spl[0] == "Script") //Easier add script recepies
 	{
 		target.AddScript(spl[1]);
+	}
+	else if (spl[0] == "RScript") //Easier remove script recepies
+	{
+		target.RemoveScript(spl[1]);
 	}
 	else
 	{
