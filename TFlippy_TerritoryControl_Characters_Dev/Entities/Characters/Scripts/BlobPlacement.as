@@ -41,8 +41,6 @@ Vec2f getBottomOfCursor(Vec2f cursorPos, CBlob@ carryBlob)
 
 void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 {
-	if (carryBlob.hasTag("no shitty rotation reset")) return;
-
 	// rotate towards mouse if object allows
 	if (carryBlob.hasTag("place45"))
 	{
@@ -75,12 +73,12 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 	}
 	else
 	{
-		if (!carryBlob.hasTag("place norotate"))
+		if (!carryBlob.hasTag("place norotate") && !carryBlob.hasTag("no shitty rotation reset"))
 		{
 			carryBlob.setAngleDegrees(0.0f);
 			// print("reset 2");
 		}
-		
+
 		AttachmentPoint@ hands = this.getAttachments().getAttachmentPointByName("PICKUP");
 		if (hands !is null)
 		{
@@ -111,6 +109,11 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 				{
 					hands.offset.y += 2;
 				}
+			}
+			if (this.isKeyPressed(key_action3) && carryBlob.hasTag("weapon"))
+			{
+				hands.offset.y -= 3;
+				if (this.isKeyPressed(key_down)) hands.offset.y -= 1;
 			}
 		}
 	}
@@ -145,9 +148,9 @@ void onTick(CBlob@ this)
 	}
 
 	CBlob @carryBlob = this.getCarriedBlob();
-	if (carryBlob !is null && !carryBlob.hasTag("no shitty rotation reset"))
+	if (carryBlob !is null)
 	{
-		if(carryBlob.hasTag("place ignore facing"))
+		if (carryBlob.hasTag("place ignore facing"))
 		{
 			carryBlob.getSprite().SetFacingLeft(false);
 		}
@@ -164,7 +167,7 @@ void onTick(CBlob@ this)
 				this.getCarriedBlob().setAngleDegrees(0.0f);
 				// print("reset 1");
 			}
-			else
+			else if (!carryBlob.hasTag("no shitty rotation reset"))
 			{
 				this.getCarriedBlob().setAngleDegrees(this.get_u16("build_angle"));
 			}
