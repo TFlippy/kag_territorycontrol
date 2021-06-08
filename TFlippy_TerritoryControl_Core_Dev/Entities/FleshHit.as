@@ -117,7 +117,29 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 			dmg = playerDamage;
 		}
-		
+		else if (this.get_string("equipment_torso") == "keg" && !isBullet && customData != HittersTC::radiation)
+		{
+			f32 armorMaxHealth = 7.0f;
+			f32 armorHealth = armorMaxHealth - this.get_f32("keg_health");
+			f32 ratio = armorHealth / armorMaxHealth;
+
+			if ((customData == Hitters::fire || customData == Hitters::fire || customData == Hitters::explosion || customData == Hitters::bomb || customData == Hitters::bomb_arrow) && this.get_f32("keg_explode") == 0.0f)
+			{
+				this.set_f32("keg_explode", getGameTime() + (30.0f * 1.0f));
+				this.SetLightRadius(this.get_f32("explosive_radius") * 0.5f);
+				this.getSprite().SetEmitSound("/Sparkle.ogg");
+				this.getSprite().SetEmitSoundSpeed(1.0f);
+				this.getSprite().SetEmitSoundVolume(1.0f);
+				this.getSprite().SetEmitSoundPaused(false);
+				ratio *= 0.0f;
+			}
+			else ratio *= 0.30f;
+			
+			this.set_f32("keg_health", this.get_f32("keg_health") + (ratio*dmg));
+			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
+
+			dmg = playerDamage;
+		}
 		// head
 		if (this.get_string("equipment_head") == "militaryhelmet" && customData != HittersTC::radiation)
 		{
@@ -143,6 +165,28 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			}
 			
 			this.set_f32("mh_health", this.get_f32("mh_health") + (ratio*dmg));
+			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
+
+			dmg = playerDamage;
+		}
+		else if (this.get_string("equipment_head") == "bucket" && !isBullet && customData != HittersTC::radiation)
+		{
+			f32 armorMaxHealth = 5.0f;
+			f32 armorHealth = armorMaxHealth - this.get_f32("bucket_health");
+			f32 ratio = armorHealth / armorMaxHealth;
+
+			switch (customData)
+			{
+				case Hitters::fire:
+				case Hitters::burn:
+					ratio *= 0.10f;
+					break;
+
+				default: ratio *= 0.20f;
+					break;
+			}
+			
+			this.set_f32("bucket_health", this.get_f32("bucket_health") + (ratio*dmg));
 			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
 
 			dmg = playerDamage;

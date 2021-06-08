@@ -106,12 +106,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 			{
 				addHead(caller, item.getName());
 				if (item.getName() == "militaryhelmet") caller.set_f32("mh_health", item.get_f32("health"));
+				else if (item.getName() == "bucket") caller.set_f32("bucket_health", item.get_f32("health"));
 				item.server_Die();
 			}
 			else if (getEquipmentType(item) == "torso")
 			{
 				addTorso(caller, item.getName());
 				if (item.getName() == "bulletproofvest") caller.set_f32("bpv_health", item.get_f32("health"));
+				else if (item.getName() == "keg") caller.set_f32("keg_health", item.get_f32("health"));
 				item.server_Die();
 			}
 			else if (getEquipmentType(item) == "boots")
@@ -154,7 +156,7 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 	playerblob.setHeadNum((playerblob.getHeadNum()+1) % 3);
 	playerblob.Tag(headname);
 	playerblob.set_string("reload_script", headname);
-	if(headname != "pumpkin" && headname != "bucket") playerblob.AddScript(headname+"_effect.as");
+	if(headname != "pumpkin") playerblob.AddScript(headname+"_effect.as");
 	playerblob.set_string("equipment_head", headname);
 	playerblob.Tag("update head");
 }
@@ -172,6 +174,11 @@ void removeHead(CBlob@ playerblob, string headname)
 		{
 			oldeq.set_f32("health", playerblob.get_f32("mh_health"));
 			oldeq.getSprite().SetFrameIndex(Maths::Floor(playerblob.get_f32("mh_health") / 4.00f));
+		}
+		else if(headname == "bucket")
+		{
+			oldeq.set_f32("health", playerblob.get_f32("bucket_health"));
+			// oldeq.getSprite().SetFrameIndex(Maths::Floor(playerblob.get_f32("bucket_health") / 4.00f)); // I don't have anyone to make sprite for me :kag_depression:
 		}
 		playerblob.server_PutInInventory(oldeq);
 	}
@@ -218,6 +225,7 @@ void removeTorso(CBlob@ playerblob, string torsoname)		//Same stuff with removin
 	{
 		CBlob@ oldeq = server_CreateBlob(torsoname, playerblob.getTeamNum(), playerblob.getPosition());
 		if(torsoname == "bulletproofvest") oldeq.set_f32("health", playerblob.get_f32("bpv_health"));	//need to be after creating blob, bcos it sets hp to it
+		if(torsoname == "keg") oldeq.set_f32("health", playerblob.get_f32("keg_health"));
 		playerblob.server_PutInInventory(oldeq);
 	}
 	
@@ -264,11 +272,9 @@ void onDie(CBlob@ this)
 		}
 		if (this.get_string("equipment_torso") != "")
 		{
-			if(this.get_string("equipment_torso") == "bulletproofvest")
+			if(this.get_string("equipment_torso") == "bulletproofvest" || this.get_string("equipment_torso") == "keg")
 			{ }
-			else if(this.get_string("equipment_torso") == "suicidevest" && !this.exists("vest_explode"))
-				server_CreateBlob(this.get_string("equipment_torso"), this.getTeamNum(), this.getPosition());
-			else if(this.get_string("equipment_torso") != "suicidevest")
+			else if(!this.exists("vest_explode"))
 				server_CreateBlob(this.get_string("equipment_torso"), this.getTeamNum(), this.getPosition());
 		}
 		if (this.get_string("equipment_boots") != "")
