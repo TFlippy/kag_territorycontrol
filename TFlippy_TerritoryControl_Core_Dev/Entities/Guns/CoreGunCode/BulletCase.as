@@ -12,6 +12,8 @@
 
 void ParticleCase2(const string particlePic, const Vec2f pos, const f32 angle)
 {
+	if (particlePic.empty()) return; //do not proceed if there is no particle to use
+
 	Vec2f dimensions;
 	GUI::GetImageDimensions(particlePic, dimensions);
 
