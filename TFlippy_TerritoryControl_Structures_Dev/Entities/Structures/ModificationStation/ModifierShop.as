@@ -16,6 +16,8 @@ void onInit(CBlob@ this)
 	this.addCommandID("shop buy");
 	this.addCommandID("shop made item");
 	this.addCommandID("shop unbound");
+	this.addCommandID("add script");
+	this.addCommandID("remove script");
 
 	if(!this.exists("shop available"))
 		this.set_bool("shop available", true);
@@ -204,6 +206,24 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		//print("Test");
 		this.set_bool("Unbound Modifiers", true);
+	}
+	else if (cmd == this.getCommandID("add script"))
+	{
+		u16 targetID;
+		if (!params.saferead_u16(targetID))
+			return;
+		CBlob@ target = getBlobByNetworkID(targetID);
+		string effectname = params.read_string();
+		target.AddScript(effectname);
+	}
+	else if (cmd == this.getCommandID("remove script"))
+	{
+		u16 targetID;
+		if (!params.saferead_u16(targetID))
+			return;
+		CBlob@ target = getBlobByNetworkID(targetID);
+		string effectname = params.read_string();
+		target.RemoveScript(effectname);
 	}
 	else if (cmd == this.getCommandID("shop buy"))
 	{

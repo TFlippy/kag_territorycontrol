@@ -196,11 +196,11 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 	}
 	else if (spl[0] == "Script") //Easier add script recepies
 	{
-		target.AddScript(spl[1]);
+		AddScriptCommand(this, target, spl[1]);
 	}
 	else if (spl[0] == "RScript") //Easier remove script recepies
 	{
-		target.RemoveScript(spl[1]);
+		RemoveScriptCommand(this, target, spl[1]);
 	}
 	else if (spl[0] == "Gun") //Guns section
 	{
@@ -261,7 +261,7 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 		}
 		else if (name == "ReturningMod")
 		{
-			target.AddScript("ReturningMod.as");
+			AddScriptCommand(this, target, "ReturningMod.as");
 			target.set_u16("ReturningMod Target", caller.getNetworkID());
 		}
 		else if (name == "Set Buoyancy")
@@ -270,5 +270,20 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 			target.getShape().getConsts().buoyancy = 1.2f;
 		}
 	}	
+}
 
+void AddScriptCommand(CBlob@ this, CBlob@ target, string script)
+{
+	CBitStream params;
+	params.write_u16(target.getNetworkID());
+	params.write_string(script);
+	this.SendCommand(this.getCommandID("add script"), params);
+}
+
+void RemoveScriptCommand(CBlob@ this, CBlob@ target, string script)
+{
+	CBitStream params;
+	params.write_u16(target.getNetworkID());
+	params.write_string(script);
+	this.SendCommand(this.getCommandID("remove script"), params);
 }
