@@ -17,6 +17,7 @@
 #include "BulletParticle.as";
 #include "Knocked.as";
 #include "GunCommon.as";
+#include "DeityCommon.as";
 
 const SColor trueWhite = SColor(255,255,255,255);
 Driver@ PDriver = getDriver();
@@ -146,8 +147,19 @@ class BulletObj
 			GunSettings@ settings;
 			gunBlob.get("gun_settings", @settings);
 
-			f32 damage = settings.B_DAMAGE;
 			f32 ammotype = settings.B_TYPE;
+			f32 damage = settings.B_DAMAGE;
+
+			//Increase damage if hooman blob is a follower of the swaggy laggy
+			if (hoomanShooter.get_u8("deity_id") == Deity::swaglag)
+			{
+				CBlob@ altar = getBlobByName("altar_swaglag");
+				if (altar !is null)
+				{
+					damage *= 1.00f + Maths::Min(altar.get_f32("deity_power") * 0.01f, 2.00f);
+				}
+			}
+
 			const string S_FLESH_HIT  = gunBlob.exists("CustomSoundFlesh")  ? gunBlob.get_string("CustomSoundFlesh")  : "BulletImpact.ogg";
 			const string S_OBJECT_HIT = gunBlob.exists("CustomSoundObject") ? gunBlob.get_string("CustomSoundObject") : "BulletImpact.ogg";
 
