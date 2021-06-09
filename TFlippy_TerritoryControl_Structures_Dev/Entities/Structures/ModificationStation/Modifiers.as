@@ -139,13 +139,13 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	//UNBOUND ONLY Modifiers
 	if (Unbound)
 	{
-		if (!target.hasTag("BouncyMod") && shape.getElasticity() < 0.8f)
+		if (shape.getElasticity() < 0.8f)
 		{
 			ShopItem@ s = addShopItem(this, "Bouncy", "$sponge$", "Set Elasiticity", "Bounces when colliding with terrain", false);
 			AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
 			s.spawnNothing = true;
 		}
-		if (!target.hasTag("FrictionlessMod") && shape.getFriction() > 0.01f)
+		if (shape.getFriction() > 0.01f)
 		{
 			ShopItem@ s = addShopItem(this, "Frictionless", "$sponge$", "Reduce Friction", "Add tiny wheels to reduce friction with the ground", false);
 			AddRequirement(s.requirements, "coin", "", "Coins", 250 * priceMod);
@@ -196,11 +196,11 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 	}
 	else if (spl[0] == "Script") //Easier add script recepies
 	{
-		AddScriptCommand(this, target, spl[1]);
+		target.AddScript(spl[1]);
 	}
 	else if (spl[0] == "RScript") //Easier remove script recepies
 	{
-		RemoveScriptCommand(this, target, spl[1]);
+		target.RemoveScript(spl[1]);
 	}
 	else if (spl[0] == "Gun") //Guns section
 	{
@@ -243,12 +243,10 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 		}
 		else if (name == "Set Elasiticity")
 		{
-			target.Tag("BouncyMod");
 			target.getShape().setElasticity(0.8f);
 		}
 		else if (name == "Reduce Friction")
 		{
-			target.Tag("FrictionlessMod");
 			target.getShape().setFriction(0.01f);
 		}
 		else if (name == "Repair")
@@ -261,7 +259,7 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 		}
 		else if (name == "ReturningMod")
 		{
-			AddScriptCommand(this, target, "ReturningMod.as");
+			target.AddScript("ReturningMod.as");
 			target.set_u16("ReturningMod Target", caller.getNetworkID());
 		}
 		else if (name == "Set Buoyancy")
@@ -270,20 +268,4 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 			target.getShape().getConsts().buoyancy = 1.2f;
 		}
 	}	
-}
-
-void AddScriptCommand(CBlob@ this, CBlob@ target, string script)
-{
-	CBitStream params;
-	params.write_u16(target.getNetworkID());
-	params.write_string(script);
-	this.SendCommand(this.getCommandID("add script"), params);
-}
-
-void RemoveScriptCommand(CBlob@ this, CBlob@ target, string script)
-{
-	CBitStream params;
-	params.write_u16(target.getNetworkID());
-	params.write_string(script);
-	this.SendCommand(this.getCommandID("remove script"), params);
 }

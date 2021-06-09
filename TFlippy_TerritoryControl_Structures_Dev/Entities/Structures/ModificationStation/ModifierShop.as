@@ -16,8 +16,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("shop buy");
 	this.addCommandID("shop made item");
 	this.addCommandID("shop unbound");
-	this.addCommandID("add script");
-	this.addCommandID("remove script");
+	this.addCommandID("modify");
 
 	if(!this.exists("shop available"))
 		this.set_bool("shop available", true);
@@ -207,23 +206,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		//print("Test");
 		this.set_bool("Unbound Modifiers", true);
 	}
-	else if (cmd == this.getCommandID("add script"))
+	else if (cmd == this.getCommandID("modify"))
 	{
 		u16 targetID;
 		if (!params.saferead_u16(targetID))
 			return;
 		CBlob@ target = getBlobByNetworkID(targetID);
-		string effectname = params.read_string();
-		target.AddScript(effectname);
-	}
-	else if (cmd == this.getCommandID("remove script"))
-	{
-		u16 targetID;
-		if (!params.saferead_u16(targetID))
+		u16 callerID;
+		if (!params.saferead_u16(callerID))
 			return;
-		CBlob@ target = getBlobByNetworkID(targetID);
+		CBlob@ caller = getBlobByNetworkID(callerID);
 		string effectname = params.read_string();
-		target.RemoveScript(effectname);
+		ModifyWith(this, caller, target, effectname);
 	}
 	else if (cmd == this.getCommandID("shop buy"))
 	{
@@ -327,7 +321,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					//print("Attempted to modify something");
 					if (target != null && !target.hasTag("dead")) //Checks for the target have been done earlier, this is just in case the target was used in the recepie (since thats currently still possible)
 					{
-						ModifyWith(this, caller, target, blobName);
+						CBitStream params;
+						params.write_u16(target.getNetworkID());
+						params.write_u16(caller.getNetworkID());
+						params.write_string(blobName);
+						this.SendCommand(this.getCommandID("modify"), params);
 					}
 					/*
 					CBitStream params;
