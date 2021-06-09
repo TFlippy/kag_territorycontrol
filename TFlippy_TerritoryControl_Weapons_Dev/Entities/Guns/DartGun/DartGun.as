@@ -1,7 +1,7 @@
 #include "Hitters.as";
-#include "HittersTC.as";
 #include "MakeMat.as";
 #include "Knocked.as";
+#include "GunCommon.as";
 
 const f32 maxDistance = 500;
 const f32 damage = 0.125f;
@@ -11,7 +11,7 @@ void onInit(CBlob@ this)
 {
 	this.Tag("no shitty rotation reset");
 	this.Tag("dangerous");
-	
+
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
 	if (ap !is null)
 	{
@@ -28,16 +28,16 @@ void onTick(CBlob@ this)
 {
 	if (this.isAttached())
 	{
-		UpdateAngle(this);
-
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-		if(point is null){return;}
-		CBlob@ holder = point.getOccupied();
+		if (point is null) return;
 
+		CBlob@ holder = point.getOccupied();
 		if (holder is null) return;
 
+		this.setAngleDegrees(getAimAngle(this, holder));
+
 		bool error = false;
-		
+
 		if (getKnocked(holder) <= 0)
 		{
 			CSprite@ sprite = this.getSprite();
@@ -77,7 +77,7 @@ void onTick(CBlob@ this)
 									if (isServer())
 									{
 										this.server_Hit(b, b.getPosition(), dir, damage, Hitters::arrow, true);
-									
+
 										CBitStream stream;
 										stream.write_u16(b.getNetworkID());
 										ammoBlob.SendCommand(ammoBlob.getCommandID("consume"), stream);
@@ -87,13 +87,12 @@ void onTick(CBlob@ this)
 									{
 										Sound::Play("DartGun_Hit.ogg", b.getPosition(), 1.00f, 1.00f);
 									}
-									
+
 									SetKnocked(b, 90);
 									length = blobs[i].distance + 8;
-									
+
 									break;
 								}
-								
 							}
 						}
 
@@ -107,7 +106,7 @@ void onTick(CBlob@ this)
 				else error = true;
 			}
 		}
-		
+
 		if (error)
 		{
 			if (isClient())
@@ -137,30 +136,6 @@ CBlob@ GetAmmoBlob(CBlob@ this)
 		}
 	}
 	return null;
-}
-
-void UpdateAngle(CBlob@ this)
-{
-	AttachmentPoint@ point=this.getAttachments().getAttachmentPointByName("PICKUP");
-	if(point is null) return;
-
-	CBlob@ holder=point.getOccupied();
-
-	if(holder is null) return;
-
-	Vec2f aimpos=holder.getAimPos();
-	Vec2f pos=holder.getPosition();
-
-	Vec2f aim_vec =(pos - aimpos);
-	aim_vec.Normalize();
-
-	f32 mouseAngle=aim_vec.getAngleDegrees();
-	if(!holder.isFacingLeft()) mouseAngle += 180;
-
-	this.setAngleDegrees(-mouseAngle);
-
-	point.offset.x=0 +(aim_vec.x*2*(holder.isFacingLeft() ? 1.0f : -1.0f));
-	point.offset.y=-(aim_vec.y);
 }
 
 void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)

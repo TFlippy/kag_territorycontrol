@@ -3,7 +3,6 @@
 // name, amount, bonus, weight
 LootItem@[] c_items =
 {
-	LootItem("mat_stone", 25, 1000, 0),
 	LootItem("mat_stone", 25, 1000, 800),
 	LootItem("mat_wood", 25, 1000, 700),
 	LootItem("mat_gold", 25, 500, 400),
