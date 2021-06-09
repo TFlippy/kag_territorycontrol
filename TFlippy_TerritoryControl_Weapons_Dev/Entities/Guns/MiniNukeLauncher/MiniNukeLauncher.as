@@ -46,6 +46,7 @@ void onInit(CBlob@ this)
 	this.set_string("ProjBlob", "mininuke");
 	this.set_Vec2f("ProjOffset", Vec2f(-15, 0));
 }
+
 void onTick(CBlob@ this)
 {
 	if (isClient())

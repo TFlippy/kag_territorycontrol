@@ -26,14 +26,9 @@ Random@ r = Random(12345);
 // Core vars
 BulletHolder@ BulletGrouped = BulletHolder();
 
-Vertex[] v_r_bullet;
-Vertex[] v_r_fade;
-Vertex[] v_r_reloadBox;
-
 SColor white = SColor(255,255,255,255);
 SColor eatUrGreens = SColor(255,0,255,0);
 int FireGunID;
-int FireShotgunID;
 
 f32 FRAME_TIME = 0;
 
@@ -63,8 +58,8 @@ void Reset(CRules@ this)
 {
 	r.Reset(12345);
 	FireGunID = this.addCommandID("fireGun");
-	v_r_bullet.clear();
-	v_r_fade.clear();
+
+	BulletRender::Reset();
 }
 
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
@@ -92,34 +87,12 @@ void GUIStuff(int id)
 
 void RenderingBullets() // Bullets
 {
-	BulletGrouped.FillArray(); // Fill up v_r_bullets
-	if (v_r_bullet.length() > 0) // If there are no bullets on our screen, dont render
-	{
-		CBlob@ holder = getLocalPlayerBlob();           
-		if (holder !is null) 
-		{
-			CBlob@ b = holder.getAttachments().getAttachmentPointByName("PICKUP").getOccupied(); 
-			CPlayer@ p = holder.getPlayer(); // get player holding this
-
-			if (b !is null && p !is null) 
-			{
-				if (b.hasTag("weapon") && b.isAttached()) // make sure its a valid gun
-				{
-					string bullet = b.exists("CustomBullet") ? b.get_string("CustomBullet") :"Bullet.png";
-					Render::RawQuads(bullet, v_r_bullet);
-				}
-			}
-		}
-		if (g_debug == 0) // useful for lerp testing
-		{
-			v_r_bullet.clear();
-		}
-	}
+	BulletRender::Draw();
 }
 
 void renderScreenpls() // Bullet ammo gui
 {
-	/*CBlob@ holder = getLocalPlayerBlob();           
+	/*CBlob@ holder = getLocalPlayerBlob();
 	if (holder !is null) 
 	{
 		CBlob@ b = holder.getAttachments().getAttachmentPointByName("PICKUP").getOccupied(); 
@@ -127,80 +100,18 @@ void renderScreenpls() // Bullet ammo gui
 
 		if (b !is null && p !is null) 
 		{
-			if (b.exists("clip")) // make sure its a valid gun
+			if (b.hasTag("weapon")) // make sure its a valid gun
 			{
 				if (p.isMyPlayer() && b.isAttached())
 				{
-					uint8 clip = b.get_u8("clip");
-					uint8 total = b.get_u8("total"); // get clip and ammo total for easy access later
+					GunSettings@ settings;
+					b.get("gun_settings", @settings);
+
 					CControls@ controls = getControls();
-					Vec2f pos = Vec2f(0,getScreenHeight()-80); // controls for screen position
-					bool render = false; // used to save render time (more fps basically)
+					Vec2f pos = Vec2f(10, getScreenHeight() - 60); // controls for screen position
 
-					if (controls !is null)
-					{
-						int length = (pos - controls.getMouseScreenPos() - Vec2f(-30,-35)).Length();
-						// get length for 'fancy' invisiblty when mouse goes near it
-
-						if (length < 256 && length > 0) // are we near it?
-						{
-							white.setAlpha(length);
-							eatUrGreens.setAlpha(length);
-							render = true;
-						}
-						else // check the reverse
-						{
-							length=-length;
-							if(length < 256 && length > 0)
-							{
-								white.setAlpha(length);
-								eatUrGreens.setAlpha(length);
-								render = true;
-							}
-						}
-					}
-						
-					if (v_r_reloadBox.length() < 1 || render) // is it time to render?
-					{
-						if (render) // lets clear only IF we need to
-						{
-							v_r_reloadBox.clear();
-						}
-
-						v_r_reloadBox.push_back(Vertex(pos.x+112, pos.y,    0, 1, 0, white)); // top right
-						v_r_reloadBox.push_back(Vertex(pos.x, pos.y,        0, 0, 0, white)); // top left
-						v_r_reloadBox.push_back(Vertex(pos.x, pos.y+80,     0, 0, 1, white)); // bot left
-						v_r_reloadBox.push_back(Vertex(pos.x+112, pos.y+80, 0, 1, 1, white)); // bot right
-					}
-
-					Render::SetTransformScreenspace(); // set position for render
-					Render::SetAlphaBlend(true); // since we are going to be doing the invisiblity thing
-					Render::RawQuads("ammoBorder.png", v_r_reloadBox); // render!
-
-					pos = Vec2f(15,getScreenHeight() - 68); // positions for the GUI
-					GUI::DrawText(clip+"/"+total, pos, eatUrGreens);
-
-					pos = Vec2f(15,getScreenHeight() - 58);
-
-					if (b.get_bool("doReload")) 
-					{
-						GUI::DrawText("Reloading...", pos, eatUrGreens);
-					} 
-					else if (clip == 0 && total > 0 && !b.get_bool("beginReload")) 
-					{
-						GUI::DrawText("Press R to \nreload or \nshoot again!", pos, eatUrGreens);
-					} 
-					else if (clip == 0 && total == 0) 
-					{
-						GUI::DrawText("No more \nammo, find \nanother \nweapon!", pos, eatUrGreens);
-					}
-				}
-			}
-			else // We might not be holding a gun, so lets clear the box
-			{
-				if (v_r_reloadBox.length() > 0)
-				{
-					v_r_reloadBox.clear();
+					GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), pos - Vec2f(10,0));
+					GUI::DrawIcon(needs defining, 3, Vec2f(16, 16), pos); //ammo blob
 				}
 			}
 		}
