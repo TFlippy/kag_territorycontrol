@@ -13,6 +13,7 @@ void onInit(CBlob@ this)
 	this.Tag("weapon");
 
 	this.set_u8("timer", 0);
+	this.set_string("ammoBlob", "mat_mithril");
 
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
 	if (ap !is null)
@@ -51,7 +52,7 @@ void onTick(CBlob@ this)
 
 			const bool lmb = holder.isKeyPressed(key_action1) || point.isKeyPressed(key_action1);
 
-			if ((holder.isKeyJustPressed(key_action1) || point.isKeyJustPressed(key_action1)) && HasAmmo(holder, false))
+			if ((holder.isKeyJustPressed(key_action1) || point.isKeyJustPressed(key_action1)) && HasAmmo(holder, false, this.get_string("ammoBlob")))
 			{
 				this.getSprite().PlaySound("/RayGun_Start.ogg");
 			}
@@ -60,7 +61,7 @@ void onTick(CBlob@ this)
 				int ticks = this.get_u8("timer");
 				bool timer = ticks % mothrildelay == 0 ? true : false;
 
-				if (HasAmmo(holder, timer))
+				if (HasAmmo(holder, timer, this.get_string("ammoBlob")))
 				{
 					this.set_u8("timer", ticks + 1);
 
@@ -180,7 +181,7 @@ void onTick(CBlob@ this)
 	}
 }
 
-bool HasAmmo(CBlob@ this, bool take)
+bool HasAmmo(CBlob@ this, bool take, string ammoBlob)
 {
 	CInventory@ inv = this.getInventory();
 	int size = inv.getItemsCount();
@@ -190,7 +191,7 @@ bool HasAmmo(CBlob@ this, bool take)
 		if(item !is null)
 		{
 			string itemName = item.getName();
-			if (itemName == "mat_mithril")
+			if (itemName == ammoBlob)
 			{
 				u32 quantity = item.getQuantity();
 				bool has = true;

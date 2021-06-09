@@ -1,7 +1,7 @@
 #include "Hitters.as";
-#include "HittersTC.as";
 #include "MakeMat.as";
 #include "Knocked.as";
+#include "GunCommon.as";
 
 const f32 maxDistance = 128;
 const f32 damage = 1.00f;
@@ -11,7 +11,10 @@ void onInit(CBlob@ this)
 {
 	this.Tag("no shitty rotation reset");
 	this.Tag("dangerous");
-	
+	this.Tag("weapon");
+
+	this.set_string("ammoBlob", "mat_battery");
+
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
 	if (ap !is null)
 	{
@@ -19,19 +22,13 @@ void onInit(CBlob@ this)
 	}
 
 	CSprite@ sprite = this.getSprite();
-	CSpriteLayer@ zap = sprite.addSpriteLayer("zap", "Zapper_Lightning.png", 128, 12);
 
-	if(zap !is null)
+	CSpriteLayer@ zap = sprite.addSpriteLayer("zap", "Zapper_Lightning.png", 128, 12);
+	if (zap !is null)
 	{
 		Animation@ anim = zap.addAnimation("default", 1, false);
-		anim.AddFrame(0);
-		anim.AddFrame(1);
-		anim.AddFrame(2);
-		anim.AddFrame(3);
-		anim.AddFrame(4);
-		anim.AddFrame(5);
-		anim.AddFrame(6);
-		anim.AddFrame(7);
+		int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
+		anim.AddFrames(frames);
 		zap.SetRelativeZ(-1.0f);
 		zap.SetVisible(false);
 		zap.setRenderStyle(RenderStyle::additive);
@@ -46,13 +43,13 @@ void onTick(CBlob@ this)
 {
 	if (this.isAttached())
 	{
-		UpdateAngle(this);
-
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-		if(point is null){return;}
-		CBlob@ holder = point.getOccupied();
+		if (point is null) return;
 
+		CBlob@ holder = point.getOccupied();
 		if (holder is null) return;
+
+		this.setAngleDegrees(getAimAngle(this, holder));
 
 		if (getKnocked(holder) <= 0)
 		{
@@ -60,7 +57,7 @@ void onTick(CBlob@ this)
 
 			const bool lmb = holder.isKeyPressed(key_action1) || point.isKeyPressed(key_action1);
 
-			if (lmb && this.get_u32("nextShoot") <= getGameTime() && HasAmmo(holder, true))
+			if (lmb && this.get_u32("nextShoot") <= getGameTime() && HasAmmo(holder, true, this.get_string("ammoBlob")))
 			{
 				Vec2f aimDir = holder.getAimPos() - this.getPosition();
 				aimDir.Normalize();
@@ -68,7 +65,7 @@ void onTick(CBlob@ this)
 				Vec2f hitPos;
 				f32 length;
 				bool flip = this.isFacingLeft();
-				f32 angle =	this.getAngleDegrees();
+				f32 angle = this.getAngleDegrees();
 				Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
 				Vec2f startPos = this.getPosition();
 				Vec2f endPos = startPos + dir * maxDistance;
@@ -89,7 +86,7 @@ void onTick(CBlob@ this)
 							continue;
 						}
 
-						if(b.getName() == "methane")
+						if (b.getName() == "methane")
 						{
 							b.Tag("lit");
 							b.server_Die();
@@ -131,17 +128,17 @@ void onTick(CBlob@ this)
 	}
 }
 
-bool HasAmmo(CBlob@ this, bool take)
+bool HasAmmo(CBlob@ this, bool take, string ammoBlob)
 {
 	CInventory@ inv = this.getInventory();
 	int size = inv.getItemsCount();
-	for(int i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		CBlob@ item = inv.getItem(i);
-		if( !(item is null) )
+		if (item !is null)
 		{
 			string itemName = item.getName();
-			if(itemName == "mat_battery")
+			if (itemName == ammoBlob)
 			{
 				u32 quantity = item.getQuantity();
 				bool has = true;
@@ -162,30 +159,6 @@ bool HasAmmo(CBlob@ this, bool take)
 		}
 	}
 	return false;
-}
-
-void UpdateAngle(CBlob@ this)
-{
-	AttachmentPoint@ point=this.getAttachments().getAttachmentPointByName("PICKUP");
-	if(point is null) return;
-
-	CBlob@ holder=point.getOccupied();
-
-	if(holder is null) return;
-
-	Vec2f aimpos=holder.getAimPos();
-	Vec2f pos=holder.getPosition();
-
-	Vec2f aim_vec =(pos - aimpos);
-	aim_vec.Normalize();
-
-	f32 mouseAngle=aim_vec.getAngleDegrees();
-	if(!holder.isFacingLeft()) mouseAngle += 180;
-
-	this.setAngleDegrees(-mouseAngle);
-
-	point.offset.x=0 +(aim_vec.x*2*(holder.isFacingLeft() ? 1.0f : -1.0f));
-	point.offset.y=-(aim_vec.y);
 }
 
 void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)

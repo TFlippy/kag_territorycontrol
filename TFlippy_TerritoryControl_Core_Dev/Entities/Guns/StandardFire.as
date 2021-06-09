@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 //
-//  StandardFire.as - Vamist
+//  StandardFire.as - Vamist & Gingerbeard
 //
 //  Handles client side activities
 //
@@ -50,7 +50,7 @@ void onInit(CBlob@ this)
 			if (this.hasTag("CustomSoundLoop"))
 			{
 				sprite.SetEmitSound(settings.FIRE_SOUND);
-				sprite.SetEmitSoundVolume(2.0f);
+				sprite.SetEmitSoundVolume(this.exists("CustomShootVolume") ? this.get_f32("CustomShootVolume") : 2.0f);
 				sprite.SetEmitSoundPaused(true);
 			}
 				if (!this.exists("CustomFlash") || (this.exists("CustomFlash") && !this.get_string("CustomFlash").empty()))
@@ -104,13 +104,14 @@ void onTick(CBlob@ this)
 			f32 oAngle = (aimangle % 360) + 180;
 
 			// Keys
-			const bool pressing_shoot = this.hasTag("CustomSemiAuto") ?
+			const bool pressing_shoot = holder.isAttached() ? false : this.hasTag("CustomSemiAuto") ?
 			           point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
 			           point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
 			
 			// Sound
 			const f32 reload_pitch = this.exists("CustomReloadPitch") ? this.get_f32("CustomReloadPitch") : 1.0f;
 			const f32 cycle_pitch  = this.exists("CustomCyclePitch")  ? this.get_f32("CustomCyclePitch")  : 1.0f;
+			const f32 shoot_volume = this.exists("CustomShootVolume") ? this.get_f32("CustomShootVolume") : 2.0f;
 
 			// Loop firing sound
 			if (this.hasTag("CustomSoundLoop"))
@@ -191,8 +192,8 @@ void onTick(CBlob@ this)
 					if (this.exists("ProjBlob"))
 					{
 						shootProj(this, aimangle);
-						//Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-						//coil.onFakeTick();
+						Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+						coil.onFakeTick();
 					}
 					else
 					{
@@ -200,7 +201,7 @@ void onTick(CBlob@ this)
 					}
 
 					// Shooting sound
-					if (!this.hasTag("CustomSoundLoop")) sprite.PlaySound(settings.FIRE_SOUND, 2.0f);
+					if (!this.hasTag("CustomSoundLoop")) sprite.PlaySound(settings.FIRE_SOUND, shoot_volume);
 
 					// Gun 'kickback' anim
 					this.set_f32("gun_recoil_current", this.exists("CustomGunRecoil") ? this.get_u32("CustomGunRecoil") : 3);

@@ -21,11 +21,11 @@ void onInit(CBlob@ this)
 	settings.B_TYPE = HittersTC::plasma; //Type of bullet the gun shoots | hitter
 
 	//Recoil
-	settings.G_RECOIL = -7; //0 is default, adds recoil aiming up
+	settings.G_RECOIL = -14; //0 is default, adds recoil aiming up
 	settings.G_RANDOMX = true; //Should we randomly move x
 	settings.G_RANDOMY = false; //Should we randomly move y, it ignores g_recoil
-	settings.G_RECOILT = 4; //How long should recoil last, 10 is default, 30 = 1 second (like ticks)
-	settings.G_BACK_T = 3; //Should we recoil the arm back time? (aim goes up, then back down with this, if > 0, how long should it last)
+	settings.G_RECOILT = 7; //How long should recoil last, 10 is default, 30 = 1 second (like ticks)
+	settings.G_BACK_T = 2; //Should we recoil the arm back time? (aim goes up, then back down with this, if > 0, how long should it last)
 
 	//Sound
 	settings.FIRE_SOUND = "ChargeRifle_Shoot.ogg"; //Sound when shooting
@@ -38,5 +38,7 @@ void onInit(CBlob@ this)
 
 	//Custom
 	this.set_u8("CustomKnock", 10);
+	this.set_string("CustomBullet", "Bullet_Plasma.png");
+	this.set_f32("CustomBulletLength", 6.0f);
 	this.set_string("CustomSoundEmpty", "");
 }

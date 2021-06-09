@@ -1,52 +1,54 @@
-#include "Hitters.as";
-#include "HittersTC.as";
-#include "CommonGun.as";
-
-Vec2f raycast_offset = Vec2f(0.0f, -2.0f);
+#include "GunCommon.as";
 
 void onInit(CBlob@ this)
 {
-	GunInitRaycast
-	(
-		this,
-		true,				//If true, gun will be fully automatic and players will be able to just hold the fire button
-		4.00f,				//Weapon damage / projectile blob name
-		1000.0f,				//Weapon raycast range
-		3,					//Weapon fire delay, in ticks
-		12,					//Weapon clip size
-		1.00f,				//Ammo usage factor, completely ignore for now
-		60,					//Weapon reload time
-		false,				//If true, gun will be reloaded like a shotgun
-		0,					//For shotguns: Additional delay to reload end
-		1,					// Bullet count - for shotguns
-		0.0f,				// Bullet Jitter
-		"mat_rifleammo",	//Ammo item blob name
-		false,				//If true, firing sound will be looped until player stops firing
-		SoundInfo("Callahan_Shoot", 1, 1.0f, 1.0f),	//Sound to play when firing
-		SoundInfo("SniperReload", 1, 1.0f, 1.0f),//Sound to play when reloading
-		SoundInfo(),							//Sound to play some time after firing
-		0,					//Delay for the delayed sound, in ticks
-		raycast_offset	//Visual offset for raycast bullets
-	);
+	GunSettings settings = GunSettings();
 
-	this.set_u8("gun_hitter", HittersTC::bullet_high_cal);
+	//General
+	//settings.CLIP = 0; //Amount of ammunition in the gun at creation
+	settings.TOTAL = 12; //Max amount of ammo that can be in a clip
+	settings.FIRE_INTERVAL = 3; //Time in between shots
+	settings.RELOAD_TIME = 60; //Time it takes to reload (in ticks)
+	settings.AMMO_BLOB = "mat_rifleammo"; //Ammunition the gun takes
+
+	//Bullet
+	//settings.B_PER_SHOT = 1; //Shots per bullet | CHANGE B_SPREAD, otherwise both bullets will come out together
+	settings.B_SPREAD = 1; //the higher the value, the more 'uncontrollable' bullets get
+	settings.B_GRAV = Vec2f(0, 0.001); //Bullet gravity drop
+	settings.B_SPEED = 65; //Bullet speed, STRONGLY AFFECTED/EFFECTS B_GRAV
+	settings.B_TTL = 15; //TTL = 'Time To Live' which determines the time the bullet lasts before despawning
+	settings.B_DAMAGE = 4.0f; //1 is 1 heart
+	settings.B_TYPE = HittersTC::bullet_high_cal; //Type of bullet the gun shoots | hitter
+
+	//Recoil
+	settings.G_RECOIL = -7; //0 is default, adds recoil aiming up
+	settings.G_RANDOMX = true; //Should we randomly move x
+	settings.G_RANDOMY = false; //Should we randomly move y, it ignores g_recoil
+	settings.G_RECOILT = 4; //How long should recoil last, 10 is default, 30 = 1 second (like ticks)
+	settings.G_BACK_T = 3; //Should we recoil the arm back time? (aim goes up, then back down with this, if > 0, how long should it last)
+
+	//Sound
+	settings.FIRE_SOUND = "Callahan_Shoot.ogg"; //Sound when shooting
+	settings.RELOAD_SOUND = "SniperReload.ogg"; //Sound when reloading
+
+	//Offset
+	settings.MUZZLE_OFFSET = Vec2f(-23, -1); //Where the muzzle flash appears
+
+	this.set("gun_settings", @settings);
+
+	//Custom
 	this.set_f32("scope_zoom", 0.40f);
-	
-	CSprite@ sprite = this.getSprite();
-	CSpriteLayer@ laser = sprite.addSpriteLayer("laser", "Laser.png", 32, 1);
-	
+
+	CSpriteLayer@ laser = this.getSprite().addSpriteLayer("laser", "Laser.png", 32, 1);
 	if (laser !is null)
 	{
-		Animation@ anim = laser.addAnimation("default", 0, false);
-		anim.AddFrame(0);
 		laser.SetRelativeZ(-1.0f);
 		laser.SetVisible(false);
 		laser.setRenderStyle(RenderStyle::additive);
 		laser.SetOffset(Vec2f(-15.0f, 0.5f));
 	}
-	
+
 	this.set_f32("scope_zoom", 0.35f);
-	this.getShape().SetOffset(Vec2f(3, -1));
 }
 
 const f32 radius = 24.00f;
@@ -55,21 +57,19 @@ void onTick(CBlob@ this)
 {
 	if (this.isAttached())
 	{
-		GunTick(this);
-		
 		// Shitcode ahead
 		CControls@ controls = getControls();
 		Driver@ driver = getDriver();
+
 		CSpriteLayer@ laser = this.getSprite().getSpriteLayer("laser");
-		
 		if (laser is null) return;
-		
+ 
 		Vec2f wpos = controls.getMouseWorldPos();
 		const u8 myTeam = this.getTeamNum();
-		
+ 
 		f32 dist = 1337.00f;
 		u16 closest_id = 0;
-		
+ 
 		CBlob@[] blobs;
 		if (this.getMap().getBlobsInRadius(wpos, radius, @blobs))
 		{
@@ -77,30 +77,31 @@ void onTick(CBlob@ this)
 			{
 				CBlob@ b = blobs[i];
 				f32 d = (b.getPosition() - wpos).getLength();
-				
-				if (d < dist && b.getTeamNum() != myTeam && b.isCollidable() && (b.hasTag("flesh") || b.hasTag("npc") || b.hasTag("vehicle")) && !b.hasTag("invincible"))
+ 
+				if (d < dist && b.getTeamNum() != myTeam && b.isCollidable() && !b.hasTag("invincible") && !b.hasTag("dead") &&
+				   (b.hasTag("player") || b.hasTag("npc") || b.hasTag("human") || b.hasTag("vehicle")))
 				{
 					closest_id = b.getNetworkID();
 					dist = d;
 				}
 			}
-			
+ 
 			// print("" + closest_id + " vs " +  this.get_u16("callahan_target"));
-						
+ 
 			if (closest_id > 0)
 			{
 				CBlob@ blob = getBlobByNetworkID(closest_id);
-				
+ 
 				Vec2f bpos = blob.getPosition();
 				// Vec2f spos = driver.getScreenPosFromWorldPos(bpos);
 				// Vec2f dir = (controls.getMouseScreenPos() - spos);
-				
+ 
 				Vec2f dir = (bpos - this.getPosition());
-			
+ 
 				f32 factor = dist / radius;
-			
+ 
 				AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-				if(point !is null)
+				if (point !is null)
 				{
 					CBlob@ holder = point.getOccupied();
 					if (holder !is null)
@@ -110,7 +111,7 @@ void onTick(CBlob@ this)
 						{
 							Vec2f spos = driver.getScreenPosFromWorldPos(bpos);
 							Vec2f sdir = (controls.getMouseScreenPos() - spos);
-						
+ 
 							controls.setMousePosition(controls.getMouseScreenPos() - (sdir * 0.75f));
 						}
 					}
@@ -120,13 +121,13 @@ void onTick(CBlob@ this)
 				{
 					Vec2f hitPos;
 					bool flip = this.isFacingLeft();
-					
+ 
 					Vec2f dir = bpos - this.getPosition();
 					f32 len = dir.Length();
 					dir.Normalize();
-					
+ 
 					f32 length = (bpos - this.getPosition()).Length();
-					
+ 
 					laser.ResetTransform();
 					laser.ScaleBy(Vec2f(length / 32.0f - 0.4, 1.0f));
 					laser.TranslateBy(Vec2f(length / 2 - 7, 0.0f));
@@ -147,7 +148,7 @@ void onTick(CBlob@ this)
 		{
 			laser.SetVisible(false);
 		}
-		
+ 
 		if (closest_id != this.get_u16("callahan_target"))
 		{
 			if (closest_id > 0)
@@ -159,7 +160,7 @@ void onTick(CBlob@ this)
 				this.getSprite().PlaySound("Callahan_Lost", 0.50f, 1.00);
 			}
 		}
-		
+ 
 		this.set_u16("callahan_target", closest_id);
 	}
 }
