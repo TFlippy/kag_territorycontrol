@@ -11,14 +11,13 @@ void onInit(CBlob@ this)
 {
 	this.Tag("no shitty rotation reset");
 	this.Tag("dangerous");
+	this.Tag("weapon");
 
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
 	if (ap !is null)
 	{
 		ap.SetKeysToTake(key_action1);
 	}
-
-	CSprite@ sprite = this.getSprite();
 
 	this.getCurrentScript().tickFrequency = 1;
 	this.getCurrentScript().runFlags |= Script::tick_attached;

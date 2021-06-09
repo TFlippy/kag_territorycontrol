@@ -38,6 +38,7 @@ void onInit(CBlob@ this)
 
 	//Custom
 	this.set_u8("CustomKnock", 20);
+	this.set_f32("CustomBulletLength", 14.0f);
 	this.set_f32("scope_zoom", 0.40f);
 	this.Tag("heavy weight");
 }

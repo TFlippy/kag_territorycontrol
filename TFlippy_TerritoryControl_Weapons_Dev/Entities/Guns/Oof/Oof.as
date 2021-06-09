@@ -11,9 +11,11 @@ void onInit(CBlob@ this)
 {
 	this.Tag("no shitty rotation reset");
 	this.Tag("no explosion particles");
-
 	this.Tag("heavy weight");
 	this.Tag("weapon");
+
+	this.set_string("ammoBlob", "mat_antimatter");
+
 	this.getShape().SetOffset(Vec2f(4, 0));
 
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
@@ -55,7 +57,7 @@ void onTick(CBlob@ this)
 			CSprite@ sprite = this.getSprite();
 			const bool lmb = holder.isKeyJustPressed(key_action1) || point.isKeyJustPressed(key_action1);
 
-			if (lmb && this.get_u32("nextShoot") <= getGameTime() && HasAmmo(holder, true))
+			if (lmb && this.get_u32("nextShoot") <= getGameTime() && HasAmmo(holder, true, this.get_string("ammoBlob")))
 			{
 				CMap@ map = getMap();
 
@@ -80,7 +82,7 @@ void onTick(CBlob@ this)
 						if (hitInfos[i].blob !is null)
 						{
 							CBlob@ blob = hitInfos[i].blob;
-							print("" + hitInfos[i].distance);
+							//print("" + hitInfos[i].distance);
 
 							if (hitInfos[i].distance > 64 && blob.getTeamNum() != this.getTeamNum() && blob.isCollidable() && !blob.hasTag("invincible")) 
 							{
@@ -151,7 +153,7 @@ void onTick(CBlob@ this)
 	}
 }
 
-bool HasAmmo(CBlob@ this, bool take)
+bool HasAmmo(CBlob@ this, bool take, string ammoBlob)
 {
 	CInventory@ inv = this.getInventory();
 	int size = inv.getItemsCount();
@@ -161,7 +163,7 @@ bool HasAmmo(CBlob@ this, bool take)
 		if (item !is null)
 		{
 			string itemName = item.getName();
-			if (itemName == "mat_antimatter")
+			if (itemName == ammoBlob)
 			{
 				u32 quantity = item.getQuantity();
 				bool has = quantity >= 1;

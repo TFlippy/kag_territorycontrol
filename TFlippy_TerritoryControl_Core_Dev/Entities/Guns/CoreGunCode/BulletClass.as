@@ -23,6 +23,58 @@ Driver@ PDriver = getDriver();
 const int ScreenX = getDriver().getScreenWidth();
 const int ScreenY = getDriver().getScreenWidth();
 
+namespace BulletRender
+{
+	Vertex[] v_r_bullet;
+	Vertex[] v_r_fade;
+	Vertex[] v_r_reloadBox;
+	string[] textureNames;
+
+	void Push(Vec2f topLeft, Vec2f topRight, Vec2f botRight, Vec2f botLeft, SColor color, string bulletTexture)
+	{
+		v_r_bullet.push_back(Vertex(topLeft.x,  topLeft.y,  0, 0, 0, color)); // top left
+		v_r_bullet.push_back(Vertex(topRight.x, topRight.y, 0, 1, 0, color)); // top right
+		v_r_bullet.push_back(Vertex(botRight.x, botRight.y, 0, 1, 1, color)); // bot right
+		v_r_bullet.push_back(Vertex(botLeft.x,  botLeft.y,  0, 0, 1, color)); // bot left
+
+		textureNames.push_back(bulletTexture);
+	}
+
+	void Erase(int index)
+	{
+		index *= 4;
+		for (int i = 0; i < 4; i++)
+		{
+			v_r_bullet.erase(index);
+		}
+	}
+
+	void Reset()
+	{
+		//v_r_bullet.clear();
+		//v_r_fade.clear();
+	}
+
+	void Draw()
+	{
+		v_r_bullet.clear();
+		textureNames.clear();
+		BulletGrouped.FillArray(); // Fill up v_r_bullets
+
+		for (int i = 0; i < v_r_bullet.length; i+= 4)
+		{
+			Vertex[] bulletVertex = {v_r_bullet[i], v_r_bullet[i+1], v_r_bullet[i+2], v_r_bullet[i+3]};
+			string texture = textureNames[i/4];
+			Render::RawQuads(texture, bulletVertex);
+		}
+
+		if (g_debug == 0) // useful for lerp testing
+		{
+			v_r_bullet.clear();
+		}
+	}
+}
+
 class BulletObj
 {
 	CBlob@ hoomanShooter;
@@ -46,7 +98,6 @@ class BulletObj
 
 	BulletObj(CBlob@ humanBlob, CBlob@ gun, f32 angle, Vec2f pos)
 	{
-
 		@hoomanShooter = humanBlob;
 		@gunBlob = gun;
 
@@ -126,7 +177,7 @@ class BulletObj
 								}
 								if (isServer())
 								{
-									hoomanShooter.server_Hit(blob, CurrentPos, Vec2f(0, 0), damage, ammotype); 
+									hoomanShooter.server_Hit(blob, CurrentPos, CurrentVelocity, damage, ammotype); 
 								}
 							}
 						}
@@ -147,7 +198,8 @@ class BulletObj
 								if (isServer())
 								{
 									if (blob.hasTag("door")) damage *= 1.5f;
-									hoomanShooter.server_Hit(blob, CurrentPos, Vec2f(0, 0), damage, ammotype);
+									hoomanShooter.server_Hit(blob, CurrentPos, CurrentVelocity / 2, damage, ammotype);
+									gunBlob.server_Hit(blob, CurrentPos, CurrentVelocity / 2, 0.0f, ammotype, false); //For calling onHitBlob
 
 									if (blob.hasTag("flesh") && gunBlob.exists("CustomKnock"))
 									{
@@ -237,10 +289,13 @@ class BulletObj
 		Vec2f newPos = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
 		LastLerpedPos = newPos;
 
-		Vec2f TopLeft  = Vec2f(newPos.x -0.7, newPos.y-3);
-		Vec2f TopRight = Vec2f(newPos.x -0.7, newPos.y+3);
-		Vec2f BotLeft  = Vec2f(newPos.x +0.7, newPos.y-3);
-		Vec2f BotRight = Vec2f(newPos.x +0.7, newPos.y+3);
+		const f32 B_LENGTH = gunBlob.exists("CustomBulletLength") ? gunBlob.get_f32("CustomBulletLength") : 3.0f;
+		const f32 B_WIDTH  = gunBlob.exists("CustomBulletWidth")  ? gunBlob.get_f32("CustomBulletWidth")  : 0.7f;
+
+		Vec2f TopLeft  = Vec2f(newPos.x - B_WIDTH, newPos.y - B_LENGTH);
+		Vec2f TopRight = Vec2f(newPos.x - B_WIDTH, newPos.y + B_LENGTH);
+		Vec2f BotLeft  = Vec2f(newPos.x + B_WIDTH, newPos.y - B_LENGTH);
+		Vec2f BotRight = Vec2f(newPos.x + B_WIDTH, newPos.y + B_LENGTH);
 
 		// Rotate the sprite to be in the correct pos
 		f32 angle = Angle - 90;
@@ -258,11 +313,9 @@ class BulletObj
 		{
 			//Fade.JoinQueue(newPos,BotRight);
 		}*/
+		string bulletTexture = gunBlob.exists("CustomBullet") ? gunBlob.get_string("CustomBullet") : "Bullet.png";
 
-		v_r_bullet.push_back(Vertex(TopLeft.x,  TopLeft.y,      0, 0, 0, trueWhite)); // top left
-		v_r_bullet.push_back(Vertex(TopRight.x, TopRight.y,     0, 1, 0, trueWhite)); // top right
-		v_r_bullet.push_back(Vertex(BotRight.x, BotRight.y,     0, 1, 1, trueWhite));   // bot right
-		v_r_bullet.push_back(Vertex(BotLeft.x,  BotLeft.y,      0, 0, 1, trueWhite));   // bot left
+		BulletRender::Push(TopLeft, TopRight, BotRight, BotLeft, trueWhite, bulletTexture);
 	}
 }
 
@@ -283,6 +336,7 @@ class BulletHolder
 			if (bullet.onFakeTick(map))
 			{
 				bullets.erase(a);
+				//BulletRender::Erase(a);
 				a--;
 			}
 		}

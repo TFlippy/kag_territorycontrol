@@ -39,6 +39,7 @@ void onInit(CBlob@ this)
 	//Custom
 	this.set_f32("scope_zoom", 0.35f);
 	this.set_u8("CustomKnock", 7);
+	this.Tag("CustomSemiAuto");
 	this.Tag("medium weight");
 
 	CSprite@ sprite = this.getSprite();

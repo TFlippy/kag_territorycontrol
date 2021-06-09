@@ -1,5 +1,7 @@
 //for use with DefaultActorHUD.as based HUDs
 
+#include "GunCommon.as";
+
 Vec2f getActorHUDStartPosition(CBlob@ blob, const u8 bar_width_in_slots)
 {
 	f32 width = bar_width_in_slots * 32.0f;
@@ -25,7 +27,7 @@ void DrawInventoryOnHUD(CBlob@ this, Vec2f tl, Vec2f hudPos = Vec2f(0, 0))
 			if (itemsToShow[k].getInventoryName() == name)
 			{
 				itemAmounts[k] = itemAmounts[k] + item.getQuantity();
-				doContinue=true;
+				doContinue = true;
 				break;
 			}
 		}
@@ -42,13 +44,31 @@ void DrawInventoryOnHUD(CBlob@ this, Vec2f tl, Vec2f hudPos = Vec2f(0, 0))
 		CBlob@ item = itemsToShow[i];
 		string itemname = item.getInventoryName();
 		string jitem = "GUI/jitem.png";
+		int frame = 0;
 		Vec2f jdim = Vec2f(16, 16);
 		Vec2f adjust = Vec2f(0, 2);
 		const int quantity = itemAmounts[i];
 
+		//Change jslot frame if it matches as ammunition for a held gun
+		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if (point !is null)
+		{
+			CBlob@ gun = point.getOccupied();
+			if (gun !is null)
+			{
+				GunSettings@ settings;
+				gun.get("gun_settings", @settings);
+
+				if (settings !is null && settings.AMMO_BLOB == item.getName() || gun.get_string("ammoBlob") == item.getName())
+				{
+					frame = 1;
+				}
+			}
+		}
+
 		//vertical belt
 		Vec2f itempos = Vec2f(10, 54 + i * 46) + hudPos;
-		GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), Vec2f(2, 46 + i * 46) + hudPos);
+		GUI::DrawIcon("GUI/jslot.png", frame, Vec2f(32, 32), Vec2f(2, 46 + i * 46) + hudPos);
 
 		int teamnum = this.getTeamNum();
 		if (teamnum > 6) teamnum = 7;
@@ -62,10 +82,14 @@ void DrawInventoryOnHUD(CBlob@ this, Vec2f tl, Vec2f hudPos = Vec2f(0, 0))
 
 		if (quantity != 1)
 		{
-			if (quantity < 10) { GUI::SetFont("menu"); GUI::DrawText(""+quantity, itempos +Vec2f(22, 18), col); }
-			else if (quantity < 100) { GUI::SetFont("menu"); GUI::DrawText("" + quantity, itempos + Vec2f(14, 18), col); }
-			else if (quantity < 1000) { GUI::SetFont("menu"); GUI::DrawText("" + quantity, itempos + Vec2f(6, 18), col); }
-			else { GUI::SetFont("menu"); GUI::DrawText(""+quantity, itempos +Vec2f(-2,18), col ); }
+			float xOffset;
+			if (quantity < 10) xOffset = 22;
+			else if (quantity < 100) xOffset = 14;
+			else if (quantity < 1000) xOffset = 6;
+			else xOffset = -2;
+
+			GUI::SetFont("menu");
+			GUI::DrawText(""+quantity, itempos +Vec2f(xOffset, 18), col);
 		}
 	}
 }

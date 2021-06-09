@@ -53,6 +53,9 @@ class GunSettings
 	///
 	/// this.set_f32("CustomReloadPitch", float pitch); //Changes Reload sound pitch
 	/// this.set_f32("CustomCyclePitch", float pitch); //Changes Cycle sound pitch
+	/// this.set_f32("CustomShootVolume", float volume); //Changes shooting sound volume
+	/// this.set_f32("CustomBulletLength", float length); //Changes the length of the bullet sprite
+	/// this.set_f32("CustomBulletWidth", float width); //Changes the width of the bullet sprite
 	///
 	/// this.set_u32("CustomCoinFlesh", uint coins) //Coins on hitting flesh (set as players)
 	/// this.set_u32("CustomCoinObject", uint coins) //Coins on hitting objects (set as vehicles)

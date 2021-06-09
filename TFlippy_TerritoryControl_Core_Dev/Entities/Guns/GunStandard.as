@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 //
-//  GunStandard.as - Vamist
+//  GunStandard.as - Vamist & Gingerbeard
 //
 //  Handles shooting bullets, when to reload, ammo
 //  count and despawning
@@ -103,9 +103,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					if (this.hasTag("CustomShotgunReload"))
 					{
 						//Shotgun reload
-						if (quantity == 1) item.server_Die();
-						else item.server_SetQuantity(Maths::Max(quantity - 1, 0));
-						quantity--;
+						if (holder.getPlayer() !is null && !this.hasTag("chicken"))
+						{
+							if (quantity == 1) item.server_Die();
+							else item.server_SetQuantity(Maths::Max(quantity - 1, 0));
+							quantity--;
+						}
 
 						this.add_u8("clip", 1);
 						if (clip < total || quantity == 1) this.set_bool("beginReload", true); //loop
@@ -116,7 +119,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					{
 						//Normal reload
 						s32 taken = Maths::Min(quantity, Maths::Clamp(total - clip, 0, total));
-						item.server_SetQuantity(Maths::Max(quantity - taken, 0));
+						if (holder.getPlayer() !is null && !this.hasTag("chicken"))
+						{
+							item.server_SetQuantity(Maths::Max(quantity - taken, 0));
+						}
 						this.add_u8("clip", taken);
 					}
 				}
