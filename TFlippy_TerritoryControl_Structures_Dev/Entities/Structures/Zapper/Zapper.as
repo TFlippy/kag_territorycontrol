@@ -1,4 +1,3 @@
-
 #include "Hitters.as";
 #include "HittersTC.as";
 #include "Knocked.as";
@@ -10,19 +9,15 @@ const u32 delay = 90;
 
 void onInit(CBlob@ this)
 {
-	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 0);
-	this.set_u8("upkeep cost", 1);
-	
 	this.Tag("builder always hit");
 	this.Tag("medium weight");
 
 	this.set_f32("pickup_priority", 16.00f);
 	this.getShape().SetRotationsAllowed(false);
-	
+
 	this.getCurrentScript().tickFrequency = 3;
 	this.getCurrentScript().runFlags |= Script::tick_not_ininventory | Script::tick_not_attached;
-	
+
 	this.set_bool("security_state", true);
 }
 
@@ -32,25 +27,24 @@ void onInit(CSprite@ this)
 	this.SetEmitSoundVolume(0.0f);
 	this.SetEmitSoundSpeed(0.0f);
 	this.SetEmitSoundPaused(false);
-	
+
 	CSpriteLayer@ zap = this.addSpriteLayer("zap", "Zapper_Lightning.png", 128, 12);
-	
-	if(zap !is null)
+
+	if (zap !is null)
 	{
 		Animation@ anim = zap.addAnimation("default", 1, false);
-		anim.AddFrame(0);
-		anim.AddFrame(1);
-		anim.AddFrame(2);
-		anim.AddFrame(3);
-		anim.AddFrame(4);
-		anim.AddFrame(5);
-		anim.AddFrame(6);
-		anim.AddFrame(7);
+		int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
+		anim.AddFrames(frames);
 		zap.SetRelativeZ(-1.0f);
 		zap.SetVisible(false);
 		zap.setRenderStyle(RenderStyle::additive);
 		zap.SetOffset(Vec2f(0, 0));
 	}
+}
+
+bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
+{
+	return blob.getShape().isStatic() && blob.isCollidable();
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -71,13 +65,13 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 u8 GetFuel(CBlob@ this)
 {
 	if (this.getTeamNum() == 250) return 50;
-	
+
 	CInventory@ inv = this.getInventory();
 	if (inv != null)
 	{
 		if (inv.getItem(0) != null) return inv.getItem(0).getQuantity();
 	}
-	
+
 	return 0;
 }
 
@@ -98,13 +92,13 @@ void onTick(CBlob@ this)
 	{
 		u8 fuel = GetFuel(this);
 		f32 modifier = f32(fuel) / 50.0f;
-		
+
 		this.getSprite().SetEmitSoundVolume(0.45f);
 		this.getSprite().SetEmitSoundSpeed(0.75f + modifier * 0.35f);
-		
+
 		if (this.get_u32("next zap") > getGameTime()) return;
 		if (fuel == 0) return;
-		
+
 		CMap@ map = getMap();
 		CBlob@[] blobsInRadius;
 		if (this.getMap().getBlobsInRadius(this.getPosition(), radius, @blobsInRadius))
@@ -112,12 +106,12 @@ void onTick(CBlob@ this)
 			int index = -1;
 			f32 s_dist = 1337;
 			u8 myTeam = this.getTeamNum();
-		
+
 			for (uint i = 0; i < blobsInRadius.length; i++)
 			{
 				CBlob@ b = blobsInRadius[i];
 				u8 team = b.getTeamNum();
-				
+
 				if (myTeam == 250 && b.get_u8("deity_id") == Deity::foghorn) continue;
 				if (team != myTeam && (b.hasTag("flesh") && !b.hasTag("dead") || b.hasTag("ruins")) && !map.rayCastSolid(this.getPosition(), b.getPosition()))
 				{
@@ -129,19 +123,21 @@ void onTick(CBlob@ this)
 					}
 				}
 			}
-			
+
 			if (index < 0) return;
-			
+
 			CBlob@ target = blobsInRadius[index];
 			CPlayer@ host = this.getDamageOwnerPlayer();
-			if (target !is null) {
+			if (target !is null) 
+			{
 				CPlayer@ _target = target.getPlayer();
-				if (host !is null && _target is host) { //recognizes host and changes team
+				if (host !is null && _target is host) //recognizes host and changes team
+				{
 					this.server_setTeamNum(_target.getTeamNum());
 					return;
 				}
 			}
-			Zap(this, target);	
+			Zap(this, target);
 		}
 	}
 }
@@ -156,7 +152,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("security_set_state"))
 	{
 		bool state = params.read_bool();
-		
+
 		CSprite@ sprite = this.getSprite();
 		sprite.SetFrameIndex(state ? 0 : 1);
 		sprite.SetEmitSoundPaused(!state);
@@ -170,11 +166,11 @@ void Zap(CBlob@ this, CBlob@ target)
 	if (this.get_u32("next zap") > getGameTime()) return;
 
 	int fuel = GetFuel(this);
-	
+
 	Vec2f dir = target.getPosition() - this.getPosition();
 	f32 dist = Maths::Abs(dir.Length());
 	dir.Normalize();
-	
+
 	SetKnocked(target, 60);
 	this.set_u32("next zap", getGameTime() + delay);
 
@@ -183,11 +179,11 @@ void Zap(CBlob@ this, CBlob@ target)
 		this.server_Hit(target, target.getPosition(), Vec2f(0, 0), damage, HittersTC::electric, true);
 		SetFuel(this, Maths::Max(0, fuel - 5));
 	}
-	
+
 	if (isClient())
-	{				
+	{
 		bool flip = this.isFacingLeft();
-	
+
 		CSpriteLayer@ zap = this.getSprite().getSpriteLayer("zap");
 		if (zap !is null)
 		{
@@ -198,7 +194,7 @@ void Zap(CBlob@ this, CBlob@ target)
 			zap.RotateBy(-dir.Angle(), Vec2f());
 			zap.SetVisible(true);
 		}
-		
+
 		this.getSprite().PlaySound("Zapper_Zap" + XORRandom(3), 1.00f, 1.00f);
 	}
 }

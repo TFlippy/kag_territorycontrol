@@ -15,11 +15,10 @@ void onInit(CBlob@ this)
 	              Vec2f(0.0f, 0.0f), // jump out velocity
 	              false  // inventory access
 	             );
+
 	VehicleInfo@ v;
-	if (!this.get("VehicleInfo", @v))
-	{
-		return;
-	}
+	if (!this.get("VehicleInfo", @v)) return;
+
 	Vehicle_SetupWeapon(this, v,
 	                    90, // fire delay (ticks)
 	                    1, // fire bullets amount
@@ -30,31 +29,10 @@ void onInit(CBlob@ this)
 	                    "EmptyFire" // empty fire sound
 	                   );
 	v.charge = 400;
-	// init arm + cage sprites
-	CSprite@ sprite = this.getSprite();
-	CSpriteLayer@ arm = sprite.addSpriteLayer("arm", "Howitzer_Cannon.png", 32, 16);
+	// init arm
 
-	if (arm !is null)
-	{
-		{
-			Animation@ anim = arm.addAnimation("default", 0, true);
-			int[] frames = {0};
-			anim.AddFrames(frames);
-		}
-	
-		{
-			Animation@ anim = arm.addAnimation("shoot", 1, false);
-			int[] frames = {0, 1, 2, 3, 2, 1, 0};
-			anim.AddFrames(frames);
-		}
-		
-		arm.SetOffset(arm_offset);
-	}
-	
 	this.getShape().SetRotationsAllowed(false);
 	this.set_string("autograb blob", "mat_howitzershell");
-
-	sprite.SetZ(-10.0f);
 
 	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 
@@ -69,14 +47,32 @@ void onInit(CBlob@ this)
 	}
 }
 
+void onInit(CSprite@ this)
+{
+	CSpriteLayer@ arm = this.addSpriteLayer("arm", "Howitzer_Cannon.png", 32, 16);
+	if (arm !is null)
+	{
+		{
+			Animation@ anim = arm.addAnimation("default", 0, true);
+			int[] frames = {0};
+			anim.AddFrames(frames);
+		}
+		{
+			Animation@ anim = arm.addAnimation("shoot", 1, false);
+			int[] frames = {0, 1, 2, 3, 2, 1, 0};
+			anim.AddFrames(frames);
+		}
+
+		arm.SetOffset(arm_offset);
+	}
+
+	this.SetZ(-10.0f);
+}
+
 void onTick(CSprite@ this)
 {
 	CSpriteLayer@ arm = this.getSpriteLayer("arm");
-	
-	if (arm.isAnimationEnded())
-	{
-		arm.SetAnimation("default");
-	}
+	if (arm.isAnimationEnded()) arm.SetAnimation("default");
 }
 
 f32 getAimAngle(CBlob@ this, VehicleInfo@ v)
@@ -93,23 +89,20 @@ f32 getAimAngle(CBlob@ this, VehicleInfo@ v)
 
 		if (this.isAttached())
 		{
-			if (facing_left) { aim_vec.x = -aim_vec.x; }
+			if (facing_left) aim_vec.x = -aim_vec.x;
 			angle = (-(aim_vec).getAngle() + 180.0f);
 		}
 		else
 		{
 			if ((!facing_left && aim_vec.x < 0) ||
-			        (facing_left && aim_vec.x > 0))
+			     (facing_left && aim_vec.x > 0))
 			{
-				if (aim_vec.x > 0) { aim_vec.x = -aim_vec.x; }
+				if (aim_vec.x > 0) aim_vec.x = -aim_vec.x;
 
 				angle = (-(aim_vec).getAngle() + 180.0f);
 				angle = Maths::Max(-60.0f, Maths::Min(angle, 10.0f));
 			}
-			else
-			{
-				this.SetFacingLeft(!facing_left);
-			}
+			else this.SetFacingLeft(!facing_left);
 		}
 	}
 
@@ -121,10 +114,7 @@ void onTick(CBlob@ this)
 	if (this.hasAttached() || this.getTickSinceCreated() < 30) //driver, seat or gunner, or just created
 	{
 		VehicleInfo@ v;
-		if (!this.get("VehicleInfo", @v))
-		{
-			return;
-		}
+		if (!this.get("VehicleInfo", @v)) return;
 
 		//set the arm angle based on GUNNER mouse aim, see above ^^^^
 		f32 angle = getAimAngle(this, v);
@@ -146,26 +136,14 @@ void onTick(CBlob@ this)
 
 		Vehicle_StandardControls(this, v);
 	}
-	if(this.hasTag("invincible") && this.isAttached()){
-		CBlob@ gunner=this.getAttachmentPoint(0).getOccupied();
-		if(gunner !is null){
+	if (this.hasTag("invincible") && this.isAttached())
+	{
+		CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
+		if (gunner !is null)
+		{
 			gunner.Tag("invincible");
 			gunner.Tag("invincibilityByVehicle");
 		}
-	}
-}
-
-void onHealthChange(CBlob@ this, f32 oldHealth)
-{
-	f32 hp = this.getHealth();
-	f32 max_hp = this.getInitialHealth();
-	int damframe = hp < max_hp * 0.4f ? 2 : hp < max_hp * 0.9f ? 1 : 0;
-	CSprite@ sprite = this.getSprite();
-	sprite.animation.frame = damframe;
-	CSpriteLayer@ cage = sprite.getSpriteLayer("cage");
-	if (cage !is null)
-	{
-		cage.animation.frame = damframe;
 	}
 }
 
@@ -181,27 +159,24 @@ bool Vehicle_canFire(CBlob@ this, VehicleInfo@ v, bool isActionPressed, bool was
 
 void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused)
 {
-	// this.set_bool("shooting", true);
-	
 	if (isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
 
 	if (bullet !is null)
 	{
-		// print("" + this.getTeamNum());
 		bullet.server_setTeamNum(this.getTeamNum());
-	
+
 		u16 charge = v.charge;
 		f32 angle = this.getAngleDegrees() + Vehicle_getWeaponAngle(this, v);
 		angle = angle * (this.isFacingLeft() ? -1 : 1);
 		angle += ((XORRandom(200) - 100) / 100.0f) * 4.0f;
-		
+
 		Vec2f vel = Vec2f((24.0f + (XORRandom(100) / 100.0f) * 2.0f ) * (this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
 		bullet.setVelocity(vel);
-		
+
 		Vec2f offset = Vec2f((this.isFacingLeft() ? -1 : 1) * 16, 0);
 		offset.RotateBy(angle);
 		bullet.setPosition(this.getPosition() + offset);
-		
+
 		bullet.server_SetTimeToDie(-1);
 		bullet.server_SetTimeToDie(20.0f);
 	}
@@ -214,19 +189,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ blob = getBlobByNetworkID(params.read_netid());
 		const u8 charge = params.read_u8();
 		VehicleInfo@ v;
-		if (!this.get("VehicleInfo", @v))
-		{
-			return;
-		}
-		Vehicle_onFire(this, v, blob, charge);
-	}
-}
+		if (!this.get("VehicleInfo", @v)) return;
 
-void onCollision(CBlob@ this, CBlob@ blob, bool solid)
-{
-	if (blob !is null)
-	{
-		TryToAttachVehicle(this, blob);
+		Vehicle_onFire(this, v, blob, charge);
 	}
 }
 
@@ -236,20 +201,34 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 	// return this.getTeamNum() == byBlob.getTeamNum();
 }
 
+bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
+{
+	return blob.getShape().isStatic() && blob.isCollidable();
+}
+
+void onCollision(CBlob@ this, CBlob@ blob, bool solid)
+{
+	if (blob !is null) TryToAttachVehicle(this, blob);
+}
+
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	if (attached.hasTag("bomber")) return;
 
-	if(attached.getPlayer() !is null && this.hasTag("invincible")){
-		if(this.isAttached()){
+	if (attached.getPlayer() !is null && this.hasTag("invincible"))
+	{
+		if (this.isAttached())
+		{
 			attached.Tag("invincible");
 			attached.Tag("invincibilityByVehicle");
 		}
 	}
 }
+
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
-	if(detached.hasTag("invincibilityByVehicle")){
+	if (detached.hasTag("invincibilityByVehicle"))
+	{
 		detached.Untag("invincible");
 		detached.Untag("invincibilityByVehicle");
 	}

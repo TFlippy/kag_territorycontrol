@@ -11,24 +11,20 @@ const u32 delay = 90;
 
 void onInit(CBlob@ this)
 {
-	this.Tag("upkeep building");
-	this.set_u8("upkeep cap increase", 0);
-	this.set_u8("upkeep cost", 1);
-	
 	this.Tag("builder always hit");
 	this.Tag("heavy weight");
 
 	this.set_f32("pickup_priority", 16.00f);
 	this.getShape().SetRotationsAllowed(false);
-	
+
 	this.getCurrentScript().tickFrequency = 10;
 	// this.getCurrentScript().runFlags |= Script::tick_not_ininventory;
-	
+
 	this.getSprite().SetZ(20);
-	
+
 	this.set_u16("target", 0);
 	this.set_u32("next_launch", 0);
-	
+
 	if (isServer())
 	{
 		if (this.getTeamNum() == 250)
@@ -38,7 +34,7 @@ void onInit(CBlob@ this)
 			this.server_PutInInventory(ammo);
 		}
 	}
-	
+
 	this.set_bool("security_state", true);
 }
 
@@ -48,13 +44,18 @@ void onInit(CSprite@ this)
 	// this.SetEmitSoundVolume(0.0f);
 	// this.SetEmitSoundSpeed(0.0f);
 	// this.SetEmitSoundPaused(false);
-	
+
 	CSpriteLayer@ head = this.addSpriteLayer("head", "SAM_Launcher.png", 32, 16);
 	if (head !is null)
 	{
 		head.SetOffset(Vec2f(0.0f, -8.0f));
 		head.SetRelativeZ(5);
 	}
+}
+
+bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
+{
+	return blob.getShape().isStatic() && blob.isCollidable();
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -73,13 +74,13 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 u8 GetAmmo(CBlob@ this)
 {
 	if (this.getTeamNum() == 250) return 50;
-	
+
 	CInventory@ inv = this.getInventory();
 	if (inv != null)
 	{
 		if (inv.getItem(0) != null) return inv.getItem(0).getQuantity();
 	}
-	
+
 	return 0;
 }
 
@@ -100,7 +101,7 @@ void onTick(CBlob@ this)
 	{
 		CBlob@[] blobs;
 		getBlobsByTag("aerial", @blobs);
-		
+
 		Vec2f pos = this.getPosition();
 		CMap@ map = getMap();
 
@@ -112,20 +113,20 @@ void onTick(CBlob@ this)
 		{
 			CBlob@ b = blobs[i];
 			u8 team = b.getTeamNum();
-			
+
 			f32 dist = (b.getPosition() - this.getPosition()).LengthSquared();
-			
+
 			if (team != this.getTeamNum() && (dist < 900*900) && dist < s_dist)
 			{
 				s_dist = dist;
 				index = i;
 			}
 		}
-		
+
 		if (index != -1)
 		{
 			CBlob@ target = blobs[index];
-			
+
 			if (target !is null)
 			{
 				if (target.getNetworkID() != this.get_u16("target"))
@@ -133,11 +134,11 @@ void onTick(CBlob@ this)
 					this.getSprite().PlaySound("SAM_Found.ogg", 1.00f, 1.00f);
 					this.set_u32("next_launch", getGameTime() + 30);
 				}
-				
+
 				this.set_u16("target", target.getNetworkID());
 			}
 		}
-		
+
 		CBlob@ t = getBlobByNetworkID(this.get_u16("target"));
 		if (t !is null && getGameTime() >= this.get_u32("next_launch") && isVisible(this, t))
 		{
@@ -149,7 +150,7 @@ void onTick(CBlob@ this)
 					Vec2f dir = t.getPosition() - this.getPosition();
 					dir.Normalize();
 					dir.y = -Maths::Abs(dir.y) - 0.25f;
-				
+
 					CBlob@ m = server_CreateBlobNoInit("sammissile");
 					m.setPosition(this.getPosition() + Vec2f(0, -12));
 					m.set_Vec2f("direction", dir);
@@ -158,10 +159,10 @@ void onTick(CBlob@ this)
 					m.server_setTeamNum(this.getTeamNum());
 					m.Tag("self_destruct");
 					m.Init();
-					
+
 					SetAmmo(this, ammo - 1);
 				}
-				
+
 				this.getSprite().PlaySound("Missile_Launch.ogg");
 				this.set_u32("next_launch", getGameTime() + 60);
 			}
@@ -182,19 +183,19 @@ void onTick(CSprite@ this)
 	if (blob.get_bool("security_state"))
 	{
 		if (isClient())
-		{					
+		{
 			CBlob@ target = getBlobByNetworkID(blob.get_u16("target"));
 			if (target !is null)
 			{
 				blob.SetFacingLeft((target.getPosition().x - blob.getPosition().x) < 0);
-			
+
 				CSpriteLayer@ head = blob.getSprite().getSpriteLayer("head");
 				if (head !is null)
 				{
 					Vec2f dir = target.getPosition() - blob.getPosition();
 					dir.Normalize();
 					dir.y = -Maths::Abs(dir.y) - 0.25f;
-				
+
 					head.ResetTransform();
 					head.RotateBy(-dir.Angle() + (this.isFacingLeft() ? 180 : 0), Vec2f());
 				}
@@ -208,13 +209,13 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("security_set_state"))
 	{
 		bool state = params.read_bool();
-		
+
 		CSpriteLayer@ head = this.getSprite().getSpriteLayer("head");
 		if (head !is null)
 		{
 			head.SetFrameIndex(state ? 0 : 1);
 		}
-		
+
 		this.getSprite().PlaySound(state ? "Security_TurnOn" : "Security_TurnOff", 0.30f, 1.00f);
 		this.set_bool("security_state", state);
 	}
