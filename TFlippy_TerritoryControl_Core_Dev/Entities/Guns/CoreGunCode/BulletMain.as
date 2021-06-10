@@ -39,6 +39,13 @@ void onInit(CRules@ this)
 
 	if (isClient())
 	{
+		if (!this.exists("VertexBook"))
+		{
+			// Client vertex book used to grab bullet texture to batch render
+			string[] book;
+			this.set("VertexBook", @book);
+		}
+
 		this.add_u16("temp_id", Render::addScript(Render::layer_postworld, "BulletMain", "GunRender", 0.0f));
 		//Render::addScript(Render::layer_prehud, "BulletMain", "GUIStuff", 0.0f);
 	}
@@ -52,6 +59,16 @@ void onReload(CRules@ this)
 void onRestart(CRules@ this)
 {
 	Reset(this);
+
+	string[]@ book;
+	this.get("VertexBook", @book);
+
+	for (int a = 0; a < book.length(); a++)
+	{
+		this.set_bool(book[a] + '-inbook', false);
+	}
+
+	book.clear();
 }
 
 void Reset(CRules@ this)
@@ -71,7 +88,7 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 void onTick(CRules@ this)
 {
 	FRAME_TIME = 0;
-	BulletGrouped.FakeOnTick(this);
+	BulletGrouped.onTick(this);
 }
 
 void GunRender(int id)
@@ -135,7 +152,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			GunSettings@ settings;
 			gunBlob.get("gun_settings", @settings);
 
-			if (settings.B_PER_SHOT > 1) //Shotgun firing
+			if (settings !is null && settings.B_PER_SHOT > 1) //Shotgun firing
 			{
 				f32 tempAngle = angle;
 
@@ -143,35 +160,31 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 				{
 					if (!gunBlob.hasTag("CustomSpread")) tempAngle = angle;
 					tempAngle += r.NextRanged(2) != 0 ? -r.NextRanged(settings.B_SPREAD) : r.NextRanged(settings.B_SPREAD);
-					BulletObj@ bullet = BulletObj(hoomanBlob, gunBlob, tempAngle, pos);
+					Bullet@ bullet = BulletGrouped.CreateNewBullet(hoomanBlob, gunBlob, tempAngle, pos);
 
 					for (u32 timeSpawned = timeSpawnedAt; timeSpawned < getGameTime(); timeSpawned++) // Catch up to everybody else
 					{
-						bullet.onFakeTick(map);
+						bullet.onTick(map);
 					}
-
-					BulletGrouped.AddNewObj(bullet);
 				}
 			}
 			else //Guns that fire only one bullet
 			{
-				BulletObj@ bullet = BulletObj(hoomanBlob, gunBlob, angle, pos);
+				Bullet@ bullet = BulletGrouped.CreateNewBullet(hoomanBlob, gunBlob, angle, pos);
 				for (;timeSpawnedAt < getGameTime(); timeSpawnedAt++) // Catch up to everybody else
 				{
-					bullet.onFakeTick(map);
+					bullet.onTick(map);
 				}
-
-				BulletGrouped.AddNewObj(bullet);
 			}
 			gunBlob.sub_u8("clip", 1);
 
-			if (isClient())
+			if (isClient() && settings !is null)
 			{
 				CBlob@ localBlob = getLocalPlayerBlob();
 				if (localBlob !is null && localBlob is hoomanBlob) // if we are this blob
 				{
-					Recoil@ coil = Recoil(localBlob, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-					BulletGrouped.NewRecoil(@coil);
+					/*Recoil@ coil = Recoil(localBlob, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+					BulletGrouped.NewRecoil(@coil);*/
 				}
 			}
 		}

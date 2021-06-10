@@ -10,6 +10,7 @@
 #include "GunCommon.as";
 #include "BulletCase.as";
 #include "Recoil.as";
+#include "GunModule.as"
 
 const uint8 NO_AMMO_INTERVAL = 25;
  
@@ -39,6 +40,44 @@ void onInit(CBlob@ this)
 
 	GunSettings@ settings;
 	this.get("gun_settings", @settings);
+
+	if (!this.exists("CustomBullet")) this.set_string("CustomBullet", "Bullet.png");  // Default bullet image
+	if (!this.exists("CustomBulletWidth")) this.set_f32("CustomBulletWidth", 0.7f);  // Default bullet width
+	if (!this.exists("CustomBulletLength")) this.set_f32("CustomBulletLength", 3.0f); // Default bullet length
+
+	string vert_name = this.get_string("CustomBullet");
+	CRules@ rules = getRules();
+
+	// Used to prevent duplication, cant use vert.length since array will most likely be 0
+	// Cant use Exist since value will get removed on map reset (and we cant remove values from engine dict for w/e reason)
+	if (!rules.get_bool(vert_name + '-inbook'))
+	{
+		if (vert_name == "")
+		{
+			warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
+			return;
+		}
+
+		rules.set_bool(vert_name + '-inbook', true);
+
+		Vertex[] vert;
+		rules.set(vert_name, @vert);
+
+		// #blamekag
+		if (!rules.exists("VertexBook"))
+		{
+			// Client vertex book used to grab bullet texture to batch render
+			string[] book;
+			rules.set("VertexBook", @book);
+			book.push_back(vert_name);
+		}
+		else
+		{
+			string[]@ book;
+			rules.get("VertexBook", @book);
+			book.push_back(vert_name);
+		}
+	}
 
 	this.set_u8("clip", settings.CLIP); //Clip u8 for easy maneuverability
 
@@ -76,6 +115,19 @@ void onInit(CBlob@ this)
 			}
 		}
 	}
+
+	GunModule[] modules = {};
+	modules.push_back(TestModule());
+	this.set("GunModules", modules);
+
+	/*if (true)//(this.exists("GunModule"))
+	{
+		GunModule[]@ modules;
+		this.get("GunModule", @modules);
+		print("done");
+		for (int a = 0; a < modules.length(); a++)
+			modules[a].onModuleInit(this);
+	}*/
 }
 
 void onTick(CBlob@ this)
@@ -88,6 +140,14 @@ void onTick(CBlob@ this)
 
 		if (holder !is null)
 		{
+			GunModule[] modules;
+			this.get("GunModules", @modules);
+
+			for (int a = 0; a < modules.length(); a++)
+			{
+				modules[a].onTick(this, holder);
+			}
+
 			CSprite@ sprite = this.getSprite();
 			f32 aimangle = getAimAngle(this, holder);
 
@@ -104,7 +164,7 @@ void onTick(CBlob@ this)
 			f32 oAngle = (aimangle % 360) + 180;
 
 			// Keys
-			const bool pressing_shoot = holder.isAttached() ? false : this.hasTag("CustomSemiAuto") ?
+			const bool pressing_shoot = holder.isAttached() ? false :this.hasTag("CustomSemiAuto") ?
 			           point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
 			           point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
 			
@@ -158,6 +218,11 @@ void onTick(CBlob@ this)
 			}
 			else if (this.get_bool("doReload")) // End of reload
 			{
+				for (int a = 0; a < modules.length(); a++)
+				{
+					modules[a].onReload(this);
+				}
+
 				if (this.hasTag("CustomShotgunReload"))
 				{
 					if (HasAmmo(this) && this.get_u8("clip") < settings.TOTAL)
@@ -178,6 +243,11 @@ void onTick(CBlob@ this)
 			{
 				if (this.get_u8("clip") > 0)
 				{
+					for (int a = 0; a < modules.length(); a++)
+					{
+						modules[a].onFire(this);
+					}
+
 					// Shoot weapon
 					actionInterval = settings.FIRE_INTERVAL;
 
@@ -241,7 +311,7 @@ void onTick(CBlob@ this)
 
 			sprite.ResetTransform();
 			//sprite.RotateBy( aimangle, holder.isFacingLeft() ? Vec2f(-3,3) : Vec2f(3,3) );
-			this.setAngleDegrees(aimangle); //Rotate gun //TODO: change rotation point somehow
+			this.setAngleDegrees(aimangle);
 			sprite.SetOffset(Vec2f(this.get_f32("gun_recoil_current"), 0)); //Recoil effect for gun blob
 		}
 	} 
