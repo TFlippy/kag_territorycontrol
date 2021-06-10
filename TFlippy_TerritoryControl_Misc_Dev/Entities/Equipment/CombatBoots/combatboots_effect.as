@@ -1,24 +1,13 @@
 #include "RunnerCommon.as"
 
-void onInit(CBlob@ this)
-{
-	if (this.get_string("reload_script") != "combatboots")
-		UpdateScript(this);
-}
-
 void onTick(CBlob@ this)
 {
-    if (this.get_string("reload_script") == "combatboots")
-	{
-		UpdateScript(this);
-		this.set_string("reload_script", "");
-	}
+    if (this.get_string("reload_script") == "combatboots") 
+    	this.set_string("reload_script", "");
 	
 	RunnerMoveVars@ moveVars;
-	if (this.get("moveVars", @moveVars))
-	{
+	if (this.get("moveVars", @moveVars)) 
 		moveVars.walkFactor *= 1.2f;
-	}
 	
 	if (this.get_f32("cb_health") >= 10.0f)
     {
@@ -28,5 +17,3 @@ void onTick(CBlob@ this)
         this.RemoveScript("combatboots_effect.as");
     }
 }
-
-

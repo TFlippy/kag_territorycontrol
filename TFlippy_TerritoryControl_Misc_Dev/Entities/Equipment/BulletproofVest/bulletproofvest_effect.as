@@ -1,21 +1,7 @@
-void onInit(CBlob@ this)
-{
-	if (this.get_string("reload_script") != "bulletproofvest")
-		UpdateScript(this);
-}
-
-void UpdateScript(CBlob@ this)
-{
-	
-}
-
 void onTick(CBlob@ this)
 {
     if (this.get_string("reload_script") == "bulletproofvest")
-	{
-		UpdateScript(this);
 		this.set_string("reload_script", "");
-	}
 	
 	//print("hp: "+this.get_f32("bpv_health"));
 	

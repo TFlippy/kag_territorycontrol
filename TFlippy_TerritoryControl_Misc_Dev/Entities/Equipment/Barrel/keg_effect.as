@@ -44,7 +44,8 @@ void onTick(CBlob@ this)
 		if (this.getSprite().getSpriteLayer("keg") !is null) this.getSprite().RemoveSpriteLayer("keg");
         this.RemoveScript("keg_effect.as");
     }
-    if (getGameTime() >= this.get_f32("keg_explode") && this.get_f32("keg_explode") != 0.0f) this.server_Die();
+    if (getGameTime() >= this.get_f32("keg_explode") && this.get_f32("keg_explode") != 0.0f)
+    	this.server_Die();
 }
 
 void onDie(CBlob@ this)

@@ -1,16 +1,7 @@
-void onInit(CBlob@ this)
-{
-    if (this.get_string("reload_script") != "bucket")
-        UpdateScript(this);
-}
- 
 void onTick(CBlob@ this)
 {
     if (this.get_string("reload_script") == "bucket")
-    {
-        UpdateScript(this);
-        this.set_string("reload_script", "");
-    }
+    	this.set_string("reload_script", "");
    
     if (this.get_f32("bucket_health") >= 5.0f)
     {
