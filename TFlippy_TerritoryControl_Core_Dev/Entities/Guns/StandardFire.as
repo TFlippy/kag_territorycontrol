@@ -40,6 +40,46 @@ void onInit(CBlob@ this)
 	GunSettings@ settings;
 	this.get("gun_settings", @settings);
 
+	if (!this.exists("CustomBullet"))
+		this.set_string("CustomBullet", "Bullet.png");
+
+	if (!this.exists("CustomBulletWidth"))
+		this.set_f32("CustomBulletWidth", 0.7f);
+
+	if (!this.exists("CustomBulletLength"))
+		this.set_f32("CustomBulletLength", 3.0f);
+
+
+	string vert_name = this.get_string("CustomBullet");
+	CRules@ rules = getRules();
+
+
+	// Used to prevent duplication, cant use vert.length since array will most likely be 0
+	// Cant use Exist since value will get removed on map reset (and we cant remove values from engine dict for w/e reason)
+	if (!rules.get_bool(vert_name + '-inbook'))
+	{
+		rules.set_bool(vert_name + '-inbook', true);
+
+		Vertex[] vert;
+		rules.set(vert_name, @vert);
+
+		// #blamekag
+		if (!rules.exists("VertexBook"))
+		{
+			// Client vertex book used to grab bullet texture to batch render
+			string[] book;
+			rules.set("VertexBook", @book);
+			book.push_back(vert_name);
+		}
+		else
+		{
+			string[]@ book;
+			rules.get("VertexBook", @book);
+			book.push_back(vert_name);
+		}
+
+	}
+
 	this.set_u8("clip", settings.CLIP); //Clip u8 for easy maneuverability
 
 	if (isClient())

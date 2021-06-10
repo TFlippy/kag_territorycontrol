@@ -41,7 +41,9 @@ void onInit(CRules@ this)
 	{
 		this.add_u16("temp_id", Render::addScript(Render::layer_postworld, "BulletMain", "GunRender", 0.0f));
 		//Render::addScript(Render::layer_prehud, "BulletMain", "GUIStuff", 0.0f);
+		
 	}
+
 }
 
 void onReload(CRules@ this)
@@ -59,6 +61,15 @@ void Reset(CRules@ this)
 	r.Reset(12345);
 	FireGunID = this.addCommandID("fireGun");
 
+	string[]@ book;
+	this.get("VertexBook", @book);
+	
+	for (int a = 0; a < book.length(); a++)
+	{
+		this.set_bool(book[a] + '-inbook', false);
+	}
+
+	book.clear();
 	BulletRender::Reset();
 }
 

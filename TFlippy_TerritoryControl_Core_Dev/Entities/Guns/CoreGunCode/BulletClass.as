@@ -31,25 +31,6 @@ namespace BulletRender
 	Vertex[] v_r_reloadBox;
 	string[] textureNames;
 
-	void Push(Vec2f topLeft, Vec2f topRight, Vec2f botRight, Vec2f botLeft, SColor color, string bulletTexture)
-	{
-		v_r_bullet.push_back(Vertex(topLeft.x,  topLeft.y,  0, 0, 0, color)); // top left
-		v_r_bullet.push_back(Vertex(topRight.x, topRight.y, 0, 1, 0, color)); // top right
-		v_r_bullet.push_back(Vertex(botRight.x, botRight.y, 0, 1, 1, color)); // bot right
-		v_r_bullet.push_back(Vertex(botLeft.x,  botLeft.y,  0, 0, 1, color)); // bot left
-
-		textureNames.push_back(bulletTexture);
-	}
-
-	void Erase(int index)
-	{
-		index *= 4;
-		for (int i = 0; i < 4; i++)
-		{
-			v_r_bullet.erase(index);
-		}
-	}
-
 	void Reset()
 	{
 		//v_r_bullet.clear();
@@ -58,16 +39,35 @@ namespace BulletRender
 
 	void Draw()
 	{
-		v_r_bullet.clear();
-		textureNames.clear();
-		BulletGrouped.FillArray(); // Fill up v_r_bullets
+		BulletGrouped.AddToVertex(); // Fill up v_r_bullets
 
-		for (int i = 0; i < v_r_bullet.length; i+= 4)
+		/*for (int i = 0; i < v_r_bullet.length; i+= 4)
 		{
 			Vertex[] bulletVertex = {v_r_bullet[i], v_r_bullet[i+1], v_r_bullet[i+2], v_r_bullet[i+3]};
 			string texture = textureNames[i/4];
 			Render::RawQuads(texture, bulletVertex);
+		}*/
+
+		CRules@ rules = getRules();
+
+		string[]@ vertex_book;
+		rules.get("VertexBook", @vertex_book);
+
+		for (int a = 0; a < vertex_book.length(); a++)
+		{
+			Vertex[]@ bulletVertex;
+			string texture = vertex_book[a];
+			rules.get(texture, @bulletVertex);
+			
+			// Sending empty vertex just eats performance because engine does not check :)
+			if (bulletVertex.length() < 1)
+				continue;
+
+			Render::RawQuads(texture, bulletVertex);
+
+			bulletVertex.clear();
 		}
+		
 
 		if (g_debug == 0) // useful for lerp testing
 		{
@@ -284,7 +284,7 @@ class BulletObj
 		return false;
 	}
 
-	void JoinQueue() // Every bullet gets forced to join the queue in onRenders, so we use this to calc to position
+	void JoinQueue(CRules@ rules) // Every bullet gets forced to join the queue in onRenders, so we use this to calc to position
 	{
 		// Are we on the screen?
 		const Vec2f xLast = PDriver.getScreenPosFromWorldPos(OldPos);
@@ -301,21 +301,21 @@ class BulletObj
 		Vec2f newPos = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
 		LastLerpedPos = newPos;
 
-		const f32 B_LENGTH = gunBlob.exists("CustomBulletLength") ? gunBlob.get_f32("CustomBulletLength") : 3.0f;
-		const f32 B_WIDTH  = gunBlob.exists("CustomBulletWidth")  ? gunBlob.get_f32("CustomBulletWidth")  : 0.7f;
+		const f32 B_LENGTH = gunBlob.get_f32("CustomBulletLength");
+		const f32 B_WIDTH  = gunBlob.get_f32("CustomBulletWidth");
 
-		Vec2f TopLeft  = Vec2f(newPos.x - B_WIDTH, newPos.y - B_LENGTH);
-		Vec2f TopRight = Vec2f(newPos.x - B_WIDTH, newPos.y + B_LENGTH);
-		Vec2f BotLeft  = Vec2f(newPos.x + B_WIDTH, newPos.y - B_LENGTH);
-		Vec2f BotRight = Vec2f(newPos.x + B_WIDTH, newPos.y + B_LENGTH);
+		Vec2f topLeft  = Vec2f(newPos.x - B_WIDTH, newPos.y - B_LENGTH);
+		Vec2f topRight = Vec2f(newPos.x - B_WIDTH, newPos.y + B_LENGTH);
+		Vec2f botLeft  = Vec2f(newPos.x + B_WIDTH, newPos.y - B_LENGTH);
+		Vec2f botRight = Vec2f(newPos.x + B_WIDTH, newPos.y + B_LENGTH);
 
 		// Rotate the sprite to be in the correct pos
 		f32 angle = Angle - 90;
 
-		BotLeft.RotateBy( angle, newPos);
-		BotRight.RotateBy(angle, newPos);
-		TopLeft.RotateBy( angle, newPos);
-		TopRight.RotateBy(angle, newPos);   
+		botLeft.RotateBy( angle, newPos);
+		botRight.RotateBy(angle, newPos);
+		topLeft.RotateBy( angle, newPos);
+		topRight.RotateBy(angle, newPos);   
 
 		/*if(FacingLeft)
 		{
@@ -325,9 +325,14 @@ class BulletObj
 		{
 			//Fade.JoinQueue(newPos,BotRight);
 		}*/
-		string bulletTexture = gunBlob.exists("CustomBullet") ? gunBlob.get_string("CustomBullet") : "Bullet.png";
+		
+		Vertex[]@ bullet_vertex;
+		rules.get(gunBlob.get_string("CustomBullet"), @bullet_vertex);
 
-		BulletRender::Push(TopLeft, TopRight, BotRight, BotLeft, trueWhite, bulletTexture);
+		bullet_vertex.push_back(Vertex(topLeft.x,  topLeft.y,  0, 0, 0, trueWhite)); // top left
+		bullet_vertex.push_back(Vertex(topRight.x, topRight.y, 0, 1, 0, trueWhite)); // top right
+		bullet_vertex.push_back(Vertex(botRight.x, botRight.y, 0, 1, 1, trueWhite)); // bot right
+		bullet_vertex.push_back(Vertex(botLeft.x,  botLeft.y,  0, 0, 1, trueWhite)); // bot left
 	}
 }
 
@@ -404,11 +409,12 @@ class BulletHolder
 		PParticles.push_back(PrettyParticle(p,type));
 	}
 
-	void FillArray()
+	void AddToVertex()
 	{
+		CRules@ rules = getRules();
 		for (int a = 0; a < bullets.length(); a++)
 		{
-			bullets[a].JoinQueue();
+			bullets[a].JoinQueue(rules);
 		}
 
 		/*for(int a = 0; a < fade.length(); a++)
