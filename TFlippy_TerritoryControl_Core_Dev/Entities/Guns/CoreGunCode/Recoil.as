@@ -52,8 +52,9 @@ class Recoil
 			return;
 		}
 
-		TimeToNormal--;
+		/*TimeToNormal--;
 		yTick -= DecayRate;
+		print(yTick + ' ');
 		if (RX && ReturnTime < TimeToNormal)
 		{
 			int rNum = XORRandom(-DecayRate * 2);
@@ -65,9 +66,12 @@ class Recoil
 			{
 				xTick += rNum;
 			}
-		}
+		}*/
 
-		BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + Vec2f(xTick, yTick));
-		ShakeScreen(Vec2f(xTick, yTick), 150, Blob.getInterpolatedPosition());
+		yTick = -1;
+		TimeToNormal -= 1;
+
+		BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + Vec2f(0, yTick));
+		//ShakeScreen(Vec2f(xTick, yTick), 150, Blob.getInterpolatedPosition());
 	}
 }
