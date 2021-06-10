@@ -14,6 +14,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 4;
 	
 	this.Tag("explosive");
+	this.Tag("medium weight");
 	
 	this.maxQuantity = 1;
 }
