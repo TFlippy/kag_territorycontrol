@@ -10,6 +10,7 @@
 #include "GunCommon.as";
 #include "BulletCase.as";
 #include "Recoil.as";
+#include "GunModule.as"
 
 const uint8 NO_AMMO_INTERVAL = 25;
  
@@ -48,7 +49,6 @@ void onInit(CBlob@ this)
 
 	if (!this.exists("CustomBulletLength"))
 		this.set_f32("CustomBulletLength", 3.0f);
-
 
 	string vert_name = this.get_string("CustomBullet");
 	CRules@ rules = getRules();
@@ -122,6 +122,22 @@ void onInit(CBlob@ this)
 			}
 		}
 	}
+
+	GunModule[] modules = {};
+	modules.push_back(TestModule());
+	this.set("GunModules", modules);
+	
+
+	/*if (true)//(this.exists("GunModule"))
+	{
+		GunModule[]@ modules;
+		this.get("GunModule", @modules);
+		print("done");
+
+		for (int a = 0; a < modules.length(); a++)
+			modules[a].onModuleInit(this);
+	}*/
+
 }
 
 void onTick(CBlob@ this)
@@ -134,6 +150,12 @@ void onTick(CBlob@ this)
 
 		if (holder !is null)
 		{
+			GunModule[] modules;
+			this.get("GunModules", @modules);
+
+			for (int a = 0; a < modules.length(); a++)
+				modules[a].onTick(this, holder);
+
 			CSprite@ sprite = this.getSprite();
 			f32 aimangle = getAimAngle(this, holder);
 
@@ -204,6 +226,9 @@ void onTick(CBlob@ this)
 			}
 			else if (this.get_bool("doReload")) // End of reload
 			{
+				for (int a = 0; a < modules.length(); a++)
+					modules[a].onReload(this);
+				
 				if (this.hasTag("CustomShotgunReload"))
 				{
 					if (HasAmmo(this) && this.get_u8("clip") < settings.TOTAL)
@@ -222,8 +247,12 @@ void onTick(CBlob@ this)
 			} 
 			else if (pressing_shoot)
 			{
+					
 				if (this.get_u8("clip") > 0)
 				{
+					for (int a = 0; a < modules.length(); a++)
+						modules[a].onFire(this);
+
 					// Shoot weapon
 					actionInterval = settings.FIRE_INTERVAL;
 
@@ -301,3 +330,4 @@ void onTick(CBlob@ this)
 		this.getCurrentScript().runFlags |= Script::tick_not_sleeping;
 	}
 }
+

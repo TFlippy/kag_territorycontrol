@@ -39,6 +39,13 @@ void onInit(CRules@ this)
 
 	if (isClient())
 	{
+		if (!this.exists("VertexBook"))
+		{
+			// Client vertex book used to grab bullet texture to batch render
+			string[] book;
+			this.set("VertexBook", @book);
+		}
+
 		this.add_u16("temp_id", Render::addScript(Render::layer_postworld, "BulletMain", "GunRender", 0.0f));
 		//Render::addScript(Render::layer_prehud, "BulletMain", "GUIStuff", 0.0f);
 		

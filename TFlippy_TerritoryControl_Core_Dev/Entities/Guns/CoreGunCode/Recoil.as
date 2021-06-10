@@ -52,7 +52,7 @@ class Recoil
 			return;
 		}
 
-		/*TimeToNormal--;
+		TimeToNormal--;
 		yTick -= DecayRate;
 		print(yTick + ' ');
 		if (RX && ReturnTime < TimeToNormal)
@@ -66,12 +66,12 @@ class Recoil
 			{
 				xTick += rNum;
 			}
-		}*/
+		}
 
 		yTick = -1;
 		TimeToNormal -= 1;
 
 		BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + Vec2f(0, yTick));
-		//ShakeScreen(Vec2f(xTick, yTick), 150, Blob.getInterpolatedPosition());
+		ShakeScreen(Vec2f(xTick, yTick), 150, Blob.getInterpolatedPosition());
 	}
 }

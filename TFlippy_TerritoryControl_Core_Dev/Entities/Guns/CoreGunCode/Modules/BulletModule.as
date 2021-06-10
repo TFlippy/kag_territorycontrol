@@ -9,7 +9,7 @@ class BulletModule
     void onTick(Bullet@ bullet) { }
 
     // Called every tick
-    // Return: True - True to skip bullet gravity calc
+    // Return: bool - True to skip vanilla gravity step
     bool onGravityStep(Bullet@ bullet) { return false; }
 
     // Called every frame IF bullet is on screen
