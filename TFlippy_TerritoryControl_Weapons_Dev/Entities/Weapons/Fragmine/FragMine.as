@@ -144,7 +144,7 @@ bool explodeOnCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return blob.getShape().isStatic() && blob.isCollidable() blob.getName() == "fragmine";
+	return blob.getShape().isStatic() && blob.isCollidable() || blob.getName() == "fragmine";
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
