@@ -20,7 +20,9 @@ void onRender(CSprite@ this)
 		if (mouseBlob.hasTag("player")) //players can get the disguised tag
 		{
 			string name = mouseBlob.getInventoryName();
-			if (mouseBlob.hasTag("disguised") && getLocalPlayer().getBlob() != null && !getLocalPlayer().getBlob().hasTag("truesight")) //diguised players names can only be seen by admins with true sight enabled
+			if (mouseBlob.hasTag("disguised") && getLocalPlayer().getBlob() != null 
+			&& !getLocalPlayer().getBlob().hasTag("truesight") 
+			&& getLocalPlayer().getBlob().getTeamNum() != mouseBlob.getTeamNum()) //diguised players names can only be seen by admins with true sight enabled
 			{
 				return;
 			}
