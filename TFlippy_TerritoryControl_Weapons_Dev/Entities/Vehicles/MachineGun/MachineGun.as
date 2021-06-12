@@ -3,7 +3,7 @@
 #include "GunCommon.as";
 #include "BulletCase.as";
 
-const Vec2f arm_offset = Vec2f(0, -3);
+const Vec2f arm_offset = Vec2f(-1, -3);
 
 void onInit(CBlob@ this)
 {
@@ -82,7 +82,7 @@ void onInit(CSprite@ this)
 		Animation@ anim = flash.addAnimation("default", 1, false);
 		int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
 		anim.AddFrames(frames);
-		flash.SetRelativeZ(1.0f);
+		flash.SetRelativeZ(2.0f);
 		flash.SetOffset(settings.MUZZLE_OFFSET);
 		flash.SetVisible(false);
 		// flash.setRenderStyle(RenderStyle::additive);
@@ -136,6 +136,7 @@ void onTick(CBlob@ this)
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("GUNNER");
 	if (ap !is null)
 	{
+		this.set_f32("gun_recoil_current", Maths::Lerp(this.get_f32("gun_recoil_current"), 0, 0.45f));
 		CSprite@ sprite = this.getSprite();
 
 		CBlob@ gunner = ap.getOccupied();
@@ -157,7 +158,7 @@ void onTick(CBlob@ this)
 			arm.ResetTransform();
 			arm.SetFacingLeft(facing_left);
 			arm.SetRelativeZ(1.0f);
-			arm.SetOffset(arm_offset);
+			arm.SetOffset(Vec2f(this.get_f32("gun_recoil_current"), 0).RotateBy(-getAimAngle(this, v)) + arm_offset);
 			arm.RotateBy(rotation, Vec2f(facing_left ? -1.0f : 1.0f, 0.0f));
 		}
 
@@ -168,7 +169,7 @@ void onTick(CBlob@ this)
 			this.get("gun_settings", @settings);
 
 			flash.ResetTransform();
-			flash.SetRelativeZ(1.0f);
+			//flash.SetRelativeZ(1.0f);
 			flash.RotateBy(rotation, Vec2f(settings.MUZZLE_OFFSET.x * (facing_left ? 1 : -1), 1));
 		}
 
@@ -230,8 +231,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 	{
 		CSprite@ sprite = this.getSprite();
 
-		CSpriteLayer@ arm = sprite.getSpriteLayer("arm");
-		if (arm !is null) arm.SetOffset(Vec2f(2, 0).RotateBy(-getAimAngle(this, v)) + arm_offset);
+		this.set_f32("gun_recoil_current", 3);
 
 		CSpriteLayer@ flash = sprite.getSpriteLayer("muzzle_flash");
 		if (flash !is null)
@@ -247,7 +247,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		ParticleCase2("GatlingCase.png", this.getPosition(), this.isFacingLeft() ? oAngle : angle);
 	}
 
-	this.set_u32("fireDelay", getGameTime() + 3);
+	this.set_u32("fireDelay", getGameTime() + 2);
 }
 
 void shootGun(const u16 gunID, const f32 aimangle, const u16 hoomanID, const Vec2f pos) 

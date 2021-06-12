@@ -148,13 +148,12 @@ void onTick(CBlob@ this)
 		for (int i = 0; i < blobs.length; i++)
 		{
 			CBlob@ b = blobs[i];
-			CBlob@ ruins = getBlobByName("ruins"); //anti spawn killing
 			u8 team = b.getTeamNum();
 
 			f32 dist = (b.getPosition() - this.getPosition()).LengthSquared();
 
 			if (myTeam == 250 && b.get_u8("deity_id") == Deity::foghorn) continue;
-			if (team != myTeam && dist < s_dist && b.hasTag("flesh") && !b.isOverlapping(ruins) && !b.hasTag("dead") && isVisible(this, b))
+			if (team != myTeam && dist < s_dist && b.hasTag("flesh") && !b.hasTag("dead") && isVisible(this, b) && b.getTickSinceCreated() > 180)
 			{
 				s_dist = dist;
 				index = i;
@@ -190,6 +189,8 @@ void onTick(CBlob@ this)
 		CPlayer@ host = this.getDamageOwnerPlayer();
 		if (t !is null)
 		{
+			this.SetFacingLeft((t.getPosition().x - this.getPosition().x) < 0);
+
 			CPlayer@ _target = t.getPlayer();
 			if (host !is null && _target is host) //recognizes host and changes team
 			{
@@ -197,7 +198,7 @@ void onTick(CBlob@ this)
 				@t = null;
 			}
 		}
-		if (t is null || !isVisible(this, t) || ((t.getPosition() - this.getPosition()).LengthSquared() > 450.00f * 450.00f) || t.hasTag("dead")) //if blob doesn't exist or gone out of tracking range or LoS
+		if (t is null || !isVisible(this, t) || ((t.getPosition() - this.getPosition()).LengthSquared() > 450.00f * 450.00f) || t.hasTag("dead") || !t.isActive()) //if blob doesn't exist or gone out of tracking range or LoS
 		{
 			this.set_u16("target", 0); //then reset targetting
 		}
@@ -209,13 +210,10 @@ void onTick(CBlob@ this)
 
 				if (t !is null)
 				{
-					this.SetFacingLeft((t.getPosition().x - this.getPosition().x) < 0);
-
-					Vec2f dir = t.getPosition() - this.getPosition();
-					f32 dist = Maths::Abs(dir.Length());
+					Vec2f dir = t.getPosition() - (this.getPosition() - Vec2f(0, 3));
 					dir.Normalize();
 					f32 angle = -dir.Angle() + (this.isFacingLeft() ? 180 : 0);
-					angle += ((XORRandom(400) - 100) / 100.0f);
+					angle += ((XORRandom(400) - 200) / 100.0f);
 
 					GunSettings@ settings;
 					this.get("gun_settings", @settings);
@@ -280,13 +278,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 bool isVisible(CBlob@ blob, CBlob@ target)
 {
+	//Is blob visible?
 	Vec2f col;
 	return !getMap().rayCastSolidNoBlobs(blob.getPosition(), target.getPosition(), col);
 }
 
 void onTick(CSprite@ this)
 {
-	this.SetFacingLeft(false);
+	//this.SetFacingLeft(false);
 	CBlob@ blob = this.getBlob();
 	if (blob.get_bool("security_state"))
 	{
@@ -295,10 +294,9 @@ void onTick(CSprite@ this)
 			CBlob@ target = getBlobByNetworkID(blob.get_u16("target"));
 			if (target !is null)
 			{
-				blob.SetFacingLeft((target.getPosition().x - blob.getPosition().x) < 0);
+				//blob.SetFacingLeft((target.getPosition().x - blob.getPosition().x) < 0);
 
-				Vec2f dir = target.getPosition() - blob.getPosition();
-				f32 length = dir.getLength();
+				Vec2f dir = target.getPosition() - blob.getPosition() + Vec2f(0, 3);
 				dir.Normalize();
 				f32 angle = dir.Angle();
 
@@ -306,7 +304,8 @@ void onTick(CSprite@ this)
 				if (head !is null)
 				{
 					head.ResetTransform();
-					head.RotateBy(-angle + (blob.isFacingLeft() ? 180 : 0), Vec2f());
+					head.SetFacingLeft((target.getPosition().x - blob.getPosition().x) < 0);
+					head.RotateBy(-angle + (head.isFacingLeft() ? 180 : 0), Vec2f());
 				}
 
 				CSpriteLayer@ flash = this.getSpriteLayer("muzzle_flash");
@@ -317,7 +316,8 @@ void onTick(CSprite@ this)
 
 					flash.ResetTransform();
 					flash.SetRelativeZ(1.0f);
-					flash.RotateBy(-angle + (this.isFacingLeft() ? 180 : 0), Vec2f(settings.MUZZLE_OFFSET.x, 0) * (this.isFacingLeft() ? 1 : -1));
+					flash.SetFacingLeft((target.getPosition().x - blob.getPosition().x) > 0);
+					flash.RotateBy(-angle + (flash.isFacingLeft() ? 180 : 0), Vec2f(settings.MUZZLE_OFFSET.x, 0) * (flash.isFacingLeft() ? 1 : -1));
 				}
 			}
 			else
@@ -326,7 +326,8 @@ void onTick(CSprite@ this)
 				if (head !is null)
 				{
 					head.ResetTransform();
-					head.RotateBy((Maths::Sin(blob.getTickSinceCreated() * 0.05f) * 20) + (blob.isFacingLeft() ? 180 : 0), Vec2f());
+					head.SetFacingLeft(blob.isFacingLeft());
+					head.RotateBy((Maths::Sin(blob.getTickSinceCreated() * 0.05f) * 20), Vec2f());
 				}
 			}
 		}

@@ -467,7 +467,7 @@ void Fire(CBlob@ this, VehicleInfo@ v, CBlob@ caller, const u8 charge)
 
 		if (shot)
 		{
-			this.getSprite().PlayRandomSound(v.fire_sound);
+			this.getSprite().PlayRandomSound(v.fire_sound, 2.0f);
 		}
 		else
 		{
