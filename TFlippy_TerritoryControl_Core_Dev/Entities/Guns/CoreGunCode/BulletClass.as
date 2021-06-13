@@ -13,18 +13,19 @@
 //
 
 #include "BulletCase.as";
-#include "Recoil.as";
 #include "BulletParticle.as";
-#include "Knocked.as";
-#include "GunCommon.as";
-#include "DeityCommon.as";
 #include "BulletModule.as";
 #include "Bullet.as";
+#include "Recoil.as";
+#include "GunCommon.as";
+#include "DeityCommon.as";
+#include "Knocked.as";
 
 const SColor trueWhite = SColor(255,255,255,255);
+
 Driver@ PDriver = getDriver();
-const int ScreenX = getDriver().getScreenWidth();
-const int ScreenY = getDriver().getScreenWidth();
+const int ScreenX = PDriver.getScreenWidth();
+const int ScreenY = PDriver.getScreenWidth();
 
 namespace BulletRender
 {
@@ -47,10 +48,9 @@ namespace BulletRender
 			Vertex[]@ bulletVertex;
 			string texture = vertex_book[a];
 			rules.get(texture, @bulletVertex);
-			
+
 			// Sending empty vertex just eats performance because engine does not check :)
-			if (bulletVertex.length() < 1)
-				continue;
+			if (bulletVertex.length() < 1) continue;
 
 			Render::RawQuads(texture, bulletVertex);
 
@@ -63,7 +63,6 @@ namespace BulletRender
 class BulletHolder
 {
 	Bullet[] bullets;
-
 	BulletHolder(){}
 
 	void onTick(CRules@ this)
@@ -76,7 +75,6 @@ class BulletHolder
 			if (bullet.onTick(map))
 			{
 				bullets.erase(a);
-				//BulletRender::Erase(a);
 				a--;
 			}
 		}

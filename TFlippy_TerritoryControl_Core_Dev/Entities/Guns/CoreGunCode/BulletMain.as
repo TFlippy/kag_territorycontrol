@@ -12,7 +12,6 @@
 //  Some code here is messy
 //
 
-#include "GunCommon.as";
 #include "BulletTrails.as";
 #include "BulletClass.as";
 
@@ -26,8 +25,6 @@ Random@ r = Random(12345);
 // Core vars
 BulletHolder@ BulletGrouped = BulletHolder();
 
-SColor white = SColor(255,255,255,255);
-SColor eatUrGreens = SColor(255,0,255,0);
 int FireGunID;
 
 f32 FRAME_TIME = 0;
@@ -35,8 +32,6 @@ f32 FRAME_TIME = 0;
 // Set commands, add render:: (only do this once)
 void onInit(CRules@ this)
 {
-	Reset(this);
-
 	if (isClient())
 	{
 		if (!this.exists("VertexBook"))
@@ -51,6 +46,7 @@ void onInit(CRules@ this)
 		
 	}
 
+	Reset(this);
 }
 
 void onReload(CRules@ this)
@@ -79,7 +75,17 @@ void Reset(CRules@ this)
 	r.Reset(12345);
 	FireGunID = this.addCommandID("fireGun");
 
-	BulletRender::Reset();
+	string[]@ book;
+	this.get("VertexBook", @book);
+
+	for (int a = 0; a < book.length(); a++)
+	{
+		this.set_bool(book[a] + '-inbook', false);
+	}
+
+	book.clear();
+
+	//BulletRender::Reset();
 }
 
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
@@ -155,7 +161,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			GunSettings@ settings;
 			gunBlob.get("gun_settings", @settings);
 
-			if (settings.B_PER_SHOT > 1) //Shotgun firing
+			if (settings !is null && settings.B_PER_SHOT > 1) //Shotgun firing
 			{
 				f32 tempAngle = angle;
 
@@ -181,7 +187,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			}
 			gunBlob.sub_u8("clip", 1);
 
-			if (isClient())
+			if (isClient() && settings !is null)
 			{
 				CBlob@ localBlob = getLocalPlayerBlob();
 				if (localBlob !is null && localBlob is hoomanBlob) // if we are this blob
