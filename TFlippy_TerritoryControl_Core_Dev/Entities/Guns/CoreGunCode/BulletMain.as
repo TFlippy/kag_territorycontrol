@@ -12,7 +12,6 @@
 //  Some code here is messy
 //
 
-#include "GunCommon.as";
 #include "BulletTrails.as";
 #include "BulletClass.as";
 
@@ -26,8 +25,6 @@ Random@ r = Random(12345);
 // Core vars
 BulletHolder@ BulletGrouped = BulletHolder();
 
-SColor white = SColor(255,255,255,255);
-SColor eatUrGreens = SColor(255,0,255,0);
 int FireGunID;
 
 f32 FRAME_TIME = 0;
@@ -35,8 +32,6 @@ f32 FRAME_TIME = 0;
 // Set commands, add render:: (only do this once)
 void onInit(CRules@ this)
 {
-	Reset(this);
-
 	if (isClient())
 	{
 		if (!this.exists("VertexBook"))
@@ -49,6 +44,8 @@ void onInit(CRules@ this)
 		this.add_u16("temp_id", Render::addScript(Render::layer_postworld, "BulletMain", "GunRender", 0.0f));
 		//Render::addScript(Render::layer_prehud, "BulletMain", "GUIStuff", 0.0f);
 	}
+
+	Reset(this);
 }
 
 void onReload(CRules@ this)
@@ -59,6 +56,12 @@ void onReload(CRules@ this)
 void onRestart(CRules@ this)
 {
 	Reset(this);
+}
+
+void Reset(CRules@ this)
+{
+	r.Reset(12345);
+	FireGunID = this.addCommandID("fireGun");
 
 	string[]@ book;
 	this.get("VertexBook", @book);
@@ -69,14 +72,8 @@ void onRestart(CRules@ this)
 	}
 
 	book.clear();
-}
 
-void Reset(CRules@ this)
-{
-	r.Reset(12345);
-	FireGunID = this.addCommandID("fireGun");
-
-	BulletRender::Reset();
+	//BulletRender::Reset();
 }
 
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)

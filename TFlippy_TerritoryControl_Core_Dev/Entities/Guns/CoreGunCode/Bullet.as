@@ -26,7 +26,7 @@ class Bullet
 	{
 		@hoomanShooter = humanBlob;
 		@gunBlob = gun;
-        modules = pointer;
+		modules = pointer;
 
 		GunSettings@ settings;
 		gun.get("gun_settings", @settings);
@@ -44,37 +44,44 @@ class Bullet
 		LastLerpedPos = CurrentPos;
 
 		for (int a = 0; a < modules.length(); a++)
+		{
 			modules[a].onModuleInit(this);
+		}
 	}
 
 	bool onTick(CMap@ map)
 	{
 		// Kill bullet at start of new tick (we don't instantly remove it so client can render it going splat)
 		TimeLeft--;
-		if (TimeLeft == 0)
-			return true;
+		if (TimeLeft == 0) return true;
 
 		OldPos = LastLerpedPos;
 
 		bool customGravity = false;
 		for (int a = 0; a < modules.length(); a++)
+		{
 			if (modules[a].onGravityStep(this))
+			{
 				customGravity = true;
+			}
+		}
 
+		Vec2f dir;
 		if (!customGravity)
 		{
 			Gravity -= BulletGrav;
 
 			// Direction shittery
-			Vec2f dir = Vec2f((FacingLeft ? -1 : 1), 0.0f).RotateBy(StartingAimAngle);
+			dir = Vec2f((FacingLeft ? -1 : 1), 0.0f).RotateBy(StartingAimAngle);
 			CurrentPos = ((dir * Speed) - (Gravity * Speed)) + CurrentPos;
 			CurrentVelocity = CurrentPos - OldPos;
 			Angle = -CurrentVelocity.getAngleDegrees();
 		}
 
 		for (int a = 0; a < modules.length(); a++)
+		{
 			modules[a].onTick(this);
-
+		}
 
 		bool endBullet = false;
 		HitInfo@[] list;
@@ -123,6 +130,7 @@ class Bullet
 								{
 									Sound::Play(S_OBJECT_HIT, CurrentPos, 1.5f);
 								}
+
 								if (isServer())
 								{
 									hoomanShooter.server_Hit(blob, CurrentPos, CurrentVelocity, damage, ammotype); 
@@ -146,8 +154,8 @@ class Bullet
 								if (isServer())
 								{
 									if (blob.hasTag("door")) damage *= 1.5f;
-									hoomanShooter.server_Hit(blob, CurrentPos, CurrentVelocity / 2, damage, ammotype);
-									gunBlob.server_Hit(blob, CurrentPos, CurrentVelocity / 2, 0.0f, ammotype, false); //For calling onHitBlob
+									hoomanShooter.server_Hit(blob, CurrentPos, dir, damage, ammotype);
+									gunBlob.server_Hit(blob, CurrentPos, dir, 0.0f, ammotype, false); //For calling onHitBlob
 
 									if (blob.hasTag("flesh") && gunBlob.exists("CustomKnock"))
 									{
@@ -178,8 +186,9 @@ class Bullet
 					}
 
 					for (int a = 0; a < modules.length(); a++)
+					{
 						modules[a].onHitBlob(this, blob, hash, hitpos, damage);
-
+					}
 
 					if (breakLoop) // So we can break while inside the switch
 					{
@@ -212,7 +221,9 @@ class Bullet
 					}
 
 					for (int a = 0; a < modules.length(); a++)
+					{
 						modules[a].onHitTile(this, tile, hitpos, damage);
+					}
 
 					CurrentPos = hitpos;
 					ParticleBullet(CurrentPos, CurrentVelocity);
@@ -242,6 +253,7 @@ class Bullet
 			}
 		}
 
+		//Find a better solution later
 		if (gunBlob.exists("CustomBullet") && gunBlob.get_string("CustomBullet").empty()) return;
 
 		// Lerp
@@ -249,7 +261,9 @@ class Bullet
 		LastLerpedPos = newPos;
 
 		for (int a = 0; a < modules.length(); a++)
+		{
 			modules[a].onRender(this);
+		}
 
 		const f32 B_LENGTH = gunBlob.get_f32("CustomBulletLength");
 		const f32 B_WIDTH  = gunBlob.get_f32("CustomBulletWidth");

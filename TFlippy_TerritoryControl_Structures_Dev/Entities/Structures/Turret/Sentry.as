@@ -5,6 +5,7 @@
 #include "VehicleAttachmentCommon.as";
 #include "DeityCommon.as";
 #include "GunCommon.as";
+#include "BulletCase.as";
 
 const f32 radius = 128.0f;
 const u32 delay = 90;
@@ -223,18 +224,19 @@ void onTick(CBlob@ this)
 					fromBarrel = fromBarrel.RotateBy(angle);
 
 					shootGun(this.getNetworkID(), angle, this.getNetworkID(), this.getSprite().getWorldTranslation() + fromBarrel);
-				}
 
-				if (isClient())
-				{
-					this.getSprite().PlaySound("Sentry_Shoot.ogg", 2.0f);
-
-					CSpriteLayer@ flash = this.getSprite().getSpriteLayer("muzzle_flash");
-					if (flash !is null)
+					if (isClient())
 					{
-						//Turn on muzzle flash
-						flash.SetFrameIndex(0);
-						flash.SetVisible(true);
+						this.getSprite().PlaySound("Sentry_Shoot.ogg", 2.0f);
+						ParticleCase2("GatlingCase.png", this.getPosition(), this.isFacingLeft() ? -dir.Angle() : angle);
+
+						CSpriteLayer@ flash = this.getSprite().getSpriteLayer("muzzle_flash");
+						if (flash !is null)
+						{
+							//Turn on muzzle flash
+							flash.SetFrameIndex(0);
+							flash.SetVisible(true);
+						}
 					}
 				}
 

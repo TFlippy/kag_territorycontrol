@@ -2,7 +2,7 @@
 //
 //  StandardFire.as - Vamist & Gingerbeard
 //
-//  Handles client side activities
+//  Handles client side activities for hand held fire arms
 //
 //
 
@@ -52,11 +52,11 @@ void onInit(CBlob@ this)
 	// Cant use Exist since value will get removed on map reset (and we cant remove values from engine dict for w/e reason)
 	if (!rules.get_bool(vert_name + '-inbook'))
 	{
-		if (vert_name == "")
+		/*if (vert_name == "")
 		{
-			//warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
+			warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
 			return;
-		}
+		}*/
 
 		rules.set_bool(vert_name + '-inbook', true);
 
