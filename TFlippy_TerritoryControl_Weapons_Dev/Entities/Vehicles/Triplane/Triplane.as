@@ -195,9 +195,10 @@ void onTick(CBlob@ this)
 	const f32 hmod = this.getHealth() / this.getInitialHealth();
 	const f32 v = this.get_f32("velocity");
 	Vec2f d = this.get_Vec2f("direction");
+	const f32 margin = this.getHealth() > this.getInitialHealth() / 2 ? 1 : hmod;
 	// Vec2f grav = Vec2f(0, 1) * 4 * (SPEED_MAX - v);
 
-	this.AddForce(-d * v * hmod * fuelModifier);
+	this.AddForce(-d * v * fuelModifier * margin);
 
 	if (this.getVelocity().Length() > 1.50f && v > 0.25f) this.setAngleDegrees((this.isFacingLeft() ? 180 : 0) - this.getVelocity().Angle());
 	else this.setAngleDegrees(0);

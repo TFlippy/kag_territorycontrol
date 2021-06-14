@@ -97,6 +97,11 @@ void SetAmmo(CBlob@ this, u8 amount)
 
 void onTick(CBlob@ this)
 {
+	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+	CBlob@ attachedBlob = point.getOccupied();
+
+	if (attachedBlob !is null && !attachedBlob.hasTag("vehicle")) return;
+
 	if (this.get_bool("security_state"))
 	{
 		CBlob@[] blobs;
@@ -142,6 +147,8 @@ void onTick(CBlob@ this)
 		CBlob@ t = getBlobByNetworkID(this.get_u16("target"));
 		if (t !is null && getGameTime() >= this.get_u32("next_launch") && isVisible(this, t))
 		{
+			this.SetFacingLeft((t.getPosition().x - this.getPosition().x) < 0);
+
 			int ammo = GetAmmo(this);
 			if (ammo > 0)
 			{
@@ -178,7 +185,7 @@ bool isVisible(CBlob@ blob, CBlob@ target)
 
 void onTick(CSprite@ this)
 {
-	this.SetFacingLeft(false);
+	//this.SetFacingLeft(false);
 	CBlob@ blob = this.getBlob();
 	if (blob.get_bool("security_state"))
 	{
@@ -187,7 +194,12 @@ void onTick(CSprite@ this)
 			CBlob@ target = getBlobByNetworkID(blob.get_u16("target"));
 			if (target !is null)
 			{
-				blob.SetFacingLeft((target.getPosition().x - blob.getPosition().x) < 0);
+				AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
+				CBlob@ attachedBlob = point.getOccupied();
+
+				if (attachedBlob !is null && !attachedBlob.hasTag("vehicle")) return;
+
+				//blob.SetFacingLeft((target.getPosition().x - blob.getPosition().x) < 0);
 
 				CSpriteLayer@ head = blob.getSprite().getSpriteLayer("head");
 				if (head !is null)
@@ -197,7 +209,18 @@ void onTick(CSprite@ this)
 					dir.y = -Maths::Abs(dir.y) - 0.25f;
 
 					head.ResetTransform();
+					head.SetFacingLeft((target.getPosition().x - blob.getPosition().x) < 0);
 					head.RotateBy(-dir.Angle() + (this.isFacingLeft() ? 180 : 0), Vec2f());
+				}
+			}
+			else
+			{
+				CSpriteLayer@ head = this.getSpriteLayer("head");
+				if (head !is null)
+				{
+					head.ResetTransform();
+					head.SetFacingLeft(blob.isFacingLeft());
+					//head.RotateBy((Maths::Sin(blob.getTickSinceCreated() * 0.05f) * 20), Vec2f());
 				}
 			}
 		}

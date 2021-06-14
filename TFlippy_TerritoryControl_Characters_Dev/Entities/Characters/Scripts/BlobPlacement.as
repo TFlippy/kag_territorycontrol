@@ -41,7 +41,7 @@ Vec2f getBottomOfCursor(Vec2f cursorPos, CBlob@ carryBlob)
 
 void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 {
-	// rotate towards mouse if object allows
+	// rotate towards mouse if object allows- modified for guns
 	if (carryBlob.hasTag("place45"))
 	{
 		f32 distance = 8.0f;
@@ -56,18 +56,18 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 		Vec2f pos = this.getPosition();
 		Vec2f aim_vec = (pos - aimpos);
 		aim_vec.Normalize();
-		f32 angle_step = 45.0f;
-		f32 mouseAngle = (int(aim_vec.getAngleDegrees() + (angle_step * 0.5)) / int(angle_step)) * angle_step ;
-		if (!this.isFacingLeft()) mouseAngle += 180;
+		//f32 angle_step = 45.0f;
+		//f32 mouseAngle = (int(aim_vec.getAngleDegrees() + (angle_step * 0.5)) / int(angle_step)) * angle_step ;
+		//if (!this.isFacingLeft()) mouseAngle += 180;
 
-		carryBlob.setAngleDegrees(-mouseAngle + angleOffset);
+		//carryBlob.setAngleDegrees(-mouseAngle + angleOffset);
 		AttachmentPoint@ hands = this.getAttachments().getAttachmentPointByName("PICKUP");
 
 		aim_vec *= distance;
 
 		if (hands !is null)
 		{
-			hands.offset.x = 0 + (aim_vec.x * 2 * (this.isFacingLeft() ? 1.0f : -1.0f)); // if blob config has offset other than 0,0 there is a desync on client, dont know why
+			hands.offset.x = -6 + (aim_vec.x * 1 * (this.isFacingLeft() ? 1.0f : -1.0f)); // if blob config has offset other than 0,0 there is a desync on client, dont know why
 			hands.offset.y = -(aim_vec.y * (distance < 0 ? 1.0f : 1.0f));
 		}
 	}

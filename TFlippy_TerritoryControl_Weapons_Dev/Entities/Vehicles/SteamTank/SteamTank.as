@@ -126,6 +126,8 @@ void onTick(CBlob@ this)
 		VehicleInfo@ v;
 		if (!this.get("VehicleInfo", @v)) return;
 
+		this.set_f32("gun_recoil_current", Maths::Lerp(this.get_f32("gun_recoil_current"), 0, 0.45f));
+
 		//set the arm angle based on GUNNER mouse aim, see above ^^^^
 		f32 angle = getAimAngle(this, v);
 		Vehicle_SetWeaponAngle(this, angle, v);
@@ -139,7 +141,7 @@ void onTick(CBlob@ this)
 
 			arm.ResetTransform();
 			arm.SetRelativeZ(-1.0f);
-			arm.SetOffset(arm_offset);
+			arm.SetOffset(Vec2f(this.get_f32("gun_recoil_current"), 0).RotateBy(-getAimAngle(this, v)) + arm_offset);
 			arm.RotateBy(rotation, Vec2f(facing_left ? -4.0f : 4.0f, 0.0f));
 		}
 
@@ -167,6 +169,13 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		bullet.setPosition(this.getPosition() + offset);
 
 		bullet.server_SetTimeToDie(20.0f);
+
+		if (isClient())
+		{
+			Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
+			ParticleAnimated("SmallExplosion.png", this.getPosition() + offset, dir, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+		}
+		this.set_f32("gun_recoil_current", 5);
 	}
 }
 
