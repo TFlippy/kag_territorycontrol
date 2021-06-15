@@ -11,6 +11,8 @@ void onInit(CBlob@ this)
 	this.SetLight(true);
 	this.SetLightRadius(64.0f);
 	this.SetLightColor(SColor(255, 255, 180, 0));
+
+	//this.set_f32("deity_power",10000); //for testing if the cap is actually working
 	
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Disc_MountainKing.ogg");
@@ -36,7 +38,7 @@ void onTick(CSprite@ this)
 	if (blob is null) return;
 
 	const f32 power = blob.get_f32("deity_power");
-	blob.setInventoryName("Altar of Grand Mason\n\nMasonic Power: " + power + "\nFree block chance: " + (power * 0.01f) + "%");
+	blob.setInventoryName("Altar of Grand Mason\n\nMasonic Power: " + power + "\nFree block chance: " + Maths::Min((power * 0.01f),MAX_FREE_BLOCK_CHANCE) + "%");
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

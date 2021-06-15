@@ -25,9 +25,11 @@ void onInit(CBlob@ this)
 	this.set_bool("base_allow_alarm", false);
 	
 	this.addCommandID("sv_store");
-	
+	this.addCommandID("sv_hidemap");
+
 	this.Tag("minimap_small");
 	this.set_u8("minimap_index", 1);
+	this.set_bool("minimap_hidden", false);
 	
 	// this.Tag("invincible");
 
@@ -101,6 +103,8 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		{
 			CButton@ buttonOwner = caller.CreateGenericButton(28, Vec2f(14, 5), this, this.getCommandID("sv_store"), "Store", params);
 		}
+
+		CButton@ buttonOwner = caller.CreateGenericButton(this.get_bool("minimap_hidden") ? 23 : 27, Vec2f(0.5f, -14), this, this.getCommandID("sv_hidemap"), "Toggle Map Icon", params);
 	}
 }
 
@@ -145,6 +149,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			f32 heal = this.getInitialHealth() * 0.05f;
 			this.server_SetHealth(Maths::Min(this.getHealth() + heal, this.getInitialHealth()));
 		}
+	}
+	else if (cmd == this.getCommandID("sv_hidemap"))
+	{
+		this.set_bool("minimap_hidden", !this.get_bool("minimap_hidden"));
 	}
 	
 	if (isServer())

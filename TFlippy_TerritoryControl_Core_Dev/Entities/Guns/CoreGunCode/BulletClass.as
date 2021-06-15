@@ -59,6 +59,7 @@ namespace BulletRender
 	}
 }
 
+
 class BulletHolder
 {
 	Bullet[] bullets;

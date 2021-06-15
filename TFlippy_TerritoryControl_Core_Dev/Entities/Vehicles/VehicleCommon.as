@@ -638,6 +638,7 @@ void Vehicle_StandardControls(CBlob@ this, VehicleInfo@ v)
 					const bool down = ap.isKeyPressed(key_down) || ap.isKeyPressed(key_action3);
 					if (onground && (down || moveUp))
 					{
+						//print("VEHICLE ON GROUND");
 						const bool faceleft = this.isFacingLeft();
 						if (angle > 330 || angle < 30)
 						{

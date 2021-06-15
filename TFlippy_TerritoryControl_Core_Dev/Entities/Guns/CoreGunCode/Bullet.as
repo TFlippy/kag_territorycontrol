@@ -33,6 +33,7 @@ class Bullet
 	{
 		@hoomanShooter = humanBlob;
 		@gunBlob = gun;
+
 		modules = pointer;
 
 		GunSettings@ settings;
@@ -152,9 +153,11 @@ class Bullet
 
 							if (blob.hasTag("flesh") || blob.isCollidable() || blob.hasTag("vehicle"))
 							{
+
 								if (blob.getTeamNum() == gunBlob.getTeamNum() && !blob.getShape().isStatic()) continue;
 								else if (blob.hasTag("weapon") || blob.hasTag("dead") || blob.hasTag("invincible") || 
 								         blob.hasTag("food")   || blob.hasTag("gas")) continue;
+
 								else if (blob.getName() == "iron_halfblock" || blob.getName() == "stone_halfblock") continue;
 
 								CurrentPos = hitpos;
@@ -162,6 +165,7 @@ class Bullet
 								if (isServer())
 								{
 									if (blob.hasTag("door")) damage *= 1.5f;
+
 									hoomanShooter.server_Hit(blob, CurrentPos, dir, damage, ammotype);
 									gunBlob.server_Hit(blob, CurrentPos, dir, 0.0f, ammotype, false); //For calling onHitBlob
 
