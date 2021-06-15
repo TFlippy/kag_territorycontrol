@@ -31,7 +31,7 @@ void onInit(CBlob@ this)
 	}
 
 	this.getCurrentScript().tickFrequency = 1;
-	this.getCurrentScript().runFlags |= Script::tick_attached;
+	//this.getCurrentScript().runFlags |= Script::tick_attached;
 }
 
 void onTick(CBlob@ this)
@@ -179,6 +179,16 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
+	else
+	{
+		CSpriteLayer@ gammalaser = this.getSprite().getSpriteLayer("gammalaser");
+		if (gammalaser !is null)
+		{
+			gammalaser.SetVisible(false);
+		}
+
+		this.getCurrentScript().runFlags |= Script::tick_not_sleeping;
+	}
 }
 
 bool HasAmmo(CBlob@ this, bool take, string ammoBlob)
@@ -229,4 +239,6 @@ void onAttach( CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint )
 {
 	attached.Tag("noLMB");
 	attached.Tag("noShielding");
+
+	this.getCurrentScript().runFlags &= ~Script::tick_not_sleeping;
 }

@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////
+//
+//  Bullet.as - Vamist
+//
+//  Handles bullet activities
+//
+
 #include "BulletModule.as"
 
 class Bullet
@@ -145,8 +152,9 @@ class Bullet
 
 							if (blob.hasTag("flesh") || blob.isCollidable() || blob.hasTag("vehicle"))
 							{
-								if (blob.getTeamNum() == gunBlob.getTeamNum() && (blob.hasTag("flesh") || blob.hasTag("vehicle"))) continue;
-								else if (blob.hasTag("weapon") || blob.hasTag("dead") || blob.hasTag("invincible")) continue;
+								if (blob.getTeamNum() == gunBlob.getTeamNum() && !blob.getShape().isStatic()) continue;
+								else if (blob.hasTag("weapon") || blob.hasTag("dead") || blob.hasTag("invincible") || 
+								         blob.hasTag("food")   || blob.hasTag("gas")) continue;
 								else if (blob.getName() == "iron_halfblock" || blob.getName() == "stone_halfblock") continue;
 
 								CurrentPos = hitpos;
@@ -206,12 +214,12 @@ class Bullet
 						{
 							for (int i = 0; i < gunBlob.get_u8("CustomPenetration"); i++)
 							{
-								map.server_DestroyTile(hitpos, 1.0f);
+								map.server_DestroyTile(hitpos, damage * 0.25f);
 							}
 						}
 						else
 						{
-							map.server_DestroyTile(hitpos, 1.0f);
+							map.server_DestroyTile(hitpos, damage * 0.25f);
 						}
 					}
 

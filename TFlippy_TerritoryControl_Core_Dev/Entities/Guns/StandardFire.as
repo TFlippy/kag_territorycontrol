@@ -54,7 +54,7 @@ void onInit(CBlob@ this)
 	{
 		if (vert_name == "")
 		{
-			warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
+			//warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
 			return;
 		}
 
@@ -81,36 +81,33 @@ void onInit(CBlob@ this)
 
 	this.set_u8("clip", settings.CLIP); //Clip u8 for easy maneuverability
 
-	if (isClient())
+	CSprite@ sprite = this.getSprite();
+
+	if (this.hasTag("CustomSoundLoop"))
 	{
-		CSprite@ sprite = this.getSprite();
+		sprite.SetEmitSound(settings.FIRE_SOUND);
+		sprite.SetEmitSoundVolume(this.exists("CustomShootVolume") ? this.get_f32("CustomShootVolume") : 2.0f);
+		sprite.SetEmitSoundPaused(true);
+	}
 
-		if (this.hasTag("CustomSoundLoop"))
+	if (!this.exists("CustomFlash") || (this.exists("CustomFlash") && !this.get_string("CustomFlash").empty()))
+	{
+		// Determine muzzleflash sprite
+		const bool hitterType = settings.B_TYPE == HittersTC::plasma || settings.B_TYPE == HittersTC::railgun_lance;
+		const string muzzleflash_file = this.exists("CustomFlash") ? this.get_string("CustomFlash") : hitterType ? "MuzzleFlash_Plasma" : "MuzzleFlash";
+
+		// Add muzzle flash
+		CSpriteLayer@ flash = sprite.addSpriteLayer("muzzle_flash", muzzleflash_file, 16, 8, this.getTeamNum(), 0);
+		if (flash !is null)
 		{
-			sprite.SetEmitSound(settings.FIRE_SOUND);
-			sprite.SetEmitSoundVolume(this.exists("CustomShootVolume") ? this.get_f32("CustomShootVolume") : 2.0f);
-			sprite.SetEmitSoundPaused(true);
-		}
-
-		if (!this.exists("CustomFlash") || (this.exists("CustomFlash") && !this.get_string("CustomFlash").empty()))
-		{
-			// Determine muzzleflash sprite
-			const bool hitterType = settings.B_TYPE == HittersTC::plasma || settings.B_TYPE == HittersTC::railgun_lance;
-			const string muzzleflash_file = this.exists("CustomFlash") ? this.get_string("CustomFlash") : hitterType ? "MuzzleFlash_Plasma" : "MuzzleFlash";
-
-			// Add muzzle flash
-			CSpriteLayer@ flash = sprite.addSpriteLayer("muzzle_flash", muzzleflash_file, 16, 8, this.getTeamNum(), 0);
-			if (flash !is null)
-			{
-				Animation@ anim = flash.addAnimation("default", 1, false);
-				int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
-				anim.AddFrames(frames);
-				flash.SetRelativeZ(1.0f);
-				flash.SetOffset(settings.MUZZLE_OFFSET);
-				flash.SetFacingLeft(this.hasTag("CustomMuzzleLeft"));
-				flash.SetVisible(false);
-				// flash.setRenderStyle(RenderStyle::additive);
-			}
+			Animation@ anim = flash.addAnimation("default", 1, false);
+			int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
+			anim.AddFrames(frames);
+			flash.SetRelativeZ(1.0f);
+			flash.SetOffset(settings.MUZZLE_OFFSET);
+			flash.SetFacingLeft(this.hasTag("CustomMuzzleLeft"));
+			flash.SetVisible(false);
+			// flash.setRenderStyle(RenderStyle::additive);
 		}
 	}
 
