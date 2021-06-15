@@ -258,7 +258,7 @@ void onTick(CBlob@ this)
 					{
 						shootProj(this, aimangle);
 						Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-						coil.onFakeTick();
+						coil.onTick();
 					}
 					else
 					{

@@ -63,6 +63,7 @@ class BulletHolder
 {
 	Bullet[] bullets;
 	BulletHolder(){}
+	Recoil@ localRecoil;
 
 	void onTick(CRules@ this)
 	{
@@ -77,6 +78,23 @@ class BulletHolder
 				a--;
 			}
 		}
+
+		if (localRecoil !is null)
+		{
+			if (localRecoil.TimeToNormal < 1)
+			{
+				@localRecoil = null;
+			}
+			else
+			{
+				localRecoil.onTick();
+			}
+		}
+	}
+
+	void NewRecoil(Recoil@ this)
+	{
+		@localRecoil = this;
 	}
 
 	void QueueBullets()

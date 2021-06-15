@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 //
-//  VehicleFire.as - Gingerbeard
+//  VehicleFire.as - Vamist
 //
 //  Holds the required information regarding bullets
 //  This file is not required for blobs that use StandardFire.as

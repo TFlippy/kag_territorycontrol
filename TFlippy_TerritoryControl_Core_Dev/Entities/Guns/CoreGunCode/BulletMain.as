@@ -180,8 +180,8 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 				CBlob@ localBlob = getLocalPlayerBlob();
 				if (localBlob !is null && localBlob is hoomanBlob) // if we are this blob
 				{
-					/*Recoil@ coil = Recoil(localBlob, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-					BulletGrouped.NewRecoil(@coil);*/
+					Recoil@ coil = Recoil(localBlob, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+					BulletGrouped.NewRecoil(@coil);
 				}
 			}
 		}
