@@ -560,6 +560,12 @@ void Vehicle_StandardControls(CBlob@ this, VehicleInfo@ v)
 							moveForce *= 1.5f;
 						}
 
+						// add gyromat effect
+						if (this.exists("gyromat_acceleration"))
+						{
+							moveForce *= Maths::Sqrt(this.get_f32("gyromat_acceleration"));
+						}
+
 						bool slopeangle = (angle > 15 && angle < 345 && this.isOnMap());
 
 						Vec2f pos = this.getPosition();

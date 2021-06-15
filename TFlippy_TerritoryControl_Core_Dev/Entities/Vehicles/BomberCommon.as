@@ -279,10 +279,12 @@ void BomberHandling(CBlob@ this, VehicleInfo@ v)
 		f32 turnSpeed = v.turn_speed;
 
 		Vec2f force;
-		bool up = driverSeat.isKeyPressed(key_action1);
-		bool down = driverSeat.isKeyPressed(key_action2);
-		bool left = driverSeat.isKeyPressed(key_left);
+
+		bool up    = driverSeat.isKeyPressed(key_action1);
+		bool down  = driverSeat.isKeyPressed(key_action2);
+		bool left  = driverSeat.isKeyPressed(key_left);
 		bool right = driverSeat.isKeyPressed(key_right);
+
 		bool fakeCrash = blob is null && !this.isOnGround() && !this.isInWater();
 		if (fakeCrash)
 		{
@@ -308,6 +310,7 @@ void BomberHandling(CBlob@ this, VehicleInfo@ v)
 				this.SetFacingLeft(true);
 			}
 		}
+
 		if (right)
 		{
 			force.x += moveForce;
@@ -316,6 +319,7 @@ void BomberHandling(CBlob@ this, VehicleInfo@ v)
 				this.SetFacingLeft(false);
 			}
 		}
+
 		if (fakeCrash)
 		{
 			if (Maths::Abs(vel.x) >= 0.5f)
@@ -323,6 +327,12 @@ void BomberHandling(CBlob@ this, VehicleInfo@ v)
 				force.x *= 1.1f;
 			}
 		}
+
+		if (this.exists("gyromat_acceleration"))
+		{
+			force.x *= Maths::Sqrt(this.get_f32("gyromat_acceleration"));
+		}
+
 		this.AddForce(Vec2f(force.x * fuelModifier, -force.y * fuelModifier));
 	}
 }
