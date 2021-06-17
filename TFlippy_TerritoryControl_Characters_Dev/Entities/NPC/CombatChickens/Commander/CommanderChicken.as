@@ -6,6 +6,7 @@
 #include "FireCommon.as";
 #include "RunnerCommon.as";
 #include "MakeCrate.as";
+#include "Survival_Structs.as";
 
 u32 next_commander_event = 0; // getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
 bool dry_shot = true;
@@ -212,7 +213,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CTeam@ team = getRules().getTeam(target.getTeamNum());
 			if (team !is null)
 			{
-				client_AddToChat("An UPF Recon Squad has been called upon " + team.getName() + "'s " + target.getInventoryName() + "!", SColor(255, 255, 0, 0));
+				client_AddToChat("An UPF Recon Squad has been called upon " + GetTeamName(target.getTeamNum()) + "'s " + target.getInventoryName() + "!", SColor(255, 255, 0, 0));
 				Sound::Play("ChickenMarch.ogg", target.getPosition(), 1.00f, 1.00f);
 			}
 		}
