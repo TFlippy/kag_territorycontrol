@@ -6,7 +6,7 @@
 void onInit(CBlob@ this)
 {
 	this.set_u8("deity_id", Deity::mason);
-	this.set_Vec2f("shop menu size", Vec2f(2, 2));
+	this.set_Vec2f("shop menu size", Vec2f(3, 2));
 
 	this.SetLight(true);
 	this.SetLightRadius(64.0f);
@@ -30,6 +30,19 @@ void onInit(CBlob@ this)
 		s.buttonwidth = 2;	
 		s.buttonheight = 2;
 		
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Building for Dummies", "$artisancertificate$", "artisancertificate", "Simplified Builder manuscript for building cooperation.", true);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+		
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Engineer's Tools", "$engineertools$", "engineertools", "Engineer's Tools for advanced builders.", true);
+		AddRequirement(s.requirements, "coin", "", "Coins", 500);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
+
 		s.spawnNothing = true;
 	}
 }
@@ -141,9 +154,21 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							callerBlob.Sync("deity_id", false);
 						}
 					}
-					else
+					else if(isServer())
 					{
+						string[] spl = data.split("-");
+						CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 
+						if (blob is null) return;
+
+						if (!blob.canBePutInInventory(callerBlob))
+						{
+							callerBlob.server_Pickup(blob);
+						}
+						else if (callerBlob.getInventory() !is null && !callerBlob.getInventory().isFull())
+						{
+							callerBlob.server_PutInInventory(blob);
+						}
 					}
 				}				
 			}
