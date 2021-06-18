@@ -37,13 +37,14 @@ void onTick(CBlob@ this)
 	}
 
 	if (this.get_f32("keg_health") >= 7.0f)
-    {
+	{
         this.getSprite().PlaySound("woodheavyhit1");
         this.set_string("equipment_head", "");
         this.set_f32("keg_health", 0.0f);
-		if (this.getSprite().getSpriteLayer("keg") !is null) this.getSprite().RemoveSpriteLayer("keg");
+        if (this.getSprite().getSpriteLayer("keg") !is null) this.getSprite().RemoveSpriteLayer("keg");
         this.RemoveScript("keg_effect.as");
     }
+    
     if (getGameTime() >= this.get_f32("keg_explode") && this.get_f32("keg_explode") != 0.0f)
     	this.server_Die();
 }
