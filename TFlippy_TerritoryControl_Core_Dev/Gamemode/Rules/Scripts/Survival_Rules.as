@@ -609,25 +609,41 @@ bool doChickenSpawn(CPlayer@ player)
 	{
 		string blobType;
 		int minutes = getGameTime() / (60*30);
-		int rand = XORRandom(100) - minutes;
-		if (rand < 5) rand = 4;
-
-		if (rand < 5)
+		int rand = XORRandom(100);
+		if (minutes > 80)
 		{
-			blobType = "commanderchicken";
+			if (rand < 40) blobType = "heavychicken";
+			else if (rand < 85) blobType = "commanderchicken";
+			else if (rand < 95) blobType = "soldierchicken";
+			else blobType = "scoutchicken";
 		}
-		else if (rand < 15)
+		else if (minutes > 60)
 		{
-			blobType = "heavychicken";
+			if (rand < 10) blobType = "heavychicken";
+			else if (rand < 30) blobType = "commanderchicken";
+			else if (rand < 75) blobType = "soldierchicken";
+			else blobType = "scoutchicken";
 		}
-		else if (rand < 45)
+		else if (minutes > 40)
 		{
-			blobType = "soldierchicken";
+			if (rand < 2) blobType = "heavychicken";
+			else if (rand < 15) blobType = "commanderchicken";
+			else if (rand < 60) blobType = "soldierchicken";
+			else blobType = "scoutchicken";
 		}
-		else
+		else if (minutes > 20)
 		{
-			blobType = "scoutchicken";
+			if (rand < 10) blobType = "commanderchicken";
+			else if (rand < 40) blobType = "soldierchicken";
+			else blobType = "scoutchicken";
 		}
+		else if (minutes > 10)
+		{
+			if (rand < 5) blobType = "commanderchicken";
+			else if (rand < 20) blobType = "soldierchicken";
+			else blobType = "scoutchicken";
+		}
+		else blobType = "scoutchicken";
 
 		CBlob@ new_blob = server_CreateBlob(blobType);
 
