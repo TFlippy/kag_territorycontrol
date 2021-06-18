@@ -139,7 +139,7 @@ void onChangeTeam(CBlob@ this, const int oldTeam)
 
 	SetNearbyBlobsToTeam(this, oldTeam, newTeam);
 
-	for(uint i = 0; i < totalFortCount; i++)
+	for (uint i = 0; i < totalFortCount; i++)
 	{
 		int fortTeamNum = forts[i].getTeamNum();
 
@@ -189,7 +189,7 @@ void SetNearbyBlobsToTeam(CBlob@ this, const int oldTeam, const int newTeam)
 	for (uint i = 0; i < teamBlobs.length; i++)
 	{
 		CBlob@ b = teamBlobs[i];
-		if(b.getName() != this.getName() && b.hasTag("change team on fort capture") && (b.getTeamNum() == oldTeam || b.getTeamNum() > 7))
+		if (b.getName() != this.getName() && b.hasTag("change team on fort capture") && (b.getTeamNum() == oldTeam || b.getTeamNum() > 7))
 		{
 			b.server_setTeamNum(newTeam);
 		}
@@ -207,7 +207,7 @@ void onDie(CBlob@ this)
 	int teamForts = 0; // Current fort is being faction_destroyed
 	u8 team = this.getTeamNum();
 
-	for(uint i = 0; i < forts.length; i++)
+	for (uint i = 0; i < forts.length; i++)
 	{
 		if (forts[i].getTeamNum() == team) teamForts++;
 	}
@@ -224,42 +224,42 @@ void onDie(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	if (this.isOverlapping(caller))
+	if (caller.getTeamNum() >= 100 && caller.getTeamNum() < 200 && this.getTeamNum() < 100 && caller.getName() != "slave")
 	{
-		if (caller.getTeamNum() >= 100 && caller.getTeamNum() < 200 && this.getTeamNum() < 100 && caller.getName() != "slave")
+		TeamData@ team_data;
+		GetTeamData(this.getTeamNum(), @team_data);
+
+		CPlayer@ ply = caller.getPlayer();
+
+		if (team_data !is null && ply !is null)
 		{
-			TeamData@ team_data;
-			GetTeamData(this.getTeamNum(), @team_data);
+			// bool deserter = ply.get_u32("teamkick_time") > getGameTime();
+			bool recruitment_enabled = team_data.recruitment_enabled;
+			bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
+			// bool is_premium = ply.getSupportTier() > 0;
 
-			CPlayer@ ply = caller.getPlayer();
+			//print("" + ply.getSupportTier());
 
-			if (team_data !is null && ply !is null)
+			bool can_join = recruitment_enabled && upkeep_gud;
+
+			string msg = "";
+			if (!can_join)
 			{
-				// bool deserter = caller.getPlayer() !is null && caller.getPlayer().get_u32("teamkick_time") > getGameTime();
-				bool recruitment_enabled = team_data.recruitment_enabled;
-				bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
-				bool is_premium = true; //ply.getSupportTier() > 0; // TODO
-
-				//print("" + ply.getSupportTier());
-
-				bool can_join = recruitment_enabled && upkeep_gud && is_premium;
-
-				string msg = "";
-				if (!can_join)
-				{
-					msg += "\n\nCannot join!\n";
-					if (!recruitment_enabled) msg += "This faction is not accepting any new members.\n";
-					if (!upkeep_gud) msg += "Faction's upkeep is too high.\n";
-					if (!is_premium) msg += "Factions are restricted to Premium accounts only.\n";
-				}
-
-				CBitStream params;
-				params.write_u16(caller.getNetworkID());
-				CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("button_join"), "Join the Faction" + msg, params);
-				button.SetEnabled(can_join);
+				msg += "\n\nCannot join!\n";
+				if (!recruitment_enabled) msg += "This faction is not accepting any new members.\n";
+				if (!upkeep_gud) msg += "Faction's upkeep is too high.\n";
+				//if (!is_premium) msg += "Factions are restricted to Premium accounts only.\n";
 			}
-		}
 
+			CBitStream params;
+			params.write_u16(caller.getNetworkID());
+			CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("button_join"), "Join the Faction" + msg, params);
+			button.SetEnabled(can_join && caller.isOverlapping(this));
+		}
+	}
+
+	if (caller.isOverlapping(this))
+	{
 		if (caller.getTeamNum() == this.getTeamNum() && this.getTeamNum() < 100)
 		{
 			CBitStream params_menu;
