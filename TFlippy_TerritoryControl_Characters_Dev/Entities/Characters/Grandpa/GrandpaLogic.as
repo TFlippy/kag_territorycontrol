@@ -12,6 +12,7 @@ void onInit(CBlob@ this)
 	//this.Tag("noBubbles"); this is for disabling emoticons, we won't need that.
 	this.Tag("notarget"); //makes AI never target us
 	this.Tag("noCapturing");
+	this.Tag("truesight");
 
 	this.Tag("noUseMenu");
 	this.set_f32("gib health", -3.0f);

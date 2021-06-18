@@ -11,16 +11,34 @@ void onInit(CSprite@ this)
 
 void onRender(CSprite@ this)
 {
-	if (g_videorecording || !u_showtutorial)
-		return;
-
 	CBlob@ mouseBlob = getMap().getBlobAtPosition(getControls().getMouseWorldPos());
-	if (mouseBlob !is null && (!mouseBlob.hasTag("player") || mouseBlob.hasTag("migrant")))
+	
+	if (g_videorecording) return;
+
+	if (mouseBlob !is null)
 	{
-		Vec2f dimensions;
-		GUI::SetFont("menu");
-		GUI::GetTextDimensions(mouseBlob.getInventoryName(), dimensions);
-		GUI::DrawText(mouseBlob.getInventoryName(), getDriver().getScreenPosFromWorldPos(mouseBlob.getPosition() - Vec2f(0, -mouseBlob.getHeight() / 2)) - Vec2f(dimensions.x / 2, -8.0f), color_white);					//	mouseBlob.RenderForHUD( RenderStyle::outline_front );
+		if (mouseBlob.hasTag("player")) //players can get the disguised tag
+		{
+			string name = mouseBlob.getInventoryName();
+			if (mouseBlob.hasTag("disguised") && getLocalPlayer().getBlob() != null 
+			&& !getLocalPlayer().getBlob().hasTag("truesight") 
+			&& getLocalPlayer().getBlob().getTeamNum() != mouseBlob.getTeamNum()) //diguised players names can only be seen by admins with true sight enabled
+			{
+				return;
+			}
+			Vec2f dimensions;
+			GUI::SetFont("menu");
+			GUI::GetTextDimensions(name, dimensions);
+			GUI::DrawText(name, getDriver().getScreenPosFromWorldPos(mouseBlob.getPosition() - Vec2f(0, -mouseBlob.getHeight() / 2)) - Vec2f(dimensions.x / 2, -8.0f), color_white);
+		}
+		else if (u_showtutorial) //disabling help does not disable player names
+		{
+			Vec2f dimensions;
+			GUI::SetFont("menu");
+			GUI::GetTextDimensions(mouseBlob.getInventoryName(), dimensions);
+			GUI::DrawText(mouseBlob.getInventoryName(), getDriver().getScreenPosFromWorldPos(mouseBlob.getPosition() - Vec2f(0, -mouseBlob.getHeight() / 2)) - Vec2f(dimensions.x / 2, -8.0f), color_white);	
+			//	mouseBlob.RenderForHUD( RenderStyle::outline_front );	
+		}	
 	}
 }
 
