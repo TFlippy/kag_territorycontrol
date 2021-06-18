@@ -76,7 +76,7 @@ void Slam(CBlob @this, f32 angle, Vec2f vel, f32 vellen)
 				if (BoulderHitMap(this, hi.hitpos, hi.tileOffset, vel, dmg, Hitters::cata_boulder))
 					return;
 			}
-			else if (team != u8(hi.blob.getTeamNum()))
+			else if (team != u8(hi.blob.getTeamNum()) && isServer())
 			{
 				this.server_Hit(hi.blob, pos, vel, dmg, Hitters::cata_boulder, true);
 				this.setVelocity(vel * 0.9f); //damp

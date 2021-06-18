@@ -1,7 +1,7 @@
 void onInit(CBlob@ this)
 {
 	this.addCommandID("use");
-	
+
 	if (isServer() && !this.exists("value")) this.set_u16("value", XORRandom(50000));
 }
 
@@ -23,10 +23,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		// const int log = (Maths::Log(rand) / 2) * 2000; // Dafuq is wrong with KAG's Log()
 		// const int amount = Maths::Min(10000, Maths::Max(10000 - (log), 0));
 		// print("a: " + amount + "; log: " + log + "; rand: " + rand);
-		
+
 		const int amount = int(Maths::Clamp((2500000.0f / (rand + 240.0f)) - 50, 0, 10000));
-		print("a: " + amount + "; rand: " + rand);
-		
+		//print("a: " + amount + "; rand: " + rand);
+
 		if (isClient())
 		{
 			if (amount <= 0) this.getSprite().PlaySound("depleted.ogg", 0.80f, 0.80f);
@@ -35,12 +35,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			else 
 			{
 				this.getSprite().PlaySound("FanfareWin.ogg", 1.50f, 1.00f);
-				
+
 				CBlob@ caller = getBlobByNetworkID(params.read_u16());
 				if (caller !is null && caller.getPlayer() !is null) client_AddToChat("" + caller.getPlayer().getCharacterName() + " has won the Grand IPL Lottery Ticket prize worth " + amount + " coins!", SColor(255, 255, 100, 0));
 			}
 		}
-		
+
 		if (isServer())
 		{
 			server_DropCoins(this.getPosition(), amount);

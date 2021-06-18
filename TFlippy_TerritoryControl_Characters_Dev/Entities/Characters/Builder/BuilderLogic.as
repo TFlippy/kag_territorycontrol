@@ -258,7 +258,7 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 			if (can_mine)
 			{
 				const bool teamHurt = !blob.hasTag("flesh") || blob.hasTag("dead");
-				this.server_Hit(blob, tilepos, attackVel, attack_power, Hitters::builder, teamHurt);
+				if (isServer()) this.server_Hit(blob, tilepos, attackVel, attack_power, Hitters::builder, teamHurt);
 			}
 		}
 	}
