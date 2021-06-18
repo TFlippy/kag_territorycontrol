@@ -384,7 +384,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				else if (tokens[0]=="!removebot" || tokens[0]=="!kickbot")
 				{
 					int playersAmount=	getPlayerCount();
-					for(int i=0;i<playersAmount;i++)
+					for (int i=0;i<playersAmount;i++)
 					{
 						CPlayer@ user=getPlayer(i);
 						if (user !is null && user.isBot())
@@ -400,7 +400,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					if (tokens.length<2) return false;
 					string botName=			tokens[1];
 					string botDisplayName=	tokens[1];
-					for(int i=2;i<tokens.length;i++)
+					for (int i=2;i<tokens.length;i++)
 					{
 						botName+=		tokens[i];
 						botDisplayName+=" "+tokens[i];
@@ -430,7 +430,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				{
 					if (tokens.length<2) return false;
 					string s = tokens[1];
-					for(uint i=2;i<tokens.length;i++) s+=" "+tokens[i];
+					for (uint i=2;i<tokens.length;i++) s+=" "+tokens[i];
 
 					server_MakePredefinedScroll(blob.getPosition(),s);
 				}
@@ -455,9 +455,14 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					server_CreateBlob("bulletproofvest", blob.getTeamNum(), blob.getPosition());
 					server_CreateBlob("combatboots", blob.getTeamNum(), blob.getPosition());
 				}
-				else if (tokens[0]=="!tree") server_MakeSeed(blob.getPosition(),"tree_pine",600,1,16);
-				else if (tokens[0]=="!bigtree") server_MakeSeed(blob.getPosition(),"tree_bushy",400,2,16);
-				else if (tokens[0]=="!spawnwater") getMap().server_setFloodWaterWorldspace(blob.getPosition(),true);
+				else if (tokens[0]=="!tree") 
+					server_MakeSeed(blob.getPosition(),"tree_pine",600,1,16);
+
+				else if (tokens[0]=="!bigtree") 
+					server_MakeSeed(blob.getPosition(),"tree_bushy",400,2,16);
+					
+				else if (tokens[0]=="!spawnwater") 
+					getMap().server_setFloodWaterWorldspace(blob.getPosition(),true);
 
 				else if (tokens[0]=="!team")
 				{
@@ -472,7 +477,8 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					if (tokens.length!=3) return false;
 					CPlayer@ user = GetPlayer(tokens[1]);
 
-					if (user !is null) if (user.getBlob() !is null) user.getBlob().server_setTeamNum(parseInt(tokens[2]));
+					if (user !is null && user.getBlob() !is null)
+						user.getBlob().server_setTeamNum(parseInt(tokens[2]));
 				}
 				else if (tokens[0]=="!class")
 				{
@@ -524,7 +530,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					CBlob@[] all; // print all blobs
 					getBlobs(@all);
 
-					for(u32 i=0;i<all.length;i++)
+					for (u32 i=0;i<all.length;i++)
 					{
 						CBlob@ blob=all[i];
 						print("["+blob.getName()+" "+blob.getNetworkID()+"] ");
@@ -698,7 +704,7 @@ string h2s(string s)
 			if (point is null){
 				return false;
 			}
-			for(int i=0;i<blob.getAttachments().getOccupiedCount();i++){
+			for (int i=0;i<blob.getAttachments().getOccupiedCount();i++){
 				AttachmentPoint@ point2=blob.getAttachments().getAttachmentPointByID(i);
 				if (point !is null){
 					CBlob@ pointBlob3=point2.getOccupied();
@@ -732,7 +738,7 @@ CPlayer@ GetPlayer(string username)
 {
 	username=			username.toLower();
 	int playersAmount=	getPlayerCount();
-	for(int i=0;i<playersAmount;i++)
+	for (int i=0;i<playersAmount;i++)
 	{
 		CPlayer@ player=getPlayer(i);
 		string playerName = player.getUsername().toLower();
@@ -749,7 +755,7 @@ bool onClientProcessChat(CRules@ this,const string& in text_in,string& out text_
 		CBlob@[] all;
 		getBlobs(@all);
 
-		for(u32 i = 0; i < all.length; i++)
+		for (u32 i = 0; i < all.length; i++)
 		{
 			CBlob@ blob = all[i];
 			print("[" + blob.getName() + " " + blob.getNetworkID() + "] ");
@@ -759,7 +765,7 @@ bool onClientProcessChat(CRules@ this,const string& in text_in,string& out text_
 				CBlob@[] overlapping;
 				if (blob.getOverlapping(@overlapping))
 				{
-					for(uint i = 0; i < overlapping.length; i++)
+					for (uint i = 0; i < overlapping.length; i++)
 					{
 						CBlob@ overlap = overlapping[i];
 						print("       " + overlap.getName() + " " + overlap.isLadder());
