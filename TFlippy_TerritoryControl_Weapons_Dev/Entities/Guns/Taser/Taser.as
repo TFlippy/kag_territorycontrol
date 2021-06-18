@@ -91,7 +91,7 @@ void onTick(CBlob@ this)
 							b.Tag("lit");
 							b.server_Die();
 						}
-						else if (!b.hasTag("flesh") || b.hasTag("dead"))
+						else if (!b.hasTag("flesh") || b.hasTag("dead") || b.getTeamNum() == holder.getTeamNum())
 						{
 							continue;
 						}

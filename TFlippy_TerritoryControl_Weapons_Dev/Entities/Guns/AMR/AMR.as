@@ -41,4 +41,5 @@ void onInit(CBlob@ this)
 	this.set_f32("CustomBulletLength", 14.0f);
 	this.set_f32("scope_zoom", 0.40f);
 	this.Tag("heavy weight");
+	this.Tag("place45");
 }

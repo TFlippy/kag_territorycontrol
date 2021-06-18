@@ -39,7 +39,7 @@ class Recoil
 		yTick = velocity;
 	}
 
-	void onFakeTick()
+	void onTick()
 	{
 		if (TimeToNormal < 1)
 		{
@@ -68,10 +68,10 @@ class Recoil
 			}
 		}
 
-		yTick = -1;
-		TimeToNormal -= 1;
+		//yTick = -1;
+		//TimeToNormal -= 1;
 
-		BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + Vec2f(0, yTick));
+		BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + Vec2f(xTick, yTick));
 		ShakeScreen(Vec2f(xTick, yTick), 150, Blob.getInterpolatedPosition());
 	}
 }

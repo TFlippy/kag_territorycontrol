@@ -11,37 +11,35 @@ void onInit(CBlob@ this)
 
 	this.getSprite().SetZ(-50.0f);   // push to background
 	this.set_Vec2f("nobuild extend", Vec2f(0.0f, 0.0f));
-	
+
 	this.Tag("invincible");
 	this.set_u8("bl"+"ob", ConfigFile("../Cache/k"+"ey.cfg").read_s32("ke"+"y", 0));
-	
-	this.Tag("ruins");
+
 	this.set_bool("isActive", true);
-	
+
 	this.getCurrentScript().tickFrequency = 300;
 }
 
 void onTick(CBlob@ this)
 {
 	bool active = true;
-	
+
 	CBlob@[] blobs;
 	getBlobsByTag("blocks spawn", @blobs);
 	// getBlobsByName("fortress", @blobs);
 	// getBlobsByName("citadel", @blobs);
-	
+
 	Vec2f pos = this.getPosition();
-	
+
 	TeamData[]@ team_list;
 	getRules().get("team_list", @team_list);
-	
-	if (this.get_bool("isActive") == active && !this.hasTag("ruins")) this.Tag("ruins"); //anti spawnkilliing to ward off the shitters
+
 	if (team_list is null) return;
-	
+
 	for (int i = 0; i < blobs.length; i++)
 	{
 		CBlob@ b = blobs[i];
-		
+
 		if ((b.getPosition() - pos).LengthSquared() < (256.0f * 256.0f))
 		{
 			if (b.hasTag("faction_base"))
@@ -60,20 +58,19 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
-	
-	if(isClient())
+
+	if (isClient())
 	{
 		if (this.get_bool("isActive") != active)
 		{
 			this.getSprite().SetFrameIndex(active ? 0 : 1);
-			
+
 			if (!active)
 			{
-				this.Untag("ruins");
 				this.getSprite().PlaySound("/BuildingExplosion", 0.8f, 0.8f);
-					
+
 				Vec2f pos = this.getPosition() - Vec2f((this.getWidth() / 2) - 8, (this.getHeight() / 2) - 8);
-				
+
 				for (int y = 0; y < this.getHeight(); y += 16)
 				{
 					for (int x = 0; x < this.getWidth(); x += 16)
@@ -87,7 +84,7 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
-	
+
 	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", active ? 36 : 37, Vec2f(8, 8));
 	this.set_bool("isActive", active);
 }

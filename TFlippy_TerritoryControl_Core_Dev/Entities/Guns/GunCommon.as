@@ -115,6 +115,6 @@ class GunSettings
 
 f32 getAimAngle(CBlob@ this, CBlob@ holder)
 {
-	Vec2f aimvector = holder.getAimPos() - this.getInterpolatedPosition();
+	Vec2f aimvector = holder.getAimPos() - (this.hasTag("place45") ? holder.getInterpolatedPosition() : this.getInterpolatedPosition());
 	return holder.isFacingLeft() ? -aimvector.Angle() + 180.0f : -aimvector.Angle();
 }

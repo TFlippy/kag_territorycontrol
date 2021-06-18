@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////
+//
+//  Bullet.as - Vamist
+//
+//  Handles bullet activities
+//
+
 #include "BulletModule.as"
 
 class Bullet
@@ -5,8 +12,8 @@ class Bullet
 	CBlob@ hoomanShooter;
 	CBlob@ gunBlob;
 
-    // Pointer to BulletModules
-    BulletModule@[] modules;
+	// Pointer to BulletModules
+	BulletModule@[] modules;
 
 	Vec2f CurrentVelocity;
 	Vec2f LastLerpedPos;
@@ -26,7 +33,8 @@ class Bullet
 	{
 		@hoomanShooter = humanBlob;
 		@gunBlob = gun;
-        modules = pointer;
+
+		modules = pointer;
 
 		GunSettings@ settings;
 		gun.get("gun_settings", @settings);
@@ -43,38 +51,45 @@ class Bullet
 		OldPos = CurrentPos;
 		LastLerpedPos = CurrentPos;
 
-        for (int a = 0; a < modules.length(); a++)
-            modules[a].onModuleInit(this);
+		for (int a = 0; a < modules.length(); a++)
+		{
+			modules[a].onModuleInit(this);
+		}
 	}
 
 	bool onTick(CMap@ map)
 	{
 		// Kill bullet at start of new tick (we don't instantly remove it so client can render it going splat)
 		TimeLeft--;
-		if (TimeLeft == 0)
-			return true;
+		if (TimeLeft == 0) return true;
 
-        OldPos = LastLerpedPos;
+		OldPos = LastLerpedPos;
 
-        bool customGravity = false;
-        for (int a = 0; a < modules.length(); a++)
-            if (modules[a].onGravityStep(this))
-                customGravity = true;
+		bool customGravity = false;
+		for (int a = 0; a < modules.length(); a++)
+		{
+			if (modules[a].onGravityStep(this))
+			{
+				customGravity = true;
+			}
+		}
 
-        if (!customGravity)
-        {
-            Gravity -= BulletGrav;
+		Vec2f dir;
+		if (!customGravity)
+		{
+			Gravity -= BulletGrav;
 
-            // Direction shittery
-            Vec2f dir = Vec2f((FacingLeft ? -1 : 1), 0.0f).RotateBy(StartingAimAngle);
-            CurrentPos = ((dir * Speed) - (Gravity * Speed)) + CurrentPos;
-            CurrentVelocity = CurrentPos - OldPos;
-            Angle = -CurrentVelocity.getAngleDegrees();
-        }
+			// Direction shittery
+			dir = Vec2f((FacingLeft ? -1 : 1), 0.0f).RotateBy(StartingAimAngle);
+			CurrentPos = ((dir * Speed) - (Gravity * Speed)) + CurrentPos;
+			CurrentVelocity = CurrentPos - OldPos;
+			Angle = -CurrentVelocity.getAngleDegrees();
+		}
 
-        for (int a = 0; a < modules.length(); a++)
-            modules[a].onTick(this);
-        
+		for (int a = 0; a < modules.length(); a++)
+		{
+			modules[a].onTick(this);
+		}
 
 		bool endBullet = false;
 		HitInfo@[] list;
@@ -123,6 +138,7 @@ class Bullet
 								{
 									Sound::Play(S_OBJECT_HIT, CurrentPos, 1.5f);
 								}
+
 								if (isServer())
 								{
 									hoomanShooter.server_Hit(blob, CurrentPos, CurrentVelocity, damage, ammotype); 
@@ -137,8 +153,11 @@ class Bullet
 
 							if (blob.hasTag("flesh") || blob.isCollidable() || blob.hasTag("vehicle"))
 							{
-								if (blob.getTeamNum() == gunBlob.getTeamNum() && (blob.hasTag("flesh") || blob.hasTag("vehicle"))) continue;
-								else if (blob.hasTag("weapon") || blob.hasTag("dead") || blob.hasTag("invincible")) continue;
+
+								if (blob.getTeamNum() == gunBlob.getTeamNum() && !blob.getShape().isStatic()) continue;
+								else if (blob.hasTag("weapon") || blob.hasTag("dead") || blob.hasTag("invincible") || 
+								         blob.hasTag("food")   || blob.hasTag("gas")) continue;
+
 								else if (blob.getName() == "iron_halfblock" || blob.getName() == "stone_halfblock") continue;
 
 								CurrentPos = hitpos;
@@ -146,8 +165,9 @@ class Bullet
 								if (isServer())
 								{
 									if (blob.hasTag("door")) damage *= 1.5f;
-									hoomanShooter.server_Hit(blob, CurrentPos, CurrentVelocity / 2, damage, ammotype);
-									gunBlob.server_Hit(blob, CurrentPos, CurrentVelocity / 2, 0.0f, ammotype, false); //For calling onHitBlob
+
+									hoomanShooter.server_Hit(blob, CurrentPos, dir, damage, ammotype);
+									gunBlob.server_Hit(blob, CurrentPos, dir, 0.0f, ammotype, false); //For calling onHitBlob
 
 									if (blob.hasTag("flesh") && gunBlob.exists("CustomKnock"))
 									{
@@ -177,9 +197,10 @@ class Bullet
 						}
 					}
 
-                    for (int a = 0; a < modules.length(); a++)
-                        modules[a].onHitBlob(this, blob, hash, hitpos, damage);
-        
+					for (int a = 0; a < modules.length(); a++)
+					{
+						modules[a].onHitBlob(this, blob, hash, hitpos, damage);
+					}
 
 					if (breakLoop) // So we can break while inside the switch
 					{
@@ -190,19 +211,19 @@ class Bullet
 				else
 				{ 
 					Tile tile = map.getTile(hitpos);
-                    
+
 					if (isServer())
 					{
 						if (gunBlob.exists("CustomPenetration"))
 						{
 							for (int i = 0; i < gunBlob.get_u8("CustomPenetration"); i++)
 							{
-								map.server_DestroyTile(hitpos, 1.0f);
+								map.server_DestroyTile(hitpos, damage * 0.25f);
 							}
 						}
 						else
 						{
-							map.server_DestroyTile(hitpos, 1.0f);
+							map.server_DestroyTile(hitpos, damage * 0.25f);
 						}
 					}
 
@@ -211,8 +232,10 @@ class Bullet
 						Sound::Play(S_OBJECT_HIT, hitpos, 1.5f);
 					}
 
-                    for (int a = 0; a < modules.length(); a++)
-                        modules[a].onHitTile(this, tile, hitpos, damage);
+					for (int a = 0; a < modules.length(); a++)
+					{
+						modules[a].onHitTile(this, tile, hitpos, damage);
+					}
 
 					CurrentPos = hitpos;
 					ParticleBullet(CurrentPos, CurrentVelocity);
@@ -242,12 +265,17 @@ class Bullet
 			}
 		}
 
+		//Find a better solution later
+		if (gunBlob.exists("CustomBullet") && gunBlob.get_string("CustomBullet").empty()) return;
+
 		// Lerp
 		Vec2f newPos = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
 		LastLerpedPos = newPos;
-        
-        for (int a = 0; a < modules.length(); a++)
-            modules[a].onRender(this);
+
+		for (int a = 0; a < modules.length(); a++)
+		{
+			modules[a].onRender(this);
+		}
 
 		const f32 B_LENGTH = gunBlob.get_f32("CustomBulletLength");
 		const f32 B_WIDTH  = gunBlob.get_f32("CustomBulletWidth");
@@ -264,7 +292,7 @@ class Bullet
 		botRight.RotateBy(angle, newPos);
 		topLeft.RotateBy( angle, newPos);
 		topRight.RotateBy(angle, newPos);
-		
+
 		Vertex[]@ bullet_vertex;
 		getRules().get(gunBlob.get_string("CustomBullet"), @bullet_vertex);
 
