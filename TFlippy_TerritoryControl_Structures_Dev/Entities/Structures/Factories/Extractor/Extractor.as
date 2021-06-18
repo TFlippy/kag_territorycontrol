@@ -20,7 +20,8 @@ void onInit(CSprite@ this)
 
 void onTick(CSprite@ this)
 {
-	if(this.getSpriteLayer("gear") !is null){
+	if (this.getSpriteLayer("gear") !is null)
+	{
 		this.getSpriteLayer("gear").RotateBy(5, Vec2f(0.5f,-0.5f));
 	}
 }
@@ -46,16 +47,22 @@ void onTick(CBlob@ this)
 			for (uint i = 0; i < blobs.length; i++)
 			{
 				CBlob@ b = blobs[i];
-				if(b.getInventory() !is null && !b.hasTag("player"))
+				if (b.getInventory() !is null && !b.hasTag("player"))
 				{
 					if (!b.isInventoryAccessible(this) || b.hasTag("ignore extractor")) continue;
 
 					if (b.getInventory().getItemsCount() > 0)
 					{
-						CBlob@ item = b.getInventory().getItem(0);
-
-						b.server_PutOutInventory(item);
-						item.setPosition(this.getPosition());
+						for (int i = 0; i < b.getInventory().getItemsCount(); i++)
+						{
+							CBlob@ item = b.getInventory().getItem(i);
+							if (item.getName() != "gyromat")
+							{
+								b.server_PutOutInventory(item);
+								item.setPosition(this.getPosition());
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -71,7 +78,7 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 
 void onAddToInventory( CBlob@ this, CBlob@ blob )
 {
-	if(blob.getName() != "gyromat")
+	if (blob.getName() != "gyromat")
 	{
 		this.server_PutOutInventory(blob);
 		return;
@@ -82,7 +89,7 @@ void onAddToInventory( CBlob@ this, CBlob@ blob )
 
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
-	if(blob.getName() != "gyromat") return;
-	
+	if (blob.getName() != "gyromat") return;
+
 	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
