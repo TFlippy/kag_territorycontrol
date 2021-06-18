@@ -154,22 +154,20 @@ void onTick(CBlob@ this)
 			f32 dist = (b.getPosition() - this.getPosition()).LengthSquared();
 
 			if (myTeam == 250 && b.get_u8("deity_id") == Deity::foghorn) continue;
-			if (team != myTeam && dist < s_dist && b.hasTag("flesh") && !b.hasTag("dead") && isVisible(this, b) && b.getTickSinceCreated() > 180)
+			if (team != myTeam && dist < s_dist && b.hasTag("flesh") && !b.hasTag("dead") && isVisible(this, b))
 			{
 				s_dist = dist;
 				index = i;
 			}
 		}
 
-		bool fired = false;
-
 		if (index != -1)
 		{
-			this.getCurrentScript().tickFrequency = 1;
 			CBlob@ target = blobs[index];
-
 			if (target !is null)
 			{
+				this.getCurrentScript().tickFrequency = 1;
+
 				if (target.getNetworkID() != this.get_u16("target"))
 				{
 					this.getSprite().PlaySound("Sentry_Found.ogg", 1.00f, 1.00f);
@@ -207,8 +205,6 @@ void onTick(CBlob@ this)
 		{
 			if (ammo > 0 && this.get_u32("next_shoot") < getGameTime())
 			{
-				fired = true;
-
 				if (t !is null)
 				{
 					Vec2f dir = t.getPosition() - (this.getPosition() - Vec2f(0, 3));
@@ -278,11 +274,28 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 }
 
-bool isVisible(CBlob@ blob, CBlob@ target)
+bool isVisible(CBlob@ this, CBlob@ target)
 {
+	//Anti spawn killing
+	CBlob@[] spawns;
+	getBlobsByName("ruins", @spawns);
+	getBlobsByTag("faction_base", @spawns);
+
+	for (int i = 0; i < spawns.length; i++)
+	{
+		CBlob@ spawn = spawns[i];
+		if (spawn.get_bool("isActive") && spawn.getTeamNum() != this.getTeamNum())
+		{
+			if (target.isOverlapping(spawn) && target.getTeamNum() > 6 && target.getTeamNum() < 250)
+			{
+				return false;
+			}
+		}
+	}
+
 	//Is blob visible?
 	Vec2f col;
-	return !getMap().rayCastSolidNoBlobs(blob.getPosition(), target.getPosition(), col);
+	return !getMap().rayCastSolidNoBlobs(this.getPosition(), target.getPosition(), col);
 }
 
 void onTick(CSprite@ this)

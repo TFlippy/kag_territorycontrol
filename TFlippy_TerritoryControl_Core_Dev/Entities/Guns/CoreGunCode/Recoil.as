@@ -54,7 +54,7 @@ class Recoil
 
 		TimeToNormal--;
 		yTick -= DecayRate;
-		print(yTick + ' ');
+		//print(yTick + ' ');
 		if (RX && ReturnTime < TimeToNormal)
 		{
 			int rNum = XORRandom(-DecayRate * 2);
