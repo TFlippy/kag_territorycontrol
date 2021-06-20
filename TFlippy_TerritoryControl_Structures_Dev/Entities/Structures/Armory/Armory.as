@@ -131,6 +131,11 @@ void addTokens(CBlob@ this)
 	AddIconToken("$icon_royalarmor$", "RoyalArmor.png", Vec2f(16, 8), 0, teamnum);
 }
 
+bool canPickup(CBlob@ blob)
+{
+	return blob.hasTag("weapon") || blob.hasTag("ammo");
+}
+
 void onTick(CBlob@ this)
 {
 	if (this.getInventory().isFull()) return;
@@ -142,7 +147,7 @@ void onTick(CBlob@ this)
 		{
 			CBlob@ blob = blobs[i];
 
-			if ((blob.hasTag("isWeapon") || blob.hasTag("ammo")) && !blob.isAttached())
+			if ((canPickup(blob)) && !blob.isAttached())
 			{
 				if (isClient() && this.getInventory().canPutItem(blob)) blob.getSprite().PlaySound("/PutInInventory.ogg");
 				if (isServer()) this.server_PutInInventory(blob);
@@ -154,7 +159,7 @@ void onTick(CBlob@ this)
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	CBlob@ carried = forBlob.getCarriedBlob();
-	return forBlob.isOverlapping(this) && (carried is null ? true : (carried.hasTag("isWeapon") || carried.hasTag("ammo")));
+	return forBlob.isOverlapping(this) && (carried is null ? true : canPickup(carried));
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
@@ -170,14 +175,14 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		params.write_u16(caller.getNetworkID());
 
 		CInventory @inv = caller.getInventory();
-		if(inv is null) return;
+		if (inv is null) return;
 
-		if(inv.getItemsCount() > 0)
+		if (inv.getItemsCount() > 0)
 		{
 			for (int i = 0; i < inv.getItemsCount(); i++)
 			{
 				CBlob @item = inv.getItem(i);
-				if (item.hasTag("ammo") || item.hasTag("isWeapon"))
+				if (canPickup(item))
 				{
 					params.write_u16(caller.getNetworkID());
 					CButton@ buttonOwner = caller.CreateGenericButton(28, Vec2f(-10, 0), this, this.getCommandID("sv_store"), "Store", params);
@@ -195,13 +200,13 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if(cmd == this.getCommandID("shop made item"))
+	if (cmd == this.getCommandID("shop made item"))
 	{
 		this.getSprite().PlaySound("ConstructShort");
 
 		u16 caller, item;
-		
-		if(!params.saferead_netid(caller) || !params.saferead_netid(item))
+
+		if (!params.saferead_netid(caller) || !params.saferead_netid(item))
 			return;
 
 		string name = params.read_string();
@@ -280,7 +285,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					for (int i = 0; i < inv.getItemsCount(); i++)
 					{
 						CBlob @item = inv.getItem(i);
-						if (item.hasTag("ammo") || item.hasTag("isWeapon"))
+						if (canPickup(item))
 						{
 							caller.server_PutOutInventory(item);
 							this.server_PutInInventory(item);
