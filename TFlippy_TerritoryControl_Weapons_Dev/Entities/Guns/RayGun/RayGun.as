@@ -162,6 +162,16 @@ void onTick(CBlob@ this)
 						}
 					}
 				}
+				else
+				{
+					sprite.SetEmitSoundPaused(true);
+
+					CSpriteLayer@ gammalaser = this.getSprite().getSpriteLayer("gammalaser");
+					if (gammalaser !is null)
+					{
+						gammalaser.SetVisible(false);
+					}
+				}
 			}
 
 			if ((holder.isKeyJustReleased(key_action1) || point.isKeyJustReleased(key_action1)))
@@ -204,20 +214,16 @@ bool HasAmmo(CBlob@ this, bool take, string ammoBlob)
 			if (itemName == ammoBlob)
 			{
 				u32 quantity = item.getQuantity();
-				bool has = true;
-				if (has)
+				if (take)
 				{
-					if (take)
+					if (quantity >= 1) item.server_SetQuantity(quantity-1);
+					else
 					{
-						if (quantity >= 1) item.server_SetQuantity(quantity-1);
-						else
-						{
-							item.server_SetQuantity(0);
-							item.server_Die();
-						}
+						item.server_SetQuantity(0);
+						item.server_Die();
 					}
-					return true;
 				}
+				return true;
 			}
 		}
 	}

@@ -107,13 +107,25 @@ void onTick(CBlob@ this)
 			f32 s_dist = 1337;
 			u8 myTeam = this.getTeamNum();
 
+			CBlob@[] spawns;
+			getBlobsByName("ruins", @spawns);
+			getBlobsByTag("faction_base", @spawns);
+
 			for (uint i = 0; i < blobsInRadius.length; i++)
 			{
 				CBlob@ b = blobsInRadius[i];
 				u8 team = b.getTeamNum();
 
+				for (uint s = 0; s < spawns.length; s++)
+				{
+					//Anti spawn killing
+					CBlob@ spawn = spawns[s];
+					if (b is spawn && spawn.get_bool("isActive") && spawn.getTeamNum() != this.getTeamNum() && 
+					    !map.rayCastSolid(this.getPosition(), b.getPosition())) return;
+				}
+
 				if (myTeam == 250 && b.get_u8("deity_id") == Deity::foghorn) continue;
-				if (team != myTeam && b.hasTag("flesh") && !b.hasTag("dead") && !map.rayCastSolid(this.getPosition(), b.getPosition()) && b.getTickSinceCreated() > 180)
+				if (team != myTeam && b.hasTag("flesh") && !b.hasTag("dead") && !map.rayCastSolid(this.getPosition(), b.getPosition()))
 				{
 					f32 dist = (b.getPosition() - this.getPosition()).Length();
 					if (dist < s_dist)

@@ -11,7 +11,6 @@
 #include "GunModule.as"
 #include "BulletCase.as";
 #include "Recoil.as";
-#include "GunModule.as"
 
 const uint8 NO_AMMO_INTERVAL = 25;
  
@@ -237,7 +236,6 @@ void onTick(CBlob@ this)
 			} 
 			else if (pressing_shoot)
 			{
-					
 				if (this.get_u8("clip") > 0)
 				{
 					for (int a = 0; a < modules.length(); a++)

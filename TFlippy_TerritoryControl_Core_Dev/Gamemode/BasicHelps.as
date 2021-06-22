@@ -35,7 +35,7 @@ void onInit(CRules@ this)
 	AddIconToken("$BlockStone$", "Sprites/world.png", Vec2f(8, 8), 96);
 
 	AddIconToken("$workshop$", "Entities/Common/GUI/HelpIcons.png", Vec2f(16, 16), 2);
-	 
+
 	// Materials
 	AddIconToken("$mat_copperingot$", "Material_CopperIngot.png", Vec2f(16, 16), 1);
 	AddIconToken("$mat_ironingot$", "Material_IronIngot.png", Vec2f(16, 16), 1);
@@ -92,24 +92,24 @@ void onBlobCreated(CRules@ this, CBlob@ blob)
 	{
 		SetHelp(blob, "help slave", "", "Slaves can be used for forced labor or imprisonment.\n\nIn case you are the slave, you have those options:\n1. Work for your captors and possibly earn freedom\n2. Try to kill your captors\n3. Break your slave ball and run away\n5. Get your hands on \"Building for Dummies\"\n5. Ask to be let free", "", 3);
 	}
-	
+
 	if (blob.hasTag("seats"))
 	{
 		SetHelp(blob, "help hop", "", "$KEY_S$ Hop inside", "", 5);
 		if (name == "triplane" || name == "helichopper") SetHelp(blob, "help hop out triplane", "", "$KEY_C$ Get out", "", 4);
 		else SetHelp(blob, "help hop out bomber", "", "$KEY_C$ Get out$", "", 4);
 	}
-	
+
 	if (blob.hasTag("faction_base"))
 	{
 		SetHelp(blob, "help faction base", "", "Factions offer you and your teammates\nextra protection and technology.\nRemember to build Quarters to raise your upkeep limit!", "", 3);
 	}
-	
-	if (blob.hasTag("isWeapon"))
+
+	if (blob.hasTag("weapon"))
 	{
 		SetHelp(blob, "help gun", "", "Most guns require ammunition that\ncan be purchased at Gunsmith's Workshop.", "", 3);
 	}
-	
+
 	// else if (name == "rain")
 	// {
 		// SetHelp(blob, "help rain", "", "Rain will moderately slow down your movement\nand promote verdancy and growth.", "", 3);
@@ -162,8 +162,6 @@ void onBlobCreated(CRules@ this, CBlob@ blob)
 	// {
 		// SetHelp(blob, "help use", "", "$building$Use    $KEY_E$", "", 3);
 	// }
-	
-		
 	//else if (name == "ctf_flag")
 	//{
 	//	SetHelp( blob, "help use", "", "$$ctf_flag$ Bring enemy flag to capture", "", 3 );

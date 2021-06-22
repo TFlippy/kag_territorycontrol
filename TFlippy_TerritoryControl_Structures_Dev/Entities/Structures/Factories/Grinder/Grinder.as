@@ -137,7 +137,7 @@ bool canSaw(CBlob@ this, CBlob@ blob)
 
 		if (chop_left !is null) chop_left.animation.frame = 1;
 		if (chop_right !is null) chop_right.animation.frame = 1;
-		
+
 		sprite.SetAnimation("blood");
 	}
 
@@ -252,7 +252,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 					MakeMat(this, this.getPosition(), "mat_meat", amount);
 				}
 			}
-			else if (blob.hasTag("isWeapon"))
+			else if (blob.hasTag("weapon"))
 			{
 				if (isServer())
 				{
