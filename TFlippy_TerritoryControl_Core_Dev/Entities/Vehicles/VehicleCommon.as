@@ -343,7 +343,7 @@ bool MakeLoadAmmoButton(CBlob@ this, CBlob@ caller, Vec2f offset, VehicleInfo@ v
 		{
 			CBitStream callerParams;
 			callerParams.write_u16(caller.getNetworkID());
-			caller.CreateGenericButton("$" + ammoBlob.getName() + "$", offset, this, this.getCommandID("load_ammo"), "Load " + ammoBlob.getInventoryName(), callerParams);
+			caller.CreateGenericButton("$" + (this.exists("ammoIcon") ? this.get_string("ammoIcon") : ammoBlob.getName()) + "$", offset, this, this.getCommandID("load_ammo"), "Load " + ammoBlob.getInventoryName(), callerParams);
 			return true;
 		}
 
@@ -467,7 +467,7 @@ void Fire(CBlob@ this, VehicleInfo@ v, CBlob@ caller, const u8 charge)
 
 		if (shot)
 		{
-			this.getSprite().PlayRandomSound(v.fire_sound);
+			this.getSprite().PlayRandomSound(v.fire_sound, 2.0f);
 		}
 		else
 		{
@@ -757,20 +757,26 @@ void Vehicle_StandardControls(CBlob@ this, VehicleInfo@ v)
 						this.AddForce(force);
 					}
 				} // flyer
-			}else if(ap.socket){
-				if (ap.name == "FLYER"){
+			}
+			else if(ap.socket)
+			{
+				if (ap.name == "FLYER")
+				{
 					f32 flyAmount=v.fly_amount;
 					//if(flyAmount>0.9f){
-					if(!this.isOnGround() && !this.isInWater()){
-						flyAmount=	Lerp(flyAmount,-5.0f,0.1f/getTicksASecond());
-					}else{
-						flyAmount=	0.0f;
+					if (!this.isOnGround() && !this.isInWater())
+					{
+						flyAmount =Lerp(flyAmount,-5.0f,0.1f/getTicksASecond());
+					}
+					else
+					{
+						flyAmount = 0.0f;
 					}
 					//}else{
-					//	flyAmount=	Maths::Clamp(0.06f/getTicksASecond(),-50.0f,0.9f);
+					//	flyAmount = Maths::Clamp(0.06f/getTicksASecond(),-50.0f,0.9f);
 					//}
-					v.fly_amount=		flyAmount;
-					v.move_direction=	1;
+					v.fly_amount = flyAmount;
+					v.move_direction = 1;
 				}
 			}
 		}   // for
@@ -834,7 +840,6 @@ void Vehicle_DontRotateInWater(CBlob@ this)
 			this.setAngleDegrees(0.0f);
 			this.getShape().SetRotationsAllowed(false);
 			return;
-
 		}
 	}
 

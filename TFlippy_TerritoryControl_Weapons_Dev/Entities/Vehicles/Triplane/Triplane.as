@@ -1,13 +1,10 @@
 #include "Hitters.as";
 #include "Explosion.as";
 #include "VehicleFuel.as";
+#include "GunCommon.as";
 
 // const u32 fuel_timer_max = 30 * 600;
 const f32 SPEED_MAX = 60;
-const Vec2f gun_offset = Vec2f(-30, 8.5);
-
-const u32 shootDelay = 3; // Ticks
-const f32 damage = 2.0f;
 
 string[] particles = 
 {
@@ -24,44 +21,59 @@ string[] smokes =
 
 void onInit(CBlob@ this)
 {
+	GunSettings settings = GunSettings();
+
+	settings.B_GRAV = Vec2f(0, 0.006); //Bullet Gravity
+	settings.B_TTL = 11; //Bullet Time to live
+	settings.B_SPEED = 70; //Bullet speed
+	settings.B_DAMAGE = 2.0f; //Bullet damage
+	settings.G_RECOIL = 0;
+	settings.FIRE_SOUND = "GatlingGun-Shoot0.ogg";
+	settings.MUZZLE_OFFSET = Vec2f(-38, 8.5); //Where muzzle flash and bullet spawn
+
+	this.set("gun_settings", @settings);
+
 	this.set_f32("velocity", 0.0f);
-	
+
 	this.set_string("custom_explosion_sound", "bigbomb_explosion.ogg");
 	this.set_bool("map_damage_raycast", true);
 	this.Tag("map_damage_dirt");
-	
+
 	this.Tag("vehicle");
 	this.Tag("aerial");
 	this.Tag("wooden");
-	
-	CSprite@ sprite = this.getSprite();
-	sprite.SetEmitSound("Aircraft_Loop.ogg");
-	sprite.SetEmitSoundSpeed(0.0f);
-	sprite.SetEmitSoundPaused(false);
 
 	this.getShape().SetRotationsAllowed(true);
 	this.set_Vec2f("direction", Vec2f(0, 0));
-	
+
 	this.addCommandID("load_fuel");
+	this.addCommandID("load_ammo");
+
 	this.set_f32("max_fuel", 1500);
 	this.set_f32("fuel_consumption_modifier", 0.75f);
 }
 
 void onInit(CSprite@ this)
 {
-	this.RemoveSpriteLayer("tracer");
-	CSpriteLayer@ tracer = this.addSpriteLayer("tracer", "GatlingGun_Tracer.png", 32, 1, this.getBlob().getTeamNum(), 0);
-
-	if (tracer !is null)
+	// Add muzzle flash
+	CSpriteLayer@ flash = this.addSpriteLayer("muzzle_flash", "MuzzleFlash.png", 16, 8);
+	if (flash !is null)
 	{
-		Animation@ anim = tracer.addAnimation("default", 0, false);
-		anim.AddFrame(0);
-		
-		tracer.SetOffset(gun_offset);
-		tracer.SetRelativeZ(-1.0f);
-		tracer.SetVisible(false);
-		tracer.setRenderStyle(RenderStyle::additive);
+		GunSettings@ settings;
+		this.getBlob().get("gun_settings", @settings);
+
+		Animation@ anim = flash.addAnimation("default", 1, false);
+		int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
+		anim.AddFrames(frames);
+		flash.SetRelativeZ(1.0f);
+		flash.SetOffset(settings.MUZZLE_OFFSET);
+		flash.SetVisible(false);
+		// flash.setRenderStyle(RenderStyle::additive);
 	}
+
+	this.SetEmitSound("Aircraft_Loop.ogg");
+	this.SetEmitSoundSpeed(0.0f);
+	this.SetEmitSoundPaused(false);
 }
 
 void onTick(CBlob@ this)
@@ -73,59 +85,59 @@ void onTick(CBlob@ this)
 		{
 			f32 velocity = this.get_f32("velocity");
 			f32 taken = velocity / fuel_factor * this.get_f32("fuel_consumption_modifier") * (30.00f / 5.00f);
-			
+
 			TakeFuel(this, taken);
 		}
 	}
-	
+
 	f32 fuelModifier = Maths::Min(fuel / 100.00f, 1.00f);
 
 	AttachmentPoint@ ap_pilot = this.getAttachments().getAttachmentPointByName("PILOT");
 	if (ap_pilot !is null)
 	{
 		CBlob@ pilot = ap_pilot.getOccupied();
-		
+
 		if (pilot !is null && this.getHealth() > 10.00f)
 		{
 			Vec2f dir = pilot.getPosition() - pilot.getAimPos();
 			const f32 len = dir.Length();
 			dir.Normalize();
-		
+
 			// this.SetFacingLeft(dir.x > 0);
 			this.SetFacingLeft(this.getVelocity().x < -0.1f);
 			// const f32 ang = this.isFacingLeft() ? 0 : 180;
 			// this.setAngleDegrees(ang - dir.Angle());
-		
+
 			bool pressed_w = ap_pilot.isKeyPressed(key_up);
 			bool pressed_s = ap_pilot.isKeyPressed(key_down);
 			bool pressed_lm = ap_pilot.isKeyPressed(key_action1);
-			
+
 			if (pressed_lm)
 			{
-				Shoot(this);
+				if (GetAmmo(this) > 0) Shoot(this);
 			}
-			
+
 			// bool pressed_s = ap_pilot.isKeyPressed(key_down);
-		
+
 			if (pressed_w) 
 			{
 				this.set_f32("velocity", Maths::Min(SPEED_MAX, (this.get_f32("velocity") + 2.5f)) * fuelModifier);
 			}
-			
+
 			if (pressed_s) 
 			{
 				this.set_f32("velocity", Maths::Min(SPEED_MAX, Maths::Max((this.get_f32("velocity") - 0.50f) * fuelModifier, 0)));
 			}
-			
+
 			this.set_Vec2f("direction", dir);
-			
+
 			if (!this.hasTag("disable bomber drop") && ap_pilot.isKeyPressed(key_action3) && this.get_u32("lastDropTime") < getGameTime()) 
 			{
 				CInventory@ inv = this.getInventory();
 				if (inv !is null) 
 				{
 					u32 itemCount = inv.getItemsCount();
-					
+
 					if (isClient()) 
 					{
 						if (itemCount > 0)
@@ -137,7 +149,7 @@ void onTick(CBlob@ this)
 							Sound::Play("NoAmmo");
 						}
 					}
-					
+
 					if (itemCount > 0) 
 					{
 						if (isServer()) 
@@ -145,7 +157,7 @@ void onTick(CBlob@ this)
 							CBlob@ item = inv.getItem(0);
 							u32 quantity = item.getQuantity();
 
-							if (item.maxQuantity>8)
+							if (item.maxQuantity > 8)
 							{ 
 								// To prevent spamming 
 								this.server_PutOutInventory(item);
@@ -157,7 +169,7 @@ void onTick(CBlob@ this)
 								dropped.server_SetQuantity(1);
 								dropped.SetDamageOwnerPlayer(pilot.getPlayer());
 								dropped.Tag("no pickup");
-								
+
 								if (quantity > 0)
 								{
 									item.server_SetQuantity(quantity - 1);
@@ -169,11 +181,11 @@ void onTick(CBlob@ this)
 							}
 						}
 					}
-					
+
 					this.set_u32("lastDropTime",getGameTime() + 30);
 				}
 			}
-		}		
+		}
 	}
 	else
 	{
@@ -183,17 +195,18 @@ void onTick(CBlob@ this)
 	const f32 hmod = this.getHealth() / this.getInitialHealth();
 	const f32 v = this.get_f32("velocity");
 	Vec2f d = this.get_Vec2f("direction");
+	const f32 margin = this.getHealth() > this.getInitialHealth() / 2 ? 1 : hmod;
 	// Vec2f grav = Vec2f(0, 1) * 4 * (SPEED_MAX - v);
-	
-	this.AddForce(-d * v * hmod * fuelModifier);
+
+	this.AddForce(-d * v * fuelModifier * margin);
 
 	if (this.getVelocity().Length() > 1.50f && v > 0.25f) this.setAngleDegrees((this.isFacingLeft() ? 180 : 0) - this.getVelocity().Angle());
 	else this.setAngleDegrees(0);
-	
+
 	if (isClient())
 	{
 		this.getSprite().SetEmitSoundSpeed(0.5f + (this.get_f32("velocity") / SPEED_MAX * 0.4f) * (this.getVelocity().Length() * 0.15f));
-		
+
 		if (hmod < 0.7 && u32(getGameTime() % 20 * hmod) == 0) ParticleAnimated(smokes[XORRandom(smokes.length)], this.getPosition(), Vec2f(0, 0), float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 3 + XORRandom(4), XORRandom(100) * -0.001f, true);
 	}
 }
@@ -202,93 +215,79 @@ void Shoot(CBlob@ this)
 {
 	if (getGameTime() < this.get_u32("fireDelay")) return;
 
-	f32 sign = (this.isFacingLeft() ? -1 : 1);
-	f32 angleOffset = (15 * sign);
-	f32 angle = this.getAngleDegrees() + ((XORRandom(200) - 100) / 100.0f) + angleOffset;
-		
-	Vec2f dir = Vec2f(sign, 0.0f).RotateBy(angle);
-	
-	Vec2f offset = gun_offset;
-	offset.x *= -sign;
-	
-	Vec2f startPos = this.getPosition() + offset.RotateBy(angle);
-	Vec2f endPos = startPos + dir * 500;
-	Vec2f hitPos;
-	
-	bool flip = this.isFacingLeft();		
-	HitInfo@[] hitInfos;
-	
-	bool mapHit = getMap().rayCastSolid(startPos, endPos, hitPos);
-	f32 length = (hitPos - startPos).Length();
-	
-	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
-		
+	// Angle shittery
+	f32 angle = this.getAngleDegrees() + ((XORRandom(500) - 100) / 100.0f);
+
+	GunSettings@ settings;
+	this.get("gun_settings", @settings);
+
+	// Muzzle
+	Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 1);
+	fromBarrel = fromBarrel.RotateBy(angle);
+
+	CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
+	if (gunner !is null)
+	{
+		shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getSprite().getWorldTranslation() + fromBarrel);
+	}
+
 	if (isClient())
 	{
-		DrawLine(this.getSprite(), startPos, length / 32, angleOffset, this.isFacingLeft());
-		this.getSprite().PlaySound("GatlingGun-Shoot0", 1.00f, 1.00f);
-		
-		// Vec2f mousePos = getControls().getMouseScreenPos();
-		// getControls().setMousePosition(Vec2f(mousePos.x, mousePos.y - 10));
-	}
-	
-	if (isServer())
-	{
-		if (blobHit)
+		this.getSprite().PlaySound(settings.FIRE_SOUND, 2.0f);
+
+		CSpriteLayer@ flash = this.getSprite().getSpriteLayer("muzzle_flash");
+		if (flash !is null)
 		{
-			f32 falloff = 1;
-			for (u32 i = 0; i < hitInfos.length; i++)
-			{
-				if (hitInfos[i].blob !is null)
-				{	
-					CBlob@ blob = hitInfos[i].blob;
-					
-					if ((blob.isCollidable() || blob.hasTag("flesh")) && blob.getTeamNum() != this.getTeamNum())
-					{
-						// print("Hit " + blob.getName() + " for " + damage * falloff);
-						this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), damage * Maths::Max(0.1, falloff), Hitters::arrow);
-						falloff = falloff * 0.5f;			
-					}
-				}
-			}
-		}
-		
-		if (mapHit)
-		{
-			CMap@ map = getMap();
-			TileType tile =	map.getTile(hitPos).type;
-			
-			if (!map.isTileBedrock(tile) && tile != CMap::tile_ground_d0 && tile != CMap::tile_stone_d0)
-			{
-				map.server_DestroyTile(hitPos, damage * 0.125f);
-			}
+			//Turn on muzzle flash
+			flash.SetFrameIndex(0);
+			flash.SetVisible(true);
 		}
 	}
-	
-	this.set_u32("fireDelay", getGameTime() + shootDelay);
+
+	TakeAmmo(this, 1);
+	this.set_u32("fireDelay", getGameTime() + 3);
 }
 
-void DrawLine(CSprite@ this, Vec2f startPos, f32 length, f32 angle, bool flip)
+void shootGun(const u16 gunID, const f32 aimangle, const u16 hoomanID, const Vec2f pos) 
 {
-	CSpriteLayer@ tracer = this.getSpriteLayer("tracer");
-	
-	tracer.SetVisible(true);
-	
-	tracer.ResetTransform();
-	tracer.ScaleBy(Vec2f(length, 1.0f));
-	tracer.TranslateBy(Vec2f(length * 16.0f, 0.0f));
-	tracer.RotateBy(angle + (flip ? 180 : 0), Vec2f());
+	CRules@ rules = getRules();
+	CBitStream params;
+
+	params.write_netid(hoomanID);
+	params.write_netid(gunID);
+	params.write_f32(aimangle);
+	params.write_Vec2f(pos);
+	params.write_u32(getGameTime());
+
+	rules.SendCommand(rules.getCommandID("fireGun"), params);
 }
 
-void onTick(CSprite@ this)
+void TakeAmmo(CBlob@ this, u16 amount)
 {
-	if ((this.getBlob().get_u32("fireDelay") - (shootDelay - 1)) < getGameTime()) this.getSpriteLayer("tracer").SetVisible(false);
+	this.set_u16("ammo_count", Maths::Max(0, Maths::Min(300, this.get_u16("ammo_count") - amount)));
+	this.Sync("ammo_count", false);
+}
+
+u16 GiveAmmo(CBlob@ this, u16 amount)
+{
+	u16 remain = Maths::Max(0, s32(this.get_u16("ammo_count")) + s32(amount) - s32(300));
+
+	this.set_u16("ammo_count", Maths::Max(0, Maths::Min(300, this.get_u16("ammo_count") + amount)));
+	this.Sync("ammo_count", false);
+
+	//print("A: " + amount + "; R: " + remain);
+	return remain;
+}
+
+u16 GetAmmo(CBlob@ this)
+{
+	return this.get_u16("ammo_count");
 }
 
 void onDie(CBlob@ this)
 {
 	DoExplosion(this);
-	
+
 	if (isServer())
 	{
 		CBlob@ wreck = server_CreateBlobNoInit("triplanewreck");
@@ -318,7 +317,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PILOT");
 	if (point is null) return true;
-		
+
 	CBlob@ holder = point.getOccupied();
 	if (holder is null) return true;
 	else return false;
@@ -332,7 +331,7 @@ void DoExplosion(CBlob@ this)
 		addToNextTick(this, rules, DoExplosion);
 		return;
 	}
-	
+
 	if (this.hasTag("exploded")) return;
 
 	f32 random = XORRandom(40);
@@ -342,26 +341,26 @@ void DoExplosion(CBlob@ this)
 
 	this.set_f32("map_damage_radius", (80.0f + random) * modifier);
 	this.set_f32("map_damage_ratio", 0.50f);
-	
+
 	Explode(this, 40.0f + random, 25.0f);
-	
+
 	for (int i = 0; i < 10 * modifier; i++) 
 	{
 		Vec2f dir = getRandomVelocity(angle, 1, 120);
 		dir.x *= 2;
 		dir.Normalize();
-		
+
 		LinearExplosion(this, dir, 16.0f + XORRandom(16) + (modifier * 8), 16 + XORRandom(24), 3, 2.00f, Hitters::explosion);
 	}
-	
+
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
-	
+
 	for (int i = 0; i < 35; i++)
 	{
 		MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
 	}
-	
+
 	this.Tag("exploded");
 	this.getSprite().Gib();
 }
@@ -390,7 +389,7 @@ void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	AttachmentPoint@ ap_pilot = this.getAttachments().getAttachmentPointByName("PILOT");
-	
+
 	if (ap_pilot !is null)
 	{
 		return ap_pilot.getOccupied() == null;
@@ -404,19 +403,19 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		CBlob@ caller = getBlobByNetworkID(params.read_netid());
 		CBlob@ carried = caller.getCarriedBlob();
-		
+
 		if (carried !is null)
 		{
 			string fuel_name = carried.getName();
 			f32 fuel_modifier = 1.00f;
 			bool isValid = false;
-			
+
 			fuel_modifier = GetFuelModifier(fuel_name, isValid, 1);
-			
+
 			if (isValid)
 			{
 				u16 remain = GiveFuel(this, carried.getQuantity(), fuel_modifier);
-					
+
 				if (remain == 0)
 				{
 					carried.Tag("dead");
@@ -429,13 +428,30 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 	}
+	else if (cmd == this.getCommandID("load_ammo"))
+	{
+		CBlob@ caller = getBlobByNetworkID(params.read_netid());
+		CBlob@ carried = caller.getCarriedBlob();
+
+		if (carried !is null && carried.getName() == "mat_gatlingammo")
+		{
+			u16 remain = GiveAmmo(this, carried.getQuantity());
+			// this.Sync("ammo_count", false); // fuck this broken sync shit
+
+			if (isServer())
+			{
+				if (remain == 0) carried.server_Die();
+				else carried.server_SetQuantity(remain);
+			}
+		}
+	}
 }
 
 s32 getHeight(CBlob@ this)
 {
 	CMap@ map = getMap();
 	Vec2f pos = this.getPosition();
-	
+
 	Vec2f point;
 	if (map.rayCastSolidNoBlobs(pos, pos + Vec2f(0, 1000), point))
 	{
@@ -444,12 +460,11 @@ s32 getHeight(CBlob@ this)
 	else return 0;
 }
 
-void drawFuelCount(CBlob@ this)
+void drawInfo(CBlob@ this)
 {
-	// draw ammo count
 	Vec2f pos2d1 = this.getInterpolatedScreenPos() - Vec2f(0, 10);
-
 	Vec2f pos2d = this.getInterpolatedScreenPos() - Vec2f(0, 60);
+
 	Vec2f dim = Vec2f(20, 8);
 	const f32 y = this.getHeight() * 2.4f;
 	f32 charge_percent = 1.0f;
@@ -468,38 +483,39 @@ void drawFuelCount(CBlob@ this)
 	}
 
 	f32 dist = lr.x - ul.x;
-	Vec2f upperleft((ul.x + (dist / 2.0f) - 10) + 4.0f, pos2d1.y + this.getHeight() + 30);
-	Vec2f lowerright((ul.x + (dist / 2.0f) + 10), upperleft.y + 20);
+	Vec2f upperleft((ul.x + (dist / 2.0f)) + 4.0f, pos2d1.y + this.getHeight() + 30);
+	Vec2f lowerright((ul.x + (dist / 2.0f)), upperleft.y + 20);
 
-	//GUI::DrawRectangle(upperleft - Vec2f(0,20), lowerright , SColor(255,0,0,255));
+	int fuel = this.get_f32("fuel_count");
+	string fuelText = "Fuel: " + fuel + " / " + this.get_f32("max_fuel");
 
-	f32 fuel = this.get_f32("fuel_count");
-	string reqsText = "Fuel: " + fuel + " / " + this.get_f32("max_fuel");
+	string ammoText = "" + GetAmmo(this) + " / " + 300;
 
-	u8 numDigits = reqsText.size() - 1;
+	u8 numDigits = ammoText.size();
 
 	upperleft -= Vec2f((float(numDigits) * 4.0f), 0);
-	lowerright += Vec2f((float(numDigits) * 4.0f), 18);
+	lowerright += Vec2f((float(numDigits) * 4.0f), 0);
 
-	// GUI::DrawRectangle(upperleft, lowerright);
 	GUI::SetFont("menu");
-	GUI::DrawTextCentered(reqsText, this.getInterpolatedScreenPos() + Vec2f(0, 40), color_white);
-				
+
+	if (GetAmmo(this) > 0)
+	{
+		GUI::DrawRectangle(upperleft, lowerright);
+		GUI::DrawText(ammoText, upperleft + Vec2f(2, 1), color_white);
+	}
+
+	GUI::SetFont("menu");
+	GUI::DrawTextCentered(fuelText, this.getInterpolatedScreenPos() + Vec2f(0, 40), color_white);
+
 	// CMap@ map = getMap();
 	// s32 landY = map.getLandYAtX(this.getPosition().x / 8.00f);
 	// s32 height = Maths::Max(landY - (this.getPosition().y / 8.00f) - 2, 0);
 
-	f32 velocity = this.get_f32("velocity");
-	f32 taken = velocity / fuel_factor * this.get_f32("fuel_consumption_modifier") * (30.00f / 5.00f);
+	//f32 velocity = this.get_f32("velocity");
+	//f32 taken = velocity / fuel_factor * this.get_f32("fuel_consumption_modifier") * (30.00f / 5.00f);
 
-	// GUI::DrawRectangle(upperleft, lowerright);
-	GUI::SetFont("menu");
-	GUI::DrawTextCentered("Speed: " + int(this.getVelocity().getLength() * 3.60f) + " km/h", this.getInterpolatedScreenPos() + Vec2f(0, 56), color_white);
-	GUI::DrawTextCentered("Consumption: " + taken + "/s", this.getInterpolatedScreenPos() + Vec2f(-8, 68), color_white);
-				
-	// GUI::DrawText("Therefore, you are unable to join another faction for " + secs + " " + units + "." ,
-		// Vec2f(getScreenWidth() / 2 - 220.0f, getScreenHeight() / 3 + offset + 20.0f + Maths::Sin(getGameTime() / 5.0f) * 5.0f),
-		// SColor(255, 255, 55, 55));
+	//GUI::DrawTextCentered("Speed: " + int(this.getVelocity().getLength() * 3.60f) + " km/h", this.getInterpolatedScreenPos() + Vec2f(0, 56), color_white);
+	//GUI::DrawTextCentered("Consumption: " + taken + "/s", this.getInterpolatedScreenPos() + Vec2f(-8, 68), color_white);
 }
 
 const f32 fuel_factor = 100.00f;
@@ -512,12 +528,18 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		string fuel_name = carried.getName();
 		bool isValid = fuel_name == "mat_oil" || fuel_name == "mat_methane" || fuel_name == "mat_fuel";
-		
+
 		if (isValid)
 		{
 			params.write_netid(caller.getNetworkID());
 			CButton@ button = caller.CreateGenericButton("$" + fuel_name + "$", Vec2f(12, 0), this, this.getCommandID("load_fuel"), "Load " + carried.getInventoryName() + "\n(" + this.get_f32("fuel_count") + " / " + this.get_f32("max_fuel") + ")", params);
 		}
+	}
+
+	if (GetAmmo(this) < 300 && carried !is null && carried.getName() == "mat_gatlingammo")
+	{
+		params.write_netid(caller.getNetworkID());
+		CButton@ button = caller.CreateGenericButton("$icon_gatlingammo$", Vec2f(10, 0), this, this.getCommandID("load_ammo"), "Load " + carried.getInventoryName() + "\n(" + this.get_u16("ammo_count") + " / " + 300 + ")", params);
 	}
 }
 
@@ -526,11 +548,11 @@ void onRender(CSprite@ this)
 	if (this is null) return;
 
 	AttachmentPoint@ pilot = this.getBlob().getAttachments().getAttachmentPointByName("PILOT");
-	if (pilot !is null	&& pilot.getOccupied() !is null && pilot.getOccupied().isMyPlayer())
+	if (pilot !is null && pilot.getOccupied() !is null && pilot.getOccupied().isMyPlayer())
 	{
-		drawFuelCount(this.getBlob());
+		drawInfo(this.getBlob());
 	}
-	
+
 	CBlob@ blob = this.getBlob();
 	Vec2f mouseWorld = getControls().getMouseWorldPos();
 	bool mouseOnBlob = (mouseWorld - blob.getPosition()).getLength() < this.getBlob().getRadius();
@@ -538,7 +560,7 @@ void onRender(CSprite@ this)
 	if (fuel <= 0 && mouseOnBlob)
 	{
 		Vec2f pos = blob.getInterpolatedScreenPos();
-		
+
 		GUI::SetFont("menu");
 		GUI::DrawTextCentered("Requires fuel!", Vec2f(pos.x, pos.y + 85 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
 		GUI::DrawTextCentered("(Oil, Methane, Fuel)", Vec2f(pos.x, pos.y + 105 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));

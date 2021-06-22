@@ -57,7 +57,7 @@ void onDie(CBlob@ this)
 	this.getShape().SetVelocity(Vec2f(0.0f, -1.5f));
 	if (isClient())
 	{
-		for(int i = 0; i < 5; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			Vec2f pos = Vec2f(XORRandom(16) - 8, XORRandom(16) - 8);
 			if (pos.Length() >= 8.0f)
@@ -94,7 +94,7 @@ void onTick(CBlob@ this)
 	}
 
 	//stuck fix
-	if (this.getVelocity() == Vec2f_zero) Reset(this);
+	if (this.getVelocity() == Vec2f_zero) KillThis(this, this.getPosition());
 	else
 	{
 		CSprite@ sprite = this.getSprite();

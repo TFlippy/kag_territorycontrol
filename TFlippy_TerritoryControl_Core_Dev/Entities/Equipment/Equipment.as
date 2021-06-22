@@ -147,14 +147,30 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 		if (playerblob.get_u8("override head") != 0) playerblob.set_u8("last head", playerblob.get_u8("override head"));
 		else playerblob.set_u8("last head", playerblob.getHeadNum());
 	}
-	// if (headname == "minershelmet")
+
+	if(headname == "scubagear")
+	{
+		playerblob.set_u8("override head", 88);
+		playerblob.Tag("disguised");
+	}
+
+	// if(headname == "minershelmet")
 		// playerblob.set_u8("override head", 30);
 
 	// if (headname == "militaryhelmet")
 		// playerblob.set_u8("override head", 30);
-	if (headname == "scubagear") playerblob.set_u8("override head", 88);
-	else if (headname == "bucket") playerblob.set_u8("override head", 107);
-	else if (headname == "pumpkin") playerblob.set_u8("override head", 108);
+
+	if(headname == "bucket")
+	{
+		playerblob.set_u8("override head", 107);
+		playerblob.Tag("disguised");
+	}
+		
+	if(headname == "pumpkin")
+	{
+		playerblob.set_u8("override head", 108);
+		playerblob.Tag("disguised");
+	}
 
 	playerblob.setHeadNum((playerblob.getHeadNum()+1) % 3);
 	playerblob.Tag(headname);
@@ -192,6 +208,7 @@ void removeHead(CBlob@ playerblob, string headname)
 	playerblob.set_string("equipment_head", "");
 	playerblob.RemoveScript(headname+"_effect.as");
 	playerblob.Tag("update head");
+	playerblob.Untag("disguised");
 }
 
 void addTorso(CBlob@ playerblob, string torsoname)			//The same stuff as in head here.

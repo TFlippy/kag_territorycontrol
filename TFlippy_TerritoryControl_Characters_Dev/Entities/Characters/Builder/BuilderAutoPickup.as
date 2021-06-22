@@ -1,4 +1,5 @@
 #define SERVER_ONLY
+#include "GunCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -32,8 +33,11 @@ void Take(CBlob@ this, CBlob@ blob)
 				for (int i = 0; i < items.size(); i++)
 				{
 					CBlob@ item = items[i];
-					string ammoType = item.get_string("gun_ammoItem");
-					if (ammoType == blob.getName() || item.getName() == blob.getName())
+
+					GunSettings@ settings;
+					item.get("gun_settings", @settings);
+
+					if (settings !is null && settings.AMMO_BLOB == blob.getName() || item.getName() == blob.getName())
 					{
 						add = true;
 						break;
