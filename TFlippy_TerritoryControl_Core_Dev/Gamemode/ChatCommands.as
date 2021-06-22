@@ -454,7 +454,14 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					server_CreateBlob("militaryhelmet", blob.getTeamNum(), blob.getPosition());
 					server_CreateBlob("bulletproofvest", blob.getTeamNum(), blob.getPosition());
 					server_CreateBlob("combatboots", blob.getTeamNum(), blob.getPosition());
-				}
+        }
+        else if (tokens[0]=="!time") {
+          if (tokens.length < 2) {
+            return false;
+          }
+          getMap().SetDayTime(parseFloat(tokens[1]));
+					return false;
+        }
 				else if (tokens[0]=="!tree") 
 					server_MakeSeed(blob.getPosition(),"tree_pine",600,1,16);
 
