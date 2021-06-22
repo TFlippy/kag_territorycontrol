@@ -18,8 +18,9 @@ void onInit(CBlob@ this)
 	this.addCommandID("faction_player_button");
 	this.addCommandID("button_join");
 
-	this.addCommandID("name");
-	this.addCommandID("renamed");
+	this.addCommandID("rename_base");
+	this.addCommandID("rename_faction");
+
 	this.set_string("initial_base_name", this.getInventoryName());
 	string base_name = this.get_string("base_name");
 	if (base_name != "") this.setInventoryName(this.getInventoryName() + " \"" + base_name + "\"");
@@ -120,16 +121,8 @@ void SetMinimap(CBlob@ this)
 		if (this.hasTag("minimap_large")) this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", this.get_u8("minimap_index"), Vec2f(16, 8));
 		else if (this.hasTag("minimap_small")) this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", this.get_u8("minimap_index"), Vec2f(8, 8));
 	}
-	if (this.get_bool("minimap_hidden"))
-	{
-		//print("hidden");
-		this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", -1, Vec2f(8, 8)); //by setting the icon to nothing it is removed, this is a bit hacky but set minimap render doesn't seem to work
-	}
-	else
-	{
-		this.SetMinimapRenderAlways(true);
-	}
-	
+
+	this.SetMinimapRenderAlways(true);
 }
 
 void onChangeTeam(CBlob@ this, const int oldTeam)
@@ -146,7 +139,7 @@ void onChangeTeam(CBlob@ this, const int oldTeam)
 
 	SetNearbyBlobsToTeam(this, oldTeam, newTeam);
 
-	for(uint i = 0; i < totalFortCount; i++)
+	for (uint i = 0; i < totalFortCount; i++)
 	{
 		int fortTeamNum = forts[i].getTeamNum();
 
@@ -196,7 +189,7 @@ void SetNearbyBlobsToTeam(CBlob@ this, const int oldTeam, const int newTeam)
 	for (uint i = 0; i < teamBlobs.length; i++)
 	{
 		CBlob@ b = teamBlobs[i];
-		if(b.getName() != this.getName() && b.hasTag("change team on fort capture") && (b.getTeamNum() == oldTeam || b.getTeamNum() > 7))
+		if (b.getName() != this.getName() && b.hasTag("change team on fort capture") && (b.getTeamNum() == oldTeam || b.getTeamNum() > 7))
 		{
 			b.server_setTeamNum(newTeam);
 		}
@@ -214,7 +207,7 @@ void onDie(CBlob@ this)
 	int teamForts = 0; // Current fort is being faction_destroyed
 	u8 team = this.getTeamNum();
 
-	for(uint i = 0; i < forts.length; i++)
+	for (uint i = 0; i < forts.length; i++)
 	{
 		if (forts[i].getTeamNum() == team) teamForts++;
 	}
@@ -231,42 +224,42 @@ void onDie(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	if (this.isOverlapping(caller))
+	if (caller.getTeamNum() >= 100 && caller.getTeamNum() < 200 && this.getTeamNum() < 100 && caller.getName() != "slave")
 	{
-		if (caller.getTeamNum() >= 100 && caller.getTeamNum() < 200 && this.getTeamNum() < 100 && caller.getName() != "slave")
+		TeamData@ team_data;
+		GetTeamData(this.getTeamNum(), @team_data);
+
+		CPlayer@ ply = caller.getPlayer();
+
+		if (team_data !is null && ply !is null)
 		{
-			TeamData@ team_data;
-			GetTeamData(this.getTeamNum(), @team_data);
+			// bool deserter = ply.get_u32("teamkick_time") > getGameTime();
+			bool recruitment_enabled = team_data.recruitment_enabled;
+			bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
+			// bool is_premium = ply.getSupportTier() > 0;
 
-			CPlayer@ ply = caller.getPlayer();
+			//print("" + ply.getSupportTier());
 
-			if (team_data !is null && ply !is null)
+			bool can_join = recruitment_enabled && upkeep_gud;
+
+			string msg = "";
+			if (!can_join)
 			{
-				// bool deserter = caller.getPlayer() !is null && caller.getPlayer().get_u32("teamkick_time") > getGameTime();
-				bool recruitment_enabled = team_data.recruitment_enabled;
-				bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
-				bool is_premium = true; //ply.getSupportTier() > 0; // TODO
-
-				//print("" + ply.getSupportTier());
-
-				bool can_join = recruitment_enabled && upkeep_gud && is_premium;
-
-				string msg = "";
-				if (!can_join)
-				{
-					msg += "\n\nCannot join!\n";
-					if (!recruitment_enabled) msg += "This faction is not accepting any new members.\n";
-					if (!upkeep_gud) msg += "Faction's upkeep is too high.\n";
-					if (!is_premium) msg += "Factions are restricted to Premium accounts only.\n";
-				}
-
-				CBitStream params;
-				params.write_u16(caller.getNetworkID());
-				CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("button_join"), "Join the Faction" + msg, params);
-				button.SetEnabled(can_join);
+				msg += "\n\nCannot join!\n";
+				if (!recruitment_enabled) msg += "This faction is not accepting any new members.\n";
+				if (!upkeep_gud) msg += "Faction's upkeep is too high.\n";
+				//if (!is_premium) msg += "Factions are restricted to Premium accounts only.\n";
 			}
-		}
 
+			CBitStream params;
+			params.write_u16(caller.getNetworkID());
+			CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("button_join"), "Join the Faction" + msg, params);
+			button.SetEnabled(can_join && caller.isOverlapping(this));
+		}
+	}
+
+	if (caller.isOverlapping(this))
+	{
 		if (caller.getTeamNum() == this.getTeamNum() && this.getTeamNum() < 100)
 		{
 			CBitStream params_menu;
@@ -275,13 +268,26 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			CButton@ button_menu = caller.CreateGenericButton(11, Vec2f(1, -8), this, Faction_Menu, "Faction Management");
 
 			CBlob@ carried = caller.getCarriedBlob();
-			if(carried !is null && carried.getName() == "paper")
+			if (carried !is null && carried.getName() == "paper")
 			{
 				CBitStream params_menu;
 				params_menu.write_u16(caller.getNetworkID());
 				params_menu.write_u16(carried.getNetworkID());
 
-				caller.CreateGenericButton("$icon_paper$", Vec2f(7, -8), this, this.getCommandID("name"), "Rename the base.", params_menu);
+				caller.CreateGenericButton("$icon_paper$", Vec2f(7, -8), this, this.getCommandID("rename_base"), "Rename the base", params_menu);
+
+				CPlayer@ myPly = caller.getPlayer();
+				if (myPly !is null && caller.isMyPlayer())
+				{
+					TeamData@ team_data;
+					GetTeamData(this.getTeamNum(), @team_data);
+					if (team_data !is null)
+					{
+						const bool isLeader = team_data.leader_name == myPly.getUsername();
+						CButton@ butt = caller.CreateGenericButton("$icon_paper$", Vec2f(-7, -8), this, this.getCommandID("rename_faction"), "Rename the faction", params_menu);
+						butt.SetEnabled(isLeader);
+					}
+				}
 			}
 		}
 	}
@@ -521,7 +527,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 
 				bool isLeader = ply.getUsername() == team_data.leader_name;
 
-				string teamName = getRules().getTeam(ply.getTeamNum()).getName();
+				string teamName = GetTeamName(ply.getTeamNum());
 				SColor teamColor = getRules().getTeam(ply.getTeamNum()).color;
 
 				switch (type)
@@ -681,7 +687,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 				case 0:
 					if (isLeader)
 					{
-						string teamName = rules.getTeam(caller.getTeamNum()).getName();
+						string teamName = GetTeamName(caller.getTeamNum());
 						printf(ply.getUsername() + " has been kicked out of the " + teamName + " by " + caller.getUsername());
 
 						if (isServer())
@@ -700,7 +706,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 				case 1:
 					if (isLeader)
 					{
-						string teamName = rules.getTeam(caller.getTeamNum()).getName();
+						string teamName = GetTeamName(caller.getTeamNum());
 						printf(ply.getUsername() + " has been enslaved by " + caller.getUsername());
 
 						if (isServer())
@@ -732,7 +738,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		if (!inParams.saferead_u16(id)) return;
 
 		CBlob@ blob = getBlobByNetworkID(id);
-		
+
 		u8 myTeam = this.getTeamNum();
 
 		if (myTeam < 7 && blob !is null && this.isOverlapping(blob) && blob.hasTag("player") && !blob.hasTag("ignore_flags"))
@@ -770,12 +776,63 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 			}
 		}
 	}
+	else if (cmd == this.getCommandID("rename_base") || cmd == this.getCommandID("rename_faction"))
+	{
+		CBlob @caller = getBlobByNetworkID(inParams.read_u16());
+		CBlob @carried = getBlobByNetworkID(inParams.read_u16());
 
-	if (isServer()) {
-		if (cmd == this.getCommandID("faction_captured") || cmd == this.getCommandID("faction_destroyed")) {
+		if (caller !is null && carried !is null)
+		{
+			string new_name = carried.get_string("text");
+			string old_name;
+
+			if (cmd == this.getCommandID("rename_base"))
+			{
+				old_name = this.getInventoryName();
+				this.setInventoryName(new_name);
+			}
+			else
+			{
+				TeamData@ team_data;
+				GetTeamData(this.getTeamNum(), @team_data);
+				if (team_data !is null)
+				{
+					old_name = GetTeamName(this.getTeamNum());
+					team_data.team_name = new_name;
+				}
+			}
+
+			string renamer_name = "Someone";
+			SColor message_color(255, 128, 128, 128);
+
+			CPlayer@ player = caller.getPlayer();
+			if (player !is null)
+			{
+				renamer_name = player.getUsername();
+				CRules @rules = getRules();
+				if (rules !is null)
+				{
+					CTeam@ team = rules.getTeam(player.getTeamNum());
+					if (team !is null)
+					{
+						message_color = player.getTeamNum() < 7 ? team.color : SColor(255, 128, 128, 128);
+					}
+				}
+			}
+			client_AddToChat(renamer_name + " has renamed " + old_name + " to " + new_name, message_color);
+
+			carried.server_Die();
+		}
+	}
+
+	if (isServer())
+	{
+		if (cmd == this.getCommandID("faction_captured") || cmd == this.getCommandID("faction_destroyed"))
+		{
 			int team = inParams.read_s32();
-			if (cmd == this.getCommandID("faction_captured")) {
-			team = inParams.read_s32();
+			if (cmd == this.getCommandID("faction_captured"))
+			{
+				team = inParams.read_s32();
 			}
 
 			bool defeat = inParams.read_bool();
@@ -793,53 +850,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 				}
 			}
 		}
-		else if (cmd == this.getCommandID("name"))
-		{
-			CBlob @caller = getBlobByNetworkID(inParams.read_u16());
-			CBlob @carried = getBlobByNetworkID(inParams.read_u16());
-
-			if (caller !is null && carried !is null)
-			{
-				string base_name = carried.get_string("text");
-				this.set_string("base_name", base_name);
-				string old_name = this.getInventoryName();
-				this.setInventoryName(this.get_string("initial_base_name") + (base_name == "" ? "" : " \"" + base_name + "\""));
-				this.Sync("base_name", true);
-
-				CBitStream params;
-				params.write_u16(caller.getNetworkID());
-				params.write_string(old_name);
-				params.write_string(this.getInventoryName());
-				this.SendCommand(this.getCommandID("renamed"), params);
-
-				carried.server_Die();
-			}
-		}
 	}
 
 	if (isClient())
 	{
-		if (cmd == this.getCommandID("renamed")) {
-			CBlob @renamer = getBlobByNetworkID(inParams.read_u16());
-			string old_name = inParams.read_string();
-			string new_name = inParams.read_string();
-			CPlayer @renamer_player = renamer.getPlayer();
-			this.setInventoryName(new_name); //doesn't sync on it's own
-			string renamer_name = "Someone";
-			SColor message_color(255, 128, 128, 128);
-			if (renamer_player !is null) {
-				renamer_name = renamer_player.getUsername();
-				CRules @rules = getRules();
-				if (rules !is null) {
-					CTeam@ team = rules.getTeam(renamer_player.getTeamNum());
-					if (team !is null) {
-						message_color = renamer_player.getTeamNum() < 7 ? team.color : SColor(255, 128, 128, 128);
-					}
-				}
-			}
-			client_AddToChat(renamer_name+" has renamed "+old_name+" to "+new_name, message_color);
-		}
-		else if (cmd == this.getCommandID("faction_captured"))
+		if (cmd == this.getCommandID("faction_captured"))
 		{
 			CRules@ rules = getRules();
 
@@ -853,8 +868,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 
 			if (oldTeam < 7 && newTeam < 7)
 			{
-				string oldTeamName = rules.getTeam(oldTeam).getName();
-				string newTeamName = rules.getTeam(newTeam).getName();
+				string oldTeamName = GetTeamName(oldTeam);
+				string newTeamName = GetTeamName(newTeam);
 
 				client_AddToChat(oldTeamName + "'s "+this.getInventoryName()+" has been captured by the " + newTeamName + "!", SColor(0xff444444));
 				if (defeat)
@@ -886,7 +901,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 
 			if (team < 7) 
 			{
-				string teamName = rules.getTeam(team).getName();
+				string teamName = GetTeamName(team);
 				client_AddToChat(teamName + "'s "+this.getInventoryName()+" has been destroyed!", SColor(0xff444444));
 
 				if (defeat) 

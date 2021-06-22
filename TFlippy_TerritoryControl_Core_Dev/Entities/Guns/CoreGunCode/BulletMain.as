@@ -43,7 +43,6 @@ void onInit(CRules@ this)
 
 		this.add_u16("temp_id", Render::addScript(Render::layer_postworld, "BulletMain", "GunRender", 0.0f));
 		//Render::addScript(Render::layer_prehud, "BulletMain", "GUIStuff", 0.0f);
-		
 	}
 
 	Reset(this);
@@ -57,17 +56,6 @@ void onReload(CRules@ this)
 void onRestart(CRules@ this)
 {
 	Reset(this);
-
-	string[]@ book;
-	this.get("VertexBook", @book);
-	
-	for (int a = 0; a < book.length(); a++)
-	{
-		this.set_bool(book[a] + '-inbook', false);
-	}
-
-	book.clear();
-
 }
 
 void Reset(CRules@ this)
@@ -192,8 +180,8 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 				CBlob@ localBlob = getLocalPlayerBlob();
 				if (localBlob !is null && localBlob is hoomanBlob) // if we are this blob
 				{
-					/*Recoil@ coil = Recoil(localBlob, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-					BulletGrouped.NewRecoil(@coil);*/
+					Recoil@ coil = Recoil(localBlob, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+					BulletGrouped.NewRecoil(@coil);
 				}
 			}
 		}

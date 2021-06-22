@@ -12,30 +12,20 @@ void onInit(CBlob@ this)
 	              Vec2f(0.0f, -5.0f), // jump out velocity
 	              true  // inventory access
 	             );
+
 	VehicleInfo@ v;
-	if (!this.get("VehicleInfo", @v))
-	{
-		return;
-	}
+	if (!this.get("VehicleInfo", @v)) return;
+
 	Vehicle_SetupAirship(this, v, 50.0f);
-	
+
 	this.Tag("vehicle");
 	this.Tag("heavy weight");
-	
+
 	this.getShape().SetOffset(Vec2f(0, 10));
 	this.getShape().SetRotationsAllowed(false);
-	
-	this.set_f32("max_fuel", 3000);
-	this.set_f32("fuel_consumption_modifier", 3.50f);
-}
 
-void onTick(CBlob@ this)
-{
-	
-}
-void onCollision(CBlob@ this, CBlob@ blob,bool solid)
-{
-	
+	this.set_f32("max_fuel", 3000);
+	this.set_f32("fuel_consumption_modifier", 1.50f);
 }
 
 void onDie( CBlob@ this )
@@ -61,7 +51,7 @@ void onDie( CBlob@ this )
 //required shit
 void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 charge)
 {
-	print("hello");
+
 }
 
 bool Vehicle_canFire(CBlob@ this, VehicleInfo@ v, bool isActionPressed, bool wasActionPressed, u8 &out chargeValue)
@@ -84,7 +74,7 @@ void onInit(CSprite@ this)
 {
 	this.SetZ(-50.0f);
 	this.getCurrentScript().tickFrequency = 5;
-	
+
 	CSpriteLayer@ balloon = this.addSpriteLayer("balloon", "ArmoredBomber.png", 48, 64);
 	if (balloon !is null)
 	{
@@ -94,15 +84,16 @@ void onInit(CSprite@ this)
 		balloon.SetRelativeZ(1.0f);
 		balloon.SetOffset(Vec2f(0.0f, -26.0f));
 	}
+
 	CSpriteLayer@ background = this.addSpriteLayer("background", "ArmoredBomber.png", 32, 16);
 	if (background !is null)
 	{
 		background.addAnimation("default", 0, false);
-		int[] frames = { 3 };
-		background.animation.AddFrames(frames);
+		background.animation.AddFrame(3);
 		background.SetRelativeZ(-5.0f);
 		background.SetOffset(Vec2f(0.0f, -5.0f));
 	}
+
 	CSpriteLayer@ burner = this.addSpriteLayer("burner", "ArmoredBomber.png", 8, 16);
 	if (burner !is null)
 	{
@@ -163,6 +154,7 @@ void onTick(CSprite@ this)
 		}
 	}
 }
+
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
 	f32 dmg = damage;

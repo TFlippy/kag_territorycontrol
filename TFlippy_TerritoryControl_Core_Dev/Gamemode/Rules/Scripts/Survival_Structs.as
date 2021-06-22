@@ -7,7 +7,7 @@
 
 	// PersistentPlayerInfo() { Setup("", 255); }
 	// PersistentPlayerInfo(string _name, u8 _team) { Setup(_name, _team); }
-	
+
 	// void Setup(string _name, u8 _team)
 	// {
 		// name = _name;
@@ -15,10 +15,10 @@
 		// coins = 0;
 		// teamkick_time = 0;
 	// }
-	
+
 	// // PersistentPlayerInfo() { Setup("", 0); }
 	// // PersistentPlayerInfo(string _name, u8 _team) { Setup(_name, _team); }
-	
+
 	// // void PersistentPlayerInfo(string _name, u8 _team)
 	// // {
 		// // name = _name;
@@ -45,15 +45,16 @@ shared class TeamData
 	{ 
 		Setup(inTeam); 
 	}
-	
+
 	u8 team;
 	u16 upkeep;
 	u16 upkeep_cap;
 	u32 wealth;
 	u16 controlled_count;
-	
+
 	string leader_name;
-	
+	string team_name;
+
 	bool recruitment_enabled;
 	bool lockdown_enabled;
 	bool tax_enabled;
@@ -62,9 +63,9 @@ shared class TeamData
 	bool slavery_enabled;
 	bool reserved_1_enabled;
 	bool reserved_2_enabled;
-	
+
 	u16 player_count;
-	
+
 	void Setup(u8 inTeam)
 	{
 		team = inTeam;
@@ -72,18 +73,19 @@ shared class TeamData
 		upkeep_cap = 10;
 		wealth = 0;
 		controlled_count = 0;
-		
+
 		leader_name = "";
+		team_name = "";
 		recruitment_enabled = true;
 		lockdown_enabled = true;
 		tax_enabled = false;
 		bool f2p_enabled = true;
 		storage_enabled = true;
 		slavery_enabled = true;
-		
+
 		player_count = 0;
 	}
-	
+
 	void Serialize(CBitStream@ stream)
 	{
 		if (stream is null)
@@ -91,7 +93,7 @@ shared class TeamData
 			print("Failed to serialize team " + team);
 			return;
 		}
-	
+
 		stream.write_u8(team);
 		stream.write_string(leader_name);
 
@@ -115,16 +117,16 @@ shared class TeamData
 			print("Failed to deserialize a team");
 			return;
 		}
-		
+
 		team = stream.read_u8();
 		leader_name = stream.read_string();
 		u8 flags = stream.read_u8();
-		
+
 		recruitment_enabled = flags & (1 << 0) > 0;
 		lockdown_enabled = flags & (1 << 1) > 0;
 		tax_enabled = flags & (1 << 2) > 0;
 		storage_enabled = flags & (1 << 3) > 0;
-	
+
 		// print("team: " + team);
 		// print("leader: " + leader_name);
 		// print("flags: " + flags);
@@ -140,9 +142,20 @@ void GetTeamData(u8 team, TeamData@ &out data)
 {
 	TeamData[]@ team_list;
 	getRules().get("team_list", @team_list);
-	
+
 	if (team_list !is null && team < team_list.length)
-	{	
+	{
 		@data = team_list[team];
 	}
+}
+
+const string GetTeamName(u8 team_num) //returns the given team's name
+{
+	TeamData@ team_data;
+	GetTeamData(team_num, @team_data);
+	if (team_data !is null)
+	{
+		if (team_data.team_name != "") return team_data.team_name; //Use custom name
+	}
+	return getRules().getTeam(team_num).getName(); //Standard name
 }

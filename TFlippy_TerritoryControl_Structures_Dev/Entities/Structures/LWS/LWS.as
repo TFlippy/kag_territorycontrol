@@ -20,8 +20,6 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 5;
 	// this.getCurrentScript().runFlags |= Script::tick_not_ininventory;
 
-	this.getSprite().SetZ(20);
-
 	this.set_u16("target", 0);
 	this.set_f32("burn_time", 0);
 
@@ -46,9 +44,12 @@ void onInit(CSprite@ this)
 	// this.SetEmitSoundSpeed(0.0f);
 	// this.SetEmitSoundPaused(false);
 
+	this.SetZ(20);
+
 	CSpriteLayer@ head = this.addSpriteLayer("head", "LWS_Launcher.png", 32, 16);
 	if (head !is null)
 	{
+		head.SetRelativeZ(1.0f);
 		head.SetOffset(headOffset);
 		head.SetVisible(true);
 	}
@@ -56,8 +57,6 @@ void onInit(CSprite@ this)
 	CSpriteLayer@ laser = this.addSpriteLayer("laser", "LWS_Laser.png", 4, 4);
 	if (laser !is null)
 	{
-		Animation@ anim = laser.addAnimation("default", 0, false);
-		anim.AddFrame(0);
 		// laser.SetRelativeZ(-1.0f);
 		laser.SetVisible(false);
 		laser.setRenderStyle(RenderStyle::additive);
@@ -113,6 +112,11 @@ const Vec2f headOffset = Vec2f(0, -8);
 
 void onTick(CBlob@ this)
 {
+	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+	CBlob@ attachedBlob = point.getOccupied();
+
+	if (attachedBlob !is null && !attachedBlob.hasTag("vehicle")) return;
+
 	CBlob@[] blobs;
 	getBlobsByTag("aerial", @blobs);
 	getBlobsByTag("projectile", @blobs);
@@ -162,6 +166,8 @@ void onTick(CBlob@ this)
 	CBlob@ t = getBlobByNetworkID(this.get_u16("target"));
 	if (t !is null && isVisible(this, t))
 	{
+		this.SetFacingLeft((t.getPosition().x - this.getPosition().x) < 0);
+
 		if (ammo > 0)
 		{
 			fired = true;
@@ -209,7 +215,6 @@ bool isVisible(CBlob@ blob, CBlob@ target)
 
 void onTick(CSprite@ this)
 {
-	this.SetFacingLeft(false);
 	CBlob@ blob = this.getBlob();
 
 	if (isClient())
@@ -217,7 +222,12 @@ void onTick(CSprite@ this)
 		CBlob@ target = getBlobByNetworkID(blob.get_u16("target"));
 		if (target !is null)
 		{
-			blob.SetFacingLeft((target.getPosition().x - blob.getPosition().x) < 0);
+			AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
+			CBlob@ attachedBlob = point.getOccupied();
+
+			if (attachedBlob !is null && !attachedBlob.hasTag("vehicle")) return;
+
+			const bool facingLeft = (target.getPosition().x - blob.getPosition().x) > 0;
 
 			Vec2f dir = target.getPosition() - blob.getPosition();
 			f32 length = dir.getLength();
@@ -228,6 +238,7 @@ void onTick(CSprite@ this)
 			if (head !is null)
 			{
 				head.ResetTransform();
+				head.SetFacingLeft(!facingLeft);
 				head.RotateBy(-dir.Angle() + (this.isFacingLeft() ? 180 : 0), Vec2f());
 			}
 
@@ -241,6 +252,16 @@ void onTick(CSprite@ this)
 				// laser.SetVisible(true);
 				// laser.SetRelativeZ(-250.0f);
 				// laser.SetOffset(headOffset);
+			}
+		}
+		else
+		{
+			CSpriteLayer@ head = this.getSpriteLayer("head");
+			if (head !is null)
+			{
+				head.ResetTransform();
+				head.SetFacingLeft(blob.isFacingLeft());
+				//head.RotateBy((Maths::Sin(blob.getTickSinceCreated() * 0.05f) * 20), Vec2f());
 			}
 		}
 	}

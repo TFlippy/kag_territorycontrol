@@ -89,8 +89,6 @@ void onInit(CSprite@ this)
 
 	if (ghost !is null)
 	{
-		Animation@ anim = ghost.addAnimation("default", 0, false);
-		anim.AddFrame(0);
 		ghost.SetRelativeZ(-1.0f);
 		ghost.SetVisible(false);
 	}
@@ -111,7 +109,7 @@ void onTick(CSprite@ this)
 		CSpriteLayer@ ghost = this.getSpriteLayer("ghost");
 
 		this.setRenderStyle(RenderStyle::normal);
-		ghost.SetOffset(Vec2f(this.isFacingLeft() ? 16 : 48, 0.0f));
+		//ghost.SetOffset(Vec2f(this.isFacingLeft() ? 16 : 48, 0.0f));
 		ghost.SetVisible(false);
 	}
 
@@ -126,14 +124,10 @@ void onTick(CBlob@ this)
 {
 	u8 knocked = getKnocked(this);
 
-	if (this.isInInventory())
-		return;
+	if (this.isInInventory()) return;
 
 	RunnerMoveVars@ moveVars;
-	if (!this.get("moveVars", @moveVars))
-	{
-		return;
-	}
+	if (!this.get("moveVars", @moveVars)) return;
 
 	u32 time = getGameTime();
 	if (isServer() && time % 5 == 0)
@@ -197,16 +191,16 @@ void onTick(CBlob@ this)
 		this.setPosition(hitPos);
 		this.setVelocity(-aimDir * (length / 12.0f));
 
-		if(isClient())
+		if (isClient())
 		{
 			this.getSprite().PlaySound("Exosuit_Teleport.ogg", 1.0f, 1.0f);
 			this.getSprite().setRenderStyle(RenderStyle::additive);
 
 			DrawGhost(this.getSprite(), 0, pos, length / 96, angle, this.isFacingLeft());
-			ShakeScreen(64, 32, this.getPosition());	
+			ShakeScreen(64, 32, this.getPosition());
 		}
 
-		if(isServer())
+		if (isServer())
 		{
 			map.server_DestroyTile(hitPos, 32.0f);
 			map.server_DestroyTile(hitPos + aimDir * -8, 16.0f);
@@ -240,14 +234,14 @@ void onTick(CBlob@ this)
 
 void DrawGhost(CSprite@ this, u8 index, Vec2f startPos, f32 length, f32 angle, bool flip)
 {
-	CSpriteLayer@ ghost =this.getSpriteLayer("ghost");
-
-	ghost.SetVisible(true);
+	CSpriteLayer@ ghost = this.getSpriteLayer("ghost");
 
 	ghost.ResetTransform();
-	ghost.ScaleBy(Vec2f(length, 1.0f));
-	ghost.TranslateBy(Vec2f(length * 16.0f, 0.0f));
-	ghost.RotateBy(angle + (flip ? 180 : 0), Vec2f());
+	//ghost.ScaleBy(Vec2f(length, 1.0f));
+	ghost.TranslateBy(Vec2f(length * (flip ? 1 : -1), 0));
+	ghost.SetOffset(Vec2f(32, 0));
+	ghost.RotateBy(angle + (flip ? 180 : 0), Vec2f(32 * (flip ? 1 : -1), 0.0f));
+	ghost.SetVisible(true);
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)

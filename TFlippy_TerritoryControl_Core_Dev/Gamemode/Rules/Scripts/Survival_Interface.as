@@ -31,7 +31,7 @@ const SColor grey = SColor(255,220,220,220);
 const SColor grey2 = SColor(255, 191, 191, 191);
 const string serverName = "Territory Control";
 const SColor[] teamColourArray = {SColor(255, 102, 102, 255), SColor(255, 255, 102, 102), SColor(255, 51, 102, 13),
-	 SColor(255, 98, 26, 131), SColor(255, 132, 71, 21), SColor(255, 43, 83, 83), SColor(255, 42, 48, 132), SColor(255, 100, 113, 96)};
+      SColor(255, 98, 26, 131), SColor(255, 132, 71, 21), SColor(255, 43, 83, 83), SColor(255, 42, 48, 132), SColor(255, 100, 113, 96)};
 
 //Non const
 string serverIP = "";
@@ -54,7 +54,7 @@ void onRestart(CRules@ this)
 	CMap@ map = getMap();
 	serverIP = net.joined_ip;
 
-	mapName = map is null ? "Error: Blame KAG" : getMap().getMapName();
+	mapName = map is null ? "Error: Blame KAG" : map.getMapName();
 }
 
 void onRenderScoreboard(CRules@ this)
@@ -91,7 +91,6 @@ void onRenderScoreboard(CRules@ this)
 		f32 height = 120;
 
 		GUI::SetFont("menu");
-
 
 		string title =  "";
 		string mapname = "";
@@ -134,7 +133,6 @@ void onRenderScoreboard(CRules@ this)
 		const f32 tO = y_offset + 20;//text offset
 		GUI::DrawFramedPane(tl, br);
 
-
 		GUI::SetFont("menu");
 		GUI::DrawText("General Rules and Notes", Vec2f(mid- 100,tl.y + 10), red);
 		GUI::DrawText("- Do not grief or sabotage your team, such as by wasting resources or stealing the leadership or kicking everyone out.", Vec2f(tO, tl.y + 30), white);
@@ -142,7 +140,6 @@ void onRenderScoreboard(CRules@ this)
 		GUI::DrawText("- Automated spawnkilling and spawnblocking is not allowed - neutrals must be able to leave their spawn.", Vec2f(tO, tl.y + 60), white);
 		//GUI::DrawText("- Try not hoard too many slaves, general rule of thumb is to only slave people either for being a murderhobo or annoying.", Vec2f(tO, tl.y + 75), white);
 		GUI::DrawText("- Do not ruin the fun for other team members or the whole server.", Vec2f(tO,tl.y + 75), white);
-
 	}
 
 	// player scoreboard
@@ -150,7 +147,6 @@ void onRenderScoreboard(CRules@ this)
 
 		Vec2f topleft(100, 190);
 		Vec2f bottomright(getScreenWidth() - 100, topleft.y + playerList_yOffset);
-
 
 		GUI::DrawFramedPane(topleft, bottomright);
 
@@ -166,13 +162,13 @@ void onRenderScoreboard(CRules@ this)
 
 		//draw player table header
 
-		if(getScreenWidth() < 1461)//Compact
+		if (getScreenWidth() < 1461)//Compact
 		{
 
 			GUI::DrawText("Character Name", Vec2f(topleft.x, topleft.y), white);
 			GUI::DrawText("User Name", Vec2f(topleft.x + 200, topleft.y), white);
 			GUI::DrawText("Accolades", Vec2f(bottomright.x - 700, topleft.y), white);
-			GUI::DrawText("Clan", Vec2f(bottomright.x - 510, topleft.y), white);
+			// GUI::DrawText("Clan", Vec2f(bottomright.x - 510, topleft.y), white);
 			GUI::DrawText("Wealth", Vec2f(bottomright.x - 420, topleft.y), white);
 			GUI::DrawText("Ping", Vec2f(bottomright.x - 330, topleft.y), white);
 			GUI::DrawText("Kills", Vec2f(bottomright.x - 270, topleft.y), white);
@@ -181,12 +177,10 @@ void onRenderScoreboard(CRules@ this)
 		}
 		else
 		{
-
 			GUI::DrawText("Character Name", Vec2f(topleft.x, topleft.y), white);
 			GUI::DrawText("User Name", Vec2f(topleft.x + 250, topleft.y), white);
 			GUI::DrawText("Accolades", Vec2f(bottomright.x - 850, topleft.y), white);
-			GUI::DrawText("Clan", Vec2f(bottomright.x - 650, topleft.y), white);
-			// GUI::DrawText("Coins", Vec2f(bottomright.x - 600, topleft.y), SColor(0xffffffff));
+			// GUI::DrawText("Clan", Vec2f(bottomright.x - 650, topleft.y), white);
 			// GUI::DrawText("Team Status", Vec2f(bottomright.x - 550, topleft.y), SColor(0xffffffff));
 			GUI::DrawText("Wealth", Vec2f(bottomright.x - 550, topleft.y), white);
 			GUI::DrawText("Ping", Vec2f(bottomright.x - 450, topleft.y), white);
@@ -208,7 +202,6 @@ void onRenderScoreboard(CRules@ this)
 
 			bool playerHover = mousePos.y > topleft.y + 20 && mousePos.y < topleft.y + 40;
 
-
 			topleft.y += stepheight;
 			bottomright.y = topleft.y + stepheight;
 			const Vec2f lineoffset = Vec2f(0, -2);
@@ -220,7 +213,7 @@ void onRenderScoreboard(CRules@ this)
 			const u16 coins = p.getCoins();
 			const string lowUsername = p.getUsername().toLower();
 			const string rank = getRank(lowUsername, customCol, p);
-			const string clan = this.exists("clanData"+lowUsername) ? this.get_string("clanData"+lowUsername) : "";
+			//const string clan = this.exists("clanData"+lowUsername) ? this.get_string("clanData"+lowUsername) : "";
 			const string characterName = (p.getClantag().length > 0 ? p.getClantag() + " " : "") + p.getCharacterName();
 			SColor playercolour = teamColourArray[p.getTeamNum() % teamColourArray.length];
 
@@ -261,16 +254,12 @@ void onRenderScoreboard(CRules@ this)
 			if (tex != "") GUI::DrawIcon(tex, frame, framesize, topleft, 0.5f, p.getTeamNum());
 			//End
 
-
-
-
-			if(getScreenWidth() < 1461)
+			if (getScreenWidth() < 1461)
 			{
-				GUI::DrawText(characterName		 , topleft + Vec2f(20, 0)				, playercolour);//CharacterName
-
-				GUI::DrawText(p.getUsername()	 , topleft + Vec2f(200, 0)				, tempGrey);//Username
-				GUI::DrawText(clan			 	 , Vec2f(bottomright.x - 510, topleft.y), tempGrey);//Clan tag
-				GUI::DrawText(coins + " coins"	 , Vec2f(bottomright.x - 420, topleft.y), tempGrey);//Coins
+				GUI::DrawText(characterName      , topleft + Vec2f(20, 0)               , playercolour);//CharacterName
+				GUI::DrawText(p.getUsername()    , topleft + Vec2f(200, 0)              , tempGrey);//Username
+				//GUI::DrawText(clan               , Vec2f(bottomright.x - 510, topleft.y), tempGrey);//Clan tag
+				GUI::DrawText(coins + " coins"   , Vec2f(bottomright.x - 420, topleft.y), tempGrey);//Coins
 				GUI::DrawText(ping_in_ms + " ms" , Vec2f(bottomright.x - 330, topleft.y), tempGrey);//Ping
 				GUI::DrawText("" + p.getKills()  , Vec2f(bottomright.x - 270, topleft.y), tempGrey);//Kills
 				GUI::DrawText("" + p.getDeaths() , Vec2f(bottomright.x - 220, topleft.y), tempGrey);//Deaths
@@ -278,13 +267,13 @@ void onRenderScoreboard(CRules@ this)
 			}
 			else
 			{
-				GUI::DrawText(characterName		 , topleft + Vec2f(20, 0)				, playercolour);//PlayerColour
+				GUI::DrawText(characterName      , topleft + Vec2f(20, 0)               , playercolour);//PlayerColour
 
-				GUI::DrawText(p.getUsername()	 , topleft + Vec2f(250, 0)				, tempGrey);
-				GUI::DrawText(clan				 , Vec2f(bottomright.x - 650, topleft.y), tempGrey);
-				GUI::DrawText(coins + " coins"	 , Vec2f(bottomright.x - 550, topleft.y), tempGrey);
+				GUI::DrawText(p.getUsername()    , topleft + Vec2f(250, 0)              , tempGrey);
+				//GUI::DrawText(clan               , Vec2f(bottomright.x - 650, topleft.y), tempGrey);
+				GUI::DrawText(coins + " coins"   , Vec2f(bottomright.x - 550, topleft.y), tempGrey);
 				GUI::DrawText(ping_in_ms + " ms" , Vec2f(bottomright.x - 450, topleft.y), tempGrey);
-				GUI::DrawText("" + p.getKills()	 , Vec2f(bottomright.x - 350, topleft.y), tempGrey);
+				GUI::DrawText("" + p.getKills()  , Vec2f(bottomright.x - 350, topleft.y), tempGrey);
 				GUI::DrawText("" + p.getDeaths() , Vec2f(bottomright.x - 250, topleft.y), tempGrey);
 				if(rank != "") GUI::DrawText(rank, Vec2f(bottomright.x - 150, topleft.y), customCol);
 			}
@@ -301,13 +290,13 @@ void onRenderScoreboard(CRules@ this)
 
 					//misc accolades
 					(acc.community_contributor ?
-						1 : 0),             4,     0,         0,
+					    1 : 0),             4,     0,         0,
 					(acc.github_contributor ?
-						1 : 0),             5,     0,         0,
+					    1 : 0),             5,     0,         0,
 					(acc.map_contributor ?
-						1 : 0),             6,     0,         0,
+					    1 : 0),             6,     0,         0,
 					(p.getOldGold() ?
-						1 : 0),             8,     0,         0,
+					    1 : 0),             8,     0,         0,
 
 					//tourney badges
 					acc.gold,               0,     1,         1,
@@ -326,7 +315,7 @@ void onRenderScoreboard(CRules@ this)
 					(getScreenWidth() < 1460 ? 600 : 700) - (24 * 5 + 12), 38,
 				};
 
-				for(int bi = 0; bi < badges_encode.length; bi += 4)
+				for (int bi = 0; bi < badges_encode.length; bi += 4)
 				{
 					int amount    = badges_encode[bi+0];
 					int icon      = badges_encode[bi+1];
@@ -366,7 +355,6 @@ void onRenderScoreboard(CRules@ this)
 	// team scoreboard
 	{
 		TeamData[]@ team_list;
-
 		this.get("team_list", @team_list);
 
 		if (team_list !is null)
@@ -397,31 +385,30 @@ void onRenderScoreboard(CRules@ this)
 				GUI::SetFont("menu");
 
 				//draw player table header
-				if(getScreenWidth() < 1461)
+				if (getScreenWidth() < 1461)
 				{
 					GUI::DrawText("Team Name", Vec2f(topleft.x, topleft.y), white);
 					GUI::DrawText("Leader", Vec2f(topleft.x + 100, topleft.y), white);
-					GUI::DrawText("Members", Vec2f(bottomright.x 	- 650, topleft.y), white);
-					GUI::DrawText("Upkeep", Vec2f(bottomright.x 	- 560, topleft.y), white);
+					GUI::DrawText("Members", Vec2f(bottomright.x    - 650, topleft.y), white);
+					GUI::DrawText("Upkeep", Vec2f(bottomright.x     - 560, topleft.y), white);
 					GUI::DrawText("Wealth", Vec2f(bottomright.x     - 490, topleft.y), white);
 					GUI::DrawText("Recruiting", Vec2f(bottomright.x - 400, topleft.y), white);
 					GUI::DrawText("Murder Tax", Vec2f(bottomright.x - 320, topleft.y), white);
 					GUI::DrawText("Lockdown", Vec2f(bottomright.x   - 230, topleft.y), white);
 					GUI::DrawText("Land Owned", Vec2f(bottomright.x - 150, topleft.y), white);
-
 				}
 				else
 				{
 					GUI::DrawText("Team Name", Vec2f(topleft.x, topleft.y), white);
 					GUI::DrawText("Leader", Vec2f(topleft.x + 250, topleft.y), white);
-					GUI::DrawText("Members", Vec2f(bottomright.x 		- base_offset, topleft.y), white);
-					GUI::DrawText("Upkeep", Vec2f(bottomright.x  		- base_offset + 100, topleft.y), white);
-					GUI::DrawText("Wealth", Vec2f(bottomright.x  		- base_offset + 200, topleft.y), white);
-					GUI::DrawText("Recruitment", Vec2f(bottomright.x	- base_offset + 300, topleft.y), white);
-					GUI::DrawText("Murder Tax", Vec2f(bottomright.x 	- base_offset + 450, topleft.y), white);
-					//GUI::DrawText("Slavery", Vec2f(bottomright.x 		- base_offset + 550, topleft.y), white);
-					GUI::DrawText("Lockdown", Vec2f(bottomright.x 		- base_offset + 550, topleft.y), white);
-					GUI::DrawText("Land Owned", Vec2f(bottomright.x 	- base_offset + 650, topleft.y), white);
+					GUI::DrawText("Members", Vec2f(bottomright.x        - base_offset, topleft.y), white);
+					GUI::DrawText("Upkeep", Vec2f(bottomright.x         - base_offset + 100, topleft.y), white);
+					GUI::DrawText("Wealth", Vec2f(bottomright.x         - base_offset + 200, topleft.y), white);
+					GUI::DrawText("Recruitment", Vec2f(bottomright.x    - base_offset + 300, topleft.y), white);
+					GUI::DrawText("Murder Tax", Vec2f(bottomright.x     - base_offset + 450, topleft.y), white);
+					//GUI::DrawText("Slavery", Vec2f(bottomright.x      - base_offset + 550, topleft.y), white);
+					GUI::DrawText("Lockdown", Vec2f(bottomright.x       - base_offset + 550, topleft.y), white);
+					GUI::DrawText("Land Owned", Vec2f(bottomright.x     - base_offset + 650, topleft.y), white);
 				}
 
 				topleft.y += stepheight * 0.5f;
@@ -442,13 +429,10 @@ void onRenderScoreboard(CRules@ this)
 
 					bool hover = mousePos.y > topleft.y + 20 && mousePos.y < topleft.y + 40;
 
-
 					topleft.y += stepheight;
 					bottomright.y = topleft.y + stepheight;
 
 					const Vec2f lineoffset = Vec2f(0, -2);
-
-
 
 					SColor tempGrey = grey;
 					SColor color = teamColourArray[i];
@@ -462,41 +446,40 @@ void onRenderScoreboard(CRules@ this)
 					GUI::DrawLine2D(Vec2f(topleft.x, bottomright.y + 1) + lineoffset, Vec2f(bottomright.x, bottomright.y + 1) + lineoffset, lBlack);
 					GUI::DrawLine2D(Vec2f(topleft.x, bottomright.y) + lineoffset, bottomright + lineoffset, color);
 
-					const string teamName = cTeam.getName();
+					const string teamName = team.team_name == "" ? cTeam.getName() : team.team_name;
 					const string leaderName = team.leader_name == "" ? "N/A" : team.leader_name;
 					const string upkeep = team.upkeep + " / " + team.upkeep_cap;
 					const string recOn = team.recruitment_enabled ? "Yes" : "No";
-					const string taxOn = team.tax_enabled ? "Yes" : "No";
-					const string slaOn = team.slavery_enabled ? "Yes" : "No";
-					const string lockOn = team.lockdown_enabled ? "Yes" : "No";
+					const string taxOn = team.tax_enabled ?         "Yes" : "No";
+					const string slaOn = team.slavery_enabled ?     "Yes" : "No";
+					const string lockOn = team.lockdown_enabled ?   "Yes" : "No";
 
-					if(getScreenWidth() < 1461)
+					if (getScreenWidth() < 1461)
 					{
-						GUI::DrawText(teamName				, topleft, color);
-						GUI::DrawText(leaderName			, topleft + Vec2f(100, 0), tempGrey);
+						GUI::DrawText(teamName              , topleft, color);
+						GUI::DrawText(leaderName            , topleft + Vec2f(100, 0), tempGrey);
 						GUI::DrawText(team.player_count + "", Vec2f(bottomright.x - 650, topleft.y), tempGrey);
-						GUI::DrawText(upkeep				, Vec2f(bottomright.x - 560, topleft.y), tempGrey);
+						GUI::DrawText(upkeep                , Vec2f(bottomright.x - 560, topleft.y), tempGrey);
 						GUI::DrawText(team.wealth + " coins", Vec2f(bottomright.x - 490, topleft.y), tempGrey);
-						GUI::DrawText(recOn					, Vec2f(bottomright.x - 400, topleft.y), tempGrey);
-						GUI::DrawText(taxOn					, Vec2f(bottomright.x - 320, topleft.y), tempGrey);
-						GUI::DrawText(lockOn				, Vec2f(bottomright.x - 230, topleft.y), tempGrey);
+						GUI::DrawText(recOn                 , Vec2f(bottomright.x - 400, topleft.y), tempGrey);
+						GUI::DrawText(taxOn                 , Vec2f(bottomright.x - 320, topleft.y), tempGrey);
+						GUI::DrawText(lockOn                , Vec2f(bottomright.x - 230, topleft.y), tempGrey);
 
 						GUI::DrawText(Maths::Round((f32(team.controlled_count) / f32(total_capturables)) * 100.00f) + "%", Vec2f(bottomright.x - 150, topleft.y), tempGrey);
 					}
 					else
 					{
-						GUI::DrawText(teamName				, topleft, color);
-						GUI::DrawText(leaderName			, topleft + Vec2f(250, 0), tempGrey);
+						GUI::DrawText(teamName              , topleft, color);
+						GUI::DrawText(leaderName            , topleft + Vec2f(250, 0), tempGrey);
 						GUI::DrawText(team.player_count + "", Vec2f(bottomright.x - base_offset + 000, topleft.y), tempGrey);
-						GUI::DrawText(upkeep				,Vec2f(bottomright.x - base_offset  + 100, topleft.y), tempGrey);
+						GUI::DrawText(upkeep                ,Vec2f(bottomright.x - base_offset  + 100, topleft.y), tempGrey);
 						GUI::DrawText(team.wealth + " coins", Vec2f(bottomright.x - base_offset + 200, topleft.y), tempGrey);
-						GUI::DrawText(recOn					, Vec2f(bottomright.x - base_offset + 300, topleft.y), tempGrey);
-						GUI::DrawText(taxOn					, Vec2f(bottomright.x - base_offset + 450, topleft.y), tempGrey);
-						//GUI::DrawText(slaOn					, Vec2f(bottomright.x - base_offset + 550, topleft.y), tempGrey);
-						GUI::DrawText(lockOn				, Vec2f(bottomright.x - base_offset + 550, topleft.y), tempGrey);
+						GUI::DrawText(recOn                 , Vec2f(bottomright.x - base_offset + 300, topleft.y), tempGrey);
+						GUI::DrawText(taxOn                 , Vec2f(bottomright.x - base_offset + 450, topleft.y), tempGrey);
+						//GUI::DrawText(slaOn               , Vec2f(bottomright.x - base_offset + 550, topleft.y), tempGrey);
+						GUI::DrawText(lockOn                , Vec2f(bottomright.x - base_offset + 550, topleft.y), tempGrey);
 						GUI::DrawText(Maths::Round((f32(team.controlled_count) / f32(total_capturables)) * 100.00f) + "%", Vec2f(bottomright.x - base_offset + 650, topleft.y), tempGrey);
 					}
-
 				}
 			}
 		}
@@ -629,22 +612,17 @@ void onRenderScoreboard(CRules@ this)
 	Vec2f mousePos = controls.getMouseScreenPos();
 
 
-	if(hovered_accolade > -1) drawHoverExplanation(hovered_accolade, hovered_age, hovered_tier, mousePos + Vec2f(0,30));
+	if (hovered_accolade > -1) drawHoverExplanation(hovered_accolade, hovered_age, hovered_tier, mousePos + Vec2f(0,30));
 }
 
 void drawHoverExplanation(int hovered_accolade, int hovered_age, int hovered_tier, Vec2f centre_top)
 {
-	if( //(invalid/"unset" hover)
-		(hovered_accolade < 0
-		 || hovered_accolade >= accolade_description.length)
-	) {
+	if ((hovered_accolade < 0 || hovered_accolade >= accolade_description.length)) //(invalid/"unset" hover)
+	{
 		return;
 	}
 
-	string desc = getTranslatedString(
-			accolade_description[hovered_accolade]
-
-	);
+	string desc = getTranslatedString(accolade_description[hovered_accolade]);
 
 	Vec2f size(0, 0);
 	GUI::GetTextDimensions(desc, size);
@@ -765,8 +743,5 @@ string getRank(string &in username, SColor &out col, CPlayer@ p)
 			return "";
 		}
 	}
-
-
-
 	return "";
 }

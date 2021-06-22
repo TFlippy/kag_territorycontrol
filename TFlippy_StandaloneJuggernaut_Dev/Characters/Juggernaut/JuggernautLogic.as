@@ -275,7 +275,7 @@ void onTick(CBlob@ this)
 							}
 							else if (getGameTime() >= this.get_u32("nextHit"))
 							{
-								this.server_Hit(blob, hitPos, dir, 0.25f, Hitters::flying, false);
+								if (isServer()) this.server_Hit(blob, hitPos, dir, 0.25f, Hitters::flying, false);
 								this.set_u32("nextHit", getGameTime() + 15); //shite anti loop
 							}
 							break;
@@ -390,8 +390,11 @@ void onTick(CBlob@ this)
 					attachedBlob.Untag("dead");
 
 					//kill blob
-					attachedBlob.server_SetHealth(0.25f);
-					this.server_Hit(attachedBlob, attachedBlob.getPosition(), Vec2f(0, 0), 3.0f, Hitters::stomp, false);
+					if (isServer())
+					{
+						attachedBlob.server_SetHealth(0.25f);
+						this.server_Hit(attachedBlob, attachedBlob.getPosition(), Vec2f(0, 0), 3.0f, Hitters::stomp, false);
+					}
 
 					if (isClient()) attachedBlob.getSprite().SetRelativeZ(attachedBlob.getSprite().getRelativeZ() + 5);
 					attachedBlob.server_DetachFrom(this);

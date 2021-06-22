@@ -3,13 +3,13 @@
 
 void onInit(CBlob@ this)
 {
-	if(this.get_string("reload_script") != "militaryhelmet")
+	if (this.get_string("reload_script") != "militaryhelmet")
 		UpdateScript(this);
 }
 
 void UpdateScript(CBlob@ this) // the same as onInit, works one time when get equiped
 {
-    CSpriteLayer@ milhelmet = this.getSprite().addSpriteLayer("milhelmet", "MilitaryHelmet.png", 16, 16);
+    CSpriteLayer@ milhelmet = this.getSprite().addSpriteLayer("militaryhelmet", "MilitaryHelmet.png", 16, 16);
    
     if (milhelmet !is null)
     {
@@ -20,20 +20,20 @@ void UpdateScript(CBlob@ this) // the same as onInit, works one time when get eq
 		
 		milhelmet.SetVisible(true);
         milhelmet.SetRelativeZ(200);
-        if(this.getSprite().isFacingLeft())
+        if (this.getSprite().isFacingLeft())
             milhelmet.SetFacingLeft(true);
     }
 }
  
 void onTick(CBlob@ this)
 {
-    if(this.get_string("reload_script") == "militaryhelmet")
+    if (this.get_string("reload_script") == "militaryhelmet")
     {
         UpdateScript(this);
         this.set_string("reload_script", "");
     }
  
-    CSpriteLayer@ milhelmet = this.getSprite().getSpriteLayer("milhelmet");
+    CSpriteLayer@ milhelmet = this.getSprite().getSpriteLayer("militaryhelmet");
    
     if (milhelmet !is null)
     {
@@ -48,14 +48,14 @@ void onTick(CBlob@ this)
 		milhelmet.SetFrameIndex(Maths::Floor(this.get_f32("mh_health") / 4.00f));
     }
    
-    if(this.get_f32("mh_health") >= 20.0f)
+    if (this.get_f32("mh_health") >= 20.0f)
     {
         this.getSprite().PlaySound("ricochet_" + XORRandom(3));
         this.set_string("equipment_head", "");
         this.set_f32("mh_health", 0.0f);
 		if (milhelmet !is null)
 		{
-			this.getSprite().RemoveSpriteLayer("milhelmet");
+			this.getSprite().RemoveSpriteLayer("militaryhelmet");
 		}
         this.RemoveScript("militaryhelmet_effect.as");
     }

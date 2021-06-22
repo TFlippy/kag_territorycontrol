@@ -158,6 +158,12 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 
 		bullet.server_SetTimeToDie(-1);
 		bullet.server_SetTimeToDie(20.0f);
+		
+		if (isClient())
+		{
+			Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
+			ParticleAnimated("SmallExplosion.png", this.getPosition() + offset, dir, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+		}
 	}
 }
 
