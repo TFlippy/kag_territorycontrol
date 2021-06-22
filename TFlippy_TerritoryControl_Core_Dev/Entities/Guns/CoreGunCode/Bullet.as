@@ -292,7 +292,7 @@ class Bullet
 		Vertex[]@ bullet_vertex;
 		getRules().get(gunBlob.get_string("CustomBullet"), @bullet_vertex);
 
-		if (bullet_vertex is null) { return }
+		if (bullet_vertex is null) { return; }
 
 		bullet_vertex.push_back(Vertex(topLeft.x,  topLeft.y,  0, 0, 0, trueWhite)); // top left
 		bullet_vertex.push_back(Vertex(topRight.x, topRight.y, 0, 1, 0, trueWhite)); // top right
