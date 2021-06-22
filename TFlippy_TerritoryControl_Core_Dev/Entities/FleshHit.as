@@ -208,7 +208,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 	if (this.getHealth() <= gibHealth)
 	{
-		sprite.Gib();
+		this.getSprite().Gib();
 		this.Tag("do gib");
 		
 		this.server_Die();
@@ -231,7 +231,7 @@ void onDie(CBlob@ this)
 		{
 			if (isClient())
 			{
-				sprite.PlaySound("Pigger_Gore.ogg", 0.3f, 0.9f);
+				this.getSprite().PlaySound("Pigger_Gore.ogg", 0.3f, 0.9f);
 				ParticleBloodSplat(this.getPosition() + getRandomVelocity(0, radius, 360), true);
 			}
 		
