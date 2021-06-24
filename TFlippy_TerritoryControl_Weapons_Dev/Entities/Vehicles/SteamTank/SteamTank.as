@@ -164,6 +164,14 @@ void onTick(CBlob@ this)
 	}
 }
 
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (!Vehicle_AddFlipButton(this, caller))
+	{
+		Vehicle_AddLoadAmmoButton(this, caller);
+	}
+}
+
 bool Vehicle_canFire(CBlob@ this, VehicleInfo@ v, bool isActionPressed, bool wasActionPressed, u8 &out chargeValue) {return false;}
 
 void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused)
