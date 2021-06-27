@@ -43,7 +43,7 @@ void onInit(CRules@ this)
 		else
 		{
 			string[]@ book;
-			rules.get("VertexBook", @book);
+			this.get("VertexBook", @book);
 
 			if (book is null)
 			{
@@ -73,8 +73,6 @@ void Reset(CRules@ this)
 {
 	r.Reset(12345);
 	FireGunID = this.addCommandID("fireGun");
-
-	book.clear();
 
 	//BulletRender::Reset();
 }
