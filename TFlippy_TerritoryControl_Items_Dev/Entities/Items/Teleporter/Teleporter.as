@@ -225,8 +225,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 			// }
 		// }
 
-		print("mithril start: " + mithril_count);
-		print("mithril used: " + used_mithril);
+		//print("mithril start: " + mithril_count);
+		//print("mithril used: " + used_mithril);
 
 		if (client)
 		{

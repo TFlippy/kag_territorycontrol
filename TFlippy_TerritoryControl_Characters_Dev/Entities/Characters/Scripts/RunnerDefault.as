@@ -232,28 +232,27 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					// print("" + ratio);
 					
 					f32 damage_reflected = Maths::Min(damage * ratio, Maths::Max(this.getHealth(), 0));
-			
+
 					hitterBlob.setVelocity(hitterBlob.getVelocity() - (velocity * damage_reflected * 2.00f));
 					this.setVelocity(this.getVelocity() + (velocity * damage_reflected * 2.00f));
-				
+
 					if (isServer() && hitterBlob.get_u8("deity_id") != Deity::mithrios)
-					{	
+					{
 						this.server_Hit(hitterBlob, worldPoint, velocity, damage_reflected, customData);
 					}
-				
+
 					if (isClient())
 					{
 						this.getSprite().PlaySound("DemonicBoing", 0.50f, 2.00f);
-						if (this.isMyPlayer()) SetScreenFlash(100, 50, 0, 0);			
+						if (this.isMyPlayer()) SetScreenFlash(100, 50, 0, 0);
 					}
-					
+
 					damage *= inv_ratio;
 				}
-		
 			}
 		}
 		break;
-		
+
 		case Deity::dragonfriend:
 		{
 			if ((customData == Hitters::fire || customData == Hitters::burn))
@@ -288,16 +287,16 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 					string action = "damaged";
 					string type = "property";
 					f32 reputation_penalty = damage * 100.00f;
-					
+
 					if (hitBlob.hasTag("flesh"))
 					{
 						reputation_penalty *= 3.00f;
 						action = "injured";
 						type = "personnel";
 					}
-					
+
 					reputation_penalty = Maths::Round(reputation_penalty);
-	
+
 					if (isClient())
 					{
 						if (this.isMyPlayer()) 
@@ -306,7 +305,7 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 							Sound::Play("Collect.ogg", hitBlob.getPosition(), 2.00f, 0.80f);
 						}
 					}
-					
+
 					altar.add_f32("deity_power", -reputation_penalty);
 					if (isServer()) altar.Sync("deity_power", false);
 				}
@@ -330,9 +329,9 @@ void onHitMap( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cus
 				{
 					string type = "property";
 					f32 reputation_penalty = damage * 25.00f;
-					
+
 					reputation_penalty = Maths::Round(reputation_penalty);
-					
+
 					if (isClient())
 					{
 						if (this.isMyPlayer()) 
@@ -341,7 +340,7 @@ void onHitMap( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cus
 							Sound::Play("Collect.ogg", worldPoint, 2.00f, 0.80f);
 						}
 					}
-					
+
 					altar.add_f32("deity_power", -reputation_penalty);
 					if (isServer()) altar.Sync("deity_power", false);
 				}
@@ -375,7 +374,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 			tcpr("[BPU] " + this.getName() + " has picked up " + attached.getName());
 		}
 	}
-	
+
 	if (isClient())
 	{
 		RemoveHelps(this, "help throw");
@@ -391,7 +390,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 
 bool isDangerous(CBlob@ blob)
 {
-	return blob.hasTag("explosive") || blob.hasTag("isWeapon") || blob.hasTag("dangerous");
+	return blob.hasTag("explosive") || blob.hasTag("weapon") || blob.hasTag("dangerous");
 }
 
 // set the Z back
@@ -422,4 +421,3 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	return (forBlob !is this) && ((getKnocked(this) > 0) || (this.get_f32("babbyed") > 0) || (this.isKeyPressed(key_down)) || (this.hasTag("dead")));
 }
-

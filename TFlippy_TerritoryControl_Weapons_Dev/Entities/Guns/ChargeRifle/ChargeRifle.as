@@ -38,6 +38,7 @@ void onInit(CBlob@ this)
 
 	//Custom
 	this.set_u8("CustomKnock", 10);
+	this.set_u8("CustomPenetration", 3);
 	this.set_string("CustomBullet", "Bullet_Plasma.png");
 	this.set_f32("CustomBulletLength", 6.0f);
 	this.set_string("CustomSoundEmpty", "");

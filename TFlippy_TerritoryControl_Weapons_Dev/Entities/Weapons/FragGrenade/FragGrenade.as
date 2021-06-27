@@ -56,16 +56,23 @@ void DoExplosion(CBlob@ this)
 	
 	Explode(this, 48.0f + random, 5.0f);
 	
-	for (int i = 0; i < 10 * modifier; i++) 
+	if (isServer())
 	{
-		Vec2f dir = getRandomVelocity(angle, 1, 120);
-		dir.x *= 2;
-		dir.Normalize();
-		
-		LinearExplosion(this, dir, 1.0f + XORRandom(16) + (modifier * 4), 16 + XORRandom(24), 2, 0.10f, Hitters::explosion);
+		for (int i = 0; i < 10 * modifier; i++) 
+		{
+			Vec2f dir = getRandomVelocity(angle, 1, 120);
+			dir.x *= 2;
+			dir.Normalize();
+			
+			LinearExplosion(this, dir, 1.0f + XORRandom(16) + (modifier * 4), 16 + XORRandom(24), 2, 0.10f, Hitters::explosion);
+
+			CBlob @blob = server_CreateBlob("shrapnel", this.getTeamNum(), this.getPosition()); // + Vec2f(16 - XORRandom(32), -10));
+			blob.setVelocity(Vec2f(10-XORRandom(20), -XORRandom(15)));
+			blob.SetDamageOwnerPlayer(this.getDamageOwnerPlayer()); 
+		}
 	}
 	
-	if(isClient())
+	if (isClient())
 	{
 
 	

@@ -1,10 +1,8 @@
 #include "Hitters.as";
-#include "HittersTC.as";
-#include "VehicleAttachmentCommon.as"
+#include "VehicleAttachmentCommon.as";
+#include "GunCommon.as";
 
 const Vec2f arm_offset = Vec2f(-6, -6);
-const u32 shootDelay = 2; // Ticks
-const f32 damage = 6.0f;
 const u16 max_ammo = 500;
 
 const string ammo_blob = "mat_mithril";
@@ -14,26 +12,18 @@ void onInit(CBlob@ this)
 	this.Tag("usable by anyone");
 	this.Tag("turret");
 
-	CSprite@ sprite = this.getSprite();
-	CSpriteLayer@ arm = sprite.addSpriteLayer("arm", "Coilgun_Cannon.png", 80, 16);
+	GunSettings settings = GunSettings();
 
-	if (arm !is null)
-	{
-		{
-			Animation@ anim = arm.addAnimation("default", 0, true);
-			int[] frames = {0};
-			anim.AddFrames(frames);
-		}
-	
-		{
-			Animation@ anim = arm.addAnimation("shoot", 1, false);
-			int[] frames = {0, 2, 1};
-			anim.AddFrames(frames);
-		}
-		
-		arm.SetOffset(arm_offset);
-	}
-	
+	settings.B_GRAV = Vec2f(0, 0.003); //Bullet Gravity
+	settings.B_TTL = 13; //Bullet Time to live
+	settings.B_SPEED = 90; //Bullet speed
+	settings.B_DAMAGE = 6.0f; //Bullet damage
+	settings.B_TYPE = HittersTC::plasma;
+	settings.G_RECOIL = 0;
+	settings.MUZZLE_OFFSET = Vec2f(-40, -7); //Where muzzle flash and bullet spawn
+
+	this.set("gun_settings", @settings);
+
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("GUNNER");
 	if (ap !is null)
 	{
@@ -41,31 +31,45 @@ void onInit(CBlob@ this)
 	}
 
 	this.getShape().SetRotationsAllowed(false);
-	
+
+	this.set_string("CustomBullet", "Bullet_Plasma.png");
+	this.set_f32("CustomBulletLength", 7.0f);
+
 	this.set_u16("ammo_count", 0);
 	this.set_u32("fireDelay", 0);
-	sprite.SetZ(-10.0f);
-	
+
 	this.addCommandID("load_ammo");
-	
-	this.getCurrentScript().runFlags |= Script::tick_hasattached;
+
+	//this.getCurrentScript().runFlags |= Script::tick_hasattached;
 }
 
 void onInit(CSprite@ this)
 {
-	this.RemoveSpriteLayer("tracer");
-	CSpriteLayer@ tracer = this.addSpriteLayer("tracer", "ChargeLance_Tracer.png" , 32, 1, this.getBlob().getTeamNum(), 0);
-
-	if (tracer !is null)
+	// Add arm
+	CSpriteLayer@ arm = this.addSpriteLayer("arm", "Coilgun_Cannon.png", 80, 16);
+	if (arm !is null)
 	{
-		Animation@ anim = tracer.addAnimation("default", 0, false);
-		anim.AddFrame(0);
-		tracer.SetRelativeZ(-2.0f);
-		tracer.SetOffset(arm_offset);
-		tracer.SetVisible(false);
-		tracer.setRenderStyle(RenderStyle::additive);
+		arm.SetOffset(arm_offset);
 	}
-	
+
+	// Add muzzle flash
+	CSpriteLayer@ flash = this.addSpriteLayer("muzzle_flash", "MuzzleFlash_Plasma.png", 16, 8);
+	if (flash !is null)
+	{
+		GunSettings@ settings;
+		this.getBlob().get("gun_settings", @settings);
+
+		Animation@ anim = flash.addAnimation("default", 1, false);
+		int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
+		anim.AddFrames(frames);
+		flash.SetRelativeZ(1.0f);
+		flash.SetOffset(settings.MUZZLE_OFFSET);
+		flash.SetVisible(false);
+		// flash.setRenderStyle(RenderStyle::additive);
+	}
+
+	this.SetZ(-10.0f);
+
 	this.SetEmitSound("Coilgun_Shoot.ogg");
 	this.SetEmitSoundSpeed(1.0f);
 	this.SetEmitSoundPaused(true);
@@ -78,8 +82,6 @@ f32 getAimAngle(CBlob@ this)
 	Vec2f dir = gunner.getAimPos() - this.getPosition();
 	f32 angle = dir.Angle();
 	dir.Normalize();
-	
-	bool failed = true;
 
 	if (gunner !is null && gunner.getOccupied() !is null)
 	{
@@ -88,23 +90,20 @@ f32 getAimAngle(CBlob@ this)
 
 		if (this.isAttached())
 		{
-			if (facing_left) { aim_vec.x = -aim_vec.x; }
+			if (facing_left) aim_vec.x = -aim_vec.x;
 			angle = (-(aim_vec).getAngle() + 180.0f);
 		}
 		else
 		{
 			if ((!facing_left && aim_vec.x < 0) ||
-			        (facing_left && aim_vec.x > 0))
+			     (facing_left && aim_vec.x > 0))
 			{
-				if (aim_vec.x > 0) { aim_vec.x = -aim_vec.x; }
+				if (aim_vec.x > 0) aim_vec.x = -aim_vec.x;
 
 				angle = (-(aim_vec).getAngle() + 180.0f);
 				angle = Maths::Max(-90.0f, Maths::Min(angle, 50.0f));
 			}
-			else
-			{
-				this.SetFacingLeft(!facing_left);
-			}
+			else this.SetFacingLeft(!facing_left);
 		}
 	}
 
@@ -115,74 +114,68 @@ void onTick(CBlob@ this)
 {
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("GUNNER");
 	CSprite@ sprite = this.getSprite();
-	
+
 	if (this.get_bool("justShot"))
 	{
-		sprite.getSpriteLayer("tracer").SetVisible(false);
 		this.set_bool("justShot", false);
 	}
-	
+
 	if (ap !is null)
 	{
 		CBlob@ gunner = ap.getOccupied();
 		if (gunner is null) return;
-	
-		f32 angle = getAimAngle(this);
-		CSpriteLayer@ arm = sprite.getSpriteLayer("arm");
 
+		f32 angle = getAimAngle(this);
+
+		bool facing_left = sprite.isFacingLeft();
+		f32 rotation = angle * (facing_left ? -1 : 1);
+
+		CSpriteLayer@ arm = sprite.getSpriteLayer("arm");
 		if (arm !is null)
 		{
-			bool facing_left = sprite.isFacingLeft();
-			f32 rotation = angle * (facing_left ? -1 : 1);
-
 			arm.ResetTransform();
 			arm.SetFacingLeft(facing_left);
 			arm.SetRelativeZ(1.0f);
 			arm.SetOffset(arm_offset);
 			arm.RotateBy(rotation, Vec2f(facing_left ? -4.0f : 4.0f, 0.0f));
 		}
-		
+
+		CSpriteLayer@ flash = sprite.getSpriteLayer("muzzle_flash");
+		if (flash !is null)
+		{
+			GunSettings@ settings;
+			this.get("gun_settings", @settings);
+
+			flash.ResetTransform();
+			flash.SetRelativeZ(1.0f);
+			flash.RotateBy(rotation, Vec2f(-37 * (facing_left ? 1 : -1), 0));
+		}
+
 		const bool a1_jr = ap.isKeyJustReleased(key_action1);
 		const bool a1_p = ap.isKeyPressed(key_action1) && !ap.isKeyJustPressed(key_action1);
-		
 		const bool spinup = getGameTime() < this.get_u32("spinCooldown");
-			
+
 		sprite.SetEmitSoundPaused(!(a1_p && !spinup && GetAmmo(this) > 0));
-		
+
 		if (ap.isKeyJustPressed(key_up))
 		{
-			if (isServer())
-			{
-				gunner.server_DetachFrom(this);
-			}
+			if (isServer()) gunner.server_DetachFrom(this);
 		}
-		
+
 		if (ap.isKeyJustPressed(key_action1))
 		{
 			sprite.PlaySound("/Coilgun_Spinup.ogg", 1.00f, 1.00f);
 			this.set_u32("spinCooldown", getGameTime() + 50);
 		}
-		else if (!spinup && a1_jr)
-		{
-			sprite.PlaySound("/Coilgun_Spindown.ogg", 1.00f, 1.00f);
-		}
-					
+		else if (!spinup && a1_jr) sprite.PlaySound("/Coilgun_Spindown.ogg", 1.00f, 1.00f);
+
 		if (a1_p && !spinup && getGameTime() >= this.get_u32("shootCooldown"))
 		{
-			if (GetAmmo(this) > 0)
-			{
-				Shoot(this, angle);
-			}
-			else
-			{
-				sprite.PlaySound("EmptyFire.ogg", 1.00f, 1.00f);
-			}
+			if (GetAmmo(this) > 0) Shoot(this, angle);
+			else sprite.PlaySound("EmptyFire.ogg", 1.00f, 1.00f);
 		}
 	}
-	else
-	{
-		sprite.SetEmitSoundPaused(true);
-	}
+	else sprite.SetEmitSoundPaused(true);
 }
 
 void TakeAmmo(CBlob@ this, u16 amount)
@@ -195,10 +188,10 @@ u16 GiveAmmo(CBlob@ this, u16 amount)
 {
 	u16 remain = Maths::Max(0, s32(this.get_u16("ammo_count")) + s32(amount) - s32(max_ammo));
 
-	this.set_u16("ammo_count", Maths::Max(0, Maths::Min(max_ammo, this.get_u16("ammo_count") + amount)));	
+	this.set_u16("ammo_count", Maths::Max(0, Maths::Min(max_ammo, this.get_u16("ammo_count") + amount)));
 	this.Sync("ammo_count", false);
-	
-	print("A: " + amount + "; R: " + remain);
+
+	//print("A: " + amount + "; R: " + remain);
 	return remain;
 }
 
@@ -209,78 +202,56 @@ u16 GetAmmo(CBlob@ this)
 
 void Shoot(CBlob@ this, f32 angle)
 {
-	if (isClient()) this.getSprite().getSpriteLayer("arm").SetAnimation("shoot");
-
 	angle = angle * (this.isFacingLeft() ? -1 : 1);
-	
-	bool flip = this.isFacingLeft();	
-		
-	Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
-	Vec2f startPos = this.getPosition() + Vec2f(arm_offset.x * (flip ? 1 : -1), arm_offset.y);
-	Vec2f endPos = startPos + dir * 800;
-	Vec2f hitPos;
-	f32 length;
-	
-	HitInfo@[] hitInfos;
-	
-	bool mapHit = getMap().rayCastSolid(startPos, endPos, hitPos);
-	length = (hitPos - startPos).Length();
-	
-	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
-		
+
+	GunSettings@ settings;
+	this.get("gun_settings", @settings);
+
+	// Muzzle
+	Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 1);
+	fromBarrel = fromBarrel.RotateBy(angle);
+
+	CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
+	if (gunner !is null)
+	{
+		shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getSprite().getWorldTranslation() + fromBarrel);
+	}
+
 	if (isClient())
 	{
-		DrawLine(this.getSprite(), startPos, length / 32, angle, this.isFacingLeft());
-		ShakeScreen(128, 48, hitPos);	
-	}
-	
-	if (isServer())
-	{
-		if (blobHit)
+		CSpriteLayer@ flash = this.getSprite().getSpriteLayer("muzzle_flash");
+		if (flash !is null)
 		{
-			f32 falloff = 1;
-			for (u32 i = 0; i < hitInfos.length; i++)
-			{
-				if (hitInfos[i].blob !is null)
-				{	
-					CBlob@ blob = hitInfos[i].blob;
-					
-					if ((blob.isCollidable() || blob.hasTag("flesh")) && blob.getTeamNum() != this.getTeamNum())
-					{
-						this.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), damage * Maths::Max(0.1, falloff), HittersTC::railgun_lance);
-						falloff = falloff * 0.5f;			
-					}
-				}
-			}
-		}
-		
-		if (mapHit)
-		{
-			CMap@ map = getMap();
-			
-			for (u32 i = 1; i < 3; i++)
-			{
-				Vec2f tpos = hitPos + (dir * i * 4);
-				TileType tile =	map.getTile(tpos).type;
-				
-				if (!map.isTileBedrock(tile))
-				{
-					map.server_DestroyTile(tpos, damage / i);
-				}
-			}
+			//Turn on muzzle flash
+			flash.SetFrameIndex(0);
+			flash.SetVisible(true);
 		}
 	}
-	
+
 	TakeAmmo(this, 1);
-	this.set_u32("shootCooldown", getGameTime() + shootDelay);
+	this.set_u32("shootCooldown", getGameTime() + 2);
 	this.set_bool("justShot", true);
+}
+
+void shootGun(const u16 gunID, const f32 aimangle, const u16 hoomanID, const Vec2f pos) 
+{
+	CRules@ rules = getRules();
+	CBitStream params;
+
+	params.write_netid(hoomanID);
+	params.write_netid(gunID);
+	params.write_f32(aimangle);
+	params.write_Vec2f(pos);
+	params.write_u32(getGameTime());
+
+	rules.SendCommand(rules.getCommandID("fireGun"), params);
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	CBitStream params;
 	CBlob@ carried = caller.getCarriedBlob();
-	
+
 	if (this.get_u16("ammo_count") < max_ammo && carried !is null && carried.getName() == ammo_blob)
 	{
 		params.write_netid(caller.getNetworkID());
@@ -294,22 +265,16 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		CBlob@ caller = getBlobByNetworkID(params.read_netid());
 		CBlob@ carried = caller.getCarriedBlob();
-		
+
 		if (carried !is null && carried.getName() == ammo_blob)
 		{
 			u16 remain = GiveAmmo(this, carried.getQuantity());
 			// this.Sync("ammo_count", false); // fuck this broken sync shit
-			
+
 			if (isServer())
 			{
-				if (remain == 0)
-				{
-					carried.server_Die();
-				}
-				else
-				{
-					carried.server_SetQuantity(remain);
-				}
+				if (remain == 0) carried.server_Die();
+				else carried.server_SetQuantity(remain);
 			}
 		}
 	}
@@ -320,7 +285,7 @@ void onRender(CSprite@ this)
 	if (this is null) return;
 
 	AttachmentPoint@ gunner = this.getBlob().getAttachments().getAttachmentPointByName("GUNNER");
-	if (gunner !is null	&& gunner.getOccupied() !is null && gunner.getOccupied().isMyPlayer())
+	if (gunner !is null && gunner.getOccupied() !is null && gunner.getOccupied().isMyPlayer())
 	{
 		drawAmmoCount(this.getBlob());
 	}
@@ -374,24 +339,14 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 	return byBlob.hasTag("vehicle");
 }
 
-void onCollision(CBlob@ this, CBlob@ blob, bool solid)
+bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	if (blob !is null)
-	{
-		TryToAttachVehicle(this, blob);
-	}
+	return blob.getShape().isStatic() && blob.isCollidable();
 }
 
-void DrawLine(CSprite@ this, Vec2f startPos, f32 length, f32 angle, bool flip)
+void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
-	CSpriteLayer@ tracer = this.getSpriteLayer("tracer");
-	
-	tracer.SetVisible(true);
-	
-	tracer.ResetTransform();
-	tracer.ScaleBy(Vec2f(length, 1.0f));
-	tracer.TranslateBy(Vec2f(length * 16.0f, 0.0f));
-	tracer.RotateBy(angle + (flip ? 180 : 0), Vec2f());
+	if (blob !is null) TryToAttachVehicle(this, blob);
 }
 
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)

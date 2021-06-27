@@ -6,8 +6,9 @@
 //
 //
 
-#include "GunStandard.as";
 #include "GunCommon.as";
+#include "GunStandard.as";
+#include "GunModule.as"
 #include "BulletCase.as";
 #include "Recoil.as";
 
@@ -40,42 +41,91 @@ void onInit(CBlob@ this)
 	GunSettings@ settings;
 	this.get("gun_settings", @settings);
 
-	this.set_u8("clip", settings.CLIP); //Clip u8 for easy maneuverability
+	if (!this.exists("CustomBullet")) this.set_string("CustomBullet", "Bullet.png");  // Default bullet image
+	if (!this.exists("CustomBulletWidth")) this.set_f32("CustomBulletWidth", 0.7f);  // Default bullet width
+	if (!this.exists("CustomBulletLength")) this.set_f32("CustomBulletLength", 3.0f); // Default bullet length
 
-	if (isClient())
+	string vert_name = this.get_string("CustomBullet");
+	CRules@ rules = getRules();
+
+	if (isClient()) //&& !rules.get_bool(vert_name + '-inbook'))
 	{
-		CSprite@ sprite = this.getSprite();
-		if (sprite !is null)
+		if (vert_name == "")
 		{
-			if (this.hasTag("CustomSoundLoop"))
-			{
-				sprite.SetEmitSound(settings.FIRE_SOUND);
-				sprite.SetEmitSoundVolume(this.exists("CustomShootVolume") ? this.get_f32("CustomShootVolume") : 2.0f);
-				sprite.SetEmitSoundPaused(true);
-			}
-				if (!this.exists("CustomFlash") || (this.exists("CustomFlash") && !this.get_string("CustomFlash").empty()))
-				{
+			// warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
+			return;
+		}
 
-				// Determine muzzleflash sprite
-				const bool hitterType = settings.B_TYPE == HittersTC::plasma || settings.B_TYPE == HittersTC::railgun_lance;
-				const string muzzleflash_file = this.exists("CustomFlash") ? this.get_string("CustomFlash") : hitterType ? "MuzzleFlash_Plasma" : "MuzzleFlash";
+		//rules.set_bool(vert_name + '-inbook', true);
 
-				// Add muzzle flash
-				CSpriteLayer@ flash = sprite.addSpriteLayer("muzzle_flash", muzzleflash_file, 16, 8, this.getTeamNum(), 0);
-				if (flash !is null)
-				{
-					Animation@ anim = flash.addAnimation("default", 1, false);
-					int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
-					anim.AddFrames(frames);
-					flash.SetRelativeZ(1.0f);
-					flash.SetOffset(settings.MUZZLE_OFFSET);
-					flash.SetFacingLeft(this.hasTag("CustomMuzzleLeft"));
-					flash.SetVisible(false);
-					// flash.setRenderStyle(RenderStyle::additive);
-				}
-			}
+		Vertex[]@ bullet_vertex;
+		rules.get(vert_name, @bullet_vertex);
+
+		if (bullet_vertex is null)
+		{
+			Vertex[] vert;
+			rules.set(vert_name, @vert);
+		}
+
+		// #blamekag
+		if (!rules.exists("VertexBook"))
+		{
+			string[] book;
+			rules.set("VertexBook", @book);
+			book.push_back(vert_name);
+		}
+		else
+		{
+			string[]@ book;
+			rules.get("VertexBook", @book);
+			book.push_back(vert_name);
 		}
 	}
+
+	this.set_u8("clip", settings.CLIP); //Clip u8 for easy maneuverability
+
+	CSprite@ sprite = this.getSprite();
+
+	if (this.hasTag("CustomSoundLoop"))
+	{
+		sprite.SetEmitSound(settings.FIRE_SOUND);
+		sprite.SetEmitSoundVolume(this.exists("CustomShootVolume") ? this.get_f32("CustomShootVolume") : 2.0f);
+		sprite.SetEmitSoundPaused(true);
+	}
+
+	if (!this.exists("CustomFlash") || (this.exists("CustomFlash") && !this.get_string("CustomFlash").empty()))
+	{
+		// Determine muzzleflash sprite
+		const bool hitterType = settings.B_TYPE == HittersTC::plasma || settings.B_TYPE == HittersTC::railgun_lance;
+		const string muzzleflash_file = this.exists("CustomFlash") ? this.get_string("CustomFlash") : hitterType ? "MuzzleFlash_Plasma" : "MuzzleFlash";
+
+		// Add muzzle flash
+		CSpriteLayer@ flash = sprite.addSpriteLayer("muzzle_flash", muzzleflash_file, 16, 8, this.getTeamNum(), 0);
+		if (flash !is null)
+		{
+			Animation@ anim = flash.addAnimation("default", 1, false);
+			int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
+			anim.AddFrames(frames);
+			flash.SetRelativeZ(1.0f);
+			flash.SetOffset(settings.MUZZLE_OFFSET);
+			flash.SetFacingLeft(this.hasTag("CustomMuzzleLeft"));
+			flash.SetVisible(false);
+			// flash.setRenderStyle(RenderStyle::additive);
+		}
+	}
+
+	GunModule[] modules = {};
+	modules.push_back(TestModule());
+	this.set("GunModules", modules);
+
+	/*if (true)//(this.exists("GunModule"))
+	{
+		GunModule[]@ modules;
+		this.get("GunModule", @modules);
+		print("done");
+		for (int a = 0; a < modules.length(); a++)
+			modules[a].onModuleInit(this);
+	}*/
 }
 
 void onTick(CBlob@ this)
@@ -88,6 +138,14 @@ void onTick(CBlob@ this)
 
 		if (holder !is null)
 		{
+			GunModule[] modules;
+			this.get("GunModules", @modules);
+
+			for (int a = 0; a < modules.length(); a++)
+			{
+				modules[a].onTick(this, holder);
+			}
+
 			CSprite@ sprite = this.getSprite();
 			f32 aimangle = getAimAngle(this, holder);
 
@@ -104,7 +162,7 @@ void onTick(CBlob@ this)
 			f32 oAngle = (aimangle % 360) + 180;
 
 			// Keys
-			const bool pressing_shoot = holder.isAttached() ? false : this.hasTag("CustomSemiAuto") ?
+			const bool pressing_shoot = holder.isAttached() ? false :this.hasTag("CustomSemiAuto") ?
 			           point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
 			           point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
 			
@@ -158,6 +216,11 @@ void onTick(CBlob@ this)
 			}
 			else if (this.get_bool("doReload")) // End of reload
 			{
+				for (int a = 0; a < modules.length(); a++)
+				{
+					modules[a].onReload(this);
+				}
+
 				if (this.hasTag("CustomShotgunReload"))
 				{
 					if (HasAmmo(this) && this.get_u8("clip") < settings.TOTAL)
@@ -178,6 +241,11 @@ void onTick(CBlob@ this)
 			{
 				if (this.get_u8("clip") > 0)
 				{
+					for (int a = 0; a < modules.length(); a++)
+					{
+						modules[a].onFire(this);
+					}
+
 					// Shoot weapon
 					actionInterval = settings.FIRE_INTERVAL;
 
@@ -193,7 +261,7 @@ void onTick(CBlob@ this)
 					{
 						shootProj(this, aimangle);
 						Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-						coil.onFakeTick();
+						coil.onTick();
 					}
 					else
 					{
@@ -241,7 +309,7 @@ void onTick(CBlob@ this)
 
 			sprite.ResetTransform();
 			//sprite.RotateBy( aimangle, holder.isFacingLeft() ? Vec2f(-3,3) : Vec2f(3,3) );
-			this.setAngleDegrees(aimangle); //Rotate gun //TODO: change rotation point somehow
+			this.setAngleDegrees(aimangle);
 			sprite.SetOffset(Vec2f(this.get_f32("gun_recoil_current"), 0)); //Recoil effect for gun blob
 		}
 	} 

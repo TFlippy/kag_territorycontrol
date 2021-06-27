@@ -5,7 +5,6 @@
 #include "FireParticle.as"
 #include "FireCommon.as";
 #include "RunnerCommon.as";
-#include "CommonGun.as";
 
 void onInit(CBlob@ this)
 {
@@ -13,38 +12,38 @@ void onInit(CBlob@ this)
 	this.set_f32("gib health", 0.0f);
 	this.set_u32("nextAttack", 0);
 	this.set_u32("nextBomb", 0);
-	
+
 	this.set_f32("minDistance", 32);
 	this.set_f32("chaseDistance", 200);
 	this.set_f32("maxDistance", 400);
-	
+
 	this.set_f32("inaccuracy", 0.01f);
 	this.set_u8("reactionTime", 20);
 	this.set_u8("attackDelay", 0);
 	this.set_bool("bomber", false);
 	this.set_bool("raider", true);
-	
+
 	this.SetDamageOwnerPlayer(null);
-	
+
 	this.Tag("can open door");
 	this.Tag("combat chicken");
 	this.Tag("npc");
 	this.Tag("flesh");
 	this.Tag("player");
-	
+
 	this.getCurrentScript().tickFrequency = 1;
-	
+
 	this.set_f32("voice pitch", 1.25f);
-	
+
 	if (isServer())
 	{
 		this.set_u16("stolen coins", 400);
-	
+
 		this.server_setTeamNum(220);
-			
+
 		string gun_config;
 		string ammo_config;
-		
+
 		switch(XORRandom(11))
 		{
 			case 0:
@@ -52,15 +51,13 @@ void onInit(CBlob@ this)
 			case 2:
 				gun_config = "revolver";
 				ammo_config = "mat_pistolammo";
-				
+
 				this.set_u8("attackDelay", 3);
 				this.set_u8("reactionTime", 30);
 				this.set_f32("chaseDistance", 100);
 				this.set_f32("minDistance", 32);
 				this.set_f32("maxDistance", 350);
-				
 				break;
-			
 			case 3:
 			case 4:
 			case 5:
@@ -72,83 +69,68 @@ void onInit(CBlob@ this)
 				this.set_f32("chaseDistance", 48);
 				this.set_f32("minDistance", 8);
 				this.set_f32("maxDistance", 400);
-				
 				break;
-			
 			case 6:
 			case 7:
 				gun_config = "banditrifle";
 				ammo_config = "mat_banditammo";
-				
+
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 10);
 				this.set_f32("chaseDistance", 400);
 				this.set_f32("minDistance", 64);
 				this.set_f32("maxDistance", 600);
-				
 				break;
-				
 			case 8:
 				gun_config = "rifle";
 				ammo_config = "mat_rifleammo";
-				
+
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 30);
 				this.set_f32("chaseDistance", 400);
 				this.set_f32("minDistance", 64);
 				this.set_f32("maxDistance", 600);
-				
 				break;
-				
 			case 9:
 			case 10:
 				gun_config = "banditpistol";
 				ammo_config = "mat_banditammo";
-				
+
 				this.set_u8("attackDelay", 30);
 				this.set_u8("reactionTime", 10);
 				this.set_f32("chaseDistance", 100);
 				this.set_f32("minDistance", 32);
 				this.set_f32("maxDistance", 400);
-				
 				break;
-				
 			default:
 				gun_config = "revolver";
 				ammo_config = "mat_pistolammo";
-				
+
 				this.set_u8("reactionTime", 20);
 				this.set_u8("attackDelay", 20);
 				this.set_f32("chaseDistance", 120);
 				this.set_f32("minDistance", 32);
 				this.set_f32("maxDistance", 400);
-				
 				break;
 		}
-		
+
 		for (int i = 0; i < 6; i++)
 		{
 			CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
 			ammo.server_SetQuantity(ammo.maxQuantity);
 			this.server_PutInInventory(ammo);
 		}
-		
+
 		CBlob@ gun = server_CreateBlob(gun_config, this.getTeamNum(), this.getPosition());
-		if(gun !is null)
+		if (gun !is null)
 		{
 			this.server_Pickup(gun);
-		
-			if (gun.hasCommandID("cmd_gunReload"))
-			{
-				CBitStream stream;
-				gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
-			}
 		}
-		
+
 		// CBrain@ brain = this.getBrain();
 		// if (brain !is null)
 		// {
-			
+				
 		// }
 	}
 }
@@ -160,8 +142,10 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
-	if(isClient()){
-		if(!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen()){
+	if (isClient())
+	{
+		if (!this.getSprite().getSpriteLayer("isOnScreen").isOnScreen())
+		{
 			return;
 		}
 	}
@@ -176,19 +160,19 @@ void onTick(CBlob@ this)
 	{
 		this.Tag("dead");
 		this.getSprite().PlaySound("Wilhelm.ogg", 1.8f, 1.8f);
-		
+
 		if (isServer())
 		{
 			this.server_SetPlayer(null);
 			server_DropCoins(this.getPosition(), Maths::Max(0, Maths::Min(this.get_u16("stolen coins"), 5000)));
 			CBlob@ carried = this.getCarriedBlob();
-			
+
 			if (carried !is null)
 			{
 				carried.server_DetachFrom(this);
 			}
 		}
-		
+
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
 
@@ -212,11 +196,11 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			this.set_u32("next sound", getGameTime() + 60);
 		}
 	}
-	
+
 	if (isServer())
 	{
 		CBrain@ brain = this.getBrain();
-		
+
 		if (brain !is null && hitterBlob !is null)
 		{
 			if (hitterBlob.getTeamNum() != this.getTeamNum() && hitterBlob.isCollidable()) 
@@ -226,7 +210,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			}
 		}
 	}
-	
+
 	return damage;
 }
 

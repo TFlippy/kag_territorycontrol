@@ -12,13 +12,13 @@ string[] particles =
 void onInit(CBlob@ this)
 {
 	this.addCommandID("vest_explode");
-	if(this.get_string("reload_script") != "suicidevest")
+	if (this.get_string("reload_script") != "suicidevest")
 		UpdateScript(this);
 }
 
 void UpdateScript(CBlob@ this)
 {
-	CSpriteLayer@ svest = this.getSprite().addSpriteLayer("svest", "SuicideVest.png", 16, 16);
+	CSpriteLayer@ svest = this.getSprite().addSpriteLayer("suicidevest", "SuicideVest.png", 16, 16);
 
 	if (svest !is null)
 	{
@@ -26,7 +26,7 @@ void UpdateScript(CBlob@ this)
 		svest.SetRelativeZ(2);
 		svest.SetOffset(Vec2f(0, 2));
 		
-		if(this.getSprite().isFacingLeft())
+		if (this.getSprite().isFacingLeft())
 			svest.SetFacingLeft(true);
 	}
 }
@@ -60,13 +60,13 @@ void onDie(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-    if(this.get_string("reload_script") == "suicidevest")
+    if (this.get_string("reload_script") == "suicidevest")
 	{
 		UpdateScript(this);
 		this.set_string("reload_script", "");
 	}
 	
-	CSpriteLayer@ svest = this.getSprite().getSpriteLayer("svest");
+	CSpriteLayer@ svest = this.getSprite().getSpriteLayer("suicidevest");
 	
 	if (svest !is null)
 	{
@@ -123,7 +123,7 @@ void DoExplosion(CBlob@ this)
 		LinearExplosion(this, dir, 16.0f + XORRandom(16) + (modifier * 8), 16 + XORRandom(24), 3, 2.00f, Hitters::explosion);
 	}
 
-	if(isClient())
+	if (isClient())
 	{
 		Vec2f pos = this.getPosition();
 		CMap@ map = getMap();

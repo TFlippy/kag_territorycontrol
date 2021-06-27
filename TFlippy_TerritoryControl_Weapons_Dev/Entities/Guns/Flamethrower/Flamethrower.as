@@ -44,7 +44,6 @@ void onInit(CBlob@ this)
 	this.set_string("ProjBlob", "flame");
 	this.set_Vec2f("ProjOffset", Vec2f(-15, -1));
 	this.Tag("CustomSoundLoop");
-	this.Tag("medium weight");
 }
 /*
 // for (int i = 1; i < 5; i++) MakeParticle(this, -dir * i, "SmallExplosion");

@@ -117,7 +117,7 @@ void onTick(CBlob@ this)
 
 bool isDangerous(CBlob@ blob)
 {
-	return blob.hasTag("explosive") || blob.hasTag("isWeapon") || blob.hasTag("dangerous");
+	return blob.hasTag("explosive") || blob.hasTag("weapon") || blob.hasTag("dangerous");
 }
 
 void GatherPickupBlobs(CBlob@ this)
@@ -200,7 +200,7 @@ f32 getPriorityPickupScale(CBlob@ this, CBlob@ b, f32 scale)
 		if (name == "drill" || name == "powerdrill" || name == "crate" || name == "mine" || name == "fragmine" || name == "phone" ||
 		    name == "engineertools" || name == "ninjascroll" || name == "hazmatitem" || 
 		    name == "artisancertificate" || name == "royalarmor" || name == "exosuititem" ||
-		    b.hasTag("explosive") || b.hasTag("isWeapon") || b.hasTag("equipment support"))
+		    b.hasTag("explosive") || b.hasTag("weapon") || b.hasTag("equipment support"))
 		{
 			scale *= 0.41f;
 		}

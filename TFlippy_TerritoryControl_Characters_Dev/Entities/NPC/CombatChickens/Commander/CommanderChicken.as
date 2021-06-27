@@ -6,6 +6,7 @@
 #include "FireCommon.as";
 #include "RunnerCommon.as";
 #include "MakeCrate.as";
+#include "Survival_Structs.as";
 
 u32 next_commander_event = 0; // getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
 bool dry_shot = true;
@@ -51,15 +52,60 @@ void onInit(CBlob@ this)
 		string gun_config;
 		string ammo_config;
 
-		gun_config = "beagle";
-		ammo_config = "mat_pistolammo";
+		switch(XORRandom(6))
+		{
+			case 0:
+				gun_config = "autoshotgun";
+				ammo_config = "mat_shotgunammo";
 
-		this.set_u8("reactionTime", 2);
-		this.set_u8("attackDelay", 2);
-		this.set_f32("chaseDistance", 100);
-		this.set_f32("minDistance", 32);
-		this.set_f32("maxDistance", 300);
-		this.set_f32("inaccuracy", 0.00f);
+				this.set_u8("reactionTime", 10);
+				this.set_u8("attackDelay", 5);
+				this.set_f32("chaseDistance", 50);
+				this.set_f32("minDistance", 8);
+				this.set_f32("maxDistance", 400);
+				this.set_bool("bomber", true);
+				this.set_f32("inaccuracy", 0.00f);
+
+				break;
+
+			case 1:
+			case 2:
+				gun_config = "sar";
+				ammo_config = "mat_rifleammo";
+				
+				this.set_u8("reactionTime", 30);
+				this.set_u8("attackDelay", 6);
+				this.set_f32("chaseDistance", 400);
+				this.set_f32("minDistance", 64);
+				this.set_f32("maxDistance", 600);
+				
+				break;
+
+			case 3:
+			case 4:
+				gun_config = "pdw";
+				ammo_config = "mat_pistolammo";
+				
+				this.set_u8("attackDelay", 1);
+				this.set_u8("reactionTime", 30);
+				this.set_f32("chaseDistance", 100);
+				this.set_f32("minDistance", 8);
+				this.set_f32("maxDistance", 300);
+				
+				break;		
+
+			default:
+				gun_config = "beagle";
+				ammo_config = "mat_pistolammo";
+
+				this.set_u8("reactionTime", 2);
+				this.set_u8("attackDelay", 2);
+				this.set_f32("chaseDistance", 100);
+				this.set_f32("minDistance", 32);
+				this.set_f32("maxDistance", 300);
+				this.set_f32("inaccuracy", 0.00f);
+				break;
+		}
 
 		CBlob@ phone = server_CreateBlob("phone", this.getTeamNum(), this.getPosition());
 		this.server_PutInInventory(phone);
@@ -77,9 +123,10 @@ void onInit(CBlob@ this)
 		}
 
 		// gun and ammo
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
+			ammo.server_SetQuantity(ammo.maxQuantity);
 			this.server_PutInInventory(ammo);
 		}
 
@@ -212,7 +259,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CTeam@ team = getRules().getTeam(target.getTeamNum());
 			if (team !is null)
 			{
-				client_AddToChat("An UPF Recon Squad has been called upon " + team.getName() + "'s " + target.getInventoryName() + "!", SColor(255, 255, 0, 0));
+				client_AddToChat("An UPF Recon Squad has been called upon " + GetTeamName(target.getTeamNum()) + "'s " + target.getInventoryName() + "!", SColor(255, 255, 0, 0));
 				Sound::Play("ChickenMarch.ogg", target.getPosition(), 1.00f, 1.00f);
 			}
 		}

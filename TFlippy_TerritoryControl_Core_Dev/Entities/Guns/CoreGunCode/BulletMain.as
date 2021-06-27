@@ -12,7 +12,6 @@
 //  Some code here is messy
 //
 
-#include "GunCommon.as";
 #include "BulletTrails.as";
 #include "BulletClass.as";
 
@@ -26,8 +25,6 @@ Random@ r = Random(12345);
 // Core vars
 BulletHolder@ BulletGrouped = BulletHolder();
 
-SColor white = SColor(255,255,255,255);
-SColor eatUrGreens = SColor(255,0,255,0);
 int FireGunID;
 
 f32 FRAME_TIME = 0;
@@ -35,13 +32,31 @@ f32 FRAME_TIME = 0;
 // Set commands, add render:: (only do this once)
 void onInit(CRules@ this)
 {
-	Reset(this);
-
 	if (isClient())
 	{
+		if (!this.exists("VertexBook"))
+		{
+			// Client vertex book used to grab bullet texture to batch render
+			string[] book;
+			this.set("VertexBook", @book);
+		}
+		else
+		{
+			string[]@ book;
+			this.get("VertexBook", @book);
+
+			if (book is null)
+			{
+				string[] book;
+				this.set("VertexBook", @book);
+			}
+		}
+
 		this.add_u16("temp_id", Render::addScript(Render::layer_postworld, "BulletMain", "GunRender", 0.0f));
 		//Render::addScript(Render::layer_prehud, "BulletMain", "GUIStuff", 0.0f);
 	}
+
+	Reset(this);
 }
 
 void onReload(CRules@ this)
@@ -59,7 +74,7 @@ void Reset(CRules@ this)
 	r.Reset(12345);
 	FireGunID = this.addCommandID("fireGun");
 
-	BulletRender::Reset();
+	//BulletRender::Reset();
 }
 
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
@@ -71,7 +86,7 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 void onTick(CRules@ this)
 {
 	FRAME_TIME = 0;
-	BulletGrouped.FakeOnTick(this);
+	BulletGrouped.onTick(this);
 }
 
 void GunRender(int id)
@@ -135,7 +150,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			GunSettings@ settings;
 			gunBlob.get("gun_settings", @settings);
 
-			if (settings.B_PER_SHOT > 1) //Shotgun firing
+			if (settings !is null && settings.B_PER_SHOT > 1) //Shotgun firing
 			{
 				f32 tempAngle = angle;
 
@@ -143,29 +158,25 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 				{
 					if (!gunBlob.hasTag("CustomSpread")) tempAngle = angle;
 					tempAngle += r.NextRanged(2) != 0 ? -r.NextRanged(settings.B_SPREAD) : r.NextRanged(settings.B_SPREAD);
-					BulletObj@ bullet = BulletObj(hoomanBlob, gunBlob, tempAngle, pos);
+					Bullet@ bullet = BulletGrouped.CreateNewBullet(hoomanBlob, gunBlob, tempAngle, pos);
 
 					for (u32 timeSpawned = timeSpawnedAt; timeSpawned < getGameTime(); timeSpawned++) // Catch up to everybody else
 					{
-						bullet.onFakeTick(map);
+						bullet.onTick(map);
 					}
-
-					BulletGrouped.AddNewObj(bullet);
 				}
 			}
 			else //Guns that fire only one bullet
 			{
-				BulletObj@ bullet = BulletObj(hoomanBlob, gunBlob, angle, pos);
+				Bullet@ bullet = BulletGrouped.CreateNewBullet(hoomanBlob, gunBlob, angle, pos);
 				for (;timeSpawnedAt < getGameTime(); timeSpawnedAt++) // Catch up to everybody else
 				{
-					bullet.onFakeTick(map);
+					bullet.onTick(map);
 				}
-
-				BulletGrouped.AddNewObj(bullet);
 			}
 			gunBlob.sub_u8("clip", 1);
 
-			if (isClient())
+			if (isClient() && settings !is null)
 			{
 				CBlob@ localBlob = getLocalPlayerBlob();
 				if (localBlob !is null && localBlob is hoomanBlob) // if we are this blob
