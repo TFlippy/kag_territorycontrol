@@ -78,7 +78,15 @@ void onInit(CBlob@ this)
 		{
 			string[]@ book;
 			rules.get("VertexBook", @book);
-			book.push_back(vert_name);
+
+			if (book is null)
+			{
+				setNewVertexBook(rules, vert_name);
+			}
+			else
+			{
+				book.push_back(vert_name);
+			}
 		}
 	}
 
@@ -126,6 +134,13 @@ void onInit(CBlob@ this)
 		for (int a = 0; a < modules.length(); a++)
 			modules[a].onModuleInit(this);
 	}*/
+}
+
+void setNewVertexBook(CRules@ rules, string vert_name)
+{
+	string[] book;
+	rules.set("VertexBook", @book);
+	book.push_back(vert_name);
 }
 
 void onTick(CBlob@ this)
