@@ -131,7 +131,7 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	// Server will always get put back to sleep (doesnt need to run any of this)
-	if (this.isAttached() && isClient())
+	if (this.isAttached())
 	{
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder = point.getOccupied();
@@ -257,15 +257,18 @@ void onTick(CBlob@ this)
 						aimangle += XORRandom(2) != 0 ? -XORRandom(settings.B_SPREAD) : XORRandom(settings.B_SPREAD);
 					}
 
-					if (this.exists("ProjBlob"))
+					if (holder.isMyPlayer() || (isServer() && holder.isBot()))
 					{
-						shootProj(this, aimangle);
-						Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-						coil.onTick();
-					}
-					else
-					{
-						shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+						if (this.exists("ProjBlob"))
+						{
+							shootProj(this, aimangle);
+							Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+							coil.onTick();
+						}
+						else
+						{
+							shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+						}
 					}
 
 					// Shooting sound
