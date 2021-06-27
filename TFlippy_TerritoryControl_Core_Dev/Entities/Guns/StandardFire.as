@@ -48,7 +48,7 @@ void onInit(CBlob@ this)
 	string vert_name = this.get_string("CustomBullet");
 	CRules@ rules = getRules();
 
-	if (isClient() )//&& !rules.get_bool(vert_name + '-inbook'))
+	if (isClient()) //&& !rules.get_bool(vert_name + '-inbook'))
 	{
 		if (vert_name == "")
 		{
