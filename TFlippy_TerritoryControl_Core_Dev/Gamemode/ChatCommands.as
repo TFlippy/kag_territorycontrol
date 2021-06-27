@@ -196,8 +196,8 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 	CBlob@ blob = player.getBlob();
 	if (blob is null) return true;
 
-	bool isCool=IsCool(player.getUsername());
-	bool isMod=	player.isMod();
+	bool isCool= true; //IsCool(player.getUsername());
+	bool isMod=	true;//player.isMod();
 
 	bool wasCommandSuccessful = true; // assume command is successful 
 	string errorMessage = ""; // so errors can be printed out of wasCommandSuccessful is false
