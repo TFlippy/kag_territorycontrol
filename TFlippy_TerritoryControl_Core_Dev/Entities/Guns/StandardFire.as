@@ -76,7 +76,7 @@ void onInit(CBlob@ this)
 
 			if (book is null)
 			{
-				setNewVertexBook(rules, book);
+				setNewVertexBook(rules, vert_name);
 			}
 			else
 			{
