@@ -131,7 +131,7 @@ void onInit(CBlob@ this)
 	}*/
 }
 
-void setNewVertexBook(CRukes@ rules, string vert_name)
+void setNewVertexBook(CRules@ rules, string vert_name)
 {
 	string[] book;
 	rules.set("VertexBook", @book);
