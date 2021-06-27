@@ -54,7 +54,7 @@ void onInit(CBlob@ this)
 	{
 		if (vert_name == "")
 		{
-			//warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
+			// warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
 			return;
 		}
 
@@ -67,15 +67,21 @@ void onInit(CBlob@ this)
 		if (!rules.exists("VertexBook"))
 		{
 			// Client vertex book used to grab bullet texture to batch render
-			string[] book;
-			rules.set("VertexBook", @book);
-			book.push_back(vert_name);
+			setNewVertexBook(rules, vert_name);
 		}
 		else
 		{
 			string[]@ book;
 			rules.get("VertexBook", @book);
-			book.push_back(vert_name);
+
+			if (book is null)
+			{
+				setNewVertexBook(rules, book);
+			}
+			else
+			{
+				book.push_back(vert_name);
+			}
 		}
 	}
 
@@ -123,6 +129,13 @@ void onInit(CBlob@ this)
 		for (int a = 0; a < modules.length(); a++)
 			modules[a].onModuleInit(this);
 	}*/
+}
+
+void setNewVertexBook(CRukes@ rules, string vert_name)
+{
+	string[] book;
+	rules.set("VertexBook", @book);
+	book.push_back(vert_name);
 }
 
 void onTick(CBlob@ this)
