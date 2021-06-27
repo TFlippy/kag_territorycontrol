@@ -142,6 +142,11 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 
 		if (hoomanBlob !is null && gunBlob !is null)
 		{
+			if (gunBlob.get_u8("clip") < 1)
+			{
+				return;
+			}
+
 			const f32 angle = params.read_f32();
 			const Vec2f pos = params.read_Vec2f();
 			u32 timeSpawnedAt = params.read_u32(); // getGameTime() it spawned at
@@ -169,13 +174,15 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			else //Guns that fire only one bullet
 			{
 				Bullet@ bullet = BulletGrouped.CreateNewBullet(hoomanBlob, gunBlob, angle, pos);
+				//timeSpawnedAt -= 50;
 				for (;timeSpawnedAt < getGameTime(); timeSpawnedAt++) // Catch up to everybody else
 				{
 					bullet.onTick(map);
 				}
 			}
-			gunBlob.sub_u8("clip", 1);
 
+			gunBlob.sub_u8("clip", 1);
+			
 			if (isClient() && settings !is null)
 			{
 				CBlob@ localBlob = getLocalPlayerBlob();

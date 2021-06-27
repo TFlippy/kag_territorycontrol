@@ -114,9 +114,9 @@ void onInit(CBlob@ this)
 		}
 	}
 
-	GunModule[] modules = {};
+	/*GunModule[] modules = {};
 	modules.push_back(TestModule());
-	this.set("GunModules", modules);
+	this.set("GunModules", modules);*/
 
 	/*if (true)//(this.exists("GunModule"))
 	{
@@ -131,20 +131,20 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	// Server will always get put back to sleep (doesnt need to run any of this)
-	if (this.isAttached() && isClient())
+	if (this.isAttached())
 	{
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder = point.getOccupied();
 
 		if (holder !is null)
 		{
-			GunModule[] modules;
+			/*GunModule[] modules;
 			this.get("GunModules", @modules);
 
 			for (int a = 0; a < modules.length(); a++)
 			{
 				modules[a].onTick(this, holder);
-			}
+			}*/
 
 			CSprite@ sprite = this.getSprite();
 			f32 aimangle = getAimAngle(this, holder);
@@ -191,7 +191,7 @@ void onTick(CBlob@ this)
 			{
 				actionInterval--; // Timer counts down with ticks
 
-				if (this.exists("CustomCycle"))
+				if (this.exists("CustomCycle") && isClient())
 				{
 					// Custom cycle sequence 
 					if ((actionInterval == settings.FIRE_INTERVAL / 2) && this.get_bool("justShot"))
@@ -216,10 +216,10 @@ void onTick(CBlob@ this)
 			}
 			else if (this.get_bool("doReload")) // End of reload
 			{
-				for (int a = 0; a < modules.length(); a++)
+				/*for (int a = 0; a < modules.length(); a++)
 				{
 					modules[a].onReload(this);
-				}
+				}*/
 
 				if (this.hasTag("CustomShotgunReload"))
 				{
@@ -241,10 +241,10 @@ void onTick(CBlob@ this)
 			{
 				if (this.get_u8("clip") > 0)
 				{
-					for (int a = 0; a < modules.length(); a++)
+					/*for (int a = 0; a < modules.length(); a++)
 					{
 						modules[a].onFire(this);
-					}
+					}*/
 
 					// Shoot weapon
 					actionInterval = settings.FIRE_INTERVAL;
@@ -257,15 +257,18 @@ void onTick(CBlob@ this)
 						aimangle += XORRandom(2) != 0 ? -XORRandom(settings.B_SPREAD) : XORRandom(settings.B_SPREAD);
 					}
 
-					if (this.exists("ProjBlob"))
+					if (holder.isMyPlayer() || (isServer() && holder.getBrain() !is null))
 					{
-						shootProj(this, aimangle);
-						Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-						coil.onTick();
-					}
-					else
-					{
-						shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+						if (this.exists("ProjBlob"))
+						{
+							shootProj(this, aimangle);
+							Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+							coil.onTick();
+						}
+						else
+						{
+							shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+						}
 					}
 
 					// Shooting sound
@@ -282,11 +285,16 @@ void onTick(CBlob@ this)
 						flash.SetVisible(true);
 					}
 
-					if (!this.exists("CustomCycle")) 
+
+
+					if (isClient()) 
 					{
-						ParticleCase2(casing, this.getPosition(), this.isFacingLeft() ? oAngle : aimangle);
+						if (!this.exists("CustomCycle")) 
+						{
+							ParticleCase2(casing, this.getPosition(), this.isFacingLeft() ? oAngle : aimangle);
+						}
+						else this.set_bool("justShot", true);
 					}
-					else this.set_bool("justShot", true);
 				}
 				else if (this.get_u8("clickReload") == 1 && HasAmmo(this))
 				{
