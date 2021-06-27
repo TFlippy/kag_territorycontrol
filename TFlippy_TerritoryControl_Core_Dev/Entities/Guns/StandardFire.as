@@ -114,9 +114,9 @@ void onInit(CBlob@ this)
 		}
 	}
 
-	GunModule[] modules = {};
+	/*GunModule[] modules = {};
 	modules.push_back(TestModule());
-	this.set("GunModules", modules);
+	this.set("GunModules", modules);*/
 
 	/*if (true)//(this.exists("GunModule"))
 	{
@@ -138,13 +138,13 @@ void onTick(CBlob@ this)
 
 		if (holder !is null)
 		{
-			GunModule[] modules;
+			/*GunModule[] modules;
 			this.get("GunModules", @modules);
 
 			for (int a = 0; a < modules.length(); a++)
 			{
 				modules[a].onTick(this, holder);
-			}
+			}*/
 
 			CSprite@ sprite = this.getSprite();
 			f32 aimangle = getAimAngle(this, holder);
@@ -216,10 +216,10 @@ void onTick(CBlob@ this)
 			}
 			else if (this.get_bool("doReload")) // End of reload
 			{
-				for (int a = 0; a < modules.length(); a++)
+				/*for (int a = 0; a < modules.length(); a++)
 				{
 					modules[a].onReload(this);
-				}
+				}*/
 
 				if (this.hasTag("CustomShotgunReload"))
 				{
@@ -241,10 +241,10 @@ void onTick(CBlob@ this)
 			{
 				if (this.get_u8("clip") > 0)
 				{
-					for (int a = 0; a < modules.length(); a++)
+					/*for (int a = 0; a < modules.length(); a++)
 					{
 						modules[a].onFire(this);
-					}
+					}*/
 
 					// Shoot weapon
 					actionInterval = settings.FIRE_INTERVAL;
@@ -256,7 +256,7 @@ void onTick(CBlob@ this)
 					{
 						aimangle += XORRandom(2) != 0 ? -XORRandom(settings.B_SPREAD) : XORRandom(settings.B_SPREAD);
 					}
-					
+
 					if (holder.isMyPlayer() || (isServer() && holder.getBrain() !is null))
 					{
 						if (this.exists("ProjBlob"))
