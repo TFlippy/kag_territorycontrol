@@ -64,7 +64,7 @@ void onTick(CBlob@ this)
 						this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 1.00f, Hitters::saw);
 					}
 				}
-				else
+				else if (!b.getShape().isStatic())
 				{
 					this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 0.50f, Hitters::saw);
 				}
