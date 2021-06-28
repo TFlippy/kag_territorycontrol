@@ -645,7 +645,7 @@ void ShootGun(CBlob@ this, f32 angle, Vec2f gunPos)
 	CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
 	if (gunner !is null)
 	{
-		shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getSprite().getWorldTranslation() + fromBarrel);
+		shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getPosition() + fromBarrel);
 	}
 
 	if (isClient())

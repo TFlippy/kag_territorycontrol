@@ -224,7 +224,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 	CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
 	if (gunner !is null)
 	{
-		shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getSprite().getWorldTranslation() + fromBarrel);
+		shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getPosition() + fromBarrel);
 	}
 
 	if (isClient())

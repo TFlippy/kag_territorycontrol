@@ -219,7 +219,7 @@ void onTick(CBlob@ this)
 					Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 3);
 					fromBarrel = fromBarrel.RotateBy(angle);
 
-					shootGun(this.getNetworkID(), angle, this.getNetworkID(), this.getSprite().getWorldTranslation() + fromBarrel);
+					shootGun(this.getNetworkID(), angle, this.getNetworkID(), this.getPosition() + fromBarrel);
 
 					if (isClient())
 					{

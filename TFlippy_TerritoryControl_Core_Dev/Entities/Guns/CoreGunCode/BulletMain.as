@@ -142,10 +142,16 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 
 		if (hoomanBlob !is null && gunBlob !is null)
 		{
-
-			if (gunBlob.get_u8("clip") < 1)
+			if (gunBlob.exists("clip"))
 			{
-				return;
+				if (gunBlob.get_u8("clip") < 1)
+				{
+					return;
+				}
+				else
+				{
+					gunBlob.sub_u8("clip", 1);
+				}
 			}
 
 			const f32 angle = params.read_f32();
@@ -181,8 +187,6 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 					bullet.onTick(map);
 				}
 			}
-
-			gunBlob.sub_u8("clip", 1);
 			
 			if (isClient() && settings !is null)
 			{
