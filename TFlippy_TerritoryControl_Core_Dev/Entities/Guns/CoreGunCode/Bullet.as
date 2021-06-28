@@ -219,7 +219,14 @@ class Bullet
                         }
                         else
                         {
-                            map.server_DestroyTile(hitpos, damage * 0.25f);
+                            if (map.isTileGround(tile.type) || map.isTileStone(tile.type))
+                            {
+                                if (XORRandom(10) > 5) map.server_DestroyTile(hitpos, damage * 0.25f);
+                            }
+                            else
+                            {
+                                map.server_DestroyTile(hitpos, damage * 0.25f);
+                            }
                         }
                     }
 

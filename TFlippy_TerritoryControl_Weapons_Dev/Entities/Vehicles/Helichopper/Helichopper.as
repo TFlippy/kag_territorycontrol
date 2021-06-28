@@ -631,21 +631,23 @@ void renderAmmo(CBlob@ blob, bool rocket)
 
 void ShootGun(CBlob@ this, f32 angle, Vec2f gunPos)
 {
-	bool flip = this.isFacingLeft();
-	f32 sign = (flip ? -1 : 1);
-	angle += ((XORRandom(400) - 100) / 100.0f);
-	angle += this.getAngleDegrees();
-
-	GunSettings@ settings;
-	this.get("gun_settings", @settings);
-
-	Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x + 5) * -sign, settings.MUZZLE_OFFSET.y);
-	fromBarrel.RotateBy(this.getAngleDegrees());
-
-	CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
-	if (gunner !is null)
+	if (isServer())
 	{
-		shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getPosition() + fromBarrel);
+		f32 sign = (this.isFacingLeft() ? -1 : 1);
+		angle += ((XORRandom(400) - 100) / 100.0f);
+		angle += this.getAngleDegrees();
+
+		GunSettings@ settings;
+		this.get("gun_settings", @settings);
+
+		Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x + 5) * -sign, settings.MUZZLE_OFFSET.y);
+		fromBarrel.RotateBy(this.getAngleDegrees());
+
+		CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
+		if (gunner !is null)
+		{
+			shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getPosition() + fromBarrel);
+		}
 	}
 
 	if (isClient())
