@@ -191,7 +191,7 @@ void onTick(CBlob@ this)
 			{
 				actionInterval--; // Timer counts down with ticks
 
-				if (this.exists("CustomCycle"))
+				if (this.exists("CustomCycle") && isClient())
 				{
 					// Custom cycle sequence 
 					if ((actionInterval == settings.FIRE_INTERVAL / 2) && this.get_bool("justShot"))
@@ -257,6 +257,7 @@ void onTick(CBlob@ this)
 						aimangle += XORRandom(2) != 0 ? -XORRandom(settings.B_SPREAD) : XORRandom(settings.B_SPREAD);
 					}
 
+					print(holder.isMyPlayer() + " | " + (isServer() && holder.getBrain() !is null));
 					if (holder.isMyPlayer() || (isServer() && holder.getBrain() !is null))
 					{
 						if (this.exists("ProjBlob"))
@@ -285,11 +286,16 @@ void onTick(CBlob@ this)
 						flash.SetVisible(true);
 					}
 
-					if (!this.exists("CustomCycle")) 
+
+
+					if (isClient()) 
 					{
-						ParticleCase2(casing, this.getPosition(), this.isFacingLeft() ? oAngle : aimangle);
+						if (!this.exists("CustomCycle")) 
+						{
+							ParticleCase2(casing, this.getPosition(), this.isFacingLeft() ? oAngle : aimangle);
+						}
+						else this.set_bool("justShot", true);
 					}
-					else this.set_bool("justShot", true);
 				}
 				else if (this.get_u8("clickReload") == 1 && HasAmmo(this))
 				{
