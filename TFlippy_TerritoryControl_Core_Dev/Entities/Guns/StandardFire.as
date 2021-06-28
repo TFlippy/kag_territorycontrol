@@ -93,6 +93,12 @@ void onInit(CBlob@ this)
 		sprite.SetEmitSoundPaused(true);
 	}
 
+	// Required or stuff breaks due to wonky mouse syndrome
+#ifndef GUNS
+	if (isServer())
+		getControls().setMousePosition(Vec2f(0,0));
+#endif
+
 	if (!this.exists("CustomFlash") || (this.exists("CustomFlash") && !this.get_string("CustomFlash").empty()))
 	{
 		// Determine muzzleflash sprite
@@ -156,15 +162,15 @@ void onTick(CBlob@ this)
 
 			// Case particle the gun uses
 			string casing = this.exists("CustomCase") ? this.get_string("CustomCase") :
-			                settings.B_TYPE == HittersTC::bullet_high_cal ? "rifleCase":
-			                settings.B_TYPE == HittersTC::bullet_low_cal  ? "pistolCase":
-			                settings.B_TYPE == HittersTC::shotgun         ? "shotgunCase": "";
+							settings.B_TYPE == HittersTC::bullet_high_cal ? "rifleCase":
+							settings.B_TYPE == HittersTC::bullet_low_cal  ? "pistolCase":
+							settings.B_TYPE == HittersTC::shotgun         ? "shotgunCase": "";
 			f32 oAngle = (aimangle % 360) + 180;
 
 			// Keys
 			const bool pressing_shoot = holder.isAttached() ? false :this.hasTag("CustomSemiAuto") ?
-			           point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
-			           point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
+					   point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
+					   point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
 			
 			// Sound
 			const f32 reload_pitch = this.exists("CustomReloadPitch") ? this.get_f32("CustomReloadPitch") : 1.0f;
@@ -180,8 +186,8 @@ void onTick(CBlob@ this)
 			// Start reload sequence when pressing [R]
 			CControls@ controls = holder.getControls();
 			if (controls !is null && controls.isKeyJustPressed(KEY_KEY_R) &&
-			    !this.get_bool("beginReload") && !this.get_bool("doReload") && 
-			    this.get_u8("clip") < settings.TOTAL && HasAmmo(this))
+				!this.get_bool("beginReload") && !this.get_bool("doReload") && 
+				this.get_u8("clip") < settings.TOTAL && HasAmmo(this))
 			{
 				this.set_bool("beginReload", true);
 			}
@@ -262,12 +268,24 @@ void onTick(CBlob@ this)
 						if (this.exists("ProjBlob"))
 						{
 							shootProj(this, aimangle);
-							Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-							coil.onTick();
+							
+							if (isClient())
+							{
+								Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+								coil.onTick();
+							}
 						}
 						else
 						{
-							shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+							// Local hosts / clients will run this
+							if (isClient())
+							{
+								shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+							}
+							else // Server will run this
+							{
+								shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), this.getPosition() + fromBarrel);
+							}
 						}
 					}
 
