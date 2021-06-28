@@ -364,14 +364,14 @@ void ManageCamera(CBlob@ this)
 
 	bool binoculars = false;
 	f32 scope_zoom = 0.00f;
-	
+
 	CBlob@ carried = this.getCarriedBlob();
 	if (carried !is null && carried.exists("scope_zoom"))
 	{
-		binoculars = true;
+		if (carried.get_f32("scope_zoom") != 0.00f) binoculars = true;
 		scope_zoom = carried.get_f32("scope_zoom");
 	}
-	
+
 	// mouse look & zoom
 	if ((getGameTime() - this.get_s32("tap_time") > 5) && controls !is null)
 	{
@@ -445,6 +445,5 @@ void ManageCamera(CBlob@ this)
 
 bool isDangerous(CBlob@ blob)
 {
-	return (blob !is null ? (blob.hasTag("explosive") || blob.hasTag("isWeapon") || blob.hasTag("dangerous")) : false);
+	return (blob !is null ? (blob.hasTag("explosive") || blob.hasTag("weapon") || blob.hasTag("dangerous")) : false);
 }
-

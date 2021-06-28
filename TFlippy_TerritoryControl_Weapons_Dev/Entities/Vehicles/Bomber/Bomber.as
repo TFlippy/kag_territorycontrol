@@ -12,32 +12,23 @@ void onInit(CBlob@ this)
 	              Vec2f(0.0f, -5.0f), // jump out velocity
 	              true  // inventory access
 	             );
+
 	VehicleInfo@ v;
-	if (!this.get("VehicleInfo", @v))
-	{
-		return;
-	}
+	if (!this.get("VehicleInfo", @v)) return;
+
 	Vehicle_SetupAirship(this, v, 50.0f);
-	
+
 	this.Tag("vehicle");
 	this.Tag("bomber");
-	
+
 	this.getShape().SetOffset(Vec2f(0, 10));
 	this.getShape().SetRotationsAllowed(false);
-	
+
 	this.set_f32("max_fuel", 2000);
-	this.set_f32("fuel_consumption_modifier", 1.50f);
-}
-void onTick(CBlob@ this)
-{
-	
-}
-void onCollision(CBlob@ this, CBlob@ blob,bool solid)
-{
-	
+	this.set_f32("fuel_consumption_modifier", 1.0f);
 }
 
-void onDie( CBlob@ this )
+void onDie(CBlob@ this)
 {
 	if (isServer())
 	{
@@ -47,7 +38,7 @@ void onDie( CBlob@ this )
 		wreck.setAngleDegrees(this.getAngleDegrees());
 		wreck.server_setTeamNum(this.getTeamNum());
 		wreck.Init();
-		
+
 		for (int i = 0; i < 5 + XORRandom(3); i++)
 		{
 			CBlob@ blob = server_CreateBlob("flame", -1, this.getPosition());
@@ -62,14 +53,17 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 charge)
 {
 	
 }
+
 bool Vehicle_canFire(CBlob@ this, VehicleInfo@ v, bool isActionPressed, bool wasActionPressed, u8 &out chargeValue)
 {
 	return true;
 }
+
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
 	return Vehicle_doesCollideWithBlob_ground(this, blob);
 }
+
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	return false;
@@ -80,7 +74,7 @@ void onInit(CSprite@ this)
 {
 	this.SetZ(-50.0f);
 	this.getCurrentScript().tickFrequency = 5;
-	
+
 	CSpriteLayer@ balloon = this.addSpriteLayer("balloon", "Balloon.png", 48, 64);
 	if (balloon !is null)
 	{
@@ -90,15 +84,16 @@ void onInit(CSprite@ this)
 		balloon.SetRelativeZ(1.0f);
 		balloon.SetOffset(Vec2f(0.0f, -26.0f));
 	}
+
 	CSpriteLayer@ background = this.addSpriteLayer("background", "Balloon.png", 32, 16);
 	if (background !is null)
 	{
 		background.addAnimation("default", 0, false);
-		int[] frames = { 3 };
-		background.animation.AddFrames(frames);
+		background.animation.AddFrame(3);
 		background.SetRelativeZ(-5.0f);
 		background.SetOffset(Vec2f(0.0f, -5.0f));
 	}
+
 	CSpriteLayer@ burner = this.addSpriteLayer("burner", "Balloon.png", 8, 16);
 	if (burner !is null)
 	{
@@ -121,6 +116,7 @@ void onInit(CSprite@ this)
 		burner.SetOffset(Vec2f(0.0f, -26.0f));
 	}
 }
+
 void onTick(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();

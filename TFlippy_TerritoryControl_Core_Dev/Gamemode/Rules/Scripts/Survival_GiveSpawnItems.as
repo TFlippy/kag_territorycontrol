@@ -227,6 +227,7 @@ void onTick(CRules@ this)
 		getBlobsByName("stronghold", @spots);
 		getBlobsByName("fortress", @spots);
 		getBlobsByName("camp", @spots);
+		getBlobsByName("altar_mason", @spots);
 		for (uint step = 0; step < spots.length; ++step)
 		{
 			CBlob@ spot = spots[step];

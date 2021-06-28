@@ -41,9 +41,7 @@ Vec2f getBottomOfCursor(Vec2f cursorPos, CBlob@ carryBlob)
 
 void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 {
-	if (carryBlob.hasTag("no shitty rotation reset")) return;
-
-	// rotate towards mouse if object allows
+	// rotate towards mouse if object allows- modified for guns
 	if (carryBlob.hasTag("place45"))
 	{
 		f32 distance = 8.0f;
@@ -58,29 +56,29 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 		Vec2f pos = this.getPosition();
 		Vec2f aim_vec = (pos - aimpos);
 		aim_vec.Normalize();
-		f32 angle_step = 45.0f;
-		f32 mouseAngle = (int(aim_vec.getAngleDegrees() + (angle_step * 0.5)) / int(angle_step)) * angle_step ;
-		if (!this.isFacingLeft()) mouseAngle += 180;
+		//f32 angle_step = 45.0f;
+		//f32 mouseAngle = (int(aim_vec.getAngleDegrees() + (angle_step * 0.5)) / int(angle_step)) * angle_step ;
+		//if (!this.isFacingLeft()) mouseAngle += 180;
 
-		carryBlob.setAngleDegrees(-mouseAngle + angleOffset);
+		//carryBlob.setAngleDegrees(-mouseAngle + angleOffset);
 		AttachmentPoint@ hands = this.getAttachments().getAttachmentPointByName("PICKUP");
 
 		aim_vec *= distance;
 
 		if (hands !is null)
 		{
-			hands.offset.x = 0 + (aim_vec.x * 2 * (this.isFacingLeft() ? 1.0f : -1.0f)); // if blob config has offset other than 0,0 there is a desync on client, dont know why
+			hands.offset.x = -6 + (aim_vec.x * 1 * (this.isFacingLeft() ? 1.0f : -1.0f)); // if blob config has offset other than 0,0 there is a desync on client, dont know why
 			hands.offset.y = -(aim_vec.y * (distance < 0 ? 1.0f : 1.0f));
 		}
 	}
 	else
 	{
-		if (!carryBlob.hasTag("place norotate"))
+		if (!carryBlob.hasTag("place norotate") && !carryBlob.hasTag("no shitty rotation reset"))
 		{
 			carryBlob.setAngleDegrees(0.0f);
 			// print("reset 2");
 		}
-		
+
 		AttachmentPoint@ hands = this.getAttachments().getAttachmentPointByName("PICKUP");
 		if (hands !is null)
 		{
@@ -111,6 +109,11 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 				{
 					hands.offset.y += 2;
 				}
+			}
+			if (this.isKeyPressed(key_action3) && carryBlob.hasTag("weapon"))
+			{
+				hands.offset.y -= 3;
+				if (this.isKeyPressed(key_down)) hands.offset.y -= 1;
 			}
 		}
 	}
@@ -145,9 +148,9 @@ void onTick(CBlob@ this)
 	}
 
 	CBlob @carryBlob = this.getCarriedBlob();
-	if (carryBlob !is null && !carryBlob.hasTag("no shitty rotation reset"))
+	if (carryBlob !is null)
 	{
-		if(carryBlob.hasTag("place ignore facing"))
+		if (carryBlob.hasTag("place ignore facing"))
 		{
 			carryBlob.getSprite().SetFacingLeft(false);
 		}
@@ -164,7 +167,7 @@ void onTick(CBlob@ this)
 				this.getCarriedBlob().setAngleDegrees(0.0f);
 				// print("reset 1");
 			}
-			else
+			else if (!carryBlob.hasTag("no shitty rotation reset"))
 			{
 				this.getCarriedBlob().setAngleDegrees(this.get_u16("build_angle"));
 			}

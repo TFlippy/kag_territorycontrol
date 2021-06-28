@@ -588,6 +588,13 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		b.size.Set(24, 24);
 		blocks[2].push_back(b);
 	}
+	{
+		BuildBlock b(0, "shifter", "$shifter$", "Shifter\n Moves things in a set direction, has a cooldown.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
+		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 2);
+		blocks[2].push_back(b);
+	}
 
 	BuildBlock[] page_3;
 	blocks.push_back(page_3);
@@ -758,6 +765,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200); //This is more expensive than for peasants as the fireplace is an amazing lightsource better than most other lightsources
 		b.buildOnGround = true;
 		b.size.Set(16, 16);
+		blocks[3].push_back(b);
   }
 	{
 		BuildBlock b(0, "tavern", "$icon_tavern$", "Tavern\nA poorly built cozy tavern.\nNeutrals may set their team here, paying you 20 coins for each spawn.");

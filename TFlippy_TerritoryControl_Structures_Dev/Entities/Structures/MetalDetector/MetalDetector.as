@@ -18,7 +18,7 @@ void onTick(CBlob@ this)
 {
 	bool detected = false;
 	bool foundBlobs = false;
-	
+
 	CBlob@[] blobs;
 	if (getMap().getBlobsInBox(this.getPosition() + Vec2f(-6, 6), this.getPosition() + Vec2f(6, -6), @blobs))
 	{
@@ -29,15 +29,15 @@ void onTick(CBlob@ this)
 			{
 				foundBlobs = true;
 				u8 team = blob.getTeamNum();
-			
+
 				if (team != this.getTeamNum() || team >= 100)
 				{
 					if (isDangerous(blob) || blob.get_string("equipment_torso") == "suicidevest")
-					{				
+					{
 						detected = true;
 						break;
 					}
-				
+
 					CInventory@ inv = blob.getInventory();
 					if (inv !is null)
 					{
@@ -51,7 +51,7 @@ void onTick(CBlob@ this)
 							}
 						}
 					}
-					
+
 					CBlob@ carried = blob.getCarriedBlob();
 					if (carried !is null)
 					{
@@ -61,10 +61,10 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
-	
+
 	u8 state = foundBlobs ? 1 : 0;
 	if (detected) state++;
-	
+
 	CSprite@ sprite = this.getSprite();
 	if (this.get_u8("detector_state") != state)
 	{
@@ -74,7 +74,7 @@ void onTick(CBlob@ this)
 				this.SetLight(false);
 				sprite.SetAnimation("default");
 			break;
-		
+
 			case 1:
 				this.SetLightColor(SColor(255, 50, 255, 0));
 				this.SetLightRadius(96.0f);
@@ -82,7 +82,7 @@ void onTick(CBlob@ this)
 				sprite.SetAnimation("undetected");
 				sprite.PlaySound("MetalDetector_Undetected");
 			break;
-			
+
 			case 2:
 				this.SetLightColor(SColor(255, 255, 50, 0));
 				this.SetLightRadius(96.0f);
@@ -92,11 +92,11 @@ void onTick(CBlob@ this)
 			break;
 		}
 	}
-	
-	this.set_u8("detector_state", state);	
+
+	this.set_u8("detector_state", state);
 }
 
 bool isDangerous(CBlob@ blob)
 {
-	return blob.hasTag("explosive") || blob.hasTag("isWeapon") || blob.hasTag("dangerous");
+	return blob.hasTag("explosive") || blob.hasTag("weapon") || blob.hasTag("dangerous");
 }

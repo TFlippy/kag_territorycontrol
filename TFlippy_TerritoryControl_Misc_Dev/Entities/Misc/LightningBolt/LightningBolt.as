@@ -6,16 +6,16 @@ void onInit(CBlob@ this)
 
 	float x = this.getPosition().x;
 	Vec2f strikePos;
-	if(map.rayCastSolid(Vec2f(x, 0.0f), Vec2f(x, map.tilemapheight * map.tilesize), strikePos))
+	if (map.rayCastSolid(Vec2f(x, 0.0f), Vec2f(x, map.tilemapheight * map.tilesize), strikePos))
 	{
 		this.setPosition(Vec2f(x, strikePos.y - 256.0f));
 	}
 
 	this.set_Vec2f("strike pos", strikePos);
 
-	if(isServer())
+	if (isServer())
 	{
-		for(int i = 0; i < 4 + XORRandom(4); i++)
+		for (int i = 0; i < 4 + XORRandom(4); i++)
 		{
 			CBlob@ blob = server_CreateBlob("flame", -1, strikePos + Vec2f(0.0f, -map.tilesize));
 			blob.setVelocity(Vec2f(XORRandom(40) / 10.0f - 2.0f, -XORRandom(20) / 10.0f));
@@ -24,13 +24,13 @@ void onInit(CBlob@ this)
 
 		CBlob@[] blobs;
 		map.getBlobsInRadius(strikePos, 48.0f, @blobs);
-		for(int i = 0; i < blobs.length; i++)
+		for (int i = 0; i < blobs.length; i++)
 		{
 			map.server_setFireWorldspace(blobs[i].getPosition(), true);
 		}
-	}
 
-	CBlob@ soundBlob = server_CreateBlob("lightningboltsound", this.getTeamNum(), strikePos);
+		CBlob@ soundBlob = server_CreateBlob("lightningboltsound", this.getTeamNum(), strikePos);
+	}
 
 	// if (isClient())
 	// {
@@ -40,8 +40,6 @@ void onInit(CBlob@ this)
 
 		// soundBlob.set_f32("distance", distance);
 	// }
-	
-	
 }
 
 void onInit(CSprite@ this)
@@ -51,7 +49,7 @@ void onInit(CSprite@ this)
 
 void onTick(CBlob@ this)
 {
-	if(this.hasTag("dead")) return;
+	if (this.hasTag("dead")) return;
 
 	CSprite@ sprite = this.getSprite();
 
@@ -65,21 +63,21 @@ void onTick(CBlob@ this)
 		flashAlpha -= int(Maths::Min(flashAlpha, distance));
 	}
 
-	if(time == lifetime)
+	if (time == lifetime)
 	{
 		sprite.SetAnimation("fade");
 	}
 
-	if(time >= lifetime)
+	if (time >= lifetime)
 	{
 		this.Tag("dead");
 		this.server_Die();
 	}
-	else if(getGameTime() % (XORRandom(2) + 1) == 0)
+	else if (getGameTime() % (XORRandom(2) + 1) == 0)
 	{
 		sprite.animation.frame = XORRandom(4);
 
-		if(isClient())
+		if (isClient())
 		{
 			SetScreenFlash(flashAlpha, 255, 255, 255);
 			ShakeScreen(200.0f, 50.0f, this.get_Vec2f("strike pos"));

@@ -19,6 +19,7 @@ void onInit(CBlob@ this)
 	this.set_f32("map_damage_radius", 48.0f);
 	this.Tag("map_damage_dirt");
 	this.set_string("custom_explosion_sound", "Missile_Explode.ogg");
+	this.Tag("medium weight");
 
 	this.set_u32("no_explosion_timer", 0);
 	this.set_u32("fuel_timer", 0);
@@ -129,7 +130,7 @@ void DoExplosion(CBlob@ this)
 	this.set_f32("map_damage_radius", (40.0f + random) * modifier);
 	this.set_f32("map_damage_ratio", 0.25f);
 
-	Explode(this, 40.0f + random, 10.0f);
+	Explode(this, 40.0f + random, 16.0f);
 
 	for (int i = 0; i < 4 * modifier; i++) 
 	{

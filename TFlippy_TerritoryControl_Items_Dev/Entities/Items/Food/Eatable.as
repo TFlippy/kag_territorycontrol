@@ -7,7 +7,7 @@ void onInit(CBlob@ this)
 	{
 		this.set_string("eat sound", "/Eat.ogg");
 	}
-	
+
 	this.Tag("food");
 	this.Tag("hopperable");
 
@@ -68,12 +68,16 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 				{
 					theBlob.server_Heal(heal_amount);
 				}
-
 			}
 
 			this.server_Die();
 		}
 	}
+}
+
+bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
+{
+	return blob.getShape().isStatic();
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
@@ -104,4 +108,3 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint @attachedPoint)
 		Heal(this, detached);
 	}
 }
-

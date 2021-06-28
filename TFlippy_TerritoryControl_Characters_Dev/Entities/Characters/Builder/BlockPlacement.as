@@ -39,7 +39,7 @@ void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
 					else
 					{
 						altar.add_f32("deity_power", 1);
-						if (isServer()) altar.Sync("deity_power", false);
+						altar.Sync("deity_power", true);
 					}
 				}
 			}
@@ -62,7 +62,7 @@ void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
 						}
 						
 						altar.add_f32("deity_power", -reputation_penalty);
-						if (isServer()) altar.Sync("deity_power", false);
+						altar.Sync("deity_power", true);
 					}
 				}
 			}
