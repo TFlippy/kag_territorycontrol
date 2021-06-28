@@ -41,6 +41,11 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 	GunSettings@ settings;
 	if(target.get("gun_settings", @settings)) //Is a gun
 	{
+		if (target.hasTag("heavy weight"))
+		{
+			priceMod *= 2; //Heavy guns are more expensive to modify
+		}
+		
 		if (!target.hasTag("MaximumdakkaMod") && settings.FIRE_INTERVAL < 10 && settings.TOTAL > 20) //only works on guns which can already fire quite fast
 		{
 			ShopItem@ s = addShopItem(this, "Maximum dakka", "$smg$", "Gun-Maximumdakka", "Fires way way faster at the cost of accuracy", false);
