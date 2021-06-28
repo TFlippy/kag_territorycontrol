@@ -212,14 +212,18 @@ void onTick(CBlob@ this)
 					f32 angle = -dir.Angle() + (this.isFacingLeft() ? 180 : 0);
 					angle += ((XORRandom(400) - 200) / 100.0f);
 
-					GunSettings@ settings;
-					this.get("gun_settings", @settings);
+					if (isServer())
+					{
+						GunSettings@ settings;
+						this.get("gun_settings", @settings);
 
-					// Muzzle
-					Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 3);
-					fromBarrel = fromBarrel.RotateBy(angle);
+						// Muzzle
+						Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 3);
+						fromBarrel = fromBarrel.RotateBy(angle);
 
-					shootGun(this.getNetworkID(), angle, this.getNetworkID(), this.getPosition() + fromBarrel);
+						// Fire!
+						shootGun(this.getNetworkID(), angle, this.getNetworkID(), this.getPosition() + fromBarrel);
+					}
 
 					if (isClient())
 					{
