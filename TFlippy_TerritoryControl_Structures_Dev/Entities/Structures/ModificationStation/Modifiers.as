@@ -231,6 +231,7 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 			{
 				settings.B_DAMAGE = 0.0f;
 				target.set_u8("CustomPenetration", 0); //Terrain damage is also 0
+				settings.G_RECOIL = 0; //Recoil is set to 0 though bullets still do no damage
 			}
 		}
 	}
