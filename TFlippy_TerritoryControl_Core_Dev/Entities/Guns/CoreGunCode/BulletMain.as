@@ -142,10 +142,12 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 
 		if (hoomanBlob !is null && gunBlob !is null)
 		{
-			if (gunBlob.get_u8("clip") < 1)
+
+			print(hoomanBlob.getName());
+			/*if (gunBlob.get_u8("clip") < 1)
 			{
 				return;
-			}
+			}*/
 
 			const f32 angle = params.read_f32();
 			const Vec2f pos = params.read_Vec2f();
@@ -155,6 +157,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			GunSettings@ settings;
 			gunBlob.get("gun_settings", @settings);
 
+			print((settings !is null) + '');
 			if (settings !is null && settings.B_PER_SHOT > 1) //Shotgun firing
 			{
 				f32 tempAngle = angle;
