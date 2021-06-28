@@ -138,8 +138,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ holder = point.getOccupied();
 		if (holder is null) return;
 
+		if (this.get_u8("clip") < 1)
+		{
+			return;
+		}
+
 		if (isServer())
 		{
+
 			const f32 angle = params.read_f32();
 			Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
 			Vec2f offset = this.exists("ProjOffset") ? this.get_Vec2f("ProjOffset") : settings.MUZZLE_OFFSET;
