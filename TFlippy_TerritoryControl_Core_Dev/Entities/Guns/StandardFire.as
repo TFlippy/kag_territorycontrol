@@ -239,8 +239,12 @@ void onTick(CBlob@ this)
 						sprite.PlaySound(this.get_string("CustomCycle"), 1.0f, cycle_pitch);
 					}
 				}
+				
+				if (holder.isMyPlayer() || (isServer() && holder.getBrain() !is null && holder.getBrain().isActive()))
+				{
+					Reload(this, holder);
+				}
 
-				Reload(this, holder);
 				if (this.hasTag("CustomShotgunReload")) this.set_bool("doReload", false);
 			} 
 			else if (pressing_shoot)
