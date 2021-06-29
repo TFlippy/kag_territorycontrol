@@ -29,31 +29,28 @@ void makeLight(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (isClient())
+	bool flip = this.isFacingLeft();
+	f32 angle = this.getAngleDegrees();
+
+	Vec2f hitPos;
+	Vec2f dir = Vec2f((flip ? -1 : 1), 0.0f).RotateBy(angle);
+	Vec2f startPos = this.getPosition();
+	Vec2f endPos = startPos + dir * max_distance;
+
+	HitInfo@[] hitInfos;
+	bool mapHit = getMap().rayCastSolid(startPos, endPos, hitPos);
+	f32 length = (hitPos - startPos).Length();
+	bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
+
+	CBlob@ light = getBlobByNetworkID(this.get_u16("remote_netid"));
+	if (light !is null)
 	{
-		bool flip = this.isFacingLeft();
-		f32 angle = this.getAngleDegrees();
-
-		Vec2f hitPos;
-		Vec2f dir = Vec2f((flip ? -1 : 1), 0.0f).RotateBy(angle);
-		Vec2f startPos = this.getPosition();
-		Vec2f endPos = startPos + dir * max_distance;
-
-		HitInfo@[] hitInfos;
-		bool mapHit = getMap().rayCastSolid(startPos, endPos, hitPos);
-		f32 length = (hitPos - startPos).Length();
-		bool blobHit = getMap().getHitInfosFromRay(startPos, angle + (flip ? 180.0f : 0.0f), length, this, @hitInfos);
-
-		CBlob@ light = getBlobByNetworkID(this.get_u16("remote_netid"));
-		if (light !is null)
-		{
-			light.setPosition(hitPos);
-		}
-
-		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-		CBlob@ holder = point.getOccupied();
-		if (holder !is null) this.setAngleDegrees(getAimAngle(this, holder));
+		light.setPosition(hitPos);
 	}
+
+	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+	CBlob@ holder = point.getOccupied();
+	if (holder !is null) this.setAngleDegrees(getAimAngle(this, holder));
 }
 
 void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
