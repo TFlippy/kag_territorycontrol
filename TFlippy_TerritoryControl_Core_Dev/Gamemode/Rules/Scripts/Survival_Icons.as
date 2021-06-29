@@ -174,7 +174,7 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_rpc$", "RPC.png", Vec2f(24, 16), 0);
 	AddIconToken("$icon_flamethrower$", "Flamethrower.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_acidthrower$", "Acidthrower.png", Vec2f(24, 8), 0);
-	AddIconToken("$icon_shotgun$", "Shotgun.png", Vec2f(16, 8), 0);
+	AddIconToken("$icon_shotgun$", "Shotgun.png", Vec2f(24, 8), 0);
 	AddIconToken("$icon_boomstick$", "Boomstick.png", Vec2f(24, 8), 0);
 	AddIconToken("$icon_grenadelauncher$", "GrenadeLauncher.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_mininukelauncher$", "MiniNukeLauncher.png", Vec2f(40, 8), 0);
