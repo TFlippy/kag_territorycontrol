@@ -7,7 +7,7 @@ void onTick(CBlob@ this)
     {
         this.getSprite().PlaySound("woodheavyhit1");
         this.set_string("equipment_head", "");
-        this.set_f32("bucket_health", 0.0f);
+        this.set_f32("bucket_health", 4.9f);
         this.RemoveScript("bucket_effect.as");
     }
     
