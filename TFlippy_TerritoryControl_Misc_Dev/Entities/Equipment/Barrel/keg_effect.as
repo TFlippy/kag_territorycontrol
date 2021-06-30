@@ -40,7 +40,7 @@ void onTick(CBlob@ this)
 	{
         this.getSprite().PlaySound("woodheavyhit1");
         this.set_string("equipment_head", "");
-        this.set_f32("keg_health", 0.0f);
+        this.set_f32("keg_health", 6.9f);
         if (this.getSprite().getSpriteLayer("keg") !is null) this.getSprite().RemoveSpriteLayer("keg");
         this.RemoveScript("keg_effect.as");
     }

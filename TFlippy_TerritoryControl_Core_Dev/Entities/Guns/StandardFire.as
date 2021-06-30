@@ -48,25 +48,28 @@ void onInit(CBlob@ this)
 	string vert_name = this.get_string("CustomBullet");
 	CRules@ rules = getRules();
 
-	// Used to prevent duplication, cant use vert.length since array will most likely be 0
-	// Cant use Exist since value will get removed on map reset (and we cant remove values from engine dict for w/e reason)
-	if (!rules.get_bool(vert_name + '-inbook'))
+	if (isClient()) //&& !rules.get_bool(vert_name + '-inbook'))
 	{
 		if (vert_name == "")
 		{
-			//warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
+			// warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
 			return;
 		}
 
-		rules.set_bool(vert_name + '-inbook', true);
+		//rules.set_bool(vert_name + '-inbook', true);
 
-		Vertex[] vert;
-		rules.set(vert_name, @vert);
+		Vertex[]@ bullet_vertex;
+		rules.get(vert_name, @bullet_vertex);
+
+		if (bullet_vertex is null)
+		{
+			Vertex[] vert;
+			rules.set(vert_name, @vert);
+		}
 
 		// #blamekag
 		if (!rules.exists("VertexBook"))
 		{
-			// Client vertex book used to grab bullet texture to batch render
 			string[] book;
 			rules.set("VertexBook", @book);
 			book.push_back(vert_name);
@@ -90,6 +93,12 @@ void onInit(CBlob@ this)
 		sprite.SetEmitSoundPaused(true);
 	}
 
+	// Required or stuff breaks due to wonky mouse syndrome
+#ifndef GUNS
+	if (isServer())
+		getControls().setMousePosition(Vec2f(0,0));
+#endif
+
 	if (!this.exists("CustomFlash") || (this.exists("CustomFlash") && !this.get_string("CustomFlash").empty()))
 	{
 		// Determine muzzleflash sprite
@@ -111,9 +120,9 @@ void onInit(CBlob@ this)
 		}
 	}
 
-	GunModule[] modules = {};
+	/*GunModule[] modules = {};
 	modules.push_back(TestModule());
-	this.set("GunModules", modules);
+	this.set("GunModules", modules);*/
 
 	/*if (true)//(this.exists("GunModule"))
 	{
@@ -128,20 +137,20 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	// Server will always get put back to sleep (doesnt need to run any of this)
-	if (this.isAttached() && isClient())
+	if (this.isAttached())
 	{
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder = point.getOccupied();
 
 		if (holder !is null)
 		{
-			GunModule[] modules;
+			/*GunModule[] modules;
 			this.get("GunModules", @modules);
 
 			for (int a = 0; a < modules.length(); a++)
 			{
 				modules[a].onTick(this, holder);
-			}
+			}*/
 
 			CSprite@ sprite = this.getSprite();
 			f32 aimangle = getAimAngle(this, holder);
@@ -153,15 +162,15 @@ void onTick(CBlob@ this)
 
 			// Case particle the gun uses
 			string casing = this.exists("CustomCase") ? this.get_string("CustomCase") :
-			                settings.B_TYPE == HittersTC::bullet_high_cal ? "rifleCase":
-			                settings.B_TYPE == HittersTC::bullet_low_cal  ? "pistolCase":
-			                settings.B_TYPE == HittersTC::shotgun         ? "shotgunCase": "";
+							settings.B_TYPE == HittersTC::bullet_high_cal ? "rifleCase":
+							settings.B_TYPE == HittersTC::bullet_low_cal  ? "pistolCase":
+							settings.B_TYPE == HittersTC::shotgun         ? "shotgunCase": "";
 			f32 oAngle = (aimangle % 360) + 180;
 
 			// Keys
 			const bool pressing_shoot = holder.isAttached() ? false :this.hasTag("CustomSemiAuto") ?
-			           point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
-			           point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
+					   point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
+					   point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
 			
 			// Sound
 			const f32 reload_pitch = this.exists("CustomReloadPitch") ? this.get_f32("CustomReloadPitch") : 1.0f;
@@ -177,8 +186,8 @@ void onTick(CBlob@ this)
 			// Start reload sequence when pressing [R]
 			CControls@ controls = holder.getControls();
 			if (controls !is null && controls.isKeyJustPressed(KEY_KEY_R) &&
-			    !this.get_bool("beginReload") && !this.get_bool("doReload") && 
-			    this.get_u8("clip") < settings.TOTAL && HasAmmo(this))
+				!this.get_bool("beginReload") && !this.get_bool("doReload") && 
+				this.get_u8("clip") < settings.TOTAL && HasAmmo(this))
 			{
 				this.set_bool("beginReload", true);
 			}
@@ -188,7 +197,7 @@ void onTick(CBlob@ this)
 			{
 				actionInterval--; // Timer counts down with ticks
 
-				if (this.exists("CustomCycle"))
+				if (this.exists("CustomCycle") && isClient())
 				{
 					// Custom cycle sequence 
 					if ((actionInterval == settings.FIRE_INTERVAL / 2) && this.get_bool("justShot"))
@@ -213,10 +222,10 @@ void onTick(CBlob@ this)
 			}
 			else if (this.get_bool("doReload")) // End of reload
 			{
-				for (int a = 0; a < modules.length(); a++)
+				/*for (int a = 0; a < modules.length(); a++)
 				{
 					modules[a].onReload(this);
-				}
+				}*/
 
 				if (this.hasTag("CustomShotgunReload"))
 				{
@@ -230,18 +239,22 @@ void onTick(CBlob@ this)
 						sprite.PlaySound(this.get_string("CustomCycle"), 1.0f, cycle_pitch);
 					}
 				}
+				
+				if (holder.isMyPlayer() || (isServer() && holder.getBrain() !is null && holder.getBrain().isActive()))
+				{
+					Reload(this, holder);
+				}
 
-				Reload(this, holder);
 				if (this.hasTag("CustomShotgunReload")) this.set_bool("doReload", false);
 			} 
 			else if (pressing_shoot)
 			{
 				if (this.get_u8("clip") > 0)
 				{
-					for (int a = 0; a < modules.length(); a++)
+					/*for (int a = 0; a < modules.length(); a++)
 					{
 						modules[a].onFire(this);
-					}
+					}*/
 
 					// Shoot weapon
 					actionInterval = settings.FIRE_INTERVAL;
@@ -254,15 +267,30 @@ void onTick(CBlob@ this)
 						aimangle += XORRandom(2) != 0 ? -XORRandom(settings.B_SPREAD) : XORRandom(settings.B_SPREAD);
 					}
 
-					if (this.exists("ProjBlob"))
+					if (holder.isMyPlayer() || (isServer() && holder.getBrain() !is null && holder.getBrain().isActive()))
 					{
-						shootProj(this, aimangle);
-						Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-						coil.onTick();
-					}
-					else
-					{
-						shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+						if (this.exists("ProjBlob"))
+						{
+							shootProj(this, aimangle);
+							
+							if (isClient())
+							{
+								Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+								coil.onTick();
+							}
+						}
+						else
+						{
+							// Local hosts / clients will run this
+							if (isClient())
+							{
+								shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+							}
+							else // Server will run this
+							{
+								shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), this.getPosition() + fromBarrel);
+							}
+						}
 					}
 
 					// Shooting sound
@@ -279,11 +307,16 @@ void onTick(CBlob@ this)
 						flash.SetVisible(true);
 					}
 
-					if (!this.exists("CustomCycle")) 
+
+
+					if (isClient()) 
 					{
-						ParticleCase2(casing, this.getPosition(), this.isFacingLeft() ? oAngle : aimangle);
+						if (!this.exists("CustomCycle")) 
+						{
+							ParticleCase2(casing, this.getPosition(), this.isFacingLeft() ? oAngle : aimangle);
+						}
+						else this.set_bool("justShot", true);
 					}
-					else this.set_bool("justShot", true);
 				}
 				else if (this.get_u8("clickReload") == 1 && HasAmmo(this))
 				{

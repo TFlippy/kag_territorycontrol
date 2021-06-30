@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
 //
-//  VehicleFire.as - Vamist
+//  VehicleFire.as - Ginger
 //
 //  Holds the required information regarding bullets
 //  This file is not required for blobs that use StandardFire.as
@@ -15,25 +15,28 @@ void onInit(CBlob@ this)
 	string vert_name = this.get_string("CustomBullet");
 	CRules@ rules = getRules();
 
-	// Used to prevent duplication, cant use vert.length since array will most likely be 0
-	// Cant use Exist since value will get removed on map reset (and we cant remove values from engine dict for w/e reason)
-	if (!rules.get_bool(vert_name + '-inbook'))
+	if (isClient()) //&& !rules.get_bool(vert_name + '-inbook'))
 	{
 		if (vert_name == "")
 		{
-			warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
+			// warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
 			return;
 		}
 
-		rules.set_bool(vert_name + '-inbook', true);
+		//rules.set_bool(vert_name + '-inbook', true);
 
-		Vertex[] vert;
-		rules.set(vert_name, @vert);
+		Vertex[]@ bullet_vertex;
+		rules.get(vert_name, @bullet_vertex);
+
+		if (bullet_vertex is null)
+		{
+			Vertex[] vert;
+			rules.set(vert_name, @vert);
+		}
 
 		// #blamekag
 		if (!rules.exists("VertexBook"))
 		{
-			// Client vertex book used to grab bullet texture to batch render
 			string[] book;
 			rules.set("VertexBook", @book);
 			book.push_back(vert_name);

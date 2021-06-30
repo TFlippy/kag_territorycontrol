@@ -45,14 +45,14 @@ void onTick(CBlob@ this)
         headoffset += Vec2f(0, -1);
         milhelmet.SetOffset(headoffset);
 		
-		milhelmet.SetFrameIndex(Maths::Floor(this.get_f32("mh_health") / 4.00f));
+		milhelmet.SetFrameIndex(Maths::Floor(this.get_f32("mh_health") / 5.00f));
     }
    
     if (this.get_f32("mh_health") >= 20.0f)
     {
         this.getSprite().PlaySound("ricochet_" + XORRandom(3));
         this.set_string("equipment_head", "");
-        this.set_f32("mh_health", 0.0f);
+        this.set_f32("mh_health", 19.9f);
 		if (milhelmet !is null)
 		{
 			this.getSprite().RemoveSpriteLayer("militaryhelmet");

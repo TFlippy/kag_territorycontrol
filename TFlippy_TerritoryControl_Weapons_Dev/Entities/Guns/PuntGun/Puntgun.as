@@ -40,4 +40,5 @@ void onInit(CBlob@ this)
 	this.set_string("CustomCycle", "PuntgunPump");
 	this.set_string("CustomCase", "");
 	this.Tag("heavy weight");
+	this.Tag("place45");
 }

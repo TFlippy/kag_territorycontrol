@@ -40,6 +40,17 @@ void onInit(CRules@ this)
 			string[] book;
 			this.set("VertexBook", @book);
 		}
+		else
+		{
+			string[]@ book;
+			this.get("VertexBook", @book);
+
+			if (book is null)
+			{
+				string[] book;
+				this.set("VertexBook", @book);
+			}
+		}
 
 		this.add_u16("temp_id", Render::addScript(Render::layer_postworld, "BulletMain", "GunRender", 0.0f));
 		//Render::addScript(Render::layer_prehud, "BulletMain", "GUIStuff", 0.0f);
@@ -62,16 +73,6 @@ void Reset(CRules@ this)
 {
 	r.Reset(12345);
 	FireGunID = this.addCommandID("fireGun");
-
-	string[]@ book;
-	this.get("VertexBook", @book);
-
-	for (int a = 0; a < book.length(); a++)
-	{
-		this.set_bool(book[a] + '-inbook', false);
-	}
-
-	book.clear();
 
 	//BulletRender::Reset();
 }
@@ -141,6 +142,18 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 
 		if (hoomanBlob !is null && gunBlob !is null)
 		{
+			if (gunBlob.exists("clip"))
+			{
+				if (gunBlob.get_u8("clip") < 1)
+				{
+					return;
+				}
+				else
+				{
+					gunBlob.sub_u8("clip", 1);
+				}
+			}
+
 			const f32 angle = params.read_f32();
 			const Vec2f pos = params.read_Vec2f();
 			u32 timeSpawnedAt = params.read_u32(); // getGameTime() it spawned at
@@ -168,19 +181,18 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			else //Guns that fire only one bullet
 			{
 				Bullet@ bullet = BulletGrouped.CreateNewBullet(hoomanBlob, gunBlob, angle, pos);
+				//timeSpawnedAt -= 50;
 				for (;timeSpawnedAt < getGameTime(); timeSpawnedAt++) // Catch up to everybody else
 				{
 					bullet.onTick(map);
 				}
 			}
-			gunBlob.sub_u8("clip", 1);
-
+			
 			if (isClient() && settings !is null)
 			{
-				CBlob@ localBlob = getLocalPlayerBlob();
-				if (localBlob !is null && localBlob is hoomanBlob) // if we are this blob
+				if (hoomanBlob.isMyPlayer()) // if we are this blob
 				{
-					Recoil@ coil = Recoil(localBlob, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+					Recoil@ coil = Recoil(hoomanBlob, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
 					BulletGrouped.NewRecoil(@coil);
 				}
 			}
