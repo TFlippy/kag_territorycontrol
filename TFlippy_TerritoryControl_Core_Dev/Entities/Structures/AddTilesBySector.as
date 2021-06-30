@@ -1,6 +1,6 @@
 void AddTilesBySector(Vec2f ul, Vec2f lr, string sectorName, TileType tile, TileType omitTile = 255)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CMap@ map = getMap();
 		const f32 tilesize = map.tilesize;
@@ -23,16 +23,20 @@ void AddTilesBySector(Vec2f ul, Vec2f lr, string sectorName, TileType tile, Tile
 
 void AddTilesBySectorSoft(Vec2f ul, Vec2f lr, string sectorName, TileType tile)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
 		CMap@ map = getMap();
 		const f32 tilesize = map.tilesize;
 		Vec2f tpos = ul;
+
 		while (tpos.x < lr.x)
 		{
 			while (tpos.y < lr.y)
 			{
-				if (map.getSectorAtPosition(tpos, sectorName) !is null && map.getTile(tpos).type < tile)
+				uint16 oldTile = map.getTile(tpos).type;
+
+				if (map.getSectorAtPosition(tpos, sectorName) !is null && 
+				   (oldTile < tile || map.hasTileFlag(map.getTileOffset(tpos), Tile::FLAMMABLE))) //which tiles can be overwritten
 				{
 					map.server_SetTile(tpos, tile);
 				}
