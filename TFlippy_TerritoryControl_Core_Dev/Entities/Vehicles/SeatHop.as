@@ -77,7 +77,12 @@ void onTick(CBlob@ this)
 		if (closestAP !is null)
 		{
 			closestAP.getBlob().server_AttachTo(this, closestAP);
-			if (isServer() && (closestAP.name == "FLYER" || closestAP.name == "DRIVER")) closestAP.getBlob().server_setTeamNum(this.getTeamNum());
+
+			if (isServer() && (closestAP.name == "FLYER" || closestAP.name == "DRIVER" || 
+			   (closestAP.getBlob().hasTag("turret") && !closestAP.getBlob().isAttached())))
+			{
+				closestAP.getBlob().server_setTeamNum(this.getTeamNum());
+			}
 		}
 	}
 }
