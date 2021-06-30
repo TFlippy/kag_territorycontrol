@@ -179,6 +179,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.03f));
 				MakeMat(this, this.getPosition(), "mat_gold",	 	XORRandom(quantity * 0.06f));
 				MakeMat(this, this.getPosition(), "mat_mithril", 	XORRandom(quantity * 0.05f));
+				MakeMat(this, this.getPosition(), "mat_coal",		XORRandom(quantity * 0.04f));
 			}
 
 			if(isClient())
