@@ -42,7 +42,7 @@ class Bullet
         CurrentPos = pos;
 
         BulletGrav = settings.B_GRAV;
-        FacingLeft = gun.isFacingLeft();
+        FacingLeft = humanBlob.isFacingLeft();
 
         TimeLeft = settings.B_TTL;
         Speed = settings.B_SPEED;
@@ -219,7 +219,14 @@ class Bullet
                         }
                         else
                         {
-                            map.server_DestroyTile(hitpos, damage * 0.25f);
+                            if (map.isTileGround(tile.type) || map.isTileStone(tile.type))
+                            {
+                                if (XORRandom(10) > 5) map.server_DestroyTile(hitpos, damage * 0.25f);
+                            }
+                            else
+                            {
+                                map.server_DestroyTile(hitpos, damage * 0.25f);
+                            }
                         }
                     }
 

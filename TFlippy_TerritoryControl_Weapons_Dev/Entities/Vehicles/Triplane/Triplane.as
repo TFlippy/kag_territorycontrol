@@ -215,20 +215,23 @@ void Shoot(CBlob@ this)
 {
 	if (getGameTime() < this.get_u32("fireDelay")) return;
 
-	// Angle shittery
-	f32 angle = this.getAngleDegrees() + ((XORRandom(500) - 100) / 100.0f);
-
 	GunSettings@ settings;
 	this.get("gun_settings", @settings);
 
-	// Muzzle
-	Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 1);
-	fromBarrel = fromBarrel.RotateBy(angle);
-
-	CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
-	if (gunner !is null)
+	if (isServer())
 	{
-		shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getSprite().getWorldTranslation() + fromBarrel);
+		// Angle shittery
+		f32 angle = this.getAngleDegrees() + ((XORRandom(500) - 100) / 100.0f);
+
+		// Muzzle
+		Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 1);
+		fromBarrel = fromBarrel.RotateBy(angle);
+
+		CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
+		if (gunner !is null)
+		{
+			shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getPosition() + fromBarrel);
+		}
 	}
 
 	if (isClient())

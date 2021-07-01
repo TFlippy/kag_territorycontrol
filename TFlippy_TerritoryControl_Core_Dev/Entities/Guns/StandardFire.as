@@ -146,7 +146,6 @@ void onTick(CBlob@ this)
 		{
 			/*GunModule[] modules;
 			this.get("GunModules", @modules);
-
 			for (int a = 0; a < modules.length(); a++)
 			{
 				modules[a].onTick(this, holder);
@@ -168,10 +167,10 @@ void onTick(CBlob@ this)
 			f32 oAngle = (aimangle % 360) + 180;
 
 			// Keys
-			const bool pressing_shoot = holder.isAttached() ? false :this.hasTag("CustomSemiAuto") ?
+			const bool pressing_shoot = holder.isAttached() && holder.getName() != "automat" ? false : this.hasTag("CustomSemiAuto") ?
 					   point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
 					   point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
-			
+
 			// Sound
 			const f32 reload_pitch = this.exists("CustomReloadPitch") ? this.get_f32("CustomReloadPitch") : 1.0f;
 			const f32 cycle_pitch  = this.exists("CustomCyclePitch")  ? this.get_f32("CustomCyclePitch")  : 1.0f;
@@ -240,7 +239,11 @@ void onTick(CBlob@ this)
 					}
 				}
 
-				Reload(this, holder);
+				if (holder.isMyPlayer() || (isServer() && holder.getBrain() !is null && holder.getBrain().isActive()))
+				{
+					Reload(this, holder);
+				}
+
 				if (this.hasTag("CustomShotgunReload")) this.set_bool("doReload", false);
 			} 
 			else if (pressing_shoot)
@@ -263,12 +266,12 @@ void onTick(CBlob@ this)
 						aimangle += XORRandom(2) != 0 ? -XORRandom(settings.B_SPREAD) : XORRandom(settings.B_SPREAD);
 					}
 
-					if (holder.isMyPlayer() || (isServer() && holder.getBrain() !is null))
+					if (holder.isMyPlayer() || (isServer() && holder.getBrain() !is null && holder.getBrain().isActive()))
 					{
 						if (this.exists("ProjBlob"))
 						{
 							shootProj(this, aimangle);
-							
+
 							if (isClient())
 							{
 								Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
@@ -302,8 +305,6 @@ void onTick(CBlob@ this)
 						flash.SetFrameIndex(0);
 						flash.SetVisible(true);
 					}
-
-
 
 					if (isClient()) 
 					{

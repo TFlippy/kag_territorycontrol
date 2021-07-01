@@ -131,37 +131,37 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			else if(spl[0] == "grain_seed")
 			{
 				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "grain_plant", rand.NextRanged(2)+1);
+				server_MakeSeedsFor(@callerBlob, "grain_plant", XORRandom(3)+1);
 			}
 			else if(spl[0] == "bush_seed")
 			{
 				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "bush", rand.NextRanged(2)+1);
+				server_MakeSeedsFor(@callerBlob, "bush", XORRandom(2)+1);
 			}
 			else if(spl[0] == "pine_seed")
 			{
 				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "tree_pine", rand.NextRanged(0)+1);
+				server_MakeSeedsFor(@callerBlob, "tree_pine", 1);
 			}
 			else if(spl[0] == "bushy_seed")
 			{
 				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "tree_bushy", rand.NextRanged(0)+1);
+				server_MakeSeedsFor(@callerBlob, "tree_bushy", 1);
 			}
 			else if(spl[0] == "ganja_seed")
 			{
 				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "ganja_plant", rand.NextRanged(0)+1);
+				server_MakeSeedsFor(@callerBlob, "ganja_plant", 1);
 			}
 			else if(spl[0] == "pumpkin_seed")
 			{
 				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "pumpkin_plant", rand.NextRanged(2)+0);
+				server_MakeSeedsFor(@callerBlob, "pumpkin_plant", XORRandom(2)+0);
 			}
 			else if (spl[0] == "flower_seed")
 			{
 				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "flowers", rand.NextRanged(2)+1);
+				server_MakeSeedsFor(@callerBlob, "flowers", XORRandom(2)+1);
 			}
 			else if (name.findFirst("mat_") != -1)
 			{

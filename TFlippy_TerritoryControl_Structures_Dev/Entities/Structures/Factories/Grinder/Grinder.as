@@ -127,7 +127,14 @@ void onTick(CSprite@ this)
 
 bool canSaw(CBlob@ this, CBlob@ blob)
 {
-	if (this.getTickSinceCreated() < 90 || blob.hasTag("sawed") || blob.getShape().isStatic() || blob.getName() == "grinder" || (blob.getName() == "mat_stone" || blob.getName() == "mat_coal" ? false : blob.hasTag("invincible"))) return false;
+	string name = blob.getName();
+    bool mat_check = (name == "mat_stone" || name == "mat_dirt" || name == "mat_coal" ? false : blob.hasTag("invincible"));
+
+    if (this.getTickSinceCreated() < 90 || blob.hasTag("sawed") || 
+        blob.getShape().isStatic() || name == "grinder" || mat_check) 
+    {
+            return false;
+    }
 
 	if (blob.hasTag("flesh") && isClient() && !g_kidssafe)
 	{
@@ -175,19 +182,52 @@ void Blend(CBlob@ this, CBlob@ blob)
 				MakeMat(this, this.getPosition(), "mat_stone", 		quantity * 0.50f + XORRandom(quantity * 0.25f));
 				MakeMat(this, this.getPosition(), "mat_concrete", 	quantity * 0.125f + XORRandom(quantity * 0.125f));
 				MakeMat(this, this.getPosition(), "mat_iron", 		XORRandom(quantity * 0.20f));
-				MakeMat(this, this.getPosition(), "mat_sulphur", 	XORRandom(quantity * 0.15f));
 				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.03f));
 				MakeMat(this, this.getPosition(), "mat_gold",	 	XORRandom(quantity * 0.06f));
 				MakeMat(this, this.getPosition(), "mat_mithril", 	XORRandom(quantity * 0.05f));
 			}
 
-			if(isClient())
+			if (isClient())
 			{
 				this.getSprite().PlaySound("rocks_explode" + (1 + XORRandom(2)) + ".ogg", 1.5f, 1.0f);
 
 				if (XORRandom(100) < 75)
 				{
 					ParticleAnimated("Smoke.png", this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+				}
+			}
+			kill = true;
+		}
+		break;
+
+		case 1074492747://mat_dirt
+		{
+			if (isServer())
+			{
+				u32 quantity = blob.getQuantity();
+
+				MakeMat(this, this.getPosition(), "mat_dirt", 		quantity * 0.65f + XORRandom(quantity * 0.25f));
+				MakeMat(this, this.getPosition(), "mat_sulphur", 	XORRandom(quantity * 0.10f));
+				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.10f));
+			}
+
+			if (isClient())
+			{
+				this.getSprite().PlaySound("dig_dirt" + (1 + XORRandom(3)) + ".ogg", 1.5f, 1.0f);
+
+				if (XORRandom(100) < 75)
+				{
+					ParticleAnimated
+					(
+						"DustSmall.png", 
+						this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), 
+						Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 
+						0.0f, 
+						1.5f, 
+						3, 
+						0.0f, 
+						true
+					);
 				}
 			}
 			kill = true;
@@ -224,13 +264,23 @@ void Blend(CBlob@ this, CBlob@ blob)
 			blob.setInventoryName("Coal Dust");
 			this.server_PutInInventory(blob);
 
-			if(isClient())
+			if (isClient())
 			{
 				this.getSprite().PlaySound("rocks_explode" + (1 + XORRandom(2)) + ".ogg", 1.5f, 1.0f);
 
 				if (XORRandom(100) < 75)
 				{
-					ParticleAnimated("LargeSmoke.png", this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 0.0f, 1.5f, 3, 0.0f, true);
+					ParticleAnimated
+					(
+						"Smoke.png", 
+						this.getPosition() + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)), 
+						Vec2f((100 - XORRandom(200)) / 100.0f, 0.5f), 
+						0.0f, 
+						1.5f, 
+						3, 
+						0.0f, 
+						true
+					);
 				}
 			}
 		}

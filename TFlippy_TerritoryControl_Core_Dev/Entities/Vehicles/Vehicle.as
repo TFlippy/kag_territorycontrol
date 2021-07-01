@@ -1,6 +1,5 @@
 #include "SeatsCommon.as"
 #include "VehicleCommon.as"
-#include "VehicleAttachmentCommon.as"
 
 void onInit(CBlob@ this)
 {
@@ -184,6 +183,23 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (!this.get("VehicleInfo", @v)) return;
 
 		v.ammo_stocked = params.read_u16();
+	}
+}
+
+void onChangeTeam(CBlob@ this, const int oldTeam)
+{
+	//Convert attached turrets to same team as host vehicle
+	AttachmentPoint@[] aps;
+	if (this.getAttachmentPoints(@aps))
+	{
+		for (uint i = 0; i < aps.length; i++)
+		{
+			AttachmentPoint@ ap = aps[i];
+			if (ap.name == "VEHICLE" && ap.getBlob().hasTag("turret") && ap.getBlob() !is this)
+			{
+				ap.getBlob().server_setTeamNum(this.getTeamNum());
+			}
+		}
 	}
 }
 

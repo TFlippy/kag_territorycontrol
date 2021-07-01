@@ -129,14 +129,8 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (this.hasTag("offblast")) return;
 
-	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-	if (point is null) return;
-
-	if (point.getOccupied() is null)
-	{
-		CBitStream params;
-		caller.CreateGenericButton(11, Vec2f(0.0f, 0.0f), this, this.getCommandID("offblast"), "Off blast!", params);
-	}
+	CBitStream params;
+	caller.CreateGenericButton(11, Vec2f(0.0f, 0.0f), this, this.getCommandID("offblast"), "Off blast!", params);
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -149,27 +143,27 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		this.Tag("aerial");
 
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-		if (point is null) return;
-
-		if (point.getOccupied() is null)
+		if (point !is null && point.getOccupied() !is null)
 		{
-			this.set_Vec2f("direction", Vec2f(0, 1).RotateBy(this.getAngleDegrees()));
+			this.server_DetachFromAll();
+		}
 
-			this.Tag("offblast");
-			this.set_u32("no_explosion_timer", getGameTime() + 30);
-			this.set_u32("fuel_timer", getGameTime() + fuel_timer_max);
+		this.set_Vec2f("direction", Vec2f(0, 1).RotateBy(this.getAngleDegrees()));
 
-			if (isClient())
-			{
-				CSprite@ sprite = this.getSprite();
-				sprite.SetEmitSound("Rocket_Idle.ogg");
-				sprite.SetEmitSoundSpeed(1.9f);
-				sprite.SetEmitSoundPaused(false);
+		this.Tag("offblast");
+		this.set_u32("no_explosion_timer", getGameTime() + 30);
+		this.set_u32("fuel_timer", getGameTime() + fuel_timer_max);
 
-				this.SetLight(true);
-				this.SetLightRadius(128.0f);
-				this.SetLightColor(SColor(255, 255, 100, 0));
-			}
+		if (isClient())
+		{
+			CSprite@ sprite = this.getSprite();
+			sprite.SetEmitSound("Rocket_Idle.ogg");
+			sprite.SetEmitSoundSpeed(1.9f);
+			sprite.SetEmitSoundPaused(false);
+
+			this.SetLight(true);
+			this.SetLightRadius(128.0f);
+			this.SetLightColor(SColor(255, 255, 100, 0));
 		}
 	}
 }

@@ -28,7 +28,7 @@ void onTick(CBlob@ this)
 			{
 				//can't get into carried blob - can pick it up after they get in though
 				//(prevents dinghy rockets)
-				if (blob.isAttachedToPoint("PICKUP"))
+				if (blob.isAttachedToPoint("PICKUP") && !blob.hasTag("usable by anyone"))
 					continue;
 
 				if (blob !is this.getIgnoreCollisionBlob())
@@ -77,7 +77,12 @@ void onTick(CBlob@ this)
 		if (closestAP !is null)
 		{
 			closestAP.getBlob().server_AttachTo(this, closestAP);
-			if (isServer() && (closestAP.name == "FLYER" || closestAP.name == "DRIVER")) closestAP.getBlob().server_setTeamNum(this.getTeamNum());
+
+			if (isServer() && (closestAP.name == "FLYER" || closestAP.name == "DRIVER" || 
+			   (closestAP.getBlob().hasTag("turret") && !closestAP.getBlob().isAttached())))
+			{
+				closestAP.getBlob().server_setTeamNum(this.getTeamNum());
+			}
 		}
 	}
 }

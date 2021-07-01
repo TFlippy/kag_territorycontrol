@@ -204,27 +204,31 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 {
 	if (getGameTime() < this.get_u32("fireDelay")) return;
 
-	GunSettings@ settings;
-	this.get("gun_settings", @settings);
-
 	// Angle shittery
 	f32 angle = this.getAngleDegrees() + Vehicle_getWeaponAngle(this, v);
 	angle = angle * (this.isFacingLeft() ? -1 : 1);
 	angle += ((XORRandom(400) - 150) / 100.0f);
 
-	// Muzzle
-	Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 1);
-	fromBarrel = fromBarrel.RotateBy(angle);
-
-	CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
-	if (gunner !is null)
+	if (isServer())
 	{
-		shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getSprite().getWorldTranslation() + fromBarrel);
+		GunSettings@ settings;
+		this.get("gun_settings", @settings);
+
+		// Muzzle
+		Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 1);
+		fromBarrel = fromBarrel.RotateBy(angle);
+
+		CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
+		if (gunner !is null)
+		{
+			shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getPosition() + fromBarrel);
+		}
 	}
 
 	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
+
 		CSpriteLayer@ flash = sprite.getSpriteLayer("muzzle_flash");
 		if (flash !is null)
 		{

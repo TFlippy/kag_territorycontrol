@@ -100,15 +100,16 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 					if (clip >= total) break;
 
+					// Determines what can have infinite ammunition
+					const bool isChickenBot = holder.getPlayer() is null && holder.hasTag("chicken");
+
 					if (this.hasTag("CustomShotgunReload"))
 					{
 						//Shotgun reload
-						if (holder.getPlayer() !is null && !this.hasTag("chicken"))
-						{
-							if (quantity == 1) item.server_Die();
-							else item.server_SetQuantity(Maths::Max(quantity - 1, 0));
-							quantity--;
-						}
+
+						if (quantity <= 1) item.server_Die();
+						else item.server_SetQuantity(Maths::Max(quantity - (isChickenBot ? 0 : 1), 0));
+						quantity--;
 
 						this.add_u8("clip", 1);
 						if (clip < total || quantity == 1) this.set_bool("beginReload", true); //loop
@@ -119,10 +120,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					{
 						//Normal reload
 						s32 taken = Maths::Min(quantity, Maths::Clamp(total - clip, 0, total));
-						if (holder.getPlayer() !is null && !this.hasTag("chicken"))
-						{
-							item.server_SetQuantity(Maths::Max(quantity - taken, 0));
-						}
+
+						item.server_SetQuantity(Maths::Max(quantity - (isChickenBot ? 0 : taken), 0));
+
 						this.add_u8("clip", taken);
 					}
 				}
@@ -138,8 +138,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ holder = point.getOccupied();
 		if (holder is null) return;
 
+		if (this.get_u8("clip") < 1)
+		{
+			return;
+		}
+
 		if (isServer())
 		{
+
 			const f32 angle = params.read_f32();
 			Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
 			Vec2f offset = this.exists("ProjOffset") ? this.get_Vec2f("ProjOffset") : settings.MUZZLE_OFFSET;
