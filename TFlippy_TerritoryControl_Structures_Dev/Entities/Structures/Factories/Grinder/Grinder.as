@@ -213,7 +213,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 
 			if (isClient())
 			{
-				this.getSprite().PlaySound("dig_dirt" + (1 + XORRandom(3) + ".ogg", 1.5f, 1.0f);
+				this.getSprite().PlaySound("dig_dirt" + (1 + XORRandom(3)) + ".ogg", 1.5f, 1.0f);
 
 				if (XORRandom(100) < 75)
 				{
