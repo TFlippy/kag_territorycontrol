@@ -100,16 +100,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 					if (clip >= total) break;
 
-					s32 taken;
+					// Determines what can have infinite ammunition
+					const bool isChickenBot = holder.getPlayer() is null && holder.hasTag("chicken");
 
 					if (this.hasTag("CustomShotgunReload"))
 					{
 						//Shotgun reload
 
-						taken = holder.getPlayer() is null && holder.hasTag("chicken") ? 0 : 1;
-
 						if (quantity <= 1) item.server_Die();
-						else item.server_SetQuantity(Maths::Max(quantity - taken, 0));
+						else item.server_SetQuantity(Maths::Max(quantity - (isChickenBot ? 0 : 1), 0));
 						quantity--;
 
 						this.add_u8("clip", 1);
@@ -120,12 +119,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					else
 					{
 						//Normal reload
-						taken = Maths::Min(quantity, Maths::Clamp(total - clip, 0, total));
+						s32 taken = Maths::Min(quantity, Maths::Clamp(total - clip, 0, total));
 
-						//don't take ammo if chicken
-						if (holder.getPlayer() is null && holder.hasTag("chicken")) taken = 0;
-
-						item.server_SetQuantity(Maths::Max(quantity - taken, 0));
+						item.server_SetQuantity(Maths::Max(quantity - (isChickenBot ? 0 : taken), 0));
 
 						this.add_u8("clip", taken);
 					}
