@@ -18,6 +18,11 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 	}
 	else // collide only if not a player or other team member, or crouching
 	{
+		if (this.hasTag("seated"))
+		{
+			return false;
+		}
+
 		//other team member
 		if (blob.hasTag("player") && (this.getTeamNum()==blob.getTeamNum() && (this.getTeamNum()>=0 && this.getTeamNum()<7)))
 		{

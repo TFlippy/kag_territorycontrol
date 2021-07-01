@@ -111,7 +111,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					break;
 
 				default:
-					ratio *= 0.30f;
+					ratio *= 0.40f;
 					break;
 			}
 			
@@ -126,18 +126,16 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			f32 armorHealth = armorMaxHealth - this.get_f32("keg_health");
 			f32 ratio = armorHealth / armorMaxHealth;
 
-			if ((customData == Hitters::fire || customData == Hitters::fire || customData == Hitters::explosion || customData == Hitters::bomb || customData == Hitters::bomb_arrow) && this.get_f32("keg_explode") == 0.0f)
+			if ((customData == Hitters::fire || customData == Hitters::burn || customData == Hitters::explosion || 
+				customData == Hitters::bomb || customData == Hitters::bomb_arrow) && this.get_f32("keg_explode") == 0.0f)
 			{
 				this.set_f32("keg_explode", getGameTime() + (30.0f * 1.0f));
 				this.SetLightRadius(this.get_f32("explosive_radius") * 0.5f);
-				CSprite@ sprite = this.getSprite();
-				sprite.SetEmitSound("/Sparkle.ogg");
-				sprite.SetEmitSoundSpeed(1.0f);
-				sprite.SetEmitSoundVolume(1.0f);
-				sprite.SetEmitSoundPaused(false);
+				this.getSprite().PlaySound("/Sparkle.ogg", 1.00f, 1.00f);
+				this.getSprite().PlaySound("MigrantScream1.ogg", 1.00f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 				ratio *= 0.0f;
 			}
-			else ratio *= 0.30f;
+			else ratio *= 0.50f;
 			
 			this.set_f32("keg_health", this.get_f32("keg_health") + (ratio*dmg));
 			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
@@ -167,7 +165,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					break;
 
 				default:
-					ratio *= 0.20f;
+					ratio *= 0.30f;
 					break;
 			}
 			
@@ -189,7 +187,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					ratio *= 0.10f;
 					break;
 
-				default: ratio *= 0.20f;
+				default: ratio *= 0.30f;
 					break;
 			}
 			
