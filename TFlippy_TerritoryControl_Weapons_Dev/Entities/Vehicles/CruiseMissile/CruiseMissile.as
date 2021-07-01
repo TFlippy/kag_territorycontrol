@@ -143,6 +143,12 @@ void onTick(CBlob@ this)
 	}
 	if (this.hasTag("offblast"))
 	{
+		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if (point !is null && point.getOccupied() !is null)
+		{
+			this.server_DetachFromAll();
+		}
+
 		Vec2f dir;
 
 		if (this.get_u32("fuel_timer") > getGameTime())
@@ -208,6 +214,16 @@ void onTick(CBlob@ this)
 	}
 }
 
+bool canBePutInInventory(CBlob@ this, CBlob@ inventoryBlob)
+{
+	if (inventoryBlob.hasTag("human") || inventoryBlob.getName() == "backpackblob")
+	{
+		if (inventoryBlob.isMyPlayer()) Sound::Play("NoAmmo");
+		return false;
+	}
+	else return true;
+}
+
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (isServer())
@@ -239,20 +255,14 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (this.hasTag("offblast")) return;
 
-	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-	if (point is null) return;
-
-	if (point.getOccupied() is null)
+	CPlayer@ ply = caller.getPlayer();
+	if (ply !is null)
 	{
-		CPlayer@ ply = caller.getPlayer();
-		if (ply !is null)
-		{
-			CBitStream params;
-			params.write_u16(caller.getNetworkID());
-			params.write_u16(ply.getNetworkID());
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		params.write_u16(ply.getNetworkID());
 
-			caller.CreateGenericButton(11, Vec2f(0.0f, -5.0f), this, this.getCommandID("offblast"), "Off blast!", params);
-		}
+		caller.CreateGenericButton(11, Vec2f(0.0f, -5.0f), this, this.getCommandID("offblast"), "Off blast!", params);
 	}
 }
 
