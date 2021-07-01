@@ -28,7 +28,7 @@ void onTick(CBlob@ this)
 			{
 				//can't get into carried blob - can pick it up after they get in though
 				//(prevents dinghy rockets)
-				if (blob.isAttachedToPoint("PICKUP"))
+				if (blob.isAttachedToPoint("PICKUP") && !blob.hasTag("usable by anyone"))
 					continue;
 
 				if (blob !is this.getIgnoreCollisionBlob())

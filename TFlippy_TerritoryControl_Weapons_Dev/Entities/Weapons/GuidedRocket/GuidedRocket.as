@@ -188,10 +188,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (this.hasTag("offblast")) return;
 
-	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-	if (point is null) return;
-
-	if (point.getOccupied() is null)
+	if (caller.isAttached() ? caller.isAttachedToPoint("PILOT") || caller.isAttachedToPoint("FLYER") : true)
 	{
 		CBitStream params;
 		caller.CreateGenericButton(11, Vec2f(0.0f, 0.0f), this, this.getCommandID("offblast"), "Off blast!", params);
@@ -203,6 +200,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("offblast"))
 	{
 		if (this.hasTag("offblast")) return;
+
+		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+		if (point !is null && point.getOccupied() !is null)
+		{
+			this.server_DetachFromAll();
+		}
 
 		// this.setPosition(this.getPosition() + Vec2f(0, -32)); // Hack
 		this.setAngleDegrees(0);
