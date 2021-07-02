@@ -72,7 +72,9 @@ void onTick(CBlob@ this)
 							if (rmb) dir = -dir;
 
 							// print("" + blob.getMass());
-							blob.AddForce(dir * (Maths::Clamp(maxDistance - dist, 0, maxDistance) * 0.80f));
+							blob.AddForce(dir * Maths::Min(50, blob.getMass()) * ((maxDistance - dist) / maxDistance * 0.80f));
+
+							
 
 							if (lmb)
 							{
