@@ -4,9 +4,9 @@
 void onInit(CBlob@ this)
 {
 	CShape@ shape = this.getShape();
-	shape.SetRotationsAllowed(true);
 	shape.getConsts().mapCollisions = false;
-	shape.SetStatic(true);
+	shape.SetRotationsAllowed(false);
+	//shape.SetStatic(true);
 	this.getSprite().getConsts().accurateLighting = false;  
 	this.getSprite().RotateBy(XORRandom(4) * 90, Vec2f(0, 0));
 	this.getSprite().SetZ(-50); //background
