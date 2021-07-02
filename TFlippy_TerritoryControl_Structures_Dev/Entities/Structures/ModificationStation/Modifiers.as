@@ -264,6 +264,8 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 			target.Tag("Sulphur Light");
 			target.SetLightRadius(96.0f);
 			target.SetLightColor(SColor(255, 20, 120, 255));
+			target.SetLight(true); //Also reignites it in case it has gone out
+			target.getSprite().SetAnimation("fire");
 		}
 		else if (name == "Reduce Drag")
 		{
