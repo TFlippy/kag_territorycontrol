@@ -37,14 +37,27 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		priceMod *= 5;
 	}
 
+	//REPAIR AND REINFORCE
+	if (target.maxQuantity <= 1 && !target.hasTag("flesh") && target.getHealth() < target.getInitialHealth()) //obviously cant heal flesh things
+	{
+		AddIconToken("$repair$", "ModificationIcons.png", Vec2f(16, 16), 0);
+		ShopItem@ s = addShopItem(this, "Repair", "$repair$", "Repair", "Repair 10% of health", false);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 1 * priceMod); //price is set at 1 iron ingot regardless of the entity (should be fine though)
+		s.spawnNothing = true;
+	}
+	if (Unbound || (!target.hasTag("flesh"))) //Only reinforce to 1.5x hp at most, can't reinforce flesh unless unbound
+	if (target.getHealth() == target.getInitialHealth()) //can't reinforce damaged things or already reinforced things
+	{
+		ShopItem@ s = addShopItem(this, "Reinforce", "$mat_ironingot$", "Reinforce", "Increase health by 50%", false);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 10 * priceMod);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50 * priceMod);
+		s.spawnNothing = true;
+	}
+
 	//GUN MODIFIERS
 	GunSettings@ settings;
 	if(target.get("gun_settings", @settings)) //Is a gun
 	{
-		if (target.hasTag("heavy weight"))
-		{
-			priceMod *= 2; //Heavy guns are more expensive to modify
-		}
 		
 		if (!target.hasTag("MaximumdakkaMod") && settings.FIRE_INTERVAL < 10 && settings.TOTAL > 20) //only works on guns which can already fire quite fast
 		{
@@ -65,6 +78,13 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 			AddRequirement(s.requirements, "coin", "", "Coins", 50 * priceMod);
 			s.spawnNothing = true;
 		}
+		if (settings.TOTAL > 5 && !target.hasTag("heavy weight"))
+		{
+			ShopItem@ s = addShopItem(this, "Drum Clip", "$steak$", "Gun-DrumClip", "Gun can hold much more ammo at once, but becomes heavy", false);
+			AddRequirement(s.requirements, "coin", "", "Coins", 100 * priceMod);
+			AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 20 * priceMod);
+			s.spawnNothing = true;
+		}
 
 		//MORE BIZZAR GUN EFFECTS
 		if (settings.B_SPEED > 10) //only slow guns which need to be slowed
@@ -75,23 +95,6 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 			s.spawnNothing = true;
 		}
 
-	}
-
-	//REPAIR AND REINFORCE
-	if (target.maxQuantity <= 1 && !target.hasTag("flesh") && target.getHealth() < target.getInitialHealth()) //obviously cant heal flesh things
-	{
-		AddIconToken("$repair$", "ModificationIcons.png", Vec2f(16, 16), 0);
-		ShopItem@ s = addShopItem(this, "Repair", "$repair$", "Repair", "Repair 10% of health", false);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 1 * priceMod); //price is set at 1 iron ingot regardless of the entity (should be fine though)
-		s.spawnNothing = true;
-	}
-	if (Unbound || (!target.hasTag("flesh"))) //Only reinforce to 1.5x hp at most, can't reinforce flesh unless unbound
-	if (target.getHealth() == target.getInitialHealth()) //can't reinforce damaged things or already reinforced things
-	{
-		ShopItem@ s = addShopItem(this, "Reinforce", "$mat_ironingot$", "Reinforce", "Increase health by 50%", false);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 10 * priceMod);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50 * priceMod);
-		s.spawnNothing = true;
 	}
 
 	//GENERAL MODFIERS
@@ -237,6 +240,12 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 				settings.B_DAMAGE = 0.0f;
 				target.set_u8("CustomPenetration", 0); //Terrain damage is also 0
 				settings.G_RECOIL = 0; //Recoil is set to 0 though bullets still do no damage
+			}
+			else if (spl[1] == "DrumClip")
+			{
+				settings.TOTAL *= 2;
+				settings.RELOAD_TIME *= 5;
+				target.Tag("heavy weight");
 			}
 		}
 	}
