@@ -60,18 +60,18 @@ void onTick(CBlob@ this)
 {
 	const f32 power = this.get_f32("deity_power");
 	float range = Maths::Sqrt(power) + 10.0f; //area around altar that will be affected by stone autorepair
-	int tileChecks = range / 4 + 5; //the amount of times we'll check random tiles until a tile that is hurt is found
+	int tileChecks = range / 4 + 5; //the amount of tiles checked per tick
 	//print(range+": Range, "+ tileChecks+": TileChecks");
 
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 	Vec2f topLeft = pos - Vec2f((range / 2.0f) * 8.0f, (range / 2.0f) * 8.0f);
 
-	float divisions = (range * range) / tileChecks;
+	float divisions = (range * range) / tileChecks; //How many ticks it takes to go over the entire area
 
 	if (isServer())
 	{
-		int place = (getGameTime()/15 % divisions) * tileChecks;
+		int place = (getGameTime()/15 % divisions) * tileChecks; //Uses modulo to consistantly generate an order
 
 		for (int i = 0; i < tileChecks; i++)
 		{
@@ -80,19 +80,18 @@ void onTick(CBlob@ this)
 			Vec2f tileWorldPos = topLeft + Vec2f(x * 8.0f, y * 8.0f); 
 			//print(x + " " + y);
 			TileType tile = map.getTile(tileWorldPos).type;
-
-			//ParticleAnimated("SmallSteam", tileWorldPos, Vec2f(0,0), float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
-
 			//Castle back block
 			switch(tile)
 			{
 				case CMap::tile_castle_back + 13:
 				case CMap::tile_castle_back + 14:
 				case CMap::tile_castle_back + 15:
+					makeParticle(tileWorldPos);
 					map.server_SetTile(tileWorldPos, tile - 1);
 					break;
 				case CMap::tile_castle_back + 12:
 				case CMap::tile_castle_moss:
+					makeParticle(tileWorldPos);
 					map.server_SetTile(tileWorldPos, CMap::tile_castle_back);
 					break;
 			}
@@ -103,17 +102,29 @@ void onTick(CBlob@ this)
 				if (tile > CMap::tile_castle_d1 && tile != CMap::tile_castle_moss)
 				{
 					//repair by one
+					makeParticle(tileWorldPos);
 					map.server_SetTile(tileWorldPos, tile - 1);
 				}
 				else
 				{
 					//set to castle block since repairing would mess it up
+					makeParticle(tileWorldPos);
 					map.server_SetTile(tileWorldPos, CMap::tile_castle);
 				}
 			}
 
 			place++;
 		}
+	}
+}
+
+void makeParticle(Vec2f pos)
+{
+	CParticle@ spark = ParticleAnimated("SmallSteam", pos + Vec2f(0,4.0f), Vec2f(0,0), float(XORRandom(360)), 
+		0.5f + XORRandom(100) * 0.01f, 3, XORRandom(100) * -0.00005f, true);
+	if (spark !is null)
+	{
+		spark.Z = 1000;
 	}
 }
 
