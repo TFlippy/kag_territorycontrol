@@ -5,6 +5,7 @@
 #include "Hitters.as";
 #include "CustomBlocks.as";
 #include "GunCommon.as";
+#include "RunnerCommon.as";
 
 void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 {
@@ -251,7 +252,7 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 			}
 			else if (spl[1] == "DrumClip")
 			{
-				settings.TOTAL *= 2;
+				settings.TOTAL *= 2; //Increases ammo per clip (only on guns with clip size > 5) but heavily increases reload time
 				settings.RELOAD_TIME *= 5;
 				target.Tag("heavy weight");
 			}
@@ -279,6 +280,12 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 		else if (name == "Reduce Friction")
 		{
 			target.getShape().setFriction(0.01f);
+			RunnerMoveVars@ moveVars;
+			if (target.get("moveVars", @moveVars))
+			{
+				moveVars.stoppingForce = 0.0001f;
+				moveVars.stoppingForceAir = 0.0001f;
+			}
 		}
 		else if (name == "Repair")
 		{
