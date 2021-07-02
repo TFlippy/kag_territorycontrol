@@ -63,18 +63,25 @@ void onTick(CBlob@ this)
 	int tileChecks = range / 4 + 5; //the amount of times we'll check random tiles until a tile that is hurt is found
 	//print(range+": Range, "+ tileChecks+": TileChecks");
 
-	Random rand(getGameTime());
-
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 	Vec2f topLeft = pos - Vec2f((range / 2.0f) * 8.0f, (range / 2.0f) * 8.0f);
 
+	float divisions = (range * range) / tileChecks;
+
 	if (isServer())
 	{
+		int place = (getGameTime()/15 % divisions) * tileChecks;
+
 		for (int i = 0; i < tileChecks; i++)
 		{
-			Vec2f tileWorldPos = topLeft + Vec2f(rand.NextFloat() * range * 8.0f, rand.NextFloat() * range * 8.0f); 
+			int x = Maths::Floor(place/range);
+			int y = Maths::Floor(place - x * range);
+			Vec2f tileWorldPos = topLeft + Vec2f(x * 8.0f, y * 8.0f); 
+			//print(x + " " + y);
 			TileType tile = map.getTile(tileWorldPos).type;
+
+			//ParticleAnimated("SmallSteam", tileWorldPos, Vec2f(0,0), float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
 
 			//Castle back block
 			switch(tile)
@@ -103,8 +110,9 @@ void onTick(CBlob@ this)
 					//set to castle block since repairing would mess it up
 					map.server_SetTile(tileWorldPos, CMap::tile_castle);
 				}
-				break;
 			}
+
+			place++;
 		}
 	}
 }
