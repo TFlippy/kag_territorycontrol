@@ -152,6 +152,14 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 50 * priceMod);
 		s.spawnNothing = true;
 	}
+	if (!target.hasScript("StickyMod") && target.getMass() < 100 && !target.hasTag("player") && !target.hasTag("vehicle"))
+	{
+		ShopItem@ s = addShopItem(this, "Sticky", "$mat_oil$", "Script-StickyMod.as", "Stops moving when it touches a wall", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100 * priceMod);
+		AddRequirement(s.requirements, "blob", "mat_oil", "Oil", 50 * priceMod);
+		AddRequirement(s.requirements, "blob", "mat_dirt", "Dirt", 50 * priceMod);
+		s.spawnNothing = true;
+	}
 
 	//UNBOUND ONLY MODIFIERS
 	if (Unbound)
