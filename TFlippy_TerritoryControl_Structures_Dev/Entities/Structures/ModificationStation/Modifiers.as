@@ -97,6 +97,14 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 
 	}
 
+	//SPECIFIC MODIFIERS
+	if (target.getName() == "lantern" && !target.hasTag("Sulphur Light"))
+	{
+		ShopItem@ s = addShopItem(this, "Sulphur Lantern", "$lantern$", "Sulphur Light", "Brighter and blue than normal lantern fire", false);
+		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 50 * priceMod);
+		s.spawnNothing = true;
+	}
+
 	//GENERAL MODFIERS
 	if (!target.hasScript("TimedDeathMod.as"))
 	{
@@ -144,7 +152,7 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		s.spawnNothing = true;
 	}
 
-	//UNBOUND ONLY Modifiers
+	//UNBOUND ONLY MODIFIERS
 	if (Unbound)
 	{
 		if (shape.getElasticity() < 0.8f)
@@ -251,7 +259,13 @@ void ModifyWith(CBlob@ this, CBlob @caller, CBlob@ target, string name)
 	}
 	else
 	{
-		if (name == "Reduce Drag")
+		if (name == "Sulphur Light")
+		{
+			target.Tag("Sulphur Light");
+			target.SetLightRadius(96.0f);
+			target.SetLightColor(SColor(255, 20, 120, 255));
+		}
+		else if (name == "Reduce Drag")
 		{
 			target.Tag("AerodynamicMod");
 			target.getShape().setDrag(target.getShape().getDrag() * 0.2f); //CURRENTLY DIRECT CHANGES LIKE THIS MAY NOT BE STORED IN SAVE FILES but the tag deffinitly would be
