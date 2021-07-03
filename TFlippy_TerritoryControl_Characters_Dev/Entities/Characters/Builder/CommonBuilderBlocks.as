@@ -775,11 +775,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		b.size.Set(56, 32);
 		blocks[3].push_back(b);
 	}
-	{
-		BuildBlock b(0, "kudzucore", "$kudzucore$", "Quick growing plant here only for testing purposes");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
-		blocks[3].push_back(b);
-	}
 	// {
 		// BuildBlock b(0, "barricade", "$icon_barricade$", "Barricade\neee");
 		// AddRequirement(b.reqs, "blob", "mat_concrete", "Concrete", 100);

@@ -843,6 +843,28 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 				col = c_iron;
 			break;
 
+
+			// KUDZU
+			case CMap::tile_kudzu:
+			case CMap::tile_kudzu_v0:
+			case CMap::tile_kudzu_v1:
+			case CMap::tile_kudzu_v2:
+			case CMap::tile_kudzu_v3:
+			case CMap::tile_kudzu_v4:
+			case CMap::tile_kudzu_v5:
+			case CMap::tile_kudzu_v6:
+			case CMap::tile_kudzu_v7:
+			case CMap::tile_kudzu_v8:
+			case CMap::tile_kudzu_v9:
+			case CMap::tile_kudzu_v10:
+			case CMap::tile_kudzu_v11:
+			case CMap::tile_kudzu_v12:
+			case CMap::tile_kudzu_v13:
+			case CMap::tile_kudzu_v14:
+			case CMap::tile_kudzu_d0:
+				col = c_grass;
+			break;
+
 			// GLASS
 			case CMap::tile_glass:
 			case CMap::tile_glass_v0:

@@ -108,10 +108,10 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 	Tile backtile = map.getTile(pos);
 	TileType type = backtile.type;
 
-	if (!map.hasSupportAtPos(pos)) 
-		return false;
+	//if (!map.hasSupportAtPos(pos)) 
+	//	return false;
 
-	if (map.isTileBedrock(type) || map.isTileSolid(type)) 
+	if (map.isTileBedrock(type) || map.isTileSolid(type) || isTileBGlass(type)) 
 	{
 		return false;
 	}
@@ -198,5 +198,5 @@ const Vec2f[] directions =
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
-	return false;
+	return !this.getShape().isStatic();
 }
