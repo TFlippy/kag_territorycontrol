@@ -80,7 +80,8 @@ void onTick(CBlob@ this)
 					map.server_SetTile(sprout + offset, CMap::tile_kudzu);
 					sprouts[i] = Vec2f(sprout + offset);
 				}
-				//ParticleAnimated("SmallFire", sprout + offset, Vec2f(0, 0), 0, 1.0f, 2, 0.25f, false);
+				//CParticle@ particle = ParticleAnimated("SmallFire", sprout + offset, Vec2f(0, 0), 0, 1.0f, 2, 0.0f, false);
+				//particle.Z = 500;
 			}
 		}
 		
@@ -102,11 +103,12 @@ bool isDead(Vec2f pos, CMap@ map)
 bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 {
 	Tile backtile = map.getTile(pos);
+	TileType type = backtile.type;
 
 	if (!map.hasSupportAtPos(pos)) 
 		return false;
 
-	if (map.isTileBedrock(backtile.type) || map.isTileSolid(backtile.type)) 
+	if (map.isTileBedrock(type) || map.isTileSolid(type)) 
 	{
 		return false;
 	}
@@ -156,9 +158,39 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 		}
 	}
 
-	return true;
+	//Check if it has suppor there
+	if (map.isTileBackgroundNonEmpty(backtile)) //Can grow on backgrounds
+	{
+		return true;
+	}
+
+	if ((this.getPosition() - pos).Length() < 15.0f) //Can be unsuported while near the core
+	{
+		return true;
+	}
+	
+	int Neighbours = 0;
+	for (u8 i = 0; i < 8; i++)
+    {
+		Tile test = map.getTile(pos + directions[i]);
+        if (map.isTileSolid(test) && !isTileKudzu(test.type)) return true; //Can grow while at least 1 non kudzu tile is around it
+    }
+
+	return false;
 	
 }
+
+const Vec2f[] directions =
+{
+	Vec2f(0, -8),
+	Vec2f(0, 8),
+	Vec2f(8, 0),
+	Vec2f(-8, 0),
+	Vec2f(-8, -8),
+	Vec2f(-8, 8),
+	Vec2f(8, -8),
+	Vec2f(8, 8)
+};
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
