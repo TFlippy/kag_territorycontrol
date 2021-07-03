@@ -13,14 +13,14 @@ const LootItem@[] c_items =
 	LootItem("mat_concrete", 200, 300, 700),
 	LootItem("mat_mithrilingot", 0, 32, 50),
 	LootItem("mat_mithril", 0, 100, 250),
-	
+
 	// Ammo
 	LootItem("mat_rifleammo", 0, 40, 400),
 	LootItem("mat_pistolammo", 0, 60, 400),
 	LootItem("mat_shotgunammo", 0, 30, 400),
 	LootItem("mat_battery", 0, 100, 100),
 	LootItem("mat_grenade", 0, 8, 16),
-	
+
 	// Weapons
 	LootItem("amr", 1, 1, 100),
 	LootItem("sniper", 1, 1, 200),
@@ -40,7 +40,7 @@ const LootItem@[] c_items =
 	LootItem("rekt", 1, 0, 15),
 	LootItem("zatniktel", 1, 0, 20),
 	LootItem("blaster", 1, 0, 25),
-	
+
 	// Misc
 	LootItem("foodcan", 2, 5, 500),
 	LootItem("bp_automation_advanced", 1, 0, 1000),
@@ -60,7 +60,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$chest_open$", "InteractionIcons.png", Vec2f(32, 32), 20);
 
 	CSprite@ sprite = this.getSprite();
-	if(sprite !is null)
+	if (sprite !is null)
 	{
 		u8 team_color = XORRandom(5);
 		this.set_u8("team_color", team_color);
@@ -74,7 +74,10 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (caller.getTeamNum() != 250 && !this.hasTag("opened") && caller.get_u8("deity_id") != Deity::foghorn)
 	{
-		CButton@ button = caller.CreateGenericButton("$chest_open$", Vec2f(0, 0), this, this.getCommandID("chest_open"), "Open");
+		if (!this.getMap().rayCastSolid(caller.getPosition(), this.getPosition()))
+		{
+			CButton@ button = caller.CreateGenericButton("$chest_open$", Vec2f(0, 0), this, this.getCommandID("chest_open"), "Open");
+		}
 	}
 }
 
@@ -91,12 +94,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void onDie(CBlob@ this)
 {
-	
 	if (isServer())
 	{
 		if (this.hasTag("opened")) return;
 
-		for(int i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			server_SpawnRandomItem(this, @c_items);
 		}
