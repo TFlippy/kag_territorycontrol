@@ -1,4 +1,5 @@
 ﻿#include "CustomBlocks.as"
+#include "Hitters.as"
 
 void onInit(CBlob @ this)
 {
@@ -70,7 +71,7 @@ void onTick(CBlob@ this)
 				}
 			
 
-				if (canGrowTo(sprout + offset, map))
+				if (canGrowTo(this, sprout + offset, map))
 				{
 					map.server_SetTile(sprout + offset, CMap::tile_glass);
 					sprouts[i] = Vec2f(sprout + offset);
@@ -94,7 +95,7 @@ bool isDead(Vec2f pos, CMap@ map)
 	return false;
 }
 
-bool canGrowTo(Vec2f pos, CMap@ map)
+bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 {
 	Tile backtile = map.getTile(pos);
 
@@ -139,6 +140,11 @@ bool canGrowTo(Vec2f pos, CMap@ map)
 					if ((middle.x > bpos.x - width * 0.5f - halfsize) && (middle.x - halfsize < bpos.x + width * 0.5f)
 							&& (middle.y > bpos.y - height * 0.5f - halfsize) && (middle.y - halfsize < bpos.y + height * 0.5f))
 					{
+						if (bname != "kudzucore")
+						{
+							this.server_Hit(b, bpos, bpos - pos, 0.125f, Hitters::spikes, false);
+						}
+						
 						return false;
 					}
 				}	
