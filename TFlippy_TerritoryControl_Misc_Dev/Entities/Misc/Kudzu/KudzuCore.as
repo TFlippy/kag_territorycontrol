@@ -14,6 +14,10 @@ void onInit(CBlob @ this)
 
 	this.getCurrentScript().tickFrequency = 15;
 
+	this.SetLight(true);
+	this.SetLightRadius(30.0f);
+	this.SetLightColor(SColor(255, 155, 255, 0));
+
 	//Starts offline
 }
 
@@ -73,10 +77,10 @@ void onTick(CBlob@ this)
 
 				if (canGrowTo(this, sprout + offset, map))
 				{
-					map.server_SetTile(sprout + offset, CMap::tile_glass);
+					map.server_SetTile(sprout + offset, CMap::tile_kudzu);
 					sprouts[i] = Vec2f(sprout + offset);
 				}
-				ParticleAnimated("SmallFire", sprout + offset, Vec2f(0, 0), 0, 1.0f, 2, 0.25f, false);
+				//ParticleAnimated("SmallFire", sprout + offset, Vec2f(0, 0), 0, 1.0f, 2, 0.25f, false);
 			}
 		}
 		
@@ -88,7 +92,7 @@ void onTick(CBlob@ this)
 bool isDead(Vec2f pos, CMap@ map)
 {
 	Tile backtile = map.getTile(pos);
-	if (!isTileGlass(backtile.type))
+	if (!isTileKudzu(backtile.type))
 	{
 		return true;
 	}
@@ -107,7 +111,7 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 		return false;
 	}
 	double halfsize = map.tilesize * 0.5f;
-	Vec2f middle = pos + Vec2f(halfsize, halfsize);
+	Vec2f middle = pos; //+ Vec2f(halfsize, halfsize);
 
 	CBlob@[] blobsInRadius;
 	if (map.getBlobsInRadius(middle, map.tilesize, @blobsInRadius))

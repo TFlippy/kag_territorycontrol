@@ -1315,6 +1315,39 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 				return CMap::tile_empty;
 			}
 
+			case CMap::tile_kudzu:
+				return CMap::tile_kudzu_d0;
+
+			case CMap::tile_kudzu_v0:
+			case CMap::tile_kudzu_v1:
+			case CMap::tile_kudzu_v2:
+			case CMap::tile_kudzu_v3:
+			case CMap::tile_kudzu_v4:
+			case CMap::tile_kudzu_v5:
+			case CMap::tile_kudzu_v6:
+			case CMap::tile_kudzu_v7:
+			case CMap::tile_kudzu_v8:
+			case CMap::tile_kudzu_v9:
+			case CMap::tile_kudzu_v10:
+			case CMap::tile_kudzu_v11:
+			case CMap::tile_kudzu_v12:
+			case CMap::tile_kudzu_v13:
+			case CMap::tile_kudzu_v14:
+			{
+				Vec2f pos = map.getTileWorldPosition(index);
+
+				map.server_SetTile(pos, CMap::tile_kudzu_d0);
+
+				for (u8 i = 0; i < 4; i++)
+				{
+					kudzu_Update(map, map.getTileWorldPosition(index) + directions[i]);
+				}
+				return CMap::tile_kudzu_d0;
+			}
+
+			case CMap::tile_kudzu_d0:
+				return CMap::tile_empty;
+
 			case CMap::tile_concrete:
 				return CMap::tile_concrete_d0;
 
@@ -1807,6 +1840,42 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				if (isClient()) Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 
+			//Kudzu
+			case CMap::tile_kudzu:
+			{
+				Vec2f pos = map.getTileWorldPosition(index);
+				kudzu_SetTile(map, pos);
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				map.RemoveTileFlag( index, Tile::WATER_PASSES);
+
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				break;
+			}
+
+			case CMap::tile_kudzu_v0:
+			case CMap::tile_kudzu_v1:
+			case CMap::tile_kudzu_v2:
+			case CMap::tile_kudzu_v3:
+			case CMap::tile_kudzu_v4:
+			case CMap::tile_kudzu_v5:
+			case CMap::tile_kudzu_v6:
+			case CMap::tile_kudzu_v7:
+			case CMap::tile_kudzu_v8:
+			case CMap::tile_kudzu_v9:
+			case CMap::tile_kudzu_v10:
+			case CMap::tile_kudzu_v11:
+			case CMap::tile_kudzu_v12:
+			case CMap::tile_kudzu_v13:
+			case CMap::tile_kudzu_v14:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES | Tile::FLAMMABLE);
+
+				break;
+
+			case CMap::tile_kudzu_d0:
+				OnKudzuTileHit(map, index);
+				break;
+			//Kudzu End //TODO: 
+
 			case CMap::tile_concrete:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
@@ -2235,6 +2304,16 @@ void OnBGlassTileHit(CMap@ map, u32 index)
 	}
 }
 
+void OnKudzuTileHit(CMap@ map, u32 index)
+{
+	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+	}
+}
+
 void OnGlassTileDestroyed(CMap@ map, u32 index)
 {
 	if (isClient())
@@ -2353,6 +2432,42 @@ bool isBGlassTile(CMap@ map, Vec2f pos)
 {
     u16 tile = map.getTile(pos).type;
     return tile >= CMap::tile_bglass && tile <= CMap::tile_bglass_v14;
+}
+
+//KUDZU
+u8 kudzu_GetMask(CMap@ map, Vec2f pos)
+{
+    u8 mask = 0;
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        if (isKudzuTile(map, pos + directions[i])) mask |= 1 << i;
+    }
+
+    return mask;
+}
+
+void kudzu_SetTile(CMap@ map, Vec2f pos)
+{
+    map.SetTile(map.getTileOffset(pos), CMap::tile_kudzu + kudzu_GetMask(map, pos));
+
+    for (u8 i = 0; i < 4; i++)
+    {
+        kudzu_Update(map, pos + directions[i]);
+    }
+}
+
+void kudzu_Update(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    if (isKudzuTile(map, pos))
+		map.server_SetTile(pos,CMap::tile_kudzu+kudzu_GetMask(map,pos));
+}
+
+bool isKudzuTile(CMap@ map, Vec2f pos)
+{
+    u16 tile = map.getTile(pos).type;
+    return tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_v14;
 }
 
 void OnPlasteelTileHit(CMap@ map, u32 index)
