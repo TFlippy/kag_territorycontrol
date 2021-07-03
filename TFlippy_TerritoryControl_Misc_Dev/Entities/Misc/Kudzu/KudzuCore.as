@@ -126,7 +126,6 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 		return false;
 	}
 
-	print(type + "" + map.isTileSolid(type));
 	double halfsize = map.tilesize * 0.5f;
 	Vec2f middle = pos; //+ Vec2f(halfsize, halfsize);
 
