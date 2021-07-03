@@ -79,7 +79,17 @@ void onTick(CBlob@ this)
 
 				if (canGrowTo(this, sprout + offset, map))
 				{
-					map.server_SetTile(sprout + offset, CMap::tile_kudzu);
+					Tile backtile = map.getTile(sprout + offset);
+					TileType type = backtile.type;
+					if(isTileKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
+					{
+						//Going over already there kudzu tile
+					}
+					else
+					{
+						map.server_SetTile(sprout + offset, CMap::tile_kudzu);
+					}
+					
 					sprouts[i] = Vec2f(sprout + offset);
 				}
 				//Testing Particles
@@ -111,10 +121,12 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 	//if (!map.hasSupportAtPos(pos)) 
 	//	return false;
 
-	if (map.isTileBedrock(type) || map.isTileSolid(type) || isTileBGlass(type)) 
+	if (map.isTileBedrock(type) || (map.isTileSolid(type)) || isTileBGlass(type))
 	{
 		return false;
 	}
+
+	print(type + "" + map.isTileSolid(type));
 	double halfsize = map.tilesize * 0.5f;
 	Vec2f middle = pos; //+ Vec2f(halfsize, halfsize);
 
@@ -161,7 +173,7 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 		}
 	}
 
-	//Check if it has suppor there
+	//Check if it has support there
 	if (map.isTileBackgroundNonEmpty(backtile)) //Can grow on backgrounds
 	{
 		return true;

@@ -861,6 +861,7 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 			case CMap::tile_kudzu_v12:
 			case CMap::tile_kudzu_v13:
 			case CMap::tile_kudzu_v14:
+			case CMap::tile_kudzu_f14: //Flower variant
 			case CMap::tile_kudzu_d0:
 				col = c_grass;
 			break;
@@ -1355,6 +1356,7 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 			case CMap::tile_kudzu_v12:
 			case CMap::tile_kudzu_v13:
 			case CMap::tile_kudzu_v14:
+			case CMap::tile_kudzu_f14:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
 
@@ -1889,6 +1891,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_kudzu_v12:
 			case CMap::tile_kudzu_v13:
 			case CMap::tile_kudzu_v14:
+			case CMap::tile_kudzu_f14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES | Tile::FLAMMABLE);
 
 				break;
@@ -2456,7 +2459,6 @@ bool isBGlassTile(CMap@ map, Vec2f pos)
     return tile >= CMap::tile_bglass && tile <= CMap::tile_bglass_v14;
 }
 
-//KUDZU
 u8 kudzu_GetMask(CMap@ map, Vec2f pos)
 {
     u8 mask = 0;
@@ -2465,6 +2467,10 @@ u8 kudzu_GetMask(CMap@ map, Vec2f pos)
     {
         if (isKudzuTile(map, pos + directions[i])) mask |= 1 << i;
     }
+	if (mask == 15 && XORRandom(10) == 0)
+	{
+		mask = 16; //flowers
+	}
 
     return mask;
 }
@@ -2489,7 +2495,7 @@ void kudzu_Update(CMap@ map, Vec2f pos)
 bool isKudzuTile(CMap@ map, Vec2f pos)
 {
     u16 tile = map.getTile(pos).type;
-    return tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_v14;
+    return tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_f14;
 }
 
 void OnPlasteelTileHit(CMap@ map, u32 index)

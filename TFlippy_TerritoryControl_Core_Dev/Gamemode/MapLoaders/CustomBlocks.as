@@ -114,6 +114,7 @@ namespace CMap
 		tile_kudzu_v12,
 		tile_kudzu_v13,
 		tile_kudzu_v14,
+		tile_kudzu_f14,
 		tile_kudzu_d0,
 
 		//TODO: ADD new kudzu tiles here??
