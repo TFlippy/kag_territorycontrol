@@ -766,13 +766,18 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		b.buildOnGround = true;
 		b.size.Set(16, 16);
 		blocks[3].push_back(b);
-  }
+    }
 	{
 		BuildBlock b(0, "tavern", "$icon_tavern$", "Tavern\nA poorly built cozy tavern.\nNeutrals may set their team here, paying you 20 coins for each spawn.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 350);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
 		b.buildOnGround = true;
 		b.size.Set(56, 32);
+		blocks[3].push_back(b);
+	}
+	{
+		BuildBlock b(0, "kudzucore", "$kudzucore$", "Quick growing plant here only for testing purposes");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
 		blocks[3].push_back(b);
 	}
 	// {
