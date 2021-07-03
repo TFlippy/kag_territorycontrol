@@ -21,6 +21,8 @@ void onInit(CBlob @ this)
 	//Starts offline
 }
 
+const u32 MAXSPROUTS = 10;
+
 void onTick(CBlob@ this)
 {
 	Vec2f[]@ sprouts;
@@ -36,9 +38,9 @@ void onTick(CBlob@ this)
 			sprouts.push_back(Vec2f(this.getPosition().x, this.getPosition().y));
 			newSprout = true;
 		}
-		else
+		else if (sprouts.length < MAXSPROUTS)
 		{
-			if (rand.NextRanged(sprouts.length*10) == sprouts.length*10 - 1)
+			if (rand.NextRanged(sprouts.length*7) == sprouts.length*7 - 1)
 			{
 				sprouts.push_back(Vec2f(this.getPosition().x, this.getPosition().y));
 				newSprout = true;
@@ -80,6 +82,7 @@ void onTick(CBlob@ this)
 					map.server_SetTile(sprout + offset, CMap::tile_kudzu);
 					sprouts[i] = Vec2f(sprout + offset);
 				}
+				//Testing Particles
 				//CParticle@ particle = ParticleAnimated("SmallFire", sprout + offset, Vec2f(0, 0), 0, 1.0f, 2, 0.0f, false);
 				//particle.Z = 500;
 			}
@@ -173,6 +176,7 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 	for (u8 i = 0; i < 8; i++)
     {
 		Tile test = map.getTile(pos + directions[i]);
+		//print(directions[i].x + " " + directions[i].y);
         if (map.isTileSolid(test) && !isTileKudzu(test.type)) return true; //Can grow while at least 1 non kudzu tile is around it
     }
 

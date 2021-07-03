@@ -1845,7 +1845,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
 				kudzu_SetTile(map, pos);
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES | Tile::FLAMMABLE);
 				map.RemoveTileFlag( index, Tile::WATER_PASSES);
 
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
