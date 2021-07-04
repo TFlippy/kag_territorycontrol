@@ -2489,7 +2489,6 @@ void kudzu_Update(CMap@ map, Vec2f pos)
     u16 tile = map.getTile(pos).type;
     if (isKudzuTile(map, pos))
 	{
-		print("Update a tile");
 		map.server_SetTile(pos,CMap::tile_kudzu+kudzu_GetMask(map,pos));
 	}
 }

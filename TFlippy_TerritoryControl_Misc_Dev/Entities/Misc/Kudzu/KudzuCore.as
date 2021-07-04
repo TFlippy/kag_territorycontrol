@@ -1,5 +1,6 @@
 ﻿#include "CustomBlocks.as"
 #include "Hitters.as"
+#include "HittersTC.as";
 
 void onInit(CBlob @ this)
 {
@@ -18,6 +19,8 @@ void onInit(CBlob @ this)
 	this.SetLightRadius(30.0f);
 	this.SetLightColor(SColor(255, 155, 255, 0));
 
+	
+
 	//Starts offline
 }
 
@@ -25,6 +28,7 @@ const u32 MAXSPROUTS = 10;
 
 void onTick(CBlob@ this)
 {
+	this.getSprite().SetRelativeZ(500);
 	Vec2f[]@ sprouts;
 	if (this.getShape().isStatic() && this.get("sprouts", @sprouts))
 	{
@@ -87,7 +91,6 @@ void onTick(CBlob@ this)
 					}
 					else
 					{
-						print("Growing a tile");
 						map.server_SetTile(sprout + offset, CMap::tile_kudzu);
 					}
 					
@@ -150,6 +153,7 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 						!b.hasTag("dead") &&
 						!b.hasTag("material") &&
 						!b.hasTag("projectile") &&
+						bname != "kudzucore" &&
 						bname != "bush")
 				{
 					//print(pos + " " +bpos);
@@ -161,10 +165,7 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map)
 					if ((middle.x > bpos.x - width * 0.5f - halfsize) && (middle.x - halfsize < bpos.x + width * 0.5f)
 							&& (middle.y > bpos.y - height * 0.5f - halfsize) && (middle.y - halfsize < bpos.y + height * 0.5f))
 					{
-						if (bname != "kudzucore")
-						{
-							this.server_Hit(b, bpos, bpos - pos, 0.125f, Hitters::spikes, false);
-						}
+						this.server_Hit(b, bpos, bpos - pos, 0.125f, HittersTC::poison, false);
 						
 						return false;
 					}
