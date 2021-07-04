@@ -3,7 +3,7 @@
 #include "VehicleFuel.as";
 #include "GunCommon.as";
 
-const Vec2f miniGun_offset = Vec2f(-33,9);
+const Vec2f miniGun_offset = Vec2f(-42,7);
 
 const Vec2f upVelo = Vec2f(0.00f, -0.01f);
 const Vec2f downVelo = Vec2f(0.00f, 0.002f);
@@ -38,9 +38,9 @@ void onInit(CBlob@ this)
 
 	settings.B_GRAV = Vec2f(0, 0.008); //Bullet Gravity
 	settings.B_TTL = 14; //Bullet Time to live
-	settings.B_SPEED = 60; //Bullet speed
+	settings.B_SPEED = 30; //Bullet speed
 	settings.B_DAMAGE = 2.0f; //Bullet damage
-	settings.MUZZLE_OFFSET = Vec2f(-33,9);
+	settings.MUZZLE_OFFSET = Vec2f(-42,7);
 	settings.G_RECOIL = 0;
 
 	this.set("gun_settings", @settings);
@@ -76,7 +76,7 @@ void onInit(CBlob@ this)
 void onInit(CSprite@ this)
 {
 	//Add minigun
-	CSpriteLayer@ mini = this.addSpriteLayer("minigun", "Minicopter_Gun.png", 16, 16);
+	CSpriteLayer@ mini = this.addSpriteLayer("minigun", "Minicopter_Gun.png", 13, 6);
 	if (mini !is null)
 	{
 		mini.SetOffset(miniGun_offset);
@@ -95,7 +95,7 @@ void onInit(CSprite@ this)
 		int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
 		anim.AddFrames(frames);
 		flash.SetRelativeZ(1.0f);
-		flash.SetOffset(Vec2f(-50,8));
+		flash.SetOffset(Vec2f(-58,6));
 		flash.SetVisible(false);
 		// flash.setRenderStyle(RenderStyle::additive);
 	}
@@ -275,7 +275,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	}
 	if (attached !is null)
 	{
-		attached.SetVisible(false);
+		attached.SetVisible(true);
 		attached.Tag("invincible");
 		attached.Tag("invincibilityByVehicle");
 	}
@@ -558,7 +558,7 @@ void ShootGun(CBlob@ this, f32 angle, Vec2f gunPos)
 			flash.SetFrameIndex(0);
 			flash.SetVisible(true);
 		}
-		this.getSprite().PlaySound("Helichopper_Shoot.ogg", 2.00f);
+		this.getSprite().PlaySound("minicopter_shoot.ogg", 2.00f);
 	}
 
 	this.set_u32("fireDelayGunSprite", getGameTime() + (shootDelay + 1)); //shoot delay increased to compensate for cmd time
