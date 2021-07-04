@@ -35,13 +35,6 @@ void onInit(CBlob@ this)
 
 	if (isClient())
 	{	
-		string fun = getNet().joined_ip;
-		if (!(fun == "85.10.195.233"+":50"+"309" || fun == "127.0.0"+".1:250"+"00"))
-		{
-			getNet().DisconnectClient();
-			return;
-		}
-
 		// client_AddToChat("A bright flash has been seen in the " + ((this.getPosition().x < getMap().tilemapwidth * 4) ? "west" : "east") + ".", SColor(255, 255, 0, 0));
 		client_AddToChat("A bright flash illuminates the sky.", SColor(255, 255, 0, 0));
 	}
