@@ -3,7 +3,7 @@ void onInit(CBlob@ this)
 	this.Tag("furniture");
 	this.Tag("usable by anyone");
 	this.set_f32("pickup_priority", 8.00f); // The lower, the higher priority
-	
+
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PILOT");
 	if (ap !is null)
 	{
@@ -25,7 +25,7 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
-}		
+}
 
 // Commented out just in case someone would want to have a jewish wedding in TC
 // bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -35,5 +35,5 @@ void onTick(CBlob@ this)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return blob.hasTag("furniture");
+    return blob.getShape().isStatic() || blob.hasTag("furniture");
 }

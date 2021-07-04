@@ -2,8 +2,6 @@
 #include "ShieldCommon.as";
 #include "Explosion.as";
 
-const f32 BLOB_DAMAGE = 20.0f;
-const f32 MAP_DAMAGE = 10.0f;
 const f32 modifier = 1;
 
 const string[] particles = 
@@ -15,17 +13,17 @@ const string[] particles =
 void onInit(CBlob@ this)
 {
 	this.server_SetTimeToDie(20);
-	
+
 	this.getShape().getConsts().mapCollisions = false;
 	this.getShape().getConsts().bullet = true;
 	this.getShape().getConsts().net_threshold_multiplier = 4.0f;
 
 	this.Tag("map_damage_dirt");
 	this.Tag("explosive");
-	
+
 	this.set_f32("map_damage_radius", 64.0f);
 	this.set_f32("map_damage_ratio", 0.2f);
-	
+
 	this.Tag("projectile");
 	this.getSprite().SetFrame(0);
 	this.getSprite().getConsts().accurateLighting = false;
@@ -33,7 +31,7 @@ void onInit(CBlob@ this)
 
 	this.SetMapEdgeFlags(CBlob::map_collide_left | CBlob::map_collide_right);
 	this.sendonlyvisible = false;
-	if(isClient())
+	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSound("Shell_Whistle.ogg");
@@ -44,16 +42,14 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	f32 angle = 0;
-
 	Vec2f velocity = this.getVelocity();
-	angle = velocity.Angle();
-	if(isServer()) Pierce(this, velocity, angle);
+	f32 angle = velocity.Angle();
+	if (isServer()) Pierce(this, velocity, angle);
 
 	this.setAngleDegrees(-angle + 90.0f);
-	
+
 	// this.getSprite().SetEmitSoundPaused(this.getVelocity().y < 0);
-	if(isClient())
+	if (isClient())
 	{
 		f32 modifier = Maths::Max(0, this.getVelocity().y * 0.02f);
 		this.getSprite().SetEmitSoundVolume(Maths::Max(0, modifier));
@@ -68,7 +64,7 @@ void Pierce(CBlob@ this, Vec2f velocity, const f32 angle)
 
 	Vec2f direction = velocity;
 	direction.Normalize();
-	
+
 	Vec2f position = this.getPosition();
 	Vec2f tip_position = position + direction * 4.0f;
 	Vec2f tail_position = position + direction * -4.0f;
@@ -85,16 +81,15 @@ void Pierce(CBlob@ this, Vec2f velocity, const f32 angle)
 		Vec2f temp_position = positions[i];
 		TileType type = map.getTile(temp_position).type;
 		const u32 offset = map.getTileOffset(temp_position);
-		
+
 		if (map.hasTileFlag(offset, Tile::SOLID))
 		{
 			onCollision(this, null, true);
 		}
-
 	}
-	
+
 	HitInfo@[] infos;
-	
+
 	if (map.getHitInfosFromArc(tail_position, -angle, 10, (tip_position - tail_position).getLength(), this, false, @infos))
 	{
 		for (uint i = 0; i < infos.length; i ++)
@@ -112,7 +107,7 @@ void Pierce(CBlob@ this, Vec2f velocity, const f32 angle)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	if (blob !is null) return (this.getTeamNum() != blob.getTeamNum() && blob.isCollidable());
+	if (blob !is null) return (this.getTickSinceCreated() > 5 && this.getTeamNum() != blob.getTeamNum() && blob.isCollidable());
 	else return false;
 }
 
@@ -144,35 +139,33 @@ void DoExplosion(CBlob@ this)
 		addToNextTick(this, rules, DoExplosion);
 		return;
 	}
-	
+
 	f32 angle = this.getOldVelocity().Angle();
 	// print("Modifier: " + modifier + "; Quantity: " + this.getQuantity());
 
 	this.set_f32("map_damage_radius", 32.0f);
 	this.set_f32("map_damage_ratio", 0.25f);
-	
+
 	Explode(this, 64.0f, 4.0f);
-	
+
 	for (int i = 0; i < XORRandom(4); i++) 
 	{
 		Vec2f dir = getRandomVelocity(angle, 1, 120);
 		dir.x *= 2;
 		dir.Normalize();
-		
+
 		LinearExplosion(this, dir, 8.0f + XORRandom(16) + (modifier * 8), 8 + XORRandom(24), 2, 0.25f, Hitters::explosion);
 	}
 
-	if(isClient())
+	if (isClient())
 	{
 		for (int i = 0; i < 5; i++)
 		{
 			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
 		}
-		
+
 		this.getSprite().Gib();
 	}
-	
-	
 }
 
 void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string filename = "SmallSteam")
