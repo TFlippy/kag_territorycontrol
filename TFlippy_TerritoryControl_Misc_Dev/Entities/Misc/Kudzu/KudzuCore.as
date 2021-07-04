@@ -151,6 +151,7 @@ void onTick(CBlob@ this)
 						{
 							CBlob@ core = server_CreateBlob("kudzucore", 0, sprout);
 							core.getShape().SetStatic(true);
+							Mutate(core); //Offspring start with 1 random mutation
 							this.set_u32("Duplication Time", 0); //No more duplicating after the first one
 						}
 						//Going over already there kudzu tile
@@ -191,7 +192,13 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 	//if (!map.hasSupportAtPos(pos)) 
 	//	return false;
 
-	if (map.isTileBedrock(type) || (map.isTileSolid(type)) || isTileBGlass(type))
+	if (map.isTileBedrock(type) || isTileBGlass(type))
+	{
+		return false;
+	}
+
+	
+	if (isTileSolid(pos, map) && !isTileKudzu(type)) //Dont go past solid blocks unless they are kudzu
 	{
 		return false;
 	}
@@ -271,7 +278,7 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
     {
 		Tile test = map.getTile(pos + directions[i]);
 		//print(directions[i].x + " " + directions[i].y);
-        if (map.isTileSolid(test) && !isTileKudzu(test.type)) return true; //Can grow while at least 1 non kudzu tile is around it
+        if (isTileSolid(pos + directions[i], map) && !isTileKudzu(test.type)) return true; //Can grow while at least 1 non kudzu tile is around it
     }
 
 	if (Vec2f(0.0f,-8.0f) == dir && this.hasTag("Mut_UpwardLines"))
@@ -292,6 +299,13 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 
 	return false;
 	
+}
+
+bool isTileSolid(Vec2f pos, CMap@ map)
+{
+	const u32 offset = map.getTileOffset(pos);
+	if (map.hasTileFlag(offset, Tile::SOLID)) return true;
+	return false;
 }
 
 void MutateTick(CBlob@ this)
