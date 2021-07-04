@@ -307,7 +307,6 @@ void MutateTick(CBlob@ this)
 		int r = rand.NextRanged(300);
 		if (r == 0)
 		{
-			print("CHECK");
 			Mutate(this);
 		}
 	}
