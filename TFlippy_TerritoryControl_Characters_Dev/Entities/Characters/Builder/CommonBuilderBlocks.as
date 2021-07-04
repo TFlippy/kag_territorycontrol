@@ -67,6 +67,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	AddIconToken("$tnt_block$", "World.png", Vec2f(8, 8), CMap::tile_tnt);
 	AddIconToken("$brick_block$", "World.png", Vec2f(8, 8), 412);
 	AddIconToken("$sand_block$", "World.png", Vec2f(8, 8), 220);
+	AddIconToken("$kudzu_block$", "World.png", Vec2f(8, 8), CMap::tile_kudzu);
 
 	//Buildings
 	AddIconToken("$icon_buildershop$", "BuilderShop.png", Vec2f(40, 24), 0, teamnum);
@@ -281,6 +282,11 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	{
 		BuildBlock b(0, "iron_platform", "$icon_ironplatform$", "Iron Platform\nReinforced one-way platform. Unbreakable by peasants.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 3);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_kudzu, "kudzu", "$kudzu_block$", "Mostly decorative Kudzu Leaves \n ");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
 		blocks[0].push_back(b);
 	}
 	// {

@@ -2458,7 +2458,7 @@ u8 kudzu_GetMask(CMap@ map, Vec2f pos)
         //if (isKudzuTile(map, pos + directions[i])) mask |= 1 << i;
 		if (kudzu_MaskOk(map, pos + directions[i])) mask |= 1 << i;
     }
-	if (mask == 15 && XORRandom(10) == 0)
+	if (mask == 15 && XORRandom(5) == 0)
 	{
 		mask = 16; //flowers
 	}
