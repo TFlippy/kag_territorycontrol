@@ -87,6 +87,7 @@ void onTick(CBlob@ this)
 					}
 					else
 					{
+						print("Growing a tile");
 						map.server_SetTile(sprout + offset, CMap::tile_kudzu);
 					}
 					

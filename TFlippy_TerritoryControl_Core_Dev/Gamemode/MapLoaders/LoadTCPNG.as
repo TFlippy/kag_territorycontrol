@@ -1868,8 +1868,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_kudzu:
 			{
 				Vec2f pos = map.getTileWorldPosition(index);
-				kudzu_SetTile(map, pos);
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES | Tile::FLAMMABLE);
+				kudzu_SetTile(map, pos);
 				map.RemoveTileFlag( index, Tile::WATER_PASSES);
 
 				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
@@ -1893,13 +1893,13 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			case CMap::tile_kudzu_v14:
 			case CMap::tile_kudzu_f14:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES | Tile::FLAMMABLE);
-
 				break;
 
 			case CMap::tile_kudzu_d0:
-				OnKudzuTileHit(map, index);
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES); // | Tile::FLAMMABLE);
+				//OnKudzuTileHit(map, index);
 				break;
-			//Kudzu End //TODO: 
+			//Kudzu End
 
 			case CMap::tile_concrete:
 			{
@@ -2329,16 +2329,6 @@ void OnBGlassTileHit(CMap@ map, u32 index)
 	}
 }
 
-void OnKudzuTileHit(CMap@ map, u32 index)
-{
-	map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
-
-	if (isClient())
-	{
-		Vec2f pos = map.getTileWorldPosition(index);
-	}
-}
-
 void OnGlassTileDestroyed(CMap@ map, u32 index)
 {
 	if (isClient())
@@ -2465,7 +2455,8 @@ u8 kudzu_GetMask(CMap@ map, Vec2f pos)
 
     for (u8 i = 0; i < 4; i++)
     {
-        if (isKudzuTile(map, pos + directions[i])) mask |= 1 << i;
+        //if (isKudzuTile(map, pos + directions[i])) mask |= 1 << i;
+		if (kudzu_MaskOk(map, pos + directions[i])) mask |= 1 << i;
     }
 	if (mask == 15 && XORRandom(10) == 0)
 	{
@@ -2473,6 +2464,14 @@ u8 kudzu_GetMask(CMap@ map, Vec2f pos)
 	}
 
     return mask;
+}
+
+bool kudzu_MaskOk(CMap@ map, Vec2f pos)
+{
+	const u32 offset = map.getTileOffset(pos);
+	u16 tile = map.getTile(pos).type;
+	
+	return map.hasTileFlag(offset, Tile::SOLID) && tile != CMap::tile_kudzu_d0;
 }
 
 void kudzu_SetTile(CMap@ map, Vec2f pos)
@@ -2489,7 +2488,10 @@ void kudzu_Update(CMap@ map, Vec2f pos)
 {
     u16 tile = map.getTile(pos).type;
     if (isKudzuTile(map, pos))
+	{
+		print("Update a tile");
 		map.server_SetTile(pos,CMap::tile_kudzu+kudzu_GetMask(map,pos));
+	}
 }
 
 bool isKudzuTile(CMap@ map, Vec2f pos)
