@@ -238,7 +238,15 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 					if ((middle.x > bpos.x - width * 0.5f - halfsize) && (middle.x - halfsize < bpos.x + width * 0.5f)
 							&& (middle.y > bpos.y - height * 0.5f - halfsize) && (middle.y - halfsize < bpos.y + height * 0.5f))
 					{
-						this.server_Hit(b, bpos, bpos - pos, 0.125f, HittersTC::poison, false);
+
+						int Type = HittersTC::poison;
+						double Amount = 0.125f;
+
+						if(this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
+
+						if(this.hasTag("Mut_IncreasedDamage")) Amount = 0.25f;
+
+						this.server_Hit(b, bpos, bpos - pos, 0.125f, Type, false);
 						
 						return false;
 					}
@@ -293,6 +301,16 @@ void MutateTick(CBlob@ this)
 		//print(this.getHealth() + "");
 		this.server_Heal(0.1f);
 	}
+	if (this.hasTag("Mut_Mutating"))
+	{
+		Random@ rand = Random(getGameTime());
+		int r = rand.NextRanged(300);
+		if (r == 0)
+		{
+			print("CHECK");
+			Mutate(this);
+		}
+	}
 }
 
 void Mutate(CBlob@ this)
@@ -301,7 +319,7 @@ void Mutate(CBlob@ this)
 	particle.Z = 500;
 
 	Random@ rand = Random(getGameTime());
-	int r = rand.NextRanged(5);
+	int r = rand.NextRanged(9);
 	if(r < 1 && !this.hasTag("Mut_Regeneration"))
 	{
 		this.Tag("Mut_Regeneration");
@@ -313,6 +331,23 @@ void Mutate(CBlob@ this)
 	else if(r < 3 && !this.hasTag("Mut_DownLines"))
 	{
 		this.Tag("Mut_DownLines");
+	}
+	else if(r < 4 && !this.hasTag("Mut_NoLight"))
+	{
+		this.SetLight(false);
+		this.Tag("Mut_NoLight");
+	}
+	else if(r < 5 && !this.hasTag("Mut_StunningDamage"))
+	{
+		this.Tag("Mut_StunningDamage");
+	}
+	else if(r < 6 && !this.hasTag("Mut_IncreasedDamage"))
+	{
+		this.Tag("Mut_IncreasedDamage");
+	}
+	else if(r < 7 && !this.hasTag("Mut_Mutating"))
+	{
+		this.Tag("Mut_Mutating");
 	}
 	else //Generic mutation (+1 Sprout)
 	{
