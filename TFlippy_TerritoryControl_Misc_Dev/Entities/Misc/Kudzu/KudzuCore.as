@@ -25,6 +25,8 @@ void onInit(CBlob @ this)
 
 	this.addCommandID("mutate");
 
+	this.getSprite().SetRelativeZ(500);
+
 	//Starts offline
 }
 
@@ -85,7 +87,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params) //Mutate command
 
 void onTick(CBlob@ this)
 {
-	this.getSprite().SetRelativeZ(500);
+	//this.getCurrentScript().tickFrequency = 1; //Testing
 	Vec2f[]@ sprouts;
 	if (this.getShape().isStatic() && this.get("sprouts", @sprouts))
 	{
@@ -163,8 +165,7 @@ void onTick(CBlob@ this)
 					{
 						map.server_SetTile(sprout + offset, CMap::tile_kudzu); //Growing
 					}
-					
-					sprouts[i] = Vec2f(sprout + offset);
+					sprouts[i] = Vec2f(sprout + offset); //Move in all cases
 				}
 				//Testing Particles
 				//CParticle@ particle = ParticleAnimated("SmallFire", sprout + offset, Vec2f(0, 0), 0, 1.0f, 2, 0.0f, false);
@@ -200,7 +201,6 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 		return false;
 	}
 
-	
 	if (isTileSolid(pos, map) && !isTileKudzu(type)) //Dont go past solid blocks unless they are kudzu
 	{
 		return false;
@@ -266,7 +266,7 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 	}
 
 	//Check if it has support there
-	if (map.isTileBackgroundNonEmpty(backtile)) //Can grow on backgrounds
+	if (map.isTileBackgroundNonEmpty(backtile) || isTileKudzu(type)) //Can grow on backgrounds (and pass through kudzu)
 	{
 		return true;
 	}
