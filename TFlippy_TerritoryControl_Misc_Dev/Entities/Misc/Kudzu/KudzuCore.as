@@ -21,12 +21,19 @@ void onInit(CBlob @ this)
 	this.SetLightRadius(30.0f);
 	this.SetLightColor(SColor(255, 155, 255, 0));
 
-	
-
 	//Starts offline
 }
 
+void onSetStatic(CBlob@ this, const bool isStatic)
+{
+	if (isStatic)
+	{
+		this.set_u32("Duplication Time", getGameTime() + RECHARGETIME);
+	}
+}
+
 const u32 MAXSPROUTS = 10;
+const u32 RECHARGETIME = 36000; // 60 = 1 second, 3600 = 1 minute, this is 10 minutes
 
 void onTick(CBlob@ this)
 {
@@ -89,6 +96,12 @@ void onTick(CBlob@ this)
 					TileType type = backtile.type;
 					if(isTileKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
 					{
+						if (getGameTime() > this.get_u32("Duplication Time") && this.get_u32("Duplication Time") != 0 && rand.NextRanged(30) == 0)
+						{
+							CBlob@ core = server_CreateBlob("kudzucore", 0, sprout);
+							core.getShape().SetStatic(true);
+							this.set_u32("Duplication Time", 0); //No more duplicating after the first one
+						}
 						//Going over already there kudzu tile
 					}
 					else
