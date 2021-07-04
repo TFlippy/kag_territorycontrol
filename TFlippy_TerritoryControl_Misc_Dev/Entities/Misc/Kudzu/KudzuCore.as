@@ -46,14 +46,14 @@ void onTick(CBlob@ this)
 		bool newSprout = false;
 
 		//New sprouts
-		if (sprouts.length < 1)
+		if (sprouts.length < 1) //First sprout is instant
 		{
 			sprouts.push_back(Vec2f(this.getPosition().x, this.getPosition().y));
 			newSprout = true;
 		}
-		else if (sprouts.length < MAXSPROUTS)
+		else if (sprouts.length < MAXSPROUTS) //Hardcap
 		{
-			if (rand.NextRanged(sprouts.length*7) == sprouts.length*7 - 1)
+			if (rand.NextRanged(sprouts.length*7) == sprouts.length*7 - 1) //Chance decreases the more sprouts it already has
 			{
 				sprouts.push_back(Vec2f(this.getPosition().x, this.getPosition().y));
 				newSprout = true;
@@ -68,7 +68,7 @@ void onTick(CBlob@ this)
 			Vec2f sprout = sprouts[i];
 
 
-			if (!(i == sprouts.length -1 && newSprout) && isDead(sprout, map))
+			if (!(i == sprouts.length -1 && newSprout) && isDead(sprout, map)) //Sprouts where the tile got destroyed should stop
 			{
 				sprouts.erase(i);
 				i--;
@@ -77,7 +77,7 @@ void onTick(CBlob@ this)
 			{
 				int dirrandom = rand.NextRanged(4);
 				Vec2f offset;
-				switch (dirrandom)
+				switch (dirrandom) //Random direction
 				{
 					case 0: offset = Vec2f(8.0f,0.0f);
 					break;
@@ -96,6 +96,7 @@ void onTick(CBlob@ this)
 					TileType type = backtile.type;
 					if(isTileKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
 					{
+						//Create a new core if its time and its chance
 						if (getGameTime() > this.get_u32("Duplication Time") && this.get_u32("Duplication Time") != 0 && rand.NextRanged(30) == 0)
 						{
 							CBlob@ core = server_CreateBlob("kudzucore", 0, sprout);
@@ -106,7 +107,7 @@ void onTick(CBlob@ this)
 					}
 					else
 					{
-						map.server_SetTile(sprout + offset, CMap::tile_kudzu);
+						map.server_SetTile(sprout + offset, CMap::tile_kudzu); //Growing
 					}
 					
 					sprouts[i] = Vec2f(sprout + offset);
