@@ -150,8 +150,11 @@ void onTick(CBlob@ this)
 						if (getGameTime() > this.get_u32("Duplication Time") && this.get_u32("Duplication Time") != 0 && rand.NextRanged(30) == 0)
 						{
 							CBlob@ core = server_CreateBlob("kudzucore", 0, sprout);
-							core.getShape().SetStatic(true);
-							Mutate(core); //Offspring start with 1 random mutation
+							if (core != null)
+							{
+								core.getShape().SetStatic(true);
+								Mutate(core); //Offspring start with 1 random mutation
+							}
 							this.set_u32("Duplication Time", 0); //No more duplicating after the first one
 						}
 						//Going over already there kudzu tile
@@ -328,8 +331,12 @@ void MutateTick(CBlob@ this)
 
 void Mutate(CBlob@ this)
 {
-	CParticle@ particle = ParticleAnimated("SmallFire", this.getPosition(), Vec2f(0, 0), 0, 1.0f, 2, 0.0f, false);
-	particle.Z = 500;
+	CParticle@ particle = ParticleAnimated("SmallSmoke", this.getPosition(), Vec2f(0, 0), 0, 1.0f, 2, 0.0f, false);
+	if (particle != null)
+	{
+		particle.Z = 500;
+	}
+
 
 	Random@ rand = Random(getGameTime());
 	int r = rand.NextRanged(9);
