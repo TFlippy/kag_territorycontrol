@@ -729,8 +729,15 @@ string h2s(string s)
 
 bool IsCool(string username)
 {
-	return 	username=="LaikaTheSpaceDog" ||
-			username=="Megawaffle2000" ||
+	return 	username=="TFlippy" ||
+			username=="merser433" ||
+			username=="Verdla" ||
+			username=="Vamist" ||
+			username=="Pirate-Rob" ||
+			username=="GoldenGuy" ||
+			username=="Koi_" ||
+			username=="digga" ||
+			username=="Asu" ||
 			(isServer()&&isClient()); //**should** return true only on localhost
 }
 
