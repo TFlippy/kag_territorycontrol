@@ -391,18 +391,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if(blob is null) return;
 
 		CBlob@ attachedBlob = blob.getAttachments().getAttachmentPointByName("PICKUP").getOccupied();
-		if (attachedBlob !is null && attachedBlob.getName() == "mat_gatlingammo")
+		if (attachedBlob !is null && attachedBlob.getName() == "mat_pistolammo")
 		{
 			this.add_u16("ammoCount", attachedBlob.getQuantity());
 			attachedBlob.server_Die();
 		}
 
 		CInventory@ invo = blob.getInventory();
-		int ammoCount = invo.getCount("mat_gatlingammo");
+		int ammoCount = invo.getCount("mat_pistolammo");
 
 		if (ammoCount > 0)
 		{
-			invo.server_RemoveItems("mat_gatlingammo", ammoCount);
+			invo.server_RemoveItems("mat_pistolammo", ammoCount);
 			this.add_u16("ammoCount", ammoCount);
 		}
 
