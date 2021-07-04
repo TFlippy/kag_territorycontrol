@@ -100,7 +100,7 @@ void onInit(CSprite@ this)
 		// flash.setRenderStyle(RenderStyle::additive);
 	}
 
-	this.SetEmitSound("Helichopper_Loop.ogg");
+	this.SetEmitSound("minicopter_loop.ogg");
 	this.SetEmitSoundSpeed(0.01f);
 	this.SetEmitSoundPaused(false);
 }
