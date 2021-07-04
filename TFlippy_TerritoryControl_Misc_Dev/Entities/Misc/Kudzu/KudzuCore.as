@@ -1,6 +1,7 @@
 ﻿#include "CustomBlocks.as"
 #include "Hitters.as"
 #include "HittersTC.as";
+#include "FireCommon.as"
 
 void onInit(CBlob @ this)
 {
@@ -9,6 +10,7 @@ void onInit(CBlob @ this)
 	this.getShape().SetRotationsAllowed(false);
 
 	this.Tag("builder always hit");
+	this.Tag(spread_fire_tag);
 
 	Vec2f[] sprouts = {};
 	this.set("sprouts", sprouts);

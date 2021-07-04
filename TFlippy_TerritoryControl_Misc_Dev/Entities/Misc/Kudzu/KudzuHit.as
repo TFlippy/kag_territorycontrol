@@ -5,6 +5,7 @@
 void onInit(CBlob@ this)
 {
 	this.Tag("kudzu");
+	this.Tag("builder always hit");
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
@@ -71,6 +72,5 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			dmg *= 0.05f;
 			break;
 	}
-	
 	return dmg;
 }
