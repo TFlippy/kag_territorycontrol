@@ -35,6 +35,8 @@ With that out the way:
   <li><b>Jenny</b> - Spriting</li>
   <li><b>Jammer</b> - Scripting</li>
   <li><b>Hobey</b> - Scripting</li>
+  <li><b>Laika</b> - Scripting</li>
+  <li><b>McSaucyNugget</b> - Spriting</li>
 </ul>
 
 
