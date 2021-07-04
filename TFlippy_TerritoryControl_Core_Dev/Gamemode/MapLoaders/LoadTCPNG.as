@@ -1872,7 +1872,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				kudzu_SetTile(map, pos);
 				map.RemoveTileFlag( index, Tile::WATER_PASSES);
 
-				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+				if (isClient()) Sound::Play("dig_dirt" + (1 + XORRandom(3)) + ".ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
 				break;
 			}
 
