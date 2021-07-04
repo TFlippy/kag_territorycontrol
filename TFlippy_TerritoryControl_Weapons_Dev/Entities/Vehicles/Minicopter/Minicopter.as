@@ -17,7 +17,7 @@ const Vec2f gun_clampAngle = Vec2f(-20, 80);
 
 const f32 thrust = 900.00f;
 const u32 shootDelay = 4; // Ticks
-const f32 damage = 1.0f;
+const f32 damage = 2.0f;
 const int maxAmmoStack = 300;
 
 void onInit(CBlob@ this)
@@ -39,7 +39,7 @@ void onInit(CBlob@ this)
 	settings.B_GRAV = Vec2f(0, 0.008); //Bullet Gravity
 	settings.B_TTL = 14; //Bullet Time to live
 	settings.B_SPEED = 30; //Bullet speed
-	settings.B_DAMAGE = 1.0f; //Bullet damage
+	settings.B_DAMAGE = 2.0f; //Bullet damage
 	settings.MUZZLE_OFFSET = Vec2f(-42,7);
 	settings.G_RECOIL = 0;
 
