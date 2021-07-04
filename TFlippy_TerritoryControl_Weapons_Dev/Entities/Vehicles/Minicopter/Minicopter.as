@@ -542,7 +542,7 @@ void ShootGun(CBlob@ this, f32 angle, Vec2f gunPos)
 		Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x + 5) * -sign, settings.MUZZLE_OFFSET.y);
 		fromBarrel.RotateBy(this.getAngleDegrees());
 
-		CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
+		CBlob@ gunner = this.getAttachmentPoint(1).getOccupied();
 		if (gunner !is null)
 		{
 			shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getPosition() + fromBarrel);
