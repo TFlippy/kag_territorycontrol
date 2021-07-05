@@ -36,7 +36,7 @@ With that out the way:
   <li><b>Jammer</b> - Scripting</li>
   <li><b>Hobey</b> - Scripting</li>
   <li><b>Wunarg</b> - Scripting</li>
-  <li><b>Darkslayer</b> - Scripting</li>
+  <li><b>Dark slayer</b> - Scripting</li>
   <li><b>Sonikuu</b> - Scripting</li>
   <li><b>Zable</b> - Scripting</li>
   <li><b>Garodil</b> - Scripting</li>
