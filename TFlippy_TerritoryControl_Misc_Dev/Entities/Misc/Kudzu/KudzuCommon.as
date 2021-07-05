@@ -211,9 +211,9 @@ void Mutate(CBlob@ this)
 	{
 		this.Tag("Mut_Mutating");
 	}
-	else if (r < 2 && !this.hasTag("Mut_Regeneration"))
+	else if (r < 2 && !this.hasTag("Mut_Explosive")) //Honestly a negative mutation, since the explosion also damages the plant and causes chain reactions
 	{
-		this.Tag("Mut_Regeneration");
+		this.Tag("Mut_Explosive");
 	}
 	else if (r < 3 && !this.hasTag("Mut_UpwardLines"))
 	{
@@ -250,9 +250,9 @@ void Mutate(CBlob@ this)
 	{
 		this.Tag("Mut_Badgers");
 	}
-	else if (r < 11 && !this.hasTag("Mut_Explosive"))
+	else if (r < 11 && !this.hasTag("Mut_Regeneration"))
 	{
-		this.Tag("Mut_Explosive");
+		this.Tag("Mut_Regeneration");
 	}
 	else //Generic mutation (+1 Sprout, no cap but very slow)
 	{
