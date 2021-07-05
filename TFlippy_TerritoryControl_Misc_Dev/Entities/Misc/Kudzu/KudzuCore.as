@@ -234,9 +234,9 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 				// cant place on any other blob
 				if (cantBuild &&
 						!b.hasTag("dead") &&
-						!b.hasTag("material") &&
+						!b.hasTag("material") && //Will just push materials dead things or projectiles similar to the normal human build mode
 						!b.hasTag("projectile") &&
-						bname != "kudzucore" &&
+						!b.hasTag("kudzu") &&	//Ignores kudzu blobs for obvious reasons (From KudzuHit.as)
 						bname != "bush")
 				{
 					//print(pos + " " +bpos);
@@ -278,12 +278,11 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 		return true;
 	}
 	
-	int Neighbours = 0;
 	for (u8 i = 0; i < 8; i++)
     {
 		Tile test = map.getTile(pos + directions[i]);
 		//print(directions[i].x + " " + directions[i].y);
-        if (isTileSolid(pos + directions[i], map) && !isTileKudzu(test.type)) return true; //Can grow while at least 1 non kudzu tile is around it
+        if (isTileSolid(pos + directions[i], map) && !isTileKudzu(test.type)) return true; //Can grow while at least 1 solid non kudzu tile in the 8 tiles around it
     }
 
 	if (Vec2f(0.0f,-8.0f) == dir && this.hasTag("Mut_UpwardLines"))
@@ -340,38 +339,40 @@ void Mutate(CBlob@ this)
 	}
 
 
-	Random@ rand = Random(getGameTime());
+	Random@ rand = Random(getGameTime() + this.getPosition().x); //Randomness is time and position dependent, 
+	//technicly 2 of em in the same coloum mutated at the exact same time would get the same mutation
 	int r = rand.NextRanged(9);
-	if(r < 1 && !this.hasTag("Mut_Regeneration"))
+
+	if(r < 1 && !this.hasTag("Mut_Mutating")) //Possibly the most dangerous mutation, (At first slot to reduce the chance of getting it with other mutations)
+	{
+		this.Tag("Mut_Mutating");
+	}
+	else if(r < 2 && !this.hasTag("Mut_Regeneration"))
 	{
 		this.Tag("Mut_Regeneration");
 	}
-	else if(r < 2 && !this.hasTag("Mut_UpwardLines"))
+	else if(r < 3 && !this.hasTag("Mut_UpwardLines"))
 	{
 		this.Tag("Mut_UpwardLines");
 	}
-	else if(r < 3 && !this.hasTag("Mut_DownLines"))
+	else if(r < 4 && !this.hasTag("Mut_DownLines"))
 	{
 		this.Tag("Mut_DownLines");
 	}
-	else if(r < 4 && !this.hasTag("Mut_NoLight"))
+	else if(r < 5 && !this.hasTag("Mut_NoLight"))
 	{
 		this.SetLight(false);
 		this.Tag("Mut_NoLight");
 	}
-	else if(r < 5 && !this.hasTag("Mut_StunningDamage"))
+	else if(r < 6 && !this.hasTag("Mut_StunningDamage"))
 	{
 		this.Tag("Mut_StunningDamage");
 	}
-	else if(r < 6 && !this.hasTag("Mut_IncreasedDamage"))
+	else if(r < 7 && !this.hasTag("Mut_IncreasedDamage"))
 	{
 		this.Tag("Mut_IncreasedDamage");
 	}
-	else if(r < 7 && !this.hasTag("Mut_Mutating"))
-	{
-		this.Tag("Mut_Mutating");
-	}
-	else //Generic mutation (+1 Sprout)
+	else //Generic mutation (+1 Sprout, no cap but very slow)
 	{
 		this.set_u8("MaxSprouts", this.get_u8("MaxSprouts") + 1);
 	}

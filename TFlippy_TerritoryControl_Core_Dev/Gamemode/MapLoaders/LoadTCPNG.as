@@ -2458,7 +2458,7 @@ u8 kudzu_GetMask(CMap@ map, Vec2f pos)
         //if (isKudzuTile(map, pos + directions[i])) mask |= 1 << i;
 		if (kudzu_MaskOk(map, pos + directions[i])) mask |= 1 << i;
     }
-	if (mask == 15 && XORRandom(5) == 0)
+	if (mask == 15 && XORRandom(6) == 0)
 	{
 		mask = 16; //flowers
 	}
@@ -2466,7 +2466,7 @@ u8 kudzu_GetMask(CMap@ map, Vec2f pos)
     return mask;
 }
 
-bool kudzu_MaskOk(CMap@ map, Vec2f pos)
+bool kudzu_MaskOk(CMap@ map, Vec2f pos) //Kudzu has connected textures with other solid tiles even non kudzu tiles
 {
 	const u32 offset = map.getTileOffset(pos);
 	u16 tile = map.getTile(pos).type;
