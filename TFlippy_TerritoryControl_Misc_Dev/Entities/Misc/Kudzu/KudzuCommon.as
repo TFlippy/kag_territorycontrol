@@ -1,3 +1,8 @@
+#include "CustomBlocks.as"
+#include "Hitters.as"
+#include "HittersTC.as"
+#include "FireCommon.as"
+
 bool isDead(Vec2f pos, CMap@ map)
 {
 	Tile backtile = map.getTile(pos);
@@ -169,6 +174,15 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 		}
 		this.set_u32("Duplication Time", 0); //No more duplicating after the first one
 	}
+	else if (this.hasTag("Mut_Badgers") && rand.NextRanged(100) == 0 && getGameTime() > this.get_u32("Upgrade Time"))
+	{
+		CBlob@ node = server_CreateBlob("kudzubadger", 0, pos);
+		if (node != null)
+		{
+			node.getShape().SetStatic(true);
+		}
+		this.set_u32("Upgrade Time", getGameTime() + 900);
+	}
 }
 
 void Mutate(CBlob@ this)
@@ -182,7 +196,7 @@ void Mutate(CBlob@ this)
 
 	Random@ rand = Random(getGameTime() + this.getPosition().x); //Randomness is time and position dependent, 
 	//technicly 2 of em in the same coloum mutated at the exact same time would get the same mutation
-	int r = rand.NextRanged(10);
+	int r = rand.NextRanged(11);
 
 	if(r < 1 && !this.hasTag("Mut_Mutating")) //Possibly the most dangerous mutation, (At first slot to reduce the chance of getting it with other mutations)
 	{
@@ -222,6 +236,10 @@ void Mutate(CBlob@ this)
 		this.Tag("Mut_FireResistance");
 		this.Untag(spread_fire_tag);
 		this.RemoveScript("IsFlammable.as");
+	}
+	else if(r < 10 && !this.hasTag("Mut_Badgers"))
+	{
+		this.Tag("Mut_Badgers");
 	}
 	else //Generic mutation (+1 Sprout, no cap but very slow)
 	{

@@ -1,11 +1,14 @@
 #include "Hitters.as"
 #include "HittersTC.as"
 #include "ParticleSparks.as";
+#include "FireCommon.as"
 
 void onInit(CBlob@ this)
 {
 	this.Tag("kudzu");
 	this.Tag("builder always hit");
+	this.Tag(spread_fire_tag);
+	this.getSprite().SetRelativeZ(500);
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
