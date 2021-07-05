@@ -2318,7 +2318,7 @@ void OnGlassTileHit(CMap@ map, u32 index)
 
 void OnBGlassTileHit(CMap@ map, u32 index)
 {
-	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES);
+	map.AddTileFlag(index, Tile::BACKGROUND | Tile::LIGHT_PASSES | Tile::WATER_PASSES | Tile::LIGHT_SOURCE);
 
 	if (isClient())
 	{

@@ -15,13 +15,16 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().mapCollisions = false;
 	this.getShape().SetRotationsAllowed(false);
 	this.getShape().getConsts().transports = true;
-	
+
+	this.SetMapEdgeFlags(CBlob::map_collide_none | CBlob::map_collide_nodeath);
+
 	this.Tag("train");
-	
+	this.Tag("invincible");
+
 	this.SetLight(true);
 	this.SetLightRadius(64.0f);
 	this.SetLightColor(SColor(255, 150, 25, 0));
-	
+
 	if (isClient())
 	{
 		CSprite@ sprite = this.getSprite();
@@ -30,7 +33,12 @@ void onInit(CBlob@ this)
 		sprite.SetEmitSoundPaused(false);
 		sprite.RewindEmitSound();
 	}
-	
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	//stops E glitch
+	return this.getPosition().x < getMap().tilemapwidth * 8;
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
@@ -53,8 +61,3 @@ void onTick(CBlob@ this)
 	// if (client) ShakeScreen(80, 50, this.getPosition());
 	this.setVelocity(Vec2f(4, 0));
 }*/
-
-f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
-{
-	return 0;
-}

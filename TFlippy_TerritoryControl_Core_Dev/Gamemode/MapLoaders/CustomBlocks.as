@@ -297,7 +297,7 @@ bool isTileRustyIron(TileType tile)
 
 bool isTileConcrete(TileType tile)
 {
-	return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_v14;
+	return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_d7;
 }
 
 bool isTileBConcrete(TileType tile)

@@ -58,3 +58,13 @@ void ParticleFromBullet(const string particlePic, const Vec2f pos, const f32 ang
 		p.lighting_force_original_color = true;
 	}
 }
+
+void ParticleBulletHit(const string particlePic, Vec2f pos, f32 angle = 0.0f)
+{
+	CParticle@ p = ParticleAnimated(particlePic, pos + Vec2f(0,-6).RotateBy(angle), Vec2f(0, 0), angle, 0.7f, 3, 0.0f, false);
+	if (p !is null)
+	{
+		p.width = 8;
+		p.height = 8;
+	}
+}
