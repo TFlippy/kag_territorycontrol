@@ -153,7 +153,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		this.set_bool("minimap_hidden", !this.get_bool("minimap_hidden"));
 
-		this.set_u8("minimap_index", this.get_bool("minimap_hidden") ? 46 : 1);
+		this.set_u8("minimap_index", this.get_bool("minimap_hidden") ? 63 : 1);
 	}
 
 	if (isServer())
