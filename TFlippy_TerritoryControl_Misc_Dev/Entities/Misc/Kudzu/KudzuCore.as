@@ -173,7 +173,10 @@ void onTick(CBlob@ this)
 				}
 				//Testing Particles
 				//CParticle@ particle = ParticleAnimated("SmallFire", sprout + offset, Vec2f(0, 0), 0, 1.0f, 2, 0.0f, false);
-				//particle.Z = 500;
+				//if (particle != null)
+				//{
+				//	particle.Z = 500;
+				//}
 			}
 		}
 		
@@ -200,7 +203,7 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 	//if (!map.hasSupportAtPos(pos)) 
 	//	return false;
 
-	if (map.isTileBedrock(type) || isTileBGlass(type))
+	if (map.isTileBedrock(type) || (isTileBGlass(type) && !this.hasTag("Mut_IgnoreBGlass")))
 	{
 		return false;
 	}
@@ -345,7 +348,7 @@ void Mutate(CBlob@ this)
 
 	Random@ rand = Random(getGameTime() + this.getPosition().x); //Randomness is time and position dependent, 
 	//technicly 2 of em in the same coloum mutated at the exact same time would get the same mutation
-	int r = rand.NextRanged(9);
+	int r = rand.NextRanged(10);
 
 	if(r < 1 && !this.hasTag("Mut_Mutating")) //Possibly the most dangerous mutation, (At first slot to reduce the chance of getting it with other mutations)
 	{
@@ -376,7 +379,11 @@ void Mutate(CBlob@ this)
 	{
 		this.Tag("Mut_IncreasedDamage");
 	}
-	else if(r < 8 && !this.hasTag("Mut_FireResistance")) //Does not make the tiles fire resistant but the core at least
+	else if(r < 8 && !this.hasTag("Mut_IgnoreBGlass"))
+	{
+		this.Tag("Mut_IgnoreBGlass");
+	}
+	else if(r < 9 && !this.hasTag("Mut_FireResistance")) //Does not make the tiles fire resistant but the core at least
 	{
 		this.Tag("Mut_FireResistance");
 		this.Untag(spread_fire_tag);
