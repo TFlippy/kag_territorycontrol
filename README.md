@@ -40,8 +40,6 @@ With that out the way:
   <li><b>Sonikuu</b> - Scripting</li>
   <li><b>Zable</b> - Scripting</li>
   <li><b>Garodil</b> - Scripting</li>
-  <li><b>Laika</b> - Scripting</li>
-  <li><b>McSaucyNugget</b> - Spriting</li>
 </ul>
 
 
