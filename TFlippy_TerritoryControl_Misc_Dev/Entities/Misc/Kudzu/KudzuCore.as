@@ -248,15 +248,17 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 					if ((middle.x > bpos.x - width * 0.5f - halfsize) && (middle.x - halfsize < bpos.x + width * 0.5f)
 							&& (middle.y > bpos.y - height * 0.5f - halfsize) && (middle.y - halfsize < bpos.y + height * 0.5f))
 					{
+						if (!b.hasTag("invincible"))
+						{
+							int Type = HittersTC::poison;
+							double Amount = 0.125f;
 
-						int Type = HittersTC::poison;
-						double Amount = 0.125f;
+							if(this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
 
-						if(this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
+							if(this.hasTag("Mut_IncreasedDamage")) Amount = 0.25f;
 
-						if(this.hasTag("Mut_IncreasedDamage")) Amount = 0.25f;
-
-						this.server_Hit(b, bpos, bpos - pos, 0.125f, Type, false);
+							this.server_Hit(b, bpos, bpos - pos, 0.125f, Type, false);
+						}
 						
 						return false;
 					}
