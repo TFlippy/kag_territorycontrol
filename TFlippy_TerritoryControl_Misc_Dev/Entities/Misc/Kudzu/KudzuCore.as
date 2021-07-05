@@ -141,29 +141,18 @@ void onTick(CBlob@ this)
 					break;
 				}
 			
-
-				if (canGrowTo(this, sprout + offset, map, offset))
+				u8 canGrow = canGrowTo(this, sprout + offset, map, offset);
+				if (canGrow >= 1)
 				{
 					Tile backtile = map.getTile(sprout + offset);
 					TileType type = backtile.type;
-					if(isTileKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
+					if (isTileKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
 					{
-						//Create a new core if its time and its chance
-						if (getGameTime() > this.get_u32("Duplication Time") && this.get_u32("Duplication Time") != 0 && rand.NextRanged(30) == 0)
+						if (canGrow >= 2)
 						{
-							CBlob@ core = server_CreateBlob("kudzucore", 0, sprout);
-							if (core != null)
-							{
-								core.getShape().SetStatic(true);
-								Mutate(core); //Offspring start with 1 random mutation
-							}
-							this.set_u32("Duplication Time", 0); //No more duplicating after the first one
+							//Try Upgrading the tile (chance based)
+							UpgradeTile(this, sprout, map, rand);
 						}
-						//else
-						//{
-						//	print("Remaining Time" + this.get_u32("Duplication Time") + " " + getGameTime());
-						//}
-						//Going over already there kudzu tile
 					}
 					else
 					{
@@ -172,11 +161,13 @@ void onTick(CBlob@ this)
 					sprouts[i] = Vec2f(sprout + offset); //Move in all cases
 				}
 				//Testing Particles
-				//CParticle@ particle = ParticleAnimated("SmallFire", sprout + offset, Vec2f(0, 0), 0, 1.0f, 2, 0.0f, false);
-				//if (particle != null)
-				//{
-				//	particle.Z = 500;
-				//}
+				/*
+				CParticle@ particle = ParticleAnimated("SmallFire", sprout + offset, Vec2f(0, 0), 0, 1.0f, 2, 0.0f, false);
+				if (particle != null)
+				{
+					particle.Z = 500;
+				}
+				*/
 			}
 		}
 		
@@ -195,7 +186,7 @@ bool isDead(Vec2f pos, CMap@ map)
 	return false;
 }
 
-bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
+u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = good, 2 = good and no kudzu blob already here
 {
 	Tile backtile = map.getTile(pos);
 	TileType type = backtile.type;
@@ -205,23 +196,24 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 
 	if (map.isTileBedrock(type) || (isTileBGlass(type) && !this.hasTag("Mut_IgnoreBGlass")))
 	{
-		return false;
+		return 0;
 	}
 
 	if (isTileSolid(pos, map) && !isTileKudzu(type)) //Dont go past solid blocks unless they are kudzu
 	{
-		return false;
+		return 0;
 	}
 
 	if (pos.y < 2 * map.tilesize || //Check map edges
 	        pos.x < 2 * map.tilesize ||
 	        pos.x > (map.tilemapwidth - 2.0f)*map.tilesize)
 	{
-		return false;
+		return 0;
 	}
 
 	double halfsize = map.tilesize * 0.5f;
 	Vec2f middle = pos; //+ Vec2f(halfsize, halfsize);
+	u8 kudzublob = 1;
 
 	CBlob@[] blobsInRadius;
 	if (map.getBlobsInRadius(middle, map.tilesize, @blobsInRadius))
@@ -243,7 +235,6 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 						!b.hasTag("dead") &&
 						!b.hasTag("material") && //Will just push materials dead things or projectiles similar to the normal human build mode
 						!b.hasTag("projectile") &&
-						!b.hasTag("kudzu") &&	//Ignores kudzu blobs for obvious reasons (From KudzuHit.as)
 						bname != "bush")
 				{
 					//print(pos + " " +bpos);
@@ -255,19 +246,25 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 					if ((middle.x > bpos.x - width * 0.5f - halfsize) && (middle.x - halfsize < bpos.x + width * 0.5f)
 							&& (middle.y > bpos.y - height * 0.5f - halfsize) && (middle.y - halfsize < bpos.y + height * 0.5f))
 					{
-						if (!b.hasTag("invincible"))
+						if (b.hasTag("kudzu"))	//Ignores kudzu blobs for obvious reasons (From KudzuHit.as))
 						{
-							int Type = HittersTC::poison;
-							double Amount = 0.125f;
-
-							if(this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
-
-							if(this.hasTag("Mut_IncreasedDamage")) Amount = 0.25f;
-
-							this.server_Hit(b, bpos, bpos - pos, 0.125f, Type, false);
+							kudzublob = 0;
 						}
-						
-						return false;
+						else 
+						{
+							if (!b.hasTag("invincible"))
+							{
+								int Type = HittersTC::poison;
+								double Amount = 0.125f;
+
+								if(this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
+
+								if(this.hasTag("Mut_IncreasedDamage")) Amount = 0.25f;
+
+								this.server_Hit(b, bpos, bpos - pos, 0.125f, Type, false);
+							}
+							return 0;
+						}
 					}
 				}	
 			}
@@ -277,26 +274,26 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 	//Check if it has support there
 	if (map.isTileBackgroundNonEmpty(backtile) || isTileKudzu(type)) //Can grow on backgrounds (and pass through kudzu)
 	{
-		return true;
+		return 1 + kudzublob;
 	}
 
 	if ((this.getPosition() - pos).Length() < 15.0f) //Can be unsuported while near the core
 	{
-		return true;
+		return 1 + kudzublob;
 	}
 	
 	for (u8 i = 0; i < 8; i++)
     {
 		Tile test = map.getTile(pos + directions[i]);
 		//print(directions[i].x + " " + directions[i].y);
-        if (isTileSolid(pos + directions[i], map) && !isTileKudzu(test.type)) return true; //Can grow while at least 1 solid non kudzu tile in the 8 tiles around it
+        if (isTileSolid(pos + directions[i], map) && !isTileKudzu(test.type)) return 1 + kudzublob; //Can grow while at least 1 solid non kudzu tile in the 8 tiles around it
     }
 
 	if (Vec2f(0.0f,-8.0f) == dir && this.hasTag("Mut_UpwardLines"))
 	{
 		if (CMap::tile_empty == map.getTile(pos + Vec2f(8.0f, 0.0f)).type && CMap::tile_empty == map.getTile(pos + Vec2f(-8.0f, 0.0f)).type)
 		{
-			return true;
+			return 1 + kudzublob;
 		}
 	}
 
@@ -304,12 +301,27 @@ bool canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir)
 	{
 		if (CMap::tile_empty == map.getTile(pos + Vec2f(8.0f, 0.0f)).type && CMap::tile_empty == map.getTile(pos + Vec2f(-8.0f, 0.0f)).type)
 		{
-			return true;
+			return 1 + kudzublob;
 		}
 	}
 
-	return false;
+	return 0; //No support found
 	
+}
+
+void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
+{
+	//Create a new core if its time and its chance
+	if (getGameTime() > this.get_u32("Duplication Time") && this.get_u32("Duplication Time") != 0 && rand.NextRanged(30) == 0)
+	{
+		CBlob@ core = server_CreateBlob("kudzucore", 0, pos);
+		if (core != null)
+		{
+			core.getShape().SetStatic(true);
+			Mutate(core); //Offspring start with 1 random mutation
+		}
+		this.set_u32("Duplication Time", 0); //No more duplicating after the first one
+	}
 }
 
 bool isTileSolid(Vec2f pos, CMap@ map)
