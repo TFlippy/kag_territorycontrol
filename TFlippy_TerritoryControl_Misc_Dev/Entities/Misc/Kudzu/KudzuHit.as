@@ -39,11 +39,11 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 
 		case Hitters::fire:
-			dmg *= 1.00f;
+			dmg *= this.hasTag("Mut_FireResistance") ? 0.00f : 1.00f;
 			break;
 		
 		case Hitters::burn:
-			dmg *= 2.00f;
+			dmg *= this.hasTag("Mut_FireResistance") ? 0.00f : 2.00f;
 			break;
 			
 		case Hitters::crush:

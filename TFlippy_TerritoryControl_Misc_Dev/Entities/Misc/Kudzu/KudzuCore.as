@@ -43,7 +43,7 @@ void onSetStatic(CBlob@ this, const bool isStatic)
 	}
 }
 
-const u32 RECHARGETIME = 36000; // 60 = 1 second, 3600 = 1 minute, this is 10 minutes
+const u32 RECHARGETIME = 18000; // 30 = 1 second, 1800 = 1 minute, this is 10 minutes
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller) //Mutate button
 {
@@ -159,6 +159,10 @@ void onTick(CBlob@ this)
 							}
 							this.set_u32("Duplication Time", 0); //No more duplicating after the first one
 						}
+						//else
+						//{
+						//	print("Remaining Time" + this.get_u32("Duplication Time") + " " + getGameTime());
+						//}
 						//Going over already there kudzu tile
 					}
 					else
@@ -371,6 +375,12 @@ void Mutate(CBlob@ this)
 	else if(r < 7 && !this.hasTag("Mut_IncreasedDamage"))
 	{
 		this.Tag("Mut_IncreasedDamage");
+	}
+	else if(r < 8 && !this.hasTag("Mut_FireResistance")) //Does not make the tiles fire resistant but the core at least
+	{
+		this.Tag("Mut_FireResistance");
+		this.Untag(spread_fire_tag);
+		this.RemoveScript("IsFlammable.as");
 	}
 	else //Generic mutation (+1 Sprout, no cap but very slow)
 	{
