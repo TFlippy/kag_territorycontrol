@@ -183,6 +183,15 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 		}
 		this.set_u32("Upgrade Time", getGameTime() + 900);
 	}
+	else if (this.hasTag("Mut_Explosive") && rand.NextRanged(50) == 0 && getGameTime() > this.get_u32("Upgrade Time"))
+	{
+		CBlob@ node = server_CreateBlob("kudzuexplosive", 0, pos);
+		if (node != null)
+		{
+			node.getShape().SetStatic(true);
+		}
+		this.set_u32("Upgrade Time", getGameTime() + 600);
+	}
 }
 
 void Mutate(CBlob@ this)
@@ -196,50 +205,54 @@ void Mutate(CBlob@ this)
 
 	Random@ rand = Random(getGameTime() + this.getPosition().x); //Randomness is time and position dependent, 
 	//technicly 2 of em in the same coloum mutated at the exact same time would get the same mutation
-	int r = rand.NextRanged(11);
+	int r = rand.NextRanged(12);
 
-	if(r < 1 && !this.hasTag("Mut_Mutating")) //Possibly the most dangerous mutation, (At first slot to reduce the chance of getting it with other mutations)
+	if (r < 1 && !this.hasTag("Mut_Mutating")) //Possibly the most dangerous mutation, (At first slot to reduce the chance of getting it with other mutations)
 	{
 		this.Tag("Mut_Mutating");
 	}
-	else if(r < 2 && !this.hasTag("Mut_Regeneration"))
+	else if (r < 2 && !this.hasTag("Mut_Regeneration"))
 	{
 		this.Tag("Mut_Regeneration");
 	}
-	else if(r < 3 && !this.hasTag("Mut_UpwardLines"))
+	else if (r < 3 && !this.hasTag("Mut_UpwardLines"))
 	{
 		this.Tag("Mut_UpwardLines");
 	}
-	else if(r < 4 && !this.hasTag("Mut_DownLines"))
+	else if (r < 4 && !this.hasTag("Mut_DownLines"))
 	{
 		this.Tag("Mut_DownLines");
 	}
-	else if(r < 5 && !this.hasTag("Mut_NoLight"))
+	else if (r < 5 && !this.hasTag("Mut_NoLight"))
 	{
 		this.SetLight(false);
 		this.Tag("Mut_NoLight");
 	}
-	else if(r < 6 && !this.hasTag("Mut_StunningDamage"))
+	else if (r < 6 && !this.hasTag("Mut_StunningDamage"))
 	{
 		this.Tag("Mut_StunningDamage");
 	}
-	else if(r < 7 && !this.hasTag("Mut_IncreasedDamage"))
+	else if (r < 7 && !this.hasTag("Mut_IncreasedDamage"))
 	{
 		this.Tag("Mut_IncreasedDamage");
 	}
-	else if(r < 8 && !this.hasTag("Mut_IgnoreBGlass"))
+	else if (r < 8 && !this.hasTag("Mut_IgnoreBGlass"))
 	{
 		this.Tag("Mut_IgnoreBGlass");
 	}
-	else if(r < 9 && !this.hasTag("Mut_FireResistance")) //Does not make the tiles fire resistant but the core at least
+	else if (r < 9 && !this.hasTag("Mut_FireResistance")) //Does not make the tiles fire resistant but the core at least
 	{
 		this.Tag("Mut_FireResistance");
 		this.Untag(spread_fire_tag);
 		this.RemoveScript("IsFlammable.as");
 	}
-	else if(r < 10 && !this.hasTag("Mut_Badgers"))
+	else if (r < 10 && !this.hasTag("Mut_Badgers"))
 	{
 		this.Tag("Mut_Badgers");
+	}
+	else if (r < 11 && !this.hasTag("Mut_Explosive"))
+	{
+		this.Tag("Mut_Explosive");
 	}
 	else //Generic mutation (+1 Sprout, no cap but very slow)
 	{
