@@ -633,15 +633,15 @@ void onDie(CBlob@ this)
 {
 	DoExplosion(this);
 
-	//if (isServer())
-	//{
-		//CBlob@ wreck = server_CreateBlobNoInit("helichopperwreck");
-		//wreck.setPosition(this.getPosition());
-		//wreck.setVelocity(this.getVelocity());
-		//wreck.setAngleDegrees(this.getAngleDegrees());
-		//wreck.server_setTeamNum(this.getTeamNum());
-		//wreck.Init();
-	//}
+	if (isServer())
+	{
+		CBlob@ wreck = server_CreateBlobNoInit("minicopterwreck");
+		wreck.setPosition(this.getPosition());
+		wreck.setVelocity(this.getVelocity());
+		wreck.setAngleDegrees(this.getAngleDegrees());
+		wreck.server_setTeamNum(this.getTeamNum());
+		wreck.Init();
+	}
 }
 
 string[] particles = 
