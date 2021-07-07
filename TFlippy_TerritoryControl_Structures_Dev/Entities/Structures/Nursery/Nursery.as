@@ -86,6 +86,11 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", 50);
 		s.spawnNothing = true;
 	}
+	{
+		ShopItem@ s = addShopItem(this, "Tea Leaf", "$COIN$", "coin-100", "Sell tea leaves (2).", true);
+		AddRequirement(s.requirements, "blob", "tealeaf", "Tea Leaf", 50);
+		s.spawnNothing = true;
+	}
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
