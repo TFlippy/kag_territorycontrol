@@ -15,7 +15,7 @@ const Vec2f maxClampVelocity = Vec2f( 0.40f, 0.00f);
 
 const Vec2f gun_clampAngle = Vec2f(-20, 80);
 
-const f32 thrust = 900.00f;
+const f32 thrust = 925.00f;
 const u32 shootDelay = 4; // Ticks
 const f32 damage = 2.0f;
 const int maxAmmoStack = 300;
