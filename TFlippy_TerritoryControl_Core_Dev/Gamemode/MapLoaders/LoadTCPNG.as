@@ -1137,7 +1137,7 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 
 bool isGrassTile(u16 tile)
 {
-    return tile >= 25 && tile <= 28;
+	return tile >= 25 && tile <= 28;
 }
 
 bool onMapTileCollapse(CMap@ map, u32 offset)
@@ -2270,37 +2270,37 @@ void OnBIronTileUpdate(bool updateThis, bool updateOthers, CMap@ map, Vec2f pos)
 
 void iron_SetTile(CMap@ map, Vec2f pos)
 {
-    map.SetTile(map.getTileOffset(pos), CMap::tile_iron + iron_GetMask(map, pos));
+	map.SetTile(map.getTileOffset(pos), CMap::tile_iron + iron_GetMask(map, pos));
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        iron_Update(map, pos + directions[i]);
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		iron_Update(map, pos + directions[i]);
+	}
 }
 
 u8 iron_GetMask(CMap@ map, Vec2f pos)
 {
-    u8 mask = 0;
+	u8 mask = 0;
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        if (isIronTile(map, pos + directions[i])) mask |= 1 << i;
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		if (isIronTile(map, pos + directions[i])) mask |= 1 << i;
+	}
 
-    return mask;
+	return mask;
 }
 
 void iron_Update(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    if (isIronTile(map, pos))
+	u16 tile = map.getTile(pos).type;
+	if (isIronTile(map, pos))
 		map.SetTile(map.getTileOffset(pos),CMap::tile_iron+iron_GetMask(map,pos));
 }
 
 bool isIronTile(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    return tile >= CMap::tile_iron && tile <= CMap::tile_iron_v14;
+	u16 tile = map.getTile(pos).type;
+	return tile >= CMap::tile_iron && tile <= CMap::tile_iron_v14;
 }
 
 void OnGlassTileHit(CMap@ map, u32 index)
@@ -2381,89 +2381,89 @@ void glasssparks(Vec2f at, int amount)
 
 u8 glass_GetMask(CMap@ map, Vec2f pos)
 {
-    u8 mask = 0;
+	u8 mask = 0;
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        if (isGlassTile(map, pos + directions[i])) mask |= 1 << i;
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		if (isGlassTile(map, pos + directions[i])) mask |= 1 << i;
+	}
 
-    return mask;
+	return mask;
 }
 
 u8 bglass_GetMask(CMap@ map, Vec2f pos)
 {
-    u8 mask = 0;
+	u8 mask = 0;
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        if (isBGlassTile(map, pos + directions[i])) mask |= 1 << i;
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		if (isBGlassTile(map, pos + directions[i])) mask |= 1 << i;
+	}
 
-    return mask;
+	return mask;
 }
 
 void glass_SetTile(CMap@ map, Vec2f pos)
 {
-    map.SetTile(map.getTileOffset(pos), CMap::tile_glass + glass_GetMask(map, pos));
+	map.SetTile(map.getTileOffset(pos), CMap::tile_glass + glass_GetMask(map, pos));
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        glass_Update(map, pos + directions[i]);
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		glass_Update(map, pos + directions[i]);
+	}
 }
 
 void bglass_SetTile(CMap@ map, Vec2f pos)
 {
-    map.SetTile(map.getTileOffset(pos), CMap::tile_bglass + bglass_GetMask(map, pos));
+	map.SetTile(map.getTileOffset(pos), CMap::tile_bglass + bglass_GetMask(map, pos));
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        bglass_Update(map, pos + directions[i]);
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		bglass_Update(map, pos + directions[i]);
+	}
 }
 
 void glass_Update(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    if (isGlassTile(map, pos))
+	u16 tile = map.getTile(pos).type;
+	if (isGlassTile(map, pos))
 		map.server_SetTile(pos,CMap::tile_glass+glass_GetMask(map,pos));
 }
 
 void bglass_Update(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    if (isBGlassTile(map, pos))
+	u16 tile = map.getTile(pos).type;
+	if (isBGlassTile(map, pos))
 		map.server_SetTile(pos,CMap::tile_bglass+bglass_GetMask(map,pos));
 }
 
 bool isGlassTile(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    return tile >= CMap::tile_glass && tile <= CMap::tile_glass_v14;
+	u16 tile = map.getTile(pos).type;
+	return tile >= CMap::tile_glass && tile <= CMap::tile_glass_v14;
 }
 
 bool isBGlassTile(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    return tile >= CMap::tile_bglass && tile <= CMap::tile_bglass_v14;
+	u16 tile = map.getTile(pos).type;
+	return tile >= CMap::tile_bglass && tile <= CMap::tile_bglass_v14;
 }
 
 u8 kudzu_GetMask(CMap@ map, Vec2f pos)
 {
-    u8 mask = 0;
+	u8 mask = 0;
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        //if (isKudzuTile(map, pos + directions[i])) mask |= 1 << i;
+	for (u8 i = 0; i < 4; i++)
+	{
+		//if (isKudzuTile(map, pos + directions[i])) mask |= 1 << i;
 		if (kudzu_MaskOk(map, pos + directions[i])) mask |= 1 << i;
-    }
+	}
 	if (mask == 15 && XORRandom(6) == 0)
 	{
 		mask = 16; //flowers
 	}
 
-    return mask;
+	return mask;
 }
 
 bool kudzu_MaskOk(CMap@ map, Vec2f pos) //Kudzu has connected textures with other solid tiles even non kudzu tiles
@@ -2476,18 +2476,18 @@ bool kudzu_MaskOk(CMap@ map, Vec2f pos) //Kudzu has connected textures with othe
 
 void kudzu_SetTile(CMap@ map, Vec2f pos)
 {
-    map.SetTile(map.getTileOffset(pos), CMap::tile_kudzu + kudzu_GetMask(map, pos));
+	map.SetTile(map.getTileOffset(pos), CMap::tile_kudzu + kudzu_GetMask(map, pos));
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        kudzu_Update(map, pos + directions[i]);
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		kudzu_Update(map, pos + directions[i]);
+	}
 }
 
 void kudzu_Update(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    if (isKudzuTile(map, pos))
+	u16 tile = map.getTile(pos).type;
+	if (isKudzuTile(map, pos))
 	{
 		map.server_SetTile(pos,CMap::tile_kudzu+kudzu_GetMask(map,pos));
 	}
@@ -2495,8 +2495,8 @@ void kudzu_Update(CMap@ map, Vec2f pos)
 
 bool isKudzuTile(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    return tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_f14;
+	u16 tile = map.getTile(pos).type;
+	return tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_f14;
 }
 
 void OnPlasteelTileHit(CMap@ map, u32 index)
@@ -2594,107 +2594,107 @@ void OnConcreteTileDestroyed(CMap@ map, u32 index)
 
 void concrete_SetTile(CMap@ map, Vec2f pos)
 {
-    map.SetTile(map.getTileOffset(pos), CMap::tile_concrete + concrete_GetMask(map, pos));
+	map.SetTile(map.getTileOffset(pos), CMap::tile_concrete + concrete_GetMask(map, pos));
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        concrete_Update(map, pos + directions[i]);
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		concrete_Update(map, pos + directions[i]);
+	}
 }
 
 u8 concrete_GetMask(CMap@ map, Vec2f pos)
 {
-    u8 mask = 0;
+	u8 mask = 0;
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        if (isConcreteTile(map, pos + directions[i])) mask |= 1 << i;
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		if (isConcreteTile(map, pos + directions[i])) mask |= 1 << i;
+	}
 
-    return mask;
+	return mask;
 }
 
 void concrete_Update(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    if (isConcreteTile(map, pos))
+	u16 tile = map.getTile(pos).type;
+	if (isConcreteTile(map, pos))
 		map.SetTile(map.getTileOffset(pos),CMap::tile_concrete+concrete_GetMask(map,pos));
 }
 
 bool isConcreteTile(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_v14;
+	u16 tile = map.getTile(pos).type;
+	return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_v14;
 }
 
 void reinforcedconcrete_SetTile(CMap@ map, Vec2f pos)
 {
-    map.SetTile(map.getTileOffset(pos), CMap::tile_reinforcedconcrete + reinforcedconcrete_GetMask(map, pos));
+	map.SetTile(map.getTileOffset(pos), CMap::tile_reinforcedconcrete + reinforcedconcrete_GetMask(map, pos));
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        reinforcedconcrete_Update(map, pos + directions[i]);
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		reinforcedconcrete_Update(map, pos + directions[i]);
+	}
 }
 
 u8 reinforcedconcrete_GetMask(CMap@ map, Vec2f pos)
 {
-    u8 mask = 0;
+	u8 mask = 0;
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        if (isReinforcedConcreteTile(map, pos + directions[i])) mask |= 1 << i;
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		if (isReinforcedConcreteTile(map, pos + directions[i])) mask |= 1 << i;
+	}
 
-    return mask;
+	return mask;
 }
 
 void reinforcedconcrete_Update(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    if (isReinforcedConcreteTile(map, pos))
+	u16 tile = map.getTile(pos).type;
+	if (isReinforcedConcreteTile(map, pos))
 		map.SetTile(map.getTileOffset(pos),CMap::tile_reinforcedconcrete+reinforcedconcrete_GetMask(map,pos));
 }
 
 bool isReinforcedConcreteTile(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    return tile >= CMap::tile_reinforcedconcrete && tile <= CMap::tile_reinforcedconcrete_v14;
+	u16 tile = map.getTile(pos).type;
+	return tile >= CMap::tile_reinforcedconcrete && tile <= CMap::tile_reinforcedconcrete_v14;
 }
 
 void bconcrete_SetTile(CMap@ map, Vec2f pos)
 {
-    map.SetTile(map.getTileOffset(pos), CMap::tile_bconcrete + bconcrete_GetMask(map, pos));
+	map.SetTile(map.getTileOffset(pos), CMap::tile_bconcrete + bconcrete_GetMask(map, pos));
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        bconcrete_Update(map, pos + directions[i]);
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		bconcrete_Update(map, pos + directions[i]);
+	}
 }
 
 u8 bconcrete_GetMask(CMap@ map, Vec2f pos)
 {
-    u8 mask = 0;
+	u8 mask = 0;
 
-    for (u8 i = 0; i < 4; i++)
-    {
-        if (isBConcreteTile(map, pos + directions[i])) mask |= 1 << i;
-    }
+	for (u8 i = 0; i < 4; i++)
+	{
+		if (isBConcreteTile(map, pos + directions[i])) mask |= 1 << i;
+	}
 
-    return mask;
+	return mask;
 }
 
 void bconcrete_Update(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    if (isBConcreteTile(map, pos))
+	u16 tile = map.getTile(pos).type;
+	if (isBConcreteTile(map, pos))
 		map.SetTile(map.getTileOffset(pos),CMap::tile_bconcrete+bconcrete_GetMask(map,pos));
 }
 
 bool isBConcreteTile(CMap@ map, Vec2f pos)
 {
-    u16 tile = map.getTile(pos).type;
-    return tile >= CMap::tile_bconcrete && tile <= CMap::tile_bconcrete_v14;
+	u16 tile = map.getTile(pos).type;
+	return tile >= CMap::tile_bconcrete && tile <= CMap::tile_bconcrete_v14;
 }
 
 void tntsparks(Vec2f at)
