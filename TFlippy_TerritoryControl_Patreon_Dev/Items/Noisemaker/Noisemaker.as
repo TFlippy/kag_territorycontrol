@@ -1,10 +1,12 @@
 #include "Hitters.as";
 #include "Knocked.as";
+#include "CargoAttachmentCommon.as";
 
 void onInit(CBlob@ this)
 {
 	this.Tag("ignore fall");
 	this.Tag("heavy weight");
+	this.Tag("noisemaker");
 	this.set_u32("next attack", 0);
 
 	AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
@@ -12,6 +14,11 @@ void onInit(CBlob@ this)
 	{
 		ap.SetKeysToTake(key_action1);
 	}
+}
+
+bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
+{
+	return blob.hasTag("helicopter");
 }
 
 void onTick(CBlob@ this)
@@ -41,6 +48,14 @@ void onTick(CBlob@ this)
 				this.set_u32("next attack", getGameTime() + 45);
 			}
 		}
+	}
+}
+
+void onCollision(CBlob@ this, CBlob@ blob, bool solid)
+{
+	if (blob !is null)
+	{
+		TryToAttachCargo(this, blob);
 	}
 }
 

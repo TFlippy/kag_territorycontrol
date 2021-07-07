@@ -32,6 +32,7 @@ void onInit(CBlob@ this)
 
 	this.Tag("vehicle");
 	this.Tag("aerial");
+	this.Tag("helicopter");
 	this.set_bool("lastTurn", false);
 
 	GunSettings settings = GunSettings();
@@ -308,7 +309,7 @@ bool doesCollideWithBlob( CBlob@ this, CBlob@ blob )
 	{
 		return true;
 	}
-	return false;
+	return blob.hasTag("noisemaker");
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
