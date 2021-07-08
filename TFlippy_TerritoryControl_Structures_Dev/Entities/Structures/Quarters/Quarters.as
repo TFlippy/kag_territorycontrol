@@ -86,7 +86,9 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 
 	// ICONS
-	AddIconToken("$tea$", "Tea.png", Vec2f(16, 16), 0);
+	AddIconToken("$tea$", "Tea.png", Vec2f(10, 6), 0);
+	AddIconToken("$TeaLeaf$", "TeaLeaf.png", Vec2f(16, 16), 0);
+	AddIconToken("$filled_bucket$", "bucket.png", Vec2f(16, 16), 1);
 	AddIconToken("$quarters_meal$", "Quarters.png", Vec2f(48, 24), 2);
 	AddIconToken("$quarters_egg$", "Quarters.png", Vec2f(24, 24), 8);
 	AddIconToken("$quarters_burger$", "Quarters.png", Vec2f(24, 24), 9);
@@ -117,6 +119,7 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Tea", "$tea$", "tea", "A refreshing cup of tea.", false);
 		s.spawnNothing = true;
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+		AddRequirement(s.requirements, "blob", "filled_bucket", "Water Bucket", 1);
 		AddRequirement(s.requirements, "blob", "TeaLeaf", "Tea Leaves", 2);
 	}
 	{

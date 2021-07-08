@@ -29,6 +29,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$grainplant$", "NurseryIcons.png", Vec2f(16, 30), 0);
 	AddIconToken("$ganjaplant$", "NurseryIcons.png", Vec2f(20, 30), 1);
 	AddIconToken("$flowerplant$", "NurseryIcons.png", Vec2f(16, 16), 3);
+	AddIconToken("$TeaLeaf$", "TeaLeaf.png", Vec2f(16, 16), 0);
 	AddIconToken("$teaplant$", "TeaIcon.png", Vec2f(16, 16), 0);
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
