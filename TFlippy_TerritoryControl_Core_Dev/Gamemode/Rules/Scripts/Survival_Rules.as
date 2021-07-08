@@ -578,6 +578,10 @@ bool doDefaultSpawn(CPlayer@ player, string blobType, u8 team, bool ignoreDisabl
 					MakeMat(new_blob, r.getPosition(), "mat_wood", 100);
 					MakeMat(new_blob, r.getPosition(), "mat_stone", 75);
 				}
+				else
+				{
+					MakeMat(new_blob, r.getPosition(), "mat_wood", 25);
+				}
 			}
 
 			return true;
