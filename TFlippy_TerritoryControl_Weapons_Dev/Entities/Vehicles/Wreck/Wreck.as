@@ -18,8 +18,16 @@ void onInit(CBlob@ this)
 	AddIconToken("$icon_repair$", "InteractionIcons.png", Vec2f(32, 32), 15);
 	{
 		ShopItem@ s = null;
-	
-		if (configName == "helichopperwreck")
+		
+		if (configName == "minicopterwreck")
+		{
+			@s = addShopItem(this, "Repair", "$icon_repair$", "minicopter", "Repair this badly damaged vehicle.");	
+			
+			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+			AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 15);
+			AddRequirement(s.requirements, "coin", "", "Coins", 100);
+		}
+		else if (configName == "helichopperwreck")
 		{
 			@s = addShopItem(this, "Repair", "$icon_repair$", "helichopper", "Repair this badly damaged vehicle.");	
 			
