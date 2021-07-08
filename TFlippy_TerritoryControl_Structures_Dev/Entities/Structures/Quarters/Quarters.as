@@ -87,13 +87,13 @@ void onInit(CBlob@ this)
 
 	// ICONS
 	AddIconToken("$tea$", "Tea.png", Vec2f(10, 6), 0);
-	AddIconToken("$TeaLeaf$", "TeaLeaf.png", Vec2f(16, 16), 0);
-	AddIconToken("$filled_bucket$", "bucket.png", Vec2f(16, 16), 1);
 	AddIconToken("$quarters_meal$", "Quarters.png", Vec2f(48, 24), 2);
 	AddIconToken("$quarters_egg$", "Quarters.png", Vec2f(24, 24), 8);
 	AddIconToken("$quarters_burger$", "Quarters.png", Vec2f(24, 24), 9);
 	AddIconToken("$rest$", "InteractionIcons.png", Vec2f(32, 32), 29);
 	AddIconToken("$beer$", "Beer.png", Vec2f(8, 8), 0);
+	AddIconToken("$mat_TeaLeaf$", "TeaLeaf.png", Vec2f(16, 16), 0);
+	AddIconToken("$mat_filled_bucket$", "bucket.png", Vec2f(16, 16), 1);
 
 	//load config
 	if (getRules().exists("ctf_costs_config"))
@@ -119,7 +119,7 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Tea", "$tea$", "tea", "A refreshing cup of tea.", false);
 		s.spawnNothing = true;
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
-		AddRequirement(s.requirements, "blob", "filled_bucket", "Water Bucket", 1);
+		AddRequirement(s.requirements, "blob", "bucket", "Water Bucket", 1);
 		AddRequirement(s.requirements, "blob", "TeaLeaf", "Tea Leaves", 2);
 	}
 	{
@@ -235,7 +235,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				if (is_server)
 				{
-					MakeMat(this, this.getPosition() + Vec2f(0, -3), "mat_tea", 1);
+					MakeMat(this, this.getPosition() + Vec2f(0, -3), "Tea", 1);
 				}
 			}
 			else if (name == "meal")

@@ -89,7 +89,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Tea Leaf", "$COIN$", "coin-50", "Sell tea leaves (2).", true);
+		ShopItem@ s = addShopItem(this, "Tea Leaf", "$COIN$", "coin-50", "Sell tea leaves (2) for 50 coins.", true);
 		AddRequirement(s.requirements, "blob", "TeaLeaf", "Tea Leaf", 2);
 		s.spawnNothing = true;
 	}

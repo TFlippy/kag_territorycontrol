@@ -16,7 +16,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("consume"))
 	{
-		//this.getSprite().PlaySound("sound here" + XORRandom(5), 1.50f, 1.00f);
+		this.getSprite().PlaySound("TeaSound.ogg", 1.50f, 1.00f);
 
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
 		if (caller !is null)

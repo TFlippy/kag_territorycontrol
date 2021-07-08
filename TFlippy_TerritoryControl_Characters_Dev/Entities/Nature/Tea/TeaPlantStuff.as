@@ -23,7 +23,7 @@ void onDie(CBlob@ this)
 				CBlob@ seed = server_MakeSeed(this.getPosition(), "tea_plant");
 				if (seed !is null)
 				{
-					MakeMat(this, this.getPosition() + Vec2f(0, -3), "mat_tealeaf", Maths::Ceil(XORRandom(6)));
+					MakeMat(this, this.getPosition() + Vec2f(0, -3), "TeaLeaf", 2);
 					seed.setVelocity(Vec2f(XORRandom(6) - 3.0f, XORRandom(6) - 3.0f));
 					seed.Tag("gas immune");
 				}
