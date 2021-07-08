@@ -31,7 +31,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$flowerplant$", "NurseryIcons.png", Vec2f(16, 16), 3);
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(5, 2));
+	this.set_Vec2f("shop menu size", Vec2f(5, 3));
 	this.set_string("shop description", "Plant Nursery");
 	this.set_u8("shop icon", 15);
 	
