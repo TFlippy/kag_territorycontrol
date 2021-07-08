@@ -22,8 +22,8 @@ void onInit(CSprite@ this)
 // #include "MakeSeed.as";
 // #include "MakeMat.as";
 
-// void onDie(CBlob@ this)
-// {
+//void onDie(CBlob@ this)
+//{
 	// if (isServer())
 	// {
 		// for (int i = 0; i <= 1; i++)
@@ -35,5 +35,5 @@ void onInit(CSprite@ this)
 			// }
 		// }
 		// // MakeMat(this, this.getPosition(), "mat_hemp", XORRandom(2)+5);
-	// }
-// }
+	 //}
+//}

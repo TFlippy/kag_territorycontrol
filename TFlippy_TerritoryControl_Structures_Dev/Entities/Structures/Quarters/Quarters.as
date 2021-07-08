@@ -85,7 +85,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 
 	// ICONS
-	AddIconToken("$quarters_beer$", "Quarters.png", Vec2f(24, 24), 7);
+	AddIconToken("$tea$", "Tea.png", Vec2f(16, 16), 0);
 	AddIconToken("$quarters_meal$", "Quarters.png", Vec2f(48, 24), 2);
 	AddIconToken("$quarters_egg$", "Quarters.png", Vec2f(24, 24), 8);
 	AddIconToken("$quarters_burger$", "Quarters.png", Vec2f(24, 24), 9);
@@ -113,9 +113,10 @@ void onInit(CBlob@ this)
 	this.set_u8("shop icon", 25);
 
 	{
-		ShopItem@ s = addShopItem(this, "Root Beer - 1 Heart", "$quarters_beer$", "rootbeer", "A refreshing mug of root beer.", false);
+		ShopItem@ s = addShopItem(this, "Tea", "$tea$", "tea", "A refreshing cup of tea.", false);
 		s.spawnNothing = true;
-		AddRequirement(s.requirements, "coin", "", "Coins", cost_beer);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+		AddRequirement(s.requirements, "blob", "TeaLeaf", "Tea Leaves", 2);
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Meal - Full Health", "$quarters_meal$", "meal", "A hearty meal to get you back on your feet.", false);
@@ -226,12 +227,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				return;
 			}
-			if (name == "rootbeer")
+			if (name == "tea")
 			{
-				// TODO: gulp gulp sound
 				if (is_server)
 				{
-					callerBlob.server_Heal(beer_ammount);
+					MakeMat(this, this.getPosition() + Vec2f(0, -3), "mat_tea", 1);
 				}
 			}
 			else if (name == "meal")

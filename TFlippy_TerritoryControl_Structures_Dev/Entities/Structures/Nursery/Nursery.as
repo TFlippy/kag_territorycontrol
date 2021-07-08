@@ -29,6 +29,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$grainplant$", "NurseryIcons.png", Vec2f(16, 30), 0);
 	AddIconToken("$ganjaplant$", "NurseryIcons.png", Vec2f(20, 30), 1);
 	AddIconToken("$flowerplant$", "NurseryIcons.png", Vec2f(16, 16), 3);
+	AddIconToken("$teaplant$", "TeaIcon.png", Vec2f(16, 16), 0);
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
 	this.set_Vec2f("shop menu size", Vec2f(5, 2));
@@ -75,7 +76,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Bush Seed", "$bush$", "bush_seed", "Create bush seeds.", true);
+		ShopItem@ s = addShopItem(this, "Tea Bush Seed", "$teaplant$", "tea_seed", "Create tea seeds.", true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 30);
 		AddRequirement(s.requirements, "coin", "", "Coins", 50);
 		s.spawnNothing = true;
@@ -87,8 +88,8 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Tea Leaf", "$COIN$", "coin-100", "Sell tea leaves (2).", true);
-		AddRequirement(s.requirements, "blob", "tealeaf", "Tea Leaf", 50);
+		ShopItem@ s = addShopItem(this, "Tea Leaf", "$COIN$", "coin-50", "Sell tea leaves (2).", true);
+		AddRequirement(s.requirements, "blob", "TeaLeaf", "Tea Leaf", 2);
 		s.spawnNothing = true;
 	}
 }
@@ -138,10 +139,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				Random rand(getGameTime());
 				server_MakeSeedsFor(@callerBlob, "grain_plant", XORRandom(3)+1);
 			}
-			else if(spl[0] == "bush_seed")
+			else if(spl[0] == "tea_seed")
 			{
 				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "bush", XORRandom(2)+1);
+				server_MakeSeedsFor(@callerBlob, "tea_plant", 1);
 			}
 			else if(spl[0] == "pine_seed")
 			{
