@@ -19,7 +19,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	return 0.0f;
 }
 
-void onHealthChange( CBlob@ this, f32 oldHealth )
+void onHealthChange( CBlob@ this, f32 oldHealth ) //Sprites now change on any health change not just getting hit, this means that healing ladders actually returns their sprite to previous states
 {
 	CSprite @sprite = this.getSprite();
 
@@ -29,7 +29,6 @@ void onHealthChange( CBlob@ this, f32 oldHealth )
 
 		if (destruction_anim !is null)
 		{
-			print("void");
 			if (this.getHealth() < this.getInitialHealth())
 			{
 				sprite.SetAnimation(destruction_anim);
