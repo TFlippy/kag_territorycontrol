@@ -6,6 +6,7 @@
 #include "CheckSpam.as";
 #include "StandardControlsCommon.as";
 #include "CTFShopCommon.as";
+#include "MakeMat.as";
 // #include "RunnerHead.as";
 
 s32 cost_beer = 5;
