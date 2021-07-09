@@ -17,8 +17,9 @@ class HarvestBlobMat
 void onInit(CBlob@ this)
 {
 	string name = this.getName();
-	HarvestBlobMat[] mats = {};
-	if (name == "log")	mats.push_back(HarvestBlobMat(90.0f, "mat_wood"));
+	HarvestBlobMat[] mats = {}; //When fully mined it will drop a total of 5x these amounts
+	
+	if (name == "log")	mats.push_back(HarvestBlobMat(30.0f, "mat_wood"));
 	else if (name == "wooden_door") mats.push_back(HarvestBlobMat(5.0f, "mat_wood"));
 	else if (name == "stone_door") mats.push_back(HarvestBlobMat(5.0f, "mat_stone"));
 	else if (name == "trap_block") mats.push_back(HarvestBlobMat(2.0f, "mat_stone"));
@@ -38,12 +39,11 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			HarvestBlobMat[] mats;
 			this.get("minableMats", mats);
 			//print(" "+ mats[0].matname);
+			//print(damage + "");
 
 			//Amount of mats is dependant on how many intervalls are crossed with that damage
 			double intervalls = this.getInitialHealth() * 0.2f; //5 Intervalls
-			print(intervalls + " " + this.getHealth() + " "+this.getInitialHealth());
-			int mod = Maths::Ceil(this.getHealth() / intervalls) - Maths::Ceil((this.getHealth() - damage) / intervalls);
-			print(Maths::Ceil(this.getHealth() / intervalls) + " " + Maths::Ceil((this.getHealth() - damage) / intervalls));
+			int mod = Maths::Ceil(this.getHealth() / intervalls) - Maths::Ceil((this.getHealth() - damage * getRules().attackdamage_modifier) / intervalls);
 			if (mod > 0)
 			{
 				if (customData == Hitters::explosion) //Explosions convert ingots into ore
