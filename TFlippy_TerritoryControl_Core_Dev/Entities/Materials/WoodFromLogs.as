@@ -28,7 +28,7 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 {	
 	if (customData == Hitters::drill || customData == Hitters::builder)
 	{
-		if (damage > 0.0f)
+		if (damage > 0.0f && !hitBlob.hasTag("MaterialLess"))
 		{
 			string name = hitBlob.getName();
 

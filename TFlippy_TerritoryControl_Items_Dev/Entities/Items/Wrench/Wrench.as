@@ -43,7 +43,15 @@ void onTick(CBlob@ this)
 						{
 							if (isServer())
 							{
-								blob.server_Heal(1); //Only heals a small amount, bizaarly the actual healing amount is half of this
+								blob.Tag("MaterialLess"); //No more materials can be harvested by mining this (prevents abuse with stone doors)
+								if (blob.getShape().isStatic())
+								{
+									blob.server_Heal(2); //Remember this is halved
+								}
+								else
+								{
+									blob.server_Heal(1); //Only heals a small amount, bizaarly the actual healing amount is half of this
+								}
 								//print("health"+blob.getHealth() + " "+ blob.getInitialHealth());
 							}
 							if (isClient())
