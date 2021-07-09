@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {	
-	if (customData == Hitters::drill || customData == Hitters::builder)
+	if (customData == Hitters::drill || customData == Hitters::builder || hitterBlob.getName() == "dynamite")
 	{
 		if (damage > 0.0f && !this.hasTag("MaterialLess")) //Tag which makes blobs stop giving materials on hit
 		{
@@ -38,9 +38,37 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			HarvestBlobMat[] mats;
 			this.get("minableMats", mats);
 			//print(" "+ mats[0].matname);
-			for (uint i = 0; i < mats.length; i++)
+
+			//Amount of mats is dependant on how many intervalls are crossed with that damage
+			double intervalls = this.getInitialHealth() * 0.2f; //5 Intervalls
+			print(intervalls + " " + this.getHealth() + " "+this.getInitialHealth());
+			int mod = Maths::Ceil(this.getHealth() / intervalls) - Maths::Ceil((this.getHealth() - damage) / intervalls);
+			print(Maths::Ceil(this.getHealth() / intervalls) + " " + Maths::Ceil((this.getHealth() - damage) / intervalls));
+			if (mod > 0)
 			{
-				MakeMat(hitterBlob, hitterBlob.getPosition(), mats[i].matname, mats[i].amount * multiplier);
+				if (customData == Hitters::explosion) //Explosions convert ingots into ore
+				{
+					for (uint i = 0; i < mats.length; i++)
+					{
+						string mat = mats[i].matname;
+						if (mat.substr(mat.length - 5,mat.length - 1) == "ingot")
+						{
+							MakeMat(hitterBlob, hitterBlob.getPosition(), mat.substr(0, mat.length - 5), mats[i].amount * multiplier * 5);
+						}
+						else
+						{
+							MakeMat(hitterBlob, hitterBlob.getPosition(), mat, mats[i].amount * multiplier);
+						}
+						
+					}
+				}
+				else
+				{
+					for (uint i = 0; i < mats.length; i++)
+					{
+						MakeMat(hitterBlob, hitterBlob.getPosition(), mats[i].matname, mats[i].amount * multiplier);
+					}
+				}
 			}
 		}
 	}
