@@ -2,20 +2,11 @@
 
 #include "MakeMat.as";
 #include "Hitters.as";
+#include "MinableMatsCommon.as";
 /*
 NOTE: This must be put before Generic Hit as generic hit sets the damage to 0 and AFTER all damage resistance effects such as WoodHit.as
 										 MinableMats.as;
 */
-class HarvestBlobMat
-{
-	f32 amount;
-	string matname;
-	HarvestBlobMat(f32 pamount, string pmatname)
-	{
-		amount = pamount;
-		matname = pmatname;
-	}
-};
 
 void onInit(CBlob@ this)
 {
@@ -91,15 +82,17 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				{
 					string mat = mats[i].matname;
 					double intervalls = this.getInitialHealth() / (mats[i].amount);
-					int mod = Maths::Ceil(this.getHealth() / intervalls) - Maths::Max(0, Maths::Ceil((this.getHealth() - damage * getRules().attackdamage_modifier) / intervalls));
+					double newHealth = calcHealth(this, damage);
+					
+					int amount = Maths::Ceil(this.getHealth() / intervalls) - Maths::Ceil(newHealth / intervalls);
 		
-					if (mat.substr(mat.length - 5,mat.length - 1) == "ingot")
+					if (mat.substr(mat.length - 5,mat.length - 1) == "ingot") //Convert
 					{
-						MakeMat(hitterBlob, hitterBlob.getPosition(), mat.substr(0, mat.length - 5), 5 * mod);
+						MakeMat(hitterBlob, hitterBlob.getPosition(), mat.substr(0, mat.length - 5), 5 * amount);
 					}
 					else
 					{
-						MakeMat(hitterBlob, hitterBlob.getPosition(), mat, mod);
+						MakeMat(hitterBlob, hitterBlob.getPosition(), mat, amount);
 					}
 					
 				}
@@ -110,11 +103,19 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				{
 					string mat = mats[i].matname;
 					double intervalls = this.getInitialHealth() / (mats[i].amount);
-					int mod = Maths::Ceil(this.getHealth() / intervalls) - Maths::Max(0, Maths::Ceil((this.getHealth() - damage * getRules().attackdamage_modifier) / intervalls));
-					MakeMat(hitterBlob, hitterBlob.getPosition(), mats[i].matname, mod);
+					double newHealth = calcHealth(this, damage);
+
+					int amount = Maths::Ceil(this.getHealth() / intervalls) - Maths::Ceil(newHealth / intervalls);
+
+					MakeMat(hitterBlob, hitterBlob.getPosition(), mats[i].matname, amount);
 				}
 			}
 		}
 	}
 	return damage;
+}
+
+double calcHealth(CBlob@ this, double damage)
+{
+	return Maths::Max(0, (this.getHealth() - damage * getRules().attackdamage_modifier));
 }
