@@ -80,15 +80,15 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			{
 				for (uint i = 0; i < mats.length; i++)
 				{
-					string mat = mats[i].matname;
 					double intervalls = this.getInitialHealth() / (mats[i].amount);
 					double newHealth = calcHealth(this, damage);
 					
 					int amount = Maths::Ceil(this.getHealth() / intervalls) - Maths::Ceil(newHealth / intervalls);
-		
-					if (mat.substr(mat.length - 5,mat.length - 1) == "ingot") //Convert
+
+					string mat = mats[i].matname;
+					if (mat.substr(mat.length - 5,mat.length - 1) == "ingot") //Convert ingots into ores (if possible and nessecary)
 					{
-						MakeMat(hitterBlob, hitterBlob.getPosition(), mat.substr(0, mat.length - 5), 5 * amount);
+						MakeMat(hitterBlob, hitterBlob.getPosition(), mat.substr(0, mat.length - 5), 5 * amount); //drop 5 ores instead of 1 ingot
 					}
 					else
 					{
@@ -101,7 +101,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			{
 				for (uint i = 0; i < mats.length; i++)
 				{
-					string mat = mats[i].matname;
 					double intervalls = this.getInitialHealth() / (mats[i].amount);
 					double newHealth = calcHealth(this, damage);
 
