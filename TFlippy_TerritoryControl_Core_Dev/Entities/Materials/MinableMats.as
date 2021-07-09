@@ -4,6 +4,7 @@
 #include "Hitters.as";
 
 //NOTE: This must be put before Generic Hit as generic hit sets the damage to 0 and AFTER all damage resistance effects such as WoodHit.as
+//											 MinableMats.as;
 
 class HarvestBlobMat
 {
@@ -19,14 +20,20 @@ class HarvestBlobMat
 void onInit(CBlob@ this)
 {
 	string name = this.getName();
-	HarvestBlobMat[] mats = {}; //When fully mined it will drop a total of 5x these amounts
+	HarvestBlobMat[] mats = {};
 
-	if (name == "log")	mats.push_back(HarvestBlobMat(30.0f, "mat_wood"));
-	else if (name == "wooden_door" || name == "neutral_door") mats.push_back(HarvestBlobMat(3.0f, "mat_wood"));
-	else if (name == "stone_door") mats.push_back(HarvestBlobMat(5.0f, "mat_stone"));
-	else if (name == "trap_block") mats.push_back(HarvestBlobMat(1.0f, "mat_stone"));
-	else if (this.hasTag("altar")) mats.push_back(HarvestBlobMat(100.0f, "mat_stone"));
-	else if (name == "steamtankwreck") mats.push_back(HarvestBlobMat(1.0f, "mat_ironingot"));
+	if (name == "log")	mats.push_back(HarvestBlobMat(120.0f, "mat_wood"));
+	//Blocks
+	else if (name == "wooden_door" || name == "neutral_door") mats.push_back(HarvestBlobMat(10.0f, "mat_wood"));
+	else if (name == "stone_door") mats.push_back(HarvestBlobMat(25.0f, "mat_stone"));
+	else if (name == "iron_door") mats.push_back(HarvestBlobMat(2.0f, "mat_ironingot"));
+	else if (name == "plasteel_door") mats.push_back(HarvestBlobMat(4.0f, "mat_plasteel"));
+	//Buildings
+	else if (this.hasTag("altar")) mats.push_back(HarvestBlobMat(500.0f, "mat_stone"));
+	//Wrecks
+	else if (name == "armoredbomberwreck") { mats.push_back(HarvestBlobMat(3.0f, "mat_ironingot")); mats.push_back(HarvestBlobMat(100.0f, "mat_wood")); }
+	else if (name == "bomberwreck") mats.push_back(HarvestBlobMat(100.0f, "mat_wood"));
+	else if (name == "steamtankwreck") mats.push_back(HarvestBlobMat(5.0f, "mat_ironingot"));
 
 	//print(name);
 	this.set("minableMats", mats);
@@ -36,7 +43,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 {	
 	if (customData == Hitters::drill || customData == Hitters::builder || hitterBlob.getName() == "dynamite")
 	{
-		print("test" + damage);
+		//print("test" + damage);
 		if (damage > 0.0f && !this.hasTag("MaterialLess")) //Tag which makes blobs stop giving materials on hit
 		{
 			
@@ -47,32 +54,34 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			//print(damage + "");
 
 			//Amount of mats is dependant on how many intervalls are crossed with that damage
-			double intervalls = this.getInitialHealth() * 0.2f; //5 Intervalls
-			int mod = Maths::Ceil(this.getHealth() / intervalls) - Maths::Max(0, Maths::Ceil((this.getHealth() - damage * getRules().attackdamage_modifier) / intervalls));
-			if (mod > 0)
+			if (customData == Hitters::explosion) //Explosions convert ingots into ore
 			{
-				if (customData == Hitters::explosion) //Explosions convert ingots into ore
+				for (uint i = 0; i < mats.length; i++)
 				{
-					for (uint i = 0; i < mats.length; i++)
+					string mat = mats[i].matname;
+					double intervalls = mats[i].amount * multiplier;
+					int mod = Maths::Ceil(this.getHealth() / intervalls) - Maths::Max(0, Maths::Ceil((this.getHealth() - damage * getRules().attackdamage_modifier) / intervalls));
+		
+					if (mat.substr(mat.length - 5,mat.length - 1) == "ingot")
 					{
-						string mat = mats[i].matname;
-						if (mat.substr(mat.length - 5,mat.length - 1) == "ingot")
-						{
-							MakeMat(hitterBlob, hitterBlob.getPosition(), mat.substr(0, mat.length - 5), mats[i].amount * multiplier * 5 * mod);
-						}
-						else
-						{
-							MakeMat(hitterBlob, hitterBlob.getPosition(), mat, mats[i].amount * multiplier * mod);
-						}
-						
+						MakeMat(hitterBlob, hitterBlob.getPosition(), mat.substr(0, mat.length - 5), 5 * mod);
 					}
+					else
+					{
+						MakeMat(hitterBlob, hitterBlob.getPosition(), mat, mod);
+					}
+					
 				}
-				else
+			}
+			else
+			{
+				for (uint i = 0; i < mats.length; i++)
 				{
-					for (uint i = 0; i < mats.length; i++)
-					{
-						MakeMat(hitterBlob, hitterBlob.getPosition(), mats[i].matname, mats[i].amount * multiplier * mod);
-					}
+					string mat = mats[i].matname;
+					double intervalls = this.getInitialHealth() / (mats[i].amount * multiplier);
+					int mod = Maths::Ceil(this.getHealth() / intervalls) - Maths::Max(0, Maths::Ceil((this.getHealth() - damage * getRules().attackdamage_modifier) / intervalls));
+					print(mod + "");
+					MakeMat(hitterBlob, hitterBlob.getPosition(), mats[i].matname, mod);
 				}
 			}
 		}
