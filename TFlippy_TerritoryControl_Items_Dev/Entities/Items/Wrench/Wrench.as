@@ -43,10 +43,8 @@ void onTick(CBlob@ this)
 						{
 							if (isServer())
 							{
-								//double amount = Maths::Min(blob.getHealth() + 1, blob.getInitialHealth());
 								blob.server_Heal(1); //Only heals a small amount, bizaarly the actual healing amount is half of this
-								//this.server_Hit(blob, Vec2f(0,0), Vec2f(0,0), 0.0f, Hitters::builder, true); //Update the sprite
-								print("health"+blob.getHealth() + " "+ blob.getInitialHealth());
+								//print("health"+blob.getHealth() + " "+ blob.getInitialHealth());
 							}
 							if (isClient())
 							{
