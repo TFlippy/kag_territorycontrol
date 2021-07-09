@@ -43,7 +43,13 @@ void onInit(CBlob@ this)
 	else if (this.hasTag("altar")) mats.push_back(HarvestBlobMat(500.0f, "mat_stone"));
 	else if (name == "tavern") { mats.push_back(HarvestBlobMat(100.0f, "mat_stone")); mats.push_back(HarvestBlobMat(150.0f, "mat_wood"));}
 	else if (name == "banditshack") mats.push_back(HarvestBlobMat(150.0f, "mat_wood"));
-	//Automation
+	else if (name == "woodchest") mats.push_back(HarvestBlobMat(50.0f, "mat_wood"));
+	else if (name == "ironlocker") mats.push_back(HarvestBlobMat(2.0f, "mat_ironingot"));
+	else if (name == "lamppost") { mats.push_back(HarvestBlobMat(15.0f, "mat_stone")); mats.push_back(HarvestBlobMat(20.0f, "mat_wood")); mats.push_back(HarvestBlobMat(1.0f, "mat_copperwire"));}
+	else if (name == "teamlamp") { mats.push_back(HarvestBlobMat(10.0f, "mat_wood")); mats.push_back(HarvestBlobMat(1.0f, "mat_copperwire"));}
+	else if (name == "industriallamp") { mats.push_back(HarvestBlobMat(15.0f, "mat_stone")); mats.push_back(HarvestBlobMat(1.0f, "mat_copperwire"));}
+	else if (name == "ceilinglamp") mats.push_back(HarvestBlobMat(1.0f, "mat_copperwire"));
+	//Industry
 	else if (name == "conveyor") { mats.push_back(HarvestBlobMat(3.0f, "mat_stone")); mats.push_back(HarvestBlobMat(4.0f, "mat_wood"));}
 	else if (name == "seperator") { mats.push_back(HarvestBlobMat(10.0f, "mat_stone")); mats.push_back(HarvestBlobMat(5.0f, "mat_wood"));}
 	else if (name == "launcher") { mats.push_back(HarvestBlobMat(5.0f, "mat_stone")); mats.push_back(HarvestBlobMat(10.0f, "mat_wood"));}
@@ -73,7 +79,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	{
 		if (damage > 0.0f && !this.hasTag("MaterialLess")) //Tag which makes blobs stop giving materials on hit
 		{
-			f32 multiplier = this.exists("mining_multiplier") ? this.get_f32("mining_multiplier") : 1.00f;
 			HarvestBlobMat[] mats;
 			this.get("minableMats", mats);
 			//print(" "+ mats[0].matname);
@@ -85,7 +90,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				for (uint i = 0; i < mats.length; i++)
 				{
 					string mat = mats[i].matname;
-					double intervalls = this.getInitialHealth() / (mats[i].amount * multiplier);
+					double intervalls = this.getInitialHealth() / (mats[i].amount);
 					int mod = Maths::Ceil(this.getHealth() / intervalls) - Maths::Max(0, Maths::Ceil((this.getHealth() - damage * getRules().attackdamage_modifier) / intervalls));
 		
 					if (mat.substr(mat.length - 5,mat.length - 1) == "ingot")
@@ -104,7 +109,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				for (uint i = 0; i < mats.length; i++)
 				{
 					string mat = mats[i].matname;
-					double intervalls = this.getInitialHealth() / (mats[i].amount * multiplier);
+					double intervalls = this.getInitialHealth() / (mats[i].amount);
 					int mod = Maths::Ceil(this.getHealth() / intervalls) - Maths::Max(0, Maths::Ceil((this.getHealth() - damage * getRules().attackdamage_modifier) / intervalls));
 					MakeMat(hitterBlob, hitterBlob.getPosition(), mats[i].matname, mod);
 				}
