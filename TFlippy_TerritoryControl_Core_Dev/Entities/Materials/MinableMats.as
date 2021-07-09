@@ -32,6 +32,10 @@ void onInit(CBlob@ this)
 	else if (name == "stone_triangle") mats.push_back(HarvestBlobMat(1.0f, "mat_stone"));
 	else if (name == "concrete_triangle") mats.push_back(HarvestBlobMat(2.0f, "mat_concrete"));
 	else if (name == "iron_triangle") mats.push_back(HarvestBlobMat(1.0f, "mat_ironingot"));
+	else if (name == "stone_halfblock") mats.push_back(HarvestBlobMat(1.0f, "mat_stone"));
+	else if (name == "iron_halfblock") mats.push_back(HarvestBlobMat(1.0f, "mat_ironingot"));
+	else if (name == "wooden_platform") mats.push_back(HarvestBlobMat(10.0f, "mat_wood"));
+	else if (name == "iron_platform") mats.push_back(HarvestBlobMat(2.0f, "mat_ironingot"));
 	//Buildings
 	else if (this.hasTag("altar")) mats.push_back(HarvestBlobMat(500.0f, "mat_stone"));
 	else if (name == "tavern") { mats.push_back(HarvestBlobMat(100.0f, "mat_stone")); mats.push_back(HarvestBlobMat(150.0f, "mat_wood"));}
