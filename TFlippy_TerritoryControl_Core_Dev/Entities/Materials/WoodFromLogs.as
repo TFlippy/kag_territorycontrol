@@ -5,54 +5,43 @@
 
 class HarvestBlobPair
 {
-	string name;
-	f32 amount_wood;
-	f32 amount_stone;
-	HarvestBlobPair(string blobname, f32 wood, f32 stone)
+	string blobname;
+	f32 amount;
+	string matname;
+	HarvestBlobPair(string pblobname, f32 pamount, string pmatname)
 	{
-		name = blobname;
-		amount_wood = wood;
-		amount_stone = stone;
+		blobname = pblobname;
+		amount = pamount;
+		matname = pmatname;
 	}
 };
 
 HarvestBlobPair[] pairs =
 {
-	HarvestBlobPair("log", 90.0f, 0.0f),
-	HarvestBlobPair("wooden_door", 5.0f, 0.0f),
-	HarvestBlobPair("stone_door", 0.0f, 5.0f),
-	HarvestBlobPair("trap_block", 0.0f, 2.5f),
+	HarvestBlobPair("log", 90.0f, "mat_wood"),
+	HarvestBlobPair("wooden_door", 5.0f, "mat_wood"),
+	HarvestBlobPair("stone_door", 5.0f, "mat_stone"),
+	HarvestBlobPair("trap_block", 2.5f, "mat_stone"),
 };
 
 void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitBlob, u8 customData)
 {	
 	if (customData == Hitters::drill || customData == Hitters::builder)
 	{
-		if (damage > 0.0f)
+		if (damage > 0.0f && !hitBlob.hasTag("MaterialLess")) //Tag which makes blobs stop giving materials on hit
 		{
 			string name = hitBlob.getName();
 
 			f32 multiplier = this.exists("mining_multiplier") ? this.get_f32("mining_multiplier") : 1.00f;
 			
-			int wood = 0;
-			int stone = 0;
 			for (uint i = 0; i < pairs.length; i++)
 			{
-				if (pairs[i].name == name)
+				//print("test" + name);
+				if (pairs[i].blobname == name)
 				{
-					stone = pairs[i].amount_stone * damage;
-					wood = pairs[i].amount_wood * damage;
+					MakeMat(this, worldPoint, pairs[i].matname, pairs[i].amount * multiplier);
 					break;
 				}
-			}
-
-			if (wood > 0)
-			{
-				MakeMat(this, worldPoint, "mat_wood", wood * multiplier);
-			}
-			if (stone > 0)
-			{
-				MakeMat(this, worldPoint, "mat_stone", stone * multiplier);
 			}
 		}
 	}
