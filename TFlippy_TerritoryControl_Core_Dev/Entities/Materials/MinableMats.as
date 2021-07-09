@@ -28,8 +28,14 @@ void onInit(CBlob@ this)
 	else if (name == "stone_door") mats.push_back(HarvestBlobMat(25.0f, "mat_stone"));
 	else if (name == "iron_door") mats.push_back(HarvestBlobMat(2.0f, "mat_ironingot"));
 	else if (name == "plasteel_door") mats.push_back(HarvestBlobMat(4.0f, "mat_plasteel"));
+	else if (name == "wood_triangle") mats.push_back(HarvestBlobMat(1.0f, "mat_wood"));
+	else if (name == "stone_triangle") mats.push_back(HarvestBlobMat(1.0f, "mat_stone"));
+	else if (name == "concrete_triangle") mats.push_back(HarvestBlobMat(2.0f, "mat_concrete"));
+	else if (name == "iron_triangle") mats.push_back(HarvestBlobMat(1.0f, "mat_ironingot"));
 	//Buildings
 	else if (this.hasTag("altar")) mats.push_back(HarvestBlobMat(500.0f, "mat_stone"));
+	else if (name == "tavern") { mats.push_back(HarvestBlobMat(100.0f, "mat_stone")); mats.push_back(HarvestBlobMat(150.0f, "mat_wood"));}
+	else if (name == "banditshack") mats.push_back(HarvestBlobMat(150.0f, "mat_wood"));
 	//Wrecks
 	else if (name == "armoredbomberwreck") { mats.push_back(HarvestBlobMat(3.0f, "mat_ironingot")); mats.push_back(HarvestBlobMat(100.0f, "mat_wood")); }
 	else if (name == "armoredcarwreck") { mats.push_back(HarvestBlobMat(10.0f, "mat_ironingot")); mats.push_back(HarvestBlobMat(5.0f, "mat_steelingot")); }
@@ -39,7 +45,8 @@ void onInit(CBlob@ this)
 	else if (name == "minicopterwreck") { mats.push_back(HarvestBlobMat(3.0f, "mat_ironingot")); mats.push_back(HarvestBlobMat(5.0f, "mat_copperwire"));}
 	else if (name == "steamtankwreck") mats.push_back(HarvestBlobMat(5.0f, "mat_ironingot"));
 	else if (name == "triplanewreck") mats.push_back(HarvestBlobMat(100.0f, "mat_wood"));
-	//print(name);
+	
+	
 	this.set("minableMats", mats);
 }
 
@@ -47,7 +54,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 {	
 	if (customData == Hitters::drill || customData == Hitters::builder || hitterBlob.getName() == "dynamite")
 	{
-		//print("test" + damage);
 		if (damage > 0.0f && !this.hasTag("MaterialLess")) //Tag which makes blobs stop giving materials on hit
 		{
 			
