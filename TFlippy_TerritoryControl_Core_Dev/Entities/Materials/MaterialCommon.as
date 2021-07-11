@@ -1,4 +1,4 @@
-
+// CURRENTLY COMPLETLY UNUSED DO NOT TRY THIS
 // Use `.set('harvest', ..)` to
 // define the materials an entity
 // should yield when harvested
