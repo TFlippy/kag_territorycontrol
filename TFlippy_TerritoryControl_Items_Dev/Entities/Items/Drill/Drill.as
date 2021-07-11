@@ -320,8 +320,6 @@ void onTick(CBlob@ this)
 								}
 
 								this.server_Hit(b, hi.hitpos, attackVel, attack_dam, Hitters::drill);
-
-								Material::fromBlob(holder, hi.blob, attack_dam, this);
 							}
 
 							hitsomething = true;

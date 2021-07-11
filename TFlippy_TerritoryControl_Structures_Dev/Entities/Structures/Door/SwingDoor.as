@@ -5,7 +5,8 @@
 #include "MapFlags.as"
 #include "DoorCommon.as"
 
-#include "CustomBlocks.as";
+#include "CustomBlocks.as"
+#include "MinableMatsCommon.as"
 
 void onInit(CBlob@ this)
 {
@@ -25,30 +26,41 @@ void onInit(CBlob@ this)
 	//block knight sword
 	this.Tag("blocks sword");
 
+	string name = this.getName();
+	HarvestBlobMat[] mats = {};
+
 	//HACK
 	// for DefaultNoBuild.as
-	if (this.getName() == "stone_door")
+	if (name == "stone_door")
 	{
 		this.set_TileType("background tile", CMap::tile_castle_back);
+		mats.push_back(HarvestBlobMat(25.0f, "mat_stone"));
 	}
-	else if (this.getName() == "iron_door")
+	else if (name == "iron_door")
 	{
 		this.set_TileType("background tile", CMap::tile_biron);
+		mats.push_back(HarvestBlobMat(2.0f, "mat_ironingot"));
 	}
-	else if (this.getName() == "plasteel_door")
+	else if (name == "plasteel_door")
 	{
 		this.set_TileType("background tile", CMap::tile_bplasteel);
+		mats.push_back(HarvestBlobMat(4.0f, "mat_plasteel"));
 	}
-	else if (this.getName() == "neutral_door")
+	else if (name == "neutral_door")
 	{
 		this.set_TileType("background tile", CMap::tile_wood_back);
 		this.server_setTeamNum(-1);
+		mats.push_back(HarvestBlobMat(10.0f, "mat_wood"));
 	}
 	else
 	{
 		this.set_TileType("background tile", CMap::tile_wood_back);
+		mats.push_back(HarvestBlobMat(10.0f, "mat_wood"));
 	}
-	
+
+	this.set("minableMats", mats);
+
+
 	this.Tag("door");
 	this.Tag("blocks water");
 }

@@ -1,4 +1,5 @@
-﻿// A script by TFlippy
+﻿#include "MinableMatsCommon.as";
+// A script by TFlippy
 
 void onInit(CSprite@ this)
 {
@@ -12,6 +13,10 @@ void onInit(CBlob@ this)
 	this.Tag("builder always hit");
 
 	this.addCommandID("sv_store");
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(50.0f, "mat_wood"));
+	this.set("minableMats", mats);	
 }
 
 void onTick(CBlob@ this)

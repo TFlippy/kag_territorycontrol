@@ -7,6 +7,7 @@
 #include "CTFShopCommon.as";
 #include "MakeMat.as";
 #include "StandardRespawnCommand.as";
+#include "MinableMatsCommon.as";
 
 Random traderRandom(Time());
 
@@ -25,6 +26,10 @@ void onInit(CBlob@ this)
 	this.SetLight(true);
 	this.SetLightRadius(48.0f);
 	this.SetLightColor(SColor(255, 255, 150, 50));
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(150.0f, "mat_wood"));
+	this.set("minableMats", mats);	
 
 	AddIconToken("$icon_faultymine$", "FaultyMine.png", Vec2f(16, 16), 1, 7);
 

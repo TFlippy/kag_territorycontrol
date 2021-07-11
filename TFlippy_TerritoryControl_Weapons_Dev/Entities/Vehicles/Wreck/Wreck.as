@@ -2,6 +2,7 @@
 #include "Requirements.as";
 #include "Requirements_Tech.as";
 #include "ShopCommon.as";
+#include "MinableMatsCommon.as";
 
 
 void onInit(CBlob@ this)
@@ -15,6 +16,19 @@ void onInit(CBlob@ this)
 	
 	this.Tag(SHOP_AUTOCLOSE);
 	
+	HarvestBlobMat[] mats = {};
+
+	if (configName == "armoredbomberwreck") { mats.push_back(HarvestBlobMat(3.0f, "mat_ironingot")); mats.push_back(HarvestBlobMat(100.0f, "mat_wood")); }
+	else if (configName == "armoredcarwreck") { mats.push_back(HarvestBlobMat(10.0f, "mat_ironingot")); mats.push_back(HarvestBlobMat(5.0f, "mat_steelingot")); }
+	else if (configName == "bomberwreck") mats.push_back(HarvestBlobMat(100.0f, "mat_wood"));
+	else if (configName == "carwreck") mats.push_back(HarvestBlobMat(8.0f, "mat_ironingot"));
+	else if (configName == "helichopperwreck") { mats.push_back(HarvestBlobMat(15.0f, "mat_ironingot")); mats.push_back(HarvestBlobMat(30.0f, "mat_steelingot")); mats.push_back(HarvestBlobMat(10.0f, "mat_copperwire"));}
+	else if (configName == "minicopterwreck") { mats.push_back(HarvestBlobMat(3.0f, "mat_ironingot")); mats.push_back(HarvestBlobMat(5.0f, "mat_copperwire"));}
+	else if (configName == "steamtankwreck") mats.push_back(HarvestBlobMat(5.0f, "mat_ironingot"));
+	else if (configName == "triplanewreck") mats.push_back(HarvestBlobMat(100.0f, "mat_wood"));
+
+	this.set("minableMats", mats);
+
 	AddIconToken("$icon_repair$", "InteractionIcons.png", Vec2f(32, 32), 15);
 	{
 		ShopItem@ s = null;

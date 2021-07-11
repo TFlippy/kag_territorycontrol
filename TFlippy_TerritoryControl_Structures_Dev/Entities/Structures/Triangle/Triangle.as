@@ -2,6 +2,7 @@
 
 #include "Hitters.as"
 #include "MapFlags.as"
+#include "MinableMatsCommon.as";
 
 int openRecursion = 0;
 
@@ -21,7 +22,15 @@ void onInit(CBlob@ this)
 	this.getShape().SetOffset(Vec2f(-1.25f, 1.25f));
 	
 	MakeDamageFrame( this );
-	this.getCurrentScript().runFlags |= Script::tick_not_attached;		 
+	this.getCurrentScript().runFlags |= Script::tick_not_attached;
+
+	string name = this.getName();
+	HarvestBlobMat[] mats = {};
+	if (name == "wood_triangle") mats.push_back(HarvestBlobMat(1.0f, "mat_wood"));
+	else if (name == "stone_triangle") mats.push_back(HarvestBlobMat(1.0f, "mat_stone"));
+	else if (name == "concrete_triangle") mats.push_back(HarvestBlobMat(2.0f, "mat_concrete"));
+	else if (name == "iron_triangle") mats.push_back(HarvestBlobMat(1.0f, "mat_ironingot"));
+	this.set("minableMats", mats);		 
 }
 
 void MakeDamageFrame( CBlob@ this )

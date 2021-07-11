@@ -1,4 +1,5 @@
 ﻿#include "MapFlags.as"
+#include "MinableMatsCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -17,6 +18,11 @@ void onInit(CBlob@ this)
 	this.SetLightColor(SColor(255, 255, 150, 50));
 
 	// this.getCurrentScript().runFlags |= Script::tick_not_attached;
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(15.0f, "mat_stone")); 
+	mats.push_back(HarvestBlobMat(1.0f, "mat_copperwire"));
+	this.set("minableMats", mats);	
 }
 
 bool canBePickedUp( CBlob@ this, CBlob@ byBlob )

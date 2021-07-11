@@ -1,5 +1,6 @@
 #include "Hitters.as"
 #include "ParticleSparks.as";
+#include "MinableMatsCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -17,6 +18,11 @@ void onInit(CBlob@ this)
 	this.set_TileType("background tile", CMap::tile_castle_back);
 
 	this.Tag("blocks sword");
+
+	
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(2.0f, "mat_ironingot"));
+	this.set("minableMats", mats);	
 }
 
 void onSetStatic(CBlob@ this, const bool isStatic)

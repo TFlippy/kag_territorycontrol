@@ -1,11 +1,6 @@
 ﻿// A script by TFlippy & Pirate-Rob
 
-#include "Requirements.as";
-#include "ShopCommon.as";
-#include "Descriptions.as";
-#include "CheckSpam.as";
-#include "CTFShopCommon.as";
-#include "MakeMat.as";
+#include "MinableMatsCommon.as";
 
 Random traderRandom(Time());
 
@@ -22,6 +17,12 @@ void onInit(CBlob@ this)
 	this.addCommandID("cl_toggle");
 	
 	SetState(this, this.get_bool("isActive"));
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(15.0f, "mat_stone")); 
+	mats.push_back(HarvestBlobMat(20.0f, "mat_wood")); 
+	mats.push_back(HarvestBlobMat(1.0f, "mat_copperwire")); //Get the full wire back
+	this.set("minableMats", mats);	
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

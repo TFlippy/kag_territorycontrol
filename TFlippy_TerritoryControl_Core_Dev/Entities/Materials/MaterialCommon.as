@@ -1,4 +1,4 @@
-
+// CURRENTLY COMPLETLY UNUSED DO NOT TRY THIS
 // Use `.set('harvest', ..)` to
 // define the materials an entity
 // should yield when harvested
@@ -177,8 +177,9 @@ void createFor(CBlob@ this, string &in name, uint16 &in quantity)
 	}
 }
 
+//COMPLETLY UNUSED
 // Server-side: Create material from a blob
-void fromBlob(CBlob@ this, CBlob@ blob, float &in damage, CBlob@ damageBlob = null)
+/*void fromBlob(CBlob@ this, CBlob@ blob, float &in damage, CBlob@ damageBlob = null)
 {
 	if (damage <= 0.f) return;
 
@@ -228,7 +229,7 @@ void fromBlob(CBlob@ this, CBlob@ blob, float &in damage, CBlob@ damageBlob = nu
 
 		createFor(this, name, harvestAmount);
 	}
-}
+}*/
 
 // Server-side: Create material from a tile
 void fromTile(CBlob@ this, uint16 &in type, float &in damage)
