@@ -1,4 +1,5 @@
 #include "Hitters.as"
+#include "MinableMatsCommon.as";
 
 const bool dangerous_logs = false;
 
@@ -21,6 +22,10 @@ void onInit(CBlob@ this)
 		harvest.set('mat_wood', 100);
 		this.set('harvest', harvest);
 	}
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(120.0f, "mat_wood"));
+	this.set("minableMats", mats);	
 
 	this.Tag("log");
 	this.Tag("pushedByDoor");

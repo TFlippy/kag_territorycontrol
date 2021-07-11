@@ -1,4 +1,5 @@
-﻿// A script by TFlippy
+﻿#include "MinableMatsCommon.as";
+// A script by TFlippy
 
 void onInit(CSprite@ this)
 {
@@ -18,6 +19,10 @@ void onInit(CBlob@ this)
 	this.set_string("Owner", "");
 	this.addCommandID("sv_setowner");
 	this.addCommandID("sv_store");
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(2.0f, "mat_ironingot"));
+	this.set("minableMats", mats);
 }
 
 void onTick(CBlob@ this)

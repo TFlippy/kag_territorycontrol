@@ -2,6 +2,7 @@
 #include "Requirements_Tech.as";
 #include "ShopCommon.as";
 #include "DeityCommon.as";
+#include "MinableMatsCommon.as";
 
 // A script by TFlippy
 
@@ -36,6 +37,10 @@ void onInit(CBlob@ this)
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	
 	if (!this.exists("deity_id")) this.set_u8("deity_id", Deity::none);
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(500.0f, "mat_stone"));
+	this.set("minableMats", mats);	
 	
 	if (this.getName() == "altar")
 	{
