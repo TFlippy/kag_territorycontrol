@@ -17,10 +17,6 @@ void onInit(CBlob@ this)
 		this.server_SetTimeToDie(240 + XORRandom(60));
 
 		this.server_setTeamNum(-1);
-
-		dictionary harvest;
-		harvest.set('mat_wood', 100);
-		this.set('harvest', harvest);
 	}
 
 	HarvestBlobMat[] mats = {};
