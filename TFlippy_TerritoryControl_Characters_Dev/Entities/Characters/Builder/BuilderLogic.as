@@ -188,6 +188,7 @@ bool RecdHitCommand(CBlob@ this, CBitStream@ params)
 				u8 mining_hardness = this.get_u8("mining_hardness");
 				bool can_mine = true;
 				
+
 				if (mining_hardness < 3)
 				{
 					if ((tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14) || (tile >= CMap::tile_bplasteel && tile <= CMap::tile_bplasteel_d14))

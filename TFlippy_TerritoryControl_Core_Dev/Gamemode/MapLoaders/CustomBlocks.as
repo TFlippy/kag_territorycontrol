@@ -97,6 +97,27 @@ namespace CMap
 		tile_bplasteel_d13,
 		tile_bplasteel_d14,
 		tile_tnt = 482,
+
+		tile_kudzu = 483,
+		tile_kudzu_v0,
+		tile_kudzu_v1,
+		tile_kudzu_v2,
+		tile_kudzu_v3,
+		tile_kudzu_v4,
+		tile_kudzu_v5,
+		tile_kudzu_v6,
+		tile_kudzu_v7,
+		tile_kudzu_v8,
+		tile_kudzu_v9,
+		tile_kudzu_v10,
+		tile_kudzu_v11,
+		tile_kudzu_v12,
+		tile_kudzu_v13,
+		tile_kudzu_v14,
+		tile_kudzu_f14,
+		tile_kudzu_d0,
+
+		//TODO: ADD new kudzu tiles here??
 				
 		tile_rail_0 = 507,
 		tile_rail_1 = 508,
@@ -276,7 +297,7 @@ bool isTileRustyIron(TileType tile)
 
 bool isTileConcrete(TileType tile)
 {
-	return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_v14;
+	return tile >= CMap::tile_concrete && tile <= CMap::tile_concrete_d7;
 }
 
 bool isTileBConcrete(TileType tile)
@@ -292,6 +313,11 @@ bool isTileMossyConcrete(TileType tile)
 bool isTileMossyBConcrete(TileType tile)
 {
 	return tile >= CMap::tile_mossybconcrete && tile <= CMap::tile_mossybconcrete_d4;
+}
+
+bool isTileKudzu(TileType tile)
+{
+	return tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_d0;
 }
 
 bool isTileGlass(TileType tile)

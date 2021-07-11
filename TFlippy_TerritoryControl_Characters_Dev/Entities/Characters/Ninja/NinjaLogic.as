@@ -442,6 +442,7 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 					bool wood = map.isTileWood(hi.tile);
 					bool glass = ((hi.tile >= CMap::tile_glass && hi.tile <= CMap::tile_glass_d0) ? true : false);
 					bool tnt = (hi.tile == CMap::tile_tnt ? true : false);
+					bool kudzu = isTileKudzu(hi.tile);
 					if (ground || wood || dirt_stone || gold)
 					{
 						Vec2f tpos = map.getTileWorldPosition(hi.tileOffset) + Vec2f(4, 4);
@@ -487,7 +488,7 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 							}
 						}
 					}
-					else if (glass || tnt)
+					else if (glass || tnt || kudzu)
 					{
 						dontHitMoreMap = true;
 						map.server_DestroyTile(hi.hitpos, 0.1f, this);

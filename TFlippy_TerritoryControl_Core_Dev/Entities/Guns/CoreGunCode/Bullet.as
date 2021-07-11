@@ -5,7 +5,8 @@
 //  Handles bullet activities
 //
 
-#include "BulletModule.as"
+#include "BulletModule.as";
+#include "CustomBlocks.as";
 
 class Bullet
 {
@@ -219,8 +220,9 @@ class Bullet
                         }
                         else
                         {
-                            if (map.isTileGround(tile.type) || map.isTileStone(tile.type))
+                            if (map.isTileGroundStuff(tile.type))
                             {
+                                //Bullet resistance
                                 if (XORRandom(10) > 5) map.server_DestroyTile(hitpos, damage * 0.25f);
                             }
                             else
@@ -232,6 +234,15 @@ class Bullet
 
                     if (isClient())
                     {
+                        if (map.isTileGroundStuff(tile.type) || map.isTileWood(tile.type))
+                        {
+                            ParticleBulletHit("DustSmall.png", hitpos, -dir.Angle() - 90);
+                        }
+                        else if (map.isTileCastle(tile.type) || isTileConcrete(tile.type))
+                        {
+                            ParticleBulletHit("Smoke.png", hitpos, -dir.Angle() - 90);
+                        }
+
                         Sound::Play(S_OBJECT_HIT, hitpos, 1.5f);
                     }
 
@@ -241,8 +252,12 @@ class Bullet
                     }
 
                     CurrentPos = hitpos;
-                    ParticleBullet(CurrentPos, CurrentVelocity);
-                    endBullet = true;
+                    ParticleBullet(CurrentPos, CurrentVelocity); //Little sparks
+
+                    if (tile.type != CMap::tile_empty && !map.isTileBackground(tile))
+                    {
+                        endBullet = true;
+                    }
                 }
             }
         }
@@ -295,10 +310,10 @@ class Bullet
         botRight.RotateBy(angle, newPos);
         topLeft.RotateBy( angle, newPos);
         topRight.RotateBy(angle, newPos);
-        
+
         Vertex[]@ bullet_vertex;
         getRules().get(gunBlob.get_string("CustomBullet"), @bullet_vertex);
-        
+
         bullet_vertex.push_back(Vertex(topLeft.x,  topLeft.y,  0, 0, 0, trueWhite)); // top left
         bullet_vertex.push_back(Vertex(topRight.x, topRight.y, 0, 1, 0, trueWhite)); // top right
         bullet_vertex.push_back(Vertex(botRight.x, botRight.y, 0, 1, 1, trueWhite)); // bot right

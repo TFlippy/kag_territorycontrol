@@ -198,6 +198,18 @@ void onInit(CBlob@ this)
 		s.buttonwidth = 4;
 		s.buttonheight = 2;
 	}
+	{
+		ShopItem@ s = addShopItem(this, "Minicopter", "$icon_minicopter$", "minicopter", "$icon_minicopter$\n\n\n\n\n" + "A fast helicopter used for scouting and transport.\n\n[W]/[S] for vertical throttle, [A]/[D] for horizontal throttle.", false, true);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 250);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 10);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 15);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+
+		s.crate_icon = 0;
+		s.customButton = true;
+		s.buttonwidth = 4;
+		s.buttonheight = 2;
+	}
 }
 
 void onChangeTeam(CBlob@ this, const int oldTeam)
@@ -217,13 +229,13 @@ void addTokens(CBlob@ this)
 	AddIconToken("$icon_longboat$", "VehicleIcons.png", Vec2f(32, 32), 4, teamnum);
 	AddIconToken("$icon_dinghy$", "VehicleIcons.png", Vec2f(32, 32), 5, teamnum);
 
-	AddIconToken("$icon_steamtank$", "Icon_SteamTank.png", Vec2f(48, 28), 0, teamnum);
 	AddIconToken("$icon_bomber$", "Icon_Bomber.png", Vec2f(64, 64), 0, teamnum);
 	AddIconToken("$icon_armoredbomber$", "Icon_ArmoredBomber.png", Vec2f(64, 64), 0, teamnum);
 	AddIconToken("$icon_triplane$", "Icon_Triplane.png", Vec2f(64, 32), 0, teamnum);
 	AddIconToken("$icon_steamtank$", "Icon_Vehicles.png", Vec2f(48, 24), 0, teamnum);
 	AddIconToken("$icon_rocketlauncher$", "Icon_Vehicles.png", Vec2f(24, 24), 5, teamnum);
 	AddIconToken("$icon_cargocontainer$", "CargoContainer.png", Vec2f(64, 24), 0, teamnum);
+	AddIconToken("$icon_minicopter$", "minicopter_icon.png", Vec2f(64, 32), 0, teamnum);
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

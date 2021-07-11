@@ -213,62 +213,66 @@ void onTick(CBlob@ this)
 				Vec2f dir = this.getAimPos() - this.getPosition();
 				dir.Normalize();
 
-				CBlob@ carried = this.getCarriedBlob();
-				if (carried is null)
+				AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("CORPSE");
+				if (point !is null)
 				{
-					CBlob@ blob = getMap().getBlobAtPosition(this.getAimPos());
-					if (blob !is null && blob !is this && !blob.hasTag("dead") && blob.hasTag("human") && this.getDistanceTo(blob) < 32.00f && !getMap().rayCastSolid(this.getPosition(), blob.getPosition())) 
+					CBlob@ carried = point.getOccupied();
+					if (carried is null)
 					{
-						if (client)
+						CBlob@ blob = getMap().getBlobAtPosition(this.getAimPos());
+						if (blob !is null && blob !is this && !blob.hasTag("dead") && blob.hasTag("human") && this.getDistanceTo(blob) < 32.00f && !getMap().rayCastSolid(this.getPosition(), blob.getPosition())) 
 						{
-							this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
-						}
+							if (client)
+							{
+								this.getSprite().PlaySound("TraderScream.ogg", 0.8f, this.getSexNum() == 0 ? 1.0f : 2.0f);
+							}
 
-						if (server)
-						{
-							this.server_Pickup(blob);
-						}
+							if (server)
+							{
+								this.server_AttachTo(blob, point);
+							}
 
-						this.set_u32("next attack", getGameTime() + 20);
+							this.set_u32("next attack", getGameTime() + 20);
+						}
 					}
-				}
-				else if (carried !is null)
-				{
-					if (carried.getConfig() != "hoobballer")
+					else if (carried !is null)
 					{
-						if (client)
+						if (carried.getConfig() != "hoobballer")
 						{
-							this.getSprite().PlaySound("Pus_Attack_2", 1.00f, 0.80f);
-							carried.getSprite().Gib();
-						}
+							if (client)
+							{
+								this.getSprite().PlaySound("Pus_Attack_2", 1.00f, 0.80f);
+								carried.getSprite().Gib();
+							}
 
-						if (server)
+							if (server)
+							{
+								CBlob@ baller = server_CreateBlob("hoobballer", carried.getTeamNum(), carried.getPosition());
+								this.server_AttachTo(baller, point);
+								carried.server_Die();
+							}
+
+							this.set_u32("next attack", getGameTime() + 20);
+						}
+						else
 						{
-							CBlob@ baller = server_CreateBlob("hoobballer", carried.getTeamNum(), carried.getPosition());
-							this.server_Pickup(baller);
-							carried.server_Die();
+							if (client)
+							{
+								this.getSprite().PlaySound("nightstick_hit2", 1.00f, 0.90f);
+							}
+
+							if (server)
+							{
+								this.server_DetachAll();
+							}
+
+							Vec2f dir = this.getAimPos() - this.getPosition();
+							dir.Normalize();
+
+							carried.setVelocity(dir * 10.00f);
+
+							this.set_u32("next attack", getGameTime() + 20);
 						}
-
-						this.set_u32("next attack", getGameTime() + 20);
-					}
-					else
-					{
-						if (client)
-						{
-							this.getSprite().PlaySound("nightstick_hit2", 1.00f, 0.90f);
-						}
-
-						if (server)
-						{
-							this.DropCarried();
-						}
-
-						Vec2f dir = this.getAimPos() - this.getPosition();
-						dir.Normalize();
-
-						carried.setVelocity(dir * 10.00f);
-
-						this.set_u32("next attack", getGameTime() + 20);
 					}
 				}
 			}
@@ -414,9 +418,13 @@ void Stomp(CBlob@ this, int count, f32 magnitude)
 			for (uint i = 0; i < blobsInRadius.length; i++)
 			{
 				CBlob@ hitBlob = blobsInRadius[i];
-				if (hitBlob !is null && hitBlob !is this && hitBlob !is this.getCarriedBlob())
+				AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("CORPSE");
+				if (point !is null)
 				{
-					this.server_Hit(hitBlob, worldPoint, this.getVelocity(), 5.00f, Hitters::crush, true);
+					if (hitBlob !is null && hitBlob !is this && hitBlob !is point.getOccupied())
+					{
+						this.server_Hit(hitBlob, worldPoint, this.getVelocity(), 5.00f, Hitters::crush, true);
+					}
 				}
 			}
 		}
