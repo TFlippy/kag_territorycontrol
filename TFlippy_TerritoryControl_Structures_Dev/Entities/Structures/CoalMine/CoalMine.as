@@ -45,7 +45,7 @@ void onInit(CBlob@ this)
 	//this.set_Vec2f("nobuild extend", Vec2f(0.0f, 8.0f));
 	this.set_Vec2f("travel button pos", Vec2f(3.5f, 4));
 	this.inventoryButtonPos = Vec2f(-16, 8);
-	this.getCurrentScript().tickFrequency = 30*5; //7.5 coal per minute, mind that teams sometimes have like 10 coal mines
+	this.getCurrentScript().tickFrequency = 30*5; //With 14 players its the same rate as before 1x, with 1 player its 0.35x
 
 	getMap().server_SetTile(this.getPosition(), CMap::tile_castle_back);
 
@@ -110,15 +110,25 @@ void onTick(CBlob@ this)
 		// MakeMat(this, this.getPosition(), resources[index], XORRandom(resourceYields[index]));
 
 		CBlob@ storage = FindStorage(this.getTeamNum());
+		int count = getPlayerCount();
+		double mod = ((6 + count) + Maths::Max(0, count - 14)) * 0.05f; 
+		//Previous rate at 14 players, players after 14 increase the rate by twice as much as players before 14
+		//0.35x Previous rate at 1 player
+		//0.5x at 4 players
+		//1x at 14 players
+		//2x at 24 players
+		
 		u8 index = XORRandom(resources.length);
-
+		u32 amount = Maths::Max(1, Maths::Floor(XORRandom(resourceYields[index]) * mod));
+		//print(mod +  " " +amount);
+		
 		if (storage !is null)
 		{
-			MakeMat(storage, this.getPosition(), resources[index], XORRandom(resourceYields[index]));
+			MakeMat(storage, this.getPosition(), resources[index], amount);
 		}
 		else if (!this.getInventory().isFull())
 		{
-			MakeMat(this, this.getPosition(), resources[index], XORRandom(resourceYields[index]));
+			MakeMat(this, this.getPosition(), resources[index], amount);
 		}
 	}
 }
