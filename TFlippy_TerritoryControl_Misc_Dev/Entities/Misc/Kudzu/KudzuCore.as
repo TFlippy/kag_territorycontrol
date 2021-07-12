@@ -22,15 +22,16 @@ void onInit(CBlob @ this)
 	this.SetLightRadius(30.0f);
 	this.SetLightColor(SColor(255, 155, 255, 0));
 
+	//Base stats
 	this.set_u8("MaxSprouts", 10);
 	this.set_f32("UpgradeSpeed", 1);
-	this.set_u8("DamageMod", 1); //Base moultiplier on 0.125
+	this.set_u8("DamageMod", 1); //Base multiplier on 0.125
 
 	this.addCommandID("mutate");
 
 	this.getSprite().SetRelativeZ(500);
 
-	//this.Tag("Mut_"); //Mutation Testing
+	//this.Tag("Mut_Knockback"); //Mutation Testing
 
 	//Starts offline
 }

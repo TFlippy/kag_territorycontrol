@@ -98,8 +98,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 								{
 									Vec2f force = (bpos - pos);
 									force.Normalize();
-
-									b.AddForce(force * b.getMass());
+									b.AddForce(force * Maths::Min(50, b.getMass()) * (XORRandom(6) + 1));
 								}
 							}
 							return 0;
@@ -281,10 +280,14 @@ void Mutate_SurvivabilityBahvior(CBlob@ this, Random@ rand)
 
 void Mutate_DamageBehavior(CBlob@ this, Random@ rand)
 {
-	int r = rand.NextRanged(2);
+	int r = rand.NextRanged(3);
 	if (r < 1 && !this.hasTag("Mut_StunningDamage"))
 	{
 		this.Tag("Mut_StunningDamage");
+	}
+	else if (r < 2 && !this.hasTag("Mut_Knockback"))
+	{
+		this.Tag("Mut_Knockback");
 	}
 	else //Repeatable Mutation (+0.125 damage)
 	{
