@@ -24,7 +24,7 @@ void onInit(CBlob @ this)
 
 	this.set_u8("MaxSprouts", 10);
 	this.set_f32("UpgradeSpeed", 1);
-	this.set_u8("DamageMod", 1);
+	this.set_u8("DamageMod", 1); //Base moultiplier on 0.125
 
 	this.addCommandID("mutate");
 

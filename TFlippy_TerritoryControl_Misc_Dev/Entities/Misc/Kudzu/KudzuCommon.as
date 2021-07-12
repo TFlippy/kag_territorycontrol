@@ -90,9 +90,17 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 								int Type = HittersTC::poison;
 								double Amount = 0.125f * this.get_u8("DamageMod");
 
-								if(this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
+								if (this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
 
-								this.server_Hit(b, bpos, bpos - pos, 0.125f, Type, false);
+								this.server_Hit(b, bpos, bpos - pos, Amount, Type, false);
+
+								if (this.hasTag("Mut_Knockback"))
+								{
+									Vec2f force = (bpos - pos);
+									force.Normalize();
+
+									b.AddForce(force * b.getMass());
+								}
 							}
 							return 0;
 						}
