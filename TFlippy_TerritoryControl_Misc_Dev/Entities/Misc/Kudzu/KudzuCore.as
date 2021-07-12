@@ -23,6 +23,8 @@ void onInit(CBlob @ this)
 	this.SetLightColor(SColor(255, 155, 255, 0));
 
 	this.set_u8("MaxSprouts", 10);
+	this.set_f32("UpgradeSpeed", 1);
+	this.set_u8("DamageMod", 1);
 
 	this.addCommandID("mutate");
 
