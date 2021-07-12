@@ -28,6 +28,8 @@ void onInit(CBlob @ this)
 
 	this.getSprite().SetRelativeZ(500);
 
+	this.Tag("Mut_Gold");
+
 	//Starts offline
 }
 

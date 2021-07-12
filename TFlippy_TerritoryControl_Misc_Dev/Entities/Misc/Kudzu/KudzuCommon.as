@@ -174,23 +174,35 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 		}
 		this.set_u32("Duplication Time", 0); //No more duplicating after the first one
 	}
-	else if (this.hasTag("Mut_Badgers") && rand.NextRanged(100) == 0 && getGameTime() > this.get_u32("Upgrade Time"))
+	else if (getGameTime() > this.get_u32("Upgrade Time"))
 	{
-		CBlob@ node = server_CreateBlob("kudzubadger", 0, pos);
-		if (node != null)
+		if (this.hasTag("Mut_Badgers") && rand.NextRanged(100) == 0)
 		{
-			node.getShape().SetStatic(true);
+			CBlob@ node = server_CreateBlob("kudzubadger", 0, pos);
+			if (node != null)
+			{
+				node.getShape().SetStatic(true);
+			}
+			this.set_u32("Upgrade Time", getGameTime() + 900);
 		}
-		this.set_u32("Upgrade Time", getGameTime() + 900);
-	}
-	else if (this.hasTag("Mut_Explosive") && rand.NextRanged(50) == 0 && getGameTime() > this.get_u32("Upgrade Time"))
-	{
-		CBlob@ node = server_CreateBlob("kudzuexplosive", 0, pos);
-		if (node != null)
+		else if (this.hasTag("Mut_Explosive") && rand.NextRanged(50) == 0)
 		{
-			node.getShape().SetStatic(true);
+			CBlob@ node = server_CreateBlob("kudzuexplosive", 0, pos);
+			if (node != null)
+			{
+				node.getShape().SetStatic(true);
+			}
+			this.set_u32("Upgrade Time", getGameTime() + 600);
 		}
-		this.set_u32("Upgrade Time", getGameTime() + 600);
+		else if (this.hasTag("Mut_Gold") && rand.NextRanged(70) == 0)
+		{
+			CBlob@ node = server_CreateBlob("kudzugold", 0, pos);
+			if (node != null)
+			{
+				node.getShape().SetStatic(true);
+			}
+			this.set_u32("Upgrade Time", getGameTime() + 900);
+		}
 	}
 }
 
@@ -205,7 +217,7 @@ void Mutate(CBlob@ this)
 
 	Random@ rand = Random(getGameTime() + this.getPosition().x); //Randomness is time and position dependent, 
 	//technicly 2 of em in the same coloum mutated at the exact same time would get the same mutation
-	int r = rand.NextRanged(12);
+	int r = rand.NextRanged(13);
 
 	if (r < 1 && !this.hasTag("Mut_Mutating")) //Possibly the most dangerous mutation, (At first slot to reduce the chance of getting it with other mutations)
 	{
@@ -250,7 +262,11 @@ void Mutate(CBlob@ this)
 	{
 		this.Tag("Mut_Badgers");
 	}
-	else if (r < 11 && !this.hasTag("Mut_Regeneration"))
+	else if (r < 11 && !this.hasTag("Mut_Gold"))
+	{
+		this.Tag("Mut_Gold");
+	}
+	else if (r < 12 && !this.hasTag("Mut_Regeneration"))
 	{
 		this.Tag("Mut_Regeneration");
 	}
