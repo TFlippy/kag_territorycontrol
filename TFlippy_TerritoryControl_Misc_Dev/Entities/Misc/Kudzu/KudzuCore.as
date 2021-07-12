@@ -151,7 +151,7 @@ void onTick(CBlob@ this)
 				{
 					Tile backtile = map.getTile(sprout + offset);
 					TileType type = backtile.type;
-					if (isTileKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
+					if (isTileTypeKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
 					{
 						if (canGrow >= 2)
 						{

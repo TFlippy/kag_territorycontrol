@@ -6,11 +6,16 @@
 bool isDead(Vec2f pos, CMap@ map)
 {
 	Tile backtile = map.getTile(pos);
-	if (!isTileKudzu(backtile.type))
+	if (!isTileTypeKudzu(backtile.type))
 	{
 		return true;
 	}
 	return false;
+}
+
+bool isTileTypeKudzu(TileType tile)
+{
+	return tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_d0;
 }
 
 u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = good, 2 = good and no kudzu blob already here
@@ -26,7 +31,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 		return 0;
 	}
 
-	if (isTileSolid(pos, map) && !isTileKudzu(type)) //Dont go past solid blocks unless they are kudzu
+	if (isTileSolid(pos, map) && !isTileTypeKudzu(type)) //Dont go past solid blocks unless they are kudzu
 	{
 		return 0;
 	}
@@ -76,6 +81,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 						if (b.hasTag("kudzu"))	//Ignores kudzu blobs for obvious reasons (From KudzuHit.as))
 						{
 							kudzublob = 0; //This is not a place where you should upgrade
+							//print("OVERLAP FOUND");
 						}
 						else 
 						{
@@ -97,7 +103,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 	}
 
 	//Check if it has support there
-	if (map.isTileBackgroundNonEmpty(backtile) || isTileKudzu(type)) //Can grow on backgrounds (and pass through kudzu)
+	if (map.isTileBackgroundNonEmpty(backtile) || isTileTypeKudzu(type)) //Can grow on backgrounds (and pass through kudzu)
 	{
 		return 1 + kudzublob;
 	}
@@ -111,7 +117,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
     {
 		Tile test = map.getTile(pos + directions[i]);
 		//print(directions[i].x + " " + directions[i].y);
-        if (isTileSolid(pos + directions[i], map) && !isTileKudzu(test.type)) return 1 + kudzublob; //Can grow while at least 1 solid non kudzu tile in the 8 tiles around it
+        if (isTileSolid(pos + directions[i], map) && !isTileTypeKudzu(test.type)) return 1 + kudzublob; //Can grow while at least 1 solid non kudzu tile in the 8 tiles around it
     }
 
 	if (Vec2f(0.0f,-8.0f) == dir && this.hasTag("Mut_UpwardLines"))
@@ -182,6 +188,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 			if (node != null)
 			{
 				node.getShape().SetStatic(true);
+				if (this.hasTag("Mut_Explosive")) node.Tag("Mut_Explosive");
 			}
 			this.set_u32("Upgrade Time", getGameTime() + 900 / UpgradeSpeed);
 		}
