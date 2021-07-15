@@ -154,7 +154,7 @@ void addTokens(CBlob@ this)
 
 bool canPickup(CBlob@ blob)
 {
-	return blob.hasTag("weapon") || blob.hasTag("ammo");
+	return blob.hasTag("weapon") || blob.hasTag("ammo") || blob.hasTag("armor");
 }
 
 void onTick(CBlob@ this)
