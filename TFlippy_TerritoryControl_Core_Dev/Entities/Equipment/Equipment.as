@@ -110,6 +110,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 				addHead(caller, item.getName());
 				if (item.getName() == "militaryhelmet") caller.set_f32("mh_health", item.get_f32("health"));
 				else if (item.getName() == "bucket") caller.set_f32("bucket_health", item.get_f32("health"));
+
+				if (item.hasTag("bushy")) caller.Tag("bushy");
 				item.server_Die();
 			}
 			else if (getEquipmentType(item) == "torso")
@@ -185,6 +187,7 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 void removeHead(CBlob@ playerblob, string headname)
 {
 	if (playerblob.getSprite().getSpriteLayer(headname) !is null) playerblob.getSprite().RemoveSpriteLayer(headname);
+	if (playerblob.getSprite().getSpriteLayer("bushy") !is null) playerblob.getSprite().RemoveSpriteLayer("bushy");
 	if (headname == "minershelmet") playerblob.SetLight(false);	//example of removing custom tags like Light
 
 	playerblob.Untag(headname);
@@ -193,6 +196,7 @@ void removeHead(CBlob@ playerblob, string headname)
 		CBlob@ oldeq = server_CreateBlob(headname, playerblob.getTeamNum(), playerblob.getPosition());
 		if (headname == "militaryhelmet")	//need to be after creating blob, bcos it sets hp to it
 		{
+			if (playerblob.hasTag("bushy")) oldeq.Tag("bushy");
 			oldeq.set_f32("health", playerblob.get_f32("mh_health"));
 			oldeq.getSprite().SetFrameIndex(Maths::Floor(playerblob.get_f32("mh_health") / 4.00f));
 		}
@@ -209,6 +213,7 @@ void removeHead(CBlob@ playerblob, string headname)
 	playerblob.RemoveScript(headname+"_effect.as");
 	playerblob.Tag("update head");
 	playerblob.Untag("disguised");
+	if (playerblob.hasTag("bushy")) playerblob.Untag("bushy");
 }
 
 void addTorso(CBlob@ playerblob, string torsoname)			//The same stuff as in head here.

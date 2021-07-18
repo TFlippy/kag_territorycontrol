@@ -126,11 +126,19 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}*/
 	{
+		ShopItem@ s = addShopItem(this, "Bushy Helm", "$bush$", "bushyhelm", "Add bush camo to helm.");
+		AddRequirement(s.requirements, "blob", "militaryhelmet", "Combat Helmet", 1);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100);
+		AddRequirement(s.requirements, "coin", "", "Coins", 125);
+
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Rendezook", "$icon_rendezook$", "rendezook", "A replica of a rocket launcher found behind the UPF shop in a trash can.\nDoes not seem to hurt anybody.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 350);
 
 		s.customButton = true;
-		s.buttonwidth = 3;
+		s.buttonwidth = 2;
 		s.buttonheight = 1;
 
 		s.spawnNothing = true;
@@ -267,7 +275,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 			else
 			{
-				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
+				string blobName = spl[0];
+				if (blobName == "bushyhelm") blobName = "militaryhelmet";
+
+				CBlob@ blob = server_CreateBlob(blobName, callerBlob.getTeamNum(), this.getPosition());
+				if (spl[0] == "bushyhelm") blob.Tag("bushy");
 
 				if (blob is null && callerBlob is null) return;
 
