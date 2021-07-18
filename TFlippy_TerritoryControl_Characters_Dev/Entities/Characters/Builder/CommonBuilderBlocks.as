@@ -598,7 +598,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		BuildBlock b(0, "shifter", "$shifter$", "Shifter\n Moves things in a set direction, has a cooldown.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
-		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 2);
+		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 1);
 		blocks[2].push_back(b);
 	}
 
