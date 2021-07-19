@@ -22,11 +22,16 @@ void onInit(CBlob @ this)
 	this.SetLightRadius(30.0f);
 	this.SetLightColor(SColor(255, 155, 255, 0));
 
+	//Base stats
 	this.set_u8("MaxSprouts", 10);
+	this.set_f32("UpgradeSpeed", 1);
+	this.set_u8("DamageMod", 1); //Base multiplier on 0.125
 
 	this.addCommandID("mutate");
 
 	this.getSprite().SetRelativeZ(500);
+
+	//this.Tag("Mut_Knockback"); //Mutation Testing
 
 	//Starts offline
 }
@@ -147,7 +152,7 @@ void onTick(CBlob@ this)
 				{
 					Tile backtile = map.getTile(sprout + offset);
 					TileType type = backtile.type;
-					if (isTileKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
+					if (isTileTypeKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
 					{
 						if (canGrow >= 2)
 						{
