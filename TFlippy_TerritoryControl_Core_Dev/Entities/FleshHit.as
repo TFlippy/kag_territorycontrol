@@ -102,7 +102,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 			if (headname == "militaryhelmet" && customData != HittersTC::radiation)
 			{
-				armorMaxHealth = 40.0f;
+				armorMaxHealth = 30.0f;
 				switch (customData)
 				{
 					case HittersTC::bullet_low_cal:
@@ -146,7 +146,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 			if (torsoname == "bulletproofvest" && customData != HittersTC::radiation)
 			{
-				armorMaxHealth = 50.0f;
+				armorMaxHealth = 35.0f;
 				switch (customData)
 				{
 					case HittersTC::bullet_low_cal:
@@ -193,7 +193,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 			if (bootsname == "combatboots" && customData != HittersTC::radiation)
 			{
-				armorMaxHealth = 20.0f;
+				armorMaxHealth = 10.0f;
 				switch (customData)
 				{
 					case Hitters::fall:

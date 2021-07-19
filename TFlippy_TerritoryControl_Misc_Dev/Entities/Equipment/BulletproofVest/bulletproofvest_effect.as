@@ -5,11 +5,11 @@ void onTick(CBlob@ this)
 	
 	//print("hp: "+this.get_f32("bpv_health"));
 	
-	if (this.get_f32("bulletproofvest_health") >= 50.0f)
+	if (this.get_f32("bulletproofvest_health") >= 35.0f)
 	{
 		this.getSprite().PlaySound("ricochet_" + XORRandom(3));
 		this.set_string("equipment_torso", "");
-		this.set_f32("bulletproofvest_health", 49.9f);
+		this.set_f32("bulletproofvest_health", 34.9f);
 		this.RemoveScript("bulletproofvest_effect.as");
 	}
 	// print("torso: "+this.get_f32("bpv_health"));

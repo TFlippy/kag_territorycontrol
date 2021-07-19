@@ -191,7 +191,7 @@ void removeHead(CBlob@ playerblob, string headname)
 		{
 			if (playerblob.hasTag("bushy")) oldeq.Tag("bushy");
 			oldeq.set_f32("health", playerblob.get_f32(headname+"_health"));
-			oldeq.getSprite().SetFrameIndex(Maths::Floor(playerblob.get_f32(headname+"_health") / 10.01f));
+			oldeq.getSprite().SetFrameIndex(Maths::Floor(playerblob.get_f32(headname+"_health") / 7.51f));
 		}
 		else if (headname == "bucket" || headname == "pumpkin" || headname == "scubagear" || headname == "minershelmet")
 		{

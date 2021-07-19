@@ -58,7 +58,7 @@ void onTick(CBlob@ this)
         headoffset += Vec2f(-head_offset.x, head_offset.y);
         headoffset += Vec2f(0, -1);
         milhelmet.SetOffset(headoffset);
-		milhelmet.SetFrameIndex(Maths::Floor(this.get_f32("militaryhelmet_health") / 10.01f));
+		milhelmet.SetFrameIndex(Maths::Floor(this.get_f32("militaryhelmet_health") / 7.51f));
 		
         CSpriteLayer@ bushy = this.getSprite().getSpriteLayer("bushy");
         if (this.hasTag("bushy") && bushy !is null)
@@ -67,11 +67,11 @@ void onTick(CBlob@ this)
         }
     }
    
-    if (this.get_f32("militaryhelmet_health") >= 40.0f)
+    if (this.get_f32("militaryhelmet_health") >= 30.0f)
     {
         this.getSprite().PlaySound("ricochet_" + XORRandom(3));
         this.set_string("equipment_head", "");
-        this.set_f32("militaryhelmet_health", 39.9f);
+        this.set_f32("militaryhelmet_health", 29.9f);
 		if (milhelmet !is null)
 		{
 			this.getSprite().RemoveSpriteLayer("militaryhelmet");
@@ -91,7 +91,7 @@ void onDie(CBlob@ this)
 		{
 			if (this.hasTag("bushy")) item.Tag("bushy");
 			item.set_f32("health", this.get_f32("militaryhelmet_health"));
-			item.getSprite().SetFrameIndex(Maths::Floor(this.get_f32("militaryhelmet_health") / 10.01f));
+			item.getSprite().SetFrameIndex(Maths::Floor(this.get_f32("militaryhelmet_health") / 7.51f));
 		}
 	}
 	
