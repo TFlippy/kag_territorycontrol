@@ -16,7 +16,7 @@ bool canOpenDoor(CBlob@ this, CBlob@ blob)
 
 	if ((blob.getShape().getConsts().collidable) &&
 	        (blob.getRadius() > 5.0f) && //large
-	        (this.getTeamNum() == 255 || this.getTeamNum() == blob.getTeamNum() || (blob.getTeamNum() > 100 && blob.getTeamNum() < 200 && lockdown_passable)) &&
+	        (this.getTeamNum() == 255 || this.getTeamNum() == blob.getTeamNum() || (blob.getTeamNum() >= 100 && blob.getTeamNum() < 200 && lockdown_passable)) &&
 	        (blob.hasTag("player") || blob.hasTag("vehicle") || blob.hasTag("can open door"))) //tags that can open doors
 	{
 		

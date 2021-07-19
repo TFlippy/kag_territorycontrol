@@ -182,7 +182,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		u16 caller, item;
 
-		if(!params.saferead_netid(caller) || !params.saferead_netid(item))
+		if (!params.saferead_netid(caller) || !params.saferead_netid(item))
 			return;
 
 		string name = params.read_string();
@@ -201,7 +201,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 				callerPlayer.server_setCoins(callerPlayer.getCoins() +  parseInt(spl[1]));
 			}
-			else if(spl[0] == "lotteryticket")
+			else if (spl[0] == "lotteryticket")
 			{
 				CBlob@ blob = server_CreateBlobNoInit("lotteryticket");
 				blob.set_u16("value", XORRandom(50000));
@@ -219,12 +219,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				{
 					callerBlob.server_PutInInventory(blob);
 				}
-			}
-			else if (spl[0] == "armoredcar")
-			{
-				CBlob@ crate = server_MakeCrate("armoredcar", "Armored Car", 0, callerBlob.getTeamNum(), this.getPosition(), false);
-				crate.Init();
-				callerBlob.server_Pickup(crate);
 			}
 			else if (spl[0] == "buyshop")
 			{
@@ -270,10 +264,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 			else
 			{
-				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
-
-				if (blob is null) return;
-
 				if (this.get_string("shop_owner") != "")
 				{
 					CPlayer@ owner = getPlayerByUsername(this.get_string("shop_owner"));
@@ -284,13 +274,27 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					}
 				}
 
-				if (!blob.canBePutInInventory(callerBlob))
+				if (spl[0] == "armoredcar")
 				{
-					callerBlob.server_Pickup(blob);
+					CBlob@ crate = server_MakeCrate("armoredcar", "Armored Car", 0, callerBlob.getTeamNum(), this.getPosition(), false);
+					crate.Init();
+					callerBlob.server_Pickup(crate);
 				}
-				else if (callerBlob.getInventory() !is null && !callerBlob.getInventory().isFull())
+				else
 				{
-					callerBlob.server_PutInInventory(blob);
+
+					CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
+
+					if (blob is null) return;
+
+					if (!blob.canBePutInInventory(callerBlob))
+					{
+						callerBlob.server_Pickup(blob);
+					}
+					else if (callerBlob.getInventory() !is null && !callerBlob.getInventory().isFull())
+					{
+						callerBlob.server_PutInInventory(blob);
+					}
 				}
 			}
 		}
@@ -342,7 +346,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 	//rename the market
 	CBlob@ carried = caller.getCarriedBlob();
-	if(carried !is null && carried.getName() == "paper" && caller.getTeamNum() == this.getTeamNum())
+	if (carried !is null && carried.getName() == "paper" && caller.getTeamNum() == this.getTeamNum())
 	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());

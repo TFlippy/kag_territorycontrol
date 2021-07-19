@@ -195,43 +195,48 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	if (customData == Hitters::bomb)
 		damage *= 1.3f;
 
+	return damage;
+}
+
+void onHealthChange( CBlob@ this, f32 oldHealth ) //Sprites now change on any health change not just getting hit, this means that healing doors actually returns their closing sprite to previous states
+{
 	CSprite@ sprite = this.getSprite();
 	if (sprite !is null)
 	{
 		u8 frame = 0;
 
 		Animation @destruction_anim = sprite.getAnimation("destruction");
-		if (destruction_anim !is null)
+		if (destruction_anim !is null && this.getHealth() < this.getInitialHealth())
 		{
-			if (this.getHealth() < this.getInitialHealth())
+			f32 ratio = (this.getHealth() / this.getInitialHealth());
+
+
+			if (ratio <= 0.0f)
 			{
-				f32 ratio = (this.getHealth() - damage * getRules().attackdamage_modifier) / this.getInitialHealth();
-
-
-				if (ratio <= 0.0f)
-				{
-					frame = destruction_anim.getFramesCount() - 1;
-				}
-				else
-				{
-					frame = (1.0f - ratio) * (destruction_anim.getFramesCount());
-				}
-
-				frame = destruction_anim.getFrame(frame);
+				frame = destruction_anim.getFramesCount() - 1;
 			}
+			else
+			{
+				frame = (1.0f - ratio) * (destruction_anim.getFramesCount());
+			}
+
+			frame = destruction_anim.getFrame(frame);
 		}
 
 		Animation @close_anim = sprite.getAnimation("close");
 		u8 lastframe = close_anim.getFrame(close_anim.getFramesCount() - 1);
 		if (lastframe < frame)
 		{
+			close_anim.RemoveFrame(lastframe);
+			close_anim.AddFrame(frame);
+		}
+		else if (lastframe > frame)
+		{
+			close_anim.RemoveFrame(lastframe);
 			close_anim.AddFrame(frame);
 		}
 	}
-
-	return damage;
 }
-
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
