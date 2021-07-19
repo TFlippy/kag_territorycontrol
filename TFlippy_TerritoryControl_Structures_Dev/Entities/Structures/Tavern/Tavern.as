@@ -4,6 +4,7 @@
 #include "ShopCommon.as";
 #include "CTFShopCommon.as";
 #include "MakeMat.as";
+#include "MinableMatsCommon.as";
 
 void onInit(CSprite@ this)
 {
@@ -66,6 +67,11 @@ void onInit(CBlob@ this)
 	this.SetLight(true);
 	this.SetLightRadius(72.0f);
 	this.SetLightColor(SColor(255, 255, 150, 50));
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(100.0f, "mat_stone")); 
+	mats.push_back(HarvestBlobMat(150.0f, "mat_wood"));
+	this.set("minableMats", mats);	
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
