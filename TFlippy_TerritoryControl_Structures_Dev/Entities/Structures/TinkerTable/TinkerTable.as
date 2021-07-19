@@ -162,7 +162,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Flashlight", "$icon_flashlight$", "flashlight", "Miraculous light in a tube! Illuminates the area it's pointing at.");
-		AddRequirement(s.requirements, "blob", "lantern", "Lantern", 1);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
 		AddRequirement(s.requirements, "coin", "", "Coins", 30);
 
@@ -199,7 +199,7 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Accelerated Gyromat Core Replacement", "$icon_gyromat$", "gyromat", "Replace this Accelerated Gyromat's core in hope to improve it.");
 		AddRequirement(s.requirements, "blob", "gyromat", "Gyromat", 1);
-		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 20);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 10);
 		AddRequirement(s.requirements, "coin", "", "Coins", 400);
 
 		s.spawnNothing = true;
