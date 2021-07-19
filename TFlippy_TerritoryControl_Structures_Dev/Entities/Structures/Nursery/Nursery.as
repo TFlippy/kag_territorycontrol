@@ -31,7 +31,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$flowerplant$", "NurseryIcons.png", Vec2f(16, 16), 3);
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(5, 2));
+	this.set_Vec2f("shop menu size", Vec2f(5, 3));
 	this.set_string("shop description", "Plant Nursery");
 	this.set_u8("shop icon", 15);
 	
@@ -84,6 +84,13 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Flower Seed", "$flowerplant$", "flower_seed", "Create flower seeds.", true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
 		AddRequirement(s.requirements, "coin", "", "Coins", 50);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Kudzu Core", "$kudzucore$", "kudzucore", "Creates a kudzu core a quickly spreading plant which slowy damages other things, Cannot be stored", true);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 300);
+		AddRequirement(s.requirements, "coin", "", "Coins", 250);
+		AddRequirement(s.requirements, "blob", "mat_dirt", "Dirt", 100);
 		s.spawnNothing = true;
 	}
 }

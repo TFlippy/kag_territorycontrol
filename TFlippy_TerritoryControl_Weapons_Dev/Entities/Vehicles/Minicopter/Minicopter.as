@@ -3,8 +3,7 @@
 #include "VehicleFuel.as";
 #include "GunCommon.as";
 
-const Vec2f miniGun_offset = Vec2f(-33,9);
-const Vec2f rocketminiGun_offset = Vec2f(-6,4);
+const Vec2f miniGun_offset = Vec2f(-42,7);
 
 const Vec2f upVelo = Vec2f(0.00f, -0.01f);
 const Vec2f downVelo = Vec2f(0.00f, 0.002f);
@@ -15,15 +14,11 @@ const Vec2f minClampVelocity = Vec2f(-0.40f, -0.70f);
 const Vec2f maxClampVelocity = Vec2f( 0.40f, 0.00f);
 
 const Vec2f gun_clampAngle = Vec2f(-20, 80);
-const Vec2f rocket_clampAngle = Vec2f(-180, 180);
 
-const f32 thrust = 1000.00f;
-
-const u32 shootDelay = 2; // Ticks
-const u32 shootDelayRocket = 15; // Ticks
-const f32 damage = 5.0f;
-const int maxRocketStack = 25;
-const int maxAmmoStack = 500;
+const f32 thrust = 950.00f;
+const u32 shootDelay = 4; // Ticks
+const f32 damage = 2.0f;
+const int maxAmmoStack = 300;
 
 void onInit(CBlob@ this)
 {
@@ -32,23 +27,21 @@ void onInit(CBlob@ this)
 	this.Tag("map_damage_dirt");
 
 	this.addCommandID("load_fuel");
-	this.addCommandID("addRocket");
 	this.addCommandID("addAmmo");
-	this.addCommandID("shootRocket");
 	this.addCommandID("shoot");
 
 	this.Tag("vehicle");
 	this.Tag("aerial");
-	//this.Tag("helicopter");    					remind laika later when someone finally sees this
+	this.Tag("helicopter");
 	this.set_bool("lastTurn", false);
 
 	GunSettings settings = GunSettings();
 
 	settings.B_GRAV = Vec2f(0, 0.008); //Bullet Gravity
 	settings.B_TTL = 14; //Bullet Time to live
-	settings.B_SPEED = 60; //Bullet speed
-	settings.B_DAMAGE = 5.0f; //Bullet damage
-	settings.MUZZLE_OFFSET = Vec2f(-33,9);
+	settings.B_SPEED = 30; //Bullet speed
+	settings.B_DAMAGE = 2.0f; //Bullet damage
+	settings.MUZZLE_OFFSET = Vec2f(-42,7);
 	settings.G_RECOIL = 0;
 
 	this.set("gun_settings", @settings);
@@ -62,8 +55,8 @@ void onInit(CBlob@ this)
 		}
 	}
 
-	this.set_f32("max_fuel", 4000);
-	this.set_f32("fuel_consumption_modifier", 2.00f);
+	this.set_f32("max_fuel", 3000);
+	this.set_f32("fuel_consumption_modifier", 3.0f);
 
 	AttachmentPoint@[] aps;
 	if (this.getAttachmentPoints(@aps))
@@ -77,7 +70,6 @@ void onInit(CBlob@ this)
 	}
 
 	this.set_u16("ammoCount", 0);
-	this.set_u16("rocketCount", 0);
 
 	this.getCurrentScript().tickFrequency = 1;
 }
@@ -85,7 +77,7 @@ void onInit(CBlob@ this)
 void onInit(CSprite@ this)
 {
 	//Add minigun
-	CSpriteLayer@ mini = this.addSpriteLayer("minigun", "Helichopper_Gun.png", 16, 16);
+	CSpriteLayer@ mini = this.addSpriteLayer("minigun", "Minicopter_Gun.png", 13, 6);
 	if (mini !is null)
 	{
 		mini.SetOffset(miniGun_offset);
@@ -104,21 +96,12 @@ void onInit(CSprite@ this)
 		int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
 		anim.AddFrames(frames);
 		flash.SetRelativeZ(1.0f);
-		flash.SetOffset(Vec2f(-50,8));
+		flash.SetOffset(Vec2f(-58,6));
 		flash.SetVisible(false);
 		// flash.setRenderStyle(RenderStyle::additive);
 	}
 
-	//Add launcher
-	CSpriteLayer@ rocket = this.addSpriteLayer("rocketlauncher", "Helichopper_Launcher.png", 16, 16);
-	if (rocket !is null)
-	{
-		rocket.SetOffset(rocketminiGun_offset);
-		rocket.SetRelativeZ(50.0f);
-		rocket.SetVisible(true);
-	}
-
-	this.SetEmitSound("Helichopper_Loop.ogg");
+	this.SetEmitSound("minicopter_loop.ogg");
 	this.SetEmitSoundSpeed(0.01f);
 	this.SetEmitSoundPaused(false);
 }
@@ -168,6 +151,23 @@ void onTick(CBlob@ this)
 
 						const f32 mass = this.getMass();
 
+						if (fuel > 0)
+						{
+							if (pressed_w) newForce += upVelo;
+							if (pressed_s) newForce += downVelo;
+							if (pressed_a) newForce += leftVelo;
+							if (pressed_d) newForce += rightVelo;
+						}
+						else
+						{
+							return;
+						}
+					}
+					else if (ap.name == "PASSENGER" && hooman !is null)
+					{
+						bool pressed_m1 = ap.isKeyPressed(key_action1);
+						Vec2f aimPos = hooman.getAimPos();
+						
 						CSpriteLayer@ minigun = sprite.getSpriteLayer("minigun");
 						if (minigun !is null)
 						{
@@ -176,11 +176,6 @@ void onTick(CBlob@ this)
 								this.set_bool("lastTurn", flip);
 								minigun.ResetTransform();
 
-								CSpriteLayer@ rocket = sprite.getSpriteLayer("rocketlauncher");
-								if (rocket !is null)
-								{
-									rocket.ResetTransform();
-								}
 							}
 
 							Vec2f aimvector = aimPos - minigun.getWorldTranslation();
@@ -219,55 +214,7 @@ void onTick(CBlob@ this)
 								}
 							}
 						}
-
-						if (fuel > 0)
-						{
-							if (pressed_w) newForce += upVelo;
-							if (pressed_s) newForce += downVelo;
-							if (pressed_a) newForce += leftVelo;
-							if (pressed_d) newForce += rightVelo;
-						}
-						else
-						{
-							return;
-						}
-					}
-					else if (ap.name == "PASSENGER" && hooman !is null)
-					{
-						bool pressed_m1 = ap.isKeyPressed(key_action1);
-						Vec2f aimPos = hooman.getAimPos();
-
-						CSpriteLayer@ rocket = sprite.getSpriteLayer("rocketlauncher");
-						if (rocket !is null)
-						{
-							Vec2f aimvector = aimPos - rocket.getWorldTranslation();
-							aimvector.RotateBy(-this.getAngleDegrees());
-
-							const f32 flip_factor = flip ? -1: 1;
-							const f32 angle = constrainAngle(-aimvector.Angle() + (flip ? 180 : 0)) * flip_factor;
-							const f32 clampedAngle = Maths::Clamp(angle, rocket_clampAngle.x, rocket_clampAngle.y) * flip_factor;
-
-							this.set_f32("rocketAngle", clampedAngle);
-
-							rocket.ResetTransform();
-							rocket.RotateBy(clampedAngle, Vec2f(0,0));
-
-							if (pressed_m1)
-							{
-								CBlob@ realPlayer = getLocalPlayerBlob();
-								if (getGameTime() > this.get_u32("fireDelayRocket") && realPlayer !is null && realPlayer is hooman)
-								{
-									CBlob@ target = getMap().getBlobAtPosition(aimPos);
-
-									CBitStream params;
-									params.write_u16(target !is null ? target.getNetworkID() : 0);
-									params.write_s32(this.get_f32("rocketAngle"));
-									params.write_Vec2f(rocket.getWorldTranslation());
-									this.SendCommand(this.getCommandID("shootRocket"), params);
-									this.set_u32("fireDelayRocket", getGameTime() + shootDelayRocket);
-								}
-							}
-						}
+						//gun here
 					}
 				}
 			}
@@ -329,7 +276,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	}
 	if (attached !is null)
 	{
-		attached.SetVisible(false);
+		attached.SetVisible(true);
 		attached.Tag("invincible");
 		attached.Tag("invincibilityByVehicle");
 	}
@@ -362,7 +309,7 @@ bool doesCollideWithBlob( CBlob@ this, CBlob@ blob )
 	{
 		return true;
 	}
-	return false;
+	return blob.hasTag("noisemaker");
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
@@ -372,14 +319,8 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		{
 			CBitStream params;
 			params.write_u16(caller.getNetworkID());
-			caller.CreateGenericButton("$sammissile$", Vec2f(3, 2), this, 
-				this.getCommandID("addRocket"), getTranslatedString("Insert SAM Missiles"), params);
-		}
-		{
-			CBitStream params;
-			params.write_u16(caller.getNetworkID());
-			caller.CreateGenericButton("$icon_gatlingammo$", Vec2f(17, 5), this, 
-				this.getCommandID("addAmmo"), getTranslatedString("Insert Gatling Gun Ammo"), params);
+			caller.CreateGenericButton("$icon_pistolammo$", Vec2f(17, 5), this, 
+				this.getCommandID("addAmmo"), getTranslatedString("Insert Low Caliber Ammo"), params);
 		}
 		{
 			CBitStream params;
@@ -387,7 +328,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			if (carried !is null && this.get_f32("fuel_count") < this.get_f32("max_fuel"))
 			{
 				string fuel_name = carried.getName();
-				bool isValid = fuel_name == "mat_fuel";
+				bool isValid = fuel_name == "mat_oil" || fuel_name == "mat_fuel";
 
 				if (isValid)
 				{
@@ -438,47 +379,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			ShootGun(this, angle, params.read_Vec2f());
 		}
 	}
-	else if(cmd == this.getCommandID("shootRocket"))
-	{
-		CBlob@ target = getBlobByNetworkID(params.read_u16());
-
-		if (this.get_u16("rocketCount") > 0)
-		{
-			this.sub_u16("rocketCount", 1);
-			this.Sync("rocketCount", true);
-			f32 angle = params.read_s32();
-			shootRocket(this, angle, target, params.read_Vec2f());
-		}
-	}
-	else if(cmd == this.getCommandID("addRocket"))
-	{
-		u16 blobNum = 0;
-		if (!params.saferead_u16(blobNum))
-		{
-			warn("addRocket");
-			return;
-		}
-		CBlob@ blob = getBlobByNetworkID(blobNum);
-		if (blob is null) return;
-
-		CBlob@ attachedBlob = blob.getAttachments().getAttachmentPointByName("PICKUP").getOccupied();
-		if (attachedBlob !is null && attachedBlob.getName() == "mat_sammissile")
-		{
-			this.add_u16("rocketCount", attachedBlob.getQuantity());
-			attachedBlob.server_Die();
-		}
-
-		CInventory@ invo = blob.getInventory();
-		int rocketCount = invo.getCount("mat_sammissile");
-
-		if(rocketCount > 0)
-		{
-			invo.server_RemoveItems("mat_sammissile", rocketCount);
-			this.add_u16("rocketCount", rocketCount);
-		}
-
-		this.Sync("rocketCount", true);
-	}
 	else if(cmd == this.getCommandID("addAmmo"))
 	{
 		//mat_gatlingammo
@@ -492,18 +392,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if(blob is null) return;
 
 		CBlob@ attachedBlob = blob.getAttachments().getAttachmentPointByName("PICKUP").getOccupied();
-		if (attachedBlob !is null && attachedBlob.getName() == "mat_gatlingammo")
+		if (attachedBlob !is null && attachedBlob.getName() == "mat_pistolammo")
 		{
 			this.add_u16("ammoCount", attachedBlob.getQuantity());
 			attachedBlob.server_Die();
 		}
 
 		CInventory@ invo = blob.getInventory();
-		int ammoCount = invo.getCount("mat_gatlingammo");
+		int ammoCount = invo.getCount("mat_pistolammo");
 
 		if (ammoCount > 0)
 		{
-			invo.server_RemoveItems("mat_gatlingammo", ammoCount);
+			invo.server_RemoveItems("mat_pistolammo", ammoCount);
 			this.add_u16("ammoCount", ammoCount);
 		}
 
@@ -520,7 +420,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			f32 fuel_modifier = 1.00f;
 			bool isValid = false;
 
-			fuel_modifier = GetFuelModifier(fuel_name, isValid, 2);
+			fuel_modifier = GetFuelModifier(fuel_name, isValid, 1);
 
 			if (isValid)
 			{
@@ -565,11 +465,10 @@ void onRender(CSprite@ this)
 		if(gunner.name == "DRIVER")
 		{
 			drawFuelCount(blob);
-			renderAmmo(blob,false);
 		}
 		else
 		{
-			renderAmmo(blob,true);
+			renderAmmo(blob,false);
 		}
 	}
 
@@ -582,7 +481,7 @@ void onRender(CSprite@ this)
 
 		GUI::SetFont("menu");
 		GUI::DrawTextCentered("Requires fuel!", Vec2f(pos.x, pos.y + 85 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
-		GUI::DrawTextCentered("(Fuel)", Vec2f(pos.x, pos.y + 105 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
+		GUI::DrawTextCentered("(Oil or Fuel)", Vec2f(pos.x, pos.y + 105 + Maths::Sin(getGameTime() / 5.0f) * 5.0f), SColor(255, 255, 55, 55));
 	}
 }
 
@@ -644,7 +543,7 @@ void ShootGun(CBlob@ this, f32 angle, Vec2f gunPos)
 		Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x + 5) * -sign, settings.MUZZLE_OFFSET.y);
 		fromBarrel.RotateBy(this.getAngleDegrees());
 
-		CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
+		CBlob@ gunner = this.getAttachmentPoint(1).getOccupied();
 		if (gunner !is null)
 		{
 			shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getPosition() + fromBarrel);
@@ -660,7 +559,7 @@ void ShootGun(CBlob@ this, f32 angle, Vec2f gunPos)
 			flash.SetFrameIndex(0);
 			flash.SetVisible(true);
 		}
-		this.getSprite().PlaySound("Helichopper_Shoot.ogg", 2.00f);
+		this.getSprite().PlaySound("minicopter_shoot.ogg", 2.00f);
 	}
 
 	this.set_u32("fireDelayGunSprite", getGameTime() + (shootDelay + 1)); //shoot delay increased to compensate for cmd time
@@ -678,31 +577,6 @@ void shootGun(const u16 gunID, const f32 aimangle, const u16 hoomanID, const Vec
 	params.write_u32(getGameTime());
 
 	rules.SendCommand(rules.getCommandID("fireGun"), params);
-}
-
-void shootRocket(CBlob@ this, f32 angle, CBlob@ target, Vec2f gunPos)
-{
-	Vec2f dir = Vec2f((this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
-	Vec2f startPos = gunPos;
-
-	if (isServer())
-	{
-		CBlob@ m = server_CreateBlobNoInit("sammissile");
-		m.setPosition(startPos);
-		m.set_Vec2f("direction", dir);
-		m.set_u16("target", target !is null ? target.getNetworkID() : 0);
-		m.set_f32("velocity", 15.00f);
-		m.server_setTeamNum(this.getTeamNum());
-		m.Init();
-	}
-
-	if (isClient())
-	{
-		for (int i = 1; i < 5; i++) {MakeParticle(this, -dir * i, "SmallExplosion");}
-		this.getSprite().PlaySound("Missile_Launch.ogg");
-	}
-
-	//this.set_u32("fireDelayRocket", getGameTime() + shootDelayRocket);
 }
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
@@ -761,7 +635,7 @@ void onDie(CBlob@ this)
 
 	if (isServer())
 	{
-		CBlob@ wreck = server_CreateBlobNoInit("helichopperwreck");
+		CBlob@ wreck = server_CreateBlobNoInit("minicopterwreck");
 		wreck.setPosition(this.getPosition());
 		wreck.setVelocity(this.getVelocity());
 		wreck.setAngleDegrees(this.getAngleDegrees());

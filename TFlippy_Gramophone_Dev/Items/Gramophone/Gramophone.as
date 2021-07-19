@@ -1,6 +1,7 @@
 // A script by TFlippy
 
 #include "GramophoneCommon.as";
+#include "CargoAttachmentCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -33,6 +34,11 @@ void onInit(CBlob@ this)
 		// anim.AddFrame(1);
 		// anim.AddFrame(i);
 	// }
+}
+
+bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
+{
+	return !blob.hasTag("helicopter");
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -133,6 +139,14 @@ void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 	this.doTickScripts = true;
 	inv.doTickScripts = true;
+}
+
+void onCollision(CBlob@ this, CBlob@ blob, bool solid)
+{
+	if (blob !is null)
+	{
+		TryToAttachCargo(this, blob);
+	}
 }
 
 void onDie(CBlob@ this)
