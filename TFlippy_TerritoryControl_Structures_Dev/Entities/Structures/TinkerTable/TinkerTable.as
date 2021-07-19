@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 	addTokens(this); //colored shop icons
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(6, 7));
+	this.set_Vec2f("shop menu size", Vec2f(7, 7));
 	this.set_string("shop description", "Mechanist's Workshop");
 	this.set_u8("shop icon", 15);
 
@@ -118,18 +118,6 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Handheld Irradiator", "$icon_raygun$", "raygun", "A rather dangerous mithril-powered device used for cancer research.");
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 3);
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}
-	{
 		ShopItem@ s = addShopItem(this, "Rocket Pack", "$icon_jetpack$", "jetpack", "A small rocket-propelled backpack.\nOccupies the Torso slot.\nPress [Shift] to jump!");
 		AddRequirement(s.requirements, "blob", "mat_smallrocket", "Small Rocket", 2);
 		AddRequirement(s.requirements, "blob", "mat_oil", "Oil", 50);
@@ -197,6 +185,22 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "Lighter", "$lighter$", "lighter", "A small device which can set things on fire");
+		AddRequirement(s.requirements, "blob", "mat_oil", "Oil", 1);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 3);
+		AddRequirement(s.requirements, "coin", "", "Coins", 30);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Wrench", "$wrench$", "wrench", "Repair damaged vehicles and structures");
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 20);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Accelerated Gyromat Core Replacement", "$icon_gyromat$", "gyromat", "Replace this Accelerated Gyromat's core in hope to improve it.");
 		AddRequirement(s.requirements, "blob", "gyromat", "Gyromat", 1);
 		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 10);
@@ -218,18 +222,6 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Scorcher", "$icon_flamethrower$", "flamethrower", "A tool used for incinerating plants, buildings and people.\n\nUses Oil.");
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}
-	{
 		ShopItem@ s = addShopItem(this, "Binoculars", "$icon_binoculars$", "binoculars", "Two telescopes glued together used for spying neighbours.");
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
@@ -238,9 +230,33 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "Handheld Irradiator", "$icon_raygun$", "raygun", "A rather dangerous mithril-powered device used for cancer research.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 3);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Hazmat Suit", "$icon_hazmat$", "hazmatitem", "A hazardous materials suit giving the wearer protection against fire, toxic gases, radiation and drowning.");
 		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 50);
 		AddRequirement(s.requirements, "coin", "", "Coins", 500);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Scorcher", "$icon_flamethrower$", "flamethrower", "A tool used for incinerating plants, buildings and people.\n\nUses Oil.");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
 
 		s.spawnNothing = true;
 	}
