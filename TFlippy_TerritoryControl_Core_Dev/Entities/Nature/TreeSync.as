@@ -61,9 +61,10 @@ void InitTree(CBlob@ this, TreeVars@ vars)
 		// recreate growth
 		u8 grown_times = this.get_u8("grown_times");
 
-		while (vars.grown_times < grown_times)
+		// Attempt to grow x amount of times instead of forever looping
+		for (int a = vars.grown_times; a < grown_times; a++)
 		{
-			DoGrow(this, vars);
+			DoGrow(this, var);
 		}
 
 		if (this.exists("last_grew_time"))
