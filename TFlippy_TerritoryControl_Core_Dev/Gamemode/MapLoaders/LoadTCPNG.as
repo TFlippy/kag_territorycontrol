@@ -2265,7 +2265,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			}
 			case CMap::tile_goldingot_d0:
 			case CMap::tile_goldingot_d1:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				break;
 
 			case CMap::tile_mithrilingot:
@@ -2275,7 +2275,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			}
 			case CMap::tile_mithrilingot_d0:
 			case CMap::tile_mithrilingot_d1:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				break;
 
 			case CMap::tile_copperingot:
@@ -2285,7 +2285,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			}
 			case CMap::tile_copperingot_d0:
 			case CMap::tile_copperingot_d1:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				break;
 			
 			case CMap::tile_steelingot:
@@ -2295,7 +2295,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			}
 			case CMap::tile_steelingot_d0:
 			case CMap::tile_steelingot_d1:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				break;
 			
 			case CMap::tile_ironingot:
@@ -2305,7 +2305,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 			}
 			case CMap::tile_ironingot_d0:
 			case CMap::tile_ironingot_d1:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION);
 				break;
 		}
 	}
