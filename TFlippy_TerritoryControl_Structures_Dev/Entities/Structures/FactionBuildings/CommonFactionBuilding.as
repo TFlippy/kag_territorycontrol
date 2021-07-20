@@ -204,6 +204,7 @@ void onDie(CBlob@ this)
 	getBlobsByTag("faction_base", @forts);
 
 	CRules@ rules = getRules();
+	this.setInventoryName(initial_base_name);
 	int teamForts = 0; // Current fort is being faction_destroyed
 	u8 team = this.getTeamNum();
 
