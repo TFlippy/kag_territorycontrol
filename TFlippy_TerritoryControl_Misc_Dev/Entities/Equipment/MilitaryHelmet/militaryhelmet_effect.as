@@ -58,7 +58,7 @@ void onTick(CBlob@ this)
         headoffset += Vec2f(-head_offset.x, head_offset.y);
         headoffset += Vec2f(0, -1);
         milhelmet.SetOffset(headoffset);
-		milhelmet.SetFrameIndex(Maths::Floor(this.get_f32("militaryhelmet_health") / 7.51f));
+        milhelmet.SetFrameIndex(Maths::Floor(this.get_f32("militaryhelmet_health") / 7.51f));
 		
         CSpriteLayer@ bushy = this.getSprite().getSpriteLayer("bushy");
         if (this.hasTag("bushy") && bushy !is null)
