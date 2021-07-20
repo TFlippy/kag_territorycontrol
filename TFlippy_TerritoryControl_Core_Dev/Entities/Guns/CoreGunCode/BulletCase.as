@@ -26,8 +26,10 @@ void ParticleCase2(const string particlePic, const Vec2f pos, const f32 angle)
 		p.bounce = 0.25;
 		p.freerotation = true;
 		p.fastcollision = true;
+#ifndef STAGING
 		p.lighting = true;
 		p.lighting_delay = 0;
+#endif
 	}
 }
 
