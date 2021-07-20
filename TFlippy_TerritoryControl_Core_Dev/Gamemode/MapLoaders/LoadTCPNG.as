@@ -1100,6 +1100,36 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 				col = c_matter;
 			break;
 
+			case CMap::tile_goldingot:
+			case CMap::tile_goldingot_d0:
+			case CMap::tile_goldingot_d1:
+				col = c_gold;
+			break;
+
+			case CMap::tile_mithrilingot:
+			case CMap::tile_mithrilingot_d0:
+			case CMap::tile_mithrilingot_d1:
+				col = c_gold;
+			break;
+
+			case CMap::tile_copperingot:
+			case CMap::tile_copperingot_d0:
+			case CMap::tile_copperingot_d1:
+				col = c_gold;
+			break;
+
+			case CMap::tile_steelingot:
+			case CMap::tile_steelingot_d0:
+			case CMap::tile_steelingot_d1:
+				col = c_gold;
+			break;
+
+			case CMap::tile_ironingot:
+			case CMap::tile_ironingot_d0:
+			case CMap::tile_ironingot_d1:
+				col = c_gold;
+			break;
+
 
 			default:
 				col = c_missing;
@@ -1623,6 +1653,36 @@ TileType server_onTileHit(CMap@ map, f32 damage, u32 index, TileType oldTileType
 
 			case CMap::tile_snow_pile_v4:
 			case CMap::tile_snow_pile_v5:
+				return CMap::tile_empty;
+
+			case CMap::tile_goldingot:
+			case CMap::tile_goldingot_d0:
+				return oldTileType + 1;
+			case CMap::tile_goldingot_d1:
+				return CMap::tile_empty;
+
+			case CMap::tile_mithrilingot:
+			case CMap::tile_mithrilingot_d0:
+				return oldTileType + 1;
+			case CMap::tile_mithrilingot_d1:
+				return CMap::tile_empty;
+
+			case CMap::tile_copperingot:
+			case CMap::tile_copperingot_d0:
+				return oldTileType + 1;
+			case CMap::tile_copperingot_d1:
+				return CMap::tile_empty;
+
+			case CMap::tile_steelingot:
+			case CMap::tile_steelingot_d0:
+				return oldTileType + 1;
+			case CMap::tile_steelingot_d1:
+				return CMap::tile_empty;
+
+			case CMap::tile_ironingot:
+			case CMap::tile_ironingot_d0:
+				return oldTileType + 1;
+			case CMap::tile_ironingot_d1:
 				return CMap::tile_empty;
 		}
 	}
@@ -2195,6 +2255,57 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				map.SetTileSupport(index, 0);
 				map.AddTileFlag(index, Tile::LIGHT_SOURCE | Tile::LIGHT_PASSES | Tile::WATER_PASSES);
 				map.RemoveTileFlag(index, Tile::SOLID | Tile::COLLISION);
+				break;
+
+
+			case CMap::tile_goldingot:
+			{
+				map.RemoveTileFlag( index, Tile::WATER_PASSES);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+			}
+			case CMap::tile_goldingot_d0:
+			case CMap::tile_goldingot_d1:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				break;
+
+			case CMap::tile_mithrilingot:
+			{
+				map.RemoveTileFlag( index, Tile::WATER_PASSES);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+			}
+			case CMap::tile_mithrilingot_d0:
+			case CMap::tile_mithrilingot_d1:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				break;
+
+			case CMap::tile_copperingot:
+			{
+				map.RemoveTileFlag( index, Tile::WATER_PASSES);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+			}
+			case CMap::tile_copperingot_d0:
+			case CMap::tile_copperingot_d1:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				break;
+			
+			case CMap::tile_steelingot:
+			{
+				map.RemoveTileFlag( index, Tile::WATER_PASSES);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+			}
+			case CMap::tile_steelingot_d0:
+			case CMap::tile_steelingot_d1:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
+				break;
+			
+			case CMap::tile_ironingot:
+			{
+				map.RemoveTileFlag( index, Tile::WATER_PASSES);
+				if (isClient()) Sound::Play("build_wall.ogg", map.getTileWorldPosition(index), 1.0f, 1.0f);
+			}
+			case CMap::tile_ironingot_d0:
+			case CMap::tile_ironingot_d1:
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES);
 				break;
 		}
 	}
