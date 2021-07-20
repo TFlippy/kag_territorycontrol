@@ -82,7 +82,7 @@ void onRender(CSprite@ this)
 
 					GUI::DrawIconByName("$down_arrow$", pos);
 
-					if (g_debug == 0)
+					if (g_debug == 1)
 					{
 						lastPointName = ap.name;  // draw just one of a kind
 					}
