@@ -174,7 +174,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					this.SetLightRadius(this.get_f32("explosive_radius") * 0.5f);
 					this.getSprite().PlaySound("/Sparkle.ogg", 1.00f, 1.00f);
 					this.getSprite().PlaySound("MigrantScream1.ogg", 1.00f, this.getSexNum() == 0 ? 1.0f : 2.0f);
-					ratio = 0.0f;
+					ratio = 1.0f;
 				}
 				else ratio = 0.50f;
 			}
