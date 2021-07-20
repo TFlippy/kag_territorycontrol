@@ -23,6 +23,19 @@ void UpdateScript(CBlob@ this) // the same as onInit, works one time when get eq
         if (this.getSprite().isFacingLeft())
             milhelmet.SetFacingLeft(true);
     }
+
+    if (this.hasTag("bushy"))
+    {
+	    CSpriteLayer@ bushy = this.getSprite().addSpriteLayer("bushy", "Bushes.png", 24, 24);
+
+		if (bushy !is null)
+		{
+			bushy.SetVisible(true);
+			bushy.SetRelativeZ(200);
+			if (this.getSprite().isFacingLeft())
+				bushy.SetFacingLeft(true);
+		}
+	}
 }
  
 void onTick(CBlob@ this)
@@ -34,6 +47,7 @@ void onTick(CBlob@ this)
     }
  
     CSpriteLayer@ milhelmet = this.getSprite().getSpriteLayer("militaryhelmet");
+    
    
     if (milhelmet !is null)
     {
@@ -44,15 +58,20 @@ void onTick(CBlob@ this)
         headoffset += Vec2f(-head_offset.x, head_offset.y);
         headoffset += Vec2f(0, -1);
         milhelmet.SetOffset(headoffset);
+		milhelmet.SetFrameIndex(Maths::Floor(this.get_f32("militaryhelmet_health") / 10.01f));
 		
-		milhelmet.SetFrameIndex(Maths::Floor(this.get_f32("mh_health") / 5.00f));
+        CSpriteLayer@ bushy = this.getSprite().getSpriteLayer("bushy");
+        if (this.hasTag("bushy") && bushy !is null)
+        {
+        	bushy.SetOffset(headoffset + Vec2f(1, 1));
+        }
     }
    
-    if (this.get_f32("mh_health") >= 20.0f)
+    if (this.get_f32("militaryhelmet_health") >= 40.0f)
     {
         this.getSprite().PlaySound("ricochet_" + XORRandom(3));
         this.set_string("equipment_head", "");
-        this.set_f32("mh_health", 19.9f);
+        this.set_f32("militaryhelmet_health", 39.9f);
 		if (milhelmet !is null)
 		{
 			this.getSprite().RemoveSpriteLayer("militaryhelmet");
@@ -70,10 +89,13 @@ void onDie(CBlob@ this)
 		CBlob@ item = server_CreateBlob("militaryhelmet", this.getTeamNum(), this.getPosition());
 		if (item !is null)
 		{
-			item.set_f32("health", this.get_f32("mh_health"));
-			item.getSprite().SetFrameIndex(Maths::Floor(item.get_f32("mh_health") / 4.00f));
+			if (this.hasTag("bushy")) item.Tag("bushy");
+			item.set_f32("health", this.get_f32("militaryhelmet_health"));
+			item.getSprite().SetFrameIndex(Maths::Floor(this.get_f32("militaryhelmet_health") / 10.01f));
 		}
 	}
 	
+	if (this.getSprite().getSpriteLayer("bushy") !is null) this.getSprite().RemoveSpriteLayer("bushy");
+	if (this.getSprite().getSpriteLayer("militaryhelmet") !is null) this.getSprite().RemoveSpriteLayer("bushy");
     this.RemoveScript("militaryhelmet_effect.as");
 }

@@ -2,6 +2,7 @@
 
 #include "Hitters.as";
 #include "MapFlags.as";
+#include "MinableMatsCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -17,6 +18,11 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 
 	this.Tag("builder always hit");
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(3.0f, "mat_stone")); 
+	mats.push_back(HarvestBlobMat(4.0f, "mat_wood"));
+	this.set("minableMats", mats);	
 }
 
 void onSetStatic(CBlob@ this, const bool isStatic)

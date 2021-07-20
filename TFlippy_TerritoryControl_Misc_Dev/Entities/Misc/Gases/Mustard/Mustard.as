@@ -31,7 +31,7 @@ void onTick(CBlob@ this)
 		for (uint i = 0; i < blobSize; i++)
 		{
 			CBlob@ blob = blobsInRadius[i];
-			if (blob is null || !blob.hasTag("flesh") || blob.hasTag("gas") || blob.hasTag("gas immunity") || !blob.isCollidable()) { continue; }
+			if (blob is null || !blob.hasTag("flesh") || blob.hasTag("gas") || blob.hasTag("gas immune") || !blob.isCollidable()) { break; }
 
 			blob.set_u8("mustard value", Maths::Clamp(blob.get_u8("mustard value") + 1, 0, 64));
 		

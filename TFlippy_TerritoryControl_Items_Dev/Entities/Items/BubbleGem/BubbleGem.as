@@ -1,15 +1,20 @@
 void onTick(CBlob@ this){
 
-	// if(isServer())
-	// if (getGameTime() % 30 == 0){
-	
-		// if(this.getInventoryBlob() !is null)
-		// this.getInventoryBlob().server_Heal(0.25f);
-	
-	// }
-
-	if(this.getInventoryBlob() !is null)
-	this.getInventoryBlob().Tag("bubblegem");
+	if (getGameTime() % 60 == 0)
+	{
+		if (this.getInventoryBlob() !is null) //Harder to use for automation since blob needs to be in water to heal
+		{
+			CBlob@ inv = this.getInventoryBlob();
+			if (inv.isInWater() && inv.hasTag("flesh"))
+			{
+				if (isServer()) inv.server_Heal(0.5f); //Healing amount is doubled from 0.25 but it only ticks every 60 ticks
+			}
+			else //Hiccups
+			{
+				inv.AddForce(Vec2f(XORRandom(3)-1,-1) * inv.getMass()); //While you arent in water it will move you around a bit (with enough you will flop around like a fish on land)
+			}
+		}
+	}
 }
 
 void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)

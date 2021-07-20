@@ -5,7 +5,8 @@
 #include "MapFlags.as"
 #include "DoorCommon.as"
 
-#include "CustomBlocks.as";
+#include "CustomBlocks.as"
+#include "MinableMatsCommon.as"
 
 void onInit(CBlob@ this)
 {
@@ -25,30 +26,41 @@ void onInit(CBlob@ this)
 	//block knight sword
 	this.Tag("blocks sword");
 
+	string name = this.getName();
+	HarvestBlobMat[] mats = {};
+
 	//HACK
 	// for DefaultNoBuild.as
-	if (this.getName() == "stone_door")
+	if (name == "stone_door")
 	{
 		this.set_TileType("background tile", CMap::tile_castle_back);
+		mats.push_back(HarvestBlobMat(25.0f, "mat_stone"));
 	}
-	else if (this.getName() == "iron_door")
+	else if (name == "iron_door")
 	{
 		this.set_TileType("background tile", CMap::tile_biron);
+		mats.push_back(HarvestBlobMat(2.0f, "mat_ironingot"));
 	}
-	else if (this.getName() == "plasteel_door")
+	else if (name == "plasteel_door")
 	{
 		this.set_TileType("background tile", CMap::tile_bplasteel);
+		mats.push_back(HarvestBlobMat(4.0f, "mat_plasteel"));
 	}
-	else if (this.getName() == "neutral_door")
+	else if (name == "neutral_door")
 	{
 		this.set_TileType("background tile", CMap::tile_wood_back);
 		this.server_setTeamNum(-1);
+		mats.push_back(HarvestBlobMat(10.0f, "mat_wood"));
 	}
 	else
 	{
 		this.set_TileType("background tile", CMap::tile_wood_back);
+		mats.push_back(HarvestBlobMat(10.0f, "mat_wood"));
 	}
-	
+
+	this.set("minableMats", mats);
+
+
 	this.Tag("door");
 	this.Tag("blocks water");
 }
@@ -183,43 +195,48 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	if (customData == Hitters::bomb)
 		damage *= 1.3f;
 
+	return damage;
+}
+
+void onHealthChange( CBlob@ this, f32 oldHealth ) //Sprites now change on any health change not just getting hit, this means that healing doors actually returns their closing sprite to previous states
+{
 	CSprite@ sprite = this.getSprite();
 	if (sprite !is null)
 	{
 		u8 frame = 0;
 
 		Animation @destruction_anim = sprite.getAnimation("destruction");
-		if (destruction_anim !is null)
+		if (destruction_anim !is null && this.getHealth() < this.getInitialHealth())
 		{
-			if (this.getHealth() < this.getInitialHealth())
+			f32 ratio = (this.getHealth() / this.getInitialHealth());
+
+
+			if (ratio <= 0.0f)
 			{
-				f32 ratio = (this.getHealth() - damage * getRules().attackdamage_modifier) / this.getInitialHealth();
-
-
-				if (ratio <= 0.0f)
-				{
-					frame = destruction_anim.getFramesCount() - 1;
-				}
-				else
-				{
-					frame = (1.0f - ratio) * (destruction_anim.getFramesCount());
-				}
-
-				frame = destruction_anim.getFrame(frame);
+				frame = destruction_anim.getFramesCount() - 1;
 			}
+			else
+			{
+				frame = (1.0f - ratio) * (destruction_anim.getFramesCount());
+			}
+
+			frame = destruction_anim.getFrame(frame);
 		}
 
 		Animation @close_anim = sprite.getAnimation("close");
 		u8 lastframe = close_anim.getFrame(close_anim.getFramesCount() - 1);
 		if (lastframe < frame)
 		{
+			close_anim.RemoveFrame(lastframe);
+			close_anim.AddFrame(frame);
+		}
+		else if (lastframe > frame)
+		{
+			close_anim.RemoveFrame(lastframe);
 			close_anim.AddFrame(frame);
 		}
 	}
-
-	return damage;
 }
-
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {

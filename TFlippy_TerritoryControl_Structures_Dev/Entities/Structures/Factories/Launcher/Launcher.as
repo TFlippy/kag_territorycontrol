@@ -2,6 +2,7 @@
 
 #include "Hitters.as";
 #include "MapFlags.as";
+#include "MinableMatsCommon.as";
 
 int openRecursion = 0;
 
@@ -26,6 +27,11 @@ void onInit(CBlob@ this)
 	sprite.SetAnimation("forward");
 
 	this.addCommandID("use");
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(5.0f, "mat_stone")); 
+	mats.push_back(HarvestBlobMat(10.0f, "mat_wood"));
+	this.set("minableMats", mats);
 }
 
 void onSetStatic(CBlob@ this, const bool isStatic)

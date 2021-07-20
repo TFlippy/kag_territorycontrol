@@ -41,7 +41,7 @@ Vec2f getBuildingOffsetPos(CBlob@ blob, CMap@ map, Vec2f required_tile_space)
 
 CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 {
-	if(index >= blocks.length)
+	if (index >= blocks.length)
 	{
 		return null;
 	}
@@ -53,18 +53,18 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 	this.set_TileType("buildtile", 0);
 
 	CBlob@ anotherBlob = inv.getItem(b.name);
-	if(isServer() && anotherBlob !is null && this !is null)
+	if (isServer() && anotherBlob !is null && this !is null)
 	{
 		this.server_Pickup(anotherBlob);
 		this.set_u8("buildblob", 255);
 		return null;
 	}
 
-	if(canBuild(this, blocks, index))
+	if (canBuild(this, blocks, index))
 	{
 		Vec2f pos = this.getPosition();
 
-		if(b.buildOnGround)
+		if (b.buildOnGround)
 		{
 			const bool onground = this.isOnGround();
 
@@ -75,7 +75,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			Vec2f space = Vec2f(b.size.x / 8, b.size.y / 8);
 			Vec2f offsetPos = getBuildingOffsetPos(this, map, space);
 
-			if(!fail)
+			if (!fail)
 			{
 				// check every tile space of the built blob for "no build sector" or "solid tile"
 				for(f32 step_x = 0.0f; step_x < space.x ; ++step_x)
@@ -94,7 +94,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 				// if we still havent failed
 				// check if we're making a building
 				// -> need to do some additional checking
-				if(!fail && b.name == "building")
+				if (!fail && b.name == "building")
 				{
 					Vec2f tl = Vec2f(offsetPos.x, offsetPos.y);
 					Vec2f br = Vec2f(offsetPos.x + b.size.x, offsetPos.y + b.size.y);
@@ -120,12 +120,12 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 							Vec2f dif = Vec2f(Maths::Abs(o_pos.x - b_pos.x), Maths::Abs(o_pos.y - b_pos.y));
 							Vec2f total = o_half + b_half;
 							Vec2f sep = total - dif;
-							if(sep.x > allow_overlap && sep.y > allow_overlap)
+							if (sep.x > allow_overlap && sep.y > allow_overlap)
 							{
 								//check if they aren't on the ignore list
 								//done here to avoid a bunch of string comp earlier
 								string o_name = o_blob.getName();
-								if(o_name != "bush" && !o_blob.hasTag("projectile"))
+								if (o_name != "bush" && !o_blob.hasTag("projectile"))
 								{
 									fail = true;
 									break;
@@ -144,17 +144,29 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 						CBlob@ e = blobs[i];
 						Vec2f vector = e.getPosition() - pos;
 						f32 distance = vector.getLength();
-						if(/*e.getTeamNum() != this.getTeamNum() &&*/distance <= 256 && distance >= 8)
+						if (e.hasTag("faction_base") && e.getTeamNum() != this.getTeamNum() && distance <= 320 && distance >= 8)
+						{
+							fail = true;
+							if (this.isMyPlayer()) client_AddToChat("There is an enemy faction base too close!", SColor(0xff444444));
+							break;
+						}
+						else if (e.hasTag("faction_base") && distance <= 224 && distance >= 8)
 						{
 							fail = true;
 							if (this.isMyPlayer()) client_AddToChat("There is a faction base too close!", SColor(0xff444444));
+							break;
+						}
+						else if (e.hasTag("upf_base") && distance <= 256 && distance >= 8)
+						{
+							fail = true;
+							if (this.isMyPlayer()) client_AddToChat("There is a UPF base too close!", SColor(0xff444444));
 							break;
 						}
 					}
 				}
 			}
 
-			if(fail)
+			if (fail)
 			{
 				if (this.isMyPlayer())
 				{
@@ -173,7 +185,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			SendGameplayEvent(createBuiltBlobEvent(this.getPlayer(), b.name));
 		}
 
-		if(isServer())
+		if (isServer())
 		{
 			if (b.name == "camp" && this.getTeamNum() >= 100)
 			{
@@ -225,7 +237,8 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			}
 			else
 			{
-				u8 myTeam = (this.getTeamNum() >= 100 && this.getTeamNum() != 250) ? -1 : this.getTeamNum();
+				bool trapBlocks = (b.name == "trap_block" || b.name == "spikes");
+				u8 myTeam = (this.getTeamNum() >= 100 && this.getTeamNum() != 250 && !trapBlocks) ? -1 : this.getTeamNum();
 				CBlob@ blockBlob = server_CreateBlob(b.name, myTeam, pos);
 				if (blockBlob !is null)
 				{
@@ -259,13 +272,13 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 							bp.setPosition(this.getPosition());
 						}
 					}
-					else if(b.name == "banner")
+					else if (b.name == "banner")
 					{
 						CPlayer@ p = this.getPlayer();
 						CRules@ r = getRules();
-						if(p !is null && r !is null)
+						if (p !is null && r !is null)
 						{
-							if(r.exists("clanData"+p.getUsername().toLower()))
+							if (r.exists("clanData"+p.getUsername().toLower()))
 							{
 								blockBlob.set_string("cData",r.get_string("clanData"+p.getUsername().toLower()));
 								blockBlob.Sync("cData",false);
@@ -276,7 +289,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 
 					if (blockBlob.hasTag("building")) return null;
 
-					if(blockBlob !is null && this !is null)
+					if (blockBlob !is null && this !is null)
 					{
 						this.server_Pickup(blockBlob);
 						this.set_u8("buildblob", index);
@@ -302,7 +315,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 
 bool canBuild(CBlob@ this, BuildBlock[]@ blocks, uint index)
 {
-	if(index >= blocks.length)
+	if (index >= blocks.length)
 	{
 		return false;
 	}
@@ -311,7 +324,7 @@ bool canBuild(CBlob@ this, BuildBlock[]@ blocks, uint index)
 
 	BlockCursor @bc;
 	this.get("blockCursor", @bc);
-	if(bc is null)
+	if (bc is null)
 	{
 		return false;
 	}
@@ -330,7 +343,7 @@ void ClearCarriedBlock(CBlob@ this)
 
 	// remove carried block, if any
 	CBlob@ carried = this.getCarriedBlob();
-	if(carried !is null && carried.hasTag("temp blob"))
+	if (carried !is null && carried.hasTag("temp blob"))
 	{
 		carried.Untag("temp blob");
 		carried.server_Die();
