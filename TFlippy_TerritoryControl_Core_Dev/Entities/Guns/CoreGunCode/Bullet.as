@@ -43,7 +43,7 @@ class Bullet
         CurrentPos = pos;
 
         BulletGrav = settings.B_GRAV;
-        FacingLeft = humanBlob.isFacingLeft();
+        FacingLeft = gun.isFacingLeft();
 
         TimeLeft = settings.B_TTL;
         Speed = settings.B_SPEED;
