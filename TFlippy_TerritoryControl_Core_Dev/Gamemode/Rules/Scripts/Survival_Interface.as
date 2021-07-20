@@ -608,6 +608,47 @@ void onRenderScoreboard(CRules@ this)
 		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
 	}
 
+	// Change log Button
+	{
+		f32 width = 100;
+		f32 height = 40;
+
+		const string text = "Change log";
+
+		Vec2f dim;
+		GUI::GetTextDimensions(text, dim);
+
+		width = dim.x + 20;
+
+		Vec2f tl = Vec2f(getScreenWidth() - 670 - width, y_offset + 10);
+		Vec2f br = Vec2f(getScreenWidth() - 670, tl.y + height);
+
+		CControls@ controls = getControls();
+		Vec2f mousePos = controls.getMouseScreenPos();
+
+		bool hover = mousePos.x > tl.x && mousePos.x < br.x && mousePos.y > tl.y && mousePos.y < br.y;
+
+		if (hover)
+		{
+			GUI::DrawButton(tl, br);
+
+			if (controls.isKeyJustPressed(KEY_LBUTTON))
+			{
+				Sound::Play("option");
+
+				OpenWebsite("https://change.vamist.dev/tc/");
+				// Engine::AcceptWebsiteOpen(true);
+				// Menu::CloseAllMenus();
+			}
+		}
+		else
+		{
+			GUI::DrawPane(tl, br, 0xffcfcfcf);
+		}
+
+		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
+	}
+
 	CControls@ controls = getControls();
 	Vec2f mousePos = controls.getMouseScreenPos();
 
