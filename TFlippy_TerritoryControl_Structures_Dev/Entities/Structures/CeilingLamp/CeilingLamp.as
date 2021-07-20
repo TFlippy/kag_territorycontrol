@@ -1,4 +1,5 @@
 ﻿#include "MapFlags.as"
+#include "MinableMatsCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -11,10 +12,14 @@ void onInit(CBlob@ this)
 	this.Tag("builder always hit");
 
 	this.SetLight(true);
-	this.SetLightRadius(72.0f);
+	this.SetLightRadius(128.0f);
 	this.SetLightColor(SColor(255, 255, 240, 210));
 	
 	this.set_bool("security_state", true);
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(1.0f, "mat_copperwire"));
+	this.set("minableMats", mats);	
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

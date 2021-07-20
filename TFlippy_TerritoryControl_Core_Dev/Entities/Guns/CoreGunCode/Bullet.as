@@ -59,8 +59,9 @@ class Bullet
 
     bool onTick(CMap@ map)
     {
+        TimeLeft = Maths::Max(0, TimeLeft - 1);
+
         // Kill bullet at start of new tick (we don't instantly remove it so client can render it going splat)
-        TimeLeft--;
         if (TimeLeft == 0) return true;
 
         OldPos = LastLerpedPos;

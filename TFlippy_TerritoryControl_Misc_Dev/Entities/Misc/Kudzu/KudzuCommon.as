@@ -6,11 +6,16 @@
 bool isDead(Vec2f pos, CMap@ map)
 {
 	Tile backtile = map.getTile(pos);
-	if (!isTileKudzu(backtile.type))
+	if (!isTileTypeKudzu(backtile.type))
 	{
 		return true;
 	}
 	return false;
+}
+
+bool isTileTypeKudzu(TileType tile)
+{
+	return tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_d0;
 }
 
 u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = good, 2 = good and no kudzu blob already here
@@ -26,7 +31,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 		return 0;
 	}
 
-	if (isTileSolid(pos, map) && !isTileKudzu(type)) //Dont go past solid blocks unless they are kudzu
+	if (isTileSolid(pos, map) && !isTileTypeKudzu(type)) //Dont go past solid blocks unless they are kudzu
 	{
 		return 0;
 	}
@@ -75,20 +80,26 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 					{
 						if (b.hasTag("kudzu"))	//Ignores kudzu blobs for obvious reasons (From KudzuHit.as))
 						{
-							kudzublob = 0;
+							kudzublob = 0; //This is not a place where you should upgrade
+							//print("OVERLAP FOUND");
 						}
 						else 
 						{
 							if (!b.hasTag("invincible"))
 							{
 								int Type = HittersTC::poison;
-								double Amount = 0.125f;
+								double Amount = 0.125f * this.get_u8("DamageMod");
 
-								if(this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
+								if (this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
 
-								if(this.hasTag("Mut_IncreasedDamage")) Amount = 0.25f;
+								this.server_Hit(b, bpos, bpos - pos, Amount, Type, false);
 
-								this.server_Hit(b, bpos, bpos - pos, 0.125f, Type, false);
+								if (this.hasTag("Mut_Knockback"))
+								{
+									Vec2f force = (bpos - pos);
+									force.Normalize();
+									b.AddForce(force * Maths::Min(50, b.getMass()) * (XORRandom(6) + 1));
+								}
 							}
 							return 0;
 						}
@@ -99,7 +110,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 	}
 
 	//Check if it has support there
-	if (map.isTileBackgroundNonEmpty(backtile) || isTileKudzu(type)) //Can grow on backgrounds (and pass through kudzu)
+	if (map.isTileBackgroundNonEmpty(backtile) || isTileTypeKudzu(type)) //Can grow on backgrounds (and pass through kudzu)
 	{
 		return 1 + kudzublob;
 	}
@@ -113,7 +124,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
     {
 		Tile test = map.getTile(pos + directions[i]);
 		//print(directions[i].x + " " + directions[i].y);
-        if (isTileSolid(pos + directions[i], map) && !isTileKudzu(test.type)) return 1 + kudzublob; //Can grow while at least 1 solid non kudzu tile in the 8 tiles around it
+        if (isTileSolid(pos + directions[i], map) && !isTileTypeKudzu(test.type)) return 1 + kudzublob; //Can grow while at least 1 solid non kudzu tile in the 8 tiles around it
     }
 
 	if (Vec2f(0.0f,-8.0f) == dir && this.hasTag("Mut_UpwardLines"))
@@ -174,23 +185,38 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 		}
 		this.set_u32("Duplication Time", 0); //No more duplicating after the first one
 	}
-	else if (this.hasTag("Mut_Badgers") && rand.NextRanged(100) == 0 && getGameTime() > this.get_u32("Upgrade Time"))
+	else if (getGameTime() > this.get_u32("Upgrade Time"))
 	{
-		CBlob@ node = server_CreateBlob("kudzubadger", 0, pos);
-		if (node != null)
+		double UpgradeSpeed = this.get_f32("UpgradeSpeed"); //Devides the time between upgrades
+
+		if (this.hasTag("Mut_Badgers") && rand.NextRanged(100) == 0)
 		{
-			node.getShape().SetStatic(true);
+			CBlob@ node = server_CreateBlob("kudzubadger", 0, pos);
+			if (node != null)
+			{
+				node.getShape().SetStatic(true);
+				if (this.hasTag("Mut_Explosive")) node.Tag("Mut_Explosive");
+			}
+			this.set_u32("Upgrade Time", getGameTime() + 900 / UpgradeSpeed);
 		}
-		this.set_u32("Upgrade Time", getGameTime() + 900);
-	}
-	else if (this.hasTag("Mut_Explosive") && rand.NextRanged(50) == 0 && getGameTime() > this.get_u32("Upgrade Time"))
-	{
-		CBlob@ node = server_CreateBlob("kudzuexplosive", 0, pos);
-		if (node != null)
+		else if (this.hasTag("Mut_Explosive") && rand.NextRanged(50) == 0)
 		{
-			node.getShape().SetStatic(true);
+			CBlob@ node = server_CreateBlob("kudzuexplosive", 0, pos);
+			if (node != null)
+			{
+				node.getShape().SetStatic(true);
+			}
+			this.set_u32("Upgrade Time", getGameTime() + 600 / UpgradeSpeed);
 		}
-		this.set_u32("Upgrade Time", getGameTime() + 600);
+		else if (this.hasTag("Mut_Gold") && rand.NextRanged(70) == 0)
+		{
+			CBlob@ node = server_CreateBlob("kudzugold", 0, pos);
+			if (node != null)
+			{
+				node.getShape().SetStatic(true);
+			}
+			this.set_u32("Upgrade Time", getGameTime() + 900 / UpgradeSpeed);
+		}
 	}
 }
 
@@ -205,58 +231,109 @@ void Mutate(CBlob@ this)
 
 	Random@ rand = Random(getGameTime() + this.getPosition().x); //Randomness is time and position dependent, 
 	//technicly 2 of em in the same coloum mutated at the exact same time would get the same mutation
-	int r = rand.NextRanged(12);
-
+	int r = rand.NextRanged(20);
 	if (r < 1 && !this.hasTag("Mut_Mutating")) //Possibly the most dangerous mutation, (At first slot to reduce the chance of getting it with other mutations)
 	{
 		this.Tag("Mut_Mutating");
 	}
-	else if (r < 2 && !this.hasTag("Mut_Explosive")) //Honestly a negative mutation, since the explosion also damages the plant and causes chain reactions
+	else if (r < 5)
 	{
-		this.Tag("Mut_Explosive");
+		Mutate_SurvivabilityBahvior(this, rand);
 	}
-	else if (r < 3 && !this.hasTag("Mut_UpwardLines"))
+	else if (r < 10)
 	{
-		this.Tag("Mut_UpwardLines");
+		Mutate_DamageBehavior(this, rand);
 	}
-	else if (r < 4 && !this.hasTag("Mut_DownLines"))
+	else if (r < 15)
 	{
-		this.Tag("Mut_DownLines");
+		Mutate_ExpansionBehavior(this, rand);
 	}
-	else if (r < 5 && !this.hasTag("Mut_NoLight"))
+	else if (r < 20)
+	{
+		Mutate_UpgradeBehavior(this, rand);
+	}
+}
+
+void Mutate_SurvivabilityBahvior(CBlob@ this, Random@ rand)
+{
+	int r = rand.NextRanged(3);
+	if (r < 1 && !this.hasTag("Mut_NoLight"))
 	{
 		this.SetLight(false);
 		this.Tag("Mut_NoLight");
 	}
-	else if (r < 6 && !this.hasTag("Mut_StunningDamage"))
-	{
-		this.Tag("Mut_StunningDamage");
-	}
-	else if (r < 7 && !this.hasTag("Mut_IncreasedDamage"))
-	{
-		this.Tag("Mut_IncreasedDamage");
-	}
-	else if (r < 8 && !this.hasTag("Mut_IgnoreBGlass"))
-	{
-		this.Tag("Mut_IgnoreBGlass");
-	}
-	else if (r < 9 && !this.hasTag("Mut_FireResistance")) //Does not make the tiles fire resistant but the core at least
+	else if (r < 2 && !this.hasTag("Mut_FireResistance")) //Does not make the tiles fire resistant but the core at least
 	{
 		this.Tag("Mut_FireResistance");
 		this.Untag(spread_fire_tag);
 		this.RemoveScript("IsFlammable.as");
 	}
-	else if (r < 10 && !this.hasTag("Mut_Badgers"))
-	{
-		this.Tag("Mut_Badgers");
-	}
-	else if (r < 11 && !this.hasTag("Mut_Regeneration"))
+	else if (r < 3 && !this.hasTag("Mut_Regeneration"))
 	{
 		this.Tag("Mut_Regeneration");
 	}
-	else //Generic mutation (+1 Sprout, no cap but very slow)
+	else
+	{
+		//NOTHING, for now
+	}
+}
+
+void Mutate_DamageBehavior(CBlob@ this, Random@ rand)
+{
+	int r = rand.NextRanged(3);
+	if (r < 1 && !this.hasTag("Mut_StunningDamage"))
+	{
+		this.Tag("Mut_StunningDamage");
+	}
+	else if (r < 2 && !this.hasTag("Mut_Knockback"))
+	{
+		this.Tag("Mut_Knockback");
+	}
+	else //Repeatable Mutation (+0.125 damage)
+	{
+		this.set_u8("DamageMod", this.get_u8("DamageMod") + 1);
+	}
+}
+
+void Mutate_ExpansionBehavior(CBlob@ this, Random@ rand)
+{	
+	int r = rand.NextRanged(4);
+	if (r < 1 && !this.hasTag("Mut_IgnoreBGlass"))
+	{
+		this.Tag("Mut_IgnoreBGlass");
+	}
+	else if (r < 2 && !this.hasTag("Mut_UpwardLines"))
+	{
+		this.Tag("Mut_UpwardLines");
+	}
+	else if (r < 3 && !this.hasTag("Mut_DownLines"))
+	{
+		this.Tag("Mut_DownLines");
+	}
+	else //Repeatable Mutation (+1 Sprout, no cap but very slow)
 	{
 		this.set_u8("MaxSprouts", this.get_u8("MaxSprouts") + 1);
+	}
+}
+
+void Mutate_UpgradeBehavior(CBlob@ this, Random@ rand)
+{	
+	int r = rand.NextRanged(4);
+	if (r < 1 && !this.hasTag("Mut_Badgers"))
+	{
+		this.Tag("Mut_Badgers");
+	}
+	else if (r < 2 && !this.hasTag("Mut_Explosive")) //Honestly a negative mutation, since the explosion also damages the plant and causes chain reactions
+	{
+		this.Tag("Mut_Explosive");
+	}
+	else if (r < 3 && !this.hasTag("Mut_Gold"))
+	{
+		this.Tag("Mut_Gold");
+	}
+	else //Repeatable Mutation
+	{
+		this.set_f32("UpgradeSpeed", this.get_f32("UpgradeSpeed") + 0.2); //Devides time between upgrades
 	}
 }
 

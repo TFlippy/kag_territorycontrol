@@ -1,4 +1,5 @@
 ﻿#include "MapFlags.as"
+#include "MinableMatsCommon.as";
 
 int openRecursion = 0;
 
@@ -30,6 +31,11 @@ void onInit(CBlob@ this)
 	this.SetLightColor(this.getTeamNum() < colors.length ? colors[this.getTeamNum()] : SColor(255, 255, 255, 255));
 
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(10.0f, "mat_wood")); 
+	mats.push_back(HarvestBlobMat(1.0f, "mat_copperwire")); //Get the full 1 wire back
+	this.set("minableMats", mats);	
 }
 
 void onChangeTeam(CBlob@ this, const int oldTeam)

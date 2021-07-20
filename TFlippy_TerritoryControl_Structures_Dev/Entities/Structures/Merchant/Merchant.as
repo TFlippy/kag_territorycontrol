@@ -136,12 +136,12 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Sell Grain (1)", "$COIN$", "coin-40", "Sell 1 grain for 40 coins.");
+		ShopItem@ s = addShopItem(this, "Sell Grain (1)", "$COIN$", "coin-50", "Sell 1 grain for 50 coins.");
 		AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Sell Grain (5)", "$COIN$", "coin-200", "Sell 5 grain for 200 coins.");
+		ShopItem@ s = addShopItem(this, "Sell Grain (5)", "$COIN$", "coin-250", "Sell 5 grain for 250 coins.");
 		AddRequirement(s.requirements, "blob", "grain", "Grain", 5);
 		s.spawnNothing = true;
 	}

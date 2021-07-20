@@ -1,7 +1,7 @@
-﻿
+﻿#include "MinableMatsCommon.as";
+
 void onInit(CBlob @ this)
 {
-
 	this.set_TileType("background tile", CMap::tile_castle_back);
 
 	this.getShape().SetRotationsAllowed(false);
@@ -13,6 +13,12 @@ void onInit(CBlob @ this)
 	CSprite@ sprite = this.getSprite();
 	sprite.SetAnimation("off"); 
 	sprite.SetZ(-100.0f);
+
+	HarvestBlobMat[] mats = {};
+	mats.push_back(HarvestBlobMat(5.0f, "mat_stone")); 
+	mats.push_back(HarvestBlobMat(10.0f, "mat_wood")); 
+	mats.push_back(HarvestBlobMat(1.0f, "mat_copperwire"));
+	this.set("minableMats", mats);
 }
 
 const u32 RECHARGETIME = 120; //how many ticks till the shifter can activate again
