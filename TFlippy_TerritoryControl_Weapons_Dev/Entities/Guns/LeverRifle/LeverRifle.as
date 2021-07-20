@@ -16,7 +16,7 @@ void onInit(CBlob@ this)
 	//settings.B_SPREAD = 0; //the higher the value, the more 'uncontrollable' bullets get
 	settings.B_GRAV = Vec2f(0, 0.006); //Bullet gravity drop
 	settings.B_SPEED = 75; //Bullet speed, STRONGLY AFFECTED/EFFECTS B_GRAV
-	settings.B_TTL = 15; //TTL = 'Time To Live' which determines the time the bullet lasts before despawning
+	settings.B_TTL = 20; //TTL = 'Time To Live' which determines the time the bullet lasts before despawning
 	settings.B_DAMAGE = 2.5f; //1 is 1 heart
 	settings.B_TYPE = HittersTC::bullet_high_cal; //Type of bullet the gun shoots | hitter
 

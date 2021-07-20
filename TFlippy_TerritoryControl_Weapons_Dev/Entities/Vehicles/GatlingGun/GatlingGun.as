@@ -15,7 +15,7 @@ void onInit(CBlob@ this)
 	GunSettings settings = GunSettings();
 
 	settings.B_GRAV = Vec2f(0, 0.006); //Bullet Gravity
-	settings.B_TTL = 11; //Bullet Time to live
+	settings.B_TTL = 20; //Bullet Time to live
 	settings.B_SPEED = 70; //Bullet speed
 	settings.B_DAMAGE = 1.5f; //Bullet damage
 	settings.MUZZLE_OFFSET = Vec2f(-24, -1); //Where muzzle flash and bullet spawn
@@ -206,7 +206,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 
 	// Angle shittery
 	f32 angle = this.getAngleDegrees() + Vehicle_getWeaponAngle(this, v);
-	angle = angle * (this.isFacingLeft() ? -1 : 1);
+	angle *= this.isFacingLeft() ? -1 : 1;
 	angle += ((XORRandom(400) - 150) / 100.0f);
 
 	if (isServer())
@@ -286,6 +286,16 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob !is null) TryToAttachVehicle(this, blob);
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	VehicleInfo@ v;
+	if (!this.get("VehicleInfo", @v)) return false;
+
+	CInventory@ inv = forBlob.getInventory();
+
+	return forBlob.getCarriedBlob() is null && (inv !is null ? inv.getItem(v.ammo_name) is null : true);
 }
 
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)

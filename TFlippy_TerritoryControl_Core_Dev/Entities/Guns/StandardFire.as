@@ -166,10 +166,14 @@ void onTick(CBlob@ this)
 							settings.B_TYPE == HittersTC::shotgun         ? "shotgunCase": "";
 			f32 oAngle = (aimangle % 360) + 180;
 
+			// Shooting
+			const bool can_shoot = holder.isAttached() && holder.getName() != "automat" ? 
+					   holder.isAttachedToPoint("PASSENGER") || holder.isAttachedToPoint("PILOT") : true;
+
 			// Keys
-			const bool pressing_shoot = holder.isAttached() && holder.getName() != "automat" ? false : this.hasTag("CustomSemiAuto") ?
+			const bool pressing_shoot = (this.hasTag("CustomSemiAuto") ?
 					   point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
-					   point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1); //semiautomatic
+					   point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)); //semiautomatic
 
 			// Sound
 			const f32 reload_pitch = this.exists("CustomReloadPitch") ? this.get_f32("CustomReloadPitch") : 1.0f;
@@ -246,7 +250,7 @@ void onTick(CBlob@ this)
 
 				if (this.hasTag("CustomShotgunReload")) this.set_bool("doReload", false);
 			} 
-			else if (pressing_shoot)
+			else if (pressing_shoot && can_shoot)
 			{
 				if (this.get_u8("clip") > 0)
 				{

@@ -43,7 +43,7 @@ class Bullet
         CurrentPos = pos;
 
         BulletGrav = settings.B_GRAV;
-        FacingLeft = humanBlob.isFacingLeft();
+        FacingLeft = gun.isFacingLeft();
 
         TimeLeft = settings.B_TTL;
         Speed = settings.B_SPEED;
@@ -156,8 +156,7 @@ class Bullet
 
                                 if (blob.getTeamNum() == gunBlob.getTeamNum() && !blob.getShape().isStatic()) continue;
                                 else if (blob.hasTag("weapon") || blob.hasTag("dead") || blob.hasTag("invincible") || 
-                                         blob.hasTag("food")   || blob.hasTag("gas")) continue;
-
+                                         blob.hasTag("food")   || blob.hasTag("gas")  || blob.isAttachedTo(hoomanShooter)) continue;
                                 else if (blob.getName() == "iron_halfblock" || blob.getName() == "stone_halfblock") continue;
 
                                 CurrentPos = hitpos;
