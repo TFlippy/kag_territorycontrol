@@ -68,24 +68,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params) //Mutate command
 	if (cmd == this.getCommandID("mutate"))
 	{
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
-		CBlob@ carried = caller.getCarriedBlob();
-
-		if (carried !is null && carried.getName() == "mat_mithrilingot")
+		if (caller !is null)
 		{
-			if (carried.getQuantity() >= 10)
+			CBlob@ carried = caller.getCarriedBlob();
+			if (carried !is null && carried.getName() == "mat_mithrilingot")
 			{
-				
-				int remain = carried.getQuantity() - 10;
-				if (remain > 0)
+				if (carried.getQuantity() >= 10)
 				{
-					carried.server_SetQuantity(remain);
+					
+					int remain = carried.getQuantity() - 10;
+					if (remain > 0)
+					{
+						carried.server_SetQuantity(remain);
+					}
+					else
+					{
+						carried.Tag("dead");
+						carried.server_Die();
+					}
+					Mutate(this);
 				}
-				else
-				{
-					carried.Tag("dead");
-					carried.server_Die();
-				}
-				Mutate(this);
 			}
 		}
 	}
