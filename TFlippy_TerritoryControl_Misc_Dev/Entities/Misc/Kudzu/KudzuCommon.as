@@ -26,7 +26,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 	//if (!map.hasSupportAtPos(pos)) 
 	//	return false;
 
-	if (map.isTileBedrock(type) || (type >= CMap::tile_rail_0 && type <= CMap::tile_rail_1_bg) ||(isTileBGlass(type) && !this.hasTag("Mut_IgnoreBGlass"))) //Does not grow past bedrock or rails
+	if (map.isTileBedrock(type)  || (isTileBGlass(type) && !this.hasTag("Mut_IgnoreBGlass"))) //Does not grow past bedrock or glass backgrounds (unless mutated)
 	{
 		return 0;
 	}
@@ -39,6 +39,11 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 	if (pos.y < 2 * map.tilesize || //Check map edges
 	        pos.x < 2 * map.tilesize ||
 	        pos.x > (map.tilemapwidth - 2.0f)*map.tilesize)
+	{
+		return 0;
+	}
+
+	if(map.getSectorAtPosition(pos, "no build") !is null) //Dont grow into railwail tracks (and other no build areas)
 	{
 		return 0;
 	}
