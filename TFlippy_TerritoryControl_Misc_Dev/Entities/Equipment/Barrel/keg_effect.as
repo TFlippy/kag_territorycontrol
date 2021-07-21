@@ -36,11 +36,11 @@ void onTick(CBlob@ this)
 		this.set_string("reload_script", "");
 	}
 
-	if (this.get_f32("keg_health") >= 10.0f)
+	if (this.get_f32("keg_health") >= 7.0f)
 	{
         this.getSprite().PlaySound("woodheavyhit1");
         this.set_string("equipment_head", "");
-        this.set_f32("keg_health", 9.9f);
+        this.set_f32("keg_health", 6.9f);
         if (this.getSprite().getSpriteLayer("keg") !is null) this.getSprite().RemoveSpriteLayer("keg");
         this.RemoveScript("keg_effect.as");
     }

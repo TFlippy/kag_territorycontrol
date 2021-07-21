@@ -254,7 +254,11 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			CBitStream params;
 			params.write_u16(caller.getNetworkID());
 			CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("button_join"), "Join the Faction" + msg, params);
-			button.SetEnabled(can_join && caller.isOverlapping(this));
+			button.SetEnabled(can_join);
+		}
+		else 
+		{
+			error("Team data is null! " + this.getTeamNum());
 		}
 	}
 

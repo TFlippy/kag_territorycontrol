@@ -33,7 +33,7 @@ void onInit(CBlob@ this)
 	addTokens(this); //colored shop icons
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(3, 5));
+	this.set_Vec2f("shop menu size", Vec2f(3, 4));
 	this.set_string("shop description", "Armory");
 	this.set_u8("shop icon", 15);
 
@@ -97,27 +97,6 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	{
-		ShopItem@ s = addShopItem(this, "Repair Helmet", "$icon_militaryhelmet$", "militaryhelmet", "Repair combat helmet.");
-		AddRequirement(s.requirements, "blob", "militaryhelmet", "Combat Helmet", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 35);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Repair Vest", "$icon_bulletproofvest$", "bulletproofvest", "Repair ballistic vest.");
-		AddRequirement(s.requirements, "blob", "bulletproofvest", "Ballistic Vest", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 75);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Repair Boots", "$icon_combatboots$", "combatboots", "Repair combat boots.");
-		AddRequirement(s.requirements, "blob", "combatboots", "Combat Boots", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 35);
-
-		s.spawnNothing = true;
-	}
 	/*{
 		ShopItem@ s = addShopItem(this, "Slavemaster's Kit", "$icon_shackles$", "shackles", "A kit containing shackles, shiny iron ball, elegant striped pants, noisy chains and a slice of cheese.");
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
@@ -126,19 +105,11 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}*/
 	{
-		ShopItem@ s = addShopItem(this, "Bushy Helm", "$bush$", "bushyhelm", "Add bush camo to helm.");
-		AddRequirement(s.requirements, "blob", "militaryhelmet", "Combat Helmet", 1);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100);
-		AddRequirement(s.requirements, "coin", "", "Coins", 125);
-
-		s.spawnNothing = true;
-	}
-	{
 		ShopItem@ s = addShopItem(this, "Rendezook", "$icon_rendezook$", "rendezook", "A replica of a rocket launcher found behind the UPF shop in a trash can.\nDoes not seem to hurt anybody.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 350);
 
 		s.customButton = true;
-		s.buttonwidth = 2;
+		s.buttonwidth = 3;
 		s.buttonheight = 1;
 
 		s.spawnNothing = true;
@@ -162,7 +133,7 @@ void addTokens(CBlob@ this)
 
 bool canPickup(CBlob@ blob)
 {
-	return blob.hasTag("weapon") || blob.hasTag("ammo") || blob.hasTag("armor");
+	return blob.hasTag("weapon") || blob.hasTag("ammo");
 }
 
 void onTick(CBlob@ this)
@@ -275,11 +246,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 			else
 			{
-				string blobName = spl[0];
-				if (blobName == "bushyhelm") blobName = "militaryhelmet";
-
-				CBlob@ blob = server_CreateBlob(blobName, callerBlob.getTeamNum(), this.getPosition());
-				if (spl[0] == "bushyhelm") blob.Tag("bushy");
+				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 
 				if (blob is null && callerBlob is null) return;
 

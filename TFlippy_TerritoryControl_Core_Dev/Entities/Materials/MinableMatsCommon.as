@@ -1,5 +1,3 @@
-#define SERVER_ONLY
-
 class HarvestBlobMat
 {
 	f32 amount;
