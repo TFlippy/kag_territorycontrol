@@ -151,17 +151,17 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 		else playerblob.set_u8("last head", playerblob.getHeadNum());
 	}
 
-	if(headname == "scubagear")
+	if (headname == "scubagear")
 	{
 		playerblob.set_u8("override head", 88);
 		playerblob.Tag("disguised");
 	}
-	else if(headname == "bucket")
+	else if (headname == "bucket")
 	{
 		playerblob.set_u8("override head", 107);
 		playerblob.Tag("disguised");
 	}
-	else if(headname == "pumpkin")
+	else if (headname == "pumpkin")
 	{
 		playerblob.set_u8("override head", 108);
 		playerblob.Tag("disguised");
