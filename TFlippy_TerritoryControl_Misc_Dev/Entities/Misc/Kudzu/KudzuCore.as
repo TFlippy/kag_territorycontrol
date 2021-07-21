@@ -22,11 +22,16 @@ void onInit(CBlob @ this)
 	this.SetLightRadius(30.0f);
 	this.SetLightColor(SColor(255, 155, 255, 0));
 
+	//Base stats
 	this.set_u8("MaxSprouts", 10);
+	this.set_f32("UpgradeSpeed", 1);
+	this.set_u8("DamageMod", 1); //Base multiplier on 0.125
 
 	this.addCommandID("mutate");
 
 	this.getSprite().SetRelativeZ(500);
+
+	//this.Tag("Mut_Teleporting"); //Mutation Testing
 
 	//Starts offline
 }
@@ -63,24 +68,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params) //Mutate command
 	if (cmd == this.getCommandID("mutate"))
 	{
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
-		CBlob@ carried = caller.getCarriedBlob();
-
-		if (carried !is null && carried.getName() == "mat_mithrilingot")
+		if (caller !is null)
 		{
-			if (carried.getQuantity() >= 10)
+			CBlob@ carried = caller.getCarriedBlob();
+			if (carried !is null && carried.getName() == "mat_mithrilingot")
 			{
-				
-				int remain = carried.getQuantity() - 10;
-				if (remain > 0)
+				if (carried.getQuantity() >= 10)
 				{
-					carried.server_SetQuantity(remain);
+					
+					int remain = carried.getQuantity() - 10;
+					if (remain > 0)
+					{
+						carried.server_SetQuantity(remain);
+					}
+					else
+					{
+						carried.Tag("dead");
+						carried.server_Die();
+					}
+					Mutate(this);
 				}
-				else
-				{
-					carried.Tag("dead");
-					carried.server_Die();
-				}
-				Mutate(this);
 			}
 		}
 	}
@@ -106,7 +113,7 @@ void onTick(CBlob@ this)
 		}
 		else if (sprouts.length < this.get_u8("MaxSprouts")) //Hardcap
 		{
-			if (rand.NextRanged(sprouts.length*7) == 0) //Chance decreases the more sprouts it already has
+			if (rand.NextRanged(sprouts.length*10) == 0) //Chance decreases the more sprouts it already has
 			{
 				sprouts.push_back(Vec2f(this.getPosition().x, this.getPosition().y));
 				newSprout = true;
@@ -141,13 +148,19 @@ void onTick(CBlob@ this)
 					case 3: offset = Vec2f(0.0f,-8.0f);
 					break;
 				}
+
+				if (this.hasTag("Mut_Teleporting") && XORRandom(50) == 0) //Skip past up to 3 tiles in a rectangular range, very low chance, cannot be a first mutation
+				{
+					offset = Vec2f((XORRandom(7) - 3) * 8.00f, (XORRandom(7) - 3) * 8.00f);
+					//print("test");
+				}
 			
 				u8 canGrow = canGrowTo(this, sprout + offset, map, offset);
 				if (canGrow >= 1)
 				{
 					Tile backtile = map.getTile(sprout + offset);
 					TileType type = backtile.type;
-					if (isTileKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
+					if (isTileTypeKudzu(type) && type != CMap::tile_kudzu_d0) //Dont replace kudzu
 					{
 						if (canGrow >= 2)
 						{

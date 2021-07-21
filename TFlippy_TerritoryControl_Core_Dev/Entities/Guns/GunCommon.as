@@ -19,7 +19,7 @@ class GunSettings
 
 	int8 B_SPREAD; //the higher the value, the more 'uncontrollable' bullets get
 	int8 B_SPEED; //Bullet speed, STRONGLY AFFECTED/EFFECTS B_GRAV
-	int8 B_TTL;  //TTL = 'Time To Live' which determines the time the bullet lasts before despawning
+	s8 B_TTL;  //TTL = 'Time To Live' which determines the time the bullet lasts before despawning
 
 	u8 B_TYPE; //Type of bullet the gun shoots (hitter) | Changes muzzle flash
 

@@ -54,8 +54,6 @@ void onTick(CBlob@ this)
 	const bool server = isServer();				
 	const bool client = isClient();				
 
-	if (this.hasTag("bubblegem")) canBreathe = !canBreathe;
-	
 	if (!canBreathe)
 	{
 		if (aircount >= FREQ)
@@ -115,8 +113,6 @@ void onTick(CBlob@ this)
 
 	this.set_u8("air_count", aircount);
 	this.Sync("air_count", true);
-	
-	this.Untag("bubblegem");
 }
 
 // SPRITE renders in party indicator

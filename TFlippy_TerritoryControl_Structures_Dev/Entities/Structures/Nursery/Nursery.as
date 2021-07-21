@@ -88,9 +88,11 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Kudzu Core", "$kudzucore$", "kudzucore", "Creates a kudzu core a quickly spreading plant which slowy damages other things, Cannot be stored", true);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 300);
-		AddRequirement(s.requirements, "coin", "", "Coins", 250);
-		AddRequirement(s.requirements, "blob", "mat_dirt", "Dirt", 100);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 500);
+		AddRequirement(s.requirements, "blob", "mat_dirt", "Dirt", 200);
+		AddRequirement(s.requirements, "blob", "grain", "Grain", 1); 
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
+		//Requiring grain and a mithrilg ingot means its a lot harder to spawm since both of these ressources are harder to get on mass (instead of dirt wood and coins alone)
 		s.spawnNothing = true;
 	}
 }

@@ -39,7 +39,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 
 			if (blob !is null)
 			{
-				blob.server_Heal(2.0f);
+				blob.server_Heal(5.0f);
 
 				if (this.get_u8("food_amount") <= 1) this.server_Die();
 				else

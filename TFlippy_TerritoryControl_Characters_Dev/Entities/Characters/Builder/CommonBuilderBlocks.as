@@ -397,8 +397,8 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	}
 	{
 		BuildBlock b(0, "camp", "$icon_camp$", "Camp\nA basic faction base. Can be upgraded to gain\nspecial functions and more durability.\n\n$GREEN$Increases Upkeep cap by 1.$GREEN$\n");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 500);
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 500);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 375);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 250);
 		AddRequirement(b.reqs, "coin", "", "Coins", 100);
 		b.buildOnGround = true;
 		b.size.Set(80, 24);
@@ -598,7 +598,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		BuildBlock b(0, "shifter", "$shifter$", "Shifter\n Moves things in a set direction, has a cooldown.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
-		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 2);
+		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 1);
 		blocks[2].push_back(b);
 	}
 

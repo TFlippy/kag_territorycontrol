@@ -58,10 +58,10 @@ void onTick(CBlob@ this)
 				if (distance <= ap.radius + 4.0f)
 				{
 					// cheat - attached objects have closer seats (cata in boat)
-					if (ap.getBlob().isAttached())
+					/*if (ap.getBlob().isAttached())
 					{
 						distance *= 0.3f;
-					}
+					}*/
 
 					if (distance < closestDist)
 					{

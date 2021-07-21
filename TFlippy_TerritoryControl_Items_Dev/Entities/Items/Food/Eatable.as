@@ -26,14 +26,17 @@ void Heal(CBlob@ this, CBlob@ blob)
 		string name = this.getName();
 
 		if (name == "heart") heal_amount = 1;
-		else if (name == "ratburger") heal_amount = 3;
-		else if (name == "ratfood") heal_amount = 2;
-		else if (name == "food") heal_amount = 4;
-		else if (name == "cake") heal_amount = 3;
-		else if (name == "foodcan") heal_amount = 20;
-		else if (name == "pumpkin") heal_amount = 7;
-		else if (name == "icecream") heal_amount = 2;
-		else if (name == "doritos") heal_amount = 8;
+		else if (name == "cake") 		heal_amount = 3;
+		else if (name == "food") 		heal_amount = 4;
+		else if (name == "foodcan") 	heal_amount = 20;
+		else if (name == "grain") 		heal_amount = 2;
+		else if (name == "ratfood") 	heal_amount = 2;
+		else if (name == "ratburger") 	heal_amount = 3;
+		else if (name == "pumpkin") 	heal_amount = 7;
+		else if (name == "steak") 		heal_amount = 4;
+		else if (name == "icecream") 	heal_amount = 3;
+		else if (name == "doritos") 	heal_amount = 8;
+		else heal_amount = 4; // things that must've been missed
 
 		params.write_u8(heal_amount);
 
