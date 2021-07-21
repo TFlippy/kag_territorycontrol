@@ -19,12 +19,20 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	{
 		case Hitters::builder:
 			dmg *= 2.00f;
+			if(isClient())
+			{
+				cuttingEffects(this, damage);
+			}
 			break;
 
 		case Hitters::spikes:
 		case Hitters::sword:
 		case Hitters::stab:
 			dmg *=  1.50f;
+			if(isClient())
+			{
+				cuttingEffects(this, damage);
+			}
 			break;
 
 		case Hitters::arrow:
@@ -77,4 +85,16 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	}
 	//print(this.getHealth() + "");
 	return dmg;
+}
+
+void cuttingEffects(CBlob@ this, f32 damage)
+{
+	Sound::Play("/cut_grass", this.getPosition());
+	for (int i = 0; i < (damage); ++i)
+	{
+		makeGibParticle("GenericGibs",
+		this.getPosition(), getRandomVelocity(-90, (Maths::Min(Maths::Max(0.5f, damage), 2.0f) * 4.0f) , 270),
+		7, 3 + XORRandom(4), Vec2f(8, 8),
+		1.0f, 0, "", 0);
+	}
 }

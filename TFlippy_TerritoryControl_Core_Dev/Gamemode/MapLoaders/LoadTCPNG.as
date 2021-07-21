@@ -1650,6 +1650,8 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				OnMatterTileDestroyed(map, index);
 			else if (tile_old == CMap::tile_snow_d3 || tile_old == CMap::tile_snow_pile_v4 || tile_old == CMap::tile_snow_pile_v5)
 				OnSnowTileDestroyed(map, index);
+			else if (tile_old == CMap::tile_kudzu_d0)
+				OnKudzuTileHit(map, index);
 
 			if(isTileSnowPile(map.getTile(index-map.tilemapwidth).type) && map.tilemapwidth < index)
 				map.server_SetTile(map.getTileWorldPosition(index-map.tilemapwidth), CMap::tile_empty);
@@ -1897,7 +1899,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 
 			case CMap::tile_kudzu_d0:
 				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES); // | Tile::FLAMMABLE);
-				//OnKudzuTileHit(map, index);
+				OnKudzuTileHit(map, index);
 				break;
 			//Kudzu End
 
@@ -2497,6 +2499,16 @@ bool isKudzuTile(CMap@ map, Vec2f pos)
 {
 	u16 tile = map.getTile(pos).type;
 	return tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_f14;
+}
+
+void OnKudzuTileHit(CMap@ map, u32 index)
+{
+	if (isClient())
+	{
+		Vec2f pos = map.getTileWorldPosition(index);
+
+		Sound::Play("/cut_grass.ogg", pos, 1.0f, 1.0f);
+	}
 }
 
 void OnPlasteelTileHit(CMap@ map, u32 index)
