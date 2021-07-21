@@ -862,8 +862,10 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 			case CMap::tile_kudzu_v13:
 			case CMap::tile_kudzu_v14:
 			case CMap::tile_kudzu_f14: //Flower variant
-			case CMap::tile_kudzu_d0:
 				col = c_grass;
+			break;
+			case CMap::tile_kudzu_d0:
+				col = c_wood;
 			break;
 
 			// GLASS
