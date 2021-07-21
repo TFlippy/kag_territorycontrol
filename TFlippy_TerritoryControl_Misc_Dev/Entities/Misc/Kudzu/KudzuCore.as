@@ -31,7 +31,7 @@ void onInit(CBlob @ this)
 
 	this.getSprite().SetRelativeZ(500);
 
-	//this.Tag("Mut_Knockback"); //Mutation Testing
+	//this.Tag("Mut_MysteryBox"); //Mutation Testing
 
 	//Starts offline
 }

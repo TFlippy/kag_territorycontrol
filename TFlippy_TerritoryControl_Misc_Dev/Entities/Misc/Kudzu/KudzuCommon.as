@@ -148,6 +148,17 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 		}
 	}
 
+	if (this.hasTag("Mut_SupportHalo"))
+	{
+		Vec2f distance = this.getPosition() - pos;
+		if (8.0f * 7 <= distance.Length() && 8.0f * 9 >= distance.Length())
+		{
+			//print("TEST");
+			return 1 + kudzublob;
+		}
+		
+	}
+
 	return 0; //No support found
 	
 }
@@ -221,6 +232,15 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 				node.getShape().SetStatic(true);
 			}
 			this.set_u32("Upgrade Time", getGameTime() + 900 / UpgradeSpeed);
+		}
+		else if (this.hasTag("Mut_MysteryBox") && rand.NextRanged(300) == 0)
+		{
+			CBlob@ node = server_CreateBlob("kudzumysterybox", 0, pos);
+			if (node != null)
+			{
+				node.getShape().SetStatic(true);
+			}
+			this.set_u32("Upgrade Time", getGameTime() + 1500 / UpgradeSpeed);
 		}
 	}
 }
@@ -302,7 +322,7 @@ void Mutate_DamageBehavior(CBlob@ this, Random@ rand)
 
 void Mutate_ExpansionBehavior(CBlob@ this, Random@ rand)
 {	
-	int r = rand.NextRanged(4);
+	int r = rand.NextRanged(5);
 	if (r < 1 && !this.hasTag("Mut_IgnoreBGlass"))
 	{
 		this.Tag("Mut_IgnoreBGlass");
@@ -315,6 +335,10 @@ void Mutate_ExpansionBehavior(CBlob@ this, Random@ rand)
 	{
 		this.Tag("Mut_DownLines");
 	}
+	else if (r < 4 && !this.hasTag("Mut_SupportHalo"))
+	{
+		this.Tag("Mut_SupportHalo");
+	}
 	else //Repeatable Mutation (+1 Sprout, no cap but very slow)
 	{
 		this.set_u8("MaxSprouts", this.get_u8("MaxSprouts") + 1);
@@ -323,16 +347,20 @@ void Mutate_ExpansionBehavior(CBlob@ this, Random@ rand)
 
 void Mutate_UpgradeBehavior(CBlob@ this, Random@ rand)
 {	
-	int r = rand.NextRanged(4);
-	if (r < 1 && !this.hasTag("Mut_Badgers"))
+	int r = rand.NextRanged(5);
+	if (r < 1 && XORRandom(3) == 0 && !this.hasTag("Mut_MysteryBox"))
 	{
-		this.Tag("Mut_Badgers");
+		this.Tag("Mut_MysteryBox");
 	}
 	else if (r < 2 && !this.hasTag("Mut_Explosive")) //Honestly a negative mutation, since the explosion also damages the plant and causes chain reactions
 	{
 		this.Tag("Mut_Explosive");
 	}
-	else if (r < 3 && !this.hasTag("Mut_Gold"))
+	else if (r < 3 && !this.hasTag("Mut_Badgers"))
+	{
+		this.Tag("Mut_Badgers");
+	}
+	else if (r < 4 && !this.hasTag("Mut_Gold"))
 	{
 		this.Tag("Mut_Gold");
 	}
