@@ -31,7 +31,7 @@ void onInit(CBlob @ this)
 
 	this.getSprite().SetRelativeZ(500);
 
-	//this.Tag("Mut_MysteryBox"); //Mutation Testing
+	//this.Tag("Mut_Teleporting"); //Mutation Testing
 
 	//Starts offline
 }
@@ -145,6 +145,12 @@ void onTick(CBlob@ this)
 					break;
 					case 3: offset = Vec2f(0.0f,-8.0f);
 					break;
+				}
+
+				if (this.hasTag("Mut_Teleporting") && XORRandom(50) == 0) //Skip past up to 3 tiles in a rectangular range, very low chance, cannot be a first mutation
+				{
+					offset = Vec2f((XORRandom(7) - 3) * 8.00f, (XORRandom(7) - 3) * 8.00f);
+					//print("test");
 				}
 			
 				u8 canGrow = canGrowTo(this, sprout + offset, map, offset);

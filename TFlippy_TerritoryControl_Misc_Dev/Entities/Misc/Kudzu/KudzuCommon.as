@@ -191,7 +191,8 @@ void MutateTick(CBlob@ this)
 void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 {
 	//Create a new core if its time and its chance
-	if (getGameTime() > this.get_u32("Duplication Time") && this.get_u32("Duplication Time") != 0 && rand.NextRanged(30) == 0)
+	Vec2f distance = this.getPosition() - pos;
+	if (getGameTime() > this.get_u32("Duplication Time") && this.get_u32("Duplication Time") != 0 && rand.NextRanged(30) == 0 && distance.Length() > 8.0f * 15) //Minimum distance for offshoots
 	{
 		CBlob@ core = server_CreateBlob("kudzucore", 0, pos);
 		if (core != null)
@@ -338,6 +339,10 @@ void Mutate_ExpansionBehavior(CBlob@ this, Random@ rand)
 	else if (r < 4 && !this.hasTag("Mut_SupportHalo"))
 	{
 		this.Tag("Mut_SupportHalo");
+	}
+	else if (r != 4 && !this.hasTag("Mut_Teleporting")) //Can only be obtained if you already have at least support halo
+	{
+		this.Tag("Mut_Teleporting");
 	}
 	else //Repeatable Mutation (+1 Sprout, no cap but very slow)
 	{
