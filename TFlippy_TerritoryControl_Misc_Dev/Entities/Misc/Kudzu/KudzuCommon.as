@@ -26,7 +26,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 	//if (!map.hasSupportAtPos(pos)) 
 	//	return false;
 
-	if (map.isTileBedrock(type) || (isTileBGlass(type) && !this.hasTag("Mut_IgnoreBGlass")))
+	if (map.isTileBedrock(type) || (type >= CMap::tile_rail_0 && type <= CMap::tile_rail_1_bg) ||(isTileBGlass(type) && !this.hasTag("Mut_IgnoreBGlass"))) //Does not grow past bedrock or rails
 	{
 		return 0;
 	}
@@ -189,7 +189,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 	{
 		double UpgradeSpeed = this.get_f32("UpgradeSpeed"); //Devides the time between upgrades
 
-		if (this.hasTag("Mut_Badgers") && rand.NextRanged(100) == 0)
+		if (this.hasTag("Mut_Badgers") && rand.NextRanged(150) == 0)
 		{
 			CBlob@ node = server_CreateBlob("kudzubadger", 0, pos);
 			if (node != null)
@@ -197,7 +197,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 				node.getShape().SetStatic(true);
 				if (this.hasTag("Mut_Explosive")) node.Tag("Mut_Explosive");
 			}
-			this.set_u32("Upgrade Time", getGameTime() + 900 / UpgradeSpeed);
+			this.set_u32("Upgrade Time", getGameTime() + 1500 / UpgradeSpeed);
 		}
 		else if (this.hasTag("Mut_Explosive") && rand.NextRanged(50) == 0)
 		{

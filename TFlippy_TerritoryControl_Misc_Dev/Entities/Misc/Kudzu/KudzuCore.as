@@ -111,7 +111,7 @@ void onTick(CBlob@ this)
 		}
 		else if (sprouts.length < this.get_u8("MaxSprouts")) //Hardcap
 		{
-			if (rand.NextRanged(sprouts.length*7) == 0) //Chance decreases the more sprouts it already has
+			if (rand.NextRanged(sprouts.length*10) == 0) //Chance decreases the more sprouts it already has
 			{
 				sprouts.push_back(Vec2f(this.getPosition().x, this.getPosition().y));
 				newSprout = true;
