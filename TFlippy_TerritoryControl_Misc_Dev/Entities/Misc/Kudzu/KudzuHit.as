@@ -19,7 +19,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	{
 		case Hitters::builder:
 			dmg *= 2.00f;
-			if(isClient())
+			if (isClient())
 			{
 				cuttingEffects(this, damage);
 			}
@@ -29,7 +29,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case Hitters::sword:
 		case Hitters::stab:
 			dmg *=  1.50f;
-			if(isClient())
+			if (isClient())
 			{
 				cuttingEffects(this, damage);
 			}
