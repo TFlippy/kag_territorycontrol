@@ -68,11 +68,11 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 				//print(cantBuild + " "+ bname);
 
 				// cant place on any other blob
-				if (cantBuild &&
-						!b.hasTag("dead") &&
-						!b.hasTag("material") && //Will just push materials dead things or projectiles similar to the normal human build mode
-						!b.hasTag("projectile") &&
-						bname != "bush")
+				if (cantBuild) //&&
+						//!b.hasTag("dead") &&
+						//!b.hasTag("material") && //Will just push materials dead things or projectiles similar to the normal human build mode
+						//!b.hasTag("projectile") &&
+						//bname != "bush")
 				{
 					//print(pos + " " +bpos);
 
