@@ -8,6 +8,19 @@ void onInit(CBlob@ this)
 		this.set_string("eat sound", "/Eat.ogg");
 	}
 
+	string name = this.getName();
+	if (name == "heart") 			this.maxQuantity = 2;
+	else if (name == "cake") 		this.maxQuantity = 1;
+	else if (name == "food") 		this.maxQuantity = 2;
+	else if (name == "foodcan") 	this.maxQuantity = 4;
+	else if (name == "grain") 		this.maxQuantity = 5;
+	else if (name == "ratfood") 	this.maxQuantity = 2;
+	else if (name == "ratburger") 	this.maxQuantity = 1;
+	else if (name == "pumpkin") 	this.maxQuantity = 2;
+	else if (name == "steak") 		this.maxQuantity = 2;
+	else if (name == "icecream") 	this.maxQuantity = 2;
+	else if (name == "doritos") 	this.maxQuantity = 6;
+
 	this.Tag("food");
 	this.Tag("hopperable");
 
@@ -41,8 +54,6 @@ void Heal(CBlob@ this, CBlob@ blob)
 		params.write_u8(heal_amount);
 
 		this.SendCommand(this.getCommandID(heal_id), params);
-
-		this.Tag("healed");
 	}
 }
 
@@ -71,9 +82,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 				{
 					theBlob.server_Heal(heal_amount);
 				}
-			}
 
-			this.server_Die();
+				int remain = this.getQuantity() - 1;
+				if (remain > 0)
+				{
+					this.server_SetQuantity(remain);
+				}
+				else
+				{
+					this.Tag("dead");
+					this.server_Die();
+				}
+			}
 		}
 	}
 }
