@@ -7,6 +7,7 @@
 #include "FireCommon.as";
 #include "RunnerCommon.as";
 #include "BrainCommon.as";
+#include "ThrowCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -266,6 +267,14 @@ void onTick(CBlob@ this)
 		{
 			// this.getSprite().PlaySound("scoutchicken_vo_perish.ogg", 0.8f, 1.5f);
 			this.set_u32("next sound", getGameTime() + 100);
+		}
+	}
+
+	if (this.isMyPlayer())
+	{
+		if (this.isKeyJustPressed(key_action3))
+		{
+			client_SendThrowOrActivateCommand(this);
 		}
 	}
 }

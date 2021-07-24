@@ -5,6 +5,7 @@
 #include "FireParticle.as"
 #include "FireCommon.as";
 #include "RunnerCommon.as";
+#include "ThrowCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -237,6 +238,14 @@ void onTick(CBlob@ this)
 		}
 
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
+	}
+
+	if (this.isMyPlayer())
+	{
+		if (this.isKeyJustPressed(key_action3))
+		{
+			client_SendThrowOrActivateCommand(this);
+		}
 	}
 }
 
