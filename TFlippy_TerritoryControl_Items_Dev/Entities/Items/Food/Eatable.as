@@ -52,7 +52,8 @@ void Heal(CBlob@ this, CBlob@ blob)
 		else heal_amount = 4; // things that must've been missed
 
 		params.write_u8(heal_amount);
-
+		this.Tag("healed");
+		
 		this.SendCommand(this.getCommandID(heal_id), params);
 	}
 }
@@ -93,6 +94,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 					this.Tag("dead");
 					this.server_Die();
 				}
+				this.Untag("healed");
 			}
 		}
 	}

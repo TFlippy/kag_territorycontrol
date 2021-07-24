@@ -38,5 +38,7 @@ void Heal(CBlob@ this, CBlob@ food)
 		params.write_u16(this.getNetworkID());
 		params.write_u8(getHealingAmount(food));
 		food.SendCommand(food.getCommandID(heal_id), params);
+
+		this.Tag("healed");
 	}
 }
