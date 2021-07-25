@@ -95,6 +95,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 								int Type = HittersTC::poison;
 								double Amount = 0.125f * this.get_u8("DamageMod");
 
+								if (this.hasTag("Mut_Peacefull")) Amount = 0;
 								if (this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
 
 								this.server_Hit(b, bpos, bpos - pos, Amount, Type, false);
@@ -306,12 +307,18 @@ void Mutate_SurvivabilityBahvior(CBlob@ this, Random@ rand)
 
 void Mutate_DamageBehavior(CBlob@ this, Random@ rand)
 {
-	int r = rand.NextRanged(3);
-	if (r < 1 && !this.hasTag("Mut_StunningDamage"))
+	int r = rand.NextRanged(4);
+	
+	if (r < 1)
+	{
+		if (!this.hasTag("Mut_Peacefull")) this.Tag("Mut_Peacefull");
+		else { this.Untag("Mut_Peacefull");}
+	}
+	if (r < 2 && !this.hasTag("Mut_StunningDamage"))
 	{
 		this.Tag("Mut_StunningDamage");
 	}
-	else if (r < 2 && !this.hasTag("Mut_Knockback"))
+	else if (r < 3 && !this.hasTag("Mut_Knockback"))
 	{
 		this.Tag("Mut_Knockback");
 	}
