@@ -11,6 +11,7 @@ void onInit(CBlob @ this)
 	this.getShape().SetRotationsAllowed(false);
 
 	this.Tag("builder always hit");
+	this.Tag("nature");
 	this.Tag(spread_fire_tag);
 
 	Vec2f[] sprouts = {};

@@ -28,6 +28,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case Hitters::spikes:
 		case Hitters::sword:
 		case Hitters::stab:
+		case Hitters::drill:
 			dmg *=  1.50f;
 			if (isClient())
 			{
@@ -36,17 +37,17 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 
 		case Hitters::arrow:
-			dmg *= 0.20f;
+			dmg *= 1.00f;
 			break;
 			
 		case Hitters::bomb_arrow:
 		case Hitters::bomb:
-			dmg *= 0.25f;
+			dmg *= 1.25f;
 			break;
 
 		case Hitters::keg:
 		case Hitters::explosion:
-			dmg *= 0.25f;
+			dmg *= 1.25f;
 			break;
 
 		case Hitters::fire:
@@ -64,15 +65,15 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		
 		// TC		
 		case HittersTC::bullet_low_cal:
-			dmg *= 0.33f;
+			dmg *= 0.66f;
 			break;
 			
 		case HittersTC::bullet_high_cal:
-			dmg *= 0.50f;
+			dmg *= 1.00f;
 			break;
 			
 		case HittersTC::shotgun:
-			dmg *= 0.10f;
+			dmg *= 0.75f;
 			break;
 			
 		case HittersTC::radiation:
