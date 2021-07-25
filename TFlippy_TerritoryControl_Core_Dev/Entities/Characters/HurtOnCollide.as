@@ -5,6 +5,7 @@
 // set "map dmg modifier" in your blob to modify map hit damage
 
 #include "Hitters.as"
+#include "CustomBlocks.as"
 
 void onInit(CBlob@ this)
 {
@@ -57,7 +58,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			        this.getMass() > 1.0f &&
 			        (map.isTileCastle(tile) ||
 			         map.isTileWood(tile)) ||
-			         (tile>=394&&tile<=410 /*glass block*/))
+			         (tile>=394&&tile<=410 /*glass block*/) ||
+					 tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_d0)
 			{
 				f32 vellen = this.getShape().vellen;
 				f32 dmg = this.get_f32("map dmg modifier") * vellen * this.getMass() / 10000.0f;
