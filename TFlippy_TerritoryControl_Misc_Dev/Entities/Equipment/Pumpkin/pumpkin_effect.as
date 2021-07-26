@@ -1,7 +1,7 @@
 void onTick(CBlob@ this)
 {
     if (this.get_string("reload_script") == "pumpkin")
-    	this.set_string("reload_script", "");
+        this.set_string("reload_script", "");
    
     if (this.get_f32("pumpkin_health") >= 5.0f)
     {
