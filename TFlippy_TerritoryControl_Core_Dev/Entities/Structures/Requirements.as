@@ -408,31 +408,29 @@ void server_TakeRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &ino
 				if (inv1 !is null && taken < quantity) 
 				{
 					CBlob@ invBlob = inv1.getBlob();
-					print("hi1"+taken);
 					taken += Maths::Min(invBlob.getBlobCount(blobName), quantity - taken);
-					print("hi2"+taken);
 					invBlob.TakeBlob(blobName, quantity);
 				}
 				
 				if (inv2 !is null && taken < quantity) 
 				{
 					CBlob@ invBlob = inv2.getBlob();
+					u16 hold = taken;
 					taken += Maths::Min(invBlob.getBlobCount(blobName), quantity - taken);
-	            	invBlob.TakeBlob(blobName, quantity - taken);
+	            	invBlob.TakeBlob(blobName, quantity - hold);
 				}
 
 				if (storageEnabled)
 				{
 					for (int i = 0; i < baseBlobs.length; i++)
 					{
-						// print("loop" + taken);
-					
 						if (taken >= quantity)
 						{
 							break;
 						}
-						baseBlobs[i].TakeBlob(blobName, quantity - taken);
+						u16 hold = taken;
 						taken += Maths::Min(baseBlobs[i].getBlobCount(blobName), quantity - taken);
+						baseBlobs[i].TakeBlob(blobName, quantity - hold);
 					}
 				}
 			}
