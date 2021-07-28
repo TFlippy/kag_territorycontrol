@@ -247,7 +247,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 
 					if (b.name == "druglab")
 					{
-						if (XORRandom(4) < 1)
+						if (XORRandom(3) < 1)
 						{
 							CBlob@ bp = server_CreateBlob("bp_chemistry", myTeam, this.getPosition());
 
