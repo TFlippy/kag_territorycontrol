@@ -97,10 +97,10 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		
 		if (headname != "" && this.exists(headname+"_health"))
 		{
-			f32 armorMaxHealth = 30.0f;
+			f32 armorMaxHealth = 25.0f;
 			f32 ratio = 0.0f;
 
-			if (headname == "militaryhelmet") armorMaxHealth = 30.0f;
+			if (headname == "militaryhelmet") armorMaxHealth = 25.0f;
 			else if (headname == "scubagear") armorMaxHealth = 10.0f;
 			else if (headname == "bucket") armorMaxHealth = 10.0f;
 			else if (headname == "pumpkin") armorMaxHealth = 5.0f;
@@ -143,10 +143,10 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 		if (torsoname != "" && this.exists(torsoname+"_health"))
 		{
-			f32 armorMaxHealth = 10.0f;
+			f32 armorMaxHealth = 30.0f;
 			f32 ratio = 0.0f;
 
-			if (torsoname == "bulletproofvest") armorMaxHealth = 35.0f;
+			if (torsoname == "bulletproofvest") armorMaxHealth = 30.0f;
 			else if (torsoname == "keg") armorMaxHealth = 10.0f;
 
 			if (torsoname == "bulletproofvest" && customData != HittersTC::radiation)
