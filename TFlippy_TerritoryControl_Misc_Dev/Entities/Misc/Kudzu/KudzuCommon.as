@@ -214,6 +214,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 			{
 				node.getShape().SetStatic(true);
 				if (this.hasTag("Mut_Explosive")) node.Tag("Mut_Explosive");
+				ApplyResistanceMutations(this, node);
 			}
 			this.set_u32("Upgrade Time", getGameTime() + 1500 / UpgradeSpeed);
 		}
@@ -223,6 +224,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 			if (node != null)
 			{
 				node.getShape().SetStatic(true);
+				ApplyResistanceMutations(this, node);
 			}
 			this.set_u32("Upgrade Time", getGameTime() + 600 / UpgradeSpeed);
 		}
@@ -232,6 +234,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 			if (node != null)
 			{
 				node.getShape().SetStatic(true);
+				ApplyResistanceMutations(this, node);
 			}
 			this.set_u32("Upgrade Time", getGameTime() + 900 / UpgradeSpeed);
 		}
@@ -241,9 +244,20 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 			if (node != null)
 			{
 				node.getShape().SetStatic(true);
+				ApplyResistanceMutations(this, node);
 			}
 			this.set_u32("Upgrade Time", getGameTime() + 1500 / UpgradeSpeed);
 		}
+	}
+}
+
+void ApplyResistanceMutations(CBlob@ this, CBlob@ child)
+{
+	if (this.hasTag("Mut_FireResistance")) 
+	{
+		child.Tag("Mut_FireResistance");
+		child.Untag(spread_fire_tag); 
+		child.RemoveScript("IsFlammable.as");
 	}
 }
 
