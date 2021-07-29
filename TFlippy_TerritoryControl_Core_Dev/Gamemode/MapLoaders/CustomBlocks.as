@@ -116,8 +116,6 @@ namespace CMap
 		tile_kudzu_v14,
 		tile_kudzu_f14,
 		tile_kudzu_d0,
-
-		//TODO: ADD new kudzu tiles here??
 				
 		tile_rail_0 = 507,
 		tile_rail_1 = 508,
