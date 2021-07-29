@@ -137,7 +137,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			f32 armorHealth = armorMaxHealth - this.get_f32(headname+"_health");
 			ratio *= armorHealth / armorMaxHealth;
 
-			this.set_f32(headname+"_health", this.get_f32(headname+"_health") + (ratio*dmg));
+			this.add_f32(headname+"_health", (ratio*dmg));
 			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
 			dmg = playerDamage;
 		}
@@ -184,7 +184,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			f32 armorHealth = armorMaxHealth - this.get_f32(torsoname+"_health");
 			ratio *= armorHealth / armorMaxHealth;
 
-			this.set_f32(torsoname+"_health", this.get_f32(torsoname+"_health") + (ratio*dmg));
+			this.add_f32(torsoname+"_health", (ratio*dmg));
 			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
 			dmg = playerDamage;
 		}
@@ -209,7 +209,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			f32 armorHealth = armorMaxHealth - this.get_f32(bootsname+"_health");
 			ratio *= armorHealth / armorMaxHealth;
 
-			this.set_f32(bootsname+"_health", this.get_f32(bootsname+"_health") + (ratio*dmg));
+			this.add_f32(bootsname+"_health", (ratio*dmg));
 			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
 			dmg = playerDamage;
 		}

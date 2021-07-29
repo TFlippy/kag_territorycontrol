@@ -14,18 +14,23 @@ u8 getHealingAmount(CBlob@ food)
 	}
 
 	string name = food.getName();
+	const int hash = name.getHash();
 	u8 heal_amount = 4; // things that might've been missed
-	if (name == "heart") heal_amount = 1;
-	else if (name == "cake") 		heal_amount = 3;
-	else if (name == "food") 		heal_amount = 4;
-	else if (name == "foodcan") 	heal_amount = 20;
-	else if (name == "grain") 		heal_amount = 2;
-	else if (name == "ratfood") 	heal_amount = 2;
-	else if (name == "ratburger") 	heal_amount = 3;
-	else if (name == "pumpkin") 	heal_amount = 7;
-	else if (name == "steak") 		heal_amount = 4;
-	else if (name == "icecream") 	heal_amount = 3;
-	else if (name == "doritos") 	heal_amount = 8;
+
+	switch(hash)
+	{
+		case 246031843:		heal_amount = 1;	break;	// heart
+		case -1964341159:	heal_amount = 3;	break;	// cake
+		case 1028682697:	heal_amount = 4;	break;	// food
+		case 1260223417:	heal_amount = 20;	break;	// foodcan
+		case -1788840884:	heal_amount = 2;	break;	// grain
+		case 1197821324:	heal_amount = 2;	break;	// ratfood
+		case -527037763:	heal_amount = 3;	break;	// ratburger
+		case -642166209:	heal_amount = 7;	break;	// pumpkin
+		case 336243301:		heal_amount = 4;	break;	// steak
+		case 258075966:		heal_amount = 3;	break;	// icecream
+		case 739538537:		heal_amount = 8;	break;	// doritos
+	}
 	return heal_amount;
 }
 
