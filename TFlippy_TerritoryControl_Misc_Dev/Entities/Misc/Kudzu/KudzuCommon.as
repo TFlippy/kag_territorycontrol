@@ -43,11 +43,6 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 		return 0;
 	}
 
-	if(map.getSectorAtPosition(pos, "no build") !is null) //Dont grow into railwail tracks (and other no build areas)
-	{
-		return 0;
-	}
-
 	double halfsize = map.tilesize * 0.5f;
 	Vec2f middle = pos; //+ Vec2f(halfsize, halfsize);
 	u8 kudzublob = 1;
@@ -83,10 +78,11 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 					if ((middle.x > bpos.x - width * 0.5f - halfsize) && (middle.x - halfsize < bpos.x + width * 0.5f)
 							&& (middle.y > bpos.y - height * 0.5f - halfsize) && (middle.y - halfsize < bpos.y + height * 0.5f))
 					{
+						//print("BLOB FOUND " + b.getName());
 						if (b.hasTag("kudzu"))	//Ignores kudzu blobs for obvious reasons (From KudzuHit.as))
 						{
 							kudzublob = 0; //This is not a place where you should upgrade
-							//print("OVERLAP FOUND");
+							//print("OVERLAP FOUND " + b.getName());
 						}
 						else 
 						{
@@ -113,6 +109,12 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 				}	
 			}
 		}
+	}
+
+	//Buildings need to be damaged before it stops here
+	if(map.getSectorAtPosition(pos, "no build") !is null && (this.getPosition().x != pos.x || this.getPosition().y != pos.y)) //Dont grow into railwail tracks (and other no build areas), but can build where this core is
+	{
+		return 0;
 	}
 
 	//Check if it has support there
@@ -259,6 +261,10 @@ void ApplyResistanceMutations(CBlob@ this, CBlob@ child)
 		child.Untag(spread_fire_tag); 
 		child.RemoveScript("IsFlammable.as");
 	}
+	if (this.hasTag("Mut_RadiationResistance"))
+	{
+		child.Tag("Mut_RadiationResistance");
+	}
 }
 
 void Mutate(CBlob@ this)
@@ -297,7 +303,7 @@ void Mutate(CBlob@ this)
 
 void Mutate_SurvivabilityBahvior(CBlob@ this, Random@ rand)
 {
-	int r = rand.NextRanged(3);
+	int r = rand.NextRanged(4);
 	if (r < 1 && !this.hasTag("Mut_NoLight"))
 	{
 		this.SetLight(false);
@@ -312,6 +318,10 @@ void Mutate_SurvivabilityBahvior(CBlob@ this, Random@ rand)
 	else if (r < 3 && !this.hasTag("Mut_Regeneration"))
 	{
 		this.Tag("Mut_Regeneration");
+	}
+	else if (r < 4 && !this.hasTag("Mut_RadiationResistance"))
+	{
+		this.Tag("Mut_RadiationResistance");
 	}
 	else
 	{
@@ -374,21 +384,21 @@ void Mutate_ExpansionBehavior(CBlob@ this, Random@ rand)
 void Mutate_UpgradeBehavior(CBlob@ this, Random@ rand)
 {	
 	int r = rand.NextRanged(5);
-	if (r < 1 && XORRandom(3) == 0 && !this.hasTag("Mut_MysteryBox"))
-	{
-		this.Tag("Mut_MysteryBox");
-	}
-	else if (r < 2 && !this.hasTag("Mut_Explosive")) //Honestly a negative mutation, since the explosion also damages the plant and causes chain reactions
+	if (r < 1 && !this.hasTag("Mut_Explosive")) //Honestly a negative mutation, since the explosion also damages the plant and causes chain reactions
 	{
 		this.Tag("Mut_Explosive");
 	}
-	else if (r < 3 && !this.hasTag("Mut_Badgers"))
+	else if (r < 2 && !this.hasTag("Mut_Badgers"))
 	{
 		this.Tag("Mut_Badgers");
 	}
-	else if (r < 4 && !this.hasTag("Mut_Gold"))
+	else if (r < 3 && !this.hasTag("Mut_Gold"))
 	{
 		this.Tag("Mut_Gold");
+	}
+	else if (r < 4 && XORRandom(3) == 0 && !this.hasTag("Mut_MysteryBox"))
+	{
+		this.Tag("Mut_MysteryBox");
 	}
 	else //Repeatable Mutation
 	{
