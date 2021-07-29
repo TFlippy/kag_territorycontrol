@@ -253,7 +253,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 	}
 }
 
-void ApplyResistanceMutations(CBlob@ this, CBlob@ child)
+void ApplyResistanceMutations(CBlob@ this, CBlob@ child) //Applies mutations to children which can be genericly transferred
 {
 	if (this.hasTag("Mut_FireResistance")) 
 	{
@@ -264,6 +264,11 @@ void ApplyResistanceMutations(CBlob@ this, CBlob@ child)
 	if (this.hasTag("Mut_RadiationResistance"))
 	{
 		child.Tag("Mut_RadiationResistance");
+	}
+	if (this.hasTag("Mut_NoLight"))
+	{
+		child.Tag("Mut_NoLight");
+		child.SetLight(false);
 	}
 }
 
