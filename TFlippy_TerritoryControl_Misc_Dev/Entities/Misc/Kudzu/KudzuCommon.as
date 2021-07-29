@@ -201,6 +201,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 		if (core != null)
 		{
 			core.getShape().SetStatic(true);
+			ApplyResistanceMutations(this, core); //Offspring cores inherit: Resistances and No Light mutation
 			Mutate(core); //Offspring start with 1 random mutation
 		}
 		this.set_u32("Duplication Time", 0); //No more duplicating after the first one
