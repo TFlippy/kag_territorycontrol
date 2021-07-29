@@ -6,7 +6,7 @@
 bool isDead(Vec2f pos, CMap@ map)
 {
 	Tile backtile = map.getTile(pos);
-	if (!isTileTypeKudzu(backtile.type))
+	if (!isTileTypeKudzu(backtile.type) || backtile.type == CMap::tile_kudzu_d0)
 	{
 		return true;
 	}
