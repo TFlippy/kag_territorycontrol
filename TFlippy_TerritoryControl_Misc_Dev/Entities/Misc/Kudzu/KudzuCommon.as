@@ -187,7 +187,7 @@ void MutateTick(CBlob@ this)
 				Mutate(this);
 			}
 		}
-		else if (getGameTime() >= this.get_f32("NextMutate") && this.get_f32("MutationTime") < (1800*5))
+		else if (getGameTime() >= this.get_f32("NextMutate"))
 		{
 			Mutate(this);
 		}
