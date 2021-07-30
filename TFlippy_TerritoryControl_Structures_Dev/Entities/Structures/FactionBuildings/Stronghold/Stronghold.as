@@ -68,8 +68,8 @@ void onInit(CBlob@ this)
 	
 	{
 		ShopItem@ s = addShopItem(this, "Upgrade to a Citadel", "$icon_upgrade$", "citadel", "Upgrade to even more durable and spacious Citadel.\n\n+ Larger inventory capacity\n+ Extra durability\n+ Increased maximum player health\n+ Longer capture time\n+ 1 Upkeep");
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 70);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 50);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 60);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 40);
 		AddRequirement(s.requirements, "blob", "mat_concrete", "Concrete", 250);
 		AddRequirement(s.requirements, "coin", "", "Coins", 1500);
 		s.customButton = true;
@@ -80,7 +80,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Repair", "$icon_repair$", "repair", "Repair this badly damaged building.\nRestores 5% of building's integrity.");	
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 2);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);		
 		s.customButton = true;
 		s.buttonwidth = 2;	

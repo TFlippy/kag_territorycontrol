@@ -222,8 +222,7 @@ bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, C
 		ReadRequirement(bs,req,blobName,friendlyName,quantity);
 		if (req == "blob") 
 		{
-			int sum = (inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0)+
-					(inv2 !is null ? inv2.getBlob().getBlobCount(blobName) : 0);
+			int sum = (inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0);
 			
 			if (storageEnabled)
 			{

@@ -66,9 +66,9 @@ void onInit(CBlob@ this)
 	
 	{
 		ShopItem@ s = addShopItem(this, "Upgrade to a Stronghold", "$icon_upgrade$", "stronghold", "Upgrade to a Stronghold.\n\n+ Larger inventory capacity\n+ Extra durability\n+ Longer capture time\n+ Material pickup\n+ 1 Upkeep");
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 50);
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 30);
-		AddRequirement(s.requirements, "coin", "", "Coins", 700);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 40);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 20);
+		AddRequirement(s.requirements, "coin", "", "Coins", 500);
 		s.customButton = true;
 		s.buttonwidth = 2;	
 		s.buttonheight = 2;

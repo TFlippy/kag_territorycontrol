@@ -67,7 +67,7 @@ void onInit(CBlob@ this)
 	
 	{
 		ShopItem@ s = addShopItem(this, "Upgrade to the Convent", "$icon_upgrade$", "convent", "Upgrade to the powerful faction tier of the Convent.\n\n+ Larger inventory capacity\n+ Extra durability\n+ Increased maximum player health\n+ Longer capture time\n+ 2 Upkeep");
-		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel", 250);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel", 200);
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 50);
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
 		AddRequirement(s.requirements, "coin", "", "Coins", 2500);
@@ -80,7 +80,7 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Repair", "$icon_repair$", "repair", "Repair this badly damaged building.\nRestores 5% of building's integrity.");	
 		AddRequirement(s.requirements, "blob", "mat_concrete", "Concrete", 25);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 3);
 		s.customButton = true;
 		s.buttonwidth = 2;	
 		s.buttonheight = 2;
