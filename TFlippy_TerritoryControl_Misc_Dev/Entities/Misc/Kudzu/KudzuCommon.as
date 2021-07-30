@@ -177,11 +177,17 @@ void MutateTick(CBlob@ this)
 		//print(this.getHealth() + "");
 		this.server_Heal(0.1f);
 	}
-	if (this.hasTag("Mut_Mutating"))
+	if (this.get_u8("MutateMax") <= 70)
 	{
-		Random@ rand = Random(getGameTime());
-		int r = rand.NextRanged(300);
-		if (r == 0)
+		if (this.hasTag("Mut_Mutating"))
+		{
+			int r = XORRandom(this.get_f32("MutationTime")*0.5);
+			if (r <= 50)
+			{
+				Mutate(this);
+			}
+		}
+		else if (getGameTime() >= this.get_f32("NextMutate") && this.get_f32("MutationTime") < (1800*5))
 		{
 			Mutate(this);
 		}
@@ -246,43 +252,99 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 	}
 }
 
-void Mutate(CBlob@ this)
+void Mutate(CBlob@ this, int hash = 0)
 {
-	CParticle@ particle = ParticleAnimated("SmallSmoke", this.getPosition(), Vec2f(0, 0), 0, 1.0f, 2, 0.0f, false);
-	if (particle != null)
-	{
-		particle.Z = 500;
-	}
+	this.set_f32("NextMutate", this.get_f32("MutationTime")+getGameTime());
 
+	if (hash != 0)
+	{
+		u8 mutChance = this.get_u8("MutationChance");
+		switch(hash)
+		{
+			case -661490310:	// mithrilingot
+				this.set_f32("MutationTime", this.get_f32("MutationTime") * 0.9);
+				this.add_u8("MutationChance", 1);
+				break;
 
-	Random@ rand = Random(getGameTime() + this.getPosition().x); //Randomness is time and position dependent, 
-	//technicly 2 of em in the same coloum mutated at the exact same time would get the same mutation
-	int r = rand.NextRanged(20);
-	if (r < 1 && !this.hasTag("Mut_Mutating")) //Possibly the most dangerous mutation, (At first slot to reduce the chance of getting it with other mutations)
-	{
-		this.Tag("Mut_Mutating");
+			case -1288560969:	// mithril
+				if (!this.hasTag("Mut_RadResistance") && mutChance < XORRandom(50)) this.Tag("Mut_RadResistance");
+				break;
+
+			case -989285105:	// mithrilenriched
+				if (!this.hasTag("Mut_RadResistance")) this.Tag("Mut_RadResistance");
+				this.add_u8("MutationChance", 10);
+				break;
+
+			case 1074492747:	// dirt
+				if (!this.hasTag("Mut_Regeneration") && mutChance < XORRandom(50)) this.Tag("Mut_Regeneration");
+				else Mutate_ExpansionBehavior(this);
+				break;
+
+			case -1326479778:	// oil
+				if (!this.hasTag("Mut_FireResistance") && mutChance < XORRandom(60))
+				{
+					this.Tag("Mut_FireResistance");
+					this.Untag(spread_fire_tag);
+					this.RemoveScript("IsFlammable.as");
+				}
+				break;
+
+			case -123101143:	// meat
+			case 336243301:		// steak
+				if (mutChance < XORRandom(50)) Mutate_DamageBehavior(this);
+				break;
+
+			case -1370030172:	// gold ore
+				if (!this.hasTag("Mut_Gold") && mutChance < XORRandom(40)) this.Tag("Mut_Gold");
+				break;
+
+			case -617913447:	// sulphur
+				if (!this.hasTag("Mut_Explosive") && mutChance < XORRandom(40)) this.Tag("Mut_Explosive");
+				break;
+
+			case 389592510:		// badger
+				if (!this.hasTag("Mut_Badgers") && mutChance < XORRandom(60)) this.Tag("Mut_Badgers");
+				break;
+		}
 	}
-	else if (r < 5)
+	else
 	{
-		Mutate_SurvivabilityBahvior(this, rand);
-	}
-	else if (r < 10)
-	{
-		Mutate_DamageBehavior(this, rand);
-	}
-	else if (r < 15)
-	{
-		Mutate_ExpansionBehavior(this, rand);
-	}
-	else if (r < 20)
-	{
-		Mutate_UpgradeBehavior(this, rand);
+		this.add_u8("MutateMax", 1);
+		CParticle@ particle = ParticleAnimated("SmallSmoke", this.getPosition(), Vec2f(0, 0), 0, 1.0f, 2, 0.0f, false);
+		if (particle != null)
+		{
+			particle.Z = 500;
+		}
+
+		if (this.get_u8("MutationChance") < XORRandom(15)) return;
+
+		int r = XORRandom(20);
+		if (r < 1 && !this.hasTag("Mut_Mutating")) //Possibly the most dangerous mutation, (At first slot to reduce the chance of getting it with other mutations)
+		{
+			this.Tag("Mut_Mutating");
+		}
+		else if (r < 5)
+		{
+			Mutate_SurvivabilityBahvior(this);
+		}
+		else if (r < 10)
+		{
+			Mutate_DamageBehavior(this);
+		}
+		else if (r < 15)
+		{
+			Mutate_ExpansionBehavior(this);
+		}
+		else if (r < 20)
+		{
+			Mutate_UpgradeBehavior(this);
+		}
 	}
 }
 
-void Mutate_SurvivabilityBahvior(CBlob@ this, Random@ rand)
+void Mutate_SurvivabilityBahvior(CBlob@ this)
 {
-	int r = rand.NextRanged(3);
+	int r = XORRandom(4);
 	if (r < 1 && !this.hasTag("Mut_NoLight"))
 	{
 		this.SetLight(false);
@@ -298,15 +360,15 @@ void Mutate_SurvivabilityBahvior(CBlob@ this, Random@ rand)
 	{
 		this.Tag("Mut_Regeneration");
 	}
-	else
+	else if (r < 4 && !this.hasTag("Mut_RadResistance"))
 	{
-		//NOTHING, for now
+		this.Tag("Mut_RadResistance");
 	}
 }
 
-void Mutate_DamageBehavior(CBlob@ this, Random@ rand)
+void Mutate_DamageBehavior(CBlob@ this)
 {
-	int r = rand.NextRanged(3);
+	int r = XORRandom(3);
 	if (r < 1 && !this.hasTag("Mut_StunningDamage"))
 	{
 		this.Tag("Mut_StunningDamage");
@@ -321,9 +383,9 @@ void Mutate_DamageBehavior(CBlob@ this, Random@ rand)
 	}
 }
 
-void Mutate_ExpansionBehavior(CBlob@ this, Random@ rand)
+void Mutate_ExpansionBehavior(CBlob@ this)
 {	
-	int r = rand.NextRanged(5);
+	int r = XORRandom(5);
 	if (r < 1 && !this.hasTag("Mut_IgnoreBGlass"))
 	{
 		this.Tag("Mut_IgnoreBGlass");
@@ -350,9 +412,9 @@ void Mutate_ExpansionBehavior(CBlob@ this, Random@ rand)
 	}
 }
 
-void Mutate_UpgradeBehavior(CBlob@ this, Random@ rand)
+void Mutate_UpgradeBehavior(CBlob@ this)
 {	
-	int r = rand.NextRanged(5);
+	int r = XORRandom(5);
 	if (r < 1 && XORRandom(3) == 0 && !this.hasTag("Mut_MysteryBox"))
 	{
 		this.Tag("Mut_MysteryBox");
