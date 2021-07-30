@@ -29,6 +29,10 @@ void onInit(CBlob@ this)
 	
 	this.Tag("minimap_large");
 	this.set_u8("minimap_index", 2);
+
+	this.SetLight(true);
+	this.SetLightRadius(128.0f);
+	this.SetLightColor(SColor(255, 255, 200, 128));
 	
 	// this.Tag("invincible");
 	this.Tag("respawn");

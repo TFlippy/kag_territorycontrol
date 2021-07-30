@@ -65,18 +65,40 @@ void onInit(CBlob@ this)
 	sprite.SetEmitSound("Faction_Alarm.ogg");
 	sprite.SetEmitSoundPaused(true);
 	sprite.SetEmitSoundSpeed(1.0f);
-	sprite.SetEmitSoundVolume(2.0f);
-
-	this.SetLight(false);
-	this.SetLightRadius(256.0f);
-	this.SetLightColor(SColor(255, 255, 0, 0));
+	sprite.SetEmitSoundVolume(1.5f);
 }
 
 void onTick(CBlob@ this)
 {
 	SetMinimap(this);   //needed for under raid check
-	if (this.get_bool("base_allow_alarm")) SetAlarm(this, this.get_bool("base_alarm_manual") || this.hasTag(raid_tag));
+	if (this.get_bool("base_alarm_manual") || this.hasTag(raid_tag))
+	{	
+		if (this.get_bool("base_allow_alarm") && !this.get_bool("base_alarm"))
+		{
+			SetAlarm(this, true);
+		}
+	}
+	else if (this.get_bool("base_alarm"))
+	{
+		this.set_bool("base_alarm", false);
+		this.getSprite().SetEmitSoundPaused(true);
 
+		if (this.getName() == "fortress")
+		{
+			this.SetLightRadius(128.0f);
+			this.SetLightColor(SColor(255, 255, 200, 128));
+		}
+		else if (this.getName() == "stronghold")
+		{
+			this.SetLightRadius(192.0f);
+			this.SetLightColor(SColor(255, 255, 240, 171));
+		}
+		else if (this.getName() == "citadel" || this.getName() == "convent")
+		{
+			this.SetLightRadius(256.0f);
+			this.SetLightColor(SColor(255, 255, 240, 210));
+		}
+	}
 	if (this.get_bool("base_demolition") && getGameTime() % 30 == 0)
 	{
 		if (isServer())
@@ -304,10 +326,12 @@ void SetAlarm(CBlob@ this, bool inState)
 	this.set_bool("base_alarm", inState);
 	if (isServer()) this.Sync("base_alarm", true);
 
-	this.SetLight(inState);
+	this.SetLight(true);
+	this.SetLightRadius(256.0f);
+	this.SetLightColor(SColor(255, 255, 0, 0));
 
 	CSprite@ sprite = this.getSprite();
-	sprite.SetEmitSoundPaused(!inState);
+	sprite.SetEmitSoundPaused(false);
 	sprite.RewindEmitSound();
 	sprite.PlaySound("LeverToggle.ogg");
 }
