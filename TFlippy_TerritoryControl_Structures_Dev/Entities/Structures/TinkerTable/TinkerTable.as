@@ -98,10 +98,9 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Scuba Gear", "$icon_scubagear$", "scubagear", "Special equipment used for scuba diving.\nOccupies the Head slot");
-		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
-		AddRequirement(s.requirements, "coin", "", "Coins", 50);
+		ShopItem@ s = addShopItem(this, "Engineer's Tools", "$engineertools$", "engineertools", "Engineer's Tools for real engineers.", true);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
+		AddRequirement(s.requirements, "coin", "", "Coins", 1000);
 
 		s.spawnNothing = true;
 	}
@@ -157,10 +156,10 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Lighter", "$lighter$", "lighter", "A small device which can set things on fire");
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 1);
-		AddRequirement(s.requirements, "blob", "lantern", "Lantern", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 30);
+		ShopItem@ s = addShopItem(this, "Scuba Gear", "$icon_scubagear$", "scubagear", "Special equipment used for scuba diving.\nOccupies the Head slot");
+		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
+		AddRequirement(s.requirements, "coin", "", "Coins", 50);
 
 		s.spawnNothing = true;
 	}
@@ -268,6 +267,14 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "Lighter", "$lighter$", "lighter", "A small device which can set things on fire");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 1);
+		AddRequirement(s.requirements, "blob", "lantern", "Lantern", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 30);
+
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Clown's Funny Klaxon", "$icon_klaxon$", "klaxon", "An infernal device housing thousands of lamenting souls.");
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 2);
 		AddRequirement(s.requirements, "coin", "", "Coins", 666);
@@ -275,10 +282,10 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Music Disc Replacement", "$musicdisc$", "musicdisc", "Change out the tunes to see if it fits your groove.");
-		AddRequirement(s.requirements, "blob", "musicdisc", "Music Disc", 1);
-		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 15);
+		ShopItem@ s = addShopItem(this, "Musical Contrabass", "$icon_contrabass$", "contrabass", "An advanced contrabass capable of emitting sounds of multiple instruments.");
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 4);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 
 		s.spawnNothing = true;
 	}
@@ -290,10 +297,10 @@ void onInit(CBlob@ this)
 		s.spawnNothing = false;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Musical Contrabass", "$icon_contrabass$", "contrabass", "An advanced contrabass capable of emitting sounds of multiple instruments.");
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
-		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 4);
-		AddRequirement(s.requirements, "coin", "", "Coins", 200);
+		ShopItem@ s = addShopItem(this, "Music Disc Replacement", "$musicdisc$", "musicdisc", "Change out the tunes to see if it fits your groove.");
+		AddRequirement(s.requirements, "blob", "musicdisc", "Music Disc", 1);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 15);
 
 		s.spawnNothing = true;
 	}
