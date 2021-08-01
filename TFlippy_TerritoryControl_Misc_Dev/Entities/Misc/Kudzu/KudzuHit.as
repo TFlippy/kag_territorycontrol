@@ -76,7 +76,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 			
 		case HittersTC::radiation:
-			dmg *= 1.50f;
+			dmg *= this.hasTag("Mut_RadiationResistance") ? 0.00f : 1.50f;
 			break;
 			
 		case HittersTC::electric:

@@ -5,7 +5,7 @@ void onInit(CBlob @ this)
 {
 	this.SetLight(true);
 	this.SetLightRadius(30.0f);
-	this.SetLightColor(SColor(255, 155, 255, 0));
+	this.SetLightColor(SColor(255, 255, 255, 255));
 }
 
 void onDie(CBlob@ this)

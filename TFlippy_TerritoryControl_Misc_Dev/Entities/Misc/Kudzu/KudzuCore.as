@@ -31,7 +31,7 @@ void onInit(CBlob @ this)
 
 	this.getSprite().SetRelativeZ(500);
 
-	//this.Tag("Mut_Teleporting"); //Mutation Testing
+	//this.Tag("Mut_Peacefull"); //Mutation Testing
 
 	//Starts offline
 }
@@ -42,7 +42,7 @@ void onSetStatic(CBlob@ this, const bool isStatic)
 	{
 		this.set_u32("Duplication Time", getGameTime() + RECHARGETIME);
 
-		if (XORRandom(5) == 0)
+		if (XORRandom(3) == 0)
 		{
 			Mutate(this);
 		}
