@@ -44,7 +44,7 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ h
 
 	// print("megahit");
 	
-	f32 true_level = this.get_f32("foofed");		
+	f32 true_level = Maths::Min(this.get_f32("foofed"), 5);
 	f32 level = 1.00f + true_level;
 
 	// print("" + level);
