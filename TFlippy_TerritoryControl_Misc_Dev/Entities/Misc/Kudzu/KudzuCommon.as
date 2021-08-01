@@ -294,11 +294,11 @@ void Mutate(CBlob@ this, int hash = 0)
 				break;
 
 			case -1288560969:	// mithril
-				if (!this.hasTag("Mut_RadResistance") && mutChance < XORRandom(50)) this.Tag("Mut_RadResistance");
+				if (!this.hasTag("Mut_RadiationResistance") && mutChance < XORRandom(50)) this.Tag("Mut_RadiationResistance");
 				break;
 
 			case -989285105:	// mithrilenriched
-				if (!this.hasTag("Mut_RadResistance")) this.Tag("Mut_RadResistance");
+				if (!this.hasTag("Mut_RadiationResistance")) this.Tag("Mut_RadiationResistance");
 				this.add_u8("MutationChance", 10);
 				break;
 
