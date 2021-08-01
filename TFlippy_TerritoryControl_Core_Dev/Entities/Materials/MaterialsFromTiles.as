@@ -97,6 +97,26 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 				MakeMat(this, worldPoint, "mat_wood", 1);
 				MakeMat(this, worldPoint, "mat_dirt", 1);
 			}
+			else if (tile >= CMap::tile_goldingot && tile <= CMap::tile_goldingot_d1)
+			{
+				MakeMat(this, worldPoint, "mat_goldingot", 10);
+			}
+			else if (tile >= CMap::tile_mithrilingot && tile <= CMap::tile_mithrilingot_d1)
+			{
+				MakeMat(this, worldPoint, "mat_mithrilingot", 10);
+			}
+			else if (tile >= CMap::tile_copperingot && tile <= CMap::tile_copperingot_d1)
+			{
+				MakeMat(this, worldPoint, "mat_copperingot", 10);
+			}
+			else if (tile >= CMap::tile_steelingot && tile <= CMap::tile_steelingot_d1)
+			{
+				MakeMat(this, worldPoint, "mat_steelingot", 10);
+			}
+			else if (tile >= CMap::tile_ironingot && tile <= CMap::tile_ironingot_d1)
+			{
+				MakeMat(this, worldPoint, "mat_ironingot", 10);
+			}
 
 			if (map.isTileSolid(tile))
 			{
