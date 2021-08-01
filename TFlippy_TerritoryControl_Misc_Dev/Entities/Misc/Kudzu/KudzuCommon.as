@@ -6,7 +6,7 @@
 bool isDead(Vec2f pos, CMap@ map)
 {
 	Tile backtile = map.getTile(pos);
-	if (!isTileTypeKudzu(backtile.type))
+	if (!isTileTypeKudzu(backtile.type) || backtile.type == CMap::tile_kudzu_d0)
 	{
 		return true;
 	}
@@ -43,11 +43,6 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 		return 0;
 	}
 
-	if(map.getSectorAtPosition(pos, "no build") !is null) //Dont grow into railwail tracks (and other no build areas)
-	{
-		return 0;
-	}
-
 	double halfsize = map.tilesize * 0.5f;
 	Vec2f middle = pos; //+ Vec2f(halfsize, halfsize);
 	u8 kudzublob = 1;
@@ -68,11 +63,11 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 				//print(cantBuild + " "+ bname);
 
 				// cant place on any other blob
-				if (cantBuild &&
-						!b.hasTag("dead") &&
-						!b.hasTag("material") && //Will just push materials dead things or projectiles similar to the normal human build mode
-						!b.hasTag("projectile") &&
-						bname != "bush")
+				if (cantBuild) //&&
+						//!b.hasTag("dead") &&
+						//!b.hasTag("material") && //Will just push materials dead things or projectiles similar to the normal human build mode
+						//!b.hasTag("projectile") &&
+						//bname != "bush")
 				{
 					//print(pos + " " +bpos);
 
@@ -83,10 +78,11 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 					if ((middle.x > bpos.x - width * 0.5f - halfsize) && (middle.x - halfsize < bpos.x + width * 0.5f)
 							&& (middle.y > bpos.y - height * 0.5f - halfsize) && (middle.y - halfsize < bpos.y + height * 0.5f))
 					{
+						//print("BLOB FOUND " + b.getName());
 						if (b.hasTag("kudzu"))	//Ignores kudzu blobs for obvious reasons (From KudzuHit.as))
 						{
 							kudzublob = 0; //This is not a place where you should upgrade
-							//print("OVERLAP FOUND");
+							//print("OVERLAP FOUND " + b.getName());
 						}
 						else 
 						{
@@ -95,6 +91,7 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 								int Type = HittersTC::poison;
 								double Amount = 0.125f * this.get_u8("DamageMod");
 
+								if (this.hasTag("Mut_Peacefull")) Amount = 0;
 								if (this.hasTag("Mut_StunningDamage")) Type = Hitters::spikes;
 
 								this.server_Hit(b, bpos, bpos - pos, Amount, Type, false);
@@ -112,6 +109,12 @@ u8 canGrowTo(CBlob@ this, Vec2f pos, CMap@ map, Vec2f dir) //0 = no good, 1 = go
 				}	
 			}
 		}
+	}
+
+	//Buildings need to be damaged before it stops here
+	if(map.getSectorAtPosition(pos, "no build") !is null && (this.getPosition().x != pos.x || this.getPosition().y != pos.y)) //Dont grow into railwail tracks (and other no build areas), but can build where this core is
+	{
+		return 0;
 	}
 
 	//Check if it has support there
@@ -204,6 +207,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 		if (core != null)
 		{
 			core.getShape().SetStatic(true);
+			ApplyResistanceMutations(this, core); //Offspring cores inherit: Resistances and No Light mutation
 			Mutate(core); //Offspring start with 1 random mutation
 		}
 		this.set_u32("Duplication Time", 0); //No more duplicating after the first one
@@ -219,6 +223,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 			{
 				node.getShape().SetStatic(true);
 				if (this.hasTag("Mut_Explosive")) node.Tag("Mut_Explosive");
+				ApplyResistanceMutations(this, node);
 			}
 			this.set_u32("Upgrade Time", getGameTime() + 1500 / UpgradeSpeed);
 		}
@@ -228,6 +233,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 			if (node != null)
 			{
 				node.getShape().SetStatic(true);
+				ApplyResistanceMutations(this, node);
 			}
 			this.set_u32("Upgrade Time", getGameTime() + 600 / UpgradeSpeed);
 		}
@@ -237,6 +243,7 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 			if (node != null)
 			{
 				node.getShape().SetStatic(true);
+				ApplyResistanceMutations(this, node);
 			}
 			this.set_u32("Upgrade Time", getGameTime() + 900 / UpgradeSpeed);
 		}
@@ -246,9 +253,29 @@ void UpgradeTile(CBlob@ this, Vec2f pos, CMap@ map, Random@ rand)
 			if (node != null)
 			{
 				node.getShape().SetStatic(true);
+				ApplyResistanceMutations(this, node);
 			}
 			this.set_u32("Upgrade Time", getGameTime() + 1500 / UpgradeSpeed);
 		}
+	}
+}
+
+void ApplyResistanceMutations(CBlob@ this, CBlob@ child) //Applies mutations to children which can be genericly transferred
+{
+	if (this.hasTag("Mut_FireResistance")) 
+	{
+		child.Tag("Mut_FireResistance");
+		child.Untag(spread_fire_tag); 
+		child.RemoveScript("IsFlammable.as");
+	}
+	if (this.hasTag("Mut_RadiationResistance"))
+	{
+		child.Tag("Mut_RadiationResistance");
+	}
+	if (this.hasTag("Mut_NoLight"))
+	{
+		child.Tag("Mut_NoLight");
+		child.SetLight(false);
 	}
 }
 
@@ -360,20 +387,26 @@ void Mutate_SurvivabilityBahvior(CBlob@ this)
 	{
 		this.Tag("Mut_Regeneration");
 	}
-	else if (r < 4 && !this.hasTag("Mut_RadResistance"))
+	else if (r < 4 && !this.hasTag("Mut_RadiationResistance"))
 	{
-		this.Tag("Mut_RadResistance");
+		this.Tag("Mut_RadiationResistance");
 	}
 }
 
 void Mutate_DamageBehavior(CBlob@ this)
 {
-	int r = XORRandom(3);
-	if (r < 1 && !this.hasTag("Mut_StunningDamage"))
+	int r = XORRandom(4);
+	
+	if (r < 1)
+	{
+		if (!this.hasTag("Mut_Peacefull")) this.Tag("Mut_Peacefull");
+		else { this.Untag("Mut_Peacefull");}
+	}
+	if (r < 2 && !this.hasTag("Mut_StunningDamage"))
 	{
 		this.Tag("Mut_StunningDamage");
 	}
-	else if (r < 2 && !this.hasTag("Mut_Knockback"))
+	else if (r < 3 && !this.hasTag("Mut_Knockback"))
 	{
 		this.Tag("Mut_Knockback");
 	}
@@ -415,21 +448,21 @@ void Mutate_ExpansionBehavior(CBlob@ this)
 void Mutate_UpgradeBehavior(CBlob@ this)
 {	
 	int r = XORRandom(5);
-	if (r < 1 && XORRandom(3) == 0 && !this.hasTag("Mut_MysteryBox"))
-	{
-		this.Tag("Mut_MysteryBox");
-	}
-	else if (r < 2 && !this.hasTag("Mut_Explosive")) //Honestly a negative mutation, since the explosion also damages the plant and causes chain reactions
+	if (r < 1 && !this.hasTag("Mut_Explosive")) //Honestly a negative mutation, since the explosion also damages the plant and causes chain reactions
 	{
 		this.Tag("Mut_Explosive");
 	}
-	else if (r < 3 && !this.hasTag("Mut_Badgers"))
+	else if (r < 2 && !this.hasTag("Mut_Badgers"))
 	{
 		this.Tag("Mut_Badgers");
 	}
-	else if (r < 4 && !this.hasTag("Mut_Gold"))
+	else if (r < 3 && !this.hasTag("Mut_Gold"))
 	{
 		this.Tag("Mut_Gold");
+	}
+	else if (r < 4 && XORRandom(3) == 0 && !this.hasTag("Mut_MysteryBox"))
+	{
+		this.Tag("Mut_MysteryBox");
 	}
 	else //Repeatable Mutation
 	{

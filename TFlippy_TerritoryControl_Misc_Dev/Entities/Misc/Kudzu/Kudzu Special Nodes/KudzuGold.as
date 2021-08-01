@@ -10,7 +10,7 @@ void onInit(CBlob @ this)
 
 void onDie(CBlob@ this)
 {
-	MakeMat(this, this.getPosition(), "mat_gold", 25 + XORRandom(25));	
+	MakeMat(this, this.getPosition(), "mat_gold", 25 + XORRandom(75));	
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
