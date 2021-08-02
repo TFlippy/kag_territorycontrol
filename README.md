@@ -17,7 +17,7 @@
 - Do not gate-keep suggestions/ideas just because one user does not play as much as you, or has different views.
 - Do not expect professionalism 24/7 from people who contribute in their free time while getting nothing in return. 
 
-## How to contirbute issues
+## How to contribute issues
 Issue's can cover a wide range of stuff, for example:
 - Bug reports
 - Suggestions for new content
