@@ -75,6 +75,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller) //Mutate button
 			case -617913447:	// sulphur
 			case 389592510:		// badger
 			case 336243301:		// steak
+				
 				canMutate = true;
 				break;
 		}
@@ -110,8 +111,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params) //Mutate command
 					case -123101143: 	matReq = 100;	break;	// meat
 					case -1370030172:	matReq = 250;	break;	// gold ore
 					case -617913447:	matReq = 250;	break;	// sulphur
-					case 389592510:		matReq = 1;		break;	// badger
-					case 336243301:		matReq = 1;		break;	// steak
+					case 389592510:		matReq = 1;	break;	// badger
+					case 336243301:		matReq = 1;	break;	// steak
 				}
 			}
 
