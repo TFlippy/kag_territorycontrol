@@ -80,6 +80,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$concrete_block$", "World.png", Vec2f(8, 8), CMap::tile_concrete);
 	AddIconToken("$bconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_bconcrete);
 	AddIconToken("$reinforcedconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_reinforcedconcrete);
+	AddIconToken("$woodengate", "1x4WoodenGate.png", Vec2f(8,24), 0);
 	
 	AddIconToken("$icon_conveyor$", "Conveyor.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 0);
@@ -268,7 +269,12 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 3);
 		blocks[0].push_back(b);
 	}
-	
+	{
+		BuildBlock b(0, "1x4WoodenGate", "$woodengate$", "Wooden Gate, can be raised or lowered.");
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 2);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
+		blocks[0].push_back(b);
+	}
 	// {
 		// BuildBlock b(CMap::tile_tnt, "tnt_block", "$tnt_block$", "Explosives\nSet off by other explosions and fire.");
 		// AddRequirement(b.reqs, "blob", "mat_dirt", "Dirt", 0);
