@@ -90,7 +90,7 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 
 	BuildBlock[][] blocks;
 	addCommonBuilderBlocks(blocks, teamnum);
-	blob.get(blocks_property, @blocks);
+	blob.get(blocks_property, blocks);
 	if(blocks is null) return;
 
 	const Vec2f MENU_CE = Vec2f(0, MENU_SIZE.y * -GRID_SIZE - GRID_PADDING + 48) + INVENTORY_CE;

@@ -259,7 +259,7 @@ void BomberHandling(CBlob@ this, VehicleInfo@ v)
 							dropped.SetDamageOwnerPlayer(blob.getPlayer());
 							dropped.Tag("no pickup");
 
-							if (quantity > 0)
+							if (quantity - 1 > 0)
 							{
 								item.server_SetQuantity(quantity - 1);
 							}

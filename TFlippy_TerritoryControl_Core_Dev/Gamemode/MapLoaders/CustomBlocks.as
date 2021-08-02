@@ -116,8 +116,6 @@ namespace CMap
 		tile_kudzu_v14,
 		tile_kudzu_f14,
 		tile_kudzu_d0,
-
-		//TODO: ADD new kudzu tiles here??
 				
 		tile_rail_0 = 507,
 		tile_rail_1 = 508,
@@ -276,7 +274,27 @@ namespace CMap
 		tile_snow_pile_v2,
 		tile_snow_pile_v3,
 		tile_snow_pile_v4,
-		tile_snow_pile_v5
+		tile_snow_pile_v5,
+
+		tile_goldingot = tile_snow_pile + 16,
+		tile_goldingot_d0,
+		tile_goldingot_d1,
+
+		tile_mithrilingot,
+		tile_mithrilingot_d0,
+		tile_mithrilingot_d1,
+
+		tile_copperingot,
+		tile_copperingot_d0,
+		tile_copperingot_d1,
+
+		tile_steelingot,
+		tile_steelingot_d0,
+		tile_steelingot_d1,
+
+		tile_ironingot,
+		tile_ironingot_d0,
+		tile_ironingot_d1,
 	};
 };
 

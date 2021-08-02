@@ -14,7 +14,7 @@ void onInit(CBlob@ this)
 	GunSettings settings = GunSettings();
 
 	settings.B_GRAV = Vec2f(0, 0.006); //Bullet Gravity
-	settings.B_TTL = 14; //Bullet Time to live
+	settings.B_TTL = 20; //Bullet Time to live
 	settings.B_SPEED = 70; //Bullet speed
 	settings.B_DAMAGE = 2.5f; //Bullet damage
 	settings.MUZZLE_OFFSET = Vec2f(-21, -4); //Where muzzle flash and bullet spawn
@@ -292,6 +292,16 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob !is null) TryToAttachVehicle(this, blob);
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	VehicleInfo@ v;
+	if (!this.get("VehicleInfo", @v)) return false;
+
+	CInventory@ inv = forBlob.getInventory();
+
+	return forBlob.getCarriedBlob() is null && (inv !is null ? inv.getItem(v.ammo_name) is null : true);
 }
 
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)

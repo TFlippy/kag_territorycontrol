@@ -31,7 +31,7 @@ void onInit(CBlob @ this)
 
 	this.getSprite().SetRelativeZ(500);
 
-	//this.Tag("Mut_Knockback"); //Mutation Testing
+	//this.Tag("Mut_Peacefull"); //Mutation Testing
 
 	//Starts offline
 }
@@ -42,7 +42,7 @@ void onSetStatic(CBlob@ this, const bool isStatic)
 	{
 		this.set_u32("Duplication Time", getGameTime() + RECHARGETIME);
 
-		if (XORRandom(5) == 0)
+		if (XORRandom(3) == 0)
 		{
 			Mutate(this);
 		}
@@ -68,24 +68,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params) //Mutate command
 	if (cmd == this.getCommandID("mutate"))
 	{
 		CBlob@ caller = getBlobByNetworkID(params.read_u16());
-		CBlob@ carried = caller.getCarriedBlob();
-
-		if (carried !is null && carried.getName() == "mat_mithrilingot")
+		if (caller !is null)
 		{
-			if (carried.getQuantity() >= 10)
+			CBlob@ carried = caller.getCarriedBlob();
+			if (carried !is null && carried.getName() == "mat_mithrilingot")
 			{
-				
-				int remain = carried.getQuantity() - 10;
-				if (remain > 0)
+				if (carried.getQuantity() >= 10)
 				{
-					carried.server_SetQuantity(remain);
+					
+					int remain = carried.getQuantity() - 10;
+					if (remain > 0)
+					{
+						carried.server_SetQuantity(remain);
+					}
+					else
+					{
+						carried.Tag("dead");
+						carried.server_Die();
+					}
+					Mutate(this);
 				}
-				else
-				{
-					carried.Tag("dead");
-					carried.server_Die();
-				}
-				Mutate(this);
 			}
 		}
 	}
@@ -111,7 +113,7 @@ void onTick(CBlob@ this)
 		}
 		else if (sprouts.length < this.get_u8("MaxSprouts")) //Hardcap
 		{
-			if (rand.NextRanged(sprouts.length*7) == 0) //Chance decreases the more sprouts it already has
+			if (rand.NextRanged(sprouts.length*10) == 0) //Chance decreases the more sprouts it already has
 			{
 				sprouts.push_back(Vec2f(this.getPosition().x, this.getPosition().y));
 				newSprout = true;
@@ -145,6 +147,12 @@ void onTick(CBlob@ this)
 					break;
 					case 3: offset = Vec2f(0.0f,-8.0f);
 					break;
+				}
+
+				if (this.hasTag("Mut_Teleporting") && XORRandom(50) == 0) //Skip past up to 3 tiles in a rectangular range, very low chance, cannot be a first mutation
+				{
+					offset = Vec2f((XORRandom(7) - 3) * 8.00f, (XORRandom(7) - 3) * 8.00f);
+					//print("test");
 				}
 			
 				u8 canGrow = canGrowTo(this, sprout + offset, map, offset);

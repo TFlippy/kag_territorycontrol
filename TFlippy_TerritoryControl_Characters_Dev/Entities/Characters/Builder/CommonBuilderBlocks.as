@@ -68,6 +68,11 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	AddIconToken("$brick_block$", "World.png", Vec2f(8, 8), 412);
 	AddIconToken("$sand_block$", "World.png", Vec2f(8, 8), 220);
 	AddIconToken("$kudzu_block$", "World.png", Vec2f(8, 8), CMap::tile_kudzu);
+	AddIconToken("$goldingot_block$", "World.png", Vec2f(8, 8), CMap::tile_goldingot);
+	AddIconToken("$mithrilingot_block$", "World.png", Vec2f(8, 8), CMap::tile_mithrilingot);
+	AddIconToken("$copperingot_block$", "World.png", Vec2f(8, 8), CMap::tile_copperingot);
+	AddIconToken("$steelingot_block$", "World.png", Vec2f(8, 8), CMap::tile_steelingot);
+	AddIconToken("$ironingot_block$", "World.png", Vec2f(8, 8), CMap::tile_ironingot);
 
 	//Buildings
 	AddIconToken("$icon_buildershop$", "BuilderShop.png", Vec2f(40, 24), 0, teamnum);
@@ -287,6 +292,31 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	{
 		BuildBlock b(CMap::tile_kudzu, "kudzu", "$kudzu_block$", "Mostly decorative kudzu leaves \n ");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_goldingot, "goldingot", "$goldingot_block$", "Mostly decorative block made from gold ingots \n ");
+		AddRequirement(b.reqs, "blob", "mat_goldingot", "Gold Ingots", 30);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_mithrilingot, "mithrilingot", "$mithrilingot_block$", "Mostly decorative block made from mithril ingots \n ");
+		AddRequirement(b.reqs, "blob", "mat_mithrilingot", "Mithril Ingots", 30);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_copperingot, "copperingot", "$copperingot_block$", "Mostly decorative block made from copper ingots \n ");
+		AddRequirement(b.reqs, "blob", "mat_copperingot", "Copper Ingots", 30);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_steelingot, "steelingot", "$steelingot_block$", "Mostly decorative block made from steel ingots \n ");
+		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingots", 30);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(CMap::tile_ironingot, "ironingot", "$ironingot_block$", "Mostly decorative block made from iron ingots \n ");
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 30);
 		blocks[0].push_back(b);
 	}
 	// {
