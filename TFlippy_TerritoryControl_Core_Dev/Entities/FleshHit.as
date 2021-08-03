@@ -215,8 +215,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		}
 	}
 	
-	if (this.get_f32("crak_effect") > 0) dmg *= 0.60f / (this.get_f32("crak_effect"));
-	
 	this.Damage(dmg, hitterBlob);
 
 	f32 gibHealth = getGibHealth(this);
