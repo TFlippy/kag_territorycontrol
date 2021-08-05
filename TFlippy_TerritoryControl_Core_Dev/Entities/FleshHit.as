@@ -87,133 +87,118 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	
 	if (this.hasTag("equipment support"))
 	{
-		bool isBullet = (
-			customData == HittersTC::bullet_low_cal || customData == HittersTC::bullet_high_cal || 
-			customData == HittersTC::shotgun || customData == HittersTC::railgun_lance);
-		
-		string headname = this.get_string("equipment_head");
-		string torsoname = this.get_string("equipment_torso");
-		string bootsname = this.get_string("equipment_boots");
-		
-		if (headname != "" && this.exists(headname+"_health"))
+		bool isBullet = (customData == HittersTC::bullet_low_cal || customData == HittersTC::bullet_high_cal || customData == HittersTC::shotgun || customData == HittersTC::railgun_lance);
+		// torso
+		if (this.get_string("equipment_torso") == "bulletproofvest" && customData != HittersTC::radiation)
 		{
-			f32 armorMaxHealth;
-			f32 ratio;
+			f32 armorMaxHealth = 25.0f;
+			f32 armorHealth = armorMaxHealth - this.get_f32("bpv_health");
+			f32 ratio = armorHealth / armorMaxHealth;
 
-			if (headname == "militaryhelmet" && customData != HittersTC::radiation)
+			switch (customData)
 			{
-				armorMaxHealth = 40.0f;
-				switch (customData)
-				{
-					case HittersTC::bullet_low_cal:
-					case HittersTC::shotgun:
-						ratio = 0.85f;
-						break;
+				case HittersTC::bullet_low_cal:
+					ratio *= 0.80f;
+					break;
 
-					case HittersTC::bullet_high_cal:
-					case HittersTC::railgun_lance:
-						ratio = 0.65f;
-						break;
+				case HittersTC::bullet_high_cal:
+				case HittersTC::railgun_lance:
+					ratio *= 0.60f;
+					break;
 
-					default:
-						ratio = 0.30f;
-						break;
-				}
-			}
-			else if (headname == "scubagear")
-			{
-				armorMaxHealth = 10.0f;
-				ratio = 0.20f;
-			}
-			else if (!isBullet && customData != HittersTC::radiation)
-			{
-				if (headname == "bucket") armorMaxHealth = 10.0f;
-				else if (headname == "pumpkin") armorMaxHealth = 5.0f;
-				else if (headname == "minershelmet") armorMaxHealth = 10.0f;
-				ratio = 0.20f;
-			}
-			f32 armorHealth = armorMaxHealth - this.get_f32(headname+"_health");
-			ratio *= armorHealth / armorMaxHealth;
+				case HittersTC::shotgun:
+					ratio *= 0.85f;
+					break;
 
-			this.set_f32(headname+"_health", this.get_f32(headname+"_health") + (ratio*dmg));
+				default:
+					ratio *= 0.40f;
+					break;
+			}
+			
+			this.set_f32("bpv_health", this.get_f32("bpv_health") + (ratio*dmg));
 			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
+
 			dmg = playerDamage;
 		}
-		if (torsoname != "" && this.exists(torsoname+"_health"))
+		else if (this.get_string("equipment_torso") == "keg" && !isBullet && customData != HittersTC::radiation)
 		{
-			f32 armorMaxHealth;
-			f32 ratio;
+			f32 armorMaxHealth = 7.0f;
+			f32 armorHealth = armorMaxHealth - this.get_f32("keg_health");
+			f32 ratio = armorHealth / armorMaxHealth;
 
-			if (torsoname == "bulletproofvest" && customData != HittersTC::radiation)
+			if ((customData == Hitters::fire || customData == Hitters::burn || customData == Hitters::explosion || 
+				customData == Hitters::bomb || customData == Hitters::bomb_arrow) && this.get_f32("keg_explode") == 0.0f)
 			{
-				armorMaxHealth = 50.0f;
-				switch (customData)
-				{
-					case HittersTC::bullet_low_cal:
-					case HittersTC::shotgun:
-						ratio = 0.85f;
-						break;
-
-					case HittersTC::bullet_high_cal:
-					case HittersTC::railgun_lance:
-						ratio = 0.65f;
-						break;
-
-					default:
-						ratio = 0.40f;
-						break;
-				}
+				this.set_f32("keg_explode", getGameTime() + (30.0f * 1.0f));
+				this.SetLightRadius(this.get_f32("explosive_radius") * 0.5f);
+				this.getSprite().PlaySound("/Sparkle.ogg", 1.00f, 1.00f);
+				this.getSprite().PlaySound("MigrantScream1.ogg", 1.00f, this.getSexNum() == 0 ? 1.0f : 2.0f);
+				ratio *= 0.0f;
 			}
-			else if (torsoname == "keg" && !isBullet && customData != HittersTC::radiation)
-			{
-				armorMaxHealth = 10.0f;
-				if ((customData == Hitters::fire || customData == Hitters::burn || customData == Hitters::explosion || 
-					customData == Hitters::bomb || customData == Hitters::bomb_arrow) && this.get_f32("keg_explode") == 0.0f)
-				{
-					this.set_f32("keg_explode", getGameTime() + (30.0f * 1.0f));
-					this.SetLightRadius(this.get_f32("explosive_radius") * 0.5f);
-					this.getSprite().PlaySound("/Sparkle.ogg", 1.00f, 1.00f);
-					this.getSprite().PlaySound("MigrantScream1.ogg", 1.00f, this.getSexNum() == 0 ? 1.0f : 2.0f);
-					ratio = 0.0f;
-				}
-				else ratio = 0.50f;
-			}
-			f32 armorHealth = armorMaxHealth - this.get_f32(torsoname+"_health");
-			ratio *= armorHealth / armorMaxHealth;
-
-			this.set_f32(torsoname+"_health", this.get_f32(torsoname+"_health") + (ratio*dmg));
+			else ratio *= 0.50f;
+			
+			this.set_f32("keg_health", this.get_f32("keg_health") + (ratio*dmg));
 			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
+
 			dmg = playerDamage;
 		}
-
-		if (bootsname != "" && this.exists(bootsname+"_health"))
+		// head
+		if (this.get_string("equipment_head") == "militaryhelmet" && customData != HittersTC::radiation)
 		{
-			f32 armorMaxHealth;
-			f32 ratio;
+			f32 armorMaxHealth = 20.0f;
+			f32 armorHealth = armorMaxHealth - this.get_f32("mh_health");
+			f32 ratio = armorHealth / armorMaxHealth;
 
-			if (bootsname == "combatboots" && customData != HittersTC::radiation)
+			switch (customData)
 			{
-				armorMaxHealth = 20.0f;
-				switch (customData)
-				{
-					case Hitters::fall:
-						ratio = 0.30f;
-						break;
+				case HittersTC::bullet_low_cal:
+					ratio *= 0.80f;
+					break;
 
-					default: ratio = 0.10f;
-						break;
-				}
+				case HittersTC::bullet_high_cal:
+				case HittersTC::railgun_lance:
+					ratio *= 0.60f;
+					break;
+
+				case HittersTC::shotgun:
+					ratio *= 0.85f;
+					break;
+
+				default:
+					ratio *= 0.30f;
+					break;
 			}
-			f32 armorHealth = armorMaxHealth - this.get_f32(bootsname+"_health");
-			ratio *= armorHealth / armorMaxHealth;
-
-			this.set_f32(bootsname+"_health", this.get_f32(bootsname+"_health") + (ratio*dmg));
+			
+			this.set_f32("mh_health", this.get_f32("mh_health") + (ratio*dmg));
 			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
+
+			dmg = playerDamage;
+		}
+		else if (this.get_string("equipment_head") == "bucket" && !isBullet && customData != HittersTC::radiation)
+		{
+			f32 armorMaxHealth = 5.0f;
+			f32 armorHealth = armorMaxHealth - this.get_f32("bucket_health");
+			f32 ratio = armorHealth / armorMaxHealth;
+
+			switch (customData)
+			{
+				case Hitters::fire:
+				case Hitters::burn:
+					ratio *= 0.10f;
+					break;
+
+				default: ratio *= 0.30f;
+					break;
+			}
+			
+			this.set_f32("bucket_health", this.get_f32("bucket_health") + (ratio*dmg));
+			f32 playerDamage = Maths::Clamp((1.00f - ratio) * dmg, 0, dmg);
+
 			dmg = playerDamage;
 		}
 	}
 	
-	if (this.get_f32("crak_effect") > 0) dmg *= 0.60f / (this.get_f32("crak_effect"));
+	if (this.get_f32("crak_effect") > 0) dmg *= 0.30f;
 	
 	this.Damage(dmg, hitterBlob);
 

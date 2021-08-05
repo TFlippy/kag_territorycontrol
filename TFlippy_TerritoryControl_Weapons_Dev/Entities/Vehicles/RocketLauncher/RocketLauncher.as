@@ -210,6 +210,16 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	if (blob !is null) TryToAttachVehicle(this, blob);
 }
 
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	VehicleInfo@ v;
+	if (!this.get("VehicleInfo", @v)) return false;
+
+	CInventory@ inv = forBlob.getInventory();
+
+	return forBlob.getCarriedBlob() is null && (inv !is null ? inv.getItem(v.ammo_name) is null : true);
+}
+
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	if (attached.hasTag("bomber")) return;

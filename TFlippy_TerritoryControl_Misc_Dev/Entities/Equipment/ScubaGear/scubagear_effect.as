@@ -28,12 +28,4 @@ void onTick(CBlob@ this)
     }
 
     this.set_u8("breath timer", (this.get_u8("breath timer") % 2) + 1);
-
-    if (this.get_f32("scubagear_health") >= 10.0f)
-    {
-        this.getSprite().PlaySound("woodheavyhit1");
-        this.set_string("equipment_head", "");
-        this.set_f32("scubagear_health", 9.9f);
-        this.RemoveScript("scubagear_effect.as");
-    }
 }
