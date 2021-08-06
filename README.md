@@ -7,7 +7,7 @@
 </p>
 
 ## Links
-[![Discord Chat](https://img.shields.io/discord/361255623456849923?label=Discord&logo=discord&logoColor=ffffff&labelColor=7289DA&color=2c2f33)]()
+[![Discord Chat](https://img.shields.io/discord/361255623456849923?label=Discord&logo=discord&logoColor=ffffff&labelColor=7289DA&color=2c2f33)](https://discord.gg/ZSazrXz)
 <br>
 [Change log site](https://change.vamist.dev/tc/)
 
