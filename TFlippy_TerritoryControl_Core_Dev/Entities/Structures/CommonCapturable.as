@@ -1,3 +1,7 @@
+#include "Survival_Structs.as";
+#include "Survival_Icons.as";
+#include "uncap_team.as"
+
 /*
  * convertible if enemy outnumbers friends in radius
  */
@@ -13,9 +17,12 @@ const u16 capture_radius = 44;
 const string friendly_prop = "capture friendly count";
 const string enemy_prop = "capture enemy count";
 
+
+
 void onInit(CBlob@ this)
 {
 	this.addCommandID("convert");
+	this.addCommandID("abandon");
 	this.getCurrentScript().tickFrequency = 30;
 
 	// f32 capture_modifier = this.exists("capture_speed_modifier") ? this.get_f32("capture_speed_modifier") : 1.00f;
@@ -184,6 +191,40 @@ void onTick(CBlob@ this)
 			// this.server_setTeamNum(-1);
 		// }
 	// }
+}
+
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (caller.isOverlapping(this) && !this.hasTag("faction_base"))
+	{
+		if (caller.getTeamNum() == this.getTeamNum() && this.getTeamNum() < 100)
+		{
+			CPlayer@ myPly = caller.getPlayer();
+			if (myPly !is null && caller.isMyPlayer())
+			{
+				TeamData@ team_data;
+				GetTeamData(this.getTeamNum(), @team_data);
+				if (team_data !is null)
+				{
+					const bool isLeader = team_data.leader_name == myPly.getUsername();
+					if (isLeader)
+					{
+						CBitStream no_params;
+						CButton@ butt = caller.CreateGenericButton(33, Vec2f(-0, -15), this, this.getCommandID("abandon"), "Abandon this building", no_params);
+						//abandon the building
+					}
+				}
+			}
+		}
+	}
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
+{
+	if (cmd == this.getCommandID("abandon"))
+	{
+		this.server_setTeamNum(pure_neutral_team);
+	}
 }
 
 void onChangeTeam(CBlob@ this, const int oldTeam)
