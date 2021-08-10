@@ -113,7 +113,8 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		(buildTile == CMap::tile_concrete && ((backtile.type >= CMap::tile_concrete_d0 && backtile.type <= CMap::tile_concrete_d7) || (backtile.type >= CMap::tile_mossyconcrete && backtile.type <= CMap::tile_mossyconcrete_d4))) ||	//concrete block
 	    (buildTile == CMap::tile_iron && backtile.type >= CMap::tile_iron_d0 && backtile.type <= CMap::tile_rustyiron_d4) || 																											//iron block
 		(buildTile == CMap::tile_reinforcedconcrete && backtile.type >= CMap::tile_reinforcedconcrete_d0 && backtile.type <= CMap::tile_reinforcedconcrete_d15) ||																		//reinforced concrete block
-		(buildTile == CMap::tile_plasteel && backtile.type >= CMap::tile_plasteel_d0 && backtile.type <= CMap::tile_plasteel_d14))																										//plasteel block
+		(buildTile == CMap::tile_plasteel && backtile.type >= CMap::tile_plasteel_d0 && backtile.type <= CMap::tile_plasteel_d14) ||																									//plasteel block
+		(buildTile == CMap::tile_kudzu && backtile.type == CMap::tile_kudzu_d0))																																						//kudzu block
 	{
 		//repair like tiles
 	}

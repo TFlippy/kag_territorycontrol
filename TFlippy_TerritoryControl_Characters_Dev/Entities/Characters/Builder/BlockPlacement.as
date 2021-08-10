@@ -45,12 +45,14 @@ void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
 		bool take = true;
 
 		u8 deity_id = this.get_u8("deity_id");
+		//print(bc.tile + " " + CMap::tile_mithrilingot);
 		switch (deity_id)
 		{
 			case Deity::mason:
 			{
 				CBlob@ altar = getBlobByName("altar_mason");
-				if (altar !is null)
+				if (altar !is null && bc.tile != CMap::tile_goldingot && bc.tile != CMap::tile_mithrilingot 
+				&& bc.tile != CMap::tile_copperingot && bc.tile != CMap::tile_steelingot && bc.tile != CMap::tile_ironingot)
 				{
 					//print("free block chance: " + Maths::Min((altar.get_f32("deity_power") * 0.01f),MAX_FREE_BLOCK_CHANCE));
 					if (XORRandom(100) < Maths::Min((altar.get_f32("deity_power") * 0.01f),MAX_FREE_BLOCK_CHANCE))
