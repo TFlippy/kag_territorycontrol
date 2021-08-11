@@ -117,41 +117,6 @@ const string[] textsWon =
 	"sit on ya arse"
 };
 
-u16 correctPrice(string drug, u16 proposed_price, bool selling)
-{
-	CRules@ rules = getRules();
-
-	u16 current_price = rules.get_u32(drug+(!selling?"_sell":"_buy"));
-	if (current_price == 0)
-	{
-		current_price = proposed_price;
-	}
-	if (selling)
-	{
-		proposed_price = Maths::Max(current_price, proposed_price);
-	}
-	else
-	{
-		proposed_price = Maths::Min(current_price, proposed_price);
-	}
-
-	u16 update_price = rules.get_u32(drug+(selling?"_sell":"_buy"));
-	if (update_price == 0)
-	{
-		update_price = proposed_price;
-	}
-	if (selling)
-	{
-		update_price = Maths::Min(update_price, proposed_price);
-	}
-	else
-	{
-		update_price = Maths::Max(update_price, proposed_price);
-	}
-	rules.set_u32(drug+(selling?"_sell":"_buy"), update_price);
-	return proposed_price;
-}
-
 void onInit(CBlob@ this)
 {
 	Random@ rand = Random(this.getNetworkID());
@@ -276,7 +241,7 @@ void onInit(CBlob@ this)
 
 		{
 			ShopItem@ s = addShopItem(this, "rocket prop whatever rocket", "$icon_sawrocket$", "mat_sawrocket-1", "rocket for launcher");
-			AddRequirement(s.requirements, "coin", "", "Coins", 10 + rand.NextRanged(550));
+			AddRequirement(s.requirements, "coin", "", "Coins", 50 + rand.NextRanged(550));
 			s.spawnNothing = true;
 		}
 	}
@@ -298,7 +263,7 @@ void onInit(CBlob@ this)
 	if (rand.NextRanged(100) < 40)
 	{
 		ShopItem@ s = addShopItem(this, "crackhead's chemistry kit", "$icon_minidruglab$", "minidruglab", "unstable pile of shit");
-		AddRequirement(s.requirements, "coin", "", "Coins", 250 + rand.NextRanged(1000));
+		AddRequirement(s.requirements, "coin", "", "Coins", 500 + rand.NextRanged(750));
 		s.spawnNothing = true;
 		s.customButton = true;
 		s.buttonwidth = 2;
@@ -314,60 +279,74 @@ void onInit(CBlob@ this)
 
 	if (rand.NextRanged(100) < 50)
 	{
-		/*if (rand.NextRanged(100) < 25)
+		if (rand.NextRanged(100) < 10)
 		{
 			ShopItem@ s = addShopItem(this, "yellow mellow", "$icon_foof$", "foof", "pissssss");
-			AddRequirement(s.requirements, "coin", "", "Coins", correctPrice("foof", 100 + rand.NextRanged(500), true));
+			AddRequirement(s.requirements, "coin", "", "Coins", 1750 + rand.NextRanged(1000));
 			s.spawnNothing = true;
-		}*/
+		}
 
 		if (rand.NextRanged(100) < 25)
 		{
 			ShopItem@ s = addShopItem(this, "fun", "$icon_domino$", "domino", "hoyl shit");
-			AddRequirement(s.requirements, "coin", "", "Coins", correctPrice("domino", 350 + rand.NextRanged(500), true));
+			AddRequirement(s.requirements, "coin", "", "Coins", 750 + rand.NextRanged(250));
 			s.spawnNothing = true;
 		}
 
-		/*if (rand.NextRanged(100) < 30)
+		if (rand.NextRanged(100) < 25)
+		{
+			ShopItem@ s = addShopItem(this, "hard pill", "$fiks$", "fiks", "hard rocc");
+			AddRequirement(s.requirements, "coin", "", "Coins", 500 + rand.NextRanged(250));
+			s.spawnNothing = true;
+		}
+
+		if (rand.NextRanged(100) < 30)
 		{
 			ShopItem@ s = addShopItem(this, "speedo", "$icon_stim$", "stim", "speedy stuff you'll be fast like hedgehog");
-			AddRequirement(s.requirements, "coin", "", "Coins", correctPrice("stim", 100 + rand.NextRanged(500), true));
+			AddRequirement(s.requirements, "coin", "", "Coins", 1250 + rand.NextRanged(500));
 			s.spawnNothing = true;
-		}*/
+		}
 
 		if (rand.NextRanged(100) < 40)
 		{
 			ShopItem@ s = addShopItem(this, "shite", "$icon_bobongo$", "bobongo", "stfu");
-			AddRequirement(s.requirements, "coin", "", "Coins", correctPrice("bobongo", 125 + rand.NextRanged(500), true));
+			AddRequirement(s.requirements, "coin", "", "Coins", 350 + rand.NextRanged(150));
 			s.spawnNothing = true;
 		}
 
 		if (rand.NextRanged(100) < 40)
 		{
 			ShopItem@ s = addShopItem(this, "crack", "$icon_crak$", "crak", "gets shit done quick");
-			AddRequirement(s.requirements, "coin", "", "Coins", correctPrice("crak", 500 + rand.NextRanged(100), true));
+			AddRequirement(s.requirements, "coin", "", "Coins", 750 + rand.NextRanged(500));
 			s.spawnNothing = true;
 		}
 
 		if (rand.NextRanged(100) < 25)
 		{
 			ShopItem@ s = addShopItem(this, "red stuff", "$icon_propesko$", "propesko", "had to do it to em");
-			AddRequirement(s.requirements, "coin", "", "Coins", correctPrice("propesko", 600 + rand.NextRanged(100), true));
+			AddRequirement(s.requirements, "coin", "", "Coins", 1550 + rand.NextRanged(750));
 			s.spawnNothing = true;
 		}
 
-		/*if (rand.NextRanged(100) < 25)
+		if (rand.NextRanged(100) < 25)
 		{
 			ShopItem@ s = addShopItem(this, "smokey", "$icon_fumes$", "fumes", "fly like an idiot");
-			AddRequirement(s.requirements, "coin", "", "Coins", correctPrice("fumes", 100 + rand.NextRanged(1000), true));
+			AddRequirement(s.requirements, "coin", "", "Coins", 1850 + rand.NextRanged(1250));
 			s.spawnNothing = true;
-		}*/
+		}
 
-		if (rand.NextRanged(100) < 10)
+		if (rand.NextRanged(100) < 25)
 		{
-		ShopItem@ s = addShopItem(this, "blue paper", "$bp_chemistry$", "bp_chemistry", "wipe ya ass");
-		AddRequirement(s.requirements, "coin", "", "Coins", 3000 + rand.NextRanged(5000));
-		s.spawnNothing = true;
+			ShopItem@ s = addShopItem(this, "venom", "$rippio$", "rippio", "rat poison");
+			AddRequirement(s.requirements, "coin", "", "Coins", 1650 + rand.NextRanged(850));
+			s.spawnNothing = true;
+		}
+
+		if (rand.NextRanged(100) < 30)
+		{
+			ShopItem@ s = addShopItem(this, "blue paper", "$bp_chemistry$", "bp_chemistry", "wipe ya ass");
+			AddRequirement(s.requirements, "coin", "", "Coins", 3000 + rand.NextRanged(2500));
+			s.spawnNothing = true;
 		}
 	}
 	else if (rand.NextRanged(100) < 40)
@@ -375,7 +354,7 @@ void onInit(CBlob@ this)
 
 		if (rand.NextRanged(100) < 70)
 		{
-			u32 cost = getRandomCost(@rand, 200, 400);
+			u32 cost = getRandomCost(@rand, 300, 500);
 			ShopItem@ s = addShopItem(this, "sell boof", "$COIN$", "coin-" + cost, "ill take this giggly shit off yer hands fer " + cost + " coins.");
 			AddRequirement(s.requirements, "blob", "boof", "Boof", 1);
 			s.spawnNothing = true;
@@ -383,7 +362,7 @@ void onInit(CBlob@ this)
 
 		if (rand.NextRanged(100) < 50)
 		{
-			u32 cost = getRandomCost(@rand, 300, 500);
+			u32 cost = getRandomCost(@rand, 500, 700);
 			ShopItem@ s = addShopItem(this, "sell crak", "$COIN$", "coin-" + cost, "ill take this cracker shit off yer hands fer " + cost + " coins.");
 			AddRequirement(s.requirements, "blob", "crak", "Crak", 1);
 			s.spawnNothing = true;
@@ -391,7 +370,7 @@ void onInit(CBlob@ this)
 
 		if (rand.NextRanged(100) < 50)
 		{
-			u32 cost = getRandomCost(@rand, 600, 1000);
+			u32 cost = getRandomCost(@rand, 1000, 1500);
 			ShopItem@ s = addShopItem(this, "sell rippio", "$COIN$", "coin-" + cost, "ill take this fucker shit off yer hands fer " + cost + " coins.");
 			AddRequirement(s.requirements, "blob", "rippio", "Rippio", 1);
 			s.spawnNothing = true;
@@ -399,7 +378,7 @@ void onInit(CBlob@ this)
 
 		if (rand.NextRanged(100) < 50)
 		{
-			u32 cost = getRandomCost(@rand, 200, 400);
+			u32 cost = getRandomCost(@rand, 500, 800);
 			ShopItem@ s = addShopItem(this, "sell stim", "$COIN$", "coin-" + cost, "ill take this hedgehog shit off yer hands fer " + cost + " coins.");
 			AddRequirement(s.requirements, "blob", "stim", "Stim", 1);
 			s.spawnNothing = true;
@@ -407,7 +386,15 @@ void onInit(CBlob@ this)
 
 		if (rand.NextRanged(100) < 50)
 		{
-			u32 cost = getRandomCost(@rand, 500, 600);
+			u32 cost = getRandomCost(@rand, 500, 750);
+			ShopItem@ s = addShopItem(this, "sell paxilon", "$COIN$", "coin-" + cost, "ill take this sleepy shit off yer hands fer " + cost + " coins.");
+			AddRequirement(s.requirements, "blob", "paxilon", "Paxilon", 1);
+			s.spawnNothing = true;
+		}
+
+		if (rand.NextRanged(100) < 50)
+		{
+			u32 cost = getRandomCost(@rand, 850, 1350);
 			ShopItem@ s = addShopItem(this, "sell propesko", "$COIN$", "coin-" + cost, "ill take this red shit off yer hands fer " + cost + " coins.");
 			AddRequirement(s.requirements, "blob", "propesko", "Propesko", 1);
 			s.spawnNothing = true;
@@ -415,9 +402,17 @@ void onInit(CBlob@ this)
 
 		if (rand.NextRanged(100) < 50)
 		{
-			u32 cost = getRandomCost(@rand, 500, 700);
+			u32 cost = getRandomCost(@rand, 1500, 1750);
 			ShopItem@ s = addShopItem(this, "sell fumes", "$COIN$", "coin-" + cost, "Ill take this smelly shit off yer hands fer " + cost + " coins.");
 			AddRequirement(s.requirements, "blob", "fumes", "Fumes", 1);
+			s.spawnNothing = true;
+		}
+
+		if (rand.NextRanged(100) < 50)
+		{
+			u32 cost = getRandomCost(@rand, 750, 1250);
+			ShopItem@ s = addShopItem(this, "sell schisk", "$COIN$", "coin-" + cost, "ill take this schizo shit off yer hands fer " + cost + " coins.");
+			AddRequirement(s.requirements, "blob", "schisk", "Schisk", 1);
 			s.spawnNothing = true;
 		}
 	}
