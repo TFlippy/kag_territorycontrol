@@ -223,7 +223,7 @@ class Bullet
                             if (map.isTileGroundStuff(tile.type))
                             {
                                 //Bullet resistance
-                                if (XORRandom(10) > 5) map.server_DestroyTile(hitpos, damage * 0.25f);
+                                if (XORRandom(4) < 3) map.server_DestroyTile(hitpos, damage * 0.25f);
                             }
                             else
                             {

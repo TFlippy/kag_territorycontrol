@@ -245,31 +245,16 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 					if (this.getPlayer() !is null)
 					blockBlob.set_string("builder", this.getPlayer().getUsername());
 
-					if (b.name == "chickenassembler")
+					if (b.name == "druglab")
 					{
-						CBlob@ bp = server_CreateBlob("bp_automation_advanced", myTeam, this.getPosition());
-
-						if (!this.server_PutInInventory(bp))
+						if (XORRandom(3) < 1)
 						{
-							bp.setPosition(this.getPosition());
-						}
-					}
-					else if (b.name == "beamtower")
-					{
-						CBlob@ bp = server_CreateBlob("bp_energetics", myTeam, this.getPosition());
+							CBlob@ bp = server_CreateBlob("bp_chemistry", myTeam, this.getPosition());
 
-						if (!this.server_PutInInventory(bp))
-						{
-							bp.setPosition(this.getPosition());
-						}
-					}
-					else if (b.name == "chemlab")
-					{
-						CBlob@ bp = server_CreateBlob("bp_chemistry", myTeam, this.getPosition());
-
-						if (!this.server_PutInInventory(bp))
-						{
-							bp.setPosition(this.getPosition());
+							if (!this.server_PutInInventory(bp))
+							{
+								bp.setPosition(this.getPosition());
+							}
 						}
 					}
 					else if (b.name == "banner")

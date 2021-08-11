@@ -41,6 +41,10 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case HittersTC::poison:
 			scale = 0.0f;
 			break;
+
+		case HittersTC::shotgun:
+			scale *= 0.7f;
+			break;
 			
 		default: 
 			break;

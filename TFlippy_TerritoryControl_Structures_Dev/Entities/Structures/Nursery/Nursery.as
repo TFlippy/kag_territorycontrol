@@ -91,7 +91,7 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 500);
 		AddRequirement(s.requirements, "blob", "mat_dirt", "Dirt", 200);
 		AddRequirement(s.requirements, "blob", "grain", "Grain", 1); 
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 5);
 		//Requiring grain and a mithrilg ingot means its a lot harder to spawm since both of these ressources are harder to get on mass (instead of dirt wood and coins alone)
 		s.spawnNothing = true;
 	}
