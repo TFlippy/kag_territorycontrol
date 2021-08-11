@@ -208,7 +208,8 @@ void React(CBlob@ this)
 			{
 				if (isServer())
 				{
-					grain_blob.server_Die();
+					if (grain_blob.getQuantity() <= 1) grain_blob.server_Die();
+					else grain_blob.server_SetQuantity(Maths::Max(grain_blob.getQuantity() - 1, 0));
 					Material::createFor(this, "vodka", 1);
 				}
 
