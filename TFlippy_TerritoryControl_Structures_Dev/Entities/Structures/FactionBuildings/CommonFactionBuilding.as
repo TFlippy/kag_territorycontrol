@@ -17,6 +17,8 @@ void onInit(CBlob@ this)
 	this.addCommandID("faction_menu_button");
 	this.addCommandID("faction_player_button");
 	this.addCommandID("button_join");
+	this.addCommandID("sv_toggle");
+	this.addCommandID("cl_toggle");
 
 	this.addCommandID("rename_base");
 	this.addCommandID("rename_faction");
@@ -28,6 +30,7 @@ void onInit(CBlob@ this)
 	this.set_bool("base_demolition", false);
 	this.set_bool("base_alarm", false);
 	this.set_bool("base_alarm_manual", false);
+	this.set_bool("isActive", true);
 
 	AddIconToken("$faction_become_leader$", "FactionIcons.png", Vec2f(16, 16), 0);
 	AddIconToken("$faction_resign_leader$", "FactionIcons.png", Vec2f(16, 16), 1);
@@ -82,6 +85,7 @@ void onTick(CBlob@ this)
 	{
 		this.set_bool("base_alarm", false);
 		this.getSprite().SetEmitSoundPaused(true);
+		this.SetLight(this.get_bool("isActive"));
 
 		if (this.getName() == "fortress")
 		{
@@ -314,6 +318,12 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 						butt.SetEnabled(isLeader);
 					}
 				}
+			}
+			if (this.getName() != "camp")
+			{
+				CBitStream params;
+				CButton@ buttonEject = caller.CreateGenericButton((this.get_bool("isActive") ? 27 : 23), Vec2f(0.5f, -14), 
+					this, this.getCommandID("sv_toggle"), (this.get_bool("isActive") ? "Turn Off" : "Turn On"), params);
 			}
 		}
 	}
@@ -878,6 +888,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 				}
 			}
 		}
+		else if (cmd == this.getCommandID("sv_toggle"))
+		{
+			this.set_bool("isActive", !this.get_bool("isActive"));
+			bool isActive = this.get_bool("isActive");
+
+			CBitStream stream;
+			stream.write_bool(isActive);
+			this.SendCommand(this.getCommandID("cl_toggle"), stream);
+		}
 	}
 
 	if (isClient())
@@ -948,6 +967,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					}
 				}
 			}
+		}
+		else if (cmd == this.getCommandID("cl_toggle"))
+		{		
+			this.getSprite().PlaySound("LeverToggle.ogg");
+
+			this.SetLight(this.get_bool("isActive"));
 		}
 	}
 }
