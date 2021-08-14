@@ -20,6 +20,51 @@ void onInit(CBlob@ this)
 	this.getSprite().SetZ(-10.0f);
 	
 	this.set_f32("irradiation", 0.00f);
+	this.set_f32("upgrade", 0.00f);
+
+	this.addCommandID("upgrade");
+}
+
+void GetButtonsFor(CBlob@ this, CBlob@ caller) //Mutate button
+{
+	CBlob@ carried = caller.getCarriedBlob();
+
+	if (carried != null && carried.getName() == "mat_mithrilingot")
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		CButton@ button = caller.CreateGenericButton(23, Vec2f(0, -6), this, this.getCommandID("upgrade"), "Upgrade Reactor", params);
+	}
+}
+
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params) //Mutate command
+{
+	if (cmd == this.getCommandID("upgrade"))
+	{
+		CBlob@ caller = getBlobByNetworkID(params.read_u16());
+		if (caller !is null)
+		{
+			CBlob@ carried = caller.getCarriedBlob();
+			if (carried !is null && carried.getName() == "mat_mithrilingot")
+			{
+				if (carried.getQuantity() >= 1)
+				{
+					
+					int remain = carried.getQuantity() - 1;
+					if (remain > 0)
+					{
+						carried.server_SetQuantity(remain);
+					}
+					else
+					{
+						carried.Tag("dead");
+						carried.server_Die();
+					}
+					this.add_f32("upgrade", 1000.00f);
+				}
+			}
+		}
+	}
 }
 
 void onTick(CBlob@ this)
@@ -33,9 +78,10 @@ void onTick(CBlob@ this)
 		const f32 mithril_count = inv.getCount("mat_mithril");
 		const f32 e_mithril_count = inv.getCount("mat_mithrilenriched");
 		const f32 gold_count = inv.getCount("mat_gold");
+		const f32 upgrade = this.get_f32("upgrade");
 		
 		const f32 irradiation = Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 400.00f;
-		const f32 max_irradiation = water ? 30000.00f : 9000.00f;
+		const f32 max_irradiation = water ? 30000.00f + upgrade : 9000.00f + (upgrade / 4);
 		
 		this.set_f32("irradiation", irradiation);
 		
@@ -48,7 +94,7 @@ void onTick(CBlob@ this)
 		
 			if (isServer()) 
 			{
-				server_Irradiate(this, irradiation / 30000.00f * rmod, irradiation / 100.00f * rmod);
+				server_Irradiate(this, irradiation / max_irradiation * rmod, irradiation / 100.00f * rmod);
 			}
 			
 			if (isClient()) 

@@ -343,7 +343,7 @@ bool MakeLoadAmmoButton(CBlob@ this, CBlob@ caller, Vec2f offset, VehicleInfo@ v
 		{
 			CBitStream callerParams;
 			callerParams.write_u16(caller.getNetworkID());
-			caller.CreateGenericButton("$" + (this.exists("ammoIcon") ? this.get_string("ammoIcon") : ammoBlob.getName()) + "$", offset, this, this.getCommandID("load_ammo"), "Load " + ammoBlob.getInventoryName(), callerParams);
+			caller.CreateGenericButton("$" + (this.exists("ammoIcon") ? this.get_string("ammoIcon") : ammoBlob.getName()) + "$", offset + Vec2f(0, 4), this, this.getCommandID("load_ammo"), "Load " + ammoBlob.getInventoryName(), callerParams);
 			return true;
 		}
 
