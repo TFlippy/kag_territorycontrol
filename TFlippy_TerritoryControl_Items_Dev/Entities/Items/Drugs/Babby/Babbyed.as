@@ -34,6 +34,10 @@ void onTick(CBlob@ this)
 		if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient.png");
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
 	}
+	else if (true_level <= 4.8f && this.hasTag("no_suicide"))
+	{
+		this.Untag("no_suicide");
+	}
 	else
 	{
 		f32 time = f32(getGameTime() * level);

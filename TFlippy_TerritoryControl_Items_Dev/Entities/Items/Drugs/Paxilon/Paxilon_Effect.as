@@ -70,4 +70,7 @@ void onTick(CBlob@ this)
 	{
 		this.set_f32("paxilon_effect", value - increment);
 	}
+
+	if (value >= 4.0f)
+		this.server_Hit(this, this.getPosition(), Vec2f(0, 0), Maths::Max(this.getHealth() * 0.01f, 0.02f * value), HittersTC::poison, true);
 }

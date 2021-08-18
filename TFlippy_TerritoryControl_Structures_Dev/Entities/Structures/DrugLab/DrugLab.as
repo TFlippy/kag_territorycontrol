@@ -381,9 +381,9 @@ void React(CBlob@ this)
 				{
 					mithril_blob.server_SetQuantity(Maths::Max(mithril_blob.getQuantity() - 50, 0));
 					acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 25, 0));
-					Material::createFor(this, "domino", 3 + XORRandom(6));
+					Material::createFor(this, "domino", 6 + XORRandom(6));
 					Material::createFor(this, "mat_mithrilenriched", XORRandom(10));
-					Material::createFor(this, "mat_fuel", XORRandom(40));
+					Material::createFor(this, "mat_fuel", 20 + XORRandom(20));
 				}
 
 				ShakeScreen(20.0f, 15, this.getPosition());

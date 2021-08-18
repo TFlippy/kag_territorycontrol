@@ -22,7 +22,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (caller !is null)
 		{		
 			if (!caller.hasScript("Fumes_Effect.as")) caller.AddScript("Fumes_Effect.as");			
-			caller.add_f32("fumes_effect", 1);
+			caller.add_f32("fumes_effect", 2);
 			
 			caller.set_u32("nextDragonFireball", getGameTime());
 
