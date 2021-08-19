@@ -28,8 +28,8 @@ const int[] matRatio = {
 };
 
 const int[] coalRatio = {
-	2,
-	2,
+	0,
+	0,
 	3,
 	4
 };
