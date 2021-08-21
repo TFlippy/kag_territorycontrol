@@ -258,7 +258,7 @@ void AssemblerMenu(CBlob@ this, CBlob@ caller)
 {
 	if(caller.isMyPlayer())
 	{
-		CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 5), "Set Assembly");
+		CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 6), "Set Assembly");
 		if (menu !is null)
 		{
 			AssemblerItem[] items = getItems(this);
