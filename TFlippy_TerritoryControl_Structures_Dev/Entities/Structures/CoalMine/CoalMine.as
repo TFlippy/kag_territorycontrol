@@ -22,7 +22,7 @@ const u8[] resourceYields =
 {
 	10,
 	27,
-	4,
+	8,
 	45,
 	20,
 	7,

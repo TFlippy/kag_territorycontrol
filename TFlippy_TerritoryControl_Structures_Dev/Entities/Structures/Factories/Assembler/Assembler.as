@@ -122,7 +122,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		AssemblerItem i("mat_howitzershell", 2, "Howitzer Shells (2)");
-		AddRequirement(i.reqs, "blob", "mat_copperingot", "Copper Ingot", 2);
+		AddRequirement(i.reqs, "blob", "mat_steelingot", "Steel Ingot", 1);
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 30);
 		items.push_back(i);
 	}
