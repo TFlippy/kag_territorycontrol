@@ -17,6 +17,8 @@ void onInit(CBlob@ this)
 	this.addCommandID("faction_menu_button");
 	this.addCommandID("faction_player_button");
 	this.addCommandID("button_join");
+	this.addCommandID("sv_toggle");
+	this.addCommandID("cl_toggle");
 
 	this.addCommandID("rename_base");
 	this.addCommandID("rename_faction");
@@ -28,6 +30,7 @@ void onInit(CBlob@ this)
 	this.set_bool("base_demolition", false);
 	this.set_bool("base_alarm", false);
 	this.set_bool("base_alarm_manual", false);
+	this.set_bool("isActive", true);
 
 	AddIconToken("$faction_become_leader$", "FactionIcons.png", Vec2f(16, 16), 0);
 	AddIconToken("$faction_resign_leader$", "FactionIcons.png", Vec2f(16, 16), 1);
@@ -65,18 +68,41 @@ void onInit(CBlob@ this)
 	sprite.SetEmitSound("Faction_Alarm.ogg");
 	sprite.SetEmitSoundPaused(true);
 	sprite.SetEmitSoundSpeed(1.0f);
-	sprite.SetEmitSoundVolume(2.0f);
-
-	this.SetLight(false);
-	this.SetLightRadius(256.0f);
-	this.SetLightColor(SColor(255, 255, 0, 0));
+	sprite.SetEmitSoundVolume(1.5f);
 }
 
 void onTick(CBlob@ this)
 {
 	SetMinimap(this);   //needed for under raid check
-	if (this.get_bool("base_allow_alarm")) SetAlarm(this, this.get_bool("base_alarm_manual") || this.hasTag(raid_tag));
+	if (this.get_bool("base_alarm_manual") || this.hasTag(raid_tag))
+	{	
+		if (this.get_bool("base_allow_alarm") && !this.get_bool("base_alarm"))
+		{
+			SetAlarm(this, true);
+		}
+	}
+	else if (this.get_bool("base_alarm"))
+	{
+		this.set_bool("base_alarm", false);
+		this.getSprite().SetEmitSoundPaused(true);
+		this.SetLight(this.get_bool("isActive"));
 
+		if (this.getName() == "fortress")
+		{
+			this.SetLightRadius(128.0f);
+			this.SetLightColor(SColor(255, 255, 200, 128));
+		}
+		else if (this.getName() == "stronghold")
+		{
+			this.SetLightRadius(192.0f);
+			this.SetLightColor(SColor(255, 255, 240, 171));
+		}
+		else if (this.getName() == "citadel" || this.getName() == "convent")
+		{
+			this.SetLightRadius(256.0f);
+			this.SetLightColor(SColor(255, 255, 240, 210));
+		}
+	}
 	if (this.get_bool("base_demolition") && getGameTime() % 30 == 0)
 	{
 		if (isServer())
@@ -293,6 +319,12 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 					}
 				}
 			}
+			if (this.getName() != "camp")
+			{
+				CBitStream params;
+				CButton@ buttonEject = caller.CreateGenericButton((this.get_bool("isActive") ? 27 : 23), Vec2f(0.5f, -14), 
+					this, this.getCommandID("sv_toggle"), (this.get_bool("isActive") ? "Turn Off" : "Turn On"), params);
+			}
 		}
 	}
 }
@@ -304,10 +336,12 @@ void SetAlarm(CBlob@ this, bool inState)
 	this.set_bool("base_alarm", inState);
 	if (isServer()) this.Sync("base_alarm", true);
 
-	this.SetLight(inState);
+	this.SetLight(true);
+	this.SetLightRadius(256.0f);
+	this.SetLightColor(SColor(255, 255, 0, 0));
 
 	CSprite@ sprite = this.getSprite();
-	sprite.SetEmitSoundPaused(!inState);
+	sprite.SetEmitSoundPaused(false);
 	sprite.RewindEmitSound();
 	sprite.PlaySound("LeverToggle.ogg");
 }
@@ -854,6 +888,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 				}
 			}
 		}
+		else if (cmd == this.getCommandID("sv_toggle"))
+		{
+			this.set_bool("isActive", !this.get_bool("isActive"));
+			bool isActive = this.get_bool("isActive");
+
+			CBitStream stream;
+			stream.write_bool(isActive);
+			this.SendCommand(this.getCommandID("cl_toggle"), stream);
+		}
 	}
 
 	if (isClient())
@@ -924,6 +967,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 					}
 				}
 			}
+		}
+		else if (cmd == this.getCommandID("cl_toggle"))
+		{		
+			this.getSprite().PlaySound("LeverToggle.ogg");
+
+			this.SetLight(this.get_bool("isActive"));
 		}
 	}
 }
