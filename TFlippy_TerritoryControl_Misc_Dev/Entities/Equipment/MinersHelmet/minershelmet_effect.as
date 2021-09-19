@@ -33,6 +33,14 @@ void onTick(CBlob@ this)
 		this.set_string("reload_script", "");
 	}
 
+	if (this.get_f32("minershelmet_health") >= 10.0f)
+	{
+		this.getSprite().PlaySound("woodheavyhit1");
+		this.set_string("equipment_head", "");
+		this.set_f32("minershelmet_health", 9.9f);
+		this.RemoveScript("minershelmet_effect.as");
+	}
+
 	CSpriteLayer@ mhelmet = this.getSprite().getSpriteLayer("minershelmet");
 	
 	if (mhelmet !is null)
