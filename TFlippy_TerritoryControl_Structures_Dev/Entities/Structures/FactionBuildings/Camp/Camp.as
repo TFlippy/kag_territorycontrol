@@ -67,9 +67,9 @@ void onInit(CBlob@ this)
 
 	{
 		ShopItem@ s = addShopItem(this, "Upgrade to a Fortress", "$icon_upgrade$", "fortress", "Upgrade to a more durable Fortress.\n\n+ Higher inventory capacity\n+ Extra durability\n+ Tunnel travel\n+ 1 Upkeep");
-		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 750);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 300);
-		AddRequirement(s.requirements, "coin", "", "Coins", 250);
+		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 500);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 250);
+		AddRequirement(s.requirements, "coin", "", "Coins", 175);
 		s.customButton = true;
 		s.buttonwidth = 2;
 		s.buttonheight = 2;
