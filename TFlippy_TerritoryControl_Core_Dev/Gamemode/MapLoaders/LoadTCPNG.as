@@ -165,7 +165,7 @@ class TCPNGLoader : PNGLoader
 
 			case tc_colors::color_badgerden:
 			{
-				spawnBlob(map, "badgerden", offset, -1);
+				spawnBlob(map, "badger", offset, -1); //reverted, cuz map makers spamming
 				break;
 			}
 
