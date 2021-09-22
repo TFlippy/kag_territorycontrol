@@ -5,6 +5,7 @@ void onInit(CBlob@ this)
 	
 	this.Tag("kill on use");
 	this.Tag("dangerous");
+	this.Tag("armor");
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)

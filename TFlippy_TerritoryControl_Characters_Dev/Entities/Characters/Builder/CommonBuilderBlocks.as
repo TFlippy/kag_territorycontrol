@@ -364,7 +364,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		blocks[1].push_back(b);
 	}
 	{
-		BuildBlock b(0, "armory", "$icon_armory$", "Armory\nA workshop where you can craft cheap equipment.\n$GREEN$Automatically stores nearby dropped weapons.$GREEN$\n");
+		BuildBlock b(0, "armory", "$icon_armory$", "Armory\nA workshop where you can craft cheap equipment.\n$GREEN$Automatically stores nearby dropped weapons and armor.$GREEN$\n");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 100);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
 		// AddRequirement(b.reqs, "blob", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
