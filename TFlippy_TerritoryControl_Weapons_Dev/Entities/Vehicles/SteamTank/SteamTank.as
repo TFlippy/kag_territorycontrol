@@ -33,6 +33,7 @@ void onInit(CBlob@ this)
 
 	this.set_u32("lastHornTime", 0.0f);
 	this.set_string("custom_explosion_sound", "KegExplosion");
+	this.set_string("ammoIcon", "icon_tankshell");
 
 	this.getShape().SetOffset(Vec2f(0, 8));
 
