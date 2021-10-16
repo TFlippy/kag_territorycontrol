@@ -5,6 +5,7 @@
 #include "FireParticle.as"
 #include "FireCommon.as";
 #include "RunnerCommon.as";
+#include "ThrowCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -174,7 +175,7 @@ void onInit(CBlob@ this)
 				break;
 		}
 
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
 			ammo.server_SetQuantity(ammo.maxQuantity);
@@ -237,6 +238,14 @@ void onTick(CBlob@ this)
 		}
 
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
+	}
+
+	if (this.isMyPlayer())
+	{
+		if (this.isKeyJustPressed(key_action3))
+		{
+			client_SendThrowOrActivateCommand(this);
+		}
 	}
 }
 
