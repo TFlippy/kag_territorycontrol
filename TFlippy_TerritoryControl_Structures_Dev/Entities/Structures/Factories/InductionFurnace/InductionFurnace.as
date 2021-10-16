@@ -7,6 +7,7 @@ void onInit(CSprite@ this)
 }
 
 const string[] matNames = { 
+	"mat_wood",
 	"mat_copper",
 	"mat_iron",
 	"mat_gold",
@@ -14,6 +15,7 @@ const string[] matNames = {
 };
 
 const string[] matNamesResult = { 
+	"mat_coal",
 	"mat_copperingot",
 	"mat_ironingot",
 	"mat_goldingot",
@@ -23,6 +25,7 @@ const string[] matNamesResult = {
 const int[] matRatio = { 
 	10,
 	10,
+	10,
 	25,
 	6
 };
@@ -30,7 +33,8 @@ const int[] matRatio = {
 const int[] coalRatio = {
 	0,
 	0,
-	3,
+	0,
+	0,
 	4
 };
 
@@ -56,9 +60,9 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		if (this.hasBlob(matNames[i], matRatio[i]) && this.hasBlob("mat_coal", coalRatio[i]))
+		if (this.hasBlob(matNames[i], matRatio[i]) && (coalRatio[i] == 0 || this.hasBlob("mat_coal", coalRatio[i])))
 		{
 			if (isServer())
 			{
@@ -66,7 +70,7 @@ void onTick(CBlob@ this)
 				mat.server_SetQuantity(4);
 				mat.Tag("justmade");
 				this.TakeBlob(matNames[i], matRatio[i]);
-				this.TakeBlob("mat_coal", coalRatio[i]);
+				if (coalRatio[i] > 0) this.TakeBlob("mat_coal", coalRatio[i]);
 			}
 
 			this.getSprite().PlaySound("ProduceSound.ogg");
