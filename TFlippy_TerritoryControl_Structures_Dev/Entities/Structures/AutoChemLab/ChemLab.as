@@ -20,11 +20,13 @@ void onInit(CBlob@ this)
 	this.getSprite().SetZ(-10.0f);
 
 	this.set_f32("pressure", 0.00f);
+	this.set_f32("upgrade", 0.00f);
 	this.set_f32("pressure_max", 180000.00f);
 	this.set_string("inventory_name", "Chemical Machine");
 
 	this.addCommandID("lab_add_heat");
 	this.addCommandID("lab_remove_heat");
+	this.addCommandID("upgrade");
 
 	this.set_u32("next_react", getGameTime());
 
@@ -104,6 +106,32 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			//print_log(this, "Heat; P: " + pressure + "; H: " + heat); //Disabled due to rcon spam unfortunately
 		}
 	}
+	else if (cmd == this.getCommandID("upgrade"))
+	{
+		CBlob@ caller = getBlobByNetworkID(params.read_u16());
+		if (caller !is null)
+		{
+			CBlob@ carried = caller.getCarriedBlob();
+			if (carried !is null && carried.getName() == "mat_copperingot")
+			{
+				if (carried.getQuantity() >= 1)
+				{
+					
+					int remain = carried.getQuantity() - 1;
+					if (remain > 0)
+					{
+						carried.server_SetQuantity(remain);
+					}
+					else
+					{
+						carried.Tag("dead");
+						carried.server_Die();
+					}
+					this.add_f32("upgrade", 2000.00f);
+				}
+			}
+		}
+	}
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
@@ -113,12 +141,22 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		CBitStream params;
 
 		{
-		CButton@ button = caller.CreateGenericButton(16, Vec2f(-8, 0.0f), this, this.getCommandID("lab_add_heat"), "Increase Heat", params);
-		button.deleteAfterClick = false;
+			CButton@ button = caller.CreateGenericButton(16, Vec2f(-8, 0.0f), this, this.getCommandID("lab_add_heat"), "Increase Heat", params);
+			button.deleteAfterClick = false;
 		}
 		{
-		CButton@ button = caller.CreateGenericButton(19, Vec2f(8, 0.0f), this, this.getCommandID("lab_remove_heat"), "Decrease Heat", params);
-		button.deleteAfterClick = false;
+			CButton@ button = caller.CreateGenericButton(19, Vec2f(8, 0.0f), this, this.getCommandID("lab_remove_heat"), "Decrease Heat", params);
+			button.deleteAfterClick = false;
+		}
+		{
+			CBlob@ carried = caller.getCarriedBlob();
+
+			if (carried != null && carried.getName() == "mat_copperingot")
+			{
+				CBitStream params;
+				params.write_u16(caller.getNetworkID());
+				CButton@ button = caller.CreateGenericButton(23, Vec2f(0, -6), this, this.getCommandID("upgrade"), "Upgrade Druglab", params);
+			}
 		}
 	}
 }
@@ -672,7 +710,7 @@ void onTick(CBlob@ this)
 	if (inv !is null)
 	{
 		f32 modifier = 1.00f;
-		const f32 max_pressure = this.get_f32("pressure_max");
+		const f32 max_pressure = this.get_f32("pressure_max") + this.get_f32("upgrade");
 
 		const f32 mithril_count = inv.getCount("mat_mithril");
 		const f32 e_mithril_count = inv.getCount("mat_mithrilenriched");
