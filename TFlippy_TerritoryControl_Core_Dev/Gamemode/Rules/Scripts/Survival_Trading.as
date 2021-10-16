@@ -270,9 +270,15 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 						
 						switch (tile)
 						{
+							case CMap::tile_wood_back:
+							case CMap::tile_castle_back: coins = 1; break;
+
 							case CMap::tile_kudzu:
-							case CMap::tile_wood: coins = 2; break;
+							case CMap::tile_wood:
+							case CMap::tile_bconcrete:
+							case CMap::tile_biron: coins = 2; break;
 							
+							case CMap::tile_bplasteel:
 							case CMap::tile_castle:
 							case CMap::tile_concrete: coins = 4; break;
 							
