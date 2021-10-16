@@ -611,7 +611,7 @@ bool doChickenSpawn(CPlayer@ player)
 
 	if (ruins.length > 0 || bases.length > 0)
 	{
-		string blobType;
+		string blobType = "scoutchicken";
 		int minutes = getGameTime() / (60*30);
 		int rand = XORRandom(100);
 		if (minutes > 80)
@@ -648,12 +648,11 @@ bool doChickenSpawn(CPlayer@ player)
 			else blobType = "scoutchicken";
 		}
 		else blobType = "scoutchicken";
-
-		CBlob@ new_blob = server_CreateBlob(blobType);
-
-		if (new_blob !is null)
+		
+		if (ruins.length > 0)
 		{
-			if (ruins.length > 0)
+			CBlob@ new_blob = server_CreateBlob(blobType);
+			if (new_blob !is null)
 			{
 				CBlob@ r = ruins[XORRandom(ruins.length)];
 
@@ -663,7 +662,11 @@ bool doChickenSpawn(CPlayer@ player)
 
 				return true;
 			}
-			else
+		}
+		else
+		{
+			CBlob@ new_blob = server_CreateBlob("scoutchicken");
+			if (new_blob !is null)
 			{
 				//parachute chickens!
 				//bots will not parachute correctly on server, only localhost
@@ -678,7 +681,7 @@ bool doChickenSpawn(CPlayer@ player)
 				return true;
 			}
 		}
-		else return false;
+		return false;
 	}
 	else return false;
 }
