@@ -28,7 +28,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case HittersTC::bullet_low_cal:
 		case HittersTC::bullet_high_cal:
 		case HittersTC::shotgun:
-			dmg *= 1.00f;
+			dmg *= 0.80f;
 			break;
 			
 		case HittersTC::radiation:
