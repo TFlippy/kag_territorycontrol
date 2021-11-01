@@ -290,11 +290,11 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Gramophone", "$gramophone$", "gramophone", "A device used to play music from Gramophone Records purchased at the Merchant.");
+		ShopItem@ s = addShopItem(this, "Gramophone", "$gramophone$", "gramophone", "A device used to play music from Gramophone Records purchased at the Merchant.", false);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 80);
 		AddRequirement(s.requirements, "blob", "mat_goldingot", "Gold Ingot", 1);
 
-		s.spawnNothing = false;
+		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Music Disc Replacement", "$musicdisc$", "musicdisc", "Change out the tunes to see if it fits your groove.");

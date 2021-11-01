@@ -104,7 +104,7 @@ void onInit(CBlob@ this)
 		AssemblerItem i("mat_gatlingammo", 50, "Machine Gun Ammo (50)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 1);
 		AddRequirement(i.reqs, "blob", "mat_copperingot", "Copper Ingot", 1);
-		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 50);
+		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
 		items.push_back(i);
 	}
 	{
@@ -121,8 +121,8 @@ void onInit(CBlob@ this)
 		items.push_back(i);
 	}
 	{
-		AssemblerItem i("mat_howitzershell", 2, "Howitzer Shells (2)");
-		AddRequirement(i.reqs, "blob", "mat_steelingot", "Steel Ingot", 1);
+		AssemblerItem i("mat_howitzershell", 4, "Howitzer Shells (4)");
+		AddRequirement(i.reqs, "blob", "mat_copperingot", "Copper Ingot", 2);
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 30);
 		items.push_back(i);
 	}
@@ -153,14 +153,15 @@ void onInit(CBlob@ this)
 	{
 		AssemblerItem i("mat_smallrocket", 4, "Small Rocket (4)");
 		AddRequirement(i.reqs, "blob", "mat_wood", "Wood", 40);
-		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 40);
+		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 20);
 		AddRequirement(i.reqs, "blob", "mat_coal", "Coal", 4);
 		items.push_back(i);
 	}
 	{
 		AssemblerItem i("rocket", 1, "Rocket of Doom (1)");
 		AddRequirement(i.reqs, "blob", "mat_wood", "Wood", 100);
-		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 50);
+		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 20);
+		AddRequirement(i.reqs, "blob", "mat_coal", "Coal", 2);
 		items.push_back(i);
 	}
 	{
@@ -178,7 +179,7 @@ void onInit(CBlob@ this)
 	{
 		AssemblerItem i("mat_sammissile", 1, "SAM Missile (1)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
-		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 30);
+		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 25);
 		items.push_back(i);
 	}
 	{
@@ -202,7 +203,7 @@ void onInit(CBlob@ this)
 	{
 		AssemblerItem i("shotgun", 1, "Shotgun (1)");
 		AddRequirement(i.reqs, "blob", "mat_wood", "Wood", 60);
-		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 1);
+		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
 		items.push_back(i);
 	}	
 	//{
@@ -213,9 +214,9 @@ void onInit(CBlob@ this)
 	//}
 	{
 		AssemblerItem i("mat_sulphur", 50, "Sulphur (50)");
-		AddRequirement(i.reqs, "blob", "mat_dirt", "Dirt", 200);
+		AddRequirement(i.reqs, "blob", "mat_dirt", "Dirt", 100);
 		AddRequirement(i.reqs, "blob", "mat_wood", "Wood", 75);
-		AddRequirement(i.reqs, "blob", "mat_coal", "Coal", 10);
+		AddRequirement(i.reqs, "blob", "mat_coal", "Coal", 20);
 		items.push_back(i);
 	}
 	{

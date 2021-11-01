@@ -200,7 +200,7 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Smoke Grenade (1)", "$icon_smokegrenade$", "mat_smokegrenade-1", "A small hand grenade used to quickly fill a room with smoke. It helps you keep out of sight.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 50);
-		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 10);
+		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 25);
 
 		s.spawnNothing = true;
 	}
@@ -214,13 +214,14 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Fragmentation Grenade (1)", "$icon_fraggrenade$", "mat_fraggrenade-1", "A small hand grenade. Especially useful against infantry.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 75);
+		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 15);
 
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Flash Grenade (1)", "$icon_flashgrenade$", "mat_flashgrenade-1", "A flash grenade used to temporarily blind your enemies.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
-		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 50);
+		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 10);
 
 		s.spawnNothing = true;
 	}
