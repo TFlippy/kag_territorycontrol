@@ -39,6 +39,7 @@ void onInit(CBlob@ this)
 
 	this.getShape().SetRotationsAllowed(false);
 	this.set_string("autograb blob", "mat_tankshell");
+	this.set_string("ammoIcon", "icon_tankshell");
 
 	sprite.SetZ(-10.0f);
 
