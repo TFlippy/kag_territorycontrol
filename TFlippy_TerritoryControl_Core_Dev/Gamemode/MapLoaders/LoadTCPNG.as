@@ -57,7 +57,11 @@ namespace tc_colors
 		color_pirategull = 0xffe4e6bb,
 		color_badger = 0xff5a5546,
 		color_barbedwire = 0xff5f6473,
-		color_iron_platform = 0xffcccccc,
+
+		color_iron_platform_up 		= 0xffccccca, // 0, 90, 180, and (270 or -90) degrees
+		color_iron_platform_right 	= 0xffcccccb,
+		color_iron_platform_down 	= 0xffcccccc,
+		color_iron_platform_left 	= 0xffcccccd,
 
 		color_glass = 0xff6d95a1,
 		color_glass_bg = 0xff5a7a83,
@@ -329,10 +333,28 @@ class TCPNGLoader : PNGLoader
 				spawnBlob(map, "barbedwire", offset, -1);
 				break;
 			}
-			case tc_colors::color_iron_platform:
+			case tc_colors::color_iron_platform_up:
 			{
 				map.SetTile(offset, CMap::tile_biron);
-				spawnBlob(map, "iron_platform", offset, -1);
+				spawnBlob(map, "iron_platform", offset, -1, true);
+				break;
+			}
+			case tc_colors::color_iron_platform_right:
+			{
+				map.SetTile(offset, CMap::tile_biron);
+				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero,  90);
+				break;
+			}
+			case tc_colors::color_iron_platform_down:
+			{
+				map.SetTile(offset, CMap::tile_biron);
+				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero,  90);
+				break;
+			}
+			case tc_colors::color_iron_platform_left:
+			{
+				map.SetTile(offset, CMap::tile_biron);
+				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero,  90);
 				break;
 			}
 			case tc_colors::color_zapper_chicken:

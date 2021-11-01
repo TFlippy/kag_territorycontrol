@@ -28,7 +28,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$mat_mithrilingot$", "Material_MithrilIngot.png", Vec2f(16, 16), 1);
 
 	this.set_Vec2f("shop offset", Vec2f(0,1));
-	this.set_Vec2f("shop menu size", Vec2f(4, 2));
+	this.set_Vec2f("shop menu size", Vec2f(5, 2));
 	this.set_string("shop description", "Forge");
 	this.set_u8("shop icon", 15);
 
@@ -56,6 +56,12 @@ void onInit(CBlob@ this)
 		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 1);
 		s.spawnNothing = true;
 	}
+	{
+		ShopItem@ s = addShopItem(this, "Coal (1)", "$mat_coal$", "mat_coal-1", "A black rock that is used for fuel.", true);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 20);
+		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal",1);
+		s.spawnNothing = true;
+	}
 
 	// Large batch
 	{
@@ -80,6 +86,11 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Gold Ingot (4)", "$mat_goldingot$", "mat_goldingot-4", "A fancy metal - traders' favourite.", true);
 		AddRequirement(s.requirements, "blob", "mat_gold", "Gold Ore", 100);
 		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 4);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Coal (4)", "$mat_coal$", "mat_coal-4", "A black rock that is used for fuel.", true);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 80);
 		s.spawnNothing = true;
 	}
 }
