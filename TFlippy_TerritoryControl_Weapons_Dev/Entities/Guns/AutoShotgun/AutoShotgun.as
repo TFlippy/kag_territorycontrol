@@ -17,7 +17,7 @@ void onInit(CBlob@ this)
 	settings.B_GRAV = Vec2f(0, 0.01); //Bullet gravity drop
 	settings.B_SPEED = 60; //Bullet speed, STRONGLY AFFECTED/EFFECTS B_GRAV
 	settings.B_TTL = 11; //TTL = 'Time To Live' which determines the time the bullet lasts before despawning
-	settings.B_DAMAGE = 1.5f; //1 is 1 heart
+	settings.B_DAMAGE = 1.25f; //1 is 1 heart
 	settings.B_TYPE = HittersTC::shotgun; //Type of bullet the gun shoots | hitter
 
 	//Recoil

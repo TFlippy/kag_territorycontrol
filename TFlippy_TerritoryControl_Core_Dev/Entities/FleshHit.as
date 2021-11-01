@@ -59,12 +59,12 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			dmg *= 2.00f;
 			break;
 
-		case Hitters::fire:
 		case Hitters::cata_stones:
 		case Hitters::flying: // boat ram
 			dmg *= 4.00f;
 			break;
 		
+		case Hitters::fire:
 		case Hitters::burn:
 			dmg *= 2.50f;
 			break;
@@ -117,7 +117,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 					case HittersTC::bullet_high_cal:
 					case HittersTC::railgun_lance:
-						ratio = 0.65f;
+						ratio = 0.75f;
 						break;
 
 					default:
@@ -125,15 +125,9 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 						break;
 				}
 			}
-			else if (headname == "scubagear")
-			{
-				ratio = 0.20f;
-			}
-			else if (!isBullet && customData != HittersTC::radiation)
-			{
-				if (headname == "bucket" || headname == "pumpkin" || headname == "minershelmet")
-					ratio = 0.20f;
-			}
+			else if (headname == "scubagear" || headname == "bucket" || headname == "pumpkin" || headname == "minershelmet")
+					ratio = 0.30f;
+					
 			f32 armorHealth = armorMaxHealth - this.get_f32(headname+"_health");
 			ratio *= armorHealth / armorMaxHealth;
 
@@ -160,7 +154,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 					case HittersTC::bullet_high_cal:
 					case HittersTC::railgun_lance:
-						ratio = 0.65f;
+						ratio = 0.75f;
 						break;
 
 					default:
@@ -179,7 +173,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 					this.getSprite().PlaySound("MigrantScream1.ogg", 1.00f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 					ratio = 1.0f;
 				}
-				else ratio = 0.50f;
+				else ratio = 0.60f;
 			}
 			f32 armorHealth = armorMaxHealth - this.get_f32(torsoname+"_health");
 			ratio *= armorHealth / armorMaxHealth;
