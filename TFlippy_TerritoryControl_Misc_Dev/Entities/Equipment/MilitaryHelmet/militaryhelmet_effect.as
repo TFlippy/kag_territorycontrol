@@ -31,6 +31,7 @@ void UpdateScript(CBlob@ this) // the same as onInit, works one time when get eq
 
 		if (bushy !is null)
 		{
+			milhelmet.SetVisible(false);
 			bushy.SetVisible(true);
 			bushy.SetRelativeZ(200);
 			if (this.getSprite().isFacingLeft())

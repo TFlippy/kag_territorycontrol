@@ -892,6 +892,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		{
 			this.set_bool("isActive", !this.get_bool("isActive"));
 			bool isActive = this.get_bool("isActive");
+			this.SetLight(this.get_bool("isActive"));
 
 			CBitStream stream;
 			stream.write_bool(isActive);
@@ -971,8 +972,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 		else if (cmd == this.getCommandID("cl_toggle"))
 		{		
 			this.getSprite().PlaySound("LeverToggle.ogg");
-
-			this.SetLight(this.get_bool("isActive"));
 		}
 	}
 }
