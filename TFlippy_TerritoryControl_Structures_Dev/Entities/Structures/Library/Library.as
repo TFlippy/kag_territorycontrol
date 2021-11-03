@@ -38,35 +38,20 @@ void onInit(CBlob@ this)
 
 	{
 		ShopItem@ s = addShopItem(this, "Chemistry Blueprint", "$bp_chemistry$", "bp_chemistry", "The blueprint for the automated druglab.", true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 12500);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Adv Automation Blueprint", "$bp_automation_advanced$", "bp_automation_advanced", "The blueprint for the automated chicken assembler.", true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 10000);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Energetics Blueprint", "$bp_energetics$", "bp_energetics", "The blueprint for the beam tower.", true);
 		AddRequirement(s.requirements, "coin", "", "Coins", 7500);
 
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Sell Chemistry", "$COIN$", "coin-2000", "Sell blueprint for 2000 coins.");
-		AddRequirement(s.requirements, "blob", "bp_chemistry", "Chemistry Blueprint", 1);
+		ShopItem@ s = addShopItem(this, "Adv Automation Blueprint", "$bp_automation_advanced$", "bp_automation_advanced", "The blueprint for the automated chicken assembler.", true);
+		AddRequirement(s.requirements, "coin", "", "Coins", 6750);
+
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Sell Adv Automation", "$COIN$", "coin-1250", "Sell blueprint for 1250 coins.");
-		AddRequirement(s.requirements, "blob", "bp_automation_advanced", "Adv Automation Blueprint", 1);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Sell Energetics", "$COIN$", "coin-750", "Sell blueprint for 750 coins.");
-		AddRequirement(s.requirements, "blob", "bp_energetics", "Energetics Blueprint", 1);
+		ShopItem@ s = addShopItem(this, "Energetics Blueprint", "$bp_energetics$", "bp_energetics", "The blueprint for the beam tower.", true);
+		AddRequirement(s.requirements, "coin", "", "Coins", 5000);
+
 		s.spawnNothing = true;
 	}
 }
