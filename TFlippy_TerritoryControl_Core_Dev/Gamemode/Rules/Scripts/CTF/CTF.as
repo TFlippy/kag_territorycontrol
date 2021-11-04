@@ -50,8 +50,8 @@ void Config(CTFCore@ this)
 
 }
 
-shared string base_name() { return "tent"; }
-shared string flag_name() { return "ctf_flag"; }
+shared string base_name() { return "fortress"; }
+shared string flag_name() { return "camp"; }
 shared string flag_spawn_name() { return "flag_base"; }
 
 //CTF spawn system
@@ -354,7 +354,6 @@ shared class CTFCore : RulesCore
 		 */
 
 		RulesCore::Update(); //update respawns
-		CheckStalemate();
 		CheckTeamWon();
 
 	}
@@ -530,7 +529,7 @@ shared class CTFCore : RulesCore
 
 		// get all the flags
 		CBlob@[] flags;
-		getBlobsByName(flag_name(), @flags);
+		getBlobsByTag("faction_base", @flags);
 
 		int winteamIndex = -1;
 		CTFTeamInfo@ winteam = null;
@@ -595,7 +594,7 @@ shared class CTFCore : RulesCore
 
 		// get all the flags
 		CBlob@[] flags;
-		getBlobsByName(flag_name(), @flags);
+		getBlobsByTag("flag_base", @flags);
 
 		//figure out if there's currently a stalemate condition
 		bool stalemate = true;
@@ -681,7 +680,6 @@ void Reset(CRules@ this)
 	CTFSpawns spawns();
 	CTFCore core(this, spawns);
 	Config(core);
-	core.SetupBases();
 	this.set("core", @core);
 	this.set("start_gametime", getGameTime() + core.warmUpTime);
 	this.set_u32("game_end_time", getGameTime() + core.gameDuration); //for TimeToEnd.as

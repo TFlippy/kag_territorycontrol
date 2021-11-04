@@ -33,23 +33,32 @@ namespace tc_colors
 		color_pumpjack_neutral = 0xff14507d,
 		color_trader_neutral = 0xff3737cd,
 		color_hobo_neutral = 0xff493326,
-
 		color_badgerden = 0xff46412d,
-		color_chickencoop = 0xff964619,
-		color_scoutchicken = 0xffb96437,
+
+		color_chickencoop 		= 0xff964619,
+		color_chickencamp 		= 0xff96461a,
+		color_chickenfortress 	= 0xff96461b,
+		color_chickenstronghold = 0xff96461c,
+		color_chickencitadel 	= 0xff96461d,
+		color_chickenconvent 	= 0xff96461e,
+
+		color_civillianchicken 	= 0xffb98c75,
+		color_merchantchicken 	= 0xffbec728,
+		color_scoutchicken 		= 0xffb96437,
+		color_soldierchicken 	= 0xffb96438,
+		color_heavychicken 		= 0xffb96439,
+
 		color_lootchest = 0xffffd200,
 		color_lootchest_random = 0xffff8200,
 		color_bannerchicken = 0xffbe3838,
 		color_irondoor_chicken = 0xffcfbaba,
 		color_chickenmarket = 0xffdccb7b,
-		color_civillianchicken = 0xffb98c75,
 		color_zapper_chicken = 0xff75b9ab,
 		color_sentry_chicken = 0xffff6408,
 		color_ceiling_lamp = 0xffd7f5f8,
 		color_car = 0xff523535,
 		color_sam = 0xff6f848c,
 		color_lws = 0xffd77474,
-		color_merchantchicken = 0xffbec728,
 		color_train = 0xff08b4b2,
 		color_sat = 0xff08ffb6,
 		color_helichopper = 0xff49ccca,
@@ -58,7 +67,7 @@ namespace tc_colors
 		color_badger = 0xff5a5546,
 		color_barbedwire = 0xff5f6473,
 
-		color_iron_platform_up 		= 0xffccccca, // 0, 90, 180, and (270 or -90) degrees
+		color_iron_platform_up 		= 0xffccccca,
 		color_iron_platform_right 	= 0xffcccccb,
 		color_iron_platform_down 	= 0xffcccccc,
 		color_iron_platform_left 	= 0xffcccccd,
@@ -100,7 +109,27 @@ namespace tc_colors
 		color_biome_jungle = 0xff327800,
 		color_biome_arctic = 0xff64b4ff,
 		color_biome_desert = 0xffffd364,
-		color_biome_dead = 0xff736e64
+		color_biome_dead = 0xff736e64,
+
+		blue_main_spawn        = 0xFF00FFFF, // ARGB(255,   0, 255, 255);
+		red_main_spawn         = 0xFFFF0000, // ARGB(255, 255,   0,   0);
+		green_main_spawn       = 0xFF9DCA22, // ARGB(255, 157, 202,  34);
+		purple_main_spawn      = 0xFFD379E0, // ARGB(255, 211, 121, 224);
+		orange_main_spawn      = 0xFFCD6120, // ARGB(255, 205,  97,  32);
+		aqua_main_spawn        = 0xFF2EE5A2, // ARGB(255,  46, 229, 162);
+		teal_main_spawn        = 0xFF5F84EC, // ARGB(255,  95, 132, 236);
+		gray_main_spawn        = 0xFFC4CFA1, // ARGB(255, 196, 207, 161);
+
+		blue_spawn             = 0xFF00C8C8, // ARGB(255,   0, 200, 200);
+		red_spawn              = 0xFFC80000, // ARGB(255, 200,   0,   0);
+		green_spawn            = 0xFF649B0D, // ARGB(255, 100, 155,  13);
+		purple_spawn           = 0xFF9E3ACC, // ARGB(255, 158,  58, 204);
+		orange_spawn           = 0xFF844715, // ARGB(255, 132,  71,  21);
+		aqua_spawn             = 0xFF4F9B7F, // ARGB(255,  79, 155, 127);
+		teal_spawn             = 0xFF4149F0, // ARGB(255,  65,  73, 240);
+		gray_spawn             = 0xFF97A792, // ARGB(255, 151, 167, 146);
+
+		redbarrier			   = 0xFFE43771
 	};
 }
 
@@ -172,31 +201,59 @@ class TCPNGLoader : PNGLoader
 			case tc_colors::color_chickencoop:
 			{
 				autotile(offset);
-				spawnBlob(map, "chickencoop", offset, -1);
+				spawnBlob(map, "hobo", offset, -1);
+				break;
+			}
+			case tc_colors::color_chickencamp:
+			{
+				autotile(offset);
+				spawnBlob(map, "chickencamp", offset, -1);
+				break;
+			}
+			case tc_colors::color_chickenfortress:
+			{
+				autotile(offset);
+				spawnBlob(map, "chickenfortress", offset, -1);
+				break;
+			}
+			case tc_colors::color_chickenstronghold:
+			{
+				autotile(offset);
+				spawnBlob(map, "chickenstronghold", offset, -1);
+				break;
+			}
+			case tc_colors::color_chickencitadel:
+			{
+				autotile(offset);
+				spawnBlob(map, "chickencitadel", offset, -1);
+				break;
+			}
+			case tc_colors::color_chickenconvent:
+			{
+				autotile(offset);
+				spawnBlob(map, "chickenconvent", offset, -1);
 				break;
 			}
 
 			case tc_colors::color_scoutchicken:
 			{
 				autotile(offset);
-
-				f32 rand = XORRandom(100);
-				if (rand < 15)
-				{
-					CBlob@ blob = spawnBlob(map, "heavychicken", offset, -1);
-					blob.set_bool("raider", XORRandom(100) < 10);
-				}
-				else if (rand < 50)
-				{
-					CBlob@ blob = spawnBlob(map, "soldierchicken", offset, -1);
-					blob.set_bool("raider", XORRandom(100) < 25);
-				}
-				else
-				{
-					CBlob@ blob = spawnBlob(map, "scoutchicken", offset, -1);
-					blob.set_bool("raider", XORRandom(100) < 50);
-				}
-
+				CBlob@ blob = spawnBlob(map, "hobo", offset, -1);
+				blob.set_bool("raider", XORRandom(100) < 50);
+				break;
+			}
+			case tc_colors::color_soldierchicken:
+			{
+				autotile(offset);
+				CBlob@ blob = spawnBlob(map, "soldierchicken", offset, -1);
+				blob.set_bool("raider", XORRandom(100) < 25);
+				break;
+			}
+			case tc_colors::color_heavychicken:
+			{
+				autotile(offset);
+				CBlob@ blob = spawnBlob(map, "heavychicken", offset, -1);
+				blob.set_bool("raider", XORRandom(100) < 10);
 				break;
 			}
 
@@ -217,9 +274,30 @@ class TCPNGLoader : PNGLoader
 				break;
 			}
 
+			case tc_colors::blue_main_spawn:
+			{
+				spawnBlob(map, "fortress", offset, 0);
+				break;
+			}
+			case tc_colors::blue_spawn:
+			{
+				spawnBlob(map, "camp", offset, 0);
+				break;
+			}
+			case tc_colors::red_main_spawn:
+			{
+				spawnBlob(map, "fortress", offset, 1);
+				break;
+			}
+			case tc_colors::red_spawn:
+			{
+				spawnBlob(map, "camp", offset, 1);
+				break;
+			}
+
 			case tc_colors::color_ruin:
 			{
-				spawnBlob(map, "ruins", offset, -1);
+				spawnBlob(map, "hobo", offset, -1);
 				break;
 			}
 			case tc_colors::color_ivy:
@@ -342,19 +420,19 @@ class TCPNGLoader : PNGLoader
 			case tc_colors::color_iron_platform_right:
 			{
 				map.SetTile(offset, CMap::tile_biron);
-				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero,  90);
+				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero, -90);
 				break;
 			}
 			case tc_colors::color_iron_platform_down:
 			{
 				map.SetTile(offset, CMap::tile_biron);
-				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero,  90);
+				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero, 180);
 				break;
 			}
 			case tc_colors::color_iron_platform_left:
 			{
 				map.SetTile(offset, CMap::tile_biron);
-				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero,  90);
+				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero, 90);
 				break;
 			}
 			case tc_colors::color_zapper_chicken:
@@ -1982,7 +2060,7 @@ void onSetTile(CMap@ map, u32 index, TileType tile_new, TileType tile_old)
 				break;
 
 			case CMap::tile_kudzu_d0:
-				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES); // | Tile::FLAMMABLE);
+				map.AddTileFlag(index, Tile::SOLID | Tile::COLLISION | Tile::LIGHT_PASSES | Tile::FLAMMABLE);
 				OnKudzuTileHit(map, index);
 				break;
 			//Kudzu End
