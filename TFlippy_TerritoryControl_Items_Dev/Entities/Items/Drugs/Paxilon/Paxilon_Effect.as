@@ -4,7 +4,7 @@
 #include "HittersTC.as";
 #include "MakeDustParticle.as";
 
-const f32 increment = 1.00f / (30.00f * 30.00f);
+const f32 increment = 1.00f / (30.00f * 20.00f);
 
 void onInit(CBlob@ this)
 {
