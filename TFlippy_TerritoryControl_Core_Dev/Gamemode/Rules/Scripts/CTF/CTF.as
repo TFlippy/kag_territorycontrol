@@ -23,7 +23,7 @@ void Config(CTFCore@ this)
 	ConfigFile cfg = ConfigFile(configstr);
 
 	//how long to wait for everyone to spawn in?
-	s32 warmUpTimeSeconds = cfg.read_s32("warmup_time", 30);
+	s32 warmUpTimeSeconds = 10;
 	this.warmUpTime = (getTicksASecond() * warmUpTimeSeconds);
 
 	s32 stalemateTimeSeconds = cfg.read_s32("stalemate_time", 30);
@@ -41,12 +41,12 @@ void Config(CTFCore@ this)
 		this.gameDuration = (getTicksASecond() * 60 * gameDurationMinutes);
 	}
 	//how many players have to be in for the game to start
-	this.minimum_players_in_team = cfg.read_s32("minimum_players_in_team", 2);
+	this.minimum_players_in_team = 1;
 	//whether to scramble each game or not
 	this.scramble_teams = cfg.read_bool("scramble_teams", true);
 
 	//spawn after death time
-	this.spawnTime = (getTicksASecond() * cfg.read_s32("spawn_time", 15));
+	this.spawnTime = (getTicksASecond() * 2);
 
 }
 
@@ -430,95 +430,6 @@ shared class CTFCore : RulesCore
 
 	void SetupBases()
 	{
-		// destroy all previous spawns if present
-		CBlob@[] oldBases;
-		getBlobsByName(base_name(), @oldBases);
-
-		for (uint i = 0; i < oldBases.length; i++)
-		{
-			oldBases[i].server_Die();
-		}
-
-		CMap@ map = getMap();
-
-		if (map !is null && map.tilemapwidth != 0)
-		{
-			//spawn the spawns :D
-			Vec2f respawnPos;
-
-			f32 auto_distance_from_edge_tents = Maths::Min(map.tilemapwidth * 0.15f * 8.0f, 100.0f);
-
-			if (!getMap().getMarker("blue main spawn", respawnPos))
-			{
-				warn("CTF: Blue spawn added");
-				respawnPos = Vec2f(auto_distance_from_edge_tents, map.getLandYAtX(auto_distance_from_edge_tents / map.tilesize) * map.tilesize - 16.0f);
-			}
-
-			respawnPos.y -= 8.0f;
-			SetupBase(server_CreateBlob(base_name(), 0, respawnPos));
-
-			if (!getMap().getMarker("red main spawn", respawnPos))
-			{
-				warn("CTF: Red spawn added");
-				respawnPos = Vec2f(map.tilemapwidth * map.tilesize - auto_distance_from_edge_tents, map.getLandYAtX(map.tilemapwidth - (auto_distance_from_edge_tents / map.tilesize)) * map.tilesize - 16.0f);
-			}
-
-			respawnPos.y -= 8.0f;
-			SetupBase(server_CreateBlob(base_name(), 1, respawnPos));
-
-			//setup the flags
-
-			//temp to hold them all
-			Vec2f[] flagPlaces;
-
-			f32 auto_distance_from_edge = Maths::Min(map.tilemapwidth * 0.25f * 8.0f, 400.0f);
-
-			//blue flags
-			if (getMap().getMarkers("blue spawn", flagPlaces))
-			{
-				for (uint i = 0; i < flagPlaces.length; i++)
-				{
-					server_CreateBlob(flag_spawn_name(), 0, flagPlaces[i] + Vec2f(0, map.tilesize));
-				}
-
-				flagPlaces.clear();
-			}
-			else
-			{
-				warn("CTF: Blue flag added");
-				f32 x = auto_distance_from_edge;
-				respawnPos = Vec2f(x, (map.getLandYAtX(x / map.tilesize) - 2) * map.tilesize);
-				server_CreateBlob(flag_spawn_name(), 0, respawnPos);
-			}
-
-			//red flags
-			if (getMap().getMarkers("red spawn", flagPlaces))
-			{
-				for (uint i = 0; i < flagPlaces.length; i++)
-				{
-					server_CreateBlob(flag_spawn_name(), 1, flagPlaces[i] + Vec2f(0, map.tilesize));
-				}
-
-				flagPlaces.clear();
-			}
-			else
-			{
-				warn("CTF: Red flag added");
-				f32 x = (map.tilemapwidth-1) * map.tilesize - auto_distance_from_edge;
-				respawnPos = Vec2f(x, (map.getLandYAtX(x / map.tilesize) - 2) * map.tilesize);
-				server_CreateBlob(flag_spawn_name(), 1, respawnPos);
-			}
-		}
-		else
-		{
-			warn("CTF: map loading failure");
-			for(int i = 0; i < 2; i++)
-			{
-				SetupBase(server_CreateBlob(base_name(), i, Vec2f(0,0)));
-				server_CreateBlob(flag_spawn_name(), i, Vec2f(0,0));
-			}
-		}
-
 		rules.SetCurrentState(WARMUP);
 	}
 
@@ -578,6 +489,7 @@ shared class CTFCore : RulesCore
 			}
 
 			rules.SetTeamWon(winteamIndex);   //game over!
+			rules.SetGlobalMessage((winteamIndex == 0 ? "Blue" : "Red") + " team wins the game!");
 			rules.SetCurrentState(GAME_OVER);
 		}
 	}
@@ -680,6 +592,7 @@ void Reset(CRules@ this)
 	CTFSpawns spawns();
 	CTFCore core(this, spawns);
 	Config(core);
+	core.SetupBases();
 	this.set("core", @core);
 	this.set("start_gametime", getGameTime() + core.warmUpTime);
 	this.set_u32("game_end_time", getGameTime() + core.gameDuration); //for TimeToEnd.as
