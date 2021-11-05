@@ -12,17 +12,50 @@ void onInit(CBlob@ this)
 	const int hash = name.getHash();
 	switch(hash)
 	{
-		case 246031843:		this.maxQuantity = 2;	break;	// heart
-		case -1964341159:	this.maxQuantity = 1;	break;	// cake
-		case 1028682697:	this.maxQuantity = 2;	break;	// food
-		case 1260223417:	this.maxQuantity = 4;	break;	// foodcan
-		case -1788840884:	this.maxQuantity = 10;	break;	// grain
-		case 1197821324:	this.maxQuantity = 2;	break;	// ratfood
-		case -527037763:	this.maxQuantity = 1;	break;	// ratburger
-		case -642166209:	this.maxQuantity = 2;	break;	// pumpkin
-		case 336243301:		this.maxQuantity = 2;	break;	// steak
-		case 258075966:		this.maxQuantity = 2;	break;	// icecream
-		case 739538537:		this.maxQuantity = 6;	break;	// doritos
+		// heart
+		case 246031843:	
+			this.maxQuantity = 2;
+			break;
+		// cake
+		case -1964341159:
+			this.maxQuantity = 1;
+			break;
+		// food
+		case 1028682697:
+			this.maxQuantity = 2;
+			break;
+		// foodcan
+		case 1260223417:
+			this.maxQuantity = 4;
+			break;
+		// grain
+		case -1788840884:
+			this.maxQuantity = 10;
+			break;
+		// ratfood
+		case 1197821324:
+			this.maxQuantity = 2;
+			break;
+		// ratburger
+		case -527037763:
+			this.maxQuantity = 1;
+			break;
+		// pumpkin
+		case -642166209:
+			this.maxQuantity = 2;
+			break;
+		// steak
+		case 336243301:	
+			this.maxQuantity = 2;
+			break;
+		// icecream
+		case 258075966:	
+			this.maxQuantity = 2;
+			break;
+		// doritos
+		case 739538537:	
+			this.maxQuantity = 6;
+			break;
 	}
 
 	this.Tag("food");
@@ -45,17 +78,50 @@ void Heal(CBlob@ this, CBlob@ blob)
 
 		switch(hash)
 		{
-			case 246031843:		heal_amount = 1;	break;	// heart
-			case -1964341159:	heal_amount = 3;	break;	// cake
-			case 1028682697:	heal_amount = 4;	break;	// food
-			case 1260223417:	heal_amount = 12;	break;	// foodcan
-			case -1788840884:	heal_amount = 2;	break;	// grain
-			case 1197821324:	heal_amount = 2;	break;	// ratfood
-			case -527037763:	heal_amount = 3;	break;	// ratburger
-			case -642166209:	heal_amount = 7;	break;	// pumpkin
-			case 336243301:		heal_amount = 4;	break;	// steak
-			case 258075966:		heal_amount = 3;	break;	// icecream
-			case 739538537:		heal_amount = 8;	break;	// doritos
+			// heart
+			case 246031843:	
+				heal_amount = 1;
+				break;
+			// cake
+			case -1964341159:
+				heal_amount = 3;
+				break;
+			// food
+			case 1028682697:
+				heal_amount = 4;
+				break;
+			// foodcan
+			case 1260223417:
+				heal_amount = 12;
+				break;
+			// grain
+			case -1788840884:
+				heal_amount = 2;
+				break;
+			// ratfood
+			case 1197821324:
+				heal_amount = 2;
+				break;
+			// ratburger
+			case -527037763:
+				heal_amount = 3;
+				break;
+			// pumpkin
+			case -642166209:
+				heal_amount = 7;
+				break;
+			// steak
+			case 336243301:	
+				heal_amount = 4;
+				break;
+			// icecream
+			case 258075966:	
+				heal_amount = 3;
+				break;
+			// doritos
+			case 739538537:	
+				heal_amount = 8;
+				break;
 		}
 
 		params.write_u8(heal_amount);
