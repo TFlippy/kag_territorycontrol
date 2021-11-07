@@ -75,8 +75,8 @@ void onTick(CBlob@ this)
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
 		{
-			moveVars.walkFactor *= 2.00f - (withdrawal * 1.50f);
-			moveVars.jumpFactor *= 2.50f - (withdrawal * 2.00f);
+			moveVars.walkFactor *= 1.50f - (withdrawal * 1.00f);
+			moveVars.jumpFactor *= 1.50f - (withdrawal * 1.00f);
 			
 			if (true_level > 3.00f)
 			{

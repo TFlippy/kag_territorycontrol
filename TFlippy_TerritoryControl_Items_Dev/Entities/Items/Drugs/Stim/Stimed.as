@@ -33,7 +33,7 @@ void onTick(CBlob@ this)
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
 		{
-			moveVars.walkFactor *= 2.00f + Maths::Min((true_level * 0.25f), 2);
+			moveVars.walkFactor *= 2.00f + Maths::Min((true_level * 0.25f), 3);
 			moveVars.jumpFactor *= 1.85f;
 		}	
 		

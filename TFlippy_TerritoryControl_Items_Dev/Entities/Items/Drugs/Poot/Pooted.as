@@ -107,7 +107,7 @@ void onTick(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
 {
-	f32 true_level = this.get_f32("pooted");		
+	f32 true_level = Maths::Min(this.get_f32("pooted"), 3);
 	f32 level = 1.00f + true_level;
 
 	if (level > 1)
