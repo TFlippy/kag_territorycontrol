@@ -27,6 +27,7 @@ void onInit(CBlob@ this)
 
 	this.set_f32("pressure", 0.00f);
 	this.set_f32("upgrade", 0.00f);
+	this.set_s16("upgrade_cost", 1);
 	this.set_f32("pressure_max", 150000.00f);
 	this.set_string("inventory_name", "Chemical Laboratory");
 
@@ -70,10 +71,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CBlob@ carried = caller.getCarriedBlob();
 			if (carried !is null && carried.getName() == "mat_copperingot")
 			{
-				if (carried.getQuantity() >= 1)
+				u8 cost = Maths::Max(this.get_s16("upgrade_cost"), 1);
+				if (carried.getQuantity() >= cost)
 				{
-					
-					int remain = carried.getQuantity() - 1;
+					int remain = carried.getQuantity() - cost;
 					if (remain > 0)
 					{
 						carried.server_SetQuantity(remain);
@@ -84,6 +85,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						carried.server_Die();
 					}
 					this.add_f32("upgrade", 2000.00f);
+					this.add_s16("upgrade_cost", 1);
+				}
+				else client_AddToChat("Not enough copper ingots! Upgrade costs "+cost+" copper ingots.", SColor(0xff444444));
+			}
+			else if (carried !is null && carried.getName() == "mat_steelingot")	// Stronger foundation
+			{
+				if (carried.getQuantity() >= 1)
+				{
+					int remain = carried.getQuantity() - 1;
+					if (remain > 0)
+					{
+						carried.server_SetQuantity(remain);
+					}
+					else
+					{
+						carried.Tag("dead");
+						carried.server_Die();
+					}
+					this.add_f32("upgrade", 1000.00f);
+					this.add_s16("upgrade_cost", -6);
 				}
 			}
 		}
@@ -107,7 +128,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		{
 			CBlob@ carried = caller.getCarriedBlob();
 
-			if (carried != null && carried.getName() == "mat_copperingot")
+			if (carried != null && (carried.getName() == "mat_copperingot" || carried.getName() == "mat_steelingot"))
 			{
 				CBitStream params;
 				params.write_u16(caller.getNetworkID());
