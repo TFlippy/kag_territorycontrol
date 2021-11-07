@@ -31,7 +31,7 @@ void onTick(CBlob@ this)
 			Vec2f bpos = pos + Vec2f(XORRandom(64) - 32, XORRandom(16));
 			
 			TileType t = map.getTile(bpos).type;
-			if (t != CMap::tile_castle_d0 && t != CMap::tile_ground_d0 && (XORRandom(100) < 50 ? true : t != CMap::tile_ground_d1))
+			if (t != CMap::tile_ground_d0 && (XORRandom(100) < 50 ? true : t != CMap::tile_ground_d1))
 			{
 				map.server_DestroyTile(bpos, 1, this);
 			}
@@ -63,7 +63,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 			Vec2f bpos = pos + Vec2f(XORRandom(48) - 24, XORRandom(48) - 24);
 			TileType t = map.getTile(bpos).type;
 			
-			if (t != CMap::tile_castle_d0 && t != CMap::tile_ground_d0 && (XORRandom(100) < 50 ? true : t != CMap::tile_ground_d1))
+			if (t != CMap::tile_ground_d0 && (XORRandom(100) < 50 ? true : t != CMap::tile_ground_d1))
 			{
 				if (server)
 				{
