@@ -85,7 +85,7 @@ void onTick(CBlob@ this)
 						attackersCount++;
 						attackerTeam = b.getTeamNum();
 
-						if (b.hasTag("combat chicken")) this.Tag(chicken_tag);
+						if (b.hasTag("combat chicken") || b.getTeamNum() == 250) this.Tag(chicken_tag);
 					}
 				}
 				else if((b.getTeamNum()>=0 && b.getTeamNum()<7) || this.hasTag("can be captured by neutral")) 

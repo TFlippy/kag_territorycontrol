@@ -21,12 +21,12 @@ const string[] resources =
 
 const u8[] resourceYields = 
 {
-	2,
-	2,
 	4,
+	3,
+	8,
 	2,
-	1,
-	1
+	2,
+	2
 };
 
 void onInit(CBlob@ this)
@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 
 	this.Tag("builder always hit");
 	
-	this.getCurrentScript().tickFrequency = 15;
+	this.getCurrentScript().tickFrequency = 30;
 	
 	this.set_bool("isActive", false);
 	this.addCommandID("sv_toggle");
@@ -151,12 +151,12 @@ void onAddToInventory( CBlob@ this, CBlob@ blob )
 {
 	if(blob.getName() != "gyromat") return;
 
-	this.getCurrentScript().tickFrequency = 15 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = 30 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
 
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if(blob.getName() != "gyromat") return;
 	
-	this.getCurrentScript().tickFrequency = 15 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = 30 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

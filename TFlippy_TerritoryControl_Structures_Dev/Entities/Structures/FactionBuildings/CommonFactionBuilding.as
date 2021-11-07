@@ -333,7 +333,7 @@ void SetAlarm(CBlob@ this, bool inState)
 {
 	if (inState == this.get_bool("base_alarm")) return;
 
-	this.set_bool("base_alarm", inState);
+	this.set_bool("base_alarm", true);
 	if (isServer()) this.Sync("base_alarm", true);
 
 	this.SetLight(true);
