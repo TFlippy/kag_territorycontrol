@@ -5,7 +5,7 @@ const u32 fuel_timer_max = 30 * 0.50f;
 
 void onInit(CBlob@ this)
 {
-	this.set_f32("map_damage_ratio", 0.5f);
+	this.set_f32("map_damage_ratio", 0.2f);
 	this.set_f32("map_damage_radius", 32.0f);
 	this.set_string("custom_explosion_sound", "Keg.ogg");
 
@@ -78,7 +78,7 @@ void DoExplosion(CBlob@ this, Vec2f velocity)
 
 	this.set_Vec2f("explosion_offset", Vec2f(0, -16).RotateBy(this.getAngleDegrees()));
 
-	Explode(this, 32.0f, 10.0f);
+	Explode(this, 32.0f, 7.0f);
 	for (int i = 0; i < 4; i++)
 	{
 		Vec2f dir = Vec2f(1 - i / 2.0f, -1 + i / 2.0f);
