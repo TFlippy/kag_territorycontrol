@@ -89,6 +89,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	if (this.getInventory().isFull()) return;
 	PickupOverlap(this);
 }
 
