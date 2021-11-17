@@ -180,9 +180,9 @@ void Blend(CBlob@ this, CBlob@ blob)
 				u32 quantity = blob.getQuantity();
 
 				MakeMat(this, this.getPosition(), "mat_stone", 		quantity * 0.50f + XORRandom(quantity * 0.25f));
-				MakeMat(this, this.getPosition(), "mat_concrete", 	quantity * 0.125f + XORRandom(quantity * 0.125f));
+				MakeMat(this, this.getPosition(), "mat_concrete", 	quantity * 0.175f + XORRandom(quantity * 0.125f));
 				MakeMat(this, this.getPosition(), "mat_iron", 		XORRandom(quantity * 0.20f));
-				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.03f));
+				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.06f));
 				MakeMat(this, this.getPosition(), "mat_gold",	 	XORRandom(quantity * 0.06f));
 				MakeMat(this, this.getPosition(), "mat_mithril", 	XORRandom(quantity * 0.05f));
 			}
@@ -207,7 +207,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 				u32 quantity = blob.getQuantity();
 
 				MakeMat(this, this.getPosition(), "mat_dirt", 		quantity * 0.65f + XORRandom(quantity * 0.25f));
-				MakeMat(this, this.getPosition(), "mat_sulphur", 	XORRandom(quantity * 0.10f));
+				MakeMat(this, this.getPosition(), "mat_sulphur", 	XORRandom(quantity * 0.25f));
 				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.10f));
 			}
 
