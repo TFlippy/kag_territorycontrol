@@ -182,9 +182,8 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	if (caller.getTeamNum() != this.getTeamNum())
 	{
 		this.set_bool("shop available", false);
-		print("hello");
 	}
-	this.set_bool("shop available", this.isOverlapping(caller));
+	else this.set_bool("shop available", this.isOverlapping(caller));
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
