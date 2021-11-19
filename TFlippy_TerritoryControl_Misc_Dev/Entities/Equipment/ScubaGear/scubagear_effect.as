@@ -1,5 +1,6 @@
 void onInit(CBlob@ this)
 {
+    this.Tag("pax immune");
 	if (this.get_string("reload_script") != "scubagear")
 		UpdateScript(this);
 }

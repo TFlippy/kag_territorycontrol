@@ -47,7 +47,7 @@ void onTick(CBlob@ this)
 		for (uint i = 0; i < blobsInRadius.length; i++)
 		{
 			CBlob@ blob = blobsInRadius[i];
-			if (blob.hasTag("flesh") && !blob.hasTag("gas immune"))
+			if (blob.hasTag("flesh") && !blob.hasTag("gas immune") && !blob.hasTag("pax immune"))
 			{
 				f32 value = blob.get_f32("paxilon_effect");
 				if (value == 0)
