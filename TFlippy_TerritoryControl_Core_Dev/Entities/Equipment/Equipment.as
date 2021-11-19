@@ -205,6 +205,7 @@ void removeHead(CBlob@ playerblob, string headname)
 	playerblob.RemoveScript(headname+"_effect.as");
 	playerblob.Tag("update head");
 	playerblob.Untag("disguised");
+	if (playerblob.hasTag("pax immune")) playerblob.Untag("pax immune");
 	if (playerblob.hasTag("bushy")) playerblob.Untag("bushy");
 }
 
