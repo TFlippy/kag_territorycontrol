@@ -48,7 +48,7 @@ void onTick(CBlob@ this)
 			this.setKeyPressed(key_action1, true);
 		}
 					
-		this.set_f32("stimed", Maths::Max(0, this.get_f32("stimed") - (0.0001f)));
+		this.set_f32("stimed", Maths::Max(0, this.get_f32("stimed") - (0.0005f)));
 	}
 	
 	// print("" + true_level);

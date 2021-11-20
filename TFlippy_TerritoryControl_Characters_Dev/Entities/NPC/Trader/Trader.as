@@ -284,6 +284,11 @@ void addTokens(CBlob@ this)
 	AddIconToken("$icon_jetpack$", "Jetpack.png", Vec2f(16, 16), 0, teamnum);
 }
 
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	this.set_bool("shop available", this.isOverlapping(caller) || this.isAttachedTo(caller));
+}
+
 void onTick(CBlob@ this)
 {
 	if (!this.hasTag("dead"))
