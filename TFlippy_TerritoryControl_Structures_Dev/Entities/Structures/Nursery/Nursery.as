@@ -165,7 +165,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			else if(spl[0] == "pumpkin_seed")
 			{
 				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "pumpkin_plant", XORRandom(2)+0);
+				server_MakeSeedsFor(@callerBlob, "pumpkin_plant", 1);
 			}
 			else if (spl[0] == "flower_seed")
 			{
