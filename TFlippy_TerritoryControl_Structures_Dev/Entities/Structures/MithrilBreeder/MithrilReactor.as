@@ -28,13 +28,17 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller) //Mutate button
 {
-	CBlob@ carried = caller.getCarriedBlob();
-
-	if (carried != null && (carried.getName() == "mat_mithrilingot" || carried.getName() == "mat_steelingot"))
+	if (this.isOverlapping(caller))
 	{
-		CBitStream params;
-		params.write_u16(caller.getNetworkID());
-		CButton@ button = caller.CreateGenericButton(23, Vec2f(0, -6), this, this.getCommandID("upgrade"), "Upgrade Reactor", params);
+		CBlob@ carried = caller.getCarriedBlob();
+
+		if (carried != null && (carried.getName() == "mat_mithrilingot" || carried.getName() == "mat_steelingot"))
+		{
+			CBitStream params;
+			params.write_u16(caller.getNetworkID());
+			CButton@ button = caller.CreateGenericButton(23, Vec2f(0, -6), this, this.getCommandID("upgrade"), "Upgrade Reactor", params);
+			button.deleteAfterClick = false;
+		}
 	}
 }
 

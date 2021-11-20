@@ -237,7 +237,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			}
 			else
 			{
-				bool trapBlocks = (b.name == "trap_block" || b.name == "spikes");
+				bool trapBlocks = (b.name == "trap_block" || b.name == "spikes" || b.name == "assembler");
 				u8 myTeam = (this.getTeamNum() >= 100 && this.getTeamNum() != 250 && !trapBlocks) ? -1 : this.getTeamNum();
 				CBlob@ blockBlob = server_CreateBlob(b.name, myTeam, pos);
 				if (blockBlob !is null)

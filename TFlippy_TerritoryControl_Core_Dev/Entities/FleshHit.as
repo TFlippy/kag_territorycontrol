@@ -268,6 +268,9 @@ void onDie(CBlob@ this)
 					// print("" + explodium_amount);
 				
 					blob.server_SetQuantity(1 + (frac * 0.25f + XORRandom(frac)));
+					if (this.getName() == "badger" || this.getName() == "bagel")
+						blob.server_SetQuantity(blob.getQuantity() * 0.5);
+						
 					blob.setVelocity(vel);
 					}
 				}

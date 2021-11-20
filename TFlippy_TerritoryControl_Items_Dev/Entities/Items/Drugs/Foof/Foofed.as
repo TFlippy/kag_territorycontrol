@@ -24,7 +24,7 @@ void onTick(CBlob@ this)
 	}
 	else
 	{
-		this.set_f32("foofed", Maths::Max(0, this.get_f32("foofed") - (0.0005f)));
+		this.set_f32("foofed", Maths::Max(0, this.get_f32("foofed") - (0.001f)));
 	}
 }
 

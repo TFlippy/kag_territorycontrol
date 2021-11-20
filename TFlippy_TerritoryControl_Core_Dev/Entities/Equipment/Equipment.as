@@ -114,7 +114,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 					caller.set_f32(eqName+"_health", item.get_f32("health"));
 
 				if (item.hasTag("bushy")) caller.Tag("bushy");
-				item.server_Die();
+				if (item.getQuantity() <= 1) item.server_Die();
+				else item.server_SetQuantity(Maths::Max(item.getQuantity() - 1, 0));
 			}
 			else if (getEquipmentType(item) == "torso")
 			{
@@ -205,6 +206,7 @@ void removeHead(CBlob@ playerblob, string headname)
 	playerblob.RemoveScript(headname+"_effect.as");
 	playerblob.Tag("update head");
 	playerblob.Untag("disguised");
+	if (playerblob.hasTag("pax immune")) playerblob.Untag("pax immune");
 	if (playerblob.hasTag("bushy")) playerblob.Untag("bushy");
 }
 
