@@ -570,6 +570,11 @@ void onSetPlayer(CBlob@ this, CPlayer@ player)
 	if (player !is null) player.SetScoreboardVars("ScoreboardIcons.png", 20, Vec2f(16, 16));
 }
 
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	this.set_bool("shop available", this.isOverlapping(caller) || this.isAttachedTo(caller));
+}
+
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("traderChat"))
