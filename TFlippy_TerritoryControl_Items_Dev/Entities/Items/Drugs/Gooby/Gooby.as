@@ -5,6 +5,7 @@ void onInit(CBlob@ this)
 	
 	this.Tag("forcefeed_always");
 	this.Tag("hopperable");
+	this.maxQuantity = 4;
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
@@ -36,7 +37,16 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			
 			if (isServer())
 			{
-				this.server_Die();
+				int8 remain = this.getQuantity() - 1;
+				if (remain > 0)
+				{
+					this.server_SetQuantity(remain);
+				}
+				else
+				{
+					this.Tag("dead");
+					this.server_Die();
+				}
 			}
 		}
 	}
