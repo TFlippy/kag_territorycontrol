@@ -57,13 +57,13 @@ void onInit(CSprite@ this)
 
 void onTick(CSprite@ this)
 {
-	if(this.getSpriteLayer("gear1") !is null){
+	if (this.getSpriteLayer("gear1") !is null){
 		this.getSpriteLayer("gear1").RotateBy(5, Vec2f(0.0f,0.0f));
 	}
-	if(this.getSpriteLayer("gear2") !is null){
+	if (this.getSpriteLayer("gear2") !is null){
 		this.getSpriteLayer("gear2").RotateBy(-5, Vec2f(0.0f,0.0f));
 	}
-	if(this.getSpriteLayer("gear3") !is null){
+	if (this.getSpriteLayer("gear3") !is null){
 		this.getSpriteLayer("gear3").RotateBy(5, Vec2f(0.0f,0.0f));
 	}
 }
@@ -249,21 +249,24 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
-	CBitStream params;
-	params.write_u16(caller.getNetworkID());
+	if (caller !is null && caller.isOverlapping(this))
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
 
-	CButton@ button = caller.CreateGenericButton(15, Vec2f(0,-8), this, AssemblerMenu, "Set Item");
+		CButton@ button = caller.CreateGenericButton(15, Vec2f(0,-8), this, AssemblerMenu, "Set Item");
+	}
 }
 
 void AssemblerMenu(CBlob@ this, CBlob@ caller)
 {
-	if(caller.isMyPlayer())
+	if (caller.isMyPlayer())
 	{
 		CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 6), "Set Assembly");
 		if (menu !is null)
 		{
 			AssemblerItem[] items = getItems(this);
-			for(uint i = 0; i < items.length; i += 1)
+			for (uint i = 0; i < items.length; i += 1)
 			{
 				AssemblerItem item = items[i];
 
@@ -275,14 +278,14 @@ void AssemblerMenu(CBlob@ this, CBlob@ caller)
 				AddIconToken("$assembler_icon" + i + "$", "AssemblerIcons.png", Vec2f(16, 16), i, teamnum);
 
 				string text = "Set to Assemble: " + item.title;
-				if(this.get_u8("crafting") == i)
+				if (this.get_u8("crafting") == i)
 				{
 					text = "Already Assembling: " + item.title;
 				}
 
 				CGridButton @butt = menu.AddButton("$assembler_icon" + i + "$", text, this.getCommandID("set"), pack);
 				butt.hoverText = item.title + "\n" + getButtonRequirementsText(item.reqs, false);
-				if(this.get_u8("crafting") == i)
+				if (this.get_u8("crafting") == i)
 				{
 					butt.SetEnabled(false);
 				}
@@ -319,7 +322,7 @@ void onTick(CBlob@ this)
 			server_TakeRequirements(inv, item.reqs);
 		}
 
-		if(isClient())
+		if (isClient())
 		{
 			this.getSprite().PlaySound("ProduceSound.ogg");
 			this.getSprite().PlaySound("BombMake.ogg");
@@ -344,7 +347,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	{
 		ReadRequirement(bs, requiredType, name, friendlyName, quantity);
 
-		if(blob.getName() == name)
+		if (blob.getName() == name)
 		{
 			isMat = true;
 			break;
@@ -373,14 +376,14 @@ AssemblerItem[] getItems(CBlob@ this)
 
 void onAddToInventory( CBlob@ this, CBlob@ blob )
 {
-	if(blob.getName() != "gyromat") return;
+	if (blob.getName() != "gyromat") return;
 
 	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
 
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
-	if(blob.getName() != "gyromat") return;
+	if (blob.getName() != "gyromat") return;
 	
 	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

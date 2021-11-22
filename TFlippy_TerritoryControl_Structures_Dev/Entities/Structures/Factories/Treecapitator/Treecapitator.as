@@ -78,3 +78,8 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	return false;
 }
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return forBlob !is null && (forBlob.getName() == "extractor" || forBlob.getName() == "filterextractor" || (forBlob.getPosition() - this.getPosition()).Length() <= 64);
+}

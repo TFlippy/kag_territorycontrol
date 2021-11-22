@@ -163,5 +163,5 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	return (forBlob.isOverlapping(this));
+	return (forBlob.getName() == "extractor" || forBlob.getName() == "filterextractor" || forBlob.isOverlapping(this));
 }

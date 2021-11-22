@@ -29,5 +29,5 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	// return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
-	return true;
+	return forBlob !is null && (forBlob.getPosition() - this.getPosition()).Length() <= 64;
 }

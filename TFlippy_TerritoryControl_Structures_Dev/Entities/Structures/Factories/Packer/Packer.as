@@ -86,10 +86,13 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
-	CBitStream params;
-	params.write_u16(caller.getNetworkID());
+	if (caller !is null && caller.isOverlapping(this))
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
 
-	CButton@ button = caller.CreateGenericButton(24, Vec2f(0, -8), this, PackerMenu, "Change packing mode");
+		CButton@ button = caller.CreateGenericButton(24, Vec2f(0, -8), this, PackerMenu, "Change packing mode");
+	}
 }
 
 void PackerMenu(CBlob@ this, CBlob@ caller)
@@ -127,4 +130,9 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 		u8 setting = params.read_u8();
 		this.set_u8("packer mode", setting);
 	}
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return forBlob !is null && forBlob.isOverlapping(this);
 }
