@@ -291,9 +291,5 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	if (forBlob.getTeamNum() == this.getTeamNum())
-	{
-		return true;
-	}
-	else return false;
+	return (forBlob !is null && this.getTeamNum() == forBlob.getTeamNum());
 }

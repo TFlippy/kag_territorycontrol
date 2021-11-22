@@ -284,3 +284,8 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	return false;
 }
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return (forBlob !is null && this.getTeamNum() == forBlob.getTeamNum());
+}
