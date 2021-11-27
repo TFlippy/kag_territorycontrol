@@ -137,7 +137,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			if (client)
 			{
 				this.getSprite().PlaySound("FallBig" + (XORRandom(5) + 1), vellen / 8.0f + 0.2f, 1.6f - vellen / 45.0f);
-				ShakeScreen(vellen * 15.0f, vellen * 4.0f, this.getPosition());
+				ShakeScreen(vellen * 10.0f, vellen * 4.0f, this.getPosition());
 			}
 			
 			if (server)

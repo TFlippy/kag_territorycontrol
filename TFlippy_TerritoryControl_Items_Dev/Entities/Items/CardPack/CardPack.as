@@ -6,11 +6,14 @@ void onInit( CBlob@ this )
 
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
-	CBitStream params;
-	params.write_u16(caller.getNetworkID());
-	
-	CButton@ button = caller.CreateGenericButton(12, Vec2f_zero, this, this.getCommandID("useitem"), "Open the pack and see what's inside!", params);
-	button.SetEnabled(this.isAttachedTo(caller));
+	if (this.isOverlapping(caller) || this.isAttachedTo(caller))
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		
+		CButton@ button = caller.CreateGenericButton(12, Vec2f_zero, this, this.getCommandID("useitem"), "Open the pack and see what's inside!", params);
+		button.SetEnabled(this.isAttachedTo(caller));
+	}
 }
 
 void onCommand( CBlob@ this, u8 cmd, CBitStream @params )

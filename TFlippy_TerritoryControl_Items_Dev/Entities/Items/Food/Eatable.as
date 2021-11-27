@@ -8,6 +8,56 @@ void onInit(CBlob@ this)
 		this.set_string("eat sound", "/Eat.ogg");
 	}
 
+	string name = this.getName();
+	const int hash = name.getHash();
+	switch(hash)
+	{
+		// heart
+		case 246031843:	
+			this.maxQuantity = 2;
+			break;
+		// cake
+		case -1964341159:
+			this.maxQuantity = 1;
+			break;
+		// food
+		case 1028682697:
+			this.maxQuantity = 2;
+			break;
+		// foodcan
+		case 1260223417:
+			this.maxQuantity = 4;
+			break;
+		// grain
+		case -1788840884:
+			this.maxQuantity = 10;
+			break;
+		// ratfood
+		case 1197821324:
+			this.maxQuantity = 2;
+			break;
+		// ratburger
+		case -527037763:
+			this.maxQuantity = 1;
+			break;
+		// pumpkin
+		case -642166209:
+			this.maxQuantity = 2;
+			break;
+		// steak
+		case 336243301:	
+			this.maxQuantity = 2;
+			break;
+		// icecream
+		case 258075966:	
+			this.maxQuantity = 2;
+			break;
+		// doritos
+		case 739538537:	
+			this.maxQuantity = 6;
+			break;
+	}
+
 	this.Tag("food");
 	this.Tag("hopperable");
 
@@ -22,27 +72,62 @@ void Heal(CBlob@ this, CBlob@ blob)
 		CBitStream params;
 		params.write_u16(blob.getNetworkID());
 
-		u8 heal_amount = 255; //in quarter hearts, 255 means full hp
 		string name = this.getName();
+		const int hash = name.getHash();
+		u8 heal_amount = 4; // things that might've been missed
 
-		if (name == "heart") heal_amount = 1;
-		else if (name == "cake") 		heal_amount = 3;
-		else if (name == "food") 		heal_amount = 4;
-		else if (name == "foodcan") 	heal_amount = 20;
-		else if (name == "grain") 		heal_amount = 2;
-		else if (name == "ratfood") 	heal_amount = 2;
-		else if (name == "ratburger") 	heal_amount = 3;
-		else if (name == "pumpkin") 	heal_amount = 7;
-		else if (name == "steak") 		heal_amount = 4;
-		else if (name == "icecream") 	heal_amount = 3;
-		else if (name == "doritos") 	heal_amount = 8;
-		else heal_amount = 4; // things that must've been missed
+		switch(hash)
+		{
+			// heart
+			case 246031843:	
+				heal_amount = 1;
+				break;
+			// cake
+			case -1964341159:
+				heal_amount = 3;
+				break;
+			// food
+			case 1028682697:
+				heal_amount = 4;
+				break;
+			// foodcan
+			case 1260223417:
+				heal_amount = 12;
+				break;
+			// grain
+			case -1788840884:
+				heal_amount = 2;
+				break;
+			// ratfood
+			case 1197821324:
+				heal_amount = 2;
+				break;
+			// ratburger
+			case -527037763:
+				heal_amount = 3;
+				break;
+			// pumpkin
+			case -642166209:
+				heal_amount = 7;
+				break;
+			// steak
+			case 336243301:	
+				heal_amount = 4;
+				break;
+			// icecream
+			case 258075966:	
+				heal_amount = 3;
+				break;
+			// doritos
+			case 739538537:	
+				heal_amount = 8;
+				break;
+		}
 
 		params.write_u8(heal_amount);
-
-		this.SendCommand(this.getCommandID(heal_id), params);
-
 		this.Tag("healed");
+		
+		this.SendCommand(this.getCommandID(heal_id), params);
 	}
 }
 
@@ -71,9 +156,19 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 				{
 					theBlob.server_Heal(heal_amount);
 				}
-			}
 
-			this.server_Die();
+				int remain = this.getQuantity() - 1;
+				if (remain > 0)
+				{
+					this.server_SetQuantity(remain);
+				}
+				else
+				{
+					this.Tag("dead");
+					this.server_Die();
+				}
+				this.Untag("healed");
+			}
 		}
 	}
 }

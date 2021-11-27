@@ -42,7 +42,7 @@ void onTick(CBlob@ this)
 	{
 		CBlob@[] blobs;
 		// if (this.getMap().getBlobsInRadius(this.getPosition(), 32.0f, @blobs))
-		if (getMap().getBlobsInBox(this.getPosition() + Vec2f(-32, -32), this.getPosition() + Vec2f(32, 32), @blobs))
+		if (getMap().getBlobsInBox(this.getPosition() + Vec2f(-40, -40), this.getPosition() + Vec2f(40, 40), @blobs))
 		{
 			for (uint i = 0; i < blobs.length; i++)
 			{

@@ -10,7 +10,7 @@ void onInit(CBlob @ this)
 	// this.Tag("ignore extractor");
 	this.Tag("builder always hit");
 
-	this.getCurrentScript().tickFrequency = 5;
+	this.getCurrentScript().tickFrequency = 15;
 
 	CSprite@ sprite = this.getSprite();
 	if (sprite !is null)
@@ -24,6 +24,7 @@ void onInit(CBlob @ this)
 
 void onTick(CBlob@ this)
 {
+	if (this.getInventory().isFull()) return;
 	if (!this.getShape().isStatic()) return;
 
 	if (isServer())
