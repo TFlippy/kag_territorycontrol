@@ -8,7 +8,6 @@ const f32 max_time = 3.00f;
 
 void onInit(CBlob@ this)
 {
-	this.Tag("no_suicide");
 	if (isClient() && this.isMyPlayer()) getMap().CreateSkyGradient("skygradient_babby.png");
 }
 

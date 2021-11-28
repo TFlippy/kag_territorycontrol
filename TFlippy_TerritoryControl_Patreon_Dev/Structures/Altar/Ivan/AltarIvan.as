@@ -23,7 +23,7 @@ void onInit(CBlob@ this)
 
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Ivan_Music.ogg");
-	sprite.SetEmitSoundVolume(0.4f);
+	sprite.SetEmitSoundVolume(0.35f);
 	sprite.SetEmitSoundSpeed(1.0f);
 	sprite.SetEmitSoundPaused(false);
 
@@ -100,9 +100,15 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 void ToggleButton(CBlob@ this, CBlob@ caller)
 {
 	if (this.hasTag("colourful"))
+	{
 		this.Untag("colourful");
+		this.getSprite().SetEmitSoundPaused(true);
+	}
 	else
+	{
 		this.Tag("colourful");
+		this.getSprite().SetEmitSoundPaused(false);
+	}
 }
 
 void onTick(CSprite@ this)
@@ -126,8 +132,6 @@ void onTick(CSprite@ this)
 
 		if (dist < diameter)
 		{
-			ShakeScreen(50.0f, 15, blob.getPosition());
-
 			if (getGameTime() % 8 == 0)
 			{
 				s16 step = blob.get_s16("rgbStep");
@@ -154,7 +158,7 @@ void onTick(CSprite@ this)
 		blob.SetLightColor(color);
 
 
-		this.SetEmitSoundVolume(Maths::Max(power * 0.002f, 0.50f));
+		this.SetEmitSoundVolume(Maths::Max(power * 0.002f, 0.45f));
 		this.SetEmitSoundSpeed(0.70f + (power * 0.0002f));
 	}
 }

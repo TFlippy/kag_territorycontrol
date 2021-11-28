@@ -45,8 +45,8 @@ void onTick(CBlob@ this)
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
 		{
-			moveVars.walkFactor *= 1.50f * modifier;
-			moveVars.jumpFactor *= 1.50f * modifier;
+			moveVars.walkFactor *= 1.30f * modifier;
+			moveVars.jumpFactor *= 1.30f * modifier;
 		}	
 				
 		if (modifier >= 1)
@@ -121,7 +121,7 @@ void onTick(CBlob@ this)
 	
 		// print("" + modifier);
 		// print("" + level / max_time);
-		this.set_f32("dominoed", Maths::Max(0, this.get_f32("dominoed") - (0.0005f)));
+		this.set_f32("dominoed", Maths::Max(0, this.get_f32("dominoed") - (0.0003f)));
 	}
 	
 	// print("" + true_level);

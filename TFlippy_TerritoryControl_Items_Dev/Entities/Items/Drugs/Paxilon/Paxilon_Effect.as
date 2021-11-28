@@ -4,7 +4,7 @@
 #include "HittersTC.as";
 #include "MakeDustParticle.as";
 
-const f32 increment = 1.00f / (30.00f * 30.00f);
+const f32 increment = 1.00f / (30.00f * 20.00f);
 
 void onInit(CBlob@ this)
 {
@@ -70,4 +70,7 @@ void onTick(CBlob@ this)
 	{
 		this.set_f32("paxilon_effect", value - increment);
 	}
+
+	if (value >= 2.0f)
+		this.server_Hit(this, this.getPosition(), Vec2f(0, 0), Maths::Max(this.getHealth() * 0.01f, 0.02f * value), HittersTC::poison, true);
 }

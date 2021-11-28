@@ -17,7 +17,7 @@ void onInit(CBlob@ this)
 	sprite.SetEmitSoundPaused(false);
 	
 	this.SetLight(true);
-	this.SetLightRadius(48.0f);
+	this.SetLightRadius(128.0f);
 	this.SetLightColor(SColor(255, 255, 0, 0));
 	
 	AddIconToken("$icon_mithrios_follower$", "InteractionIcons.png", Vec2f(32, 32), 11);
@@ -43,6 +43,7 @@ void onInit(CBlob@ this)
 		// s.spawnNothing = true;
 	// }
 	
+	/*
 	AddIconToken("$icon_mithrios_offering_0$", "AltarMithrios_Icons.png", Vec2f(24, 24), 0);
 	{
 		ShopItem@ s = addShopItem(this, "Offering of Death", "$icon_mithrios_offering_0$", "offering_death", "Sacrifice a slave to kill a random person in this region.");
@@ -53,6 +54,7 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
+	*/
 	
 	AddIconToken("$icon_mithrios_offering_1$", "AltarMithrios_Icons.png", Vec2f(24, 24), 1);
 	{
@@ -93,8 +95,6 @@ void onTick(CSprite@ this)
 			this.SetEmitSoundVolume(factor);
 			this.SetEmitSoundSpeed(0.50f + (0.50f * invFactor) + Maths::Min(power * 0.0005f, 0.35f));
 			
-			SetScreenFlash(Maths::Clamp((50 * factor) + XORRandom(10 + (power * 0.02)) + (power * 0.005f), 0, 255), 64, 0, 0);
-			ShakeScreen((25 * factor) + (power * 0.0050f), 30, blob.getPosition());
 			
 			if (playerBlob.get_u8("deity_id") != Deity::mithrios)
 			{

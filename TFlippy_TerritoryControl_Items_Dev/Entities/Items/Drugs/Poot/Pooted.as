@@ -61,8 +61,8 @@ void onTick(CBlob@ this)
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSound("/AAAA.ogg");
 		sprite.SetEmitSoundPaused(false);
-		sprite.SetEmitSoundSpeed(level * 1.00f);
-		sprite.SetEmitSoundVolume(true_level * 0.75f);
+		sprite.SetEmitSoundSpeed(level * 0.70f);
+		sprite.SetEmitSoundVolume(true_level * 0.50f);
 		
 		Vec2f vel = this.getVelocity();
 		if (Maths::Abs(vel.x) > 0.1)
@@ -107,7 +107,7 @@ void onTick(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
 {
-	f32 true_level = this.get_f32("pooted");		
+	f32 true_level = this.get_f32("pooted");
 	f32 level = 1.00f + true_level;
 
 	if (level > 1)
@@ -137,7 +137,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			if (client)
 			{
 				this.getSprite().PlaySound("FallBig" + (XORRandom(5) + 1), vellen / 8.0f + 0.2f, 1.6f - vellen / 45.0f);
-				ShakeScreen(vellen * 10.0f, vellen * 4.0f, this.getPosition());
+				ShakeScreen(vellen * 8.0f, vellen * 2.0f, this.getPosition());
 			}
 			
 			if (server)

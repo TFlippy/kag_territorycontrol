@@ -23,7 +23,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (caller !is null)
 		{
 			if (!caller.hasScript("Dominoed.as")) caller.AddScript("Dominoed.as");
-			caller.set_f32("dominoed", 5);
+			caller.add_f32("dominoed", 5);
 			
 			if (isServer())
 			{

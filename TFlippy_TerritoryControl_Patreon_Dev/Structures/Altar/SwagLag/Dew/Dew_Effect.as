@@ -127,7 +127,7 @@ void onTick(CBlob@ this)
 	
 		// print("" + modifier);
 		// print("" + level / max_time);
-		this.set_f32("dew_effect", Maths::Max(0, this.get_f32("dew_effect") - (0.002f)));
+		this.set_f32("dew_effect", Maths::Max(0, this.get_f32("dew_effect") - (0.001f)));
 	}
 	
 	// print("" + true_level);

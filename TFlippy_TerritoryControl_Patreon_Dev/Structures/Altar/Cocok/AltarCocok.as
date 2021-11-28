@@ -113,14 +113,6 @@ void onTick(CSprite@ this)
 		f32 sqrDistMod = 1.00f - Maths::Sqrt(dist / radius);
 
 		this.SetEmitSoundVolume(0.20f + (distMod * 0.20f));
-
-		if (dist < diameter)
-		{
-			if (getGameTime() % 8 == 0)
-			{
-				ShakeScreen(50.0f, 15, blob.getPosition());
-			}
-		}
 	}
 }
 

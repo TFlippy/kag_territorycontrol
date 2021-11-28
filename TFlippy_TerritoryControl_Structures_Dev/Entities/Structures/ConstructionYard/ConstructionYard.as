@@ -56,9 +56,9 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Steam Tank", "$icon_steamtank$", "steamtank", "$icon_steamtank$\n\n\n" + "An armored land vehicle. Comes with a powerful cannon and a durable ram.", false, true);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 10);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 20);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100);
-		AddRequirement(s.requirements, "coin", "", "Coins", 125);
+		AddRequirement(s.requirements, "coin", "", "Coins", 375);
 
 		s.crate_icon = 7;
 		s.customButton = true;
