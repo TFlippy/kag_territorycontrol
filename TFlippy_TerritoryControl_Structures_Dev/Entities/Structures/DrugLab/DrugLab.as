@@ -218,8 +218,10 @@ void React(CBlob@ this)
 			{
 				if (isServer())
 				{
-					rippio_blob.server_Die();
-					fiks_blob.server_Die();
+					rippio_blob.server_SetQuantity(Maths::Max(rippio_blob.getQuantity() - 1, 0));
+					if (rippio_blob.getQuantity() <= 0) rippio_blob.server_Die();
+					fiks_blob.server_SetQuantity(Maths::Max(fiks_blob.getQuantity() - 1, 0));
+					if (fiks_blob.getQuantity() <= 0) fiks_blob.server_Die();
 					dangermeat_blob.server_SetQuantity(Maths::Max(dangermeat_blob.getQuantity() - 45, 0));
 
 					Material::createFor(this, "gooby", 1 + XORRandom(2));
@@ -246,8 +248,8 @@ void React(CBlob@ this)
 			{
 				if (isServer())
 				{
-					if (grain_blob.getQuantity() <= 1) grain_blob.server_Die();
-					else grain_blob.server_SetQuantity(Maths::Max(grain_blob.getQuantity() - 1, 0));
+					grain_blob.server_SetQuantity(Maths::Max(grain_blob.getQuantity() - 1, 0));
+					if (grain_blob.getQuantity() <= 0) grain_blob.server_Die();
 					Material::createFor(this, "vodka", 1);
 				}
 
@@ -261,7 +263,8 @@ void React(CBlob@ this)
 				{
 					if (XORRandom(100) < 30)
 					{
-						fiks_blob.server_Die();
+						fiks_blob.server_SetQuantity(Maths::Max(fiks_blob.getQuantity() - 1, 0));
+						if (fiks_blob.getQuantity() <= 0) fiks_blob.server_Die();
 						Material::createFor(this, "crak", 1);
 					}
 					else
@@ -280,7 +283,8 @@ void React(CBlob@ this)
 				{
 					fuel_blob.server_SetQuantity(Maths::Max(fuel_blob.getQuantity() - 50, 0));
 					coal_blob.server_SetQuantity(Maths::Max(coal_blob.getQuantity() - 50, 0));
-					vodka_blob.server_Die();
+					vodka_blob.server_SetQuantity(Maths::Max(vodka_blob.getQuantity() - 1, 0));
+					if (vodka_blob.getQuantity() <= 0) vodka_blob.server_Die();
 
 					Material::createFor(this, "sosek", 2 + XORRandom(3));
 				}
@@ -507,7 +511,8 @@ void React(CBlob@ this)
 					{
 						acid_blob.server_SetQuantity(Maths::Max(acid_blob.getQuantity() - 25, 0));
 						oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 20, 0));
-						bobomax.server_Die();
+						bobomax.server_SetQuantity(Maths::Max(bobomax.getQuantity() - 1, 0));
+						if (bobomax.getQuantity() <= 0) bobomax.server_Die();
 
 						Material::createFor(this, "foof", 3 + XORRandom(7));
 					}
@@ -525,7 +530,8 @@ void React(CBlob@ this)
 					if (isServer())
 					{
 						oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 25, 0));
-						stim.server_Die();
+						stim.server_SetQuantity(Maths::Max(stim.getQuantity() - 1, 0));
+						if (stim.getQuantity() <= 0) stim.server_Die();
 
 						Material::createFor(this, "rippio", 2 + XORRandom(2));
 						Material::createFor(this, "mat_rippio", 15 + XORRandom(35));
@@ -606,13 +612,13 @@ void React(CBlob@ this)
 
 			if (heat > 500 && hasOil && oil_count >= 25 && hasVodka)
 			{
-				CBlob@ vodka = inv.getItem("vodka");
-				if (vodka !is null)
+				if (vodka_blob !is null)
 				{
 					if (isServer())
 					{
 						oil_blob.server_SetQuantity(Maths::Max(oil_blob.getQuantity() - 25, 0));
-						vodka.server_Die();
+						vodka_blob.server_SetQuantity(Maths::Max(vodka_blob.getQuantity() - 1, 0));
+						if (vodka_blob.getQuantity() <= 0) vodka_blob.server_Die();
 
 						Material::createFor(this, "paxilon", 2 + XORRandom(2));
 						Material::createFor(this, "mat_paxilon", 15 + XORRandom(35));
