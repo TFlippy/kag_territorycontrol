@@ -26,7 +26,8 @@ void onInit(CSprite@ this)
 
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
-	if(caller.getCarriedBlob() !is this){
+	if (caller !is null && caller.isOverlapping(this) && caller.getCarriedBlob() !is this)
+	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
 
@@ -114,4 +115,9 @@ void onTick(CBlob@ this)
 	}
 
 	this.set_bool("inserter_cycle", !cycle);
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return (forBlob !is null && forBlob.isOverlapping(this));
 }

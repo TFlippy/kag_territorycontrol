@@ -362,5 +362,5 @@ void Blend(CBlob@ this, CBlob@ blob)
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	// return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
-	return true;
+	return forBlob !is null && (forBlob.getName() == "extractor" || forBlob.getName() == "filterextractor" || (forBlob.getPosition() - this.getPosition()).Length() <= 64);
 }

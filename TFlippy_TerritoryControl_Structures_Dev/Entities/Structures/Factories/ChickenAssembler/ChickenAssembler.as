@@ -114,10 +114,13 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
-	CBitStream params;
-	params.write_u16(caller.getNetworkID());
+	if (caller.isOverlapping(this))
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
 
-	CButton@ button = caller.CreateGenericButton(15, Vec2f(0,-8), this, ChickenAssemblerMenu, "Set Item");
+		CButton@ button = caller.CreateGenericButton(15, Vec2f(0,-8), this, ChickenAssemblerMenu, "Set Item");
+	}
 }
 
 void ChickenAssemblerMenu(CBlob@ this, CBlob@ caller)
