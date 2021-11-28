@@ -4,7 +4,7 @@
 void onInit(CBlob@ this)
 {	
 	this.Tag("ammo");
-	this.maxQuantity = 3;
+	this.maxQuantity = 6;
 }
 
 void DoExplosion(CBlob@ this, Vec2f velocity)

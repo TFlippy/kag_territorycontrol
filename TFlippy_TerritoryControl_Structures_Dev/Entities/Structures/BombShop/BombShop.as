@@ -161,8 +161,8 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Small Rocket (1)", "$icon_smallrocket$", "mat_smallrocket-1", "Self-propelled ammunition for rocket launchers.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 50);
+		ShopItem@ s = addShopItem(this, "Small Rocket (3)", "$icon_smallrocket$", "mat_smallrocket-3", "Self-propelled ammunition for rocket launchers.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 75);
 
 		s.spawnNothing = true;
 	}

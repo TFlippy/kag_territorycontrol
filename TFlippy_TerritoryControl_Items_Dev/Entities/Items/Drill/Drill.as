@@ -13,7 +13,7 @@ const f32 speed_hard_thresh = 2.6f;
 const string buzz_prop = "drill timer";
 
 const string heat_prop = "drill heat";
-const u8 heat_max = 200;
+const u8 heat_max = 150;
 
 const string last_drill_prop = "drill last active";
 

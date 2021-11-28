@@ -4,7 +4,7 @@
 // Mounted Bow logic
 
 const Vec2f arm_offset = Vec2f(-4, -2);
-const u32 shootDelay = 8; // Ticks
+const u32 shootDelay = 7; // Ticks
 
 void onInit(CBlob@ this)
 {

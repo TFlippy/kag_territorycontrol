@@ -55,12 +55,6 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Machine Gun Ammunition (50)", "$icon_gatlingammo$", "mat_gatlingammo-50", "Ammunition used by the machine gun.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 85);
-
-		s.spawnNothing = true;
-	}
-	{
 		ShopItem@ s = addShopItem(this, "Fragmentation Grenade (1)", "$icon_fraggrenade$", "mat_fraggrenade-1", "A small hand grenade. Especially useful against infantry.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 75);
 
@@ -69,6 +63,18 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Scrub's Chow (1)", "$foodcan$", "foodcan-1", "Scrub's Chow. Foodcans used to satisfy your hunger.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "UPF Phone", "$phone$", "phone", "UPF Phone. Use this to call in reinforcements.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 2999);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Beagle", "$beagle$", "beagle", "UPF Beagle. Used by professional UPF hitman.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 799);
 
 		s.spawnNothing = true;
 	}
@@ -108,12 +114,14 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
+	/*
 	{
 		ShopItem@ s = addShopItem(this, "UPF AMR-127", "$amr$", "amr", "UPF Anti-Material Rifle. Used to obliterate humans.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 3499);
 
 		s.spawnNothing = true;
 	}
+	*/
 
 	if (isServer())
 	{	
@@ -171,8 +179,11 @@ void SetMinimap(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	if (caller.getTeamNum() == this.getTeamNum())
-		this.set_bool("shop available", this.isOverlapping(caller));
+	if (caller.getTeamNum() != this.getTeamNum())
+	{
+		this.set_bool("shop available", false);
+	}
+	else this.set_bool("shop available", this.isOverlapping(caller));
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

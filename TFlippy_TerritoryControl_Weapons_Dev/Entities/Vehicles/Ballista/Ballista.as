@@ -244,7 +244,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		{
 			CBitStream params;
 			params.write_u16(caller.getNetworkID());
-			CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(0, -4), this, SpawnCmd::buildMenu, getTranslatedString("Change class"), params);
+			CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(0, -4), this, buildSpawnMenu, "Change class");
 		}
 
 		if (!Vehicle_AddFlipButton(this, caller) && caller.getTeamNum() == this.getTeamNum())
