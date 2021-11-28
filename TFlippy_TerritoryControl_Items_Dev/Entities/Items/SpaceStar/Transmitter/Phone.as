@@ -367,6 +367,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @ap)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
+	bool isChicken = caller.getTeamNum() == 250;
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_bool("shop available", getGameTime() >= this.get_u32("next use"));
+	this.set_bool("shop available", getGameTime() >= this.get_u32("next use") && isChicken);
 }

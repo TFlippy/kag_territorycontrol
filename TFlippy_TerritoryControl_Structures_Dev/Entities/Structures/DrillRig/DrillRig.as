@@ -21,12 +21,12 @@ const string[] resources =
 
 const u8[] resourceYields = 
 {
-	4,
-	3,
-	8,
 	2,
 	2,
-	2
+	5,
+	1,
+	2,
+	1
 };
 
 void onInit(CBlob@ this)
@@ -48,8 +48,8 @@ void onInit(CBlob@ this)
 void onInit(CSprite@ this)
 {
 	this.SetEmitSound("Drill.ogg");
-	this.SetEmitSoundVolume(0.3f);
-	this.SetEmitSoundSpeed(0.7f);
+	this.SetEmitSoundVolume(0.2f);
+	this.SetEmitSoundSpeed(0.5f);
 	
 	this.SetEmitSoundPaused(!this.getBlob().get_bool("isActive"));
 }
@@ -62,15 +62,15 @@ void onTick(CBlob@ this)
 	
 		CMap@ map = getMap();
 		
-		f32 depth = XORRandom(96);
-		Vec2f pos = Vec2f(this.getPosition().x + (XORRandom(64) - 32) * (1 - depth / 96), Maths::Min(this.getPosition().y + 16 + depth, (map.tilemapheight * map.tilesize) - 8));
+		f32 depth = XORRandom(48);
+		Vec2f pos = Vec2f(this.getPosition().x + (XORRandom(32) - 16) * (1 - depth / 48), Maths::Min(this.getPosition().y + 16 + depth, (map.tilemapheight * map.tilesize) - 8));
 
 		this.server_HitMap(pos, Vec2f(0, 0), 1.3f, Hitters::drill);
 	}
 	
 	if (isClient())
 	{
-		this.getSprite().SetEmitSoundSpeed(0.7f + ((this.get_f32("gyromat_acceleration") - 1.00f) * 0.10f));
+		this.getSprite().SetEmitSoundSpeed(0.5f + ((this.get_f32("gyromat_acceleration") - 1.00f) * 0.10f));
 	}
 }
 

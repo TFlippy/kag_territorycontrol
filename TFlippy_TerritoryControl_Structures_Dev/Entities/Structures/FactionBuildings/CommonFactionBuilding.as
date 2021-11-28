@@ -402,8 +402,8 @@ void Faction_Menu(CBlob@ this, CBlob@ caller)
 						params.write_u8(1);
 
 						CGridButton@ butt = menu.AddButton("$faction_become_leader$", "Claim Leadership", this.getCommandID("faction_menu_button"), Vec2f(3, 1), params);
-						butt.hoverText = "Claim leadership of this faction, giving yourself access to various management tools.";
-						butt.SetEnabled(team_data.leader_name == "");
+						butt.hoverText = "Claim leadership of this faction, giving yourself access to various management tools.\nFeature Disabled.";
+						butt.SetEnabled(false);
 					}
 				}
 				{

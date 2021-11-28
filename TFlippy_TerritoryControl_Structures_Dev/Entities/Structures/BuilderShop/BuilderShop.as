@@ -38,20 +38,14 @@ void onInit(CBlob@ this)
 
 	{
 		ShopItem@ s = addShopItem(this, "Lantern", "$lantern$", "lantern", descriptions[9], false);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 10);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Bucket", "$bucket$", "bucket", descriptions[36], false);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 10);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 25);
 
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Filled Bucket", "$filled_bucket$", "filled_bucket", Descriptions::filled_bucket, false);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 10);
-		AddRequirement(s.requirements, "coin", "", "Coins", 10);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 25);
+		AddRequirement(s.requirements, "coin", "", "Coins", 20);
 
 		s.spawnNothing = true;
 	}
@@ -75,7 +69,7 @@ void onInit(CBlob@ this)
 	// }
 	{
 		ShopItem@ s = addShopItem(this, "Crate", "$crate$", "crate", "A wooden crate used for storage.\nBreaks upon impact.", true);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 75);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
 
 		s.spawnNothing = true;
 	}
@@ -120,7 +114,7 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Engineer's Tools", "$icon_engineertools$", "engineertools", "Engineer's Tools for real engineers.", true);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
-		AddRequirement(s.requirements, "coin", "", "Coins", 1000);
+		AddRequirement(s.requirements, "coin", "", "Coins", 750);
 
 		s.spawnNothing = true;
 	}

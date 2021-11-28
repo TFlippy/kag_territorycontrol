@@ -35,21 +35,21 @@ void onInit(CBlob@ this)
 
 	{
 		ShopItem@ s = addShopItem(this, "Artillery Shell (4)", "$icon_tankshell$", "mat_tankshell-4", "A highly explosive shell used by the artillery.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 40);
+		AddRequirement(s.requirements, "coin", "", "Coins", 80);
 
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Howitzer Shell (2)", "$icon_howitzershell$", "mat_howitzershell-2", "A large howitzer shell capable of annihilating a cottage.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 75);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100);
 
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Rocket of Doom", "$icon_rocket$", "rocket", "Let's fly to the Moon. (Not really)");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
-		AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 2);
+		AddRequirement(s.requirements, "coin", "", "Coins", 250);
+		AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 10);
 
 		s.spawnNothing = true;
 	}
@@ -67,7 +67,7 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "R.O.F.L.", "$icon_nuke$", "nuke", "A dangerous warhead stuffed in a cart. Since it's heavy, it can be only pushed around or picked up by balloons.");
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
-		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 50);
+		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 75);
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100); // Cart!
 		AddRequirement(s.requirements, "coin", "", "Coins", 750);
@@ -76,32 +76,32 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Mine", "$icon_mine$", "mine", descriptions[20], false);
-		AddRequirement(s.requirements, "coin", "", "Coins", 50);
+		AddRequirement(s.requirements, "coin", "", "Coins", 75);
 
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Fragmentation Mine", "$icon_fragmine$", "fragmine", "A fragmentation mine that fills the surroundings with shards of metal upon detonation.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 125);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Small Bomb (4)", "$icon_smallbomb$", "mat_smallbomb-4", "A small iron bomb. Detonates upon strong impact.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Incendiary Bomb (2)", "$icon_incendiarybomb$", "mat_incendiarybomb-2", "Sets the peasants on fire. Detonates upon strong impact.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 		AddRequirement(s.requirements, "blob", "mat_oil", "Oil", 20);
 
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Bunker Buster (1)", "$icon_bunkerbuster$", "mat_bunkerbuster-1", "Perfect for making holes in heavily fortified bases. Detonates upon strong impact.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 50);
 
 		s.spawnNothing = true;
@@ -115,7 +115,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Cluster Bomb (1)", "$icon_clusterbomb$", "mat_clusterbomb-1", "A cluster bomb that splits into smaller bomblets upon detonation.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+		AddRequirement(s.requirements, "coin", "", "Coins", 250);
 		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", 25);
 		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 25);
 
@@ -130,15 +130,15 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "L.O.L. Warhead (1)", "$icon_mininuke$", "mat_mininuke-1", "A miniature nuclear warhead. Can be used as L.O.L. Warhead Launcher ammunition. Detonates upon impact.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 350);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 4);
+		AddRequirement(s.requirements, "coin", "", "Coins", 750);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 8);
 		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 10);
 
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Grenade (2)", "$icon_grenade$", "mat_grenade-2", "A small, timed explosive device used by grenade launchers.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 75);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 
 		s.spawnNothing = true;
 	}
@@ -193,7 +193,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Firework (1)", "$icon_firework$", "firework", "Celebrate the new year with this colorful rocket!");
-		AddRequirement(s.requirements, "coin", "", "Coins", 50);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100);
 
 		s.spawnNothing = true;
 	}
