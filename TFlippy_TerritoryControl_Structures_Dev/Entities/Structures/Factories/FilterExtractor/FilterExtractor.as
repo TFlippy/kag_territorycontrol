@@ -93,3 +93,8 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 	
 	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return (forBlob.isOverlapping(this));
+}

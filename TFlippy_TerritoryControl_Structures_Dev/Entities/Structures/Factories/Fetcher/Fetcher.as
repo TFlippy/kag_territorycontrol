@@ -11,6 +11,7 @@ void onInit(CSprite@ this)
 void onInit(CBlob@ this)
 {
 	this.Tag("remote_storage");
+	this.Tag("ignore extractor");
 
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
@@ -55,7 +56,7 @@ void onTick(CBlob@ this)
 
 				u8 team = b.getTeamNum();
 
-				if(b.getInventory() !is null && (team == my_team || team >= 100))
+				if (b.getInventory() !is null && (team == my_team || team >= 100))
 				{
 					if (!b.isInventoryAccessible(this) || b.hasTag("ignore extractor")) continue;
 
@@ -83,19 +84,22 @@ void onTick(CBlob@ this)
 
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
-	u16 carried_netid;
-
-	CBlob@ carried = caller.getCarriedBlob();
-	if (carried !is null) carried_netid = carried.getNetworkID();
-
-	CBitStream params;
-	params.write_u16(caller.getNetworkID());
-	params.write_u16(carried_netid);
-
-	CButton@ button_withdraw = caller.CreateGenericButton(11, Vec2f(0, -8), this, this.getCommandID("fetcher_set"), "Set Resource", params);
-	if (button_withdraw !is null)
+	if (caller !is null && (caller.getPosition() - this.getPosition()).Length() <= 64)
 	{
-		button_withdraw.SetEnabled(carried !is null);
+		u16 carried_netid;
+
+		CBlob@ carried = caller.getCarriedBlob();
+		if (carried !is null) carried_netid = carried.getNetworkID();
+
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		params.write_u16(carried_netid);
+
+		CButton@ button_withdraw = caller.CreateGenericButton(11, Vec2f(0, -8), this, this.getCommandID("fetcher_set"), "Set Resource", params);
+		if (button_withdraw !is null)
+		{
+			button_withdraw.SetEnabled(carried !is null);
+		}
 	}
 }
 
@@ -114,4 +118,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 			client_UpdateName(this);
 		}
 	}
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return forBlob !is null && (forBlob.getPosition() - this.getPosition()).Length() <= 64;
 }

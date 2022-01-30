@@ -89,12 +89,13 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
-	if(caller.getCarriedBlob() !is this){
+	if (caller !is null && this.isOverlapping(caller) && (caller.getPosition() - this.getPosition()).Length() <= 64)
+	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
 		
 		int icon = 17;
-		if(!this.isFacingLeft())icon = 18;
+		if (!this.isFacingLeft()) icon = 18;
 		
 		CButton@ button = caller.CreateGenericButton(icon, Vec2f(0,0), this, this.getCommandID("use"), "Use", params);
 	}

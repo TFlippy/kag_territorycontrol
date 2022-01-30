@@ -26,7 +26,8 @@ void onInit(CSprite@ this)
 
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
-	if(caller.getCarriedBlob() !is this){
+	if (caller !is null && caller.isOverlapping(this) && caller.getCarriedBlob() !is this)
+	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
 
@@ -82,7 +83,7 @@ void onTick(CBlob@ this)
 				if (item !is null)
 				{
 					string blobName = right.getName();
-					if (item.canBePutInInventory(this) && t_inv.getItem(0) is null && 
+					if (t_inv.getItem(0) is null && 
 					    blobName != "builder" && blobName != "engineer" && blobName != "hazmat" ) //certain classes won't be affected
 					{
 						this.server_PutInInventory(item);
@@ -103,9 +104,9 @@ void onTick(CBlob@ this)
 				CBlob@ item = inv.getItem(0);
 				if (item !is null)
 				{
-					if (item.canBePutInInventory(left)) 
+					if (!left.server_PutInInventory(item))
 					{
-						left.server_PutInInventory(item);
+						this.server_PutInInventory(item);
 						this.getSprite().PlaySound("bridge_close.ogg", 1.00f, 1.00f);
 					}
 				}
@@ -114,4 +115,9 @@ void onTick(CBlob@ this)
 	}
 
 	this.set_bool("inserter_cycle", !cycle);
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return (forBlob !is null && forBlob.isOverlapping(this));
 }

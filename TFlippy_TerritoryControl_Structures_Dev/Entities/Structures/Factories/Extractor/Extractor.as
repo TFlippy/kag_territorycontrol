@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
-	this.getCurrentScript().tickFrequency = 60;
+	this.getCurrentScript().tickFrequency = 90;
 
 	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
@@ -49,7 +49,7 @@ void onTick(CBlob@ this)
 				CBlob@ b = blobs[i];
 				if (b.getInventory() !is null && !b.hasTag("player"))
 				{
-					if (!b.isInventoryAccessible(this) || b.hasTag("ignore extractor")) continue;
+					if (!b.isInventoryAccessible(this) || b.hasTag("ignore extractor") || b.hasTag("vehicle")) continue;
 
 					if (b.getInventory().getItemsCount() > 0)
 					{
@@ -84,12 +84,12 @@ void onAddToInventory( CBlob@ this, CBlob@ blob )
 		return;
 	}
 
-	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
 
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if (blob.getName() != "gyromat") return;
 
-	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
