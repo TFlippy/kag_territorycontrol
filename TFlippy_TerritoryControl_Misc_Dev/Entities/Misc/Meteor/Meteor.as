@@ -173,7 +173,6 @@ void onHitGround(CBlob@ this)
         if (isClient())
         {
             this.getSprite().SetEmitSoundPaused(true);
-            ShakeScreen(power * 500.0f, power * 120.0f, this.getPosition());
             SetScreenFlash(150, 255, 238, 218);
             Sound::Play("MeteorStrike.ogg", this.getPosition(), 1.5f, 1.0f);
         }
@@ -221,7 +220,7 @@ void onHitGround(CBlob@ this)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-    if(customData != Hitters::builder && customData != Hitters::drill)
+    if (customData != Hitters::builder && customData != Hitters::drill && customData != Hitters::saw)
     {
         s32 heat = this.get_s32("heat");
         if (customData == Hitters::water || customData == Hitters::water_stun && heat > 0)
@@ -240,11 +239,13 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
     if (isServer())
     {
-        MakeMat(hitterBlob, worldPoint, "mat_stone", (10 + XORRandom(50)));
-        if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_copper", (5 + XORRandom(10)));
-        if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_iron", (10 + XORRandom(40)));
-        if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_mithril", (5 + XORRandom(20)));
-        if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_gold", (XORRandom(35)));
+        f32 multiplier = damage * 2;
+        MakeMat(hitterBlob, worldPoint, "mat_stone", (20 + XORRandom(50)) * multiplier);
+        if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_copper", (5 + XORRandom(10)) * multiplier);
+        if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_iron", (10 + XORRandom(40)) * multiplier);
+        if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_mithril", (3 + XORRandom(10)) * multiplier);
+        if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_coal", (3 + XORRandom(10)) * multiplier);
+        if (XORRandom(2) == 0) MakeMat(hitterBlob, worldPoint, "mat_gold", (3 + XORRandom(30)) * multiplier);
     }
     return damage;
 }
