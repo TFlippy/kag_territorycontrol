@@ -3,13 +3,14 @@ void onInit(CBlob@ this)
 	this.getShape().SetRotationsAllowed(true);
 	this.addCommandID("consume");
 	this.Tag("hopperable");
+	this.maxQuantity = 4;
 	
 	this.Tag("forcefeed_always");
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	if (this.isOverlapping(caller) || this.isAttachedTo(caller))
+	if (caller !is null && (caller.getPosition() - this.getPosition()).Length() <= 64 && !this.isAttachedTo(caller))
 	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
@@ -32,7 +33,16 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			
 			if (isServer())
 			{
-				this.server_Die();
+				int8 remain = this.getQuantity() - 1;
+				if (remain > 0)
+				{
+					this.server_SetQuantity(remain);
+				}
+				else
+				{
+					this.Tag("dead");
+					this.server_Die();
+				}
 			}
 		}
 	}

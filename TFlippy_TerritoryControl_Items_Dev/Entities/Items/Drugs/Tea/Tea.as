@@ -3,13 +3,17 @@ void onInit(CBlob@ this)
 	this.addCommandID("consume");
 	this.Tag("hopperable");
 	this.Tag("forcefeed_always");
+	this.maxQuantity = 3;
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	CBitStream params;
-	params.write_u16(caller.getNetworkID());
-	caller.CreateGenericButton(22, Vec2f(0, 0), this, this.getCommandID("consume"), "Drink!", params);
+	if (caller !is null && (caller.getPosition() - this.getPosition()).Length() <= 64)
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		caller.CreateGenericButton(22, Vec2f(0, 0), this, this.getCommandID("consume"), "Drink!", params);
+	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -25,7 +29,16 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 			if (isServer())
 			{
-				this.server_Die();
+				int8 remain = this.getQuantity() - 1;
+				if (remain > 0)
+				{
+					this.server_SetQuantity(remain);
+				}
+				else
+				{
+					this.Tag("dead");
+					this.server_Die();
+				}
 			}
 		}
 	}

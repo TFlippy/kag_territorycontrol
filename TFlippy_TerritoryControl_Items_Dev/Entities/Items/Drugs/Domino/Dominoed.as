@@ -45,25 +45,25 @@ void onTick(CBlob@ this)
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
 		{
-			moveVars.walkFactor *= 1.50f * modifier;
-			moveVars.jumpFactor *= 1.50f * modifier;
+			moveVars.walkFactor *= 1.20f * modifier;
+			moveVars.jumpFactor *= 1.20f * modifier;
 		}	
 				
 		if (modifier >= 1)
 		{
-			if (this.getTickSinceCreated() % 30 == 0)
+			if (this.getTickSinceCreated() % 15 == 0)
 			{
 				f32 maxHealth = Maths::Ceil(this.getInitialHealth() * 2.00f);
 				if (this.getHealth() < maxHealth)
 				{				
 					if (isServer())
 					{
-						this.server_SetHealth(Maths::Min(this.getHealth() + 0.125f, maxHealth));
+						this.server_SetHealth(Maths::Min(this.getHealth() + 0.0625f, maxHealth));
 					}
 					
 					if (isClient())
 					{
-						for (int i = 0; i < 4; i++)
+						for (int i = 0; i < 2; i++)
 						{
 							ParticleAnimated("HealParticle.png", this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), Vec2f(0, f32(XORRandom(100) * -0.02f)) * 0.25f, 0, 0.5f, 10, 0, true);
 						}
@@ -98,7 +98,7 @@ void onTick(CBlob@ this)
 					SColor col = RedToBlack(colTime,5 / invModifier);
 								
 					SetScreenFlash(255 * invModifier, col.getRed(), col.getGreen(), col.getBlue(), 2 * invModifier);
-					ShakeScreen(250.0f * invModifier, 1, this.getPosition());
+					ShakeScreen(100.0f * invModifier, 1, this.getPosition());
 				}
 			}
 			
@@ -121,7 +121,7 @@ void onTick(CBlob@ this)
 	
 		// print("" + modifier);
 		// print("" + level / max_time);
-		this.set_f32("dominoed", Maths::Max(0, this.get_f32("dominoed") - (0.0005f)));
+		this.set_f32("dominoed", Maths::Max(0, this.get_f32("dominoed") - (0.0003f)));
 	}
 	
 	// print("" + true_level);

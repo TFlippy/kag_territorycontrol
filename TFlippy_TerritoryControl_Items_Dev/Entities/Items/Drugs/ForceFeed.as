@@ -8,8 +8,9 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
+	if ((caller.getPosition() - this.getPosition()).Length() > 32) return;
 	CBlob@ carried = caller.getCarriedBlob();
-	if (caller !is this && carried !is null && carried.hasTag("forcefeedable"))
+	if (caller !is this && carried !is null && carried.hasTag("forcefeedable") && !this.hasTag("dead"))
 	{
 		CBitStream params;
 		params.write_u16(carried.getNetworkID());

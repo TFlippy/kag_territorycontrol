@@ -4,7 +4,7 @@
 #include "HittersTC.as";
 #include "MakeDustParticle.as";
 
-const f32 health_increment = 0.125f;
+const f32 health_increment = 0.0625f;
 
 void onTick(CBlob@ this)
 {
@@ -21,12 +21,12 @@ void onTick(CBlob@ this)
 	{
 		if (this.getTickSinceCreated() % 6 == 0)
 		{
-			f32 maxHealth = this.getInitialHealth() + 1.5f;
+			f32 maxHealth = this.getInitialHealth() * 1.5f;
 			if (this.getHealth() < maxHealth)
 			{
 				if (isServer())
 				{
-					this.server_SetHealth(this.getHealth() + health_increment);
+					this.server_SetHealth(this.getHealth() + health_increment * level);
 					this.sub_f32("fiksed", health_increment);
 				}
 
@@ -34,7 +34,7 @@ void onTick(CBlob@ this)
 				{
 					if (this.isMyPlayer()) this.getSprite().PlaySound("heart.ogg", 0.50f, 1.00f);
 
-					for (int i = 0; i < 4; i++)
+					for (int i = 0; i < 2; i++)
 					{
 						ParticleAnimated("HealParticle.png", this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), Vec2f(0, f32(XORRandom(100) * -0.02f)) * 0.25f, 0, 0.5f, 10, 0, true);
 					}

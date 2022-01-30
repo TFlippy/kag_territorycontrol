@@ -51,11 +51,6 @@ void onTick(CBlob@ this)
 						// p.stretches = true;
 					}
 				}
-				
-				if (this.isMyPlayer())
-				{
-					ShakeScreen2(Maths::Min(value * 2.00f, 10), 30, this.getPosition());
-				}
 			}
 			
 			if (this.isMyPlayer())
@@ -83,8 +78,7 @@ void onTick(CBlob@ this)
 			
 			if (client) 
 			{
-				this.getSprite().PlaySound("/cough" + XORRandom(5) + ".ogg", 0.6f, this.getSexNum() == 0 ? 1.0f : 2.0f);
-				if (this.isMyPlayer()) ShakeScreen(60, 5, this.getPosition());
+				this.getSprite().PlaySound("/cough" + XORRandom(5) + ".ogg", 0.7f, this.getSexNum() == 0 ? 1.0f : 2.0f);
 				
 				f32 mod = XORRandom(100) * 0.01f * value;
 				Vec2f pos = this.getPosition();
@@ -148,7 +142,7 @@ void Infect(CBlob@ this, CBlob@ blob, f32 amount)
 {
 	if (this !is null && blob !is null)
 	{
-		if (blob.hasTag("flesh") && !blob.hasTag("gas immune"))
+		if (blob.hasTag("flesh") && !blob.hasTag("gas immune") && !blob.hasTag("vaccinated"))
 		{
 			if (!blob.hasScript("Fusk_Effect.as")) blob.AddScript("Fusk_Effect.as");
 			blob.add_f32("fusk_effect", amount);

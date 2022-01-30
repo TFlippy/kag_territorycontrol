@@ -33,14 +33,13 @@ void onTick(CBlob@ this)
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
 		{
-			moveVars.walkFactor *= 2.00f + Maths::Min((true_level * 0.25f), 2);
-			moveVars.jumpFactor *= 1.85f;
-		}	
-		
+			moveVars.walkFactor *= 1.5f + Maths::Min((true_level * 0.25f), 1.5f);
+			moveVars.jumpFactor *= 1.4f;
+		}
+
 		if (this.isMyPlayer())
 		{
-			ShakeScreen(Maths::Min(true_level * 3, 20), 5, this.getPosition());
-			SetScreenFlash(Maths::Min(XORRandom(255) * true_level * 0.10f, 25), XORRandom(255), XORRandom(255), XORRandom(255));
+			ShakeScreen(5, 5, this.getPosition());
 		}
 					
 		if (XORRandom(200 / true_level) == 0)
@@ -48,7 +47,7 @@ void onTick(CBlob@ this)
 			this.setKeyPressed(key_action1, true);
 		}
 					
-		this.set_f32("stimed", Maths::Max(0, this.get_f32("stimed") - (0.0005f)));
+		this.set_f32("stimed", Maths::Max(0, this.get_f32("stimed") - (0.001f)));
 	}
 	
 	// print("" + true_level);

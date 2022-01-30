@@ -44,7 +44,7 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ h
 
 	// print("megahit");
 	
-	f32 true_level = this.get_f32("foofed");		
+	f32 true_level = Maths::Min(this.get_f32("foofed"), 5);
 	f32 level = 1.00f + true_level;
 
 	// print("" + level);
@@ -78,14 +78,13 @@ void MegaHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ h
 		
 		if (client)
 		{
-			f32 magnitude = damage * level;
+			f32 magnitude = damage * (level*0.6);
 			this.getSprite().PlaySound("FallBig" + (XORRandom(5) + 1), level, 1.00f);
-			ShakeScreen(magnitude * 10.0f, Maths::Min(magnitude * 8.0f, 30), this.getPosition());
 		}
 		
 		if (hitBlob !is null)
 		{
-			if (server) this.server_Hit(hitBlob, worldPoint, velocity, true_level * 0.50f, HittersTC::foof, true);
+			if (server) this.server_Hit(hitBlob, worldPoint, velocity, true_level * 0.25f, HittersTC::foof, true);
 			if (client) this.getSprite().PlaySound("nightstick_hit" + (1 + XORRandom(3)) + ".ogg", 0.9f, 0.8f);
 			
 			f32 mass = hitBlob.getMass();

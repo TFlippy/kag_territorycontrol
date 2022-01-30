@@ -75,8 +75,8 @@ void onTick(CBlob@ this)
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
 		{
-			moveVars.walkFactor *= 2.00f - (withdrawal * 1.50f);
-			moveVars.jumpFactor *= 2.50f - (withdrawal * 2.00f);
+			moveVars.walkFactor *= 1.50f - (withdrawal * 1.00f);
+			moveVars.jumpFactor *= 1.50f - (withdrawal * 1.00f);
 			
 			if (true_level > 3.00f)
 			{
@@ -104,7 +104,6 @@ void onTick(CBlob@ this)
 					{
 						this.getSprite().PlaySound("Thunder2", 1.50f, 1.00f + (XORRandom(100) * 0.01f));
 					
-						ShakeScreen(200, 20, this.getPosition());
 						SetScreenFlash(255, 255, 255, 255, 0.25f);
 					}
 				}
@@ -128,8 +127,6 @@ void onTick(CBlob@ this)
 			{
 				if (this.isMyPlayer())
 				{
-					ShakeScreen(50.0f * (withdrawal + 0.10f), 1, this.getPosition());
-					
 					if (XORRandom(500 * true_level) == 0)
 					{
 						if (true_level < 0.50f)

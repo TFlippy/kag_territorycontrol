@@ -136,7 +136,6 @@ void onTick(CBlob@ this)
 		if (this.isMyPlayer())
 		{
 			SetScreenFlash(Maths::Clamp((25 + XORRandom(100)) * value, 0, 255), 25 + (XORRandom(4) * 25), 0, 0);
-			ShakeScreen2(200.0f * (value + 0.50f), 30.0f, this.getPosition());
 			
 			// if (value > 0.40f && XORRandom(1 + (4 / (1 + value))) == 0)
 			// {

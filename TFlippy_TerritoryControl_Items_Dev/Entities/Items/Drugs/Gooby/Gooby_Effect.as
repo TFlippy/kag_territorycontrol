@@ -5,7 +5,7 @@
 #include "MakeDustParticle.as";
 
 const f32 increment = 1.00f / (30.00f * 30.00f);
-const f32 health_increment = 0.25f;
+const f32 health_increment = 0.0625f;
 
 void onInit(CBlob@ this)
 {
@@ -27,19 +27,19 @@ void onTick(CBlob@ this)
 	{
 		if (this.getTickSinceCreated() % 4 == 0)
 		{
-			f32 maxHealth = Maths::Ceil(Maths::Min(this.getInitialHealth() * 10.00f, this.getInitialHealth() + 20));
+			f32 maxHealth = this.getInitialHealth() * 5.00f;
 			if (this.getHealth() < maxHealth)
 			{				
 				if (isServer())
 				{
-					this.server_SetHealth(Maths::Min(this.getHealth() + health_increment, maxHealth));
+					this.server_SetHealth(Maths::Min(this.getHealth() + health_increment*this.getInitialHealth(), maxHealth));
 				}
 				
 				if (isClient())
 				{
 					if (this.isMyPlayer()) this.getSprite().PlaySound("heart.ogg", 0.50f, 1.00f);
 				
-					for (int i = 0; i < 4; i++)
+					for (int i = 0; i < 2; i++)
 					{
 						ParticleAnimated("HealParticle.png", this.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), Vec2f(0, f32(XORRandom(100) * -0.02f)) * 0.25f, 0, 0.5f, 10, 0, true);
 					}
@@ -61,8 +61,8 @@ void onTick(CBlob@ this)
 				
 				if (this.isMyPlayer())
 				{
-					SetScreenFlash(255, 100, 0, 0, 0.50f);
-					ShakeScreen2(200.0f, 30.0f, this.getPosition());
+					SetScreenFlash(50, 100, 0, 0, 0.50f);
+					ShakeScreen2(100.0f, 30.0f, this.getPosition());
 				
 					getMap().CreateSkyGradient("skygradient_poot.png");
 				}
@@ -76,7 +76,8 @@ void onTick(CBlob@ this)
 
 			if (isServer())
 			{
-				this.server_Hit(this, this.getPosition(), Vec2f(0, 0), 0.125f, Hitters::stab, true);
+				this.server_Hit(this, this.getPosition(), Vec2f(0, 0), 0.5f*this.getInitialHealth(), Hitters::stab, true);
+				SetKnocked(this, 30);
 			}
 		}
 		
@@ -111,8 +112,8 @@ void onTick(CBlob@ this)
 		
 			if (this.isMyPlayer())
 			{
-				ShakeScreen2(200.0f, 30.0f, this.getPosition());
-				SetScreenFlash(50, 100, 0, 0, 0.10f);
+				ShakeScreen2(50.0f, 30.0f, this.getPosition());
+				SetScreenFlash(25, 100, 0, 0, 0.10f);
 			}
 		}
 	}

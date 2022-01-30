@@ -64,6 +64,10 @@ void onTick(CBlob@ this)
 				if (isClient()) this.getSprite().PlaySound("methane_explode");
 				if (isServer()) this.server_Hit(this, this.getPosition(), Vec2f(0, 0), 50.0, HittersTC::poison, true);
 			}
+			else if (scriptname == "Fusk_Effect.as")
+			{
+				this.Tag("vaccinated");
+			}
 
 			this.RemoveScript(scriptname);
 		}
