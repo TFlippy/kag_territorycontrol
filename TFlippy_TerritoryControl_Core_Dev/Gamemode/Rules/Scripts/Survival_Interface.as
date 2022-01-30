@@ -728,12 +728,18 @@ string getRank(string &in username, SColor &out col, CPlayer@ p)
 		}
 		break;
 
+		case 926613433: // blackguy123
+		{
+			col = SColor(255, 56, 149, 244);
+			return "The Last TC Dev";
+		}
+		break;
+
 		case -1913766845: // cesar0
 		case -445244992: // sylw
 		case 306188315: // sjd360
 		case 494034411: // turtlecake
 		case -608852120: // hobey
-		case 926613433: // blackguy123
 		case -1384627824: // oolmbalol
 		case -1483665587: // zable
 		case -803033509: // garodil

@@ -40,6 +40,6 @@ bool canGrowAt(CBlob@ this, Vec2f pos)
 		return false;
 	}
 
-	TileType tile = map.getTile(Vec2f(pos.x, pos.y + 8)).type;
+	TileType tile = map.getTile(Vec2f(pos.x, pos.y + 5)).type;
 	return map.isTileGroundStuff(tile) || map.isTileWood(tile) || tile == CMap::tile_castle_moss;
 }

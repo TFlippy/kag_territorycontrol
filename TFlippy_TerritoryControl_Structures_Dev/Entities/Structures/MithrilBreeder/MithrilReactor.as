@@ -21,6 +21,7 @@ void onInit(CBlob@ this)
 	
 	this.set_f32("irradiation", 0.00f);
 	this.set_f32("upgrade", 0.00f);
+	this.set_s16("upgrade_cost", 1);
 
 	this.addCommandID("upgrade");
 }
@@ -51,10 +52,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params) //Mutate command
 			CBlob@ carried = caller.getCarriedBlob();
 			if (carried !is null && carried.getName() == "mat_mithrilingot")
 			{
-				if (carried.getQuantity() >= 1)
+				u8 cost = Maths::Max(this.get_s16("upgrade_cost"), 1);
+				if (carried.getQuantity() >= cost)
 				{
-					
-					int remain = carried.getQuantity() - 1;
+					int remain = carried.getQuantity() - cost;
 					if (remain > 0)
 					{
 						carried.server_SetQuantity(remain);
@@ -65,6 +66,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params) //Mutate command
 						carried.server_Die();
 					}
 					this.add_f32("upgrade", 1000.00f);
+					this.add_s16("upgrade_cost", 1);
+				}
+				else if (caller.isMyPlayer()) client_AddToChat("Not enough copper ingots! Upgrade costs "+cost+" mithril ingots.", SColor(0xff444444));
+			}
+			else if (carried !is null && carried.getName() == "mat_steelingot")
+			{
+				if (carried.getQuantity() >= 1)
+				{
+					int remain = carried.getQuantity() - 1;
+					if (remain > 0)
+					{
+						carried.server_SetQuantity(remain);
+					}
+					else
+					{
+						carried.Tag("dead");
+						carried.server_Die();
+					}
+					this.add_f32("upgrade", 500.00f);
+					this.add_s16("upgrade_cost", -4);
 				}
 			}
 		}
@@ -85,7 +106,7 @@ void onTick(CBlob@ this)
 		const f32 upgrade = this.get_f32("upgrade");
 		
 		const f32 irradiation = Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 400.00f;
-		const f32 max_irradiation = water ? 30000.00f + upgrade : 9000.00f + (upgrade / 4);
+		const f32 max_irradiation = water ? 30000.00f + upgrade : 9000.00f + (upgrade / 4.0);
 		
 		this.set_f32("irradiation", irradiation);
 		
