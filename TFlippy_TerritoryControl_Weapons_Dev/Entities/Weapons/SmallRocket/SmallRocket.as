@@ -5,7 +5,7 @@ const u32 fuel_timer_max = 30 * 0.50f;
 
 void onInit(CBlob@ this)
 {
-	this.set_f32("map_damage_ratio", 0.5f);
+	this.set_f32("map_damage_ratio", 0.2f);
 	this.set_f32("map_damage_radius", 32.0f);
 	this.set_string("custom_explosion_sound", "Keg.ogg");
 
@@ -42,11 +42,6 @@ void onTick(CBlob@ this)
 
 		this.setVelocity(dir * -this.get_f32("velocity") + Vec2f(0, this.getTickSinceCreated() > 5 ? XORRandom(50) / 100.0f : 0));
 
-		if(isClient())
-		{
-			MakeParticle(this, -dir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallExplosion" + (1 + XORRandom(3)));
-		}
-
 		this.setAngleDegrees(-this.getVelocity().Angle() + 90);
 	}
 	else
@@ -54,14 +49,6 @@ void onTick(CBlob@ this)
 		this.setAngleDegrees(-this.getVelocity().Angle() + 90);
 		this.getSprite().SetEmitSoundPaused(true);
 	}
-}
-
-void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
-{
-	if (!isClient()) return;
-
-	Vec2f offset = Vec2f(0, 4).RotateBy(this.getAngleDegrees());
-	ParticleAnimated(filename, this.getPosition() + offset, vel, float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
 }
 
 void DoExplosion(CBlob@ this, Vec2f velocity)
@@ -78,7 +65,7 @@ void DoExplosion(CBlob@ this, Vec2f velocity)
 
 	this.set_Vec2f("explosion_offset", Vec2f(0, -16).RotateBy(this.getAngleDegrees()));
 
-	Explode(this, 32.0f, 10.0f);
+	Explode(this, 32.0f, 7.0f);
 	for (int i = 0; i < 4; i++)
 	{
 		Vec2f dir = Vec2f(1 - i / 2.0f, -1 + i / 2.0f);

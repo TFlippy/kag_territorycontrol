@@ -53,7 +53,7 @@ void onTick(CBlob@ this)
 	CBlob@[] blobs;
 	map.getBlobsInRadius(pos, 4, @blobs);
 	
-	for (int i = 0; i < blobs.length; i++) if (!blobs[i].hasTag("shrapnel")) this.server_Hit(blobs[i], pos, Vec2f_zero, 0.75f, Hitters::stab, true);
+	for (int i = 0; i < blobs.length; i++) if (blobs[i].hasTag("flesh")) this.server_Hit(blobs[i], pos, Vec2f_zero, 2.75f, Hitters::stab, true);
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)

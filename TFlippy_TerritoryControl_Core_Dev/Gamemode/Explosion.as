@@ -36,7 +36,7 @@ void makeSmallExplosionParticle(Vec2f pos)
 {
 	if(!isClient()){return;}
 	ParticleAnimated("Entities/Effects/Sprites/SmallExplosion" + (XORRandom(3) + 1) + ".png",
-	                 pos, Vec2f(0, 0.5f), 0.0f, 1.0f,
+	                 pos, Vec2f(0, -1), 0.0f, 1.0f,
 	                 3 + XORRandom(3),
 	                 -0.1f, true);
 }
@@ -45,7 +45,7 @@ void makeLargeExplosionParticle(Vec2f pos)
 {
 	if(!isClient()){return;}
 	ParticleAnimated("Entities/Effects/Sprites/Explosion.png",
-	                 pos, Vec2f(0, 0.5f), 0.0f, 1.0f,
+	                 pos, Vec2f(0, -1), 0.0f, 1.0f,
 	                 3 + XORRandom(3),
 	                 -0.1f, true);
 }
@@ -154,11 +154,6 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 
 	// print("rad: " + radius + "; " + damage);
 	// ShakeScreen(damage * radius, 40.00f * Maths::FastSqrt(damage / 5.00f), pos);
-	if(isClient())
-	{
-		ShakeScreen(Maths::Sqrt(damage * radius), Maths::Sqrt(damage * radius) + radius, pos);
-		if (particles) makeLargeExplosionParticle(pos);
-	}
 
 	if (bomberman)
 	{
@@ -589,7 +584,6 @@ void WorldExplode(Vec2f position, f32 radius, f32 damage, const string explosion
 	const int r = (radius * (2.0 / 3.0));
 
 	// print("rad: " + radius + "; " + damage);
-	ShakeScreen(damage * radius, 40.00f * Maths::FastSqrt(damage / 5.00f), pos);
 	makeLargeExplosionParticle(pos);
 
 	Sound::Play(explosionSound, pos);

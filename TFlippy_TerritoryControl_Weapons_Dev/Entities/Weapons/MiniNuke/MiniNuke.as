@@ -17,6 +17,7 @@ void onInit(CBlob@ this)
 	this.set_u32("fuel_timer", getGameTime() + fuel_timer_max + XORRandom(15));
 	
 	this.Tag("projectile");
+	this.Tag("explosive");
 	
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Shell_Whistle.ogg");
