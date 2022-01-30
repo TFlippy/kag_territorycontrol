@@ -5,7 +5,7 @@ void onInit(CBlob@ this)
 		this.set_u8('decay step', 6);
 	}
 
-	this.maxQuantity = 50;
+	this.maxQuantity = 500;
 	this.set_u8("fuel_energy", 20);
 
 	this.getCurrentScript().tickFrequency = 1;

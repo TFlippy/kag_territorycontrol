@@ -29,7 +29,7 @@ void DoExplosion(CBlob@ this)
 				
 			if (isServer())
 			{
-				for (int i = 0; i < (quantity / 5) + XORRandom(quantity / 5) ; i++)
+				for (int i = 0; i < (quantity / 10) + XORRandom(quantity / 10) ; i++)
 				{
 					CBlob@ blob = server_CreateBlob("methane", -1, this.getPosition());
 					blob.setVelocity(Vec2f(2 - XORRandom(4), 2 - XORRandom(4)));

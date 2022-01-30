@@ -5,7 +5,7 @@
 
 void onInit(CBlob@ this)
 {	
-	this.maxQuantity = 250;
+	this.maxQuantity = 500;
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1, Vec2f point2)

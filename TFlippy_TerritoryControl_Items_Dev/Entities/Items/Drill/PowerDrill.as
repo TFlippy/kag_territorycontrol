@@ -13,7 +13,7 @@ const f32 speed_hard_thresh = 2.2f;
 const string buzz_prop = "drill timer";
 
 const string heat_prop = "drill heat";
-const u8 heat_max = 250;
+const u8 heat_max = 1000;
 
 const string last_drill_prop = "drill last active";
 
@@ -22,8 +22,8 @@ const u8 heat_add_constructed = 1;
 const u8 heat_add_blob = 1;
 const u8 heat_cool_amount = 5;
 
-const u8 heat_cooldown_time = 10;
-const u8 heat_cooldown_time_water = u8(heat_cooldown_time / 3);
+const u8 heat_cooldown_time = 6;
+const u8 heat_cooldown_time_water = u8(heat_cooldown_time / 2);
 
 const f32 max_heatbar_view_range = 65;
 
@@ -238,9 +238,8 @@ void onTick(CBlob@ this)
 			heat++;
 		}
 
-		u8 delay_amount = 8;
-		if (this.get_bool("just hit dirt")) delay_amount = 10;
-		if (inwater) delay_amount = 20;
+		u8 delay_amount = 4;
+		if (inwater) delay_amount = 15;
 
 		bool skip = (gametime < this.get_u32(last_drill_prop) + delay_amount);
 
@@ -264,7 +263,7 @@ void onTick(CBlob@ this)
 			const f32 attack_distance = 6.0f;
 			Vec2f attackVel = direction * attack_distance;
 
-			const f32 distance = 20.0f;
+			const f32 distance = 25.0f;
 
 			bool hitsomething = false;
 			bool hitblob = false;

@@ -1,6 +1,3 @@
-#define SERVER_ONLY
-
-#include "MakeMat.as";
 #include "Hitters.as";
 #include "MinableMatsCommon.as";
 /*
@@ -27,47 +24,50 @@ void onInit(CBlob@ this)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {	
-	if (customData == Hitters::drill || customData == Hitters::builder || hitterBlob.getName() == "dynamite")
+	if (isServer())
 	{
-		if (damage > 0.0f && !this.hasTag("MaterialLess")) //Tag which makes blobs stop giving materials on hit
+		if (customData == Hitters::drill || customData == Hitters::builder || hitterBlob.getName() == "dynamite")
 		{
-			HarvestBlobMat[]@ mats;
-			this.get("minableMats", @mats);
-			//print(" "+ mats[0].matname);
-			//print(damage + "");
-
-			//Amount of mats is dependant on how many intervalls are crossed with that damage
-			if (customData == Hitters::explosion) //Explosions convert ingots into ore
+			if (damage > 0.0f && !this.hasTag("MaterialLess")) //Tag which makes blobs stop giving materials on hit
 			{
-				for (uint i = 0; i < mats.length; i++)
-				{
-					double intervalls = this.getInitialHealth() / (mats[i].amount);
-					double newHealth = calcHealth(this, damage);
-					
-					int amount = Maths::Ceil(this.getHealth() / intervalls) - Maths::Ceil(newHealth / intervalls);
+				HarvestBlobMat[]@ mats;
+				this.get("minableMats", @mats);
+				//print(" "+ mats[0].matname);
+				//print(damage + "");
 
-					string mat = mats[i].matname;
-					if (mat.substr(mat.length - 5,mat.length - 1) == "ingot") //Convert ingots into ores (if possible and nessecary)
+				//Amount of mats is dependant on how many intervalls are crossed with that damage
+				if (customData == Hitters::explosion) //Explosions convert ingots into ore
+				{
+					for (uint i = 0; i < mats.length; i++)
 					{
-						MakeMat(hitterBlob, hitterBlob.getPosition(), mat.substr(0, mat.length - 5), 5 * amount); //drop 5 ores instead of 1 ingot
+						double intervalls = this.getInitialHealth() / (mats[i].amount);
+						double newHealth = calcHealth(this, damage);
+						
+						int amount = Maths::Ceil(this.getHealth() / intervalls) - Maths::Ceil(newHealth / intervalls);
+
+						string mat = mats[i].matname;
+						if (mat.substr(mat.length - 5,mat.length - 1) == "ingot") //Convert ingots into ores (if possible and nessecary)
+						{
+							server_CreateBlob(mat.substr(0, mat.length - 5), -1, hitterBlob.getPosition()).server_SetQuantity(5 * amount);	//drop 5 ores instead of 1 ingot
+						}
+						else
+						{
+							server_CreateBlob(mat, -1, hitterBlob.getPosition()).server_SetQuantity(amount);
+						}
+						
 					}
-					else
-					{
-						MakeMat(hitterBlob, hitterBlob.getPosition(), mat, amount);
-					}
-					
 				}
-			}
-			else
-			{
-				for (uint i = 0; i < mats.length; i++)
+				else
 				{
-					double intervalls = this.getInitialHealth() / (mats[i].amount);
-					double newHealth = calcHealth(this, damage);
+					for (uint i = 0; i < mats.length; i++)
+					{
+						double intervalls = this.getInitialHealth() / (mats[i].amount);
+						double newHealth = calcHealth(this, damage);
 
-					int amount = Maths::Ceil(this.getHealth() / intervalls) - Maths::Ceil(newHealth / intervalls);
+						int amount = Maths::Ceil(this.getHealth() / intervalls) - Maths::Ceil(newHealth / intervalls);
 
-					MakeMat(hitterBlob, hitterBlob.getPosition(), mats[i].matname, amount);
+						server_CreateBlob(mats[i].matname, -1, hitterBlob.getPosition()).server_SetQuantity(amount);
+					}
 				}
 			}
 		}

@@ -13,7 +13,7 @@ const f32 speed_hard_thresh = 2.6f;
 const string buzz_prop = "drill timer";
 
 const string heat_prop = "drill heat";
-const u8 heat_max = 200;
+const u8 heat_max = 150;
 
 const string last_drill_prop = "drill last active";
 
@@ -239,7 +239,6 @@ void onTick(CBlob@ this)
 		}
 
 		u8 delay_amount = 8;
-		if (this.get_bool("just hit dirt")) delay_amount = 10;
 		if (inwater) delay_amount = 20;
 
 		bool skip = (gametime < this.get_u32(last_drill_prop) + delay_amount);
@@ -496,10 +495,10 @@ void onRender(CSprite@ this)
 	Vec2f localPos = localBlob.getPosition();
 
 
-	if (holderBlob.getName() != "engineer")
+	if (holderBlob.getName() != "engineer" && holderBlob.getName() != "builder")
 	{
 		Vec2f pos = holderBlob.getInterpolatedScreenPos() + (blob.getScreenPos() - holderBlob.getScreenPos()) + Vec2f(0, -40);
-		GUI::DrawTextCentered("Only an engineer can use this drill!", pos, SColor(255, 183, 51, 51));
+		GUI::DrawTextCentered("Only engineer/builder can use this drill!", pos, SColor(255, 183, 51, 51));
 		return;
 	}
 

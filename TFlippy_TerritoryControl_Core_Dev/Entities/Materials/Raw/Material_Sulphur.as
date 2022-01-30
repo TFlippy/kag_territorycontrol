@@ -13,7 +13,7 @@ string[] particles =
 
 void onInit(CBlob@ this)
 {
-	this.maxQuantity = 500;
+	this.maxQuantity = 1500;
 	
 	this.set_bool("map_damage_raycast", true);
 	this.set_Vec2f("explosion_offset", Vec2f(0, 0));

@@ -8,9 +8,9 @@ void onInit(CBlob@ this)
 	this.SetLightRadius(0.0f);
 	this.SetLightColor(SColor(255, 25, 200, 255));
 	
-	this.maxQuantity = 50;
+	this.maxQuantity = 100;
 	
-	this.getCurrentScript().tickFrequency = 1;
+	this.getCurrentScript().tickFrequency = 15;
 	// this.getCurrentScript().runFlags |= Script::tick_not_inwater; // | Script::tick_not_ininventory;
 	this.getCurrentScript().runFlags |= Script::tick_not_inwater | Script::tick_not_ininventory;
 	

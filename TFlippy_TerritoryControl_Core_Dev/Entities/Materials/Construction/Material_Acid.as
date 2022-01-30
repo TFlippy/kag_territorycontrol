@@ -4,7 +4,7 @@
 void onInit(CBlob@ this)
 {
 	this.Tag("explosive");
-	this.maxQuantity = 50;
+	this.maxQuantity = 100;
 	this.Tag("mat_gas");
 }
 
@@ -24,7 +24,7 @@ void DoExplosion(CBlob@ this)
 		{
 			if (isServer())
 			{
-				for (int i = 0; i < (quantity / 8) + XORRandom(quantity / 8) ; i++)
+				for (int i = 0; i < (quantity / 15) + XORRandom(quantity / 15) ; i++)
 				{
 					CBlob@ blob = server_CreateBlobNoInit("acidgas");
 					blob.server_setTeamNum(-1);

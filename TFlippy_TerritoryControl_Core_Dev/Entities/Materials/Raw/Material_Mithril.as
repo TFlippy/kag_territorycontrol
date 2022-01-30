@@ -10,7 +10,7 @@ void onInit(CBlob@ this)
 
 	this.maxQuantity = 250;
 
-	this.getCurrentScript().tickFrequency = 1;
+	this.getCurrentScript().tickFrequency = 15;
 	this.getCurrentScript().runFlags |= Script::tick_not_inwater | Script::tick_not_ininventory;
 
 	this.Tag("dangerous");

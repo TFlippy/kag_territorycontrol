@@ -242,11 +242,17 @@ void fromTile(CBlob@ this, uint16 &in type, float &in damage)
 
 	if (map.isTileThickStone(type))
 	{
-		createFor(this, 'mat_stone', 6 * damage);
+		createFor(this, 'mat_stone', 14 * damage);
+		if (XORRandom(100) < 60) createFor(this, 'mat_iron', 10 * damage);
+		if (XORRandom(100) < 60) createFor(this, 'mat_copper', 3 * damage);
+		if (XORRandom(100) < 10) createFor(this, 'mat_coal', 10 * damage);
 	}
 	else if (map.isTileStone(type))
 	{
-		createFor(this, 'mat_stone', 4 * damage);
+		createFor(this, 'mat_stone', 6 * damage);
+		if (XORRandom(100) < 60) createFor(this, 'mat_iron', 3 * damage);
+		if (XORRandom(100) < 60) createFor(this, 'mat_copper', damage);
+		if (XORRandom(100) < 30) createFor(this, 'mat_coal', 2 * damage);
 	}
 	else if (map.isTileCastle(type))
 	{
@@ -258,7 +264,13 @@ void fromTile(CBlob@ this, uint16 &in type, float &in damage)
 	}
 	else if (map.isTileGold(type))
 	{
-		createFor(this, 'mat_gold', 4 * damage);
+		createFor(this, 'mat_gold', 5 * damage);
+	}
+	else if (map.isTileGround(type))
+	{
+		createFor(this, 'mat_dirt', 4 * damage);
+		if (XORRandom(100) < 60) createFor(this, 'mat_sulphur', 2 * damage);
+		if (XORRandom(100) < 60) createFor(this, 'mat_copper', damage);
 	}
   }
 }

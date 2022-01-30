@@ -44,15 +44,17 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 					if (depth < 0.90f && XORRandom(100) < 70) MakeMat(this, worldPoint, "mat_copper", (1 + XORRandom(3 * (1 - depth))) * multiplier);
 					if (depth < 0.60f && XORRandom(100) < 60) MakeMat(this, worldPoint, "mat_iron", (5 + XORRandom(8)) * multiplier);
 					if (depth < 0.10f && XORRandom(100) < 10) MakeMat(this, worldPoint, "mat_mithril", (2 + XORRandom(6)) * multiplier);
+					if (depth < 0.60f && XORRandom(100) < 10) MakeMat(this, worldPoint, "mat_coal", (15 + XORRandom(10)) * multiplier);
 				} 
 				else 
 				{
 					MakeMat(this, worldPoint, "mat_stone", (4 + XORRandom(4)) * multiplier);
 					if (depth > 0.40f && depth < 0.80f && XORRandom(100) < 50) MakeMat(this, worldPoint, "mat_copper", (1 + XORRandom(2 * (1 - depth))) * multiplier);
 					if (depth < 0.60f && XORRandom(100) < 30) MakeMat(this, worldPoint, "mat_iron", (3 + XORRandom(6)) * multiplier);
+					if (depth < 0.60f && XORRandom(100) < 30) MakeMat(this, worldPoint, "mat_coal", (1 + XORRandom(3)) * multiplier);
 				}
 
-				if (XORRandom(200) == 0) 
+				if (XORRandom(100) == 1) 
 				{
 					CBlob@[] blobs;
 					getBlobsByName("methanedeposit", @blobs);
@@ -86,7 +88,7 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 			}
 			else if (tile == CMap::tile_concrete_d7)
 			{
-				MakeMat(this, worldPoint, "mat_concrete", 3);
+				MakeMat(this, worldPoint, "mat_concrete", 4);
 			}
 			else if (tile >= CMap::tile_iron && tile <= CMap::tile_iron_d4)
 			{
