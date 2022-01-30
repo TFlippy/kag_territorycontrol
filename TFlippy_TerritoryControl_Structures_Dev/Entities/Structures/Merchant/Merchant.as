@@ -42,7 +42,7 @@ void onInit(CBlob@ this)
 	// AddIconToken("$icon_cake$", "Cake.png", Vec2f(16, 8), 0);
 	// AddIconToken("$icon_car$", "Icon_Car.png", Vec2f(16, 8), 0);
 
-	this.getCurrentScript().tickFrequency = 30 * 3;
+	this.getCurrentScript().tickFrequency = 30 * 10;
 
 	addTokens(this); //colored shop icons
 
@@ -118,43 +118,48 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		u32 cost = getRandomCost(@rand, 150, 250);
-		ShopItem@ s = addShopItem(this, "Sell Pumpkin (1)", "$COIN$", "coin-" + cost, "Sell 1 pumpkin for " + cost + " coins.");
-		AddRequirement(s.requirements, "blob", "pumpkin", "Pumpkin", 1);
-		s.spawnNothing = true;
+		u32 cost = getRandomCost(@rand, 200, 300);
+		{
+			ShopItem@ s = addShopItem(this, "Sell Pumpkin (1)", "$pumpkin$", "coin-" + cost, "Sell 1 pumpkin for " + cost + " coins.");
+			AddRequirement(s.requirements, "blob", "pumpkin", "Pumpkin", 1);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Sell Pumpkin (10)", "$pumpkin$", "coin-" + cost*10, "Sell 10 pumpkin for " + cost*10 + " coins.");
+			AddRequirement(s.requirements, "blob", "pumpkin", "Pumpkin", 10);
+			s.spawnNothing = true;
+		}
 	}
 	{
-		u32 cost = getRandomCost(@rand, 300, 400);
-		ShopItem@ s = addShopItem(this, "Sell Oil Drum (50 l)", "$COIN$", "coin-" + cost, "Sell 50 litres of oil for " + cost + " coins.");
-		AddRequirement(s.requirements, "blob", "mat_oil", "Oil Drum (50 l)", 50);
-		s.spawnNothing = true;
+		u32 cost = getRandomCost(@rand, 50, 75);
+		{
+			ShopItem@ s = addShopItem(this, "Sell Grain (1)", "$grain$", "coin-" + cost, "Sell 1 grain for " + cost + " coins.");
+			AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Sell Grain (20)", "$grain$", "coin-" + cost*20, "Sell 20 grain for " + cost*20 + " coins.");
+			AddRequirement(s.requirements, "blob", "grain", "Grain", 20);
+			s.spawnNothing = true;
+		}
 	}
 	{
 		u32 cost = getRandomCost(@rand, 140, 180);
 		{
-			ShopItem@ s = addShopItem(this, "Sell Scrub's Chow (1)", "$COIN$", "coin-" + cost, "Sell 1 Scrub's Chow for " + cost + " coins.");
+			ShopItem@ s = addShopItem(this, "Sell Scrub's Chow (1)", "$foodcan$", "coin-" + cost, "Sell 1 Scrub's Chow for " + cost + " coins.");
 			AddRequirement(s.requirements, "blob", "foodcan", "Scrub's Chow", 1);
 			s.spawnNothing = true;
 		}
 		{
-			ShopItem@ s = addShopItem(this, "Sell Scrub's Chow (4)", "$COIN$", "coin-" + cost*4, "Sell 4 Scrub's Chow for " + cost*4 + " coins.");
+			ShopItem@ s = addShopItem(this, "Sell Scrub's Chow (4)", "$foodcan$", "coin-" + cost*4, "Sell 4 Scrub's Chow for " + cost*4 + " coins.");
 			AddRequirement(s.requirements, "blob", "foodcan", "Scrub's Chow", 4);
 			s.spawnNothing = true;
 		}
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Sell Grain (1)", "$COIN$", "coin-50", "Sell 1 grain for 50 coins.");
-		AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Sell Grain (5)", "$COIN$", "coin-250", "Sell 5 grain for 250 coins.");
-		AddRequirement(s.requirements, "blob", "grain", "Grain", 5);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Gramophone Record", "$musicdisc$", "musicdisc", "A random gramophone record.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 30);
+		u32 cost = getRandomCost(@rand, 300, 400);
+		ShopItem@ s = addShopItem(this, "Sell Oil Drum (50 l)", "$mat_oil$", "coin-" + cost, "Sell 50 litres of oil for " + cost + " coins.");
+		AddRequirement(s.requirements, "blob", "mat_oil", "Oil Drum (50 l)", 50);
 		s.spawnNothing = true;
 	}
 	{
@@ -164,7 +169,7 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Kitten", "$icon_kitten$", "kitten", "A cute little kitten! Take care of it!", false, true);
-		AddRequirement(s.requirements, "coin", "", "Coins", getRandomCost(@rand, 250, 350));
+		AddRequirement(s.requirements, "coin", "", "Coins", getRandomCost(@rand, 200, 300));
 		s.spawnNothing = true;
 	}
 	{
@@ -186,6 +191,11 @@ void onInit(CBlob@ this)
 		s.customButton = true;
 		s.buttonwidth = 1;
 		s.buttonheight = 1;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Gramophone Record", "$musicdisc$", "musicdisc", "A random gramophone record.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 30);
+		s.spawnNothing = true;
 	}
 	// {
 		// ShopItem@ s = addShopItem(this, "Sell Mystery Meat (50)", "$COIN$", "coin-50", "Sell 50 Mystery Meat for 50 coins.");
@@ -257,7 +267,7 @@ void onTick(CBlob@ this)
 			CPlayer@ ply = getPlayer(i);
 			if (ply.getTeamNum() == myTeam)
 			{
-				if (ply !is null) ply.server_setCoins(ply.getCoins() + 1);
+				if (ply !is null) ply.server_setCoins(ply.getCoins() + 5);
 			}
 		}
 

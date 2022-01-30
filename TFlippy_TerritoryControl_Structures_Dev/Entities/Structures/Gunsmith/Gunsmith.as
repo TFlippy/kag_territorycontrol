@@ -37,7 +37,7 @@ void onInit(CBlob@ this)
 	this.Tag("builder always hit");
 	this.Tag("change team on fort capture");
 
-	this.getCurrentScript().tickFrequency = 300;
+	this.getCurrentScript().tickFrequency = 300*4;
 	this.inventoryButtonPos = Vec2f(-8, 0);
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
@@ -163,11 +163,12 @@ void onTick(CBlob@ this)
 {
 	if(isServer())
 	{
-		u8 index = XORRandom(resources.length);
-
-		if (!this.getInventory().isFull())
+		for (u8 index = 0;i<4;i++)
 		{
-			MakeMat(this, this.getPosition(), resources[index], XORRandom(resourceYields[index]));
+			if (!this.getInventory().isFull())
+			{
+				MakeMat(this, this.getPosition(), resources[index], XORRandom(resourceYields[index])*2);
+			}
 		}
 	}
 }

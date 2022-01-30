@@ -25,8 +25,8 @@ const u8[] resourceYields =
 	8,
 	45,
 	20,
-	7,
-	15
+	13,
+	17
 };
 
 void onInit(CBlob@ this)
@@ -45,7 +45,7 @@ void onInit(CBlob@ this)
 	//this.set_Vec2f("nobuild extend", Vec2f(0.0f, 8.0f));
 	this.set_Vec2f("travel button pos", Vec2f(3.5f, 4));
 	this.inventoryButtonPos = Vec2f(-16, 8);
-	this.getCurrentScript().tickFrequency = 30*5; //With 12 players its the same rate as before 1x, with 1 player its 0.35x
+	this.getCurrentScript().tickFrequency = 30*60;
 
 	getMap().server_SetTile(this.getPosition(), CMap::tile_castle_back);
 
@@ -55,39 +55,44 @@ void onInit(CBlob@ this)
 
 	// SHOP
 	this.set_Vec2f("shop offset", Vec2f(0, 8));
-	this.set_Vec2f("shop menu size", Vec2f(3, 2));
+	this.set_Vec2f("shop menu size", Vec2f(6, 2));
 	this.set_string("shop description", "Coalville Mining Company");
 	this.set_u8("shop icon", 25);
 
+	for (u8 i=0;i<2;i++)
 	{
-		ShopItem@ s = addShopItem(this, "Buy Dirt (100)", "$mat_dirt$", "mat_dirt-100", "Buy 100 Dirt for 50 coins.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 50);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Buy Stone (250)", "$mat_stone$", "mat_stone-250", "Buy 250 Stone for 125 coins.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 125);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Buy Coal (25)", "$mat_coal$", "mat_coal-25", "Buy 25 Coal for 250 coins.");
-		AddRequirement(s.requirements,"coin","","Coins", 250); //made it cost a lot, so it's better to just conquer the building
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Buy Copper Ore (25)", "$mat_copper$", "mat_copper-25", "Buy 25 copper for 25 coins.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 25);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Buy Iron Ore (100)", "$mat_iron$", "mat_iron-100", "Buy 100 Iron Ore for 100 coins.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Buy Sulphur (50)", "$mat_sulphur$", "mat_sulphur-50", "Buy 50 Sulphur for 150 coins.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
-		s.spawnNothing = true;
+		uint16 bulk = 250;
+		if (i == 1) bulk = 2500;
+		{
+			ShopItem@ s = addShopItem(this, "Buy Dirt ("+bulk+")", "$mat_dirt$", "mat_dirt-"+bulk, "Buy "+bulk+" Dirt for "+bulk+" coins.");
+			AddRequirement(s.requirements, "coin", "", "Coins", bulk);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Buy Stone ("+bulk+")", "$mat_stone$", "mat_stone-"+bulk, "Buy "+bulk+" Stone for "+bulk+" coins.");
+			AddRequirement(s.requirements, "coin", "", "Coins", bulk);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Buy Coal ("+bulk/5+")", "$mat_coal$", "mat_coal-"+bulk/5, "Buy "+bulk/5+" Coal for "+bulk+" coins.");
+			AddRequirement(s.requirements,"coin","","Coins", bulk);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Buy Copper Ore ("+bulk+")", "$mat_copper$", "mat_copper-"+bulk, "Buy "+bulk+" copper for "+bulk+" coins.");
+			AddRequirement(s.requirements, "coin", "", "Coins", bulk);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Buy Iron Ore ("+bulk+")", "$mat_iron$", "mat_iron-"+bulk, "Buy "+bulk+" Iron Ore for "+bulk+" coins.");
+			AddRequirement(s.requirements, "coin", "", "Coins", bulk);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Buy Sulphur ("+bulk/5+")", "$mat_sulphur$", "mat_sulphur-"+bulk/5, "Buy "+bulk/5+" Sulphur for "+bulk*3/5+" coins.");
+			AddRequirement(s.requirements, "coin", "", "Coins", bulk*3/5);
+			s.spawnNothing = true;
+		}
 	}
 }
 
@@ -117,18 +122,21 @@ void onTick(CBlob@ this)
 		//0.5x at 4 players
 		//1x at 12 players
 		//2x at 22 players
-		
-		u8 index = XORRandom(resources.length);
-		u32 amount = Maths::Max(1, Maths::Floor(XORRandom(resourceYields[index]) * mod));
-		//print(mod +  " " +amount);
-		
-		if (storage !is null)
+
+		for (u8 i = 0;i<8;i++)
 		{
-			MakeMat(storage, this.getPosition(), resources[index], amount);
-		}
-		else if (!this.getInventory().isFull())
-		{
-			MakeMat(this, this.getPosition(), resources[index], amount);
+			u8 index = XORRandom(resources.length);
+			u32 amount = Maths::Max(1, Maths::Floor(XORRandom(resourceYields[index]) * mod));
+			//print(mod +  " " +amount);
+			
+			if (storage !is null)
+			{
+				MakeMat(storage, this.getPosition(), resources[index], amount*2);
+			}
+			else if (!this.getInventory().isFull())
+			{
+				MakeMat(this, this.getPosition(), resources[index], amount*2);
+			}
 		}
 	}
 }
@@ -173,14 +181,6 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 		CButton@ buttonWrite = caller.CreateGenericButton("$icon_paper$", Vec2f(0, -8), this, this.getCommandID("write"), "Rename the mine.", params);
 	}
-}
-
-bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
-{
-	return true;
-
-	// return false;
-	// return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -265,4 +265,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			this.setInventoryName(this.get_string("text"));
 		}
 	}
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return (forBlob !is null && (forBlob.getPosition() - this.getPosition()).Length() <= 64);
 }

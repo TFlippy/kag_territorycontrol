@@ -84,11 +84,6 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Funny Magical Card Booster Pack", "$card_pack$", "card_pack", "A full pack of fun!");
-		AddRequirement(s.requirements, "coin", "", "Coins", 30);
-		s.spawnNothing = true;
-	}
-	{
 		ShopItem@ s = addShopItem(this, "Ganja Weed", "$ganjapod$", "ganja_seed", "With these ingredients I may conjure a magical plant of valuable properties.");
 		AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
 		AddRequirement(s.requirements, "blob", "mat_copper", "Copper", 50);
@@ -161,7 +156,7 @@ void onTick(CBlob@ this)
 
 					if (isClient())
 					{
-						for (int i = 0; i < 4; i++)
+						for (int i = 0; i < 2; i++)
 						{
 							ParticleAnimated("HealParticle.png", blob.getPosition() + Vec2f(XORRandom(16) - 8, XORRandom(16) - 8), Vec2f(0, f32(XORRandom(100) * -0.02f)) * 0.25f, 0, 0.5f, 10, 0, true);
 						}

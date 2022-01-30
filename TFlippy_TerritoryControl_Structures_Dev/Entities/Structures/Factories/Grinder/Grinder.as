@@ -165,7 +165,7 @@ void Blend(CBlob@ this, CBlob@ blob)
 		{
 			if (isServer())
 			{
-				MakeMat(this, this.getPosition(), "mat_wood", 60 + XORRandom(40));
+				MakeMat(this, this.getPosition(), "mat_wood", 100 + XORRandom(40));
 			}
 
 			this.getSprite().PlaySound("SawLog.ogg", 0.8f, 0.9f);
@@ -180,9 +180,9 @@ void Blend(CBlob@ this, CBlob@ blob)
 				u32 quantity = blob.getQuantity();
 
 				MakeMat(this, this.getPosition(), "mat_stone", 		quantity * 0.50f + XORRandom(quantity * 0.25f));
-				MakeMat(this, this.getPosition(), "mat_concrete", 	quantity * 0.125f + XORRandom(quantity * 0.125f));
+				MakeMat(this, this.getPosition(), "mat_concrete", 	quantity * 0.125 + XORRandom(quantity * 0.125f));
 				MakeMat(this, this.getPosition(), "mat_iron", 		XORRandom(quantity * 0.20f));
-				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.03f));
+				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.06f));
 				MakeMat(this, this.getPosition(), "mat_gold",	 	XORRandom(quantity * 0.06f));
 				MakeMat(this, this.getPosition(), "mat_mithril", 	XORRandom(quantity * 0.05f));
 			}
@@ -207,8 +207,8 @@ void Blend(CBlob@ this, CBlob@ blob)
 				u32 quantity = blob.getQuantity();
 
 				MakeMat(this, this.getPosition(), "mat_dirt", 		quantity * 0.65f + XORRandom(quantity * 0.25f));
-				MakeMat(this, this.getPosition(), "mat_sulphur", 	XORRandom(quantity * 0.10f));
-				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.10f));
+				MakeMat(this, this.getPosition(), "mat_sulphur", 	XORRandom(quantity * 0.15f));
+				MakeMat(this, this.getPosition(), "mat_copper", 	XORRandom(quantity * 0.03f));
 			}
 
 			if (isClient())
@@ -362,5 +362,5 @@ void Blend(CBlob@ this, CBlob@ blob)
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	// return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
-	return true;
+	return forBlob !is null && (forBlob.getName() == "extractor" || forBlob.getName() == "filterextractor" || (forBlob.getPosition() - this.getPosition()).Length() <= 64);
 }
