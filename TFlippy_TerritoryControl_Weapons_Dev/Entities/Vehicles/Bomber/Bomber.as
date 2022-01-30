@@ -38,13 +38,6 @@ void onDie(CBlob@ this)
 		wreck.setAngleDegrees(this.getAngleDegrees());
 		wreck.server_setTeamNum(this.getTeamNum());
 		wreck.Init();
-
-		for (int i = 0; i < 5 + XORRandom(3); i++)
-		{
-			CBlob@ blob = server_CreateBlob("flame", -1, this.getPosition());
-			blob.setVelocity(Vec2f(XORRandom(10) - 5, -XORRandom(6)));
-			blob.server_SetTimeToDie(4 + XORRandom(15));
-		}
 	}
 }
 

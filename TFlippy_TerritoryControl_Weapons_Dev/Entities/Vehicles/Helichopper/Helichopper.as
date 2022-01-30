@@ -39,7 +39,6 @@ void onInit(CBlob@ this)
 
 	this.Tag("vehicle");
 	this.Tag("aerial");
-	//this.Tag("helicopter");    					remind laika later when someone finally sees this
 	this.set_bool("lastTurn", false);
 
 	GunSettings settings = GunSettings();
@@ -327,7 +326,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	{
 		this.Tag("no barrier pass");
 	}
-	if (attached !is null)
+	if (attached !is null && attached.hasTag("player"))
 	{
 		attached.SetVisible(false);
 		attached.Tag("invincible");
@@ -343,7 +342,7 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint @attachedPoint)
 		detached.AddForce(Vec2f(0.0f, -300.0f));
 		this.Untag("no barrier pass");
 	}
-	if (detached !is null)
+	if (detached !is null && detached.hasTag("player"))
 	{
 		detached.SetVisible(true);
 		detached.Untag("invincible");

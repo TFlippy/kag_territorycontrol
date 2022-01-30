@@ -246,7 +246,7 @@ void BomberHandling(CBlob@ this, VehicleInfo@ v)
 						CBlob@ item = inv.getItem(0);
 						u32 quantity = item.getQuantity();
 
-						if (item.maxQuantity > 8)
+						if (item.maxQuantity > 16)
 						{
 							// To prevent spamming 
 							this.server_PutOutInventory(item);
@@ -439,9 +439,6 @@ void onAttach(CBlob@ this,CBlob@ attached,AttachmentPoint @attachedPoint)
 {
 	if (attached.hasTag("bomber")) return;
 
-	attached.Tag("invincible");
-	attached.Tag("invincibilityByVehicle");
-
 	VehicleInfo@ v;
 	if (!this.get("VehicleInfo", @v)) return;
 
@@ -451,9 +448,6 @@ void onAttach(CBlob@ this,CBlob@ attached,AttachmentPoint @attachedPoint)
 void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)
 {
 	if (detached.hasTag("bomber")) return;
-
-	detached.Untag("invincible");
-	detached.Untag("invincibilityByVehicle");
 
 	VehicleInfo@ v;
 	if (!this.get("VehicleInfo", @v))return;

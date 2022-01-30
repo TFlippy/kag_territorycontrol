@@ -108,14 +108,14 @@ f32 getAimAngle(CBlob@ this, VehicleInfo@ v)
 
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
-	if (attached.hasTag("bomber")) return;
+	if (!attached.hasTag("player")) return;
 
 	attached.Tag("invincible");
 }
 
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
-	if (detached.hasTag("bomber")) return;
+	if (!detached.hasTag("player")) return;
 
 	detached.Untag("invincible");
 }
@@ -283,4 +283,9 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	return false;
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return forBlob.getTeamNum() == this.getTeamNum();
 }

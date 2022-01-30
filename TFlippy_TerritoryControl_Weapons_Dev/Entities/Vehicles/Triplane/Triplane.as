@@ -157,7 +157,7 @@ void onTick(CBlob@ this)
 							CBlob@ item = inv.getItem(0);
 							u32 quantity = item.getQuantity();
 
-							if (item.maxQuantity > 8)
+							if (item.maxQuantity > 16)
 							{ 
 								// To prevent spamming 
 								this.server_PutOutInventory(item);
@@ -359,11 +359,6 @@ void DoExplosion(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	CMap@ map = getMap();
 
-	for (int i = 0; i < 35; i++)
-	{
-		MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
-	}
-
 	this.Tag("exploded");
 	this.getSprite().Gib();
 }
@@ -373,20 +368,6 @@ void MakeParticle(CBlob@ this, const Vec2f pos, const Vec2f vel, const string fi
 	if (!isClient()) return;
 
 	ParticleAnimated(filename, this.getPosition() + pos, vel, float(XORRandom(360)), 0.5f + XORRandom(100) * 0.01f, 1 + XORRandom(4), XORRandom(100) * -0.00005f, true);
-}
-
-void onAttach(CBlob@ this,CBlob@ attached,AttachmentPoint @attachedPoint)
-{
-	if (attached.hasTag("bomber")) return;
-
-	attached.Tag("invincible");
-	attached.Tag("invincibilityByVehicle");
-}
-
-void onDetach(CBlob@ this,CBlob@ detached,AttachmentPoint@ attachedPoint)
-{
-	detached.Untag("invincible");
-	detached.Untag("invincibilityByVehicle");
 }
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
