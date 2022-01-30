@@ -457,17 +457,25 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				}
 				else if (tokens[0]=="!mats")
 				{
-					server_CreateBlob("mat_ironingot", -1, blob.getPosition()).server_SetQuantity(100);
-					server_CreateBlob("mat_copperingot", -1, blob.getPosition()).server_SetQuantity(100);
-					server_CreateBlob("mat_goldingot", -1, blob.getPosition()).server_SetQuantity(100);
-					server_CreateBlob("mat_steelingot", -1, blob.getPosition()).server_SetQuantity(100);
-					server_CreateBlob("mat_mithrilingot", -1, blob.getPosition()).server_SetQuantity(100);
-					server_CreateBlob("mat_wood", -1, blob.getPosition()).server_SetQuantity(1000);
-					server_CreateBlob("mat_stone", -1, blob.getPosition()).server_SetQuantity(1000);
-					server_CreateBlob("mat_dirt", -1, blob.getPosition()).server_SetQuantity(1000);
-					server_CreateBlob("mat_concrete", -1, blob.getPosition()).server_SetQuantity(1000);
-					server_CreateBlob("mat_plasteel", -1, blob.getPosition()).server_SetQuantity(1000);
-					server_CreateBlob("mat_copperwire", -1, blob.getPosition()).server_SetQuantity(400);
+					string[] mats = 
+					{
+						"mat_ironingot",
+						"mat_copperingot",
+						"mat_goldingot",
+						"mat_steelingot",
+						"mat_mithrilingot",
+						"mat_wood",
+						"mat_stone",
+						"mat_dirt",
+						"mat_concrete",
+						"mat_plasteel",
+						"mat_copperwire"
+					};
+					for (u8 p = 0;p < mats.length; p++)
+					{
+						CBlob@ newBlob = server_CreateBlob(mats[p], -1, blob.getPosition());
+						if (newBlob !is null) newBlob.server_SetQuantity(newBlob.maxQuantity);
+					}
 				}
 				else if (tokens[0]=="!time") 
 				{
