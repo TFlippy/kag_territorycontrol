@@ -16,17 +16,17 @@ const string[] resources =
 	"mat_stone",
 	"mat_gold",
 	"mat_coal",
-	"mat_mithril"
+	"mat_dirt"
 };
 
 const u8[] resourceYields = 
 {
+	3,
+	3,
+	7,
 	2,
-	2,
-	4,
-	2,
-	1,
-	1
+	3,
+	4
 };
 
 void onInit(CBlob@ this)
@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 
 	this.Tag("builder always hit");
 	
-	this.getCurrentScript().tickFrequency = 15;
+	this.getCurrentScript().tickFrequency = 60;
 	
 	this.set_bool("isActive", false);
 	this.addCommandID("sv_toggle");
@@ -48,8 +48,8 @@ void onInit(CBlob@ this)
 void onInit(CSprite@ this)
 {
 	this.SetEmitSound("Drill.ogg");
-	this.SetEmitSoundVolume(0.3f);
-	this.SetEmitSoundSpeed(0.7f);
+	this.SetEmitSoundVolume(0.1f);
+	this.SetEmitSoundSpeed(0.5f);
 	
 	this.SetEmitSoundPaused(!this.getBlob().get_bool("isActive"));
 }
@@ -62,15 +62,10 @@ void onTick(CBlob@ this)
 	
 		CMap@ map = getMap();
 		
-		f32 depth = XORRandom(96);
-		Vec2f pos = Vec2f(this.getPosition().x + (XORRandom(64) - 32) * (1 - depth / 96), Maths::Min(this.getPosition().y + 16 + depth, (map.tilemapheight * map.tilesize) - 8));
+		f32 depth = XORRandom(48);
+		Vec2f pos = Vec2f(this.getPosition().x + (XORRandom(32) - 16) * (1 - depth / 48), Maths::Min(this.getPosition().y + 16 + depth, (map.tilemapheight * map.tilesize) - 8));
 
 		this.server_HitMap(pos, Vec2f(0, 0), 1.3f, Hitters::drill);
-	}
-	
-	if (isClient())
-	{
-		this.getSprite().SetEmitSoundSpeed(0.7f + ((this.get_f32("gyromat_acceleration") - 1.00f) * 0.10f));
 	}
 }
 
@@ -82,8 +77,8 @@ void onHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 cust
 		
 		if (tile == CMap::tile_bedrock)
 		{
-			u8 index = XORRandom(resources.length - 1);
-			MakeMat(this, worldPoint, resources[index], XORRandom(resourceYields[index] * (f32(XORRandom(100)) / 40.00f)));
+			u8 index = XORRandom(resources.length);
+			MakeMat(this, worldPoint, resources[index], XORRandom(resourceYields[index]*2));
 			
 			// this.server_Hit(this, this.getPosition(), Vec2f(0, 0), 0.02f, Hitters::drill, true);
 			
@@ -151,17 +146,17 @@ void onAddToInventory( CBlob@ this, CBlob@ blob )
 {
 	if(blob.getName() != "gyromat") return;
 
-	this.getCurrentScript().tickFrequency = 15 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
 
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if(blob.getName() != "gyromat") return;
 	
-	this.getCurrentScript().tickFrequency = 15 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	return (forBlob.isOverlapping(this));
+	return (forBlob.getName() == "extractor" || forBlob.getName() == "filterextractor" || forBlob.isOverlapping(this));
 }
