@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 			break;
 		// grain
 		case -1788840884:
-			this.maxQuantity = 10;
+			this.maxQuantity = 20;
 			break;
 		// ratfood
 		case 1197821324:

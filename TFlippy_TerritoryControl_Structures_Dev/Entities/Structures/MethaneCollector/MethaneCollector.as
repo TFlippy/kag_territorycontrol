@@ -10,7 +10,7 @@ void onInit(CBlob@ this)
 
 	this.Tag("builder always hit");
 
-	this.getCurrentScript().tickFrequency = 150;
+	this.getCurrentScript().tickFrequency = 300;
 
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("MethaneCollector_Loop.ogg");
@@ -27,11 +27,11 @@ void onTick(CBlob@ this)
 
 		if (storage !is null)
 		{
-			MakeMat(storage, this.getPosition(), "mat_methane", 2 + XORRandom(3));
+			MakeMat(storage, this.getPosition(), "mat_methane", 4 + XORRandom(5));
 		}
 		else if (this.getInventory().getCount("mat_methane") < 100)
 		{
-			MakeMat(this, this.getPosition(), "mat_methane", 2 + XORRandom(3));
+			MakeMat(this, this.getPosition(), "mat_methane", 4 + XORRandom(5));
 		}
 	}
 }

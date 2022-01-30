@@ -10,16 +10,7 @@ void onInit(CBlob @ this)
 	// this.Tag("ignore extractor");
 	this.Tag("builder always hit");
 
-	this.getCurrentScript().tickFrequency = 15;
-
-	CSprite@ sprite = this.getSprite();
-	if (sprite !is null)
-	{
-		sprite.SetEmitSound("Treecapicator_Idle.ogg");
-		sprite.SetEmitSoundVolume(0.10f);
-		sprite.SetEmitSoundSpeed(1.0f);
-		sprite.SetEmitSoundPaused(false);
-	}
+	this.getCurrentScript().tickFrequency = 240;
 }
 
 void onTick(CBlob@ this)
@@ -42,7 +33,18 @@ void onTick(CBlob@ this)
 			{
 				string bname = b.getName();
 
-				if (b.hasTag("tree"))
+				if (bname == "grain" || bname == "pumpkin" || bname == "log" || bname == "ganjapod" )
+				{
+					this.server_PutInInventory(b);
+				}
+				else if (bname == "grain_plant" || bname == "pumpkin_plant" || bname == "ganja_plant")
+				{
+					if (b.hasTag("has pumpkin") || b.hasTag("has pod") || b.hasTag("has grain"))
+					{
+						this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 2.00f, Hitters::saw);
+					}
+				}
+				else if (b.hasTag("tree"))
 				{
 					TreeVars@ tree;
 					b.get("TreeVars", @tree);
@@ -50,19 +52,8 @@ void onTick(CBlob@ this)
 					{
 						if (tree.height == tree.max_height)
 						{
-							this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 1.00f, Hitters::saw);
+							this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 4.00f, Hitters::saw);
 						}
-					}
-				}
-				else if (bname == "log" || bname == "pumpkin" || bname == "grain" || bname == "ganjapod" )
-				{
-					this.server_PutInInventory(b);
-				}
-				else if (bname == "pumpkin_plant" || bname == "ganja_plant" || bname == "grain_plant" )
-				{
-					if (b.hasTag("has pumpkin") || b.hasTag("has pod") || b.hasTag("has grain"))
-					{
-						this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 1.00f, Hitters::saw);
 					}
 				}
 				else if (!b.getShape().isStatic())
@@ -77,4 +68,9 @@ void onTick(CBlob@ this)
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	return false;
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return forBlob !is null && (forBlob.getName() == "extractor" || forBlob.getName() == "filterextractor" || (forBlob.getPosition() - this.getPosition()).Length() <= 64);
 }

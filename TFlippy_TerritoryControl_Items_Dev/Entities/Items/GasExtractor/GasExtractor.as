@@ -39,7 +39,7 @@ void onTick(CBlob@ this)
 
 			if ((!rmb && point.isKeyJustPressed(key_action1)) || (!lmb && point.isKeyJustPressed(key_action2)))
 			{
-				this.getSprite().PlaySound("/gasextractor_start.ogg");
+				this.getSprite().PlaySound("/gasextractor_start.ogg", 0.2f);
 			}
 			else if (lmb || rmb)
 			{
@@ -84,9 +84,9 @@ void onTick(CBlob@ this)
 									{
 										if (isServer())
 										{
-											if (blob.getName() == "mustard" || blob.getName() == "methane")
+											if (blob.getName() == "falloutgas")
 											{
-												MakeMat(holder, this.getPosition(), "mat_" + blob.getName(), 1 + XORRandom(5));
+												MakeMat(holder, this.getPosition(), "mat_" + "mithril", 3 + XORRandom(5));
 											}
 											else
 											{
@@ -95,11 +95,11 @@ void onTick(CBlob@ this)
 											blob.server_Die();
 										}
 
-										sprite.PlaySound("/gasextractor_load.ogg");
+										sprite.PlaySound("/gasextractor_load.ogg", 0.2f);
 									}
 									else if (blob.canBePickedUp(holder) && !holder.getInventory().isFull())
 									{
-										sprite.PlaySound("/gasextractor_load.ogg");
+										sprite.PlaySound("/gasextractor_load.ogg", 0.2f);
 										if (isServer()) holder.server_PutInInventory(blob);
 									}
 								}

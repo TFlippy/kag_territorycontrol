@@ -72,7 +72,10 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	caller.CreateGenericButton(12, Vec2f(0, 0), this, this.getCommandID("box_unpack"), "Unpack");
+	if (caller !is null && (caller.getPosition() - this.getPosition()).Length() <= 48)
+	{
+		caller.CreateGenericButton(12, Vec2f(0, 0), this, this.getCommandID("box_unpack"), "Unpack");
+	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
