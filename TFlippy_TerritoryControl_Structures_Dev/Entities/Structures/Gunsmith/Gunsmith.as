@@ -163,11 +163,11 @@ void onTick(CBlob@ this)
 {
 	if(isServer())
 	{
-		for (u8 index = 0;i<4;i++)
+		for (u8 i = 0;i<4;i++)
 		{
 			if (!this.getInventory().isFull())
 			{
-				MakeMat(this, this.getPosition(), resources[index], XORRandom(resourceYields[index])*2);
+				MakeMat(this, this.getPosition(), resources[i], XORRandom(resourceYields[i])*2);
 			}
 		}
 	}
