@@ -28,70 +28,41 @@ void onInit(CBlob@ this)
 	AddIconToken("$mat_mithrilingot$", "Material_MithrilIngot.png", Vec2f(16, 16), 1);
 
 	this.set_Vec2f("shop offset", Vec2f(0,1));
-	this.set_Vec2f("shop menu size", Vec2f(5, 2));
+	this.set_Vec2f("shop menu size", Vec2f(5, 3));
 	this.set_string("shop description", "Forge");
 	this.set_u8("shop icon", 15);
 
+	for (u8 i = 0;i<3;i++)
 	{
-		ShopItem@ s = addShopItem(this, "Copper Ingot (1)", "$mat_copperingot$", "mat_copperingot-1", "A soft conductive metal.", true);
-		AddRequirement(s.requirements, "blob", "mat_copper", "Copper Ore", 10);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 1);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Iron Ingot (1)", "$mat_ironingot$", "mat_ironingot-1", "A fairly strong metal used to make tools, equipment and such.", true);
-		AddRequirement(s.requirements, "blob", "mat_iron", "Iron Ore", 10);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal",1);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Steel Ingot (1)", "$mat_steelingot$", "mat_steelingot-1", "Much stronger than iron, but also more expensive.", true);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
-		AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 1);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Gold Ingot (1)", "$mat_goldingot$", "mat_goldingot-1", "A fancy metal - traders' favourite.", true);
-		AddRequirement(s.requirements, "blob", "mat_gold", "Gold Ore", 25);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 1);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Coal (1)", "$mat_coal$", "mat_coal-1", "A black rock that is used for fuel.", true);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 20);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal",1);
-		s.spawnNothing = true;
-	}
-
-	// Large batch
-	{
-		ShopItem@ s = addShopItem(this, "Copper Ingot (4)", "$mat_copperingot$", "mat_copperingot-4", "A soft conductive metal.", true);
-		AddRequirement(s.requirements, "blob", "mat_copper", "Copper Ore", 40);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 4);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Iron Ingot (4)", "$mat_ironingot$", "mat_ironingot-4", "A fairly strong metal used to make tools, equipment and such.", true);
-		AddRequirement(s.requirements, "blob", "mat_iron", "Iron Ore", 40);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 4);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Steel Ingot (4)", "$mat_steelingot$", "mat_steelingot-4", "Much stronger than iron, but also more expensive.", true);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 16);
-		AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 4);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Gold Ingot (4)", "$mat_goldingot$", "mat_goldingot-4", "A fancy metal - traders' favourite.", true);
-		AddRequirement(s.requirements, "blob", "mat_gold", "Gold Ore", 100);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 4);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Coal (4)", "$mat_coal$", "mat_coal-4", "A black rock that is used for fuel.", true);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 80);
-		s.spawnNothing = true;
+		uint8 batch = 1;
+		if (i == 1) batch = 10;
+		else if (i == 2) batch = 100;
+		{
+			ShopItem@ s = addShopItem(this, "Copper Ingot ("+batch+")", "$mat_copperingot$", "mat_copperingot-"+batch, "A soft conductive metal.", true);
+			AddRequirement(s.requirements, "blob", "mat_copper", "Copper Ore", 10*batch);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Iron Ingot ("+batch+")", "$mat_ironingot$", "mat_ironingot-"+batch, "A fairly strong metal used to make tools, equipment and such.", true);
+			AddRequirement(s.requirements, "blob", "mat_iron", "Iron Ore", 10*batch);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Steel Ingot ("+batch+")", "$mat_steelingot$", "mat_steelingot-"+batch, "Much stronger than iron, but also more expensive.", true);
+			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4*batch);
+			AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 1*batch);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Gold Ingot ("+batch+")", "$mat_goldingot$", "mat_goldingot-"+batch, "A fancy metal - traders' favourite.", true);
+			AddRequirement(s.requirements, "blob", "mat_gold", "Gold Ore", 25*batch);
+			s.spawnNothing = true;
+		}
+		{
+			ShopItem@ s = addShopItem(this, "Coal ("+batch+")", "$mat_coal$", "mat_coal-"+batch, "A black rock that is used for fuel.", true);
+			AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 20*batch);
+			s.spawnNothing = true;
+		}
 	}
 }
 

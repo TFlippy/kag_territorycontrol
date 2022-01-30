@@ -21,17 +21,17 @@ const string[] matNamesResult = {
 };
 
 const int[] matRatio = { 
-	10,
-	10,
-	25,
-	20
+	20,
+	20,
+	50,
+	40
 };
 
 void onInit(CBlob@ this)
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
-	this.getCurrentScript().tickFrequency = 45;
+	this.getCurrentScript().tickFrequency = 90;
 
 	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
@@ -39,12 +39,12 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (this.hasBlob("mat_ironingot", 4) && this.hasBlob("mat_coal", 4)) //steel ingots require coal to be created
+	if (this.hasBlob("mat_ironingot", 8) && this.hasBlob("mat_coal", 6)) //steel ingots require coal to be created
 	{
 		if (isServer())
 		{
 			CBlob@ mat = server_CreateBlob("mat_steelingot", -1, this.getPosition());
-			mat.server_SetQuantity(2);
+			mat.server_SetQuantity(4);
 			mat.Tag("justmade");
 			this.TakeBlob("mat_ironingot", 4);
 			this.TakeBlob("mat_coal", 4);
@@ -62,7 +62,7 @@ void onTick(CBlob@ this)
 			if (isServer())
 			{
 				CBlob@ mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
-				mat.server_SetQuantity(2);
+				mat.server_SetQuantity(4);
 				mat.Tag("justmade");
 				this.TakeBlob(matNames[i], matRatio[i]);
 			}
@@ -109,12 +109,12 @@ void onAddToInventory( CBlob@ this, CBlob@ blob )
 {
 	if(blob.getName() != "gyromat") return;
 
-	this.getCurrentScript().tickFrequency = 45 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
 
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if(blob.getName() != "gyromat") return;
 	
-	this.getCurrentScript().tickFrequency = 45 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

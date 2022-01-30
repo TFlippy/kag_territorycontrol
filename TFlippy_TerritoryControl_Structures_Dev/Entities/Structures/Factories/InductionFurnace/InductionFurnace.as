@@ -23,11 +23,11 @@ const string[] matNamesResult = {
 };
 
 const int[] matRatio = { 
-	10,
-	10,
-	10,
-	25,
-	6
+	20,
+	20,
+	20,
+	50,
+	12
 };
 
 const int[] coalRatio = {
@@ -35,14 +35,14 @@ const int[] coalRatio = {
 	0,
 	0,
 	0,
-	4
+	8
 };
 
 void onInit(CBlob@ this)
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
-	this.getCurrentScript().tickFrequency = 90;
+	this.getCurrentScript().tickFrequency = 180;
 
 	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
@@ -67,7 +67,7 @@ void onTick(CBlob@ this)
 			if (isServer())
 			{
 				CBlob @mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
-				mat.server_SetQuantity(4);
+				mat.server_SetQuantity(8);
 				mat.Tag("justmade");
 				this.TakeBlob(matNames[i], matRatio[i]);
 				if (coalRatio[i] > 0) this.TakeBlob("mat_coal", coalRatio[i]);
@@ -88,7 +88,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		return;
 	}
 
-	for(int i = 0;i < 4; i += 1)
+	for(int i = 0;i < 5; i += 1)
 	if (!blob.isAttached() && blob.hasTag("material") && blob.getName() == matNames[i])
 	{
 		if (isServer()) this.server_PutInInventory(blob);
@@ -112,12 +112,12 @@ void onAddToInventory( CBlob@ this, CBlob@ blob )
 {
 	if(blob.getName() != "gyromat") return;
 
-	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = 180 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
 
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 {
 	if(blob.getName() != "gyromat") return;
 
-	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	this.getCurrentScript().tickFrequency = 180 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }
