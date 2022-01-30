@@ -138,6 +138,11 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case Hitters::fire:
 		case Hitters::burn:
 			return damage * 0.10f;
+
+		case Hitters::explosion:
+		case Hitters::builder:
+		case Hitters::drill:
+			return damage * 4;
 	}
 	
 	return damage;
