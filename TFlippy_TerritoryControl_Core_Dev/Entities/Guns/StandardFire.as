@@ -288,6 +288,8 @@ void onTick(CBlob@ this)
 							if (isClient())
 							{
 								shootGun(this.getNetworkID(), aimangle, holder.getNetworkID(), sprite.getWorldTranslation() + fromBarrel);
+								Recoil@ coil = Recoil(holder, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
+								coil.onTick();
 							}
 							else // Server will run this
 							{

@@ -187,15 +187,6 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 					bullet.onTick(map);
 				}
 			}
-			
-			if (isClient() && settings !is null)
-			{
-				if (hoomanBlob.isMyPlayer()) // if we are this blob
-				{
-					Recoil@ coil = Recoil(hoomanBlob, settings.G_RECOIL, settings.G_RECOILT, settings.G_BACK_T, settings.G_RANDOMX, settings.G_RANDOMY);
-					BulletGrouped.NewRecoil(@coil);
-				}
-			}
 		}
 	}
 }

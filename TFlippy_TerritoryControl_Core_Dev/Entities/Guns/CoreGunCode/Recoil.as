@@ -72,6 +72,5 @@ class Recoil
 		//TimeToNormal -= 1;
 
 		BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + Vec2f(xTick, yTick));
-		ShakeScreen(Vec2f(xTick, yTick), 150, Blob.getInterpolatedPosition());
 	}
 }
