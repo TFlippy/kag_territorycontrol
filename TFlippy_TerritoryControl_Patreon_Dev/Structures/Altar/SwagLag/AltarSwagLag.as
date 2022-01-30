@@ -68,6 +68,32 @@ void onInit(CBlob@ this)
 	}
 }
 
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (this.isOverlapping(caller))
+	{
+		if (this.hasTag("colourful"))
+			caller.CreateGenericButton(27, Vec2f(0, -12), this, ToggleButton, "Sound OFF");
+		else
+				caller.CreateGenericButton(23, Vec2f(0, -12), this, ToggleButton, "Sound ON");
+	}
+	this.set_bool("shop available", this.isOverlapping(caller));
+}
+
+void ToggleButton(CBlob@ this, CBlob@ caller)
+{
+	if (this.hasTag("colourful"))
+	{
+		this.Untag("colourful");
+		this.getSprite().SetEmitSoundPaused(true);
+	}
+	else
+	{
+		this.Tag("colourful");
+		this.getSprite().SetEmitSoundPaused(false);
+	}
+}
+
 void onTick(CBlob@ this)
 {
 	const bool server = isServer();
@@ -96,7 +122,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				{
 					if (data == "follower")
 					{
-						this.add_f32("deity_power", 100);
+						this.add_f32("deity_power", 250);
 						if (isServer()) this.Sync("deity_power", false);
 						
 						if (isClient())
@@ -131,7 +157,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					{
 						if (data == "offering_protopopov")
 						{
-							this.add_f32("deity_power", 150);
+							this.add_f32("deity_power", 500);
 							if (isServer()) this.Sync("deity_power", false);
 							
 							if (isServer())
@@ -147,7 +173,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						}
 						else if (data == "offering_mlg")
 						{
-							this.add_f32("deity_power", 200);
+							this.add_f32("deity_power", 1000);
 							if (isServer()) this.Sync("deity_power", false);
 							
 							if (isServer())
@@ -163,7 +189,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						}
 						else if (data == "offering_doritos")
 						{
-							this.add_f32("deity_power", 1);
+							this.add_f32("deity_power", 10);
 							if (isServer()) this.Sync("deity_power", false);
 							
 							if (isServer())

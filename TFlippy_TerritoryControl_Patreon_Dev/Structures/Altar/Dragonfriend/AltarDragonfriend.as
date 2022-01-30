@@ -181,7 +181,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 					{
 						if (callerBlob.getTeamNum() < 7)
 						{
-							this.add_f32("deity_power", 899);
+							this.add_f32("deity_power", 999);
 							if (isServer()) this.Sync("deity_power", false);
 							
 							if (isClient())
@@ -241,7 +241,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 								f32 stonks_value = this.get_f32("stonks_value");
 							
 								this.add_f32("deity_power", stonks_value * 0.95f);
-								if (isServer()) this.Sync("deity_power", false);
+								if (isServer()) this.Sync("deity_power", true);
 							
 								server_DropCoins(this.getPosition(), stonks_value * 0.05f);
 							}
@@ -255,8 +255,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 						{
 							if (isServer())
 							{
-								this.add_f32("deity_power", 7999);
-								if (isServer()) this.Sync("deity_power", false);
+								this.add_f32("deity_power", 9999);
+								if (isServer()) this.Sync("deity_power", true);
 							
 								f32 map_width = getMap().tilemapwidth * 8.00f;
 								CBlob@ item = server_CreateBlob("meteor", this.getTeamNum(), Vec2f(XORRandom(map_width), 0));

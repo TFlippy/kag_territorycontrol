@@ -47,6 +47,32 @@ void onInit(CBlob@ this)
 	}
 }
 
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (this.isOverlapping(caller))
+	{
+		if (this.hasTag("colourful"))
+			caller.CreateGenericButton(27, Vec2f(0, -12), this, ToggleButton, "SHUT UP");
+		else
+				caller.CreateGenericButton(23, Vec2f(0, -12), this, ToggleButton, "Sound On");
+	}
+	this.set_bool("shop available", this.isOverlapping(caller));
+}
+
+void ToggleButton(CBlob@ this, CBlob@ caller)
+{
+	if (this.hasTag("colourful"))
+	{
+		this.Untag("colourful");
+		this.getSprite().SetEmitSoundPaused(true);
+	}
+	else
+	{
+		this.Tag("colourful");
+		this.getSprite().SetEmitSoundPaused(false);
+	}
+}
+
 void onTick(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();

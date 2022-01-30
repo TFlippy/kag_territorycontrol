@@ -53,13 +53,13 @@ void DoExplosion(CBlob@ this)
 		if (isServer())
 		{
 			Vec2f vel = this.getOldVelocity();
-			for (int i = 0; i < 7 +  XORRandom(4) ; i++)
+			for (int i = 0; i < 4 +  XORRandom(4) ; i++)
 			{
 				CBlob@ blob = server_CreateBlob("flame", -1, this.getPosition() + Vec2f(0, -8));
 				Vec2f nv = Vec2f((XORRandom(100) * 0.01f * vel.x * 1.30f), -(XORRandom(100) * 0.01f * 3.00f));
 				
 				blob.setVelocity(nv);
-				blob.server_SetTimeToDie(2 + XORRandom(6));
+				blob.server_SetTimeToDie(3 + XORRandom(3));
 			}
 		}
 		

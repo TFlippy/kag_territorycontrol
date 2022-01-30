@@ -23,7 +23,7 @@ void onInit(CBlob@ this)
 
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("Ivan_Music.ogg");
-	sprite.SetEmitSoundVolume(0.4f);
+	sprite.SetEmitSoundVolume(0.35f);
 	sprite.SetEmitSoundSpeed(1.0f);
 	sprite.SetEmitSoundPaused(false);
 
@@ -91,18 +91,28 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	if (this.hasTag("colourful"))
-		caller.CreateGenericButton(27, Vec2f(10, 0), this, ToggleButton, "STOP THE RAVE");
-	else
-			caller.CreateGenericButton(23, Vec2f(10, 0), this, ToggleButton, "LET'S GET THIS RAVE STARTED");
+	if (this.isOverlapping(caller))
+	{
+		if (this.hasTag("colourful"))
+			caller.CreateGenericButton(27, Vec2f(10, 0), this, ToggleButton, "STOP THE RAVE");
+		else
+				caller.CreateGenericButton(23, Vec2f(10, 0), this, ToggleButton, "LET'S GET THIS RAVE STARTED");
+	}
+	this.set_bool("shop available", this.isOverlapping(caller));
 }
 
 void ToggleButton(CBlob@ this, CBlob@ caller)
 {
 	if (this.hasTag("colourful"))
+	{
 		this.Untag("colourful");
+		this.getSprite().SetEmitSoundPaused(true);
+	}
 	else
+	{
 		this.Tag("colourful");
+		this.getSprite().SetEmitSoundPaused(false);
+	}
 }
 
 void onTick(CSprite@ this)
@@ -126,8 +136,6 @@ void onTick(CSprite@ this)
 
 		if (dist < diameter)
 		{
-			ShakeScreen(50.0f, 15, blob.getPosition());
-
 			if (getGameTime() % 8 == 0)
 			{
 				s16 step = blob.get_s16("rgbStep");
@@ -154,7 +162,7 @@ void onTick(CSprite@ this)
 		blob.SetLightColor(color);
 
 
-		this.SetEmitSoundVolume(Maths::Max(power * 0.002f, 0.50f));
+		this.SetEmitSoundVolume(Maths::Max(power * 0.002f, 0.45f));
 		this.SetEmitSoundSpeed(0.70f + (power * 0.0002f));
 	}
 }
@@ -163,37 +171,6 @@ void onTick(CBlob@ this)
 {
 	const f32 power = this.get_f32("deity_power");
 	const f32 radius = 64.00f + Maths::Sqrt(power);
-
-	CBlob@[] blobsInRadius;
-	if (this.getMap().getBlobsInRadius(this.getPosition(), radius, @blobsInRadius))
-	{
-		int index = -1;
-		f32 s_dist = 1337;
-		u8 myTeam = this.getTeamNum();
-
-		for (uint i = 0; i < blobsInRadius.length; i++)
-		{
-			CBlob@ b = blobsInRadius[i];
-			u8 team = b.getTeamNum();
-
-			if (team < 7 && team <= 200 && b.hasTag("flesh"))
-			{
-				f32 dist = (b.getPosition() - this.getPosition()).Length();
-				if (dist < s_dist)
-				{
-					s_dist = dist;
-					index = i;
-				}
-			}
-		}
-
-		if (index < 0) return;
-
-		CBlob@ target = blobsInRadius[index];
-		Zap(this, target);
-
-		// print("" + target.getName());
-	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

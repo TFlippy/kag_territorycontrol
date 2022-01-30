@@ -61,9 +61,9 @@ void onInit(CBlob@ this)
 		{
 			ShopItem@ s = addShopItem(this, "Mithrios, God of Death", "$icon_mithrios$", "altar_mithrios", "A demon known for his cruelty and hunger for blood.\n\nAfter being banished from the mortal realm, he returned as a weapon of destruction.\n\n- Damage Reflection\n- Kill a random person\n- Create a Mithrios Device\n- Gain Demonic Power by killing people");
 			AddRequirement(s.requirements, "no more global", "altar_mithrios", "Altar of Mithrios", 1);
-			AddRequirement(s.requirements, "blob", "slaveball", "Slave Ball", 1);
+			AddRequirement(s.requirements, "blob", "knight", "Sacrifice", 1);
 			AddRequirement(s.requirements, "blob", "mat_meat", "Meat", 250);
-			AddRequirement(s.requirements, "coin", "", "Coins", 2500);
+			AddRequirement(s.requirements, "coin", "", "Coins", 1250);
 			s.customButton = true;
 			s.buttonwidth = 2;	
 			s.buttonheight = 2;
@@ -95,9 +95,9 @@ void onInit(CBlob@ this)
 			s.spawnNothing = true;
 		}
 		{
-			ShopItem@ s = addShopItem(this, "Grand Mason, God of Masonry", "$icon_mason$", "altar_mason", "A determined architect responsible for creation of many bridges, castles and palaces.\n\He's humble.\n\n- Chance to not consume materials when placing a block.");
-			AddRequirement(s.requirements, "no more global", "altar_gregor", "Altar of Gregor Builder", 1);
-			AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 4000);
+			ShopItem@ s = addShopItem(this, "Grand Mason, God of Masonry", "$icon_mason$", "altar_mason", "A determined architect responsible for creation of many bridges, castles and palaces.\nHe's a man of focus, commitment, and sheer will.\n\n- Chance to not consume materials when placing a block.");
+			AddRequirement(s.requirements, "no more global", "altar_mason", "Altar of Mason", 1);
+			AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 2500);
 			AddRequirement(s.requirements, "blob", "artisancertificate", "Building for Dummies", 1);
 			AddRequirement(s.requirements, "coin", "", "Coins", 1000);
 			s.customButton = true;
@@ -107,7 +107,7 @@ void onInit(CBlob@ this)
 			s.spawnNothing = true;
 		}
 		{
-			ShopItem@ s = addShopItem(this, "Cocok, God of Cocok", "$icon_cocok$", "altar_cocok", "The bestest player in this region.\n\Specializes in illegal weaponry.\n\n- Infidels feel heavier around the altar.\n- Create Molotov Cocktails\n- Construct a Molothrower\n- Build a Cocok Bomba");
+			ShopItem@ s = addShopItem(this, "Cocok, God of Cocok", "$icon_cocok$", "altar_cocok", "The bestest player in this region.\nSpecializes in illegal weaponry.\n\n- Infidels feel heavier around the altar.\n- Create Molotov Cocktails\n- Construct a Molothrower\n- Build a Cocok Bomba");
 			AddRequirement(s.requirements, "no more global", "altar_cocok", "Altar of Cocok", 1);
 			AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 200);
 			AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 200);

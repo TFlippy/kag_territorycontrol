@@ -15,15 +15,17 @@ void onInit(CBlob@ this)
 	sprite.SetEmitSound("DemonicLoop.ogg");
 	sprite.RewindEmitSound();
 	sprite.SetEmitSoundPaused(false);
+	client_AddToChat("Mithrios Awakens.", SColor(0x00000000));
+	client_AddToChat("Mithrios has marked his prey with a glowing red light.", SColor(0xffff0000));
 	
 	this.SetLight(true);
-	this.SetLightRadius(48.0f);
+	this.SetLightRadius(64.0f);
 	this.SetLightColor(SColor(255, 255, 0, 0));
 	
 	AddIconToken("$icon_mithrios_follower$", "InteractionIcons.png", Vec2f(32, 32), 11);
 	{
-		ShopItem@ s = addShopItem(this, "Rite of Mithrios", "$icon_mithrios_follower$", "follower", "Gain Mithrios's interest by offering him a dead peasant and some meat.");
-		AddRequirement(s.requirements, "blob", "peasant", "Peasant's Corpse", 1);
+		ShopItem@ s = addShopItem(this, "Rite of Mithrios", "$icon_mithrios_follower$", "follower", "Gain Mithrios's interest by offering him a roasted pig and some meat.");
+		AddRequirement(s.requirements, "blob", "piglet", "Piglet", 1);
 		AddRequirement(s.requirements, "blob", "mat_meat", "Mystery Meat", 100);
 		s.customButton = true;
 		s.buttonwidth = 2;	
@@ -43,6 +45,7 @@ void onInit(CBlob@ this)
 		// s.spawnNothing = true;
 	// }
 	
+	/*
 	AddIconToken("$icon_mithrios_offering_0$", "AltarMithrios_Icons.png", Vec2f(24, 24), 0);
 	{
 		ShopItem@ s = addShopItem(this, "Offering of Death", "$icon_mithrios_offering_0$", "offering_death", "Sacrifice a slave to kill a random person in this region.");
@@ -53,6 +56,7 @@ void onInit(CBlob@ this)
 		
 		s.spawnNothing = true;
 	}
+	*/
 	
 	AddIconToken("$icon_mithrios_offering_1$", "AltarMithrios_Icons.png", Vec2f(24, 24), 1);
 	{
@@ -66,6 +70,11 @@ void onInit(CBlob@ this)
 	}
 	
 	this.addCommandID("mithrios_gib");
+}
+
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	this.set_bool("shop available", this.isOverlapping(caller));
 }
 
 void onTick(CSprite@ this)
@@ -93,8 +102,6 @@ void onTick(CSprite@ this)
 			this.SetEmitSoundVolume(factor);
 			this.SetEmitSoundSpeed(0.50f + (0.50f * invFactor) + Maths::Min(power * 0.0005f, 0.35f));
 			
-			SetScreenFlash(Maths::Clamp((50 * factor) + XORRandom(10 + (power * 0.02)) + (power * 0.005f), 0, 255), 64, 0, 0);
-			ShakeScreen((25 * factor) + (power * 0.0050f), 30, blob.getPosition());
 			
 			if (playerBlob.get_u8("deity_id") != Deity::mithrios)
 			{
@@ -104,7 +111,7 @@ void onTick(CSprite@ this)
 				{
 					Vec2f spos = driver.getScreenPosFromWorldPos(blob.getPosition());
 					Vec2f dir = (controls.getMouseScreenPos() - spos);
-					Vec2f move_to = dir * 0.01f * factor;
+					Vec2f move_to = dir * 0.001f * factor;
 					if(move_to.x < 0) move_to.x--;
 					if(move_to.y < 0) move_to.y--;
 					
@@ -117,7 +124,7 @@ void onTick(CSprite@ this)
 				if (XORRandom(100 * (invFactor)) == 0)
 				{
 					blob.set_u32("next_whisper", getGameTime() + 30 * 10);
-					this.PlaySound("dem_whisper_" + XORRandom(6), 0.75f * factor, 0.75f);
+					this.PlaySound("dem_whisper_" + XORRandom(6), 1.75f * factor, 0.75f);
 				}
 			}
 		}
@@ -176,7 +183,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							if (isServer())
 							{
 								this.add_f32("deity_power", 25);
-								if (isServer()) this.Sync("deity_power", false);
+								if (isServer()) this.Sync("deity_power", true);
 							
 								CMap@ map = getMap();
 							
@@ -195,7 +202,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							if (isServer())
 							{
 								this.add_f32("deity_power", 100);
-								if (isServer()) this.Sync("deity_power", false);
+								if (isServer()) this.Sync("deity_power", true);
 							
 								int count = getPlayerCount();
 								CPlayer@ player = getPlayer(XORRandom(count));
@@ -211,8 +218,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						{
 							if (isServer())
 							{
-								this.add_f32("deity_power", 400);
-								if (isServer()) this.Sync("deity_power", false);
+								this.add_f32("deity_power", 1000);
+								if (isServer()) this.Sync("deity_power", true);
 							
 								CMap@ map = getMap();
 							
@@ -227,6 +234,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 							}
 						}
 					}
+					this.SetLightRadius(64.0f + this.get_f32("deity_power")/2.0f);
 				}				
 			}
 		}

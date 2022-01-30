@@ -7,6 +7,7 @@ void onInit(CBlob@ this)
 {
 	this.set_u8("deity_id", Deity::cocok);
 	this.set_Vec2f("shop menu size", Vec2f(4, 2));
+	this.set_Vec2f("shop offset", Vec2f(-10,0));
 
 	CSprite@ sprite = this.getSprite();
 	sprite.SetEmitSound("AltarCocok_Music.ogg");
@@ -113,19 +114,12 @@ void onTick(CSprite@ this)
 		f32 sqrDistMod = 1.00f - Maths::Sqrt(dist / radius);
 
 		this.SetEmitSoundVolume(0.20f + (distMod * 0.20f));
-
-		if (dist < diameter)
-		{
-			if (getGameTime() % 8 == 0)
-			{
-				ShakeScreen(50.0f, 15, blob.getPosition());
-			}
-		}
 	}
 }
 
 void onTick(CBlob@ this)
 {
+	if (!this.hasTag("cocok_gravity")) return;
 	const f32 power = this.get_f32("deity_power");
 	const f32 radius = 64.00f + ((power / 100.00f) * 8.00f);
 	const f32 gravity = sv_gravity * 0.03f;
@@ -142,6 +136,30 @@ void onTick(CBlob@ this)
 				blob.AddForce(Vec2f(0, gravity * blob.getMass()));
 			}
 		}
+	}
+}
+
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (this.isOverlapping(caller))
+	{
+		if (this.hasTag("cocok_gravity")) caller.CreateGenericButton(27, Vec2f(10, 0), this, ToggleButton, "OFF");
+		else caller.CreateGenericButton(23, Vec2f(10, 0), this, ToggleButton, "ON");
+	}
+	this.set_bool("shop available", this.isOverlapping(caller));
+}
+
+void ToggleButton(CBlob@ this, CBlob@ caller)
+{
+	if (this.hasTag("cocok_gravity"))
+	{
+		this.Untag("cocok_gravity");
+		this.getSprite().SetEmitSoundPaused(true);
+	}
+	else
+	{
+		this.Tag("cocok_gravity");
+		this.getSprite().SetEmitSoundPaused(false);
 	}
 }
 
