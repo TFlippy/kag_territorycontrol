@@ -197,21 +197,24 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (caller.isOverlapping(this) && !this.hasTag("faction_base"))
 	{
-		if (caller.getTeamNum() == this.getTeamNum() && this.getTeamNum() < 100)
+		if (this.getName() != "merchant" && this.getName() != "witchshack")
 		{
-			CPlayer@ myPly = caller.getPlayer();
-			if (myPly !is null && caller.isMyPlayer())
+			if (caller.getTeamNum() == this.getTeamNum() && this.getTeamNum() < 100)
 			{
-				TeamData@ team_data;
-				GetTeamData(this.getTeamNum(), @team_data);
-				if (team_data !is null)
+				CPlayer@ myPly = caller.getPlayer();
+				if (myPly !is null && caller.isMyPlayer())
 				{
-					const bool isLeader = team_data.leader_name == myPly.getUsername();
-					if (isLeader)
+					TeamData@ team_data;
+					GetTeamData(this.getTeamNum(), @team_data);
+					if (team_data !is null)
 					{
-						CBitStream no_params;
-						CButton@ butt = caller.CreateGenericButton(33, Vec2f(-0, -15), this, this.getCommandID("abandon"), "Abandon this building", no_params);
-						//abandon the building
+						const bool isLeader = team_data.leader_name == myPly.getUsername();
+						if (isLeader)
+						{
+							CBitStream no_params;
+							CButton@ butt = caller.CreateGenericButton(33, Vec2f(-0, -15), this, this.getCommandID("abandon"), "Abandon this building", no_params);
+							//abandon the building
+						}
 					}
 				}
 			}

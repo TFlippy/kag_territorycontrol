@@ -1,6 +1,7 @@
 #include "ResearchCommon.as"
 #include "Survival_Structs.as";
 #include "Requirements_Tech.as"
+#include "SmartStorageHelpers.as";
 
 string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 {
@@ -166,7 +167,8 @@ bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, C
 		: (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
 
 	CBlob@[] baseBlobs;
-	
+	CBlob@[] smartStorageBlobs;
+
 	bool storageEnabled = false;
 	
 	if (playerBlob !is null)
@@ -191,6 +193,15 @@ bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, C
 
 		if (storageEnabled)
 		{
+			getBlobsByTag("smart_storage", @smartStorageBlobs);
+			for (int i = 0; i< smartStorageBlobs.length; i++)
+			{
+				if (smartStorageBlobs[i].getTeamNum() != playerTeam)
+				{
+					smartStorageBlobs.erase(i);
+					i--;
+				}
+			}
 			getBlobsByTag("remote_storage", @baseBlobs);
 			for (int i = 0; i < baseBlobs.length; i++)
 			{
@@ -213,6 +224,7 @@ bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, C
 			if (!canPass)
 			{
 				baseBlobs.clear();
+				smartStorageBlobs.clear();
 			}
 		}
 	}
@@ -229,6 +241,10 @@ bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, C
 				for (int i = 0; i< baseBlobs.length; i++)
 				{
 					sum += baseBlobs[i].getBlobCount(blobName);
+				}
+				for (int i = 0; i< smartStorageBlobs.length; i++)
+				{
+					sum += smartStorageCheck(smartStorageBlobs[i],blobName);
 				}
 			}
 			
@@ -354,6 +370,7 @@ void server_TakeRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &ino
 		: (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
 
 	CBlob@[] baseBlobs;
+	CBlob@[] smartStorageBlobs;
 	
 	bool storageEnabled = false;
 
@@ -379,6 +396,15 @@ void server_TakeRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &ino
 
 		if (storageEnabled)
 		{
+			getBlobsByTag("smart_storage", @smartStorageBlobs);
+			for (int i = 0; i < smartStorageBlobs.length; i++)
+			{
+				if (smartStorageBlobs[i].getTeamNum() != playerTeam)
+				{
+					smartStorageBlobs.erase(i);
+					i--;
+				}
+			}
 			getBlobsByTag("remote_storage", @baseBlobs);
 			for (int i = 0; i < baseBlobs.length; i++)
 			{
@@ -418,6 +444,17 @@ void server_TakeRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &ino
 
 			if (storageEnabled)
 			{
+				for (int i = 0; i < smartStorageBlobs.length; i++)
+				{
+					if (taken >= quantity)
+					{
+						break;
+					}
+					u32 hold = Maths::Min(smartStorageCheck(smartStorageBlobs[i], blobName), quantity - taken);
+					smartStorageTake(smartStorageBlobs[i], blobName, quantity - taken);
+					taken += hold;
+				}
+				
 				for (int i = 0; i < baseBlobs.length; i++)
 				{
 					if (taken >= quantity)
