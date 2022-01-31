@@ -731,7 +731,7 @@ string getRank(string &in username, SColor &out col, CPlayer@ p)
 		case 926613433: // blackguy123
 		{
 			col = SColor(255, 56, 149, 244);
-			return "The Last TC Dev";
+			return "TC CTF Creator";
 		}
 		break;
 
