@@ -139,22 +139,19 @@ void onInit(CBlob@ this)
 				break;
 		}
 
-		for (int i = 0; i < 4; i++)
-		{
-			CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
-			ammo.server_SetQuantity(ammo.maxQuantity);
-			this.server_PutInInventory(ammo);
-		}
+		CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
+		ammo.server_SetQuantity(ammo.maxQuantity);
+		this.server_PutInInventory(ammo);
 
 		CBlob@ gun = server_CreateBlob(gun_config, this.getTeamNum(), this.getPosition());
 		if(gun !is null)
 		{
 			this.server_Pickup(gun);
 
-			if (gun.hasCommandID("cmd_gunReload"))
+			if (gun.hasCommandID("reload"))
 			{
 				CBitStream stream;
-				gun.SendCommand(gun.getCommandID("cmd_gunReload"), stream);
+				gun.SendCommand(gun.getCommandID("reload"), stream);
 			}
 		}
 
