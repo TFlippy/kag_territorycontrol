@@ -42,6 +42,16 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			scale = 0.0f;
 			break;
 			
+		case HittersTC::bullet_low_cal:
+		case HittersTC::shotgun:
+			scale = 0.7f;
+			break;
+
+		case HittersTC::bullet_high_cal:
+		case HittersTC::railgun_lance:
+			scale = 0.6f;
+			break;
+			
 		default: 
 			break;
 	}

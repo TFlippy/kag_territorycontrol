@@ -317,11 +317,11 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			case Hitters::spikes:
 			case Hitters::builder:
 			case Hitters::arrow:
+			case HittersTC::electric:
 				damage_received = damage * 0.25f;
 				break;
 
 			case HittersTC::bullet_high_cal:
-			case HittersTC::electric:
 				damage_received = damage * 0.10f;
 				break;
 
@@ -341,8 +341,8 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		// print("received " + damage_received);
 		// print("reflecting " + damage_reflected);
 
-		hitterBlob.setVelocity(hitterBlob.getVelocity() - (velocity * damage_reflected * 1.25f));
-		this.setVelocity(this.getVelocity() + (velocity * damage_reflected * 1.25f));
+		hitterBlob.setVelocity(hitterBlob.getVelocity() - (velocity * damage_reflected * 0.25f));
+		this.setVelocity(this.getVelocity() + (velocity * damage_reflected * 0.25f));
 
 		SetKnocked(hitterBlob, 30.0f * damage_reflected);
 		SetKnocked(this, 30.0f * damage_reflected);
@@ -369,4 +369,5 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 void onDie(CBlob@ this)
 {
 	if (isServer()) server_CreateBlob("exosuititem", this.getTeamNum(), this.getPosition());
+	this.RemoveScript("ExosuitLogic.as");
 }
