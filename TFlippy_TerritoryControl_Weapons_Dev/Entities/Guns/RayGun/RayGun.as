@@ -108,7 +108,7 @@ void onTick(CBlob@ this)
 						for (int i = 0; i < blobs.length; i++)
 						{
 							CBlob@ b = blobs[i].blob;
-							if (b !is null && (b.hasTag("flesh") || b.hasTag("nature")) && !b.hasTag("dead"))
+							if (b !is null && (b.hasTag("flesh") || b.hasTag("nature")) && !b.hasTag("dead") && this.getTeamNum() != b.getTeamNum())
 							{
 								this.server_Hit(b, b.getPosition(), Vec2f(0, 0), damage / counter, HittersTC::radiation, true);
 
@@ -132,7 +132,7 @@ void onTick(CBlob@ this)
 								CBlob@ blob = blobsInRadius[i];
 								// if (!blob.hasTag("flesh") || blob.hasTag("dead")) continue;
 
-								if (!(blob.hasTag("flesh") || blob.hasTag("nature")) || blob.hasTag("dead")) continue;
+								if (!(blob.hasTag("flesh") || blob.hasTag("nature")) || blob.hasTag("dead") || this.getTeamNum() == blob.getTeamNum()) continue;
 
 								Vec2f pos = hitPos;
 								Vec2f dir = blob.getPosition() - pos;
