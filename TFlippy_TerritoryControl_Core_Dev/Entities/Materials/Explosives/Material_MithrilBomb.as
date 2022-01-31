@@ -113,21 +113,10 @@ void DoExplosion(CBlob@ this)
 
 	if (isServer())
 	{
-		for (int i = 0; i < 24; i++)
+		for (int i = 0; i < 12; i++)
 		{
-			int amount = 25;
-			while(amount < 250)
-			{
-				amount += 25 + XORRandom(80);
-				i++;
-				if(i > 23)
-				{
-					break;
-				}
-			}
-			if(amount > 250) amount = 250;
 			CBlob@ blob = server_CreateBlob("mat_mithril", this.getTeamNum(), this.getPosition());
-			blob.server_SetQuantity(amount);
+			blob.server_SetQuantity(20 + XORRandom(50));
 			blob.setVelocity(Vec2f(4 - XORRandom(8), -2 - XORRandom(5)) * (0.5f));
 		}
 
@@ -156,11 +145,6 @@ void DoExplosion(CBlob@ this)
 
 	if(isClient())
 	{
-		for (int i = 0; i < 10; i++)
-		{
-			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(500) * 0.01f, 25), particles[XORRandom(particles.length)]);
-		}
-
 		SetScreenFlash(50, 255, 255, 255);
 		this.getSprite().Gib();
 	}

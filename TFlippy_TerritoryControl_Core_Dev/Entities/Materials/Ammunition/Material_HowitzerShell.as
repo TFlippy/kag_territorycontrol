@@ -3,9 +3,10 @@
 
 void onInit(CBlob@ this)
 {
-	this.maxQuantity = 8;
+	this.maxQuantity = 16;
 	this.Tag("explosive");
 	this.Tag("medium weight");
+	this.Tag("map_damage_dirt");
 }
 
 void DoExplosion(CBlob@ this, Vec2f velocity)
@@ -23,8 +24,8 @@ void DoExplosion(CBlob@ this, Vec2f velocity)
 	Explode(this, 64.0f, 4.0f);
 	for (int i = 0; i < 4; i++)
 	{
-		Vec2f jitter = Vec2f((XORRandom(200) - 100) / 200.0f, (XORRandom(200) - 100) / 200.0f);
-		LinearExplosion(this, Vec2f(velocity.x * jitter.x, velocity.y * jitter.y), 24.0f + XORRandom(32), 24.0f, 4, 10.0f, Hitters::explosion);
+		Vec2f jitter = Vec2f((XORRandom(100) - 50) / 100.0f, (XORRandom(100) - 50) / 100.0f);
+		LinearExplosion(this, Vec2f(velocity.x * jitter.x, velocity.y * jitter.y), 16.0f + XORRandom(8), 16 + XORRandom(8), 2, 4.00f, Hitters::explosion);
 	}
 
 	this.server_Die();
@@ -47,7 +48,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 	f32 vellen = this.getOldVelocity().Length();
 
-	if (vellen > 10.0f)
+	if (vellen > 6.0f)
 	{
 		DoExplosion(this, this.getOldVelocity());
 	}

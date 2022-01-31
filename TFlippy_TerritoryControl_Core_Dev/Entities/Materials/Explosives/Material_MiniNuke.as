@@ -21,7 +21,7 @@ void onInit(CBlob@ this)
 	// this.Tag("map_damage_dirt");
 	
 	this.Tag("explosive");
-	this.Tag("medium weight");
+	this.Tag("heavy weight");
 	
 	this.maxQuantity = 1;
 }

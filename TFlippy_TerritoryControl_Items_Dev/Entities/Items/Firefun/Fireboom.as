@@ -17,7 +17,7 @@ string[] explosion_particles =
 
 const u32 fuel_timer_max = 30 * 1;
 const f32 inp_ratio = 0.50f;
-const f32 push_radius = 512.00f;
+const f32 push_radius = 300.00f;
 
 void onInit(CBlob@ this)
 {
@@ -124,7 +124,6 @@ void DoExplosion(CBlob@ this)
 
 	SetScreenFlash(255, 255, 255, 255, 3);
 	Sound::Play("Fireboom_Boom");
-	ShakeScreen(666, 666, this.getPosition());
 
 	CBlob@[] blobs;
 	if (map.getBlobsInRadius(pos, push_radius, @blobs))
@@ -145,7 +144,6 @@ void DoExplosion(CBlob@ this)
 
 				f32 mod = Maths::Sqrt(Maths::Clamp(dist / push_radius, 0, 1));
 				blob.AddForce(dir * blob.getRadius() * 75 * mod);
-				SetKnocked(blob, 150 * mod);
 			}
 		}
 	}
@@ -157,11 +155,11 @@ void DoExplosion(CBlob@ this)
 			map.server_setFireWorldspace(pos + Vec2f(2 - XORRandom(4), 2 - XORRandom(4)) * 8, true);
 		}
 
-		for (int i = 0; i < 40; i++)
+		for (int i = 0; i < 20; i++)
 		{
 			CBlob@ blob = server_CreateBlob("flame", -1, this.getPosition());
 			blob.setVelocity(getRandomVelocity(0, XORRandom(200) / (10.00f + XORRandom(10)), 360));
-			blob.server_SetTimeToDie(60 + XORRandom(10));
+			blob.server_SetTimeToDie(15 + XORRandom(10));
 		}
 
 		CBlob@ boom = server_CreateBlobNoInit("nukeexplosion");
@@ -181,34 +179,6 @@ void DoExplosion(CBlob@ this)
 			boom.set_string("custom_explosion_sound", "Fireboom_Boom");
 			boom.Init();
 		}
-	}
-
-	if (isClient())
-	{
-		const u32 count = 800;
-		const f32 seg = 360.00f / count;
-		u32 color = this.getTeamNum() < teamcolours.length ? teamcolours[this.getTeamNum()] : teamcolours[XORRandom(teamcolours.length)];
-
-		for (int i = 0; i < count; i++)
-		{
-			Vec2f dir = Vec2f(Maths::Cos(i * seg), Maths::Sin(i * seg));
-			Vec2f ppos = (pos + dir * 4.00f) + getRandomVelocity(0, 1, 360);
-			f32 vel = XORRandom(200) / (10.00f + XORRandom(10));
-
-			string filename = CFileMatcher(explosion_particles[XORRandom(explosion_particles.size())]).getFirst();
-
-			CParticle@ p = ParticleAnimated(filename, this.getPosition(), dir * vel, float(XORRandom(360)), 1.0f, 10 + XORRandom(30), 0.05f, true);
-			if (p !is null)
-			{
-				p.growth = -0.005f;
-				p.colour = SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255));
-				p.velocity = dir * vel;
-				p.collides = false;
-				p.damping = 0.90f + (XORRandom(40) * 0.0025f);
-			}
-		}
-
-		this.getSprite().Gib();
 	}
 	
 }
@@ -253,7 +223,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CSprite@ sprite = this.getSprite();
 		sprite.SetEmitSound("Rocket_Idle.ogg");
 		sprite.SetEmitSoundSpeed(1.9f);
-		sprite.SetEmitSoundVolume(2.0f);
+		sprite.SetEmitSoundVolume(1.5f);
 		sprite.SetEmitSoundPaused(false);
 		// sprite.PlaySound("Rocket_Idle.ogg", 1.00f, 1.80f);
 

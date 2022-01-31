@@ -19,7 +19,7 @@ void onInit(CBlob@ this)
 	this.set_f32("bomb angle", 90);
 
 	this.Tag("explosive");
-	this.Tag("medium weight");
+	this.Tag("heavy weight");
 
 	this.maxQuantity = 1;
 }
@@ -105,26 +105,11 @@ void DoExplosion(CBlob@ this)
 
 	if (isServer())
 	{
-		CBlob@[] blobs;
-
-		if (map.getBlobsInRadius(pos, 128.0f, @blobs))
-		{
-			for (int i = 0; i < blobs.length; i++)
-			{
-				CBlob@ blob = blobs[i];
-				if (blob !is null && (blob.hasTag("flesh") || blob.hasTag("plant"))) 
-				{
-					map.server_setFireWorldspace(blob.getPosition(), true);
-					blob.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.5f, Hitters::fire);
-				}
-			}
-		}
-
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			CBlob@ blob = server_CreateBlob("mat_mithril", -1, this.getPosition());
 			blob.setVelocity(getRandomVelocity(angle, 4 + XORRandom(15), 60));
-			blob.server_SetQuantity(XORRandom(75));
+			blob.server_SetQuantity(10 + XORRandom(20));
 
 			CBlob@ gas = server_CreateBlob("falloutgas", -1, this.getPosition());
 			gas.setVelocity(getRandomVelocity(angle, 8 + XORRandom(10), 70));

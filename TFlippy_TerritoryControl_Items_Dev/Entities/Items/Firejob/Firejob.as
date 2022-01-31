@@ -72,11 +72,6 @@ void onTick(CBlob@ this)
 				this.server_Die();
 			}
 		}
-
-		if (isClient())
-		{
-			MakeParticle(this, -nDir, XORRandom(100) < 30 ? ("SmallSmoke" + (1 + XORRandom(2))) : "SmallFire" + (1 + XORRandom(2)));
-		}
 	}
 }
 
@@ -135,7 +130,6 @@ void DoExplosion(CBlob@ this)
 
 				f32 mod = Maths::Sqrt(Maths::Clamp(dist / push_radius, 0, 1));
 				blob.AddForce(dir * blob.getRadius() * 75 * mod);
-				SetKnocked(blob, 150 * mod);
 			}
 		}
 	}
@@ -161,8 +155,7 @@ void DoExplosion(CBlob@ this)
 			}
 		}
 
-		int rng = XORRandom(5);
-		for (int i = 0; i < 3 + rng; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			CBlob@ blob = @server_CreateBlob("flame", -1, this.getPosition());
 			if (blob is null) { continue; }
@@ -174,54 +167,11 @@ void DoExplosion(CBlob@ this)
 
 	if (isClient())
 	{
-		const u32 count = 360;
-		const f32 seg = 360.00f / count;
-
-		u32 color = this.getTeamNum() < teamcolours.length ? teamcolours[this.getTeamNum()] : teamcolours[XORRandom(teamcolours.length)];
-		// MakePulseParticle(this, Vec2f(0, 0), 30, 32, 0.2f, color);
-
-		for (int i = 0; i < count; i++)
-		{
-			Vec2f dir = Vec2f(Maths::Cos(i * seg), Maths::Sin(i * seg));
-			Vec2f ppos = (pos + dir * 4.00f) + getRandomVelocity(0, 1, 360);
-			f32 vel = XORRandom(100) / 25.00f;
-
-			// CParticle@ p = ParticlePixel(ppos, dir * vel, SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255)), true, 90 + XORRandom(90));
-			// if (p !is null)
-			// {
-				// p.gravity = Vec2f(0, 0.01f);
-				// p.scale = 32.00f + (XORRandom(100) / 25.00f);
-				// p.growth = 0.01f;
-			// }
-
-			f32 size = 3 + ((XORRandom(100) / 100.00f) * 2.00f);
-			// CParticle@ p = ParticleAnimated(CFileMatcher("Sparkle.png").getFirst(), ppos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(8, 8), 1, 0, true);
-			CParticle@ p = ParticleAnimated("pixel.png", ppos, Vec2f(0, 0), XORRandom(360), size, RenderStyle::additive, 0, Vec2f(1, 1), 1, 0, true);
-			if (p !is null)
-			{
-				p.animated = 60 + XORRandom(120);
-				p.growth = XORRandom(100) * -0.007f;
-				// p.setRenderStyle(RenderStyle::additive);
-				p.colour = SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255));
-				p.velocity = dir * vel;
-				p.gravity = Vec2f(0, XORRandom(100) / 5000.00f);
-				p.collides = true;
-			}
-			
-		}
-
 		CBlob@ local = getLocalPlayerBlob();
 		if (local !is null)
 		{
 			f32 dmod = 1.00f - ((local.getPosition() - pos).getLength() / 500.00f);
 			Sound::Play("Firejob_Boom.ogg", getDriver().getWorldPosFromScreenPos(getDriver().getScreenCenterPos()), 2.0f - (0.2f * (1 - dmod)), 0.50f + dmod);
-			ShakeScreen(256.0f, 150, this.getPosition());
-
-			if (Maths::Abs(local.getPosition().x - pos.x) < 500)
-			{
-				SColor c = SColor(color) + SColor(255, XORRandom(255), XORRandom(255), XORRandom(255));
-				SetScreenFlash(200, c.getRed(), c.getGreen(), c.getBlue(), 3);		
-			}
 		}
 	}
 
@@ -229,7 +179,7 @@ void DoExplosion(CBlob@ this)
 	this.getSprite().Gib();
 }
 
-const f32 push_radius = 350.00f;
+const f32 push_radius = 175.00f;
 
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {

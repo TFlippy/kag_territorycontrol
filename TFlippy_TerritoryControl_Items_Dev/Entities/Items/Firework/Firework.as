@@ -194,7 +194,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (!this.hasTag("offblast"))
 	{
-		if (this.isOverlapping(caller) || this.isAttachedTo(caller))
+		if (caller !is null && (caller.getPosition() - this.getPosition()).Length() <= 32)
 		{
 			CBitStream params;
 			caller.CreateGenericButton(11, Vec2f(0.0f, 0.0f), this, this.getCommandID("offblast"), "Off blast!", params);

@@ -113,23 +113,12 @@ void DoExplosion(CBlob@ this)
 		{
 			CBlob@ blob = server_CreateBlob("flame", -1, this.getPosition());
 			blob.setVelocity(Vec2f(XORRandom(10) - 5, -XORRandom(10)));
-			blob.server_SetTimeToDie(20 + XORRandom(10));
+			blob.server_SetTimeToDie(10 + XORRandom(10));
 		}
 		for(int a = 0; a < 80; a++)
 		{
 			map.server_setFireWorldspace(pos + Vec2f(8 - XORRandom(16), 8 - XORRandom(16)) * 8, true);
 		}
-	}
-
-	if (isClient() && this.isOnScreen())
-	{
-		for (int i = 0; i < 80; i++)
-		{
-
-			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(angle, XORRandom(400) * 0.01f, 70), particles[XORRandom(particles.length)]);
-			// ParticleAnimated("Entities/Effects/Sprites/FireFlash.png", this.getPosition() + Vec2f(0, -4), Vec2f(0, 0.5f), 0.0f, 1.0f, 2, 0.0f, true);
-		}
-		this.getSprite().Gib();
 	}
 }
 

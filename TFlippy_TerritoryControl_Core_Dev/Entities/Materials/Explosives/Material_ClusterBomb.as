@@ -97,22 +97,7 @@ void DoExplosion(CBlob@ this)
 	
 	if (isServer())
 	{
-		CBlob@[] blobs;
-		
-		if (map.getBlobsInRadius(pos, 128.0f, @blobs))
-		{
-			for (int i = 0; i < blobs.length; i++)
-			{		
-				CBlob@ blob = blobs[i];
-				if (blob !is null && (blob.hasTag("flesh") || blob.hasTag("plant"))) 
-				{
-					map.server_setFireWorldspace(blob.getPosition(), true);
-					blob.server_Hit(blob, blob.getPosition(), Vec2f(0, 0), 0.5f, Hitters::fire);
-				}
-			}
-		}
-	
-		for (int i = 0; i < 8 * this.getQuantity(); i++)
+		for (int i = 0; i < 4 * this.getQuantity(); i++)
 		{
 			CBlob@ blob = server_CreateBlob("tankshell", this.getTeamNum(), this.getPosition());
 			blob.setVelocity(getRandomVelocity(angle, 15 + XORRandom(5), 45));
