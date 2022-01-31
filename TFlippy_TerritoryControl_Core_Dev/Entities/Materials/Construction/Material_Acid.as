@@ -30,9 +30,9 @@ void DoExplosion(CBlob@ this)
 					blob.server_setTeamNum(-1);
 					blob.setPosition(this.getPosition());
 					blob.setVelocity(Vec2f(XORRandom(16) - 8, -XORRandom(5)));
-					blob.set_u16("acid_strength", 100);
+					blob.set_u16("acid_strength", 25);
 					blob.Init();
-					blob.server_SetTimeToDie(30 + XORRandom(30));
+					blob.server_SetTimeToDie(15 + XORRandom(15));
 				}
 			}
 		}

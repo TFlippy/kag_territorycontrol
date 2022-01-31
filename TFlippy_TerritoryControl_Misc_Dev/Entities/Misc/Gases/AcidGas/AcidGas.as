@@ -11,7 +11,7 @@ void onInit(CBlob@ this)
 	this.getSprite().setRenderStyle(RenderStyle::additive);
 	this.getSprite().SetZ(10.0f);
 
-	if (!this.exists("acid_strength")) this.set_u16("acid_strength", 50);
+	if (!this.exists("acid_strength")) this.set_u16("acid_strength", 25);
 	if (!this.exists("toxicity")) this.set_f32("toxicity", 1.00f);
 	
 	this.SetMapEdgeFlags(CBlob::map_collide_sides);
@@ -20,7 +20,7 @@ void onInit(CBlob@ this)
 
 	this.getSprite().RotateBy(90 * XORRandom(4), Vec2f());
 
-	this.server_SetTimeToDie(30);
+	this.server_SetTimeToDie(10);
 }
 
 void UpdateTickFrequency(CBlob@ this)
@@ -51,7 +51,8 @@ void onTick(CBlob@ this)
 			
 			TileType type = map.getTile(bpos).type;
 			
-			if (!isTileGlass(type) && !isTileBGlass(type)  && !map.isTileGround(type) && type != CMap::tile_goldingot && type != CMap::tile_mithrilingot && type != CMap::tile_empty && type != CMap::tile_ground_back)
+			if (!isTileGlass(type) && !isTileBGlass(type) && type != CMap::tile_goldingot && type != CMap::tile_mithrilingot && 
+				type != CMap::tile_empty && type != CMap::tile_ground_back)
 			{
 				if (server && type != CMap::tile_bedrock)
 				{
