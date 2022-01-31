@@ -23,7 +23,7 @@ void onInit(CBlob@ this)
 	this.Tag("builder always hit");
 	this.Tag("change team on fort capture");
 
-	this.getCurrentScript().tickFrequency = 150;
+	this.getCurrentScript().tickFrequency = 450;
 
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
 
@@ -50,14 +50,14 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Copper Wire (2)", "$mat_copperwire$", "mat_copperwire-2", "A copper wire. Kids' favourite toy.");
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
+		ShopItem@ s = addShopItem(this, "Copper Wire (10)", "$mat_copperwire$", "mat_copperwire-10", "A bundle of copper wires. Kids' favourite toy.");
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 5);
 
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Copper Wire (10)", "$mat_copperwire$", "mat_copperwire-10", "A bundle of copper wires. Kids' favourite toy.");
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 5);
+		ShopItem@ s = addShopItem(this, "Copper Wire (100)", "$mat_copperwire$", "mat_copperwire-100", "A copper wire. Kids' favourite toy.");
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 50);
 
 		s.spawnNothing = true;
 	}
@@ -71,8 +71,8 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Giga Drill Breaker", "$powerdrill$", "powerdrill", "A huge overpowered drill with a durable mithril head.");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
-		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 4);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 10);
 
 		s.spawnNothing = true;
 	}
@@ -100,7 +100,7 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Engineer's Tools", "$engineertools$", "engineertools", "Engineer's Tools for real engineers.", true);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
-		AddRequirement(s.requirements, "coin", "", "Coins", 1000);
+		AddRequirement(s.requirements, "coin", "", "Coins", 500);
 
 		s.spawnNothing = true;
 	}
@@ -135,6 +135,7 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Rocket Pack", "$icon_jetpack$", "jetpack", "A small rocket-propelled backpack.\nOccupies the Torso slot.\nPress [Shift] to jump!");
 		AddRequirement(s.requirements, "blob", "mat_smallrocket", "Small Rocket", 2);
 		AddRequirement(s.requirements, "blob", "mat_oil", "Oil", 50);
+		AddRequirement(s.requirements, "blob", "mat_oil", "Oil", 25);
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 
 		s.spawnNothing = true;
@@ -187,7 +188,7 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Gauss Rifle", "$icon_gaussrifle$", "gaussrifle", "A modified toy used to kill people.\n\nUses Mithril Ingots.");
+		ShopItem@ s = addShopItem(this, "Gauss Rifle", "$icon_gaussrifle$", "gaussrifle", "A modified toy used to kill people.\n\nUses Steel Ingots.");
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
 		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 50);
 		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 10);
@@ -282,6 +283,32 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "Beagle", "$beagle$", "beagle", "A hand-made off-brand desert eagle. \n Uses High Calliber Ammo.");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 2);
+		AddRequirement(s.requirements, "coin", "", "Coins", 375);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Police Taser", "$taser$", "taser", "Used to shock people. \n Requires batteries to operate.");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 10);
+		AddRequirement(s.requirements, "coin", "", "Coins", 375);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Batteries", "$mat_battery$", "mat_battery-50", "Used to power your remote control.");
+		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 25);
+		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 25);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 1);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 125);
+
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Musical Contrabass", "$icon_contrabass$", "contrabass", "An advanced contrabass capable of emitting sounds of multiple instruments.");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 150);
 		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 4);
@@ -340,7 +367,7 @@ void onTick(CBlob@ this)
 
 			if (blob.hasTag("vehicle"))
 			{
-				if (blob.getHealth() < blob.getInitialHealth()) blob.server_Heal(4);
+				if (blob.getHealth() < blob.getInitialHealth()) blob.server_Heal(20);
 			}
 		}
 	}
