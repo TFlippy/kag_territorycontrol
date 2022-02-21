@@ -109,6 +109,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 			u16 prevstacks = (held_resource_amount-1)/maxquantity+1; //round up
 			held_resource_amount += amount;
 			if(prevstacks<(held_resource_amount-1)/maxquantity+1) quantity += 1; //round up again
+			blob.Tag("dead");
 			blob.server_Die();
 			this.set_u16("smart_storage_quantity", quantity);
 		}
