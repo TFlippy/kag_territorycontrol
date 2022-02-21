@@ -4,6 +4,7 @@
 void onInit(CBlob@ this)
 {
 	this.Tag("blueprint");
+	this.maxQuantity = 100;
 
 	// this.addCommandID("study");
 	

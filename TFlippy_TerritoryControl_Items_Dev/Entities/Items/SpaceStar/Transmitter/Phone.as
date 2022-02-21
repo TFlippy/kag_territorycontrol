@@ -54,19 +54,19 @@ void onInit(CBlob@ this)
 	// }
 	{
 		ShopItem@ s = addShopItem(this, "UPF Recon Squad!", "$ss_scout_raid$", "scout_raid", "Have you lost something? Order our willing recon squad, and you will sure find what you're looking for!");
-		AddRequirement(s.requirements, "coin", "", "Coins", 799);
+		AddRequirement(s.requirements, "coin", "", "Coins", 1299);
 		
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "UPF Assault Squad!", "$ss_soldier_raid$", "soldier_raid", "Get your own soldier... TODAY!");
-		AddRequirement(s.requirements, "coin", "", "Coins", 1499);
+		AddRequirement(s.requirements, "coin", "", "Coins", 1799);
 		
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "UPF Weapon Package!", "$ss_guns$", "gun_package", "Assorted gun collection! Become a proud owner of UPF's best-selling armaments, now with a huge discount!");
-		AddRequirement(s.requirements, "coin", "", "Coins", 2199);
+		AddRequirement(s.requirements, "coin", "", "Coins", 3499);
 		
 		s.spawnNothing = true;
 	}
