@@ -189,21 +189,6 @@ void DoExplosion(CBlob@ this)
 		Vec2f pos = this.getPosition();
 		CMap@ map = getMap();
 		
-		for (int i = 0; i < 35; i++)
-		{
-			MakeParticle(this, Vec2f(XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(-angle, XORRandom(220) * 0.01f, 90), particles[XORRandom(particles.length)]);
-		}
-		
-		// for (int i = 0; i < 35; i++)
-		// {
-			// MakeParticleEmber(this, Vec2f(0, 0), getRandomVelocity(-angle, XORRandom(800) * 0.01f, 45), particles[XORRandom(particles.length)]);
-		// }
-		
-		// for (int i = 0; i < 15; i++)
-		// {
-			// MakeParticleSmoke(this, Vec2f(32 - XORRandom(64), 16 - XORRandom(32)), Vec2f(XORRandom(100) * 0.01f, -XORRandom(100) * 0.01f), particles_smoke[XORRandom(particles_smoke.length)]);
-		// }
-		
 		this.getSprite().Gib();
 	}
 	
