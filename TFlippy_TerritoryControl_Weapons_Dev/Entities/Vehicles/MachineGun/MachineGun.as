@@ -247,7 +247,6 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		sprite.getSpriteLayer("arm").SetAnimation("shoot");
 
 		f32 oAngle = (angle % 360) + 180;
-		ParticleCase2("GatlingCase.png", this.getPosition(), this.isFacingLeft() ? oAngle : angle);
 	}
 
 	this.set_u32("fireDelay", getGameTime() + 2);

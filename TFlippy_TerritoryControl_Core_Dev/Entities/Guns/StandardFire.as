@@ -206,7 +206,6 @@ void onTick(CBlob@ this)
 					if ((actionInterval == settings.FIRE_INTERVAL / 2) && this.get_bool("justShot"))
 					{
 						sprite.PlaySound(this.get_string("CustomCycle"));
-						ParticleCase2(casing, this.getPosition(), this.isFacingLeft() ? oAngle : aimangle);
 						this.set_bool("justShot", false);
 					}
 				}
@@ -310,15 +309,6 @@ void onTick(CBlob@ this)
 						//Turn on muzzle flash
 						flash.SetFrameIndex(0);
 						flash.SetVisible(true);
-					}
-
-					if (isClient()) 
-					{
-						if (!this.exists("CustomCycle")) 
-						{
-							ParticleCase2(casing, this.getPosition(), this.isFacingLeft() ? oAngle : aimangle);
-						}
-						else this.set_bool("justShot", true);
 					}
 				}
 				else if (this.get_u8("clickReload") == 1 && HasAmmo(this))

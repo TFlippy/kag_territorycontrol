@@ -810,14 +810,6 @@ void DoExplosion(CBlob@ this)
 		}
 	}
 
-	if (isClient())
-	{
-		for (int i = 0; i < 40; i++)
-		{
-			MakeParticle(this, Vec2f( XORRandom(64) - 32, XORRandom(80) - 60), getRandomVelocity(angle, XORRandom(400) * 0.01f, 70), particles[XORRandom(particles.length)]);
-		}
-	}
-
 	this.getSprite().Gib();
 }
 
