@@ -2,7 +2,7 @@ void onInit(CBlob@ this)
 {
 	this.addCommandID("consume");
 	this.Tag("hopperable");
-	this.maxQuantity = 100;
+	this.maxQuantity = 12;
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
