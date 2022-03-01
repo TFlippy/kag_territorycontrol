@@ -83,7 +83,7 @@ void onTick(CBlob@ this)
 	{
 		CBlob@ pilot = ap_pilot.getOccupied();
 		
-		if (pilot !is null && this.getHealth() > 10.00f)
+		if (pilot !is null && this.getHealth() > 5.00f)
 		{
 			Vec2f dir = pilot.getPosition() - pilot.getAimPos();
 			const f32 len = dir.Length();
