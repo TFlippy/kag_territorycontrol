@@ -13,6 +13,7 @@ void onInit(CBlob@ this)
 {
 	this.Tag("builder always hit");
 	this.Tag("heavy weight");
+	this.Tag("ignore extractor");
 
 	this.set_f32("pickup_priority", 16.00f);
 	this.getShape().SetRotationsAllowed(false);
@@ -65,7 +66,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	if (this.getTeamNum() != forBlob.getTeamNum()) return false;
+	if (this.getTeamNum() != forBlob.getTeamNum() || this.getDistanceTo(forBlob) > 48) return false;
 
 	CBlob@ carried = forBlob.getCarriedBlob();
 	return (carried is null ? true : carried.getName() == "mat_sammissile");
@@ -104,6 +105,8 @@ void onTick(CBlob@ this)
 
 	if (this.get_bool("security_state"))
 	{
+		int ammo = GetAmmo(this);
+		if (ammo == 0) return;
 		CBlob@[] blobs;
 		getBlobsByTag("aerial", @blobs);
 
@@ -118,10 +121,11 @@ void onTick(CBlob@ this)
 		{
 			CBlob@ b = blobs[i];
 			u8 team = b.getTeamNum();
+			if (team == myTeam || !isVisible(this, b)) continue;
 
 			f32 dist = (b.getPosition() - this.getPosition()).LengthSquared();
 
-			if (team != this.getTeamNum() && (dist < 900*900) && dist < s_dist)
+			if ((dist < 900*900) && dist < s_dist)
 			{
 				s_dist = dist;
 				index = i;
@@ -142,36 +146,34 @@ void onTick(CBlob@ this)
 
 				this.set_u16("target", target.getNetworkID());
 			}
-		}
-
-		CBlob@ t = getBlobByNetworkID(this.get_u16("target"));
-		if (t !is null && getGameTime() >= this.get_u32("next_launch") && isVisible(this, t))
-		{
-			this.SetFacingLeft((t.getPosition().x - this.getPosition().x) < 0);
-
-			int ammo = GetAmmo(this);
-			if (ammo > 0)
+			CBlob@ t = getBlobByNetworkID(this.get_u16("target"));
+			if (t !is null && getGameTime() >= this.get_u32("next_launch") && isVisible(this, t))
 			{
-				if (isServer())
+				this.SetFacingLeft((t.getPosition().x - this.getPosition().x) < 0);
+
+				if (ammo > 0)
 				{
-					Vec2f dir = t.getPosition() - this.getPosition();
-					dir.Normalize();
-					dir.y = -Maths::Abs(dir.y) - 0.25f;
+					if (isServer())
+					{
+						Vec2f dir = t.getPosition() - this.getPosition();
+						dir.Normalize();
+						dir.y = -Maths::Abs(dir.y) - 0.25f;
 
-					CBlob@ m = server_CreateBlobNoInit("sammissile");
-					m.setPosition(this.getPosition() + Vec2f(0, -12));
-					m.set_Vec2f("direction", dir);
-					m.set_u16("target", this.get_u16("target"));
-					m.set_f32("velocity", 10.00f);
-					m.server_setTeamNum(this.getTeamNum());
-					m.Tag("self_destruct");
-					m.Init();
+						CBlob@ m = server_CreateBlobNoInit("sammissile");
+						m.setPosition(this.getPosition() + Vec2f(0, -12));
+						m.set_Vec2f("direction", dir);
+						m.set_u16("target", this.get_u16("target"));
+						m.set_f32("velocity", 10.00f);
+						m.server_setTeamNum(this.getTeamNum());
+						m.Tag("self_destruct");
+						m.Init();
 
-					SetAmmo(this, ammo - 1);
+						SetAmmo(this, ammo - 1);
+					}
+
+					this.getSprite().PlaySound("Missile_Launch.ogg");
+					this.set_u32("next_launch", getGameTime() + 60);
 				}
-
-				this.getSprite().PlaySound("Missile_Launch.ogg");
-				this.set_u32("next_launch", getGameTime() + 60);
 			}
 		}
 	}

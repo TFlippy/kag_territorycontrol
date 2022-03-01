@@ -115,6 +115,7 @@ void onTick(CBlob@ this)
 			{
 				CBlob@ b = blobsInRadius[i];
 				u8 team = b.getTeamNum();
+				if (team == myTeam || map.rayCastSolid(this.getPosition(), b.getPosition())) continue;
 
 				for (uint s = 0; s < spawns.length; s++)
 				{
@@ -124,8 +125,7 @@ void onTick(CBlob@ this)
 					    !map.rayCastSolid(this.getPosition(), b.getPosition())) return;
 				}
 
-				if (myTeam == 250 && b.get_u8("deity_id") == Deity::foghorn) continue;
-				if (team != myTeam && b.hasTag("flesh") && !b.hasTag("dead") && !map.rayCastSolid(this.getPosition(), b.getPosition()))
+				if (b.hasTag("flesh") && !b.hasTag("dead"))
 				{
 					f32 dist = (b.getPosition() - this.getPosition()).Length();
 					if (dist < s_dist)
@@ -145,11 +145,11 @@ void onTick(CBlob@ this)
 				CPlayer@ _target = target.getPlayer();
 				if (host !is null && _target is host) //recognizes host and changes team
 				{
-					this.server_setTeamNum(_target.getTeamNum());
+					this.server_setTeamNum(_target.getBlob().getTeamNum());
 					return;
 				}
+				Zap(this, target);
 			}
-			Zap(this, target);
 		}
 	}
 }

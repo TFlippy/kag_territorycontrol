@@ -13,6 +13,7 @@ void onInit(CBlob@ this)
 {
 	this.Tag("builder always hit");
 	this.Tag("heavy weight");
+	this.Tag("ignore extractor");
 
 	this.set_f32("pickup_priority", 16.00f);
 	this.getShape().SetRotationsAllowed(false);
@@ -78,7 +79,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	if (this.getTeamNum() != forBlob.getTeamNum()) return false;
+	if (this.getTeamNum() != forBlob.getTeamNum() || this.getDistanceTo(forBlob) > 48) return false;
 
 	CBlob@ carried = forBlob.getCarriedBlob();
 	return (carried is null ? true : carried.getName() == "mat_battery");
@@ -112,6 +113,8 @@ const Vec2f headOffset = Vec2f(0, -8);
 
 void onTick(CBlob@ this)
 {
+	int ammo = GetAmmo(this);
+	if (ammo == 0) return;
 	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 	CBlob@ attachedBlob = point.getOccupied();
 
@@ -132,15 +135,18 @@ void onTick(CBlob@ this)
 	{
 		CBlob@ b = blobs[i];
 		u8 team = b.getTeamNum();
+		if (team == myTeam || !isVisible(this, b)) continue;
 
 		f32 dist = (b.getPosition() - this.getPosition()).LengthSquared();
 
-		if (team != myTeam && (dist < 900*900) && dist < s_dist && (b.getHealth() < 5.00f || b.hasTag("wooden")))
+		if ((dist < 900*900) && dist < s_dist && (b.getHealth() < 5.00f || b.hasTag("wooden")))
 		{
 			s_dist = dist;
 			index = i;
 		}
 	}
+
+	bool fired = false;
 
 	if (index != -1)
 	{
@@ -156,37 +162,33 @@ void onTick(CBlob@ this)
 
 			this.set_u16("target", target.getNetworkID());
 		}
-	}
-
-	bool fired = false;
-
-	int ammo = GetAmmo(this);
-	this.SetLight(ammo > 0);
-
-	CBlob@ t = getBlobByNetworkID(this.get_u16("target"));
-	if (t !is null && isVisible(this, t))
-	{
-		this.SetFacingLeft((t.getPosition().x - this.getPosition().x) < 0);
-
-		if (ammo > 0)
+		CBlob@ t = getBlobByNetworkID(this.get_u16("target"));
+		if (t !is null && isVisible(this, t))
 		{
-			fired = true;
-			f32 burn_time = this.get_f32("burn_time") + 1;
-			this.set_f32("burn_time", burn_time);
+			this.SetFacingLeft((t.getPosition().x - this.getPosition().x) < 0);
 
-			if (isServer())
+			if (ammo > 0)
 			{
-				this.server_Hit(t, t.getPosition(), Vec2f(0, 0), 0.03f * burn_time * (t.hasTag("explosive") ? 20.00f : 1.00f), Hitters::fire, true);
+				fired = true;
+				f32 burn_time = this.get_f32("burn_time") + 1;
+				this.set_f32("burn_time", burn_time);
 
-				SetAmmo(this, ammo - 2);
-			}
+				if (isServer())
+				{
+					this.server_Hit(t, t.getPosition(), Vec2f(0, 0), 0.03f * burn_time * (t.hasTag("explosive") ? 20.00f : 1.00f), Hitters::fire, true);
 
-			if (isClient())
-			{
-				ParticleAnimated("LargeSmoke", t.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+					SetAmmo(this, ammo - 2);
+				}
+
+				if (isClient())
+				{
+					ParticleAnimated("LargeSmoke", t.getPosition(), Vec2f(), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), -0.1f, false);
+				}
 			}
 		}
 	}
+
+	this.SetLight(ammo > 0);
 
 	if (isClient())
 	{
@@ -197,11 +199,7 @@ void onTick(CBlob@ this)
 		}
 	}
 
-	if (fired)
-	{
-
-	}
-	else
+	if (!fired)
 	{
 		this.set_f32("burn_time", 0);
 	}
