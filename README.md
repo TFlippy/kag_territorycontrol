@@ -64,11 +64,11 @@ When filling out the description, include the following things:
   <li><b>Jammer</b> - Scripting</li>
   <li><b>Hobey</b> - Scripting</li>
   <li><b>Wunarg</b> - Scripting</li>
-  <li><b>Dark slayer</b> - Scripting</li>
+   <li><b>Laika</b> - Scripting, Selen's Husband</li>
+  <li><b>Darkslayer</b> - Scripting</li>
   <li><b>Sonikuu</b> - Scripting</li>
   <li><b>Zable</b> - Scripting</li>
   <li><b>Garodil</b> - Scripting</li>
-  <li><b>Laika</b> - Scripting</li>
   <li><b>McSaucyNugget</b> - Spriting</li>
 </ul>
 
