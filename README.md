@@ -68,8 +68,8 @@ When filling out the description, include the following things:
   <li><b>Sonikuu</b> - Scripting</li>
   <li><b>Zable</b> - Scripting</li>
   <li><b>Garodil</b> - Scripting</li>
+  <li><b>Laika</b> - Scripting</li>
   <li><b>McSaucyNugget</b> - Spriting</li>
-  <li><b>Laika</b> - Nuisance</li>
 </ul>
 
 
