@@ -1,34 +1,13 @@
-// Minelogic
+//Slave ball logic
 
-//for onhit stuff
 #include "Hitters.as";
 
-// const u32 PRIMING_TICKS = 45;
-
-f32 maxDistance = 48.0f;
+f32 maxDistance = 64.0f;
 
 void onInit(CBlob@ this)
 {
-	this.Tag("medium weight");
-
-	// this.getShape().getVars().waterDragScale = 16.0f;
-
-	// this.set_f32("explosive_radius", 32.0f);
-	// this.set_f32("explosive_damage", 7.5f);
-	// this.set_string("custom_explosion_sound", "Entities/Items/Explosives/KegExplosion.ogg");
-	// this.set_f32("map_damage_radius", 24.0f);
-	// this.set_f32("map_damage_ratio", 0.5f);
-	// this.set_bool("map_damage_raycast", true);
-	// this.set_u32("priming ticks", 0);
-
+	this.Tag("heavy weight");
 	this.Tag("ignore fall");
-
-	// this.getShape().getConsts().collideWhenAttached = true;
-
-	// this.getCurrentScript().runFlags |= Script::tick_attached;
-	// this.getCurrentScript().tickFrequency = 10;
-	
-	// if (XORRandom(100) > 50) this.Tag("dud");
 	
 	CSprite@ sprite = this.getSprite();
 	
@@ -47,6 +26,7 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	CBlob@ slave = getBlobByNetworkID(this.get_u16("slave_id"));
+	this.setInventoryName("Slave's Iron Ball: "+(Maths::Round(this.getHealth()/this.getInitialHealth()*1000.0f)/10.0f)+"% HP");
 	
 	if (slave !is null && slave.getName() == "slave")
 	{		
@@ -56,15 +36,21 @@ void onTick(CBlob@ this)
 		
 		if (distance > maxDistance) 
 		{
-			slave.setPosition(this.getPosition() - dir * maxDistance * 0.999f); 
-			// slave.AddForce(dir * (distance / maxDistance) * 100);
+			slave.setPosition(this.getPosition() - dir * maxDistance * 0.999f);
 			
-			// slave.setVelocity(Vec2f(slave.getVelocity().x, 0));
+			slave.setVelocity(dir*3.0f);
+			this.setVelocity(-dir);
 			
-			// print("gud");
-			// slave.AddForce(dir * (distance / maxDistance) * 32);
-			
-			// if (isServer() && distance > maxDistance * 4) this.server_Hit(slave, slave.getPosition(), dir, (distance / maxDistance) * 0.1f, Hitters::crush, true);
+			if(isServer()){
+				this.server_Hit(this, this.getPosition(), -dir, 0.025f, 0, true);
+			}
+		} else {
+			if(isServer())
+			if(getGameTime() % 15 == 0){
+				if(getMap().rayCastSolid(this.getPosition(), slave.getPosition())){
+					this.server_Hit(this, this.getPosition(), -dir, 0.025f, 0, true);
+				}
+			}
 		}
 		
 		if (isClient()) DrawLine(this.getSprite(), this.getPosition(), distance / 32, -dir.Angle(), true);
@@ -83,7 +69,7 @@ bool canBePutInInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
-	return byBlob.getName() != "slave";
+	return byBlob.getName() != "slave";// || this.isOverlapping(byBlob);
 }
 
 void DrawLine(CSprite@ this, Vec2f startPos, f32 length, f32 angle, bool flip)
@@ -106,70 +92,22 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			damage *= 0.2f;
 			break;
 	}
-
+	
 	return damage;
 
 }
 
-// void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
-// {
-	// this.set_u32("priming ticks", 0);
-	// this.getCurrentScript().tickFrequency = 10;
-	// this.getSprite().SetFrameIndex(0);
-	// this.SetDamageOwnerPlayer(attached.getPlayer());
-// }
+void onDie( CBlob@ this ){
+	if (isServer()){
+		CBlob@ slave = getBlobByNetworkID(this.get_u16("slave_id"));
+		
+		if (slave !is null && slave.getName() == "slave"){
+			CBlob@ peasant = server_CreateBlob("peasant", slave.getTeamNum(), slave.getPosition());
 
-// bool ExplodeOnContactWith(CBlob@ this, CBlob@ blob)
-// {
-	// //enemies									//non neutral enemies
-	// return (this.getTeamNum() != blob.getTeamNum() && blob.getTeamNum() < 8) &&
-	       // //really heavy stuff
-	       // (blob.getMass() > 500.0f ||
-	        // //vehicles
-	        // blob.hasTag("vehicle") ||
-	        // //projectiles
-	        // blob.hasTag("projectile") ||
-	        // //fleshy stuff
-	        // blob.hasTag("flesh"));
-// }
-
-// bool ExtraCollideBlobs(CBlob@ blob)
-// {
-	// return blob.hasTag("door") ||
-	       // blob.getName() == "wooden_platform";
-// }
-
-// bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
-// {
-	// return (ExtraCollideBlobs(blob) ||  //early out collide with doors
-	        // this.getTeamNum() != blob.getTeamNum() &&
-	        // !this.isAttachedTo(blob) &&
-	        // ExplodeOnContactWith(this, blob));
-// }
-
-// void onCollision(CBlob@ this, CBlob@ blob, bool solid)
-// {
-
-// }
-
-// bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
-// {
-	// return (this.getTeamNum() == byBlob.getTeamNum());
-// }
-
-// //1hko damage from builders
-
-// f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
-// {
-	// f32 dmg = damage;
-
-	// switch (customData)
-	// {
-		// case Hitters::builder:
-			// dmg = this.getHealth();
-			// break;
-	// }
-
-	// return dmg;
-
-// }
+			if (peasant !is null){
+				if (slave.getPlayer() !is null) peasant.server_SetPlayer(slave.getPlayer());
+				slave.server_Die();
+			}
+		}
+	}
+}

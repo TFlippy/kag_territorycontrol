@@ -34,23 +34,18 @@ void onSetPlayer(CBlob@ this, CPlayer@ player)
 	if (player !is null) player.SetScoreboardVars("ScoreboardIcons.png", 7, Vec2f(16, 16));
 }
 
-// void onTick(CBlob@ this)
-// {
-	// RunnerMoveVars@ moveVars;
+void onTick(CBlob@ this){
+	RunnerMoveVars@ moveVars;
 
-	// if (!this.get("moveVars", @moveVars))
-	// {
-		// return;
-	// }
+	if (!this.get("moveVars", @moveVars))return;
 
-	// CBlob@ carried = this.getCarriedBlob();
+	CBlob@ carried = this.getCarriedBlob();
 
-	// if (carried !is null && carried.getName() == "slaveball")
-	// {
-		// moveVars.jumpFactor *= 0.5f;
-		// moveVars.walkFactor *= 0.5f;
-	// }
-// }
+	if (carried !is null && carried.getName() == "slaveball"){
+		moveVars.jumpFactor *= 0.0f;
+		moveVars.walkFactor *= 0.1f;
+	}
+}
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
