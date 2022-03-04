@@ -20,7 +20,7 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency=30*2;	//30 oil per minute
 
 	this.SetMinimapOutsideBehaviour(CBlob::minimap_snap);
-	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png",6,Vec2f(8,8));
+	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png",24,Vec2f(16,8));
 	this.SetMinimapRenderAlways(true);
 
 	AddIconToken("$icon_oil$","Material_Oil.png",Vec2f(16,16),0);

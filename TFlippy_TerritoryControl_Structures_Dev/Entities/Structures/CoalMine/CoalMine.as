@@ -50,7 +50,7 @@ void onInit(CBlob@ this)
 	getMap().server_SetTile(this.getPosition(), CMap::tile_castle_back);
 
 	this.SetMinimapOutsideBehaviour(CBlob::minimap_snap);
-	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", 6, Vec2f(8, 8));
+	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", 19, Vec2f(16, 8));
 	this.SetMinimapRenderAlways(true);
 
 	// SHOP
