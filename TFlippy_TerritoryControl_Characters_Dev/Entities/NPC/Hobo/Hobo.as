@@ -122,6 +122,9 @@ void onInit(CBlob@ this)
 	Random@ rand = Random(this.getNetworkID());
 	string name = firstnames[rand.NextRanged(firstnames.length)] + " " + surnames[rand.NextRanged(surnames.length)];
 	this.set_string("trader name", name);
+	
+	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", 53, Vec2f(8, 8));
+	this.SetMinimapRenderAlways(true);
 
 	this.getShape().SetRotationsAllowed(false);
 	this.set_f32("gib health", -2.0f);

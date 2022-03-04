@@ -42,6 +42,9 @@ void onInit(CBlob@ this)
 
 	this.Tag("dangerous");
 	this.Tag("chicken");
+	
+	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", 28, Vec2f(8, 8));
+	this.SetMinimapRenderAlways(true);
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)

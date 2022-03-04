@@ -3,7 +3,7 @@
 void onInit(CBlob@ this)
 {
 	this.SetMinimapOutsideBehaviour(CBlob::minimap_snap);
-	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", 36, Vec2f(8, 8));
+	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", 9, Vec2f(16, 18));
 	this.SetMinimapRenderAlways(true);
 
 	this.getShape().SetStatic(true);

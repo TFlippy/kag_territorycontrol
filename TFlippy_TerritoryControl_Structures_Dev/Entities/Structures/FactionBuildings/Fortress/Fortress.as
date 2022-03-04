@@ -28,7 +28,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("sv_store");
 	
 	this.Tag("minimap_large");
-	this.set_u8("minimap_index", 2);
+	this.set_u8("minimap_index", 29);
 
 	this.SetLight(true);
 	this.SetLightRadius(128.0f);

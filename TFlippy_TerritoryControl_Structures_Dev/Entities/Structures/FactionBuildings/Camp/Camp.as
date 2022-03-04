@@ -27,8 +27,8 @@ void onInit(CBlob@ this)
 	this.addCommandID("sv_store");
 	this.addCommandID("sv_hidemap");
 
-	this.Tag("minimap_small");
-	this.set_u8("minimap_index", 1);
+	this.Tag("minimap_large");
+	this.set_u8("minimap_index", 28);
 	this.set_bool("minimap_hidden", false);
 
 	// this.Tag("invincible");
