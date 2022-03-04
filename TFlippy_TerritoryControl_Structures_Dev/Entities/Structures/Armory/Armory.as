@@ -119,13 +119,13 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	/*{
+	{
 		ShopItem@ s = addShopItem(this, "Slavemaster's Kit", "$icon_shackles$", "shackles", "A kit containing shackles, shiny iron ball, elegant striped pants, noisy chains and a slice of cheese.");
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 4);
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
 
 		s.spawnNothing = true;
-	}*/
+	}
 	{
 		ShopItem@ s = addShopItem(this, "Bushy Helm", "$bush$", "bushyhelm", "Add bush camo to helm.");
 		AddRequirement(s.requirements, "blob", "militaryhelmet", "Combat Helmet", 1);
