@@ -183,9 +183,9 @@ void onInit(CBlob@ this)
 		items.push_back(i);
 	}
 	{
-		AssemblerItem i("mat_grenade", 4, "Grenade (4)");
-		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
-		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
+		AssemblerItem i("guidedrocket", 1, "Guided Missile (1)");
+		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 20);
 		items.push_back(i);
 	}
 	{
@@ -206,12 +206,6 @@ void onInit(CBlob@ this)
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
 		items.push_back(i);
 	}	
-	//{
-		//AssemblerItem i("guidedrocket", 1, "Guided Missile (1)");
-		//AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 4);
-		//AddRequirement(i.reqs, "blob", "mat_methane", "Methane", 20);
-		//items.push_back(i);
-	//}
 	{
 		AssemblerItem i("mat_sulphur", 50, "Sulphur (50)");
 		AddRequirement(i.reqs, "blob", "mat_dirt", "Dirt", 100);
@@ -229,6 +223,12 @@ void onInit(CBlob@ this)
 		AssemblerItem i("mat_fraggrenade", 2, "Fragmentation Grenade (2)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 1);
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 20);
+		items.push_back(i);
+	}
+	{
+		AssemblerItem i("mat_grenade", 4, "Grenade (4)");
+		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
+		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
 		items.push_back(i);
 	}
 	this.set("items", items);
