@@ -30,7 +30,8 @@ namespace tc_colors
 		color_coalmine_neutral = 0xff373750,
 		color_merchant_neutral = 0xff7878ff,
 		color_bitch_neutral = 0xff7832e1,
-		color_pumpjack_neutral = 0xff14507d,
+		color_pumpjack_neutral = 0xff211912,
+		color_oildeposit = 0xff14507d,
 		color_trader_neutral = 0xff3737cd,
 		color_hobo_neutral = 0xff493326,
 
@@ -160,6 +161,13 @@ class TCPNGLoader : PNGLoader
 			{
 				autotile(offset);
 				spawnBlob(map, "pumpjack", offset, -1);
+				break;
+			}
+			
+			case tc_colors::color_oildeposit:
+			{
+				autotile(offset);
+				spawnBlob(map, "oildeposit", offset, -1);
 				break;
 			}
 
