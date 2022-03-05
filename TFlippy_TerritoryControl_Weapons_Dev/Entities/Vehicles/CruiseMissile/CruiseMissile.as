@@ -309,16 +309,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 	}
 }
 
-bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
-{
-	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PILOT");
-	if (point is null) return true;
-
-	CBlob@ controller = point.getOccupied();
-	if (controller is null) return true;
-	else return false;
-}
-
 void MakeParticle(CBlob@ this, const Vec2f vel, const string filename = "SmallSteam")
 {
 	if (!isClient()) return;
