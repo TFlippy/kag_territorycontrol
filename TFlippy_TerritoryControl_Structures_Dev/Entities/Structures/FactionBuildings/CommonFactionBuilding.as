@@ -261,25 +261,26 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		{
 			// bool deserter = ply.get_u32("teamkick_time") > getGameTime();
 			bool recruitment_enabled = team_data.recruitment_enabled;
-			bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
+			//bool upkeep_gud = (team_data.upkeep + UPKEEP_COST_PLAYER) <= team_data.upkeep_cap;
 			// bool is_premium = ply.getSupportTier() > 0;
 
-			//print("" + ply.getSupportTier());
+			bool enough_slots = (3+highestCampLevel(this)) > team_data.player_count;
 
-			bool can_join = recruitment_enabled && upkeep_gud;
+			bool can_join = recruitment_enabled && enough_slots;
 
-			string msg = "";
+			string msg = "Join the Faction";
 			if (!can_join)
 			{
-				msg += "\n\nCannot join!\n";
+				msg = "Cannot join!\n";
 				if (!recruitment_enabled) msg += "This faction is not accepting any new members.\n";
-				if (!upkeep_gud) msg += "Faction's upkeep is too high.\n";
+				//if (!upkeep_gud) msg += "Faction's upkeep is too high.\n";
+				if(!enough_slots) msg += "Faction does not have enough slots.("+team_data.player_count+"/"+(3+highestCampLevel(this))+")\nAsk them to upgrade their base.\n";
 				//if (!is_premium) msg += "Factions are restricted to Premium accounts only.\n";
 			}
 
 			CBitStream params;
 			params.write_u16(caller.getNetworkID());
-			CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("button_join"), "Join the Faction" + msg, params);
+			CButton@ button = caller.CreateGenericButton(11, Vec2f(0, 0), this, this.getCommandID("button_join"),msg, params);
 			button.SetEnabled(can_join);
 		}
 		else 
@@ -290,6 +291,8 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 	if (caller.isOverlapping(this))
 	{
+		this.set_bool("shop available", caller.getTeamNum() == this.getTeamNum());
+	
 		if (caller.getTeamNum() == this.getTeamNum() && this.getTeamNum() < 100)
 		{
 			CBitStream params_menu;
@@ -790,11 +793,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ inParams)
 				if (p.getTeamNum() >= 100 && team_data !is null)
 				{
 					// bool deserter = p.get_u32("teamkick_time") > getGameTime();
-					bool upkeep_gud = team_data.upkeep + UPKEEP_COST_PLAYER <= team_data.upkeep_cap;
+					//bool upkeep_gud = team_data.upkeep + UPKEEP_COST_PLAYER <= team_data.upkeep_cap;
 					bool recruitment_enabled = team_data.recruitment_enabled;
 					bool is_premium = p.getOldGold();
+					bool enough_slots = (3+highestCampLevel(this)) > team_data.player_count;
 
-					bool can_join = upkeep_gud && recruitment_enabled;
+					bool can_join = enough_slots && recruitment_enabled; //upkeep_gud
 
 					if (can_join)
 					{
@@ -984,4 +988,24 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	}
 
 	return damage;
+}
+
+int highestCampLevel(CBlob@ this){
+	CBlob@[] forts;
+	getBlobsByTag("faction_base", @forts);
+
+	int newTeam = this.getTeamNum();
+	int totalFortCount = forts.length;
+	int highest = 0;
+
+	for (uint i = 0; i < totalFortCount; i++){
+		if(forts[i].getTeamNum() == this.getTeamNum()){
+			string name = forts[i].getName();
+			if(name == "fortress"){if(highest < 1)highest = 1;}
+			else if(name == "stronghold"){if(highest < 2)highest = 2;}
+			else if(name == "citadel"){if(highest < 3)highest = 3;}
+			else if(name == "convent"){if(highest < 4)highest = 4;}
+		}
+	}
+	return highest;
 }
