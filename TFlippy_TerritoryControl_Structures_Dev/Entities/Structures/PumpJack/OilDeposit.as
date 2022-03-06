@@ -31,8 +31,9 @@ void onInit(CBlob@ this)
 	
 	{
 		ShopItem@ s = addShopItem(this, "Build a Pumpjack", "$icon_upgrade$", "pumpjack", "Build a Pumpjack.");
-		AddRequirement(s.requirements,"blob","mat_stone","Stone",100);
-		AddRequirement(s.requirements,"blob","mat_wood","Wood",350);
+		AddRequirement(s.requirements,"blob","mat_stone","Stone",200);
+		AddRequirement(s.requirements,"blob","mat_wood","Wood",500);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 50);
 		s.customButton = true;
 		s.buttonwidth = 2;	
 		s.buttonheight = 2;
