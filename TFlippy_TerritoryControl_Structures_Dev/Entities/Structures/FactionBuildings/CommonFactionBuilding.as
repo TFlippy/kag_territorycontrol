@@ -69,6 +69,8 @@ void onInit(CBlob@ this)
 	sprite.SetEmitSoundPaused(true);
 	sprite.SetEmitSoundSpeed(1.0f);
 	sprite.SetEmitSoundVolume(1.5f);
+	
+	this.set_Vec2f("shop offset", Vec2f(-10, -16));
 }
 
 void onTick(CBlob@ this)
@@ -298,7 +300,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			CBitStream params_menu;
 			params_menu.write_u16(caller.getNetworkID());
 			// CButton@ button_menu = caller.CreateGenericButton(11, Vec2f(14, 5), this, this.getCommandID("faction_menu"), "Faction Management", params_menu);
-			CButton@ button_menu = caller.CreateGenericButton(11, Vec2f(1, -8), this, Faction_Menu, "Faction Management");
+			CButton@ button_menu = caller.CreateGenericButton(11, Vec2f(1, -32), this, Faction_Menu, "Faction Management");
 
 			CBlob@ carried = caller.getCarriedBlob();
 			if (carried !is null && carried.getName() == "paper")
@@ -325,7 +327,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			if (this.getName() != "camp")
 			{
 				CBitStream params;
-				CButton@ buttonEject = caller.CreateGenericButton((this.get_bool("isActive") ? 27 : 23), Vec2f(0.5f, -14), 
+				CButton@ buttonEject = caller.CreateGenericButton((this.get_bool("isActive") ? 27 : 23), Vec2f(6, -8), 
 					this, this.getCommandID("sv_toggle"), (this.get_bool("isActive") ? "Turn Off" : "Turn On"), params);
 			}
 		}
