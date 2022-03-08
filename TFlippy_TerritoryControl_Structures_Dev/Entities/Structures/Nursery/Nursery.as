@@ -36,8 +36,7 @@ void onInit(CBlob@ this)
 	this.set_u8("shop icon", 15);
 	
 	{
-		ShopItem@ s = addShopItem(this, "Grain Seed", "$grainplant$", "grain_seed", "A common food source which can be used for various tasks.\nConvert grain into seeds.");
-		AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
+		ShopItem@ s = addShopItem(this, "Grain Seed", "$grainplant$", "grain_seed", "A common food source which can be used for various tasks.");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
 		AddRequirement(s.requirements, "coin", "", "Coins", 40);
 		s.customButton = true;
@@ -46,8 +45,15 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Ganja Seed", "$ganjaplant$", "ganja_seed", "A plant which is known for its drug properties.\nConvert a ganja pod into a seed.", true);
-		AddRequirement(s.requirements, "blob", "ganjapod", "Ganja Pod", 1);
+		ShopItem@ s = addShopItem(this, "Grain Harvest", "$grainplant$", "grain_seed", "Convert grain into 1-3 seeds.");
+		AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
+		s.customButton = true;
+		s.buttonwidth = 1;
+		s.buttonheight = 2;
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Ganja Seed", "$ganjaplant$", "ganja_seed", "A plant which is known for its drug properties.", true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 70);
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
 		s.customButton = true;
@@ -56,10 +62,22 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Pumpkin Seed", "$pumpkin$", "pumpkin_seed", "A large squash fun for festivities.\nAttempt to convert a pumpkin into a seed.", true);
-		AddRequirement(s.requirements, "blob", "pumpkin", "Pumpkin", 1);
+		ShopItem@ s = addShopItem(this, "Ganja Harvest", "$ganjaplant$", "ganja_seed", "Convert a ganja pod into a seed.", true);
+		AddRequirement(s.requirements, "blob", "ganjapod", "Ganja Pod", 1);
+		s.customButton = true;
+		s.buttonwidth = 1;
+		s.buttonheight = 2;
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Pumpkin Seed", "$pumpkin$", "pumpkin_seed", "A large squash fun for festivities.", true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 50);
 		AddRequirement(s.requirements, "coin", "", "Coins", 80);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Pumpkin Harvest", "$pumpkin$", "pumpkin_seed", "Convert a Pumpkin into its seed.", true);
+		AddRequirement(s.requirements, "blob", "pumpkin", "Pumpkin", 1);
 		s.spawnNothing = true;
 	}
 	{
@@ -90,9 +108,8 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Kudzu Core", "$kudzucore$", "kudzucore", "Creates a kudzu core a quickly spreading plant which slowy damages other things, Cannot be stored", true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 500);
 		AddRequirement(s.requirements, "blob", "mat_dirt", "Dirt", 200);
-		AddRequirement(s.requirements, "blob", "grain", "Grain", 1); 
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
-		//Requiring grain and a mithrilg ingot means its a lot harder to spawm since both of these ressources are harder to get on mass (instead of dirt wood and coins alone)
+		AddRequirement(s.requirements, "blob", "grain", "Grain", 2); 
+		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 50);
 		s.spawnNothing = true;
 	}
 }
