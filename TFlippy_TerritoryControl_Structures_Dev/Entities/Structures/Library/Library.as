@@ -41,18 +41,6 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Adv Automation Blueprint", "$bp_automation_advanced$", "bp_automation_advanced", "The blueprint for the automated chicken assembler.", true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 6750);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Energetics Blueprint", "$bp_energetics$", "bp_energetics", "The blueprint for the beam tower.", true);
-		AddRequirement(s.requirements, "coin", "", "Coins", 5000);
-
-		s.spawnNothing = true;
-	}
-	{
 		ShopItem@ s = addShopItem(this, "Sell Chemistry", "$COIN$", "coin-1500", "Sell blueprint for 1500 coins.");
 		AddRequirement(s.requirements, "blob", "bp_chemistry", "Chemistry Blueprint", 1);
 		s.spawnNothing = true;
