@@ -38,13 +38,14 @@ const string inventory_offset = "inventory offset";
 void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 {
 	// AddIconToken("$icon_faction$", "Tent.png", Vec2f(50, 48), 0);
-	AddIconToken("$icon_faction$", "PeasantIcons.png", Vec2f(80, 32), 0);
+	AddIconToken("$icon_faction$", "PeasantIcons.png", Vec2f(55, 32), 0);
 	AddIconToken("$wood_triangle$", "WoodTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$stone_triangle$", "StoneTriangle.png", Vec2f(8, 8), 0);
 	AddIconToken("$woodchest$", "WoodChest.png", Vec2f(16, 16), 0);
 	AddIconToken("$neutral_door$", "1x1NeutralDoor.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_banditshack$", "BanditShack.png", Vec2f(40, 32), 0);
 	AddIconToken("$icon_tavern$", "Tavern.png", Vec2f(56, 32), 0);
+	AddIconToken("$icon_altar$", "Altar.png", Vec2f(24, 32), 0);
 
 	BuildBlock[] page_0;
 	blocks.push_back(page_0);
@@ -55,7 +56,43 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
 		AddRequirement(b.reqs, "coin", "", "Coins", 50);
 		b.buildOnGround = true;
-		b.size.Set(80, 24);
+		b.size.Set(55, 32);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(0, "tavern", "$icon_tavern$", "Tavern\nA poorly built cozy tavern.\nOther neutrals may set their team here, paying you 20 coins for each spawn.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 350);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
+		b.buildOnGround = true;
+		b.size.Set(56, 32);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(0, "altar", "$icon_altar$", "Altar\nWorship your idols here. Needs to be carved first.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 1999); // idk why when but I make it 2000 it consumes more than 2000 but less than 3001 ;-;
+		b.buildOnGround = true;
+		b.size.Set(24, 32);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(0, "fireplace", "$fireplace$", "Campfire\nCan be used to cook various foods.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 50);
+		b.buildOnGround = true;
+		b.size.Set(16, 16);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(0, "wooden_platform", "$wooden_platform$", "Wooden Platform\nOne way platform");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 15);
+		blocks[0].push_back(b);
+	}
+	{
+		BuildBlock b(0, "banditshack", "$icon_banditshack$", "An Awful Rundown Bandit Shack\nGives you an option to become bandit scum.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
+		b.buildOnGround = true;
+		b.size.Set(40, 24);
 		blocks[0].push_back(b);
 	}
 	{
@@ -89,14 +126,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "banditshack", "$icon_banditshack$", "An Awful Rundown Bandit Shack\nGives you an option to become bandit scum.");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
-		b.buildOnGround = true;
-		b.size.Set(40, 24);
-		blocks[0].push_back(b);
-	}
-	{
 		BuildBlock b(0, "wood_triangle", "$wood_triangle$", "Wooden Triangle");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 5);
 		blocks[0].push_back(b);
@@ -104,27 +133,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	{
 		BuildBlock b(0, "stone_triangle", "$stone_triangle$", "Stone Triangle");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 2);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(0, "wooden_platform", "$wooden_platform$", "Wooden Platform\nOne way platform");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 15);
-		blocks[0].push_back(b);
-	}
-	{
-		BuildBlock b(0, "tavern", "$icon_tavern$", "Tavern\nA poorly built cozy tavern.\nOther neutrals may set their team here, paying you 20 coins for each spawn.");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 350);
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
-		b.buildOnGround = true;
-		b.size.Set(56, 32);
-		blocks[0].push_back(b);
-	}
-	{	//Report fil, he stole my fireplace // Ye ~Fil
-		BuildBlock b(0, "fireplace", "$fireplace$", "Campfire\nCan be used to cook various foods.");
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 50);
-		b.buildOnGround = true;
-		b.size.Set(16, 16);
 		blocks[0].push_back(b);
 	}
 

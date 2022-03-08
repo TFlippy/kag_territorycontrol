@@ -96,9 +96,8 @@ void onInit(CBlob@ this)
 		}
 		{
 			ShopItem@ s = addShopItem(this, "Grand Mason, God of Masonry", "$icon_mason$", "altar_mason", "A determined architect responsible for creation of many bridges, castles and palaces.\n\He's humble.\n\n- Chance to not consume materials when placing a block.");
-			AddRequirement(s.requirements, "no more global", "altar_gregor", "Altar of Gregor Builder", 1);
-			AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 4000);
-			AddRequirement(s.requirements, "blob", "artisancertificate", "Building for Dummies", 1);
+			AddRequirement(s.requirements, "no more global", "altar_mason", "Altar of Grand Mason", 1);
+			AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 5000);
 			AddRequirement(s.requirements, "coin", "", "Coins", 1000);
 			s.customButton = true;
 			s.buttonwidth = 2;	
