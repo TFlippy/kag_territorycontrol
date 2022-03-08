@@ -454,20 +454,33 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 					server_CreateBlob("militaryhelmet", blob.getTeamNum(), blob.getPosition());
 					server_CreateBlob("bulletproofvest", blob.getTeamNum(), blob.getPosition());
 					server_CreateBlob("combatboots", blob.getTeamNum(), blob.getPosition());
-        }
-        else if (tokens[0]=="!time") {
-          if (tokens.length < 2) {
-            return false;
-          }
-          getMap().SetDayTime(parseFloat(tokens[1]));
+				}
+				else if (tokens[0]=="!mats")
+				{
+					server_CreateBlob("mat_ironingot", -1, blob.getPosition()).server_SetQuantity(100);
+					server_CreateBlob("mat_copperingot", -1, blob.getPosition()).server_SetQuantity(100);
+					server_CreateBlob("mat_goldingot", -1, blob.getPosition()).server_SetQuantity(100);
+					server_CreateBlob("mat_steelingot", -1, blob.getPosition()).server_SetQuantity(100);
+					server_CreateBlob("mat_mithrilingot", -1, blob.getPosition()).server_SetQuantity(100);
+					server_CreateBlob("mat_wood", -1, blob.getPosition()).server_SetQuantity(1000);
+					server_CreateBlob("mat_stone", -1, blob.getPosition()).server_SetQuantity(1000);
+					server_CreateBlob("mat_dirt", -1, blob.getPosition()).server_SetQuantity(1000);
+					server_CreateBlob("mat_concrete", -1, blob.getPosition()).server_SetQuantity(1000);
+					server_CreateBlob("mat_plasteel", -1, blob.getPosition()).server_SetQuantity(1000);
+					server_CreateBlob("mat_copperwire", -1, blob.getPosition()).server_SetQuantity(400);
+				}
+				else if (tokens[0]=="!time") 
+				{
+					if (tokens.length < 2) return false;
+					getMap().SetDayTime(parseFloat(tokens[1]));
 					return false;
-        }
+				}
 				else if (tokens[0]=="!tree") 
 					server_MakeSeed(blob.getPosition(),"tree_pine",600,1,16);
 
 				else if (tokens[0]=="!bigtree") 
 					server_MakeSeed(blob.getPosition(),"tree_bushy",400,2,16);
-					
+
 				else if (tokens[0]=="!spawnwater") 
 					getMap().server_setFloodWaterWorldspace(blob.getPosition(),true);
 

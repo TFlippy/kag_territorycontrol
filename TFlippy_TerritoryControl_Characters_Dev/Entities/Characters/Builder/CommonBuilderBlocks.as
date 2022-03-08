@@ -87,6 +87,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	AddIconToken("$icon_camp$", "Camp.png", Vec2f(80, 24), 0, teamnum);
 	AddIconToken("$icon_patreonshop$", "PatreonShop.png", Vec2f(40, 40), 0, teamnum);
 	AddIconToken("$icon_nursery$","Nursery.png",Vec2f(40, 32), 5, teamnum);
+	AddIconToken("$icon_library$", "Library.png", Vec2f(40, 24), 0, teamnum);
 	AddIconToken("$icon_workshop$", "Building.png", Vec2f(40, 24), 0);
 	AddIconToken("$icon_modificationstation$", "ModificationStation.png", Vec2f(24, 24), 0, teamnum);
 
@@ -297,27 +298,27 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	}
 	{
 		BuildBlock b(CMap::tile_goldingot, "goldingot", "$goldingot_block$", "Mostly decorative block made from gold ingots \n ");
-		AddRequirement(b.reqs, "blob", "mat_goldingot", "Gold Ingots", 30);
+		AddRequirement(b.reqs, "blob", "mat_goldingot", "Gold Ingots", 15);
 		blocks[0].push_back(b);
 	}
 	{
 		BuildBlock b(CMap::tile_mithrilingot, "mithrilingot", "$mithrilingot_block$", "Mostly decorative block made from mithril ingots \n ");
-		AddRequirement(b.reqs, "blob", "mat_mithrilingot", "Mithril Ingots", 30);
+		AddRequirement(b.reqs, "blob", "mat_mithrilingot", "Mithril Ingots", 15);
 		blocks[0].push_back(b);
 	}
 	{
 		BuildBlock b(CMap::tile_copperingot, "copperingot", "$copperingot_block$", "Mostly decorative block made from copper ingots \n ");
-		AddRequirement(b.reqs, "blob", "mat_copperingot", "Copper Ingots", 30);
+		AddRequirement(b.reqs, "blob", "mat_copperingot", "Copper Ingots", 15);
 		blocks[0].push_back(b);
 	}
 	{
 		BuildBlock b(CMap::tile_steelingot, "steelingot", "$steelingot_block$", "Mostly decorative block made from steel ingots \n ");
-		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingots", 30);
+		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingots", 15);
 		blocks[0].push_back(b);
 	}
 	{
 		BuildBlock b(CMap::tile_ironingot, "ironingot", "$ironingot_block$", "Mostly decorative block made from iron ingots \n ");
-		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 30);
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 15);
 		blocks[0].push_back(b);
 	}
 	// {
@@ -364,7 +365,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		blocks[1].push_back(b);
 	}
 	{
-		BuildBlock b(0, "armory", "$icon_armory$", "Armory\nA workshop where you can craft cheap equipment.\n$GREEN$Automatically stores nearby dropped weapons.$GREEN$\n");
+		BuildBlock b(0, "armory", "$icon_armory$", "Armory\nA workshop where you can craft cheap equipment.\n$GREEN$Automatically stores nearby dropped weapons and armor.$GREEN$\n");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 100);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
 		// AddRequirement(b.reqs, "blob", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
@@ -428,8 +429,8 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	}
 	{
 		BuildBlock b(0, "camp", "$icon_camp$", "Camp\nA basic faction base. Can be upgraded to gain\nspecial functions and more durability.\n\n$GREEN$Increases Upkeep cap by 1.$GREEN$\n");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 375);
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 250);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 325);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 175);
 		AddRequirement(b.reqs, "coin", "", "Coins", 100);
 		b.buildOnGround = true;
 		b.size.Set(80, 24);
@@ -453,7 +454,14 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		b.size.Set(24, 24);
 		blocks[1].push_back(b);
 	}
-	
+	{
+		BuildBlock b(0, "library", "$icon_library$", "Library\nBuy and sell various blueprints.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 125);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
+		b.buildOnGround = true;
+		b.size.Set(40, 24);
+		blocks[1].push_back(b);
+	}
 
 	BuildBlock[] page_2;
 	blocks.push_back(page_2);

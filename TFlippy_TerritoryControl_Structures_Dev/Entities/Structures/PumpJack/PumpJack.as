@@ -16,17 +16,18 @@ void onInit(CBlob@ this)
 	this.addCommandID("write");
 	//this.set_Vec2f("nobuild extend",Vec2f(0.0f, 8.0f));
 
-	//this.inventoryButtonPos = Vec2f(-16, 8);
-	this.getCurrentScript().tickFrequency=30*2;	//30 oil per minute
+	this.inventoryButtonPos = Vec2f(10, 8);
+	float oilPerMinute = 10;
+	this.getCurrentScript().tickFrequency=(30.0f*60.0f)/oilPerMinute;
 
 	this.SetMinimapOutsideBehaviour(CBlob::minimap_snap);
-	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png",6,Vec2f(8,8));
+	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png",48,Vec2f(8,8));
 	this.SetMinimapRenderAlways(true);
 
 	AddIconToken("$icon_oil$","Material_Oil.png",Vec2f(16,16),0);
 
 	//SHOP
-	this.set_Vec2f("shop offset",Vec2f(5,5));
+	this.set_Vec2f("shop offset",Vec2f(32,0));
 	this.set_Vec2f("shop menu size",Vec2f(1,1));
 	this.set_string("shop description","Pump Jack");
 	this.set_u8("shop icon", 25);
@@ -44,13 +45,14 @@ void onInit(CSprite@ this)
 	{
 		head.addAnimation("default", 0, true);
 		head.SetRelativeZ(-1.0f);
-		head.SetOffset(Vec2f(-12, -18));
+		head.SetOffset(Vec2f(-12.5, -17));
 	}
 
-	CSpriteLayer@ rod = this.addSpriteLayer("rod", "PumpJack_Rod", 4, 64);
+	CSpriteLayer@ rod = this.addSpriteLayer("rod",  this.getFilename(), 16, 48);
 	if (rod !is null)
 	{
-		rod.addAnimation("default", 0, true);
+		Animation@ anim = rod.addAnimation("default", 0, true);
+		anim.AddFrame(10);
 		rod.SetRelativeZ(-5.0f);
 		rod.SetOffset(Vec2f(-36, 0));
 	}
@@ -67,14 +69,14 @@ void onTick(CSprite@ this)
 	CSpriteLayer@ head = this.getSpriteLayer("head");
 
 	head.ResetTransform();
-	head.RotateBy(Maths::Sin((getGameTime() * 0.075f) % 180) * 20.0f, Vec2f_zero);
+	head.RotateBy(Maths::Sin((getGameTime() * 0.075f) % 180) * 20.0f, Vec2f(2,-4));
 
 	CSpriteLayer@ rod = this.getSpriteLayer("rod");
 	if (rod !is null)
 	{
 		rod.addAnimation("default", 0, true);
 		rod.SetRelativeZ(-5.0f);
-		rod.SetOffset(Vec2f(-36, Maths::Sin((getGameTime() * 0.075f) % 180) * 9.0f));
+		rod.SetOffset(Vec2f(-34, 3.0f+Maths::Sin((getGameTime() * 0.075f) % 180) * 9.0f));
 	}
 }
 
@@ -88,12 +90,20 @@ void onTick(CBlob@ this)
 
 		if (storage !is null)
 		{
-			MakeMat(storage, this.getPosition(), "mat_oil", XORRandom(3));
+			MakeMat(storage, this.getPosition(), "mat_oil", 1);
 		}
-		else if (this.getInventory().getCount("mat_oil") < 450)
+		else if (this.getInventory().getCount("mat_oil") < 50)
 		{
-			MakeMat(this, this.getPosition(), "mat_oil", XORRandom(3));
+			MakeMat(this, this.getPosition(), "mat_oil", 1);
 		}
+	}
+}
+
+void onDie(CBlob@ this)
+{
+	if (isServer()) 
+	{
+		CBlob@ newBlob = server_CreateBlob("oildeposit", -1, this.getPosition());
 	}
 }
 
@@ -121,7 +131,7 @@ CBlob@ FindStorage(u8 team)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	this.set_bool("shop available", this.isOverlapping(caller));
+	//this.set_bool("shop available", this.isOverlapping(caller));
 
 	if (caller is null) return;
 	if (!this.isOverlapping(caller)) return;

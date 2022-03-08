@@ -5,6 +5,7 @@
 #include "FireParticle.as"
 #include "FireCommon.as";
 #include "RunnerCommon.as";
+#include "ThrowCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -49,7 +50,7 @@ void onInit(CBlob@ this)
 			case 1:
 			case 2:
 				gun_config = "carbine";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("attackDelay", 3);
 				this.set_u8("reactionTime", 30);
@@ -63,7 +64,7 @@ void onInit(CBlob@ this)
 			case 4:
 			case 5:
 				gun_config = "shotgun";
-				ammo_config = "mat_shotgunammo";
+				ammo_config = "ammo_shotgun";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 30);
@@ -76,7 +77,7 @@ void onInit(CBlob@ this)
 			case 6:
 			case 7:
 				gun_config = "sar";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 6);
@@ -88,7 +89,7 @@ void onInit(CBlob@ this)
 
 			case 8:
 				gun_config = "silencedrifle";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 10);
@@ -101,7 +102,7 @@ void onInit(CBlob@ this)
 			case 9:
 			case 10:
 				gun_config = "uzi";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_lowcal";
 
 				this.set_u8("attackDelay", 0);
 				this.set_u8("reactionTime", 10);
@@ -115,7 +116,7 @@ void onInit(CBlob@ this)
 			case 12:
 			case 13:
 				gun_config = "pdw";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_lowcal";
 
 				this.set_u8("attackDelay", 1);
 				this.set_u8("reactionTime", 30);
@@ -127,7 +128,7 @@ void onInit(CBlob@ this)
 				
 			default:
 				gun_config = "fuger";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_lowcal";
 
 				this.set_u8("reactionTime", 20);
 				this.set_u8("attackDelay", 20);
@@ -138,7 +139,7 @@ void onInit(CBlob@ this)
 				break;
 		}
 
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
 			ammo.server_SetQuantity(ammo.maxQuantity);
@@ -217,6 +218,14 @@ void onTick(CBlob@ this)
 		{
 			// this.getSprite().PlaySound("scoutchicken_vo_perish.ogg", 0.8f, 1.5f);
 			this.set_u32("next sound", getGameTime() + 100);
+		}
+	}
+	
+	if (this.isMyPlayer())
+	{
+		if (this.isKeyJustPressed(key_action3))
+		{
+			client_SendThrowOrActivateCommand(this);
 		}
 	}
 }

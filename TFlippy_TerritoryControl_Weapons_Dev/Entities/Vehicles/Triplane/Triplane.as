@@ -436,7 +436,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ caller = getBlobByNetworkID(params.read_netid());
 		CBlob@ carried = caller.getCarriedBlob();
 
-		if (carried !is null && carried.getName() == "mat_gatlingammo")
+		if (carried !is null && carried.getName() == "ammo_gatling")
 		{
 			u16 remain = GiveAmmo(this, carried.getQuantity());
 			// this.Sync("ammo_count", false); // fuck this broken sync shit
@@ -539,7 +539,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		}
 	}
 
-	if (GetAmmo(this) < 300 && carried !is null && carried.getName() == "mat_gatlingammo")
+	if (GetAmmo(this) < 300 && carried !is null && carried.getName() == "ammo_gatling")
 	{
 		params.write_netid(caller.getNetworkID());
 		CButton@ button = caller.CreateGenericButton("$icon_gatlingammo$", Vec2f(10, 0), this, this.getCommandID("load_ammo"), "Load " + carried.getInventoryName() + "\n(" + this.get_u16("ammo_count") + " / " + 300 + ")", params);

@@ -29,7 +29,11 @@ void onInit(CBlob@ this)
 	this.addCommandID("sv_store");
 	
 	this.Tag("minimap_large");
-	this.set_u8("minimap_index", 2);
+	this.set_u8("minimap_index", 31);
+
+	this.SetLight(true);
+	this.SetLightRadius(256.0f);
+	this.SetLightColor(SColor(255, 255, 240, 210));
 	
 	// this.Tag("invincible");
 	this.Tag("respawn");
@@ -56,7 +60,7 @@ void onInit(CBlob@ this)
 	}
 	
 	// Upgrading stuff
-	this.set_Vec2f("shop offset", Vec2f(-12, 5));
+	//this.set_Vec2f("shop offset" //This has been moved to CommonFactionBuilding.as
 	this.set_Vec2f("shop menu size", Vec2f(4, 2));
 	this.set_string("shop description", "Upgrades & Repairs");
 	this.set_u8("shop icon", 15);
@@ -67,7 +71,7 @@ void onInit(CBlob@ this)
 	
 	{
 		ShopItem@ s = addShopItem(this, "Upgrade to the Convent", "$icon_upgrade$", "convent", "Upgrade to the powerful faction tier of the Convent.\n\n+ Larger inventory capacity\n+ Extra durability\n+ Increased maximum player health\n+ Longer capture time\n+ 2 Upkeep");
-		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel", 250);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel", 200);
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 50);
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
 		AddRequirement(s.requirements, "coin", "", "Coins", 2500);
@@ -80,7 +84,7 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Repair", "$icon_repair$", "repair", "Repair this badly damaged building.\nRestores 5% of building's integrity.");	
 		AddRequirement(s.requirements, "blob", "mat_concrete", "Concrete", 25);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 3);
 		s.customButton = true;
 		s.buttonwidth = 2;	
 		s.buttonheight = 2;
@@ -95,7 +99,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
-		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, -2.5f), this, buildSpawnMenu, "Change class");
+		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, 0.0f), this, buildSpawnMenu, "Change class");
 				
 		CInventory @inv = caller.getInventory();
 		if(inv is null) return;

@@ -30,7 +30,11 @@ void onInit(CBlob@ this)
 	this.addCommandID("sv_store");
 	
 	this.Tag("minimap_large");
-	this.set_u8("minimap_index", 2);
+	this.set_u8("minimap_index", 31);
+
+	this.SetLight(true);
+	this.SetLightRadius(256.0f);
+	this.SetLightColor(SColor(255, 255, 240, 210));
 	
 	// this.Tag("invincible");
 	this.Tag("respawn");
@@ -57,7 +61,7 @@ void onInit(CBlob@ this)
 	}
 	
 	// Upgrading stuff
-	this.set_Vec2f("shop offset", Vec2f(-12, 5));
+	//this.set_Vec2f("shop offset" //This has been moved to CommonFactionBuilding.as
 	this.set_Vec2f("shop menu size", Vec2f(2, 2));
 	this.set_string("shop description", "Upgrades & Repairs");
 	this.set_u8("shop icon", 15);
@@ -84,7 +88,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
-		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, -2.5f), this, buildSpawnMenu,"Change class");
+		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, 0.0f), this, buildSpawnMenu,"Change class");
 				
 		CInventory @inv = caller.getInventory();
 		if(inv is null) return;

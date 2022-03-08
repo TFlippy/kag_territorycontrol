@@ -9,7 +9,7 @@ void onInit(CBlob@ this)
 	settings.TOTAL = 7; //Max amount of ammo that can be in a clip
 	settings.FIRE_INTERVAL = 6; //Time in between shots
 	settings.RELOAD_TIME = 30; //Time it takes to reload (in ticks)
-	settings.AMMO_BLOB = "mat_pistolammo"; //Ammunition the gun takes
+	settings.AMMO_BLOB = "ammo_highcal"; //Ammunition the gun takes
 
 	//Bullet
 	//settings.B_PER_SHOT = 1; //Shots per bullet | CHANGE B_SPREAD, otherwise both bullets will come out together
@@ -18,7 +18,7 @@ void onInit(CBlob@ this)
 	settings.B_SPEED = 55; //Bullet speed, STRONGLY AFFECTED/EFFECTS B_GRAV
 	settings.B_TTL = 12; //TTL = 'Time To Live' which determines the time the bullet lasts before despawning
 	settings.B_DAMAGE = 2.25f; //1 is 1 heart
-	settings.B_TYPE = HittersTC::bullet_low_cal; //Type of bullet the gun shoots | hitter
+	settings.B_TYPE = HittersTC::bullet_high_cal; //Type of bullet the gun shoots | hitter
 
 	//Recoil
 	settings.G_RECOIL = -7; //0 is default, adds recoil aiming up
@@ -39,4 +39,5 @@ void onInit(CBlob@ this)
 	//Custom
 	this.set_f32("CustomShootVolume", 4.0f);
 	this.Tag("CustomSemiAuto");
+	this.set_string("CustomBullet", "BulletHighCal.png");
 }

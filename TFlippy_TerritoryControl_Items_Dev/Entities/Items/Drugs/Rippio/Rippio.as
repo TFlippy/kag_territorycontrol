@@ -9,9 +9,12 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	CBitStream params;
-	params.write_u16(caller.getNetworkID());
-	caller.CreateGenericButton(22, Vec2f(0, 0), this, this.getCommandID("consume"), "Inject!", params);
+	if (this.isOverlapping(caller) || this.isAttachedTo(caller))
+	{
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		caller.CreateGenericButton(22, Vec2f(0, 0), this, this.getCommandID("consume"), "Inject!", params);
+	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)

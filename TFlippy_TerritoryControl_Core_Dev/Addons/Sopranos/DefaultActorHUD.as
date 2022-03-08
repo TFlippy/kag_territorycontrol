@@ -196,10 +196,10 @@ const string[] teamBombs =
 
 const string[] teamAmmo =
 {
-	"mat_pistolammo",
-	"mat_rifleammo",
-	"mat_gatlingammo",
-	"mat_shotgunammo"
+	"ammo_lowcal",
+	"ammo_highcal",
+	"ammo_gatling",
+	"ammo_shotgun"
 };
 
 void RenderTeamInventoryHUD(CBlob@ this)

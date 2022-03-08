@@ -62,7 +62,7 @@ void onTick(CBlob@ this)
 			if (isServer())
 			{
 				CBlob@ mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
-				mat.server_SetQuantity(1 + XORRandom(2));
+				mat.server_SetQuantity(2);
 				mat.Tag("justmade");
 				this.TakeBlob(matNames[i], matRatio[i]);
 			}

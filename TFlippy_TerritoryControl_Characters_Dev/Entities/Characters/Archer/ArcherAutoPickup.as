@@ -57,7 +57,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		// }
 	// }
 	
-	// if (blobName == "mat_firearrows" || blobName == "mat_bombarrows" || blobName == "mat_waterarrows" || blobName == "mat_rifleammo" || blobName == "mat_pistolammo" || blobName == "mat_smallrocket" || blobName == "mat_shotgunammo")
+	// if (blobName == "mat_firearrows" || blobName == "mat_bombarrows" || blobName == "mat_waterarrows" || blobName == "ammo_highcal" || blobName == "ammo_lowcal" || blobName == "mat_smallrocket" || blobName == "ammo_shotgun")
 	
 	if (blob.hasTag("archer pickup") && !blob.hasTag("no pickup"))
 	{

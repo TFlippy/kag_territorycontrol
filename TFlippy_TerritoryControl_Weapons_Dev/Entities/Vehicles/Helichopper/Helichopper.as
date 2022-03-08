@@ -481,7 +481,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	else if(cmd == this.getCommandID("addAmmo"))
 	{
-		//mat_gatlingammo
+		//ammo_gatling
 		u16 blobNum = 0;
 		if (!params.saferead_u16(blobNum))
 		{
@@ -492,18 +492,18 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if(blob is null) return;
 
 		CBlob@ attachedBlob = blob.getAttachments().getAttachmentPointByName("PICKUP").getOccupied();
-		if (attachedBlob !is null && attachedBlob.getName() == "mat_gatlingammo")
+		if (attachedBlob !is null && attachedBlob.getName() == "ammo_gatling")
 		{
 			this.add_u16("ammoCount", attachedBlob.getQuantity());
 			attachedBlob.server_Die();
 		}
 
 		CInventory@ invo = blob.getInventory();
-		int ammoCount = invo.getCount("mat_gatlingammo");
+		int ammoCount = invo.getCount("ammo_gatling");
 
 		if (ammoCount > 0)
 		{
-			invo.server_RemoveItems("mat_gatlingammo", ammoCount);
+			invo.server_RemoveItems("ammo_gatling", ammoCount);
 			this.add_u16("ammoCount", ammoCount);
 		}
 

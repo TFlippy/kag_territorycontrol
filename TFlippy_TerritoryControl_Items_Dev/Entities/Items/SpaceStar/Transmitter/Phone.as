@@ -101,6 +101,15 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "UPF Frag Grenades!", "$fraggrenade$", "frag_package", "Angry at humans? Throw a pack of frag grenades at them!");
+		AddRequirement(s.requirements, "coin", "", "Coins", 499);
+		
+		s.spawnNothing = true;
+		s.customButton = true;
+		s.buttonwidth = 1;
+		s.buttonheight = 1;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "UPF Portable Machine Gun!", "$ss_machinegun$", "machinegun-parachute_no_unpack", "Humans disturbing your precious sleep? Mow them down with our Portable Machine Gun!");
 		AddRequirement(s.requirements, "coin", "", "Coins", 1299);
 		
@@ -182,6 +191,13 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						blob.Tag("unpack on land");
 						blob.Tag("destroy on touch");
 					}
+				}
+				else if (name == "frag_package")
+				{
+						CBlob@ frag = server_MakeCrateOnParachute("mat_fraggrenade", "SpaceStar Ordering Weapon Package", 0, 250, Vec2f(callerBlob.getPosition().x + (64 - XORRandom(128)), XORRandom(32)));
+						frag.Tag("unpack on land");
+						frag.Tag("destroy on touch");
+						frag.set_u8("count", 8);
 				}
 				else if (name == "gun_package")
 				{
@@ -298,28 +314,28 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						{
 							case 0:							
 							{
-								ammo_config = "mat_gatlingammo";
+								ammo_config = "ammo_gatling";
 								ammo_count = 250;
 							}
 							break;
 							
 							case 1:
 							{
-								ammo_config = "mat_rifleammo";
+								ammo_config = "ammo_highcal";
 								ammo_count = 100;
 							}
 							break;
 							
 							case 2:
 							{
-								ammo_config = "mat_pistolammo";
+								ammo_config = "ammo_lowcal";
 								ammo_count = 200;
 							}
 							break;
 							
 							case 3:
 							{
-								ammo_config = "mat_shotgunammo";
+								ammo_config = "ammo_shotgun";
 								ammo_count = 50;
 							}
 							break;

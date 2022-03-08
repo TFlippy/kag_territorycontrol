@@ -121,6 +121,9 @@ void onInit(CBlob@ this)
 	Random@ rand = Random(this.getNetworkID());
 	string name = firstnames[rand.NextRanged(firstnames.length)] + " " + surnames[rand.NextRanged(surnames.length)];
 	this.set_string("trader name", name);
+	
+	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", 52, Vec2f(8, 8));
+	this.SetMinimapRenderAlways(true);
 
 	//no spinning
 	this.getShape().SetRotationsAllowed(false);
@@ -141,7 +144,7 @@ void onInit(CBlob@ this)
 	addTokens(this); //colored shop icons
 
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
-	this.set_Vec2f("shop menu size", Vec2f(4, 4));
+	this.set_Vec2f("shop menu size", Vec2f(4, 5));
 	this.set_string("shop description", name + " the Trader");
 	this.setInventoryName(name + " the Trader");
 	this.set_u8("shop icon", 25);
@@ -249,7 +252,7 @@ void onInit(CBlob@ this)
 			s.spawnNothing = true;
 		}
 		{
-			ShopItem@ s = addShopItem(this, "Shotgun Shells (4)", "$icon_shotgunammo$", "mat_shotgunammo-4", "Boomstick's food.");
+			ShopItem@ s = addShopItem(this, "Shotgun Shells (4)", "$icon_shotgunammo$", "ammo_shotgun-4", "Boomstick's food.");
 			AddRequirement(s.requirements, "coin", "", "Coins", 100);
 			s.spawnNothing = true;
 		}
@@ -282,6 +285,11 @@ void addTokens(CBlob@ this)
 	AddIconToken("$icon_lighter$", "Lighter.png", Vec2f(8, 8), 0, teamnum);
 	AddIconToken("$icon_firework$", "Firework.png", Vec2f(16, 24), 0, teamnum);
 	AddIconToken("$icon_jetpack$", "Jetpack.png", Vec2f(16, 16), 0, teamnum);
+}
+
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	this.set_bool("shop available", this.isOverlapping(caller) || this.isAttachedTo(caller));
 }
 
 void onTick(CBlob@ this)

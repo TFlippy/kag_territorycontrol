@@ -51,9 +51,6 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 	if(shop_items.length > 0 && this.get_bool("shop available") && !this.hasTag("shop disabled"))
 	{
-		CBitStream params;
-		params.write_u16(caller.getNetworkID());
-
 		CButton@ button = caller.CreateGenericButton(
 			this.get_u8("shop icon"),                                // icon token
 			this.get_Vec2f("shop offset"),                           // button offset
@@ -68,8 +65,24 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 void createMenu(CBlob@ this, CBlob@ caller)
 {
-	if (this.hasTag("shop disabled"))
-		return;
+	/*if (this.hasTag("shop disabled"))
+		return;*/
+
+	/*CAttachment@ att = this.getAttachments();
+
+	if (att !is null) 
+	{
+		AttachmentPoint@ m1 = att.getAttachmentPointByName("m1_go_brrr");
+		
+		if (m1 is null)
+		{
+			@m1 = att.AddAttachmentPoint("m1_go_brrr", true);
+			m1.SetKeysToTake(key_action1);
+		}
+
+		caller.server_AttachTo(this, m1);
+		caller.set_u16("m1_go_brrr_owner", this.getNetworkID());
+	}*/
 
 	BuildShopMenu(this, caller, this.get_string("shop description"), Vec2f(0, 0), this.get_Vec2f("shop menu size"));
 }

@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 	                    shootDelay, // fire delay (ticks)
 	                    1, // fire bullets amount
 	                    Vec2f(-6.0f, 2.0f), // fire position offset
-	                    "mat_gatlingammo", // bullet ammo config name
+	                    "ammo_gatling", // bullet ammo config name
 	                    "", // fire position offset
 	                    "GatlingGun-Shoot0", // fire sound
 	                    "EmptyFire" // empty fire sound
@@ -45,7 +45,7 @@ void onInit(CBlob@ this)
 
 	this.getShape().SetRotationsAllowed(false);
 	this.set_string("ammoIcon", "icon_gatlingammo");
-	this.set_string("autograb blob", "mat_gatlingammo");
+	this.set_string("autograb blob", "ammo_gatling");
 
 	this.set_u32("fireDelay", 0);
 
@@ -53,7 +53,7 @@ void onInit(CBlob@ this)
 
 	if (isServer())
 	{
-		CBlob@ ammo = server_CreateBlob("mat_gatlingammo");
+		CBlob@ ammo = server_CreateBlob("ammo_gatling");
 		if (ammo !is null)
 		{
 			if (!this.server_PutInInventory(ammo)) ammo.server_Die();

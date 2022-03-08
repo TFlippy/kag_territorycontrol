@@ -28,7 +28,11 @@ void onInit(CBlob@ this)
 	this.addCommandID("sv_store");
 	
 	this.Tag("minimap_large");
-	this.set_u8("minimap_index", 2);
+	this.set_u8("minimap_index", 29);
+
+	this.SetLight(true);
+	this.SetLightRadius(128.0f);
+	this.SetLightColor(SColor(255, 255, 200, 128));
 	
 	// this.Tag("invincible");
 	this.Tag("respawn");
@@ -55,7 +59,7 @@ void onInit(CBlob@ this)
 	}
 	
 	// Upgrading stuff
-	this.set_Vec2f("shop offset", Vec2f(-12, 5));
+	//this.set_Vec2f("shop offset" //This has been moved to CommonFactionBuilding.as
 	this.set_Vec2f("shop menu size", Vec2f(4, 2));
 	this.set_string("shop description", "Upgrades & Repairs");
 	this.set_u8("shop icon", 15);
@@ -66,9 +70,9 @@ void onInit(CBlob@ this)
 	
 	{
 		ShopItem@ s = addShopItem(this, "Upgrade to a Stronghold", "$icon_upgrade$", "stronghold", "Upgrade to a Stronghold.\n\n+ Larger inventory capacity\n+ Extra durability\n+ Longer capture time\n+ Material pickup\n+ 1 Upkeep");
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 50);
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 30);
-		AddRequirement(s.requirements, "coin", "", "Coins", 700);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 40);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 20);
+		AddRequirement(s.requirements, "coin", "", "Coins", 500);
 		s.customButton = true;
 		s.buttonwidth = 2;	
 		s.buttonheight = 2;
@@ -93,7 +97,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
-		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, -2.5f), this, buildSpawnMenu, "Change class");
+		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, 0.0f), this, buildSpawnMenu, "Change class");
 				
 		CInventory @inv = caller.getInventory();
 		if(inv is null) return;

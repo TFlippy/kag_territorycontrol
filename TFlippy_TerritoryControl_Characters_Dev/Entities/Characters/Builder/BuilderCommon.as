@@ -237,7 +237,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			}
 			else
 			{
-				bool trapBlocks = (b.name == "trap_block" || b.name == "spikes");
+				bool trapBlocks = (b.name == "trap_block" || b.name == "spikes" || b.name == "assembler");
 				u8 myTeam = (this.getTeamNum() >= 100 && this.getTeamNum() != 250 && !trapBlocks) ? -1 : this.getTeamNum();
 				CBlob@ blockBlob = server_CreateBlob(b.name, myTeam, pos);
 				if (blockBlob !is null)
@@ -245,31 +245,16 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 					if (this.getPlayer() !is null)
 					blockBlob.set_string("builder", this.getPlayer().getUsername());
 
-					if (b.name == "chickenassembler")
+					if (b.name == "druglab")
 					{
-						CBlob@ bp = server_CreateBlob("bp_automation_advanced", myTeam, this.getPosition());
-
-						if (!this.server_PutInInventory(bp))
+						if (XORRandom(3) < 1)
 						{
-							bp.setPosition(this.getPosition());
-						}
-					}
-					else if (b.name == "beamtower")
-					{
-						CBlob@ bp = server_CreateBlob("bp_energetics", myTeam, this.getPosition());
+							CBlob@ bp = server_CreateBlob("bp_chemistry", myTeam, this.getPosition());
 
-						if (!this.server_PutInInventory(bp))
-						{
-							bp.setPosition(this.getPosition());
-						}
-					}
-					else if (b.name == "chemlab")
-					{
-						CBlob@ bp = server_CreateBlob("bp_chemistry", myTeam, this.getPosition());
-
-						if (!this.server_PutInInventory(bp))
-						{
-							bp.setPosition(this.getPosition());
+							if (!this.server_PutInInventory(bp))
+							{
+								bp.setPosition(this.getPosition());
+							}
 						}
 					}
 					else if (b.name == "banner")

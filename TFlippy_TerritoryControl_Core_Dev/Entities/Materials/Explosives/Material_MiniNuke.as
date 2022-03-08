@@ -22,6 +22,7 @@ void onInit(CBlob@ this)
 	
 	this.Tag("explosive");
 	this.Tag("medium weight");
+	this.Tag("ribbon_icon");
 	
 	this.maxQuantity = 1;
 }

@@ -27,6 +27,7 @@ void onInit(CBlob@ this)
 	this.Tag("player");
 	this.Tag("dangerous");
 	this.Tag("map_damage_dirt");
+	this.Tag("no class swap");
 
 	this.set_f32("map_damage_ratio", 0.3f);
 	this.set_f32("map_damage_radius", 32.0f);

@@ -63,7 +63,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 	if (level > 1)
 	{
-		return damage / Maths::Min(level, 4);
+		return damage / Maths::Min(level, 2);
 	}
 
 	return damage;

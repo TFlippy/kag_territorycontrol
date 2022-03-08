@@ -15,9 +15,9 @@ const LootItem@[] c_items =
 	LootItem("mat_mithril", 0, 100, 250),
 
 	// Ammo
-	LootItem("mat_rifleammo", 0, 40, 400),
-	LootItem("mat_pistolammo", 0, 60, 400),
-	LootItem("mat_shotgunammo", 0, 30, 400),
+	LootItem("ammo_highcal", 0, 40, 400),
+	LootItem("ammo_lowcal", 0, 60, 400),
+	LootItem("ammo_shotgun", 0, 30, 400),
 	LootItem("mat_battery", 0, 100, 100),
 	LootItem("mat_grenade", 0, 8, 16),
 

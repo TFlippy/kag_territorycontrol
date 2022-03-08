@@ -12,6 +12,7 @@ class Bullet
 {
     CBlob@ hoomanShooter;
     CBlob@ gunBlob;
+	BulletFade@ Fade;
 
     // Pointer to BulletModules
     BulletModule@[] modules;
@@ -50,6 +51,10 @@ class Bullet
 
         OldPos = CurrentPos;
         LastLerpedPos = CurrentPos;
+		
+		@Fade = BulletFade(pos);
+		Fade.Texture = gunBlob.get_string("CustomFade");
+		BulletGrouped.addFade(Fade);
 
         for (int a = 0; a < modules.length(); a++)
         {
@@ -223,7 +228,7 @@ class Bullet
                             if (map.isTileGroundStuff(tile.type))
                             {
                                 //Bullet resistance
-                                if (XORRandom(10) > 5) map.server_DestroyTile(hitpos, damage * 0.25f);
+                                if (XORRandom(4) < 3) map.server_DestroyTile(hitpos, damage * 0.25f);
                             }
                             else
                             {
@@ -264,7 +269,8 @@ class Bullet
 
         if (endBullet)
         {
-            TimeLeft = 1;
+            Fade.Front = CurrentPos;
+			TimeLeft = 1;
         }
 
         return false;
@@ -272,7 +278,9 @@ class Bullet
 
     void onRender() // Every bullet gets forced to join the queue in onRenders, so we use this to calc to position
     {
-        // Are we on the screen?
+        Fade.Front = CurrentPos;
+		
+		// Are we on the screen?
         const Vec2f xLast = PDriver.getScreenPosFromWorldPos(OldPos);
         const Vec2f xNew  = PDriver.getScreenPosFromWorldPos(CurrentPos);
         if (!(xNew.x > 0 && xNew.x < ScreenX)) // Is our main position still on screen?
@@ -289,6 +297,8 @@ class Bullet
         // Lerp
         Vec2f newPos = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
         LastLerpedPos = newPos;
+		
+		Fade.Front = newPos;
 
         for (int a = 0; a < modules.length(); a++)
         {

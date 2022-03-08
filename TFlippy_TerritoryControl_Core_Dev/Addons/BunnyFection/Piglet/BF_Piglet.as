@@ -57,6 +57,7 @@ void onInit(CBlob@ this)
 	//for flesh hit
 	this.set_f32("gib health", -2.0f);	  	
 	this.Tag("flesh");
+	this.Tag("passive");
 
 	this.getShape().SetOffset(Vec2f(0, 2));
 

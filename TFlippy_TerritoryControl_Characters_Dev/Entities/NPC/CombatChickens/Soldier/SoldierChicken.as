@@ -5,6 +5,7 @@
 #include "FireParticle.as"
 #include "FireCommon.as";
 #include "RunnerCommon.as";
+#include "ThrowCommon.as";
 
 void onInit(CBlob@ this)
 {
@@ -50,7 +51,7 @@ void onInit(CBlob@ this)
 			case 3:
 			case 4:
 				gun_config = "assaultrifle";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("attackDelay", 2);
 				this.set_u8("reactionTime", 15);
@@ -64,7 +65,7 @@ void onInit(CBlob@ this)
 			case 5:
 			case 6:
 				gun_config = "shotgun";
-				ammo_config = "mat_shotgunammo";
+				ammo_config = "ammo_shotgun";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 30);
@@ -77,7 +78,7 @@ void onInit(CBlob@ this)
 			case 7:
 			case 8:
 				gun_config = "sar";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 5);
@@ -89,7 +90,7 @@ void onInit(CBlob@ this)
 
 			case 9:
 				gun_config = "minigun";
-				ammo_config = "mat_gatlingammo";
+				ammo_config = "ammo_gatling";
 
 				this.set_u8("reactionTime", 15);
 				this.set_u8("attackDelay", 1);
@@ -105,7 +106,7 @@ void onInit(CBlob@ this)
 			case 11:
 			case 12:
 				gun_config = "sniper";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 45);
 				this.set_u8("attackDelay", 30);
@@ -119,7 +120,7 @@ void onInit(CBlob@ this)
 
 			case 13:
 				gun_config = "autoshotgun";
-				ammo_config = "mat_shotgunammo";
+				ammo_config = "ammo_shotgun";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 10);
@@ -134,7 +135,7 @@ void onInit(CBlob@ this)
 			case 14:
 			case 15:
 				gun_config = "silencedrifle";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 45);
 				this.set_u8("attackDelay", 10);
@@ -148,7 +149,7 @@ void onInit(CBlob@ this)
 
 			case 16:
 				gun_config = "amr";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 90);
@@ -162,7 +163,7 @@ void onInit(CBlob@ this)
 
 			default:
 				gun_config = "carbine";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("attackDelay", 2);
 				this.set_u8("reactionTime", 30);
@@ -174,7 +175,7 @@ void onInit(CBlob@ this)
 				break;
 		}
 
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
 			ammo.server_SetQuantity(ammo.maxQuantity);
@@ -237,6 +238,14 @@ void onTick(CBlob@ this)
 		}
 
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
+	}
+
+	if (this.isMyPlayer())
+	{
+		if (this.isKeyJustPressed(key_action3))
+		{
+			client_SendThrowOrActivateCommand(this);
+		}
 	}
 }
 

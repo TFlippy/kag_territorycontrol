@@ -250,7 +250,9 @@ void Blend(CBlob@ this, CBlob@ blob)
 
 			if (isServer())
 			{
-				MakeMat(this, this.getPosition(), "mat_meat", 20 + XORRandom(10));
+				u8 quantity = blob.getQuantity();
+
+				MakeMat(this, this.getPosition(), "mat_meat", quantity * 20 + XORRandom(quantity * 10));
 			}
 
 			this.getSprite().PlaySound("SawLog.ogg", 0.8f, 1.0f);

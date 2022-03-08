@@ -27,9 +27,9 @@ void onInit(CBlob@ this)
 	this.addCommandID("sv_store");
 	this.addCommandID("sv_hidemap");
 
-	this.Tag("minimap_small");
-	this.set_u8("minimap_index", 1);
-	this.set_bool("minimap_hidden", false);
+	this.Tag("minimap_large");
+	this.set_u8("minimap_index", 27);
+	this.set_bool("minimap_hidden", true);
 
 	// this.Tag("invincible");
 
@@ -56,7 +56,7 @@ void onInit(CBlob@ this)
 	}
 
 	// Upgrading stuff
-	this.set_Vec2f("shop offset", Vec2f(-12, 5));
+	//this.set_Vec2f("shop offset" //This has been moved to CommonFactionBuilding.as
 	this.set_Vec2f("shop menu size", Vec2f(4, 2));
 	this.set_string("shop description", "Upgrades & Repairs");
 	this.set_u8("shop icon", 15);
@@ -67,9 +67,9 @@ void onInit(CBlob@ this)
 
 	{
 		ShopItem@ s = addShopItem(this, "Upgrade to a Fortress", "$icon_upgrade$", "fortress", "Upgrade to a more durable Fortress.\n\n+ Higher inventory capacity\n+ Extra durability\n+ Tunnel travel\n+ 1 Upkeep");
-		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 750);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 300);
-		AddRequirement(s.requirements, "coin", "", "Coins", 250);
+		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", 500);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 250);
+		AddRequirement(s.requirements, "coin", "", "Coins", 175);
 		s.customButton = true;
 		s.buttonwidth = 2;
 		s.buttonheight = 2;
@@ -94,7 +94,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		CBitStream params;
 		params.write_u16(caller.getNetworkID());
-		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, -2.5f), this, buildSpawnMenu, "Change class");
+		CButton@ button = caller.CreateGenericButton("$change_class$", Vec2f(-12, 0.0f), this, buildSpawnMenu, "Change class");
 
 		CInventory @inv = caller.getInventory();
 		if(inv is null) return;
@@ -104,7 +104,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			CButton@ buttonOwner = caller.CreateGenericButton(28, Vec2f(14, 5), this, this.getCommandID("sv_store"), "Store", params);
 		}
 
-		CButton@ buttonOwner = caller.CreateGenericButton(this.get_bool("minimap_hidden") ? 23 : 27, Vec2f(0.5f, -14), this, this.getCommandID("sv_hidemap"), "Toggle Map Icon", params);
+		CButton@ buttonOwner = caller.CreateGenericButton(this.get_bool("minimap_hidden") ? 27 : 23, Vec2f(6, -8), this, this.getCommandID("sv_hidemap"), "Toggle Map Icon", params);
 	}
 }
 
@@ -153,7 +153,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		this.set_bool("minimap_hidden", !this.get_bool("minimap_hidden"));
 
-		this.set_u8("minimap_index", this.get_bool("minimap_hidden") ? 63 : 1);
+		this.set_u8("minimap_index", this.get_bool("minimap_hidden") ? 27 : 28);
 	}
 
 	if (isServer())

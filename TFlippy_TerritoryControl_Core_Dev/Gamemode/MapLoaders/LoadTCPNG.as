@@ -30,7 +30,8 @@ namespace tc_colors
 		color_coalmine_neutral = 0xff373750,
 		color_merchant_neutral = 0xff7878ff,
 		color_bitch_neutral = 0xff7832e1,
-		color_pumpjack_neutral = 0xff14507d,
+		color_pumpjack_neutral = 0xff211912,
+		color_oildeposit = 0xff14507d,
 		color_trader_neutral = 0xff3737cd,
 		color_hobo_neutral = 0xff493326,
 
@@ -57,7 +58,11 @@ namespace tc_colors
 		color_pirategull = 0xffe4e6bb,
 		color_badger = 0xff5a5546,
 		color_barbedwire = 0xff5f6473,
-		color_iron_platform = 0xffcccccc,
+
+		color_iron_platform_up 		= 0xffccccca, // 0, 90, 180, and (270 or -90) degrees
+		color_iron_platform_right 	= 0xffcccccb,
+		color_iron_platform_down 	= 0xffcccccc,
+		color_iron_platform_left 	= 0xffcccccd,
 
 		color_glass = 0xff6d95a1,
 		color_glass_bg = 0xff5a7a83,
@@ -156,6 +161,13 @@ class TCPNGLoader : PNGLoader
 			{
 				autotile(offset);
 				spawnBlob(map, "pumpjack", offset, -1);
+				break;
+			}
+			
+			case tc_colors::color_oildeposit:
+			{
+				autotile(offset);
+				spawnBlob(map, "oildeposit", offset, -1);
 				break;
 			}
 
@@ -329,10 +341,28 @@ class TCPNGLoader : PNGLoader
 				spawnBlob(map, "barbedwire", offset, -1);
 				break;
 			}
-			case tc_colors::color_iron_platform:
+			case tc_colors::color_iron_platform_up:
 			{
 				map.SetTile(offset, CMap::tile_biron);
-				spawnBlob(map, "iron_platform", offset, -1);
+				spawnBlob(map, "iron_platform", offset, -1, true);
+				break;
+			}
+			case tc_colors::color_iron_platform_right:
+			{
+				map.SetTile(offset, CMap::tile_biron);
+				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero,  90);
+				break;
+			}
+			case tc_colors::color_iron_platform_down:
+			{
+				map.SetTile(offset, CMap::tile_biron);
+				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero,  90);
+				break;
+			}
+			case tc_colors::color_iron_platform_left:
+			{
+				map.SetTile(offset, CMap::tile_biron);
+				spawnBlob(map, "iron_platform", offset, -1, true, Vec2f_zero,  90);
 				break;
 			}
 			case tc_colors::color_zapper_chicken:

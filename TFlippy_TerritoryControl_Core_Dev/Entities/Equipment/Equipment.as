@@ -105,24 +105,28 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 		CBlob@ item = caller.getCarriedBlob();
 		if (item !is null)
 		{
+			string eqName = item.getName();
 			if (getEquipmentType(item) == "head")
 			{
-				addHead(caller, item.getName());
-				if (item.getName() == "militaryhelmet") caller.set_f32("mh_health", item.get_f32("health"));
-				else if (item.getName() == "bucket") caller.set_f32("bucket_health", item.get_f32("health"));
-				item.server_Die();
+				addHead(caller, eqName);
+				if (eqName == "militaryhelmet" || eqName == "bucket" || eqName == "pumpkin" || 
+					eqName == "scubagear" || eqName == "minershelmet") 
+					caller.set_f32(eqName+"_health", item.get_f32("health"));
+
+				if (item.hasTag("bushy")) caller.Tag("bushy");
+				if (item.getQuantity() <= 1) item.server_Die();
+				else item.server_SetQuantity(Maths::Max(item.getQuantity() - 1, 0));
 			}
 			else if (getEquipmentType(item) == "torso")
 			{
-				addTorso(caller, item.getName());
-				if (item.getName() == "bulletproofvest") caller.set_f32("bpv_health", item.get_f32("health"));
-				else if (item.getName() == "keg") caller.set_f32("keg_health", item.get_f32("health"));
+				addTorso(caller, eqName);
+				if (eqName == "bulletproofvest" || eqName == "keg") caller.set_f32(eqName+"_health", item.get_f32("health"));
 				item.server_Die();
 			}
 			else if (getEquipmentType(item) == "boots")
 			{
-				addBoots(caller, item.getName());
-				if (item.getName() == "combatboots") caller.set_f32("cb_health", item.get_f32("health"));
+				addBoots(caller, eqName);
+				if (eqName == "combatboots") caller.set_f32(eqName+"_health", item.get_f32("health"));
 				item.server_Die();
 			}
 		}
@@ -148,25 +152,17 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 		else playerblob.set_u8("last head", playerblob.getHeadNum());
 	}
 
-	if(headname == "scubagear")
+	if (headname == "scubagear")
 	{
 		playerblob.set_u8("override head", 88);
 		playerblob.Tag("disguised");
 	}
-
-	// if(headname == "minershelmet")
-		// playerblob.set_u8("override head", 30);
-
-	// if (headname == "militaryhelmet")
-		// playerblob.set_u8("override head", 30);
-
-	if(headname == "bucket")
+	else if (headname == "bucket")
 	{
 		playerblob.set_u8("override head", 107);
 		playerblob.Tag("disguised");
 	}
-		
-	if(headname == "pumpkin")
+	else if (headname == "pumpkin")
 	{
 		playerblob.set_u8("override head", 108);
 		playerblob.Tag("disguised");
@@ -176,7 +172,7 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 	playerblob.Tag(headname);
 	playerblob.set_string("reload_script", headname);
 
-	if (headname != "pumpkin") playerblob.AddScript(headname+"_effect.as");
+	playerblob.AddScript(headname+"_effect.as");
 
 	playerblob.set_string("equipment_head", headname);
 	playerblob.Tag("update head");
@@ -185,6 +181,7 @@ void addHead(CBlob@ playerblob, string headname)	//Here you need to add head ove
 void removeHead(CBlob@ playerblob, string headname)
 {
 	if (playerblob.getSprite().getSpriteLayer(headname) !is null) playerblob.getSprite().RemoveSpriteLayer(headname);
+	if (playerblob.getSprite().getSpriteLayer("bushy") !is null) playerblob.getSprite().RemoveSpriteLayer("bushy");
 	if (headname == "minershelmet") playerblob.SetLight(false);	//example of removing custom tags like Light
 
 	playerblob.Untag(headname);
@@ -193,13 +190,13 @@ void removeHead(CBlob@ playerblob, string headname)
 		CBlob@ oldeq = server_CreateBlob(headname, playerblob.getTeamNum(), playerblob.getPosition());
 		if (headname == "militaryhelmet")	//need to be after creating blob, bcos it sets hp to it
 		{
-			oldeq.set_f32("health", playerblob.get_f32("mh_health"));
-			oldeq.getSprite().SetFrameIndex(Maths::Floor(playerblob.get_f32("mh_health") / 4.00f));
+			if (playerblob.hasTag("bushy")) oldeq.Tag("bushy");
+			oldeq.set_f32("health", playerblob.get_f32(headname+"_health"));
+			oldeq.getSprite().SetFrameIndex(Maths::Floor(playerblob.get_f32(headname+"_health") / 6.26f));
 		}
-		else if (headname == "bucket")
+		else if (headname == "bucket" || headname == "pumpkin" || headname == "scubagear" || headname == "minershelmet")
 		{
-			oldeq.set_f32("health", playerblob.get_f32("bucket_health"));
-			// oldeq.getSprite().SetFrameIndex(Maths::Floor(playerblob.get_f32("bucket_health") / 4.00f)); // I don't have anyone to make sprite for me :kag_depression:
+			oldeq.set_f32("health", playerblob.get_f32(headname+"_health"));
 		}
 		playerblob.server_PutInInventory(oldeq);
 	}
@@ -209,6 +206,8 @@ void removeHead(CBlob@ playerblob, string headname)
 	playerblob.RemoveScript(headname+"_effect.as");
 	playerblob.Tag("update head");
 	playerblob.Untag("disguised");
+	if (playerblob.hasTag("pax immune")) playerblob.Untag("pax immune");
+	if (playerblob.hasTag("bushy")) playerblob.Untag("bushy");
 }
 
 void addTorso(CBlob@ playerblob, string torsoname)			//The same stuff as in head here.
@@ -246,8 +245,8 @@ void removeTorso(CBlob@ playerblob, string torsoname)		//Same stuff with removin
 	if (isServer())
 	{
 		CBlob@ oldeq = server_CreateBlob(torsoname, playerblob.getTeamNum(), playerblob.getPosition());
-		if (torsoname == "bulletproofvest") oldeq.set_f32("health", playerblob.get_f32("bpv_health"));	//need to be after creating blob, bcos it sets hp to it
-		if (torsoname == "keg") oldeq.set_f32("health", playerblob.get_f32("keg_health"));
+		if (torsoname == "bulletproofvest" || torsoname == "keg") 
+			oldeq.set_f32("health", playerblob.get_f32(torsoname+"_health"));
 		playerblob.server_PutInInventory(oldeq);
 	}
 	
@@ -275,7 +274,7 @@ void removeBoots(CBlob@ playerblob, string bootsname)		//I think you should alre
 	if (isServer())
 	{
 		CBlob@ oldeq = server_CreateBlob(bootsname, playerblob.getTeamNum(), playerblob.getPosition());
-		if (bootsname == "combatboots") oldeq.set_f32("health", playerblob.get_f32("cb_health"));	//need to be after creating blob, bcos it sets hp to it
+		if (bootsname == "combatboots") oldeq.set_f32("health", playerblob.get_f32(bootsname+"_health"));
 		playerblob.server_PutInInventory(oldeq);		
 	}
 	playerblob.set_string("equipment_boots", "");
@@ -286,24 +285,39 @@ void onDie(CBlob@ this)
 {
     if (isServer())
 	{
-		if (this.get_string("equipment_head") != "")
+		string headname = this.get_string("equipment_head");
+		string torsoname = this.get_string("equipment_torso");
+		string bootsname = this.get_string("equipment_boots");
+		if (headname != "")
 		{
-			if (this.get_string("equipment_head") == "militaryhelmet")
-			{ }
-			else server_CreateBlob(this.get_string("equipment_head"), this.getTeamNum(), this.getPosition());
+			if (headname == "bucket" || headname == "pumpkin" || headname == "scubagear" || headname == "minershelmet")
+			{
+				CBlob@ item = server_CreateBlob(headname, this.getTeamNum(), this.getPosition());
+				if (item !is null) item.set_f32("health", this.get_f32(headname+"_health"));
+				this.RemoveScript(headname+"_effect.as");
+			}
+			else if (headname != "militaryhelmet") server_CreateBlob(headname, this.getTeamNum(), this.getPosition());
 		}
-		if (this.get_string("equipment_torso") != "")
+		if (torsoname != "")
 		{
-			if (this.get_string("equipment_torso") == "bulletproofvest" || this.get_string("equipment_torso") == "keg")
-			{ }
-			else if (!this.exists("vest_explode"))
-				server_CreateBlob(this.get_string("equipment_torso"), this.getTeamNum(), this.getPosition());
+			if (torsoname == "bulletproofvest")
+			{
+				CBlob@ item = server_CreateBlob(torsoname, this.getTeamNum(), this.getPosition());
+				if (item !is null) item.set_f32("health", this.get_f32(torsoname+"_health"));
+				this.RemoveScript(torsoname+"_effect.as");
+			}
+			else if (!this.exists("vest_explode") && torsoname != "keg")
+				server_CreateBlob(torsoname, this.getTeamNum(), this.getPosition());
 		}
-		if (this.get_string("equipment_boots") != "")
+		if (bootsname != "")
 		{
-			if (this.get_string("equipment_boots") == "combatboots")
-			{ }
-			else server_CreateBlob(this.get_string("equipment_boots"), this.getTeamNum(), this.getPosition());
+			if (bootsname == "combatboots")
+			{
+				CBlob@ item = server_CreateBlob(bootsname, this.getTeamNum(), this.getPosition());
+				if (item !is null) item.set_f32("health", this.get_f32(bootsname+"_health"));
+				this.RemoveScript(bootsname+"_effect.as");
+			}
+			else server_CreateBlob(bootsname, this.getTeamNum(), this.getPosition());
 		}
 	}
 }

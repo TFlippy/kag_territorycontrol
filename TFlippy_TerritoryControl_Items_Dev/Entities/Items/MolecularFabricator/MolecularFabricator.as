@@ -28,7 +28,7 @@ void onInit(CBlob@ this)
 
 	// SHOP
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
-	this.set_Vec2f("shop menu size", Vec2f(5, 6));
+	this.set_Vec2f("shop menu size", Vec2f(5, 7));
 	this.set_string("shop description", "Molecular Fabricator");
 	this.set_u8("shop icon", 15);
 
@@ -100,26 +100,23 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
+		ShopItem@ s = addShopItem(this, "Reconstruct a Force Field Generator", "$icon_fieldgenerator$", "fieldgenerator", "A high-tech force field generator. Strikes anything that is made of flesh and doesn't match its internal filter.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 25);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 5);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct 10 Metal Rods", "$mat_lancerod$", "mat_lancerod-10", "A bundle of 10 charge lance rods.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
+		s.spawnNothing = true;
+	}
+	{
 		ShopItem@ s = addShopItem(this, "Reconstruct 10 Plasteel Sheets", "$icon_plasteel$", "mat_plasteel-10", "A durable yet lightweight material.");
 		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 10);
 		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 1);
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Reconstruct a Busted Scyther Component", "$icon_scythergib$", "scythergib", "A completely useless garbage, brand new.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 25);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 2);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Reconstruct a Scyther", "$icon_scyther$", "scyther", "A light combat mechanoid equipped with a Charge Lance.");
-		AddRequirement(s.requirements, "blob", "scythergib", "Busted Scyther Component", 1);
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 25);
-		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 20);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 5);
-		AddRequirement(s.requirements, "blob", "chargelance", "Charge Lance", 1);
 		s.spawnNothing = true;
 	}
 	{
@@ -137,8 +134,56 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Reconstruct 10 Metal Rods", "$mat_lancerod$", "mat_lancerod-10", "A bundle of 10 charge lance rods.");
+		ShopItem@ s = addShopItem(this, "Reconstruct a Charge Pistol", "$chargepistol$", "chargepistol", "A handheld energy pistol");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 25);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 10);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 2);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct a Charge Blaster", "$chargeblaster$", "chargeblaster", "A rapid-fire energy minigun.");
 		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 50);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 20);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct an Inferno Cannon", "$infernocannon$", "infernocannon", "An energy cannon that shoots out an incendiary projectile.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 200);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 75);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 20);
+		s.spawnNothing = true;
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct a Partical Cannon", "$forceray$", "forceray", "A partical cannon that uses mithril.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 200);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 75);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 50);
+		s.spawnNothing = true;
+	}
+	/*
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct a Callahan", "$callahan$", "callahan", "Callahan Full-bore Auto Lock. Aim assist assault rifle.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 75);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 50);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct an Oof-007", "$icon_oof$", "oof", "Destroyer of worlds.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 150);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 150);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
+		s.spawnNothing = true;
+	}
+	*/
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct a Coilgun", "$icon_coilgun$", "coilgun", "A rapid firing mounted gun. Uses Mithril as ammunition.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 200);
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
 		s.spawnNothing = true;
 	}
@@ -150,17 +195,12 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Reconstruct an Exosuit", "$icon_exosuit$", "exosuititem", "A Model II Exosuit with a shield module.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 100);
-		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 25);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 8);
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Reconstruct a Force Field Generator", "$icon_fieldgenerator$", "fieldgenerator", "A high-tech force field generator. Strikes anything that is made of flesh and doesn't match its internal filter.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
-		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 25);
+		ShopItem@ s = addShopItem(this, "Reconstruct a Scyther", "$icon_scyther$", "scyther", "A light combat mechanoid equipped with a Charge Lance.");
+		AddRequirement(s.requirements, "blob", "scythergib", "Busted Scyther Component", 1);
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 25);
+		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 20);
 		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 5);
+		AddRequirement(s.requirements, "blob", "chargelance", "Charge Lance", 1);
 		s.spawnNothing = true;
 	}
 	{
@@ -171,10 +211,17 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Reconstruct a Coilgun", "$icon_coilgun$", "coilgun", "A rapid firing mounted gun. Uses Mithril as ammunition.");
-		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 50);
+		ShopItem@ s = addShopItem(this, "Reconstruct an Exosuit", "$icon_exosuit$", "exosuititem", "A Model II Exosuit with a shield module.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 100);
 		AddRequirement(s.requirements, "blob", "mat_plasteel", "Plasteel Sheet", 50);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 8);
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Reconstruct a Busted Scyther Component", "$icon_scythergib$", "scythergib", "A completely useless garbage, brand new.");
+		AddRequirement(s.requirements, "blob", "mat_matter", "Amazing Technicolor Dust", 25);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 2);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 1);
 		s.spawnNothing = true;
 	}
 }

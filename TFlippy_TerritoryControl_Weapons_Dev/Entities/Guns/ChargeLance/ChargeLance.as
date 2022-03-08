@@ -40,7 +40,10 @@ void onInit(CBlob@ this)
 	this.set_u8("CustomKnock", 6);
 	this.set_f32("CustomBulletLength", 20.0f);
 	this.set_string("CustomCycle", "ChargeLanceCycle.ogg");
-	this.set_string("CustomBullet", "Bullet_Lance.png");
+	
+	this.set_string("CustomBullet", "BulletGauss.png");
+	this.set_string("CustomFade", "PlasmaFade.png");
+	
 	this.set_string("CustomSoundEmpty", "");
 	this.set_string("CustomSoundObject", "Sulphur_Explode.ogg");
 	this.Tag("heavy weight");

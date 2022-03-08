@@ -32,7 +32,8 @@ void onInit(CBlob@ this)
 
 	this.getShape().SetRotationsAllowed(false);
 
-	this.set_string("CustomBullet", "Bullet_Plasma.png");
+	this.set_string("CustomBullet", "BulletPlasma.png");
+	this.set_string("CustomFade", "PlasmaFade.png");
 	this.set_f32("CustomBulletLength", 7.0f);
 
 	this.set_u16("ammo_count", 0);

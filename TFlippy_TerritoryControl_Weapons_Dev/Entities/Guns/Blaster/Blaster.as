@@ -37,7 +37,8 @@ void onInit(CBlob@ this)
 	this.set("gun_settings", @settings);
 
 	//Custom
-	this.set_string("CustomBullet", "Bullet_Blaster.png");
+	this.set_string("CustomBullet", "BulletBlaster.png");
+	this.set_string("CustomFade", "BlasterFade.png");
 	this.set_string("CustomFlash", "MuzzleFlash_Blaster.png");
 	this.set_u8("CustomKnock", 3);
 }

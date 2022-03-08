@@ -6,6 +6,7 @@
 #include "FireCommon.as";
 #include "RunnerCommon.as";
 #include "MakeCrate.as";
+#include "ThrowCommon.as";
 #include "Survival_Structs.as";
 
 u32 next_commander_event = 0; // getGameTime() + (30 * 60 * 5) + XORRandom(30 * 60 * 5));
@@ -56,7 +57,7 @@ void onInit(CBlob@ this)
 		{
 			case 0:
 				gun_config = "autoshotgun";
-				ammo_config = "mat_shotgunammo";
+				ammo_config = "ammo_shotgun";
 
 				this.set_u8("reactionTime", 10);
 				this.set_u8("attackDelay", 5);
@@ -71,7 +72,7 @@ void onInit(CBlob@ this)
 			case 1:
 			case 2:
 				gun_config = "sar";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 				
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 6);
@@ -84,7 +85,7 @@ void onInit(CBlob@ this)
 			case 3:
 			case 4:
 				gun_config = "pdw";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_lowcal";
 				
 				this.set_u8("attackDelay", 1);
 				this.set_u8("reactionTime", 30);
@@ -96,7 +97,7 @@ void onInit(CBlob@ this)
 
 			default:
 				gun_config = "beagle";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 2);
 				this.set_u8("attackDelay", 2);
@@ -123,7 +124,7 @@ void onInit(CBlob@ this)
 		}
 
 		// gun and ammo
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			CBlob@ ammo = server_CreateBlob(ammo_config, this.getTeamNum(), this.getPosition());
 			ammo.server_SetQuantity(ammo.maxQuantity);
@@ -179,6 +180,14 @@ void onTick(CBlob@ this)
 		}
 
 		this.getCurrentScript().runFlags |= Script::remove_after_this;
+	}
+
+	if (this.isMyPlayer())
+	{
+		if (this.isKeyJustPressed(key_action3))
+		{
+			client_SendThrowOrActivateCommand(this);
+		}
 	}
 
 	if (isServer())

@@ -44,7 +44,7 @@ void onInit(CBlob@ this)
 		string ammo_config;
 
 		gun_config = "fuger";
-		ammo_config = "mat_pistolammo";
+		ammo_config = "ammo_lowcal";
 
 		// this.set_u8("reactionTime", 2);
 		// this.set_u8("attackDelay", 1);
@@ -53,7 +53,7 @@ void onInit(CBlob@ this)
 		// this.set_f32("maxDistance", 300);
 		// this.set_f32("inaccuracy", 0.00f);
 
-		// MakeMat(this, this.getPosition(), "mat_pistolammo", 50);
+		// MakeMat(this, this.getPosition(), "ammo_lowcal", 50);
 
 		// CBlob@ gun = server_CreateBlob(gun_config, this.getTeamNum(), this.getPosition());
 		// if(gun !is null)

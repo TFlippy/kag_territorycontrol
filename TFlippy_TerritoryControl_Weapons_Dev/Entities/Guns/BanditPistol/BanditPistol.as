@@ -9,7 +9,7 @@ void onInit(CBlob@ this)
 	settings.TOTAL = 1; //Max amount of ammo that can be in a clip
 	settings.FIRE_INTERVAL = 10; //Time in between shots
 	settings.RELOAD_TIME = 10; //Time it takes to reload (in ticks)
-	settings.AMMO_BLOB = "mat_banditammo"; //Ammunition the gun takes
+	settings.AMMO_BLOB = "ammo_bandit"; //Ammunition the gun takes
 
 	//Bullet
 	//settings.B_PER_SHOT = 1; //Shots per bullet | CHANGE B_SPREAD, otherwise both bullets will come out together
@@ -39,4 +39,6 @@ void onInit(CBlob@ this)
 	//Custom
 	this.set_string("CustomCase", "");
 	this.Tag("CustomSemiAuto");
+	this.set_string("CustomBullet", "BulletPebble.png");
+	this.set_string("CustomFade", "PebbleFade.png");
 }

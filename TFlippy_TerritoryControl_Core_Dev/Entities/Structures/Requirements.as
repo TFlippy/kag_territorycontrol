@@ -13,18 +13,18 @@ string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 		ReadRequirement(bs,requiredType,name,friendlyName,quantity);
 		string quantityColor;
 
-		if(missing)
+		if (missing)
 		{
-			quantityColor="$RED$";
+			quantityColor = "$RED$";
 		}
 		else
 		{
-			quantityColor="$GREEN$";
+			quantityColor = "$GREEN$";
 		}
 
-		if(requiredType=="blob")
+		if (requiredType == "blob")
 		{
-			if(quantity>0)
+			if (quantity > 0)
 			{
 				text += quantityColor;
 				text += quantity;
@@ -39,7 +39,12 @@ string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 			// text += " required.";
 			text += "\n";
 		}
-		else if(requiredType=="tech")
+		else if (requiredType == "coin")
+		{
+			text += quantity;
+			text += " $COIN$ required\n";
+		}
+		else if (requiredType=="tech")
 		{
 			text += " \n$"; text += name; text += "$ ";
 			text += quantityColor;
@@ -53,61 +58,59 @@ string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 			text += "Access to role " + friendlyName + " required. \n";
 			text += quantityColor;
 		}
-		else if(requiredType=="not tech" && missing)
+		else if (missing)
 		{
-			text += " \n";
-			text += quantityColor;
-			text += friendlyName;
-			text += " technology already acquired.\n";
-			text += quantityColor;
-		}
-		else if(requiredType=="coin")
-		{
-			text += quantity;
-			text += " $COIN$ required\n";
-		}
-		else if(requiredType=="no more" && missing)
-		{
-			text += quantityColor;
-			text += "Only "+quantity+" "+friendlyName+" per-team possible. \n";
-			text += quantityColor;
-		}
-		else if(requiredType=="no less" && missing)
-		{
-			text += quantityColor;
-			text += "At least "+quantity+" "+friendlyName+" required. \n";
-			text += quantityColor;
-		}
-		else if(requiredType == "no more global" && missing)
-		{
-			text += quantityColor;
-			text += "Only " + quantity + " " + friendlyName + " possible. \n";
-			text += quantityColor;
-		}
-		else if(requiredType == "no less global" && missing)
-		{
-			text += quantityColor;
-			text += "At least " + quantity + " " + friendlyName + " required. \n";
-			text += quantityColor;
+			if (requiredType == "not tech")
+			{
+				text += " \n";
+				text += quantityColor;
+				text += friendlyName;
+				text += " technology already acquired.\n";
+				text += quantityColor;
+			}
+			else if (requiredType == "no more")
+			{
+				text += quantityColor;
+				text += "Only "+quantity+" "+friendlyName+" per-team possible. \n";
+				text += quantityColor;
+			}
+			else if (requiredType == "no less")
+			{
+				text += quantityColor;
+				text += "At least "+quantity+" "+friendlyName+" required. \n";
+				text += quantityColor;
+			}
+			else if (requiredType == "no more global")
+			{
+				text += quantityColor;
+				text += "Only " + quantity + " " + friendlyName + " possible. \n";
+				text += quantityColor;
+			}
+			else if (requiredType == "no less global")
+			{
+				text += quantityColor;
+				text += "At least " + quantity + " " + friendlyName + " required. \n";
+				text += quantityColor;
+			}
 		}
 	}
 
 	return text;
 }
 
-void SetItemDescription(CGridButton@ button,CBlob@ caller,CBitStream &in reqs,const string& in description,CInventory@ anotherInventory=null)
+void SetItemDescription(CGridButton@ button, CBlob@ caller, CBitStream &in reqs, const string& in description, CInventory@ anotherInventory=null)
 {
-	if(button !is null && caller !is null && caller.getInventory() !is null)
+	if (button !is null && caller !is null && caller.getInventory() !is null)
 	{
 		CBitStream missing;
 
-		if(hasRequirements(caller.getInventory(),anotherInventory,reqs,missing))
+		if (hasRequirements(caller.getInventory(),anotherInventory,reqs,missing))
 		{
-			button.hoverText=description+"\n\n "+getButtonRequirementsText(reqs,false);
+			button.hoverText = description+"\n\n "+getButtonRequirementsText(reqs,false);
 		}
 		else
 		{
-			button.hoverText=description+"\n\n "+getButtonRequirementsText(missing,true);
+			button.hoverText = description+"\n\n "+getButtonRequirementsText(missing,true);
 			button.SetEnabled(false);
 		}
 	}
@@ -115,7 +118,7 @@ void SetItemDescription(CGridButton@ button,CBlob@ caller,CBitStream &in reqs,co
 
 // read/write
 
-void AddRequirement(CBitStream &inout bs,const string &in req,const string &in blobName,const string &in friendlyName,u16 &in quantity=1)
+void AddRequirement(CBitStream &inout bs, const string &in req, const string &in blobName, const string &in friendlyName, u16 &in quantity=1)
 {
 	bs.write_string(req);
 	bs.write_string(blobName);
@@ -123,24 +126,24 @@ void AddRequirement(CBitStream &inout bs,const string &in req,const string &in b
 	bs.write_u16(quantity);
 }
 
-bool ReadRequirement(CBitStream &inout bs,string &out req,string &out blobName,string &out friendlyName,u16 &out quantity)
+bool ReadRequirement(CBitStream &inout bs, string &out req, string &out blobName, string &out friendlyName, u16 &out quantity)
 {
-	if(!bs.saferead_string(req))
+	if (!bs.saferead_string(req))
 	{
 		return false;
 	}
 
-	if(!bs.saferead_string(blobName))
+	if (!bs.saferead_string(blobName))
 	{
 		return false;
 	}
 
-	if(!bs.saferead_string(friendlyName))
+	if (!bs.saferead_string(friendlyName))
 	{
 		return false;
 	}
 
-	if(!bs.saferead_u16(quantity))
+	if (!bs.saferead_u16(quantity))
 	{
 		return false;
 	}
@@ -149,7 +152,7 @@ bool ReadRequirement(CBitStream &inout bs,string &out req,string &out blobName,s
 }
 
 //upd this
-bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBitStream &inout missingBs)
+bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, CBitStream &inout missingBs)
 {
 	string req, blobName, friendlyName;
 	u16 quantity = 0;
@@ -157,7 +160,11 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 	bs.ResetBitIndex();
 	bool has = true;
 
-	CBlob@ playerBlob = (inv1 !is null ? (inv1.getBlob().getPlayer() !is null ? inv1.getBlob() : (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null)) : (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
+	CBlob@ playerBlob = (inv1 !is null 
+		? (inv1.getBlob().getPlayer() !is null ? inv1.getBlob() 
+			: (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null)) 
+		: (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
+
 	CBlob@[] baseBlobs;
 	
 	bool storageEnabled = false;
@@ -213,9 +220,9 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 	while (!bs.isBufferEnd()) 
 	{
 		ReadRequirement(bs,req,blobName,friendlyName,quantity);
-		if(req=="blob") 
+		if (req == "blob") 
 		{
-			int sum=(inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0)+(inv2 !is null ? inv2.getBlob().getBlobCount(blobName) : 0);
+			int sum = (inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0);
 			
 			if (storageEnabled)
 			{
@@ -225,24 +232,24 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 				}
 			}
 			
-			if(sum<quantity) 
+			if (sum<quantity) 
 			{
 				AddRequirement(missingBs,req,blobName,friendlyName,quantity);
-				has=false;
+				has = false;
 			}
 		}
-		else if(req=="coin") 
+		else if (req == "coin") 
 		{
-			CPlayer@ player1=	inv1 !is null ? inv1.getBlob().getPlayer() : null;
-			CPlayer@ player2=	inv2 !is null ? inv2.getBlob().getPlayer() : null;
-			u16 sum=			(player1 !is null ? player1.getCoins() : 0)+(player2 !is null ? player2.getCoins() : 0);
-			if(sum<quantity) 
+			CPlayer@ player1 = inv1 !is null ? inv1.getBlob().getPlayer() : null;
+			CPlayer@ player2 = inv2 !is null ? inv2.getBlob().getPlayer() : null;
+			u16 sum = (player1 !is null ? player1.getCoins() : 0)+(player2 !is null ? player2.getCoins() : 0);
+			if (sum<quantity) 
 			{
 				AddRequirement(missingBs,req,blobName,friendlyName,quantity);
 				has=false;
 			}
 		}
-		else if((req == "no more" || req == "no less") && inv1 !is null) 
+		else if ((req == "no more" || req == "no less") && inv1 !is null) 
 		{
 			int teamNum = inv1.getBlob().getTeamNum();
 			int count =	0;
@@ -253,26 +260,26 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 				for (uint step = 0; step < blobs.length; ++step) 
 				{
 					CBlob@ blob = blobs[step];
-					if(blob.getTeamNum() == teamNum) 
+					if (blob.getTeamNum() == teamNum) 
 					{
 						count++;
 					}
 				}
 			}
 			
-			if((req == "no more" && count >= quantity) || (req == "no less" && count < quantity)) 
+			if ((req == "no more" && count >= quantity) || (req == "no less" && count < quantity)) 
 			{
 				AddRequirement(missingBs, req, blobName, friendlyName, quantity);
 				has = false;
 			}
 		}
-		else if((req == "no more global" || req == "no less global") && inv1 !is null) 
+		else if ((req == "no more global" || req == "no less global") && inv1 !is null) 
 		{
 			CBlob@[] blobs;
 			getBlobsByName(blobName, @blobs);
 		
 			int count =	blobs.length;
-			if((req == "no more global" && count >= quantity) || (req == "no less global" && count < quantity)) 
+			if ((req == "no more global" && count >= quantity) || (req == "no less global" && count < quantity)) 
 			{
 				AddRequirement(missingBs, req, blobName, friendlyName, quantity);
 				has = false;
@@ -330,18 +337,22 @@ bool hasRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs,CBit
 	return has;
 }
 
-bool hasRequirements(CInventory@ inv,CBitStream &inout bs,CBitStream &inout missingBs)
+bool hasRequirements(CInventory@ inv, CBitStream &inout bs, CBitStream &inout missingBs)
 {
-	return (hasRequirements(inv,null,bs,missingBs));
+	return (hasRequirements(inv, null, bs, missingBs));
 }
 
-void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout bs)
+void server_TakeRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs)
 {
-	if(!isServer()) {
+	if (!isServer()) {
 		return;
 	}
 
-	CBlob@ playerBlob = (inv1 !is null ? (inv1.getBlob().getPlayer() !is null ? inv1.getBlob() : (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null)) : (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
+	CBlob@ playerBlob = (inv1 !is null 
+		? (inv1.getBlob().getPlayer() !is null ? inv1.getBlob() 
+			: (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null)) 
+		: (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
+
 	CBlob@[] baseBlobs;
 	
 	bool storageEnabled = false;
@@ -389,58 +400,50 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 		if (req == "blob") 
 		{
 			u16 taken = 0;
-			// print("init taken  " + taken);
-			
+
 			if (inv1 !is null && taken < quantity) 
 			{
-				// taken += inv1.getBlob().TakeBlob(blobName, quantity);
 				CBlob@ invBlob = inv1.getBlob();
-				invBlob.TakeBlob(blobName, quantity);
-				//inv1.server_RemoveItems(blobName,quantity);
 				taken += Maths::Min(invBlob.getBlobCount(blobName), quantity - taken);
+				invBlob.TakeBlob(blobName, quantity);
 			}
 			
 			if (inv2 !is null && taken < quantity) 
 			{
-				//taken += inv2.getBlob().TakeBlob(blobName, quantity - taken);
-				//inv2.server_RemoveItems(blobName, quantity - taken);
 				CBlob@ invBlob = inv2.getBlob();
-            	invBlob.TakeBlob(blobName, quantity - taken);
+				u16 hold = taken;
 				taken += Maths::Min(invBlob.getBlobCount(blobName), quantity - taken);
+            	invBlob.TakeBlob(blobName, quantity - hold);
 			}
-			
-			// print("pre loop taken " + taken);
-			
+
 			if (storageEnabled)
 			{
 				for (int i = 0; i < baseBlobs.length; i++)
 				{
-					// print("loop" + taken);
-				
 					if (taken >= quantity)
 					{
 						break;
 					}
-					baseBlobs[i].TakeBlob(blobName, quantity - taken);
+					u16 hold = taken;
 					taken += Maths::Min(baseBlobs[i].getBlobCount(blobName), quantity - taken);
-					// print("loop taken " + taken);
+					baseBlobs[i].TakeBlob(blobName, quantity - hold);
 				}
 			}
 		}
-		else if(req=="coin") 
+		else if (req == "coin") 
 		{ // TODO...
-			CPlayer@ player1=inv1 !is null ? inv1.getBlob().getPlayer() : null;
-			CPlayer@ player2=inv2 !is null ? inv2.getBlob().getPlayer() : null;
+			CPlayer@ player1 = inv1 !is null ? inv1.getBlob().getPlayer() : null;
+			CPlayer@ player2 = inv2 !is null ? inv2.getBlob().getPlayer() : null;
 			int taken = 0;
 			if (player1 !is null) 
 			{
-				taken=Maths::Min(player1.getCoins(), quantity);
+				taken = Maths::Min(player1.getCoins(), quantity);
 				player1.server_setCoins(player1.getCoins() - taken);
 			}
 			if (player2 !is null) 
 			{
-				taken=quantity-taken;
-				taken=Maths::Min(player2.getCoins(), quantity);
+				taken = quantity - taken;
+				taken = Maths::Min(player2.getCoins(), quantity);
 				player2.server_setCoins(player2.getCoins() - taken);
 			}
 		}
@@ -449,7 +452,7 @@ void server_TakeRequirements(CInventory@ inv1,CInventory@ inv2,CBitStream &inout
 	bs.ResetBitIndex();
 }
 
-void server_TakeRequirements(CInventory@ inv,CBitStream &inout bs)
+void server_TakeRequirements(CInventory@ inv, CBitStream &inout bs)
 {
-	server_TakeRequirements(inv,null,bs);
+	server_TakeRequirements(inv, null, bs);
 }

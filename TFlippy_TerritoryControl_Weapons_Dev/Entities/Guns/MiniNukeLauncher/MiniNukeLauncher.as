@@ -52,7 +52,7 @@ void onTick(CBlob@ this)
 	if (isClient())
 	{
 		const bool Loaded = this.get_u8("clip") > 0;
-		this.SetInventoryIcon("MiniNukeLauncher.png", Loaded ? 1 : 0, Vec2f(40, 8));
+		this.SetInventoryIcon("GunIcon.png", 45 + (Loaded ? 1 : 0), Vec2f(48, 24));
 		this.getSprite().SetAnimation(Loaded ? "loaded" : "unloaded");
 	}
 }

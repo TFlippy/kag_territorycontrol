@@ -42,8 +42,8 @@ namespace BulletRender
 
 		string[]@ vertex_book;
 		rules.get("VertexBook", @vertex_book);
-
-		for (int a = 0; a < vertex_book.length(); a++)
+		
+		for (int a = vertex_book.length()-1; a >= 0; a--)
 		{
 			Vertex[]@ bulletVertex;
 			string texture = vertex_book[a];
@@ -52,10 +52,13 @@ namespace BulletRender
 			// Sending empty vertex just eats performance because engine does not check :)
 			if (bulletVertex.length() < 1) continue;
 
+			if(texture.findFirst("Fade") >= 0)Render::SetAlphaBlend(true);
 			Render::RawQuads(texture, bulletVertex);
+			Render::SetAlphaBlend(false);
 
 			bulletVertex.clear();
 		}
+		
 	}
 }
 
@@ -63,6 +66,7 @@ namespace BulletRender
 class BulletHolder
 {
 	Bullet[] bullets;
+	BulletFade@[] fade;
 	BulletHolder(){}
 	Recoil@ localRecoil;
 
@@ -79,6 +83,13 @@ class BulletHolder
 				a--;
 			}
 		}
+		
+		for(int a = 0; a < fade.length(); a++)
+        {
+            if(fade[a].TimeLeft <= 0){
+				fade.removeAt(a);
+			}
+        }
 
 		if (localRecoil !is null)
 		{
@@ -106,6 +117,10 @@ class BulletHolder
 			Bullet@ bullet = bullets[a];
 			bullet.onRender();
 		}
+		for (int a = 0; a < fade.length(); a++)
+		{
+			fade[a].onRender();
+		}
 	}
 
 	Bullet@ CreateNewBullet(CBlob@ humanBlob, CBlob@ gun, f32 angle, Vec2f pos)
@@ -121,6 +136,11 @@ class BulletHolder
 		bullets.push_back(bullet);
 		return bullet;
 	}
+	
+	void addFade(BulletFade@ fadeToAdd)
+    {   
+        fade.push_back(fadeToAdd);
+    }
 
 	// Don't use this unless you super have to, use CreateNewBullet instead
 	void AddNewBullet(Bullet@ bullet)

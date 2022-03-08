@@ -33,7 +33,7 @@ void onTick(CBlob@ this)
 		RunnerMoveVars@ moveVars;
 		if (this.get("moveVars", @moveVars))
 		{
-			moveVars.walkFactor *= 2.00f + (true_level * 0.25f);
+			moveVars.walkFactor *= 2.00f + Maths::Min((true_level * 0.25f), 2);
 			moveVars.jumpFactor *= 1.85f;
 		}	
 		
@@ -48,22 +48,22 @@ void onTick(CBlob@ this)
 			this.setKeyPressed(key_action1, true);
 		}
 					
-		this.set_f32("stimed", Maths::Max(0, this.get_f32("stimed") - (0.0001f)));
+		this.set_f32("stimed", Maths::Max(0, this.get_f32("stimed") - (0.0005f)));
 	}
 	
 	// print("" + true_level);
 	// print("" + (1.00f / (level)));
 }
 
-f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
-{
-	f32 true_level = this.get_f32("stimed");		
-	f32 level = 1.00f + true_level;
+//f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+//{
+	//f32 true_level = this.get_f32("stimed");		
+	//f32 level = 1.00f + true_level;
 
-	if (level > 1)
-	{
-		return damage / Maths::Min(level + 1, 4);
-	}
+	//if (level > 1)
+	//{
+		//return damage / Maths::Min(level, 2);
+	//}
 	
-	return damage;
-}
+	//return damage;
+//}
