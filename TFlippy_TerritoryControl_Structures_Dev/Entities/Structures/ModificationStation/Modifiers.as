@@ -63,8 +63,8 @@ void AllPossibleModifiers(CBlob@ this, CBlob @caller, CBlob@ target)
 		if (!target.hasTag("MaximumdakkaMod") && settings.FIRE_INTERVAL < 10 && settings.TOTAL > 20) //only works on guns which can already fire quite fast
 		{
 			ShopItem@ s = addShopItem(this, "Maximum dakka", "$smg$", "Gun-Maximumdakka", "Fires way way faster at the cost of accuracy", false);
-			AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 2 * priceMod);
-			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5 * priceMod);
+			AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 20 * priceMod);
+			AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 15 * priceMod);
 			s.spawnNothing = true;
 		}
 		if (settings.FIRE_SOUND != "") //only silence guns which still have a sound effect
