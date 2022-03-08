@@ -29,10 +29,8 @@ void onInit(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	if(!this.exists(req_class))
-	{
-		return;
-	}
+	if(!this.exists(req_class))return;
+	if(caller.hasTag("no class swap"))return;
 
 	bool CanChange = true;
 	

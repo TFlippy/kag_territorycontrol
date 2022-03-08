@@ -9,6 +9,7 @@ void onInit(CBlob@ this)
 	this.Tag("flesh");
 	this.Tag("neutral");
 	this.Tag("human");
+	this.Tag("no class swap");
 
 	this.set_Vec2f("inventory offset", Vec2f(0.0f, 0.0f));
 	this.set_f32("mining_multiplier", 3.0f);
