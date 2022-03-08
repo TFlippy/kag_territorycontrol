@@ -8,7 +8,7 @@ string[] particles =
 	"Explosion.png"
 };
 
-const f32 radius = 32.00f;
+const f32 radius = 64.00f;
 
 void onInit(CBlob@ this)
 {
@@ -48,7 +48,7 @@ void onInit(CBlob@ this)
 
 	//Custom
 	this.set_string("CustomBullet", "BulletHighCal.png");
-	this.Tag("CustomShotgunReload");
+	this.Tag("SingleShotReloading");
 	this.Tag("CustomSemiAuto");
 	this.set_f32("scope_zoom", 0.35f);
 }
@@ -66,6 +66,8 @@ void onTick(CBlob@ this)
 
 		f32 dist = 1337.00f;
 		u16 closest_id = 0;
+
+		this.set_netid("force_aim",0);
 
 		CBlob@[] blobs;
 		if (this.getMap().getBlobsInRadius(wpos, radius, @blobs))
@@ -91,7 +93,9 @@ void onTick(CBlob@ this)
 					Vec2f dir = (bpos - this.getPosition());
 
 					f32 factor = dist / radius;
-
+					
+					this.set_netid("force_aim",blob.getNetworkID());
+					/*
 					AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 					if(point !is null)
 					{
@@ -108,6 +112,7 @@ void onTick(CBlob@ this)
 							}
 						}
 					}
+					*/
 				}
 			}
 		}

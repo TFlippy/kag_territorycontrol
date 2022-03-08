@@ -37,7 +37,7 @@ void onInit(CBlob@ this)
 	this.set("gun_settings", @settings);
 
 	//Custom
-	this.Tag("CustomShotgunReload");
+	this.Tag("SingleShotReloading");
 	this.Tag("CustomSemiAuto");
 	this.set_string("CustomCase", "");
 	this.set_string("CustomFlash", "");

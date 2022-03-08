@@ -25,6 +25,7 @@ void onInit(CBlob@ this)
 
 	// Set commands
 	this.addCommandID("reload");
+	this.addCommandID("cancelreload");
 	this.addCommandID("fireProj");
 
 	// Set vars
@@ -42,8 +43,8 @@ void onInit(CBlob@ this)
 	this.get("gun_settings", @settings);
 
 	if (!this.exists("CustomBullet")) this.set_string("CustomBullet", "BulletLowCal.png");  // Default bullet image
-	if (!this.exists("CustomBulletWidth")) this.set_f32("CustomBulletWidth", 2.0f);  // Default bullet width
-	if (!this.exists("CustomBulletLength")) this.set_f32("CustomBulletLength", 6.0f); // Default bullet length
+	if (!this.exists("CustomBulletWidth")) this.set_f32("CustomBulletWidth", 1.0f);  // Default bullet width
+	if (!this.exists("CustomBulletLength")) this.set_f32("CustomBulletLength", 3.0f); // Default bullet length
 	if (!this.exists("CustomFade")) this.set_string("CustomFade", "Fade.png");  // Default fade image
 
 	string vert_name = this.get_string("CustomBullet");
@@ -122,7 +123,7 @@ void onInit(CBlob@ this)
 
 	// Required or stuff breaks due to wonky mouse syndrome
 #ifndef GUNS
-	if (isServer())
+	if (isServer() && !isClient())
 		getControls().setMousePosition(Vec2f(0,0));
 #endif
 
@@ -159,6 +160,9 @@ void onInit(CBlob@ this)
 		for (int a = 0; a < modules.length(); a++)
 			modules[a].onModuleInit(this);
 	}*/
+	
+	this.set_f32("anti_recoil",1.0f);
+	this.set_netid("force_aim",0);
 }
 
 void onTick(CBlob@ this)
@@ -177,6 +181,45 @@ void onTick(CBlob@ this)
 			{
 				modules[a].onTick(this, holder);
 			}*/
+			
+			
+			// Shooting
+			const bool can_shoot = holder.isAttached() && holder.getName() != "automat" ? 
+					   holder.isAttachedToPoint("PASSENGER") || holder.isAttachedToPoint("PILOT") : true;
+			// Keys
+			const bool pressing_shoot = (this.hasTag("CustomSemiAuto") ?
+					   point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
+					   point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)); //semiautomatic
+			
+			
+			float antirecoil = this.get_f32("anti_recoil");
+			Vec2f aim = this.get_Vec2f("aim");
+			Vec2f HolderAim = (holder.getAimPos()-this.getPosition());
+			HolderAim.Normalize();
+			HolderAim = HolderAim*160.0f;
+			Vec2f dif = HolderAim-aim;
+			
+			if(can_shoot && pressing_shoot){
+				if(antirecoil > 0.25f)antirecoil -= 0.01f;
+				else antirecoil = 0.25f;
+			} else {
+				if(antirecoil < 1.0f)antirecoil += 0.01f;
+				else antirecoil = 1.0f;
+			}
+			
+			float dis = Maths::Clamp((1.0f+dif.Length()*0.2f)*antirecoil, 0, dif.Length());
+			dif.Normalize();
+			aim = aim+dif*dis;
+			
+			CBlob@ force_target = getBlobByNetworkID(this.get_netid("force_aim"));
+			if(force_target !is null){
+				aim = force_target.getPosition()-this.getPosition();
+				antirecoil = 1.0f;
+			}
+			
+			this.set_Vec2f("aim",aim);
+			this.set_f32("anti_recoil",antirecoil);
+			
 
 			CSprite@ sprite = this.getSprite();
 			f32 aimangle = getAimAngle(this, holder);
@@ -193,14 +236,9 @@ void onTick(CBlob@ this)
 							settings.B_TYPE == HittersTC::shotgun         ? "shotgunCase": "";
 			f32 oAngle = (aimangle % 360) + 180;
 
-			// Shooting
-			const bool can_shoot = holder.isAttached() && holder.getName() != "automat" ? 
-					   holder.isAttachedToPoint("PASSENGER") || holder.isAttachedToPoint("PILOT") : true;
+			
 
-			// Keys
-			const bool pressing_shoot = (this.hasTag("CustomSemiAuto") ?
-					   point.isKeyJustPressed(key_action1) || holder.isKeyJustPressed(key_action1) : //automatic
-					   point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)); //semiautomatic
+			
 
 			// Sound
 			const f32 reload_pitch = this.exists("CustomReloadPitch") ? this.get_f32("CustomReloadPitch") : 1.0f;
@@ -223,9 +261,22 @@ void onTick(CBlob@ this)
 			}
 
 			uint8 actionInterval = this.get_u8("actionInterval");
-			if (actionInterval > 0)
+			
+			
+			
+			
+			if(actionInterval > 0)
 			{
 				actionInterval--; // Timer counts down with ticks
+				
+				
+				if(isServer())
+				if (this.hasTag("SingleShotReloading")){
+					if(this.get_u8("clip") > 0)
+					if(pressing_shoot){
+						CancelReload(this, true);
+					}
+				}
 
 				if (this.exists("CustomCycle") && isClient())
 				{
@@ -247,21 +298,26 @@ void onTick(CBlob@ this)
 
 				if (HasAmmo(this) && this.get_u8("clip") < settings.TOTAL) 
 				{
-					if (!this.hasTag("CustomShotgunReload")) sprite.PlaySound(settings.RELOAD_SOUND, 1.0f, reload_pitch);
+					if(!this.hasTag("SingleShotReloading")) sprite.PlaySound(settings.RELOAD_SOUND, 1.0f, reload_pitch);
 				}
 			}
-			else if (this.get_bool("doReload")) // End of reload
+			else if (this.get_bool("doReload") && !this.get_bool("cancel_reload")) // End of reload
 			{
 				/*for (int a = 0; a < modules.length(); a++)
 				{
 					modules[a].onReload(this);
 				}*/
-
-				if (this.hasTag("CustomShotgunReload"))
+				if (this.hasTag("SingleShotReloading"))
 				{
+					
 					if (HasAmmo(this) && this.get_u8("clip") < settings.TOTAL)
 					{
 						sprite.PlaySound(settings.RELOAD_SOUND, 1.0f, reload_pitch);
+					}
+					else if (this.exists("CustomFinishReloadSound"))
+					{
+						actionInterval = settings.RELOAD_TIME * 2;
+						sprite.PlaySound(this.get_string("CustomFinishReloadSound"), 1.0f, cycle_pitch);
 					}
 					else if (this.exists("CustomCycle"))
 					{
@@ -275,10 +331,13 @@ void onTick(CBlob@ this)
 					Reload(this, holder);
 				}
 
-				if (this.hasTag("CustomShotgunReload")) this.set_bool("doReload", false);
+				if(this.hasTag("SingleShotReloading")) this.set_bool("doReload", false);
 			} 
-			else if (pressing_shoot && can_shoot)
+			else if ((pressing_shoot || this.hasTag("cancel_reload")) && can_shoot)
 			{
+				this.set_bool("beginReload", false);
+				this.set_bool("doReload", false);
+				CancelReload(this, false);
 				if (this.get_u8("clip") > 0)
 				{
 					/*for (int a = 0; a < modules.length(); a++)

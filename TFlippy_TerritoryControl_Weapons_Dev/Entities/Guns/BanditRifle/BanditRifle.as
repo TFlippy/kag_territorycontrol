@@ -38,7 +38,7 @@ void onInit(CBlob@ this)
 
 	//Custom
 	this.set_string("CustomCase", "");
-	this.Tag("CustomShotgunReload");
+	this.Tag("SingleShotReloading");
 	this.Tag("CustomSemiAuto");
 	this.set_string("CustomBullet", "BulletPebble.png");
 	this.set_string("CustomFade", "PebbleFade.png");

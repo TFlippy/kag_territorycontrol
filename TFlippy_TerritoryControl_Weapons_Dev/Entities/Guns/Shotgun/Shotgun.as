@@ -38,5 +38,5 @@ void onInit(CBlob@ this)
 
 	//Custom
 	this.set_string("CustomCycle", "ShotgunPump");
-	this.Tag("CustomShotgunReload");
+	this.Tag("SingleShotReloading");
 }

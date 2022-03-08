@@ -42,6 +42,19 @@ void Reload(CBlob@ this, CBlob@ holder)
 	this.set_u8("clickReload", 0);
 }
 
+void CancelReload(CBlob@ this, bool cancel) 
+{
+	
+	this.set_bool("cancel_reload",cancel);
+
+	if(isServer()){
+		CBitStream params;
+
+		params.write_bool(cancel);
+		this.SendCommand(this.getCommandID("cancelreload"), params);
+	}
+}
+
 s32 CountAmmo(CBlob@ this, string ammoBlob = "")
 {
 	//count how much ammo is in the holder's inventory
@@ -103,7 +116,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					// Determines what can have infinite ammunition
 					const bool isChickenBot = holder.getPlayer() is null && holder.hasTag("chicken");
 
-					if (this.hasTag("CustomShotgunReload"))
+					if (this.hasTag("SingleShotReloading"))
 					{
 						//Shotgun reload
 
@@ -112,7 +125,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						quantity--;
 
 						this.add_u8("clip", 1);
-						if (clip < total || quantity == 1) this.set_bool("beginReload", true); //loop
+						if (clip < total || quantity == 1){
+							this.set_bool("beginReload", true); //loop
+						}
 
 						break;
 					}
@@ -128,7 +143,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				}
 			}
 		}
-		if (!this.hasTag("CustomShotgunReload")) this.set_bool("doReload", false);
+		if (!this.hasTag("SingleShotReloading")) this.set_bool("doReload", false);
 	}
 	else if (cmd == this.getCommandID("fireProj"))
 	{
@@ -164,6 +179,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 
 		this.sub_u8("clip", 1);
+	}
+	else if (cmd == this.getCommandID("cancelreload"))
+	{
+		this.set_bool("cancel_reload",params.read_bool());
 	}
 }
 

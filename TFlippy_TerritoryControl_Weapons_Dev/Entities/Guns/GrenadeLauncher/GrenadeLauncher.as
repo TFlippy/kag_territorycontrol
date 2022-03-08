@@ -42,5 +42,5 @@ void onInit(CBlob@ this)
 	//this.set_f32("CustomReloadPitch", 0.65f);
 	this.set_string("ProjBlob", "grenade");
 	this.Tag("CustomSemiAuto");
-	this.Tag("CustomShotgunReload");
+	this.Tag("SingleShotReloading");
 }

@@ -38,6 +38,6 @@ void onInit(CBlob@ this)
 
 	//Custom
 	this.set_string("CustomCycle", "LeverRifle_Cycle");
-	this.Tag("CustomShotgunReload");
+	this.Tag("SingleShotReloading");
 	this.set_string("CustomBullet", "BulletHighCal.png");
 }

@@ -125,8 +125,7 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Microgun", "$icon_microgun$", "microgun", "A large unwieldy machine gun.");
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 10);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 20);
 		AddRequirement(s.requirements, "coin", "", "Coins", 1000);
 
 		s.customButton = true;

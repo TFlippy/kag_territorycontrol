@@ -68,10 +68,23 @@ class Recoil
 			}
 		}
 
+		Vec2f recoil = Vec2f(xTick, yTick);
+
+		
+
 		//yTick = -1;
 		//TimeToNormal -= 1;
 
-		BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + Vec2f(xTick, yTick));
+		//BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + recoil);
+		if(Blob.getCarriedBlob() !is null){
+			recoil.RotateByDegrees(Blob.getCarriedBlob().getAngleDegrees());
+			Vec2f aim = Blob.getCarriedBlob().get_Vec2f("aim");
+			if(aim.AngleDegrees() > 90 && aim.AngleDegrees() < 270){
+				if((aim+recoil).AngleDegrees() > 90)Blob.getCarriedBlob().set_Vec2f("aim",aim+recoil);
+			} else {
+				if((aim+recoil).AngleDegrees() < 90 || (aim+recoil).AngleDegrees() > 270)Blob.getCarriedBlob().set_Vec2f("aim",aim+recoil);
+			}
+		}
 		ShakeScreen(Vec2f(xTick, yTick), 150, Blob.getInterpolatedPosition());
 	}
 }

@@ -50,6 +50,7 @@ class GunSettings
 	/// this.set_string("CustomSoundPickup", string fileName); //Adds a sound effect for when the gun is picked up
 	/// this.set_string("CustomSoundEmpty", string fileName); //Changes the sound file of the gun empty sound
 	/// this.set_string("CustomCycle", string fileName); //Enables cycling sounds when shooting (pumpaction, bolt action etc)
+	/// this.set_string("CustomFinishReloadSound", string fileName); //Sound when finishing reload, overrides CustomCycle when reloading but not when firing.
 	///
 	/// this.set_f32("CustomReloadPitch", float pitch); //Changes Reload sound pitch
 	/// this.set_f32("CustomCyclePitch", float pitch); //Changes Cycle sound pitch
@@ -64,7 +65,7 @@ class GunSettings
 	/// this.set_u8("CustomKnock", int knocktime); //Time in ticks the victim is knocked for
 	/// this.set_u8("CustomPenetration", int penetration); //How much damage to blocks that are shot
 	///
-	/// this.Tag("CustomShotgunReload"); //Switches the gun to use an alternative reloading method
+	/// this.Tag("SingleShotReloading"); //Switches the gun to use an alternative reloading method
 	/// this.Tag("CustomMuzzleLeft"); //Sets the muzzle flash sprite in the opposite direction
 	/// this.Tag("CustomSoundLoop"); //Shooting sound becomes looped rather than instantaneous
 	/// this.Tag("CustomSemiAuto"); //Switches the gun to become semiautomatic rather than automatic
@@ -115,7 +116,8 @@ class GunSettings
 
 f32 getAimAngle(CBlob@ this, CBlob@ holder)
 {
-	Vec2f aimvector = holder.getAimPos() - (this.hasTag("place45") ? holder.getInterpolatedPosition() : this.getInterpolatedPosition());
+	Vec2f aimvector = (this.getPosition()+this.get_Vec2f("aim")) - (this.hasTag("place45") ? holder.getInterpolatedPosition() : this.getInterpolatedPosition());
+	//Vec2f aimvector = holder.getAimPos() - (this.hasTag("place45") ? holder.getInterpolatedPosition() : this.getInterpolatedPosition());
 	f32 angle = holder.isFacingLeft() ? -aimvector.Angle() + 180.0f : -aimvector.Angle();
 	if (holder.isAttached()) this.SetFacingLeft(holder.isFacingLeft());
 	return angle;

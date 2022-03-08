@@ -14,7 +14,7 @@ class BulletFade
 
     Vec2f Back;
     Vec2f Front;
-	f32 MaxTime = 50;
+	f32 MaxTime = 30;
 	f32 TimeLeft = MaxTime;
 	
 	string Texture = "Fade.png";

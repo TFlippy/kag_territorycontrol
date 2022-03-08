@@ -52,7 +52,7 @@ void onInit(CBlob@ this)
 	this.set_string("CustomBullet", "BulletHighCal.png");
 }
 
-const f32 radius = 24.00f;
+const f32 radius = 48.00f;
 
 void onTick(CBlob@ this)
 {
@@ -70,6 +70,8 @@ void onTick(CBlob@ this)
  
 		f32 dist = 1337.00f;
 		u16 closest_id = 0;
+		
+		this.set_netid("force_aim",0);
  
 		CBlob@[] blobs;
 		if (this.getMap().getBlobsInRadius(wpos, radius, @blobs))
@@ -101,6 +103,9 @@ void onTick(CBlob@ this)
  
 				f32 factor = dist / radius;
  
+				this.set_netid("force_aim",blob.getNetworkID());
+				
+				/*
 				AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 				if (point !is null)
 				{
@@ -116,7 +121,7 @@ void onTick(CBlob@ this)
 							controls.setMousePosition(controls.getMouseScreenPos() - (sdir * 0.75f));
 						}
 					}
-				}
+				}*/
 
 				if (isVisible(this, blob))
 				{

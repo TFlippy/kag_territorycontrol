@@ -8,7 +8,7 @@ void onInit(CBlob@ this)
 	//settings.CLIP = 0; //Amount of ammunition in the gun at creation
 	settings.TOTAL = 6; //Max amount of ammo that can be in a clip
 	settings.FIRE_INTERVAL = 5; //Time in between shots
-	settings.RELOAD_TIME = 55; //Time it takes to reload (in ticks)
+	settings.RELOAD_TIME = 9;//55; //Time it takes to reload (in ticks)
 	settings.AMMO_BLOB = "ammo_lowcal"; //Ammunition the gun takes
 
 	//Bullet
@@ -29,12 +29,14 @@ void onInit(CBlob@ this)
 
 	//Sound
 	settings.FIRE_SOUND = "RevolverFire.ogg"; //Sound when shooting
-	settings.RELOAD_SOUND = "RevolverReload.ogg"; //Sound when reloading
+	settings.RELOAD_SOUND = "LeverRifle_Load.ogg"; //Sound when reloading
 
 	//Offset
 	settings.MUZZLE_OFFSET = Vec2f(-14, -2); //Where the muzzle flash appears
 
 	this.Tag("CustomSemiAuto");
+	this.Tag("SingleShotReloading");
 
 	this.set("gun_settings", @settings);
+	this.set_string("CustomFinishReloadSound", "RevolverReload.ogg");
 }
