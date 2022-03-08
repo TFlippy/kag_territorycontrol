@@ -56,10 +56,10 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$zapper$", "Zapper.png", Vec2f(24, 24), 0);
 
 	// Ammo
-	AddIconToken("$icon_gatlingammo$", "Material_GatlingAmmo.png", Vec2f(16, 16), 2);
-	AddIconToken("$icon_rifleammo$", "Material_RifleAmmo.png", Vec2f(16, 16), 3);
-	AddIconToken("$icon_shotgunammo$", "Material_ShotgunAmmo.png", Vec2f(16, 16), 3);
-	AddIconToken("$icon_pistolammo$", "Material_PistolAmmo.png", Vec2f(16, 16), 3);
+	AddIconToken("$icon_gatlingammo$", "AmmoIcon_Gatling.png", Vec2f(24, 24), 3);
+	AddIconToken("$icon_rifleammo$", "AmmoIcon_HighCal.png", Vec2f(24, 24), 3);
+	AddIconToken("$icon_shotgunammo$", "AmmoIcon_Shotgun.png", Vec2f(24, 24), 3);
+	AddIconToken("$icon_pistolammo$", "AmmoIcon_LowCal.png", Vec2f(24, 24), 3);
 	AddIconToken("$icon_howitzershell$", "Material_HowitzerShell.png", Vec2f(16, 8), 0);
 
 	// Explosives
@@ -79,7 +79,7 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_guidedrocket$", "GuidedRocket.png", Vec2f(16, 24), 0);
 	AddIconToken("$icon_smokegrenade$", "SmokeGrenade.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_dynamite$", "Dynamite.png", Vec2f(8, 16), 0);
-	AddIconToken("$icon_mininuke$", "Material_MiniNuke.png", Vec2f(16, 16), 0);
+	AddIconToken("$icon_mininuke$", "MaterialIcon_MiniNuke.png", Vec2f(24, 24), 0);
 	AddIconToken("$icon_fraggrenade$", "FragGrenade.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_flashgrenade$", "FlashGrenade.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_clusterbomb$", "Material_ClusterBomb.png", Vec2f(16, 24), 0);
@@ -130,7 +130,6 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_bulletproofvest$", "Bulletproofvest.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_combatboots$", "CombatBoots.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_rendeboots$", "RendeBoots.png", Vec2f(16, 16), 0);
-	AddIconToken("$icon_rendezook$", "Rendezook.png", Vec2f(18, 6), 0);
 	AddIconToken("$icon_parachute$", "ParachutePack.png", Vec2f(16, 16), 0);
 
 	// Mechanist
@@ -140,9 +139,6 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_mustard$", "Material_Mustard.png", Vec2f(8, 16), 0);
 	AddIconToken("$icon_scubagear$", "ScubaGear.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_radpill$", "Radpill.png", Vec2f(8, 8), 0);
-	AddIconToken("$icon_raygun$", "Raygun.png", Vec2f(24, 16), 0);
-	AddIconToken("$icon_dartgun$", "DartGun.png", Vec2f(32, 16), 0);
-	AddIconToken("$icon_gaussrifle$", "GaussRifle.png", Vec2f(32, 8), 0);
 	AddIconToken("$icon_jetpack$", "Jetpack.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_flippers$", "Flippers.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_minershelmet$", "MinersHelmet.png", Vec2f(16, 16), 0);
@@ -165,29 +161,36 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_hoverbike$", "Hoverbike.png", Vec2f(24, 16), 2);
 	AddIconToken("$icon_teleporter$", "Teleporter.png", Vec2f(32, 32), 0);
 
-	// Gunsmith
-	AddIconToken("$rifle$", "Rifle.png", Vec2f(24, 8), 0);
-	AddIconToken("$leverrifle$", "LeverRifle.png", Vec2f(24, 8), 0);
-	AddIconToken("$smg$", "SMG.png", Vec2f(24, 8), 0);
-	AddIconToken("$revolver$", "Revolver.png", Vec2f(16, 8), 0);
-	AddIconToken("$icon_bazooka$", "Bazooka.png", Vec2f(16, 8), 0);
-	AddIconToken("$icon_rpc$", "RPC.png", Vec2f(24, 16), 0);
-	AddIconToken("$icon_flamethrower$", "Flamethrower.png", Vec2f(16, 8), 0);
-	AddIconToken("$icon_acidthrower$", "Acidthrower.png", Vec2f(24, 8), 0);
-	AddIconToken("$icon_shotgun$", "Shotgun.png", Vec2f(24, 8), 0);
-	AddIconToken("$icon_boomstick$", "Boomstick.png", Vec2f(24, 8), 0);
-	AddIconToken("$icon_grenadelauncher$", "GrenadeLauncher.png", Vec2f(16, 8), 0);
-	AddIconToken("$icon_mininukelauncher$", "MiniNukeLauncher.png", Vec2f(40, 8), 0);
-	AddIconToken("$icon_blazethrower$", "Blazethrower.png", Vec2f(24, 8), 0);
+	// Guns
+	AddIconToken("$rifle$", "GunIcon.png", Vec2f(24, 24), 20);
+	AddIconToken("$leverrifle$", "GunIcon.png", Vec2f(24, 24), 29);
+	AddIconToken("$smg$", "GunIcon.png", Vec2f(24, 24), 13);
+	AddIconToken("$revolver$", "GunIcon.png", Vec2f(24, 24), 10);
+	AddIconToken("$icon_bazooka$", "GunIcon.png", Vec2f(24, 24), 60);
+	AddIconToken("$icon_rpc$", "GunIcon.png", Vec2f(24, 24), 62);
+	AddIconToken("$icon_flamethrower$", "GunIcon.png", Vec2f(24, 24), 70);
+	AddIconToken("$icon_acidthrower$", "GunIcon.png", Vec2f(24, 24), 100);
+	AddIconToken("$icon_shotgun$", "GunIcon.png", Vec2f(24, 24), 30);
+	AddIconToken("$icon_boomstick$", "GunIcon.png", Vec2f(24, 24), 32);
+	AddIconToken("$icon_grenadelauncher$", "GunIcon.png", Vec2f(24, 24), 85);
+	AddIconToken("$icon_mininukelauncher$", "GunIcon.png", Vec2f(48, 24), 45);
+	AddIconToken("$icon_blazethrower$", "GunIcon.png", Vec2f(24, 24), 71);
+	AddIconToken("$icon_microgun$", "GunIcon.png", Vec2f(48, 24), 27);
+	AddIconToken("$icon_raygun$", "GunIcon.png", Vec2f(24, 24), 47);
+	AddIconToken("$icon_dartgun$", "GunIcon.png", Vec2f(24, 24), 84);
+	AddIconToken("$icon_gaussrifle$", "GunIcon.png", Vec2f(48, 24), 40);
+	AddIconToken("$icon_rendezook$", "GunIcon.png", Vec2f(24, 24), 61);
+	AddIconToken("$icon_banditpistol$", "GunIcon.png", Vec2f(24,24), 0);
+	AddIconToken("$icon_banditrifle$", "GunIcon.png", Vec2f(24, 24), 1);
 
 	// Bandits
+	AddIconToken("$icon_faultymine$", "FaultyMine.png", Vec2f(16, 16), 1, 7);
 	AddIconToken("$ratburger$", "RatBurger.png", Vec2f(16, 16), 0);
 	AddIconToken("$ratfood$", "Rat.png", Vec2f(16, 16), 0);
 	AddIconToken("$faultymine$", "FaultyMine.png", Vec2f(16, 16), 0);
 	AddIconToken("$badger$", "Badger.png", Vec2f(32, 16), 0);
-	AddIconToken("$icon_banditammo$", "Material_BanditAmmo.png", Vec2f(16, 16), 3);
-	AddIconToken("$icon_banditpistol$", "BanditPistol.png", Vec2f(16, 8), 0);
-	AddIconToken("$icon_banditrifle$", "BanditRifle.png", Vec2f(24, 16), 0);
+	AddIconToken("$icon_banditammo$", "AmmoIcon_Bandit.png", Vec2f(24, 24), 3);
+	
 	AddIconToken("$icon_foodcan$", "FoodCan.png", Vec2f(16, 16), 0);
 	AddIconToken("$icon_bigfoodcan$", "BigFoodCan.png", Vec2f(16, 24), 0);
 	AddIconToken("$icon_vodka$", "Vodka.png", Vec2f(8, 16), 0);

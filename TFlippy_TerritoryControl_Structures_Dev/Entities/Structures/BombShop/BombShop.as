@@ -33,6 +33,53 @@ void onInit(CBlob@ this)
 	this.set_string("shop description", "Demolitionist's Workshop");
 	this.set_u8("shop icon", 15);
 	
+	//Rockets
+	
+	{
+		ShopItem@ s = addShopItem(this, "Bazooka", "$icon_bazooka$", "bazooka", "A long tube capable of shooting rockets. Make sure nobody is standing behind it.\n\nUses Small Rockets.");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 2);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Rendezook", "$icon_rendezook$", "rendezook", "A replica of a rocket launcher found behind the UPF shop in a trash can.\nDoes not seem to hurt anybody.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 350);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Small Rocket (1)", "$icon_smallrocket$", "mat_smallrocket-1", "Self-propelled ammunition for rocket launchers.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 50);
+
+		s.spawnNothing = true;
+	}
+	///LOL
+	
+	{
+		ShopItem@ s = addShopItem(this, "L.O.L. Warhead Launcher", "$icon_mininukelauncher$", "mininukelauncher", "Are people bullying you again? Remember, there still is the nuclear option.\n\nUses L.O.L. Warheads.");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 10);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 2);
+		AddRequirement(s.requirements, "coin", "", "Coins", 300);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "L.O.L. Warhead (1)", "$icon_mininuke$", "mat_mininuke-1", "A miniature nuclear warhead. Can be used as L.O.L. Warhead Launcher ammunition. Detonates upon impact.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 350);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 4);
+		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 10);
+
+		s.spawnNothing = true;
+	}
+	
+	
 	{
 		ShopItem@ s = addShopItem(this, "Small Bomb (4)", "$icon_smallbomb$", "mat_smallbomb-4", "A small iron bomb. Detonates upon strong impact.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 100);
@@ -87,14 +134,6 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "L.O.L. Warhead (1)", "$icon_mininuke$", "mat_mininuke-1", "A miniature nuclear warhead. Can be used as L.O.L. Warhead Launcher ammunition. Detonates upon impact.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 350);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 4);
-		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 10);
-
-		s.spawnNothing = true;
-	}
-	{
 		ShopItem@ s = addShopItem(this, "Cluster Bomb (1)", "$icon_clusterbomb$", "mat_clusterbomb-1", "A cluster bomb that splits into smaller bomblets upon detonation.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", 25);
@@ -110,14 +149,26 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Artillery Shell (4)", "$icon_tankshell$", "mat_tankshell-4", "A highly explosive shell used by the artillery.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 40);
+		ShopItem@ s = addShopItem(this, "Firework (1)", "$icon_firework$", "firework", "Celebrate the new year with this colorful rocket!");
+		AddRequirement(s.requirements, "coin", "", "Coins", 50);
 
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Howitzer Shell (2)", "$icon_howitzershell$", "mat_howitzershell-2", "A large howitzer shell capable of annihilating a cottage.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 75);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Fragmentation Mine", "$icon_fragmine$", "fragmine", "A fragmentation mine that fills the surroundings with shards of metal upon detonation.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 125);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Shock Mine", "$icon_shockmine$", "shockmine", "A concussive mine. Launches nearby objects upon detonation.", false);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100);
 
 		s.spawnNothing = true;
 	}
@@ -140,20 +191,18 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Shock Mine", "$icon_shockmine$", "shockmine", "A concussive mine. Launches nearby objects upon detonation.", false);
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+		ShopItem@ s = addShopItem(this, "R.O.F.L.", "$icon_nuke$", "nuke", "A dangerous warhead stuffed in a cart. Since it's heavy, it can be only pushed around or picked up by balloons.");
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
+		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 50);
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100); // Cart!
+		AddRequirement(s.requirements, "coin", "", "Coins", 750);
 
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Small Rocket (1)", "$icon_smallrocket$", "mat_smallrocket-1", "Self-propelled ammunition for rocket launchers.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 50);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Firework (1)", "$icon_firework$", "firework", "Celebrate the new year with this colorful rocket!");
-		AddRequirement(s.requirements, "coin", "", "Coins", 50);
+		ShopItem@ s = addShopItem(this, "Artillery Shell (4)", "$icon_tankshell$", "mat_tankshell-4", "A highly explosive shell used by the artillery.");
+		AddRequirement(s.requirements, "coin", "", "Coins", 40);
 
 		s.spawnNothing = true;
 	}
@@ -184,26 +233,21 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	{
-		ShopItem@ s = addShopItem(this, "R.O.F.L.", "$icon_nuke$", "nuke", "A dangerous warhead stuffed in a cart. Since it's heavy, it can be only pushed around or picked up by balloons.");
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 10);
-		AddRequirement(s.requirements, "blob", "mat_mithrilenriched", "Enriched Mithril", 50);
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100); // Cart!
-		AddRequirement(s.requirements, "coin", "", "Coins", 750);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Fragmentation Mine", "$icon_fragmine$", "fragmine", "A fragmentation mine that fills the surroundings with shards of metal upon detonation.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 125);
-
-		s.spawnNothing = true;
-	}
+	
+	
 	{
 		ShopItem@ s = addShopItem(this, "Fragmentation Grenade (1)", "$icon_fraggrenade$", "mat_fraggrenade-1", "A small hand grenade. Especially useful against infantry.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 75);
 		AddRequirement(s.requirements, "blob", "mat_sulphur", "Sulphur", 15);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Grenade Launcher", "$icon_grenadelauncher$", "grenadelauncher", "A short-ranged weapon that launches grenades.\n\nUses Grenades.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 100);
+		AddRequirement(s.requirements, "coin", "", "Coins", 200);
+
 
 		s.spawnNothing = true;
 	}
@@ -232,7 +276,7 @@ void addTokens(CBlob@ this)
 	AddIconToken("$icon_fragmine$", "FragMine.png", Vec2f(16, 16), 1, teamnum);
 	AddIconToken("$icon_guidedrocket$", "GuidedRocket.png", Vec2f(16, 24), 0, teamnum);
 	AddIconToken("$icon_firework$", "Firework.png", Vec2f(16, 24), 0, teamnum);
-	AddIconToken("$icon_smallrocket$", "Material_SmallRocket.png", Vec2f(8, 16), 0, teamnum);
+	AddIconToken("$icon_smallrocket$", "Materialcon_SmallRocket.png", Vec2f(24, 24), 0, teamnum);
 	AddIconToken("$icon_claymore$", "Claymore.png", Vec2f(16, 16), 1, teamnum);
 	AddIconToken("$icon_stunbomb$", "Material_StunBomb.png", Vec2f(16, 16), 0, teamnum);
 	AddIconToken("$icon_nuke$", "Nuke.png", Vec2f(40, 32), 0, teamnum);

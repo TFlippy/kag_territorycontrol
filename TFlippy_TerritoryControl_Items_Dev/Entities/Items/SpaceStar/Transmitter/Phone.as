@@ -314,28 +314,28 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 						{
 							case 0:							
 							{
-								ammo_config = "mat_gatlingammo";
+								ammo_config = "ammo_gatling";
 								ammo_count = 250;
 							}
 							break;
 							
 							case 1:
 							{
-								ammo_config = "mat_rifleammo";
+								ammo_config = "ammo_highcal";
 								ammo_count = 100;
 							}
 							break;
 							
 							case 2:
 							{
-								ammo_config = "mat_pistolammo";
+								ammo_config = "ammo_lowcal";
 								ammo_count = 200;
 							}
 							break;
 							
 							case 3:
 							{
-								ammo_config = "mat_shotgunammo";
+								ammo_config = "ammo_shotgun";
 								ammo_count = 50;
 							}
 							break;

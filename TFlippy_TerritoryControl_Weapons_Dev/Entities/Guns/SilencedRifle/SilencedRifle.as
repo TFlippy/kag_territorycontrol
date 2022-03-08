@@ -9,7 +9,7 @@ void onInit(CBlob@ this)
 	settings.TOTAL = 10; //Max amount of ammo that can be in a clip
 	settings.FIRE_INTERVAL = 5; //Time in between shots
 	settings.RELOAD_TIME = 45; //Time it takes to reload (in ticks)
-	settings.AMMO_BLOB = "mat_rifleammo"; //Ammunition the gun takes
+	settings.AMMO_BLOB = "ammo_highcal"; //Ammunition the gun takes
 
 	//Bullet
 	//settings.B_PER_SHOT = 1; //Shots per bullet | CHANGE B_SPREAD, otherwise both bullets will come out together
@@ -39,5 +39,6 @@ void onInit(CBlob@ this)
 	//Custom
 	this.set_f32("scope_zoom", 0.20f);
 	this.set_string("CustomBullet", "");
+	this.set_string("CustomFade", "");
 	this.set_string("CustomFlash", "");
 }

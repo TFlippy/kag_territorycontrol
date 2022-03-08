@@ -38,7 +38,8 @@ void onInit(CBlob@ this)
 
 	//Custom
 	this.set_string("CustomFlash", "MuzzleFlash.png");
-	this.set_string("CustomBullet", "Bullet_Gauss.png");
+	this.set_string("CustomBullet", "BulletGauss.png");
+	this.set_string("CustomFade", "SmokeFade.png");
 	this.set_f32("CustomBulletLength", 10.0f);
 	this.set_u8("CustomKnock", 15);
 	this.Tag("medium weight");

@@ -37,7 +37,8 @@ void onInit(CBlob@ this)
 	this.set("gun_settings", @settings);
 
 	//Custom
-	this.set_string("CustomBullet", "Bullet_Plasma.png");
+	this.set_string("CustomBullet", "BulletPlasma.png");
+	this.set_string("CustomFade", "PlasmaFade.png");
 	this.set_u8("CustomKnock", 1);
 	this.Tag("CustomSemiAuto");
 }

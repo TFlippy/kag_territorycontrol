@@ -87,28 +87,28 @@ void onInit(CBlob@ this)
 {
 	AssemblerItem[] items;
 	{
-		AssemblerItem i("mat_pistolammo", 50, "Low Caliber Bullets (50)");
+		AssemblerItem i("ammo_lowcal", 50, "Low Caliber Bullets (50)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
 		AddRequirement(i.reqs, "blob", "mat_copperingot", "Copper Ingot", 1);
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
 		items.push_back(i);
 	}
 	{
-		AssemblerItem i("mat_rifleammo", 30, "High Caliber Bullets (30)");
+		AssemblerItem i("ammo_highcal", 30, "High Caliber Bullets (30)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 1);
 		AddRequirement(i.reqs, "blob", "mat_copperingot", "Copper Ingot", 1);
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 15);
 		items.push_back(i);
 	}
 	{
-		AssemblerItem i("mat_gatlingammo", 50, "Machine Gun Ammo (50)");
+		AssemblerItem i("ammo_gatling", 50, "Machine Gun Ammo (50)");
 		AddRequirement(i.reqs, "blob", "mat_ironingot", "Iron Ingot", 1);
 		AddRequirement(i.reqs, "blob", "mat_copperingot", "Copper Ingot", 1);
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 25);
 		items.push_back(i);
 	}
 	{
-		AssemblerItem i("mat_shotgunammo", 20, "Shotgun Shells (20)");
+		AssemblerItem i("ammo_shotgun", 20, "Shotgun Shells (20)");
 		AddRequirement(i.reqs, "blob", "mat_copperingot", "Copper Ingot", 1);
 		AddRequirement(i.reqs, "blob", "mat_wood", "Wood", 10);
 		AddRequirement(i.reqs, "blob", "mat_sulphur", "Sulphur", 10);

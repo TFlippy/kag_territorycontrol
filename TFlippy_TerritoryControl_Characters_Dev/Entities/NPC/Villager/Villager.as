@@ -242,7 +242,7 @@ void onInit(CBlob@ this)
 			s.spawnNothing = true;
 		}
 		{
-			ShopItem@ s = addShopItem(this, "Shotgun Shells (4)", "$icon_shotgunammo$", "mat_shotgunammo-4", "Boomstick's food.");
+			ShopItem@ s = addShopItem(this, "Shotgun Shells (4)", "$icon_shotgunammo$", "ammo_shotgun-4", "Boomstick's food.");
 			AddRequirement(s.requirements, "coin", "", "Coins", 100);
 			s.spawnNothing = true;
 		}

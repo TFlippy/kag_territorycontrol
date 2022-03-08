@@ -32,7 +32,8 @@ void updateFrame(CBlob@ this)
 	Vec2f size(consts.frameWidth, consts.frameHeight);
 
 	// Inventory icon frame update
-	this.SetInventoryIcon(consts.filename, frame, size);
+	if(this.inventoryIconName == consts.filename)this.SetInventoryIcon(this.inventoryIconName, frame, size);
+	else this.SetInventoryIcon(this.inventoryIconName, frame, this.inventoryFrameDimension);
 }
 
 // Server-side: Hard merge

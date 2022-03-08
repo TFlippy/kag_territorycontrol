@@ -134,16 +134,6 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	{
-		ShopItem@ s = addShopItem(this, "Rendezook", "$icon_rendezook$", "rendezook", "A replica of a rocket launcher found behind the UPF shop in a trash can.\nDoes not seem to hurt anybody.");
-		AddRequirement(s.requirements, "coin", "", "Coins", 350);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}
 }
 
 void onChangeTeam(CBlob@ this, const int oldTeam)

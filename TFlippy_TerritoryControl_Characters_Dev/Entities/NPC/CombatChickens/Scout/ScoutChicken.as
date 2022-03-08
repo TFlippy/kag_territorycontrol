@@ -50,7 +50,7 @@ void onInit(CBlob@ this)
 			case 1:
 			case 2:
 				gun_config = "carbine";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("attackDelay", 3);
 				this.set_u8("reactionTime", 30);
@@ -64,7 +64,7 @@ void onInit(CBlob@ this)
 			case 4:
 			case 5:
 				gun_config = "shotgun";
-				ammo_config = "mat_shotgunammo";
+				ammo_config = "ammo_shotgun";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 30);
@@ -77,7 +77,7 @@ void onInit(CBlob@ this)
 			case 6:
 			case 7:
 				gun_config = "sar";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 6);
@@ -89,7 +89,7 @@ void onInit(CBlob@ this)
 
 			case 8:
 				gun_config = "silencedrifle";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 10);
@@ -102,7 +102,7 @@ void onInit(CBlob@ this)
 			case 9:
 			case 10:
 				gun_config = "uzi";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_lowcal";
 
 				this.set_u8("attackDelay", 0);
 				this.set_u8("reactionTime", 10);
@@ -116,7 +116,7 @@ void onInit(CBlob@ this)
 			case 12:
 			case 13:
 				gun_config = "pdw";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_lowcal";
 
 				this.set_u8("attackDelay", 1);
 				this.set_u8("reactionTime", 30);
@@ -128,7 +128,7 @@ void onInit(CBlob@ this)
 				
 			default:
 				gun_config = "fuger";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_lowcal";
 
 				this.set_u8("reactionTime", 20);
 				this.set_u8("attackDelay", 20);

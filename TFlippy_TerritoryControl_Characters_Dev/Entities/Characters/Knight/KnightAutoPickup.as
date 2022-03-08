@@ -14,7 +14,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 	string blobName = blob.getName();
 
-	// if (blobName == "mat_bombs" || (blobName == "satchel" && !blob.hasTag("exploding")) || blobName == "mat_waterbombs" || blobName == "mat_rifleammo" || blobName == "mat_pistolammo" || blobName == "mat_smallrocket" || blobName == "mat_shotgunammo")
+	// if (blobName == "mat_bombs" || (blobName == "satchel" && !blob.hasTag("exploding")) || blobName == "mat_waterbombs" || blobName == "ammo_highcal" || blobName == "ammo_lowcal" || blobName == "mat_smallrocket" || blobName == "ammo_shotgun")
 	
 	if (blob.hasTag("knight pickup") && !blob.hasTag("no pickup"))
 	{

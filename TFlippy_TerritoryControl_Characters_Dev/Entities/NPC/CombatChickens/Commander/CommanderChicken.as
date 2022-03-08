@@ -57,7 +57,7 @@ void onInit(CBlob@ this)
 		{
 			case 0:
 				gun_config = "autoshotgun";
-				ammo_config = "mat_shotgunammo";
+				ammo_config = "ammo_shotgun";
 
 				this.set_u8("reactionTime", 10);
 				this.set_u8("attackDelay", 5);
@@ -72,7 +72,7 @@ void onInit(CBlob@ this)
 			case 1:
 			case 2:
 				gun_config = "sar";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 				
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 6);
@@ -85,7 +85,7 @@ void onInit(CBlob@ this)
 			case 3:
 			case 4:
 				gun_config = "pdw";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_lowcal";
 				
 				this.set_u8("attackDelay", 1);
 				this.set_u8("reactionTime", 30);
@@ -97,7 +97,7 @@ void onInit(CBlob@ this)
 
 			default:
 				gun_config = "beagle";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 2);
 				this.set_u8("attackDelay", 2);

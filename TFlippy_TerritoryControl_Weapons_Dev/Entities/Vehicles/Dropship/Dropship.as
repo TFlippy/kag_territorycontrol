@@ -72,7 +72,7 @@ void onInit(CBlob@ this)
 	}
 
 	this.getShape().SetRotationsAllowed(false);
-	this.set_string("autograb blob", "mat_gatlingammo");
+	this.set_string("autograb blob", "ammo_gatling");
 	this.set_u32("fireDelay", 0);
 	sprite.SetZ(10.0f);
 

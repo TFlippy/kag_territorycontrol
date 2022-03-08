@@ -31,31 +31,31 @@ void onInit(CBlob@ this)
 	// this.set_string("required class", "builder");
 
 	{
-		ShopItem@ s = addShopItem(this, "Low Caliber Ammunition (20)", "$icon_pistolammo$", "mat_pistolammo-20", "Bullets for pistols and SMGs.");
+		ShopItem@ s = addShopItem(this, "Low Caliber Ammunition (20)", "$icon_pistolammo$", "ammo_lowcal-20", "Bullets for pistols and SMGs.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 50);
 
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "High Caliber Ammunition (10)", "$icon_rifleammo$", "mat_rifleammo-10", "Bullets for rifles. Effective against armored targets.");
+		ShopItem@ s = addShopItem(this, "High Caliber Ammunition (10)", "$icon_rifleammo$", "ammo_highcal-10", "Bullets for rifles. Effective against armored targets.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 75);
 
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Shotgun Shells (4)", "$icon_shotgunammo$", "mat_shotgunammo-4", "Shotgun Shells for... Shotguns.");
+		ShopItem@ s = addShopItem(this, "Shotgun Shells (4)", "$icon_shotgunammo$", "ammo_shotgun-4", "Shotgun Shells for... Shotguns.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 70);
 
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Machine Gun Ammunition (50)", "$icon_gatlingammo$", "mat_gatlingammo-50", "Ammunition used by the machine gun.");
+		ShopItem@ s = addShopItem(this, "Machine Gun Ammunition (50)", "$icon_gatlingammo$", "ammo_gatling-50", "Ammunition used by the machine gun.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 85);
 
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Machine Gun Ammunition (50)", "$icon_gatlingammo$", "mat_gatlingammo-50", "Ammunition used by the machine gun.");
+		ShopItem@ s = addShopItem(this, "Machine Gun Ammunition (50)", "$icon_gatlingammo$", "ammo_gatling-50", "Ammunition used by the machine gun.");
 		AddRequirement(s.requirements, "coin", "", "Coins", 85);
 
 		s.spawnNothing = true;

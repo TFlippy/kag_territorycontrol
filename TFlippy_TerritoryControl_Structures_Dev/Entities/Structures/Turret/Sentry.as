@@ -40,7 +40,7 @@ void onInit(CBlob@ this)
 	{
 		if (this.getTeamNum() == 250)
 		{
-			CBlob@ ammo = server_CreateBlob("mat_gatlingammo", this.getTeamNum(), this.getPosition());
+			CBlob@ ammo = server_CreateBlob("ammo_gatling", this.getTeamNum(), this.getPosition());
 			ammo.server_SetQuantity(500);
 			this.server_PutInInventory(ammo);
 		}
@@ -98,7 +98,7 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 	if (this.getTeamNum() != forBlob.getTeamNum()) return false;
 
 	CBlob@ carried = forBlob.getCarriedBlob();
-	return (carried is null ? true : carried.getName() == "mat_gatlingammo" && !forBlob.isAttached());
+	return (carried is null ? true : carried.getName() == "ammo_gatling" && !forBlob.isAttached());
 }
 
 u8 GetAmmo(CBlob@ this)

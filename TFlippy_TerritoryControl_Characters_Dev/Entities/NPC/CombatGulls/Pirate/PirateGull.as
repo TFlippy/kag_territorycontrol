@@ -50,7 +50,7 @@ void onInit(CBlob@ this)
 			case 1:
 			case 2:
 				gun_config = "revolver";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_lowcal";
 
 				this.set_u8("attackDelay", 3);
 				this.set_u8("reactionTime", 30);
@@ -62,7 +62,7 @@ void onInit(CBlob@ this)
 			case 4:
 			case 5:
 				gun_config = "boomstick";
-				ammo_config = "mat_shotgunammo";
+				ammo_config = "ammo_shotgun";
 				
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 10);
@@ -73,7 +73,7 @@ void onInit(CBlob@ this)
 			case 6:
 			case 7:
 				gun_config = "banditrifle";
-				ammo_config = "mat_banditammo";
+				ammo_config = "ammo_bandit";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 10);
@@ -83,7 +83,7 @@ void onInit(CBlob@ this)
 				break;
 			case 8:
 				gun_config = "rifle";
-				ammo_config = "mat_rifleammo";
+				ammo_config = "ammo_highcal";
 
 				this.set_u8("reactionTime", 30);
 				this.set_u8("attackDelay", 30);
@@ -94,7 +94,7 @@ void onInit(CBlob@ this)
 			case 9:
 			case 10:
 				gun_config = "banditpistol";
-				ammo_config = "mat_banditammo";
+				ammo_config = "ammo_bandit";
 
 				this.set_u8("attackDelay", 30);
 				this.set_u8("reactionTime", 10);
@@ -104,7 +104,7 @@ void onInit(CBlob@ this)
 				break;
 			default:
 				gun_config = "revolver";
-				ammo_config = "mat_pistolammo";
+				ammo_config = "ammo_lowcal";
 
 				this.set_u8("reactionTime", 20);
 				this.set_u8("attackDelay", 20);

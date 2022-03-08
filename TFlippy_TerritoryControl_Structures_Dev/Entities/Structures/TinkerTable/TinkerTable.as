@@ -34,6 +34,59 @@ void onInit(CBlob@ this)
 	this.set_string("shop description", "Mechanist's Workshop");
 	this.set_u8("shop icon", 15);
 
+
+	{
+		ShopItem@ s = addShopItem(this, "Gauss Rifle", "$icon_gaussrifle$", "gaussrifle", "A modified toy used to kill people.\n\nUses Mithril Ingots.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
+		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 50);
+		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 10);
+		AddRequirement(s.requirements, "coin", "", "Coins", 850);
+
+		s.customButton = true;
+		s.buttonwidth = 2;
+		s.buttonheight = 1;
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Dart Gun", "$icon_dartgun$", "dartgun", "Dart Gun that can be used to remotely deliver drugs.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 6);
+		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", 50);
+		AddRequirement(s.requirements, "coin", "", "Coins", 500);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Scorcher", "$icon_flamethrower$", "flamethrower", "A tool used for incinerating plants, buildings and people.\n\nUses Oil.");
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
+		AddRequirement(s.requirements, "coin", "", "Coins", 150);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Blazethrower", "$icon_blazethrower$", "blazethrower", "A Scorcher modification providing support for gaseous fuels.\n\nUses Fuel.");
+		AddRequirement(s.requirements, "blob", "flamethrower", "Scorcher", 1);
+		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 5);
+		AddRequirement(s.requirements, "coin", "", "Coins", 600);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Handheld Irradiator", "$icon_raygun$", "raygun", "A rather dangerous mithril-powered device used for cancer research.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 3);
+		AddRequirement(s.requirements, "coin", "", "Coins", 100);
+
+		s.spawnNothing = true;
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Acidthrower", "$icon_acidthrower$", "acidthrower", "A tool used for dissolving plants, buildings and people.\n\nUses Acid.");
+		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
+		AddRequirement(s.requirements, "coin", "", "Coins", 1250);
+
+		s.spawnNothing = true;
+	}
 	{
 		ShopItem@ s = addShopItem(this, "Drill", "$drill$", "drill", descriptions[43], false);
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
@@ -186,83 +239,12 @@ void onInit(CBlob@ this)
 
 		s.spawnNothing = true;
 	}
-	{
-		ShopItem@ s = addShopItem(this, "Gauss Rifle", "$icon_gaussrifle$", "gaussrifle", "A modified toy used to kill people.\n\nUses Mithril Ingots.");
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
-		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 50);
-		AddRequirement(s.requirements, "blob", "mat_copperwire", "Copper Wire", 10);
-		AddRequirement(s.requirements, "coin", "", "Coins", 850);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}
+	
 	{
 		ShopItem@ s = addShopItem(this, "Binoculars", "$icon_binoculars$", "binoculars", "Two telescopes glued together used for spying neighbours.");
 		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
 		AddRequirement(s.requirements, "coin", "", "Coins", 150);
 		// AddRequirement(s.requirements, "tech", "tech_metallurgy", "Metallurgy", 1);
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Handheld Irradiator", "$icon_raygun$", "raygun", "A rather dangerous mithril-powered device used for cancer research.");
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 5);
-		AddRequirement(s.requirements, "blob", "mat_mithrilingot", "Mithril Ingot", 3);
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Dart Gun", "$icon_dartgun$", "dartgun", "Dart Gun that can be used to remotely deliver drugs.");
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 6);
-		AddRequirement(s.requirements, "blob", "mat_methane", "Methane", 50);
-		AddRequirement(s.requirements, "coin", "", "Coins", 500);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Scorcher", "$icon_flamethrower$", "flamethrower", "A tool used for incinerating plants, buildings and people.\n\nUses Oil.");
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 1);
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Blazethrower", "$icon_blazethrower$", "blazethrower", "A Scorcher modification providing support for gaseous fuels.\n\nUses Fuel.");
-		AddRequirement(s.requirements, "blob", "flamethrower", "Scorcher", 1);
-		AddRequirement(s.requirements, "blob", "mat_copperingot", "Copper Ingot", 5);
-		AddRequirement(s.requirements, "coin", "", "Coins", 600);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
-
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Acidthrower", "$icon_acidthrower$", "acidthrower", "A tool used for dissolving plants, buildings and people.\n\nUses Acid.");
-		AddRequirement(s.requirements, "blob", "mat_steelingot", "Steel Ingot", 10);
-		AddRequirement(s.requirements, "coin", "", "Coins", 1250);
-
-		s.customButton = true;
-		s.buttonwidth = 2;
-		s.buttonheight = 1;
 
 		s.spawnNothing = true;
 	}

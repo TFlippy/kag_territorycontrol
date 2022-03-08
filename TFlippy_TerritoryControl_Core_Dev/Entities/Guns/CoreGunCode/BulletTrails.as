@@ -9,52 +9,42 @@
 
 class BulletFade
 {
-	SColor Col = SColor(255,255,255,255);
+    SColor Col = SColor(255,255,255,255);
+	SColor BackCol = SColor(0,255,255,255);
 
-	Vec2f TopLeft;
-	Vec2f BotLeft;
-	Vec2f TopRight;
-	Vec2f BotRight;
+    Vec2f Back;
+    Vec2f Front;
+	f32 MaxTime = 50;
+	f32 TimeLeft = MaxTime;
+	
+	string Texture = "Fade.png";
 
-	BulletFade(Vec2f CurrentPos)
-	{
-		TopLeft = CurrentPos;
-		BotLeft = CurrentPos;
-		TopRight = CurrentPos;
-		BotRight = CurrentPos;
-	}
+    BulletFade(Vec2f p)
+    {
+        Back = p;
+        Front = p;
+    }
 
-	void JoinQueue(Vec2f FrontLeft, Vec2f FrontRight)
-	{
-		/*TimeLeft -=1;
-		if(Alpha < 5)
-		{
-			TimeLeft = 0;
-			Alpha = 0;
+    void onRender()
+    {
+		TimeLeft -= 3.0f * ((1000.0f/30.0f) * getRenderDeltaTime());
+		Col.setAlpha((TimeLeft/MaxTime)*255.0f);
+		BackCol.setAlpha((TimeLeft/MaxTime)*128.0f);
+		
+		if(TimeLeft > 0){
+			Vec2f Over = Vec2f(0,1);
+			Vec2f Under = Vec2f(0,-1);
+			Vec2f Aim = Back-Front;
+			Over.RotateByDegrees(-Aim.AngleDegrees());
+			Under.RotateByDegrees(-Aim.AngleDegrees());
+			
+			Vertex[]@ fade_vertex;
+			if(getRules().get(Texture, @fade_vertex)){
+				fade_vertex.push_back(Vertex(Front.x+Under.x, Front.y+Under.y, 1, 0, 1, Col)); //top left
+				fade_vertex.push_back(Vertex(Front.x+Over.x, Front.y+Over.y, 1, 1, 1, Col)); //top right
+				fade_vertex.push_back(Vertex(Back.x+Over.x*0.5f, Back.y+Over.y*0.5f,1, 1, 0, BackCol)); //bot right
+				fade_vertex.push_back(Vertex(Back.x+Under.x*0.5f, Back.y+Under.y*0.5f,1, 0, 0, BackCol)); //bot left
+			}
 		}
-		Alpha -= 5 * (60 * getRenderDeltaTime());
-
-		Col.setBlue(Col.getBlue() + 1);
-		Col.setGreen(Col.getGreen() - 1);
-		Col.setAlpha(Alpha);
-		float toAdd = 0.20 * ((60 * getRenderDeltaTime()));*/
-
-
-		/*v_r_fade.push_back(Vertex(FrontLeft.x - 0.7, FrontLeft.y + 0.7,     1, 1, 0, Col)); //top right
-		v_r_fade.push_back(Vertex(FrontRight.x - 0.7, FrontRight.y - 0.7,        1, 0, 0, Col)); //top left
-		v_r_fade.push_back(Vertex(BotRight.x + 0.7, BotRight.y + 0.7,       1, 0, 1, Col)); //bot left
-		v_r_fade.push_back(Vertex(BotLeft.x+ 0.7, BotLeft.y - 0.7,      1, 1, 1, Col)); //bot right*/
-
-		
-		//Vec2f TopLeft  = Vec2f(newPos.x -0.7, newPos.y-3);
-		//Vec2f TopRight = Vec2f(newPos.x -0.7, newPos.y+3);
-		//Vec2f BotLeft  = Vec2f(newPos.x +0.7, newPos.y-3);
-		//Vec2f BotRight = Vec2f(newPos.x +0.7, newPos.y+3);
-		
-		
-		//v_r_bullet.push_back(Vertex(TopLeft.x,  TopLeft.y,      1, 0, 0, SColor(255,255,255,255))); //top left
-		//v_r_bullet.push_back(Vertex(TopRight.x, TopRight.y,     1, 1, 0, SColor(255,255,255,255))); //top right
-		//v_r_bullet.push_back(Vertex(BotRight.x, BotRight.y,     1, 1, 1, SColor(255,255,255,255))); //bot right
-		//v_r_bullet.push_back(Vertex(BotLeft.x,  BotLeft.y,      1, 0, 1, SColor(255,255,255,255))); //bot left
-	}
+    }
 }

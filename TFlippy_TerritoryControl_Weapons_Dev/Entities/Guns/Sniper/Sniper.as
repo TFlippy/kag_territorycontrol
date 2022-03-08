@@ -9,7 +9,7 @@ void onInit(CBlob@ this)
 	settings.TOTAL = 4; //Max amount of ammo that can be in a clip
 	settings.FIRE_INTERVAL = 35; //Time in between shots
 	settings.RELOAD_TIME = 40; //Time it takes to reload (in ticks)
-	settings.AMMO_BLOB = "mat_rifleammo"; //Ammunition the gun takes
+	settings.AMMO_BLOB = "ammo_highcal"; //Ammunition the gun takes
 
 	//Bullet
 	settings.B_PER_SHOT = 4; //Shots per bullet | CHANGE B_SPREAD, otherwise both bullets will come out together
@@ -41,6 +41,7 @@ void onInit(CBlob@ this)
 	this.set_u8("CustomKnock", 7);
 	this.Tag("CustomSemiAuto");
 	this.Tag("medium weight");
+	this.set_string("CustomBullet", "BulletHighCal.png");
 
 	CSprite@ sprite = this.getSprite();
 

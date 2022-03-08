@@ -86,7 +86,7 @@ class GunSettings
 		TOTAL = 30;
 		FIRE_INTERVAL = 10;
 		RELOAD_TIME = 25;
-		AMMO_BLOB = "mat_rifleammo";
+		AMMO_BLOB = "ammo_highcal";
 
 		//Bullet
 		B_PER_SHOT = 1;

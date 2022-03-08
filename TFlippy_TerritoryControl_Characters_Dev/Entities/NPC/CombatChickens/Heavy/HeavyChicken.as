@@ -49,7 +49,7 @@ void onInit(CBlob@ this)
 		if (XORRandom(100) < 1)
 		{
 			gun_config = "rekt";
-			ammo_config = "mat_gatlingammo";
+			ammo_config = "ammo_gatling";
 
 			this.set_u8("reactionTime", 0);
 			this.set_u8("attackDelay", 0);
@@ -66,7 +66,7 @@ void onInit(CBlob@ this)
 				case 1:
 				case 2:
 					gun_config = "assaultrifle";
-					ammo_config = "mat_rifleammo";
+					ammo_config = "ammo_highcal";
 
 					this.set_u8("attackDelay", 0);
 					this.set_u8("reactionTime", 5);
@@ -94,7 +94,7 @@ void onInit(CBlob@ this)
 				case 6:
 				case 7:
 					gun_config = "minigun";
-					ammo_config = "mat_gatlingammo";
+					ammo_config = "ammo_gatling";
 
 					this.set_u8("reactionTime", 15);
 					this.set_u8("attackDelay", 0);
@@ -109,7 +109,7 @@ void onInit(CBlob@ this)
 				case 8:
 				case 9:
 					gun_config = "sniper";
-					ammo_config = "mat_rifleammo";
+					ammo_config = "ammo_highcal";
 
 					this.set_u8("reactionTime", 45);
 					this.set_u8("attackDelay", 0);
@@ -124,7 +124,7 @@ void onInit(CBlob@ this)
 				case 10:
 				case 11:
 					gun_config = "amr";
-					ammo_config = "mat_rifleammo";
+					ammo_config = "ammo_highcal";
 
 					this.set_u8("reactionTime", 30);
 					this.set_u8("attackDelay", 90);
@@ -180,7 +180,7 @@ void onInit(CBlob@ this)
 
 				default:
 					gun_config = "autoshotgun";
-					ammo_config = "mat_shotgunammo";
+					ammo_config = "ammo_shotgun";
 
 					this.set_u8("reactionTime", 10);
 					this.set_u8("attackDelay", 5);
