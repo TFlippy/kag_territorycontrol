@@ -44,7 +44,7 @@ LootItem@[] c_items = //Same as the mystery box EXCEPT no badgers and no gold or
 	LootItem("mat_ironingot", 5, 25, 358),
 	LootItem("mat_goldingot", 1, 25, 105),
 	LootItem("mat_steelingot", 5, 25, 254),
-	LootItem("artisancertificate", 1, 1, 574),
+	//LootItem("artisancertificate", 1, 1, 574),
 	LootItem("mat_mithrilingot", 5, 25, 61),
 	LootItem("badgerden", 1, 1, 154),
 	LootItem("card_pack", 1, 2, 404),
