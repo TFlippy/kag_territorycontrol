@@ -193,12 +193,6 @@ void onTick(CBlob@ this)
 			
 			
 			float antirecoil = this.get_f32("anti_recoil");
-			Vec2f aim = this.get_Vec2f("aim");
-			Vec2f HolderAim = (holder.getAimPos()-this.getPosition());
-			HolderAim.Normalize();
-			HolderAim = HolderAim*160.0f;
-			Vec2f dif = HolderAim-aim;
-			
 			if(can_shoot && pressing_shoot){
 				if(antirecoil > 0.25f)antirecoil -= 0.01f;
 				else antirecoil = 0.25f;
@@ -206,18 +200,10 @@ void onTick(CBlob@ this)
 				if(antirecoil < 1.0f)antirecoil += 0.01f;
 				else antirecoil = 1.0f;
 			}
-			
-			float dis = Maths::Clamp((1.0f+dif.Length()*0.2f)*antirecoil, 0, dif.Length());
-			dif.Normalize();
-			aim = aim+dif*dis;
-			
 			CBlob@ force_target = getBlobByNetworkID(this.get_netid("force_aim"));
 			if(force_target !is null){
-				aim = force_target.getPosition()-this.getPosition();
 				antirecoil = 1.0f;
 			}
-			
-			this.set_Vec2f("aim",aim);
 			this.set_f32("anti_recoil",antirecoil);
 			
 
@@ -333,11 +319,14 @@ void onTick(CBlob@ this)
 
 				if(this.hasTag("SingleShotReloading")) this.set_bool("doReload", false);
 			} 
-			else if ((pressing_shoot || this.hasTag("cancel_reload")) && can_shoot)
+			else if (this.get_bool("cancel_reload"))
 			{
 				this.set_bool("beginReload", false);
 				this.set_bool("doReload", false);
 				CancelReload(this, false);
+			}
+			else if (pressing_shoot && can_shoot)
+			{
 				if (this.get_u8("clip") > 0)
 				{
 					/*for (int a = 0; a < modules.length(); a++)

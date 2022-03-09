@@ -179,7 +179,6 @@ const string[] teamBombs =
 {
 	"mat_incendiarybomb",
 	"mat_bunkerbuster",
-	"mat_mininuke",
 	"mat_dirtybomb",
 	"mat_smallbomb",
 	"mat_stunbomb",
@@ -196,10 +195,13 @@ const string[] teamBombs =
 
 const string[] teamAmmo =
 {
+	"ammo_bandit",
 	"ammo_lowcal",
 	"ammo_highcal",
+	"ammo_shotgun",
 	"ammo_gatling",
-	"ammo_shotgun"
+	"mat_smallrocket",
+	"mat_mininuke"
 };
 
 void RenderTeamInventoryHUD(CBlob@ this)
@@ -524,7 +526,10 @@ void RenderTeamInventoryHUD(CBlob@ this)
 			}
 			b--;
 		}
-		for (int i = 0; i < itemsToShow.length; i++)
+		
+		int AmmoX = 0;
+		
+		for (int i = itemsToShow.length-1; i >= 0; i--)
 		{
 			//draw teamAmmo
 			CBlob@ ammo = itemsToShow[i];
@@ -543,10 +548,10 @@ void RenderTeamInventoryHUD(CBlob@ this)
 				continue;
 			}
 
-			Vec2f itemPos = Vec2f(getScreenWidth() / 1.52 - 94 + b * 46, getScreenHeight() - 57) + hudPos2;
-			GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), itemPos);
+			Vec2f itemPos = Vec2f(getScreenWidth() / 1.52 - 74 + b * 46 - AmmoX* 56, getScreenHeight() - 64) + hudPos2;
+			GUI::DrawIcon("ammo_slot.png", 0, Vec2f(32, 32), itemPos);
 
-			GUI::DrawIcon(ammo.inventoryIconName, ammo.inventoryIconFrame, ammo.inventoryFrameDimension, itemPos + Vec2f(8, 8));
+			GUI::DrawIcon(ammo.inventoryIconName, ammo.inventoryIconFrame, ammo.inventoryFrameDimension, itemPos + Vec2f(6, 2));
 
 			int quantity = itemAmounts[i];
 			f32 ratio = float(quantity) / float(ammo.maxQuantity);
@@ -557,7 +562,7 @@ void RenderTeamInventoryHUD(CBlob@ this)
 				GUI::SetFont("menu");
 				GUI::DrawText("" + quantity / 2, itemPos + Vec2f(38 - (l * 8), 26), col);
 			}
-			b--;
+			AmmoX++;
 		}
 	}
 }

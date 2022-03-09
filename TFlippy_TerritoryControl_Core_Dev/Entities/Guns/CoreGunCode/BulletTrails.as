@@ -14,6 +14,7 @@ class BulletFade
 
     Vec2f Back;
     Vec2f Front;
+	Vec2f OldFront;
 	f32 MaxTime = 30;
 	f32 TimeLeft = MaxTime;
 	
@@ -23,13 +24,16 @@ class BulletFade
     {
         Back = p;
         Front = p;
+		OldFront = p;
     }
 
     void onRender()
     {
-		TimeLeft -= 3.0f * ((1000.0f/30.0f) * getRenderDeltaTime());
+		if(Front == OldFront)TimeLeft -= 3.0f * ((1000.0f/30.0f) * getRenderDeltaTime());
 		Col.setAlpha((TimeLeft/MaxTime)*255.0f);
 		BackCol.setAlpha((TimeLeft/MaxTime)*128.0f);
+		
+		OldFront = Front;
 		
 		if(TimeLeft > 0){
 			Vec2f Over = Vec2f(0,1);

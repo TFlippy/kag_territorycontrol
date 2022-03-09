@@ -70,9 +70,6 @@ void onTick(CBlob@ this)
 					sprite.SetEmitSoundSpeed(1.0f);
 					sprite.SetEmitSoundVolume(0.4f);
 
-					Vec2f aimDir = holder.getAimPos() - this.getPosition();
-					aimDir.Normalize();
-
 					Vec2f hitPos;
 					f32 length;
 					bool flip = this.isFacingLeft();

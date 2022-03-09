@@ -59,7 +59,7 @@ void onRestart(CRules@ this)
 
 void onRenderScoreboard(CRules@ this)
 {
-
+	Render::SetTransformWorldspace();
 	hovered_accolade = -1;
 	//sort players
 	CPlayer@[] sortedplayers;

@@ -13,11 +13,8 @@ void onRender(CSprite@ this)
 		{
 			if (gun.hasTag("weapon"))
 			{
-				
 
-				//hud.SetCursorImage("WeaponCursor.png", Vec2f(32, 32));
-				//hud.SetCursorOffset(Vec2f(-32, -32));
-				hud.HideCursor();
+				if(!hud.hasMenus())hud.HideCursor();
 
 				GunSettings@ settings;
 				gun.get("gun_settings", @settings);
@@ -35,7 +32,8 @@ void onRender(CSprite@ this)
 
 				Render::SetTransformScreenspace();
 				
-				int AimSpace = Maths::Max(settings.B_SPREAD*4,8);
+				int AimSpace = 8;
+				if (settings !is null)AimSpace = Maths::Max(settings.B_SPREAD*2,8);
 				
 				Vertex[] cross_height_vertex;
 				for( int i = 0; i < 4; i += 1){
@@ -102,15 +100,14 @@ void onRender(CSprite@ this)
 				
 				int Skip = 1;
 				bool angled = false;
-				if(settings.TOTAL > 100){
-					Skip = 2;
-					angled = true;
-				}
 				int ammo = gun.get_u8("clip");
 				int maxammo = ammo;
 				
 				if (settings !is null)
 				{
+					if(settings.TOTAL > 50)angled = true;
+					if(settings.TOTAL > 100)Skip = 2;
+				
 					maxammo = settings.TOTAL;
 
 					if (gun.get_bool("doReload") && !gun.hasTag("SingleShotReloading"))
@@ -120,7 +117,11 @@ void onRender(CSprite@ this)
 						u32 reloadTime = gun.get_u8("actionInterval");
 						u32 startTime = endTime - reloadTime;
 						ammo = f32(maxammo)*f32(startTime) / f32(endTime);
-						print("reloading:"+f32(startTime) / f32(endTime));
+						
+						if(maxammo < 3){
+							maxammo = 8;
+							ammo = f32(8)*f32(startTime) / f32(endTime);
+						}
 					}
 				}
 				
@@ -142,7 +143,7 @@ void onRender(CSprite@ this)
 						BotRight.RotateByDegrees(angle);
 					}
 					
-					Vec2f DrawPos = Vec2f(AimSpace+16,0);
+					Vec2f DrawPos = Vec2f(AimSpace+10,0);
 					DrawPos.RotateByDegrees(angle);
 					
 					DrawPos = mouse_pos+DrawPos;

@@ -39,22 +39,22 @@ class Bullet
 
         GunSettings@ settings;
         gun.get("gun_settings", @settings);
-
-        StartingAimAngle = angle;
-        CurrentPos = pos;
-
-        BulletGrav = settings.B_GRAV;
-        FacingLeft = gun.isFacingLeft();
-
-        TimeLeft = settings.B_TTL;
-        Speed = settings.B_SPEED;
-
-        OldPos = CurrentPos;
-        LastLerpedPos = CurrentPos;
 		
 		@Fade = BulletFade(pos);
 		Fade.Texture = gunBlob.get_string("CustomFade");
 		BulletGrouped.addFade(Fade);
+
+		TimeLeft = settings.B_TTL*0.9f;
+
+        StartingAimAngle = angle;
+        CurrentPos = pos;
+
+		Speed = settings.B_SPEED;
+        BulletGrav = settings.B_GRAV;
+        FacingLeft = gun.isFacingLeft();
+
+        OldPos = CurrentPos;
+        LastLerpedPos = CurrentPos;
 
         for (int a = 0; a < modules.length(); a++)
         {

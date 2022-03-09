@@ -116,7 +116,26 @@ class GunSettings
 
 f32 getAimAngle(CBlob@ this, CBlob@ holder)
 {
-	Vec2f aimvector = (this.getPosition()+this.get_Vec2f("aim")) - (this.hasTag("place45") ? holder.getInterpolatedPosition() : this.getInterpolatedPosition());
+	float antirecoil = 1;
+	if(this.exists("anti_recoil"))antirecoil = this.get_f32("anti_recoil");
+	Vec2f aim = this.get_Vec2f("aim");
+	Vec2f HolderAim = (holder.getAimPos()-this.getPosition());
+	HolderAim.Normalize();
+	HolderAim = HolderAim*160.0f;
+	Vec2f dif = HolderAim-aim;
+
+	float dis = Maths::Clamp((1.0f+dif.Length()*0.2f)*antirecoil, 0, dif.Length());
+	dif.Normalize();
+	aim = aim+dif*dis;
+	
+	CBlob@ force_target = getBlobByNetworkID(this.get_netid("force_aim"));
+	if(force_target !is null){
+		aim = force_target.getPosition()-this.getPosition();
+	}
+	
+	this.set_Vec2f("aim",aim);
+	
+	Vec2f aimvector = (this.getPosition()+aim) - (this.hasTag("place45") ? holder.getInterpolatedPosition() : this.getInterpolatedPosition());
 	//Vec2f aimvector = holder.getAimPos() - (this.hasTag("place45") ? holder.getInterpolatedPosition() : this.getInterpolatedPosition());
 	f32 angle = holder.isFacingLeft() ? -aimvector.Angle() + 180.0f : -aimvector.Angle();
 	if (holder.isAttached()) this.SetFacingLeft(holder.isFacingLeft());
