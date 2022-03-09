@@ -68,6 +68,24 @@ void onInit(CBlob@ this)
 		sprite.SetZ(-10.0f);
 		sprite.ReloadSprites(team_color, 0);
 	}
+	
+	if(isServer()){
+		f32 dis = 640.0f;
+		CBlob@[] blobs;
+		if(getBlobsByTag("chicken", @blobs))
+		{
+			for (int i = 0; i < blobs.length; i++)
+			{
+				CBlob@ b = blobs[i];
+				f32 d = (b.getPosition() - this.getPosition()).getLength();
+				if(d < dis)dis = d;
+			}
+		}
+		if(dis > 64 && XORRandom(100) != 0){
+			this.Tag("opened");
+			this.server_Die();
+		}
+	}
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
