@@ -124,6 +124,7 @@ void onInit(CBlob@ this)
 						  "Murderer!",
 						  "You monster!",
 						  "I shall redeem myself!",
+						  "There's no sorry in this world, only actions and consequences!",
 						  "Death to you!"
 		                };
 		b.taunts = temp;
