@@ -65,12 +65,23 @@ void onInit(CBlob@ this)
 
 		if (XORRandom(100) < 80) 
 		{
-			MakeMat(this, this.getPosition(), "bp_automation_advanced", 1);
-		}
-
-		if (XORRandom(100) < 70) 
-		{
-			MakeMat(this, this.getPosition(), "bp_energetics", 1);
+			if (XORRandom(10) == 0){
+				switch(XORRandom(5)){
+					case 0:MakeMat(this, this.getPosition(), "bp_automation", 1);break;
+					case 1:MakeMat(this, this.getPosition(), "bp_chemistry", 1);break;
+					case 2:MakeMat(this, this.getPosition(), "bp_energetics", 1);break;
+					case 3:MakeMat(this, this.getPosition(), "bp_enrichment", 1);break;
+					case 4:MakeMat(this, this.getPosition(), "bp_induction", 1);break;
+				}
+			} else {
+				switch(XORRandom(5)){
+					case 0:MakeMat(this, this.getPosition(), "theory_automation", 1);break;
+					case 1:MakeMat(this, this.getPosition(), "theory_chemistry", 1);break;
+					case 2:MakeMat(this, this.getPosition(), "theory_energetics", 1);break;
+					case 3:MakeMat(this, this.getPosition(), "theory_enrichment", 1);break;
+					case 4:MakeMat(this, this.getPosition(), "theory_induction", 1);break;
+				}
+			}
 		}
 
 		if (XORRandom(100) < 40) 

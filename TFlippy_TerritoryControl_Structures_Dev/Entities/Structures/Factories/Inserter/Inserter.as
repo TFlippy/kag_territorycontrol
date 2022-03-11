@@ -27,24 +27,17 @@ void onInit(CSprite@ this)
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
 	if(caller.getCarriedBlob() !is this){
-		CBitStream params;
-		params.write_u16(caller.getNetworkID());
-
 		int icon = !this.isFacingLeft() ? 18 : 17;
 
-		CButton@ button = caller.CreateGenericButton(icon, Vec2f(0, 0), this, this.getCommandID("use"), "Use", params);
+		CButton@ button = caller.CreateGenericButton(icon, Vec2f(0, 0), this, this.getCommandID("use"), "Use");
 	}
 }
 
 void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 {
-	CBlob@ caller = getBlobByNetworkID(params.read_u16());
-	if (caller !is null)
+	if (cmd == this.getCommandID("use"))
 	{
-		if (cmd == this.getCommandID("use"))
-		{
-			this.SetFacingLeft(!this.isFacingLeft());
-		}
+		this.SetFacingLeft(!this.isFacingLeft());
 	}
 }
 

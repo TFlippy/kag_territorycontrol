@@ -245,19 +245,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 					if (this.getPlayer() !is null)
 					blockBlob.set_string("builder", this.getPlayer().getUsername());
 
-					if (b.name == "druglab")
-					{
-						if (XORRandom(3) < 1)
-						{
-							CBlob@ bp = server_CreateBlob("bp_chemistry", myTeam, this.getPosition());
-
-							if (!this.server_PutInInventory(bp))
-							{
-								bp.setPosition(this.getPosition());
-							}
-						}
-					}
-					else if (b.name == "banner")
+					if (b.name == "banner")
 					{
 						CPlayer@ p = this.getPlayer();
 						CRules@ r = getRules();

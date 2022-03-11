@@ -92,6 +92,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 
 	//Automation
 	AddIconToken("$icon_conveyor$", "Conveyor.png", Vec2f(8, 8), 0, teamnum);
+	AddIconToken("$icon_climber$", "Climber.png", Vec2f(8, 8), 0, teamnum);
 	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 0, teamnum);
 	AddIconToken("$icon_filter$", "Filter.png", Vec2f(24, 8), 0, teamnum);
 	AddIconToken("$icon_launcher$", "Launcher.png", Vec2f(8, 8), 0, teamnum);
@@ -101,7 +102,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	AddIconToken("$icon_assembler$", "Assembler.png", Vec2f(40, 24), 0, teamnum);
 	AddIconToken("$icon_hopper$", "Hopper.png", Vec2f(24, 24), 0, teamnum);
 	AddIconToken("$icon_fetcher$", "Fetcher.png", Vec2f(24, 24), 0, teamnum);
-	AddIconToken("$icon_extractor$", "Extractor.png", Vec2f(16, 24), 0);
+	AddIconToken("$icon_extractor$", "Extractor.png", Vec2f(16, 20), 0);
 	AddIconToken("$icon_filterextractor$", "FilterExtractor.png", Vec2f(24, 24), 0, teamnum);
 	AddIconToken("$icon_grinder$", "Grinder.png", Vec2f(40, 24), 0, teamnum);
 	AddIconToken("$icon_stonepile$", "StonePile.png", Vec2f(24, 40), 3, teamnum);
@@ -467,6 +468,12 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
 		blocks[2].push_back(b);
 	}
+	/*{
+		BuildBlock b(0, "climber", "$icon_climber$", "Climber\nPulls items upwards.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 4);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 6);
+		blocks[2].push_back(b);
+	}*/
 	{
 		BuildBlock b(0, "launcher", "$icon_launcher$", "Launcher\nLaunches items to the eternity and beyond.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
@@ -564,7 +571,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 10);
 		// AddRequirement(b.reqs, "tech", "tech_automation_advanced", "Technology (Advanced Automation)", 1);
-		AddRequirement(b.reqs, "blob", "bp_automation_advanced", "Blueprint (Advanced Automation)", 1);
+		AddRequirement(b.reqs, "blob", "bp_automation", "Blueprint (Advanced Automation)", 1);
 		b.buildOnGround = true;
 		b.size.Set(56, 24);
 		blocks[2].push_back(b);
@@ -586,10 +593,11 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "inductionfurnace", "$icon_inductionfurnace$", "Industrial Furnace\nA heavy-duty furnace that produces up to 4x more ingots at cost of lower speed.\n$RED$Requires coal to smelt metal.$RED$$mat_coal$\n");
+		BuildBlock b(0, "inductionfurnace", "$icon_inductionfurnace$", "Induction Furnace\nA heavy-duty furnace that produces up to 4x more ingots at cost of lower speed.");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 60);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 20);
 		// AddRequirement(b.reqs, "blob", "mat_battery", "Voltron Battery Plus", 50);
+		AddRequirement(b.reqs, "blob", "bp_induction", "Blueprint (Induction)", 1);
 		b.buildOnGround = true;
 		b.size.Set(40, 32);
 		blocks[2].push_back(b);
@@ -759,6 +767,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
 		AddRequirement(b.reqs, "blob", "mat_mithril", "Mithril", 100);
 		AddRequirement(b.reqs, "blob", "mat_mithrilingot", "Mithril Ingot", 5);
+		AddRequirement(b.reqs, "blob", "bp_enrichment", "Blueprint (Enrichment)", 1);
 		b.buildOnGround = true;
 		b.size.Set(24, 24);
 		blocks[3].push_back(b);
