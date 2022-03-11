@@ -61,19 +61,19 @@ void onInit(CBlob@ this)
 		{
 			if (XORRandom(10) == 0){
 				switch(XORRandom(5)){
-					case 0:MakeMat(this, this.getPosition(), "bp_automation", 1);break;
-					case 1:MakeMat(this, this.getPosition(), "bp_chemistry", 1);break;
-					case 2:MakeMat(this, this.getPosition(), "bp_energetics", 1);break;
-					case 3:MakeMat(this, this.getPosition(), "bp_enrichment", 1);break;
-					case 4:MakeMat(this, this.getPosition(), "bp_induction", 1);break;
+					case 0:this.server_PutInInventory(server_CreateBlob("bp_automation", -1, this.getPosition()));break;
+					case 1:this.server_PutInInventory(server_CreateBlob("bp_chemistry", -1, this.getPosition()));break;
+					case 2:this.server_PutInInventory(server_CreateBlob("bp_energetics", -1, this.getPosition()));break;
+					case 3:this.server_PutInInventory(server_CreateBlob("bp_enrichment", -1, this.getPosition()));break;
+					case 4:this.server_PutInInventory(server_CreateBlob("bp_induction", -1, this.getPosition()));break;
 				}
 			} else {
 				switch(XORRandom(5)){
-					case 0:MakeMat(this, this.getPosition(), "theory_automation", 1);break;
-					case 1:MakeMat(this, this.getPosition(), "theory_chemistry", 1);break;
-					case 2:MakeMat(this, this.getPosition(), "theory_energetics", 1);break;
-					case 3:MakeMat(this, this.getPosition(), "theory_enrichment", 1);break;
-					case 4:MakeMat(this, this.getPosition(), "theory_induction", 1);break;
+					case 0:this.server_PutInInventory(server_CreateBlob("theory_automation", -1, this.getPosition()));break;
+					case 1:this.server_PutInInventory(server_CreateBlob("theory_chemistry", -1, this.getPosition()));break;
+					case 2:this.server_PutInInventory(server_CreateBlob("theory_energetics", -1, this.getPosition()));break;
+					case 3:this.server_PutInInventory(server_CreateBlob("theory_enrichment", -1, this.getPosition()));break;
+					case 4:this.server_PutInInventory(server_CreateBlob("theory_induction", -1, this.getPosition()));break;
 				}
 			}
 		}
