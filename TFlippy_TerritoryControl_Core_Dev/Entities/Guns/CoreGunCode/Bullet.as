@@ -40,9 +40,11 @@ class Bullet
         GunSettings@ settings;
         gun.get("gun_settings", @settings);
 		
-		@Fade = BulletFade(pos);
-		Fade.Texture = gunBlob.get_string("CustomFade");
-		BulletGrouped.addFade(Fade);
+		if(gunBlob.exists("CustomFade")){
+			@Fade = BulletFade(pos);
+			Fade.Texture = gunBlob.get_string("CustomFade");
+			BulletGrouped.addFade(Fade);
+		}
 
 		TimeLeft = settings.B_TTL*0.9f;
 
@@ -269,7 +271,7 @@ class Bullet
 
         if (endBullet)
         {
-            Fade.Front = CurrentPos;
+            if(Fade !is null)Fade.Front = CurrentPos;
 			TimeLeft = 1;
         }
 
@@ -278,7 +280,7 @@ class Bullet
 
     void onRender() // Every bullet gets forced to join the queue in onRenders, so we use this to calc to position
     {
-        Fade.Front = CurrentPos;
+        if(Fade !is null)Fade.Front = CurrentPos;
 		
 		// Are we on the screen?
         const Vec2f xLast = PDriver.getScreenPosFromWorldPos(OldPos);
@@ -298,7 +300,7 @@ class Bullet
         Vec2f newPos = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
         LastLerpedPos = newPos;
 		
-		Fade.Front = newPos;
+		if(Fade !is null)Fade.Front = newPos;
 
         for (int a = 0; a < modules.length(); a++)
         {

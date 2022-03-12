@@ -20,7 +20,7 @@ void onInit(CBlob@ this)
 	settings.B_DAMAGE = 6.0f; //Bullet damage
 	settings.B_TYPE = HittersTC::plasma;
 	settings.G_RECOIL = 0;
-	settings.MUZZLE_OFFSET = Vec2f(-40, -7); //Where muzzle flash and bullet spawn
+	settings.MUZZLE_OFFSET = Vec2f(-90, -7); //Where muzzle flash and bullet spawn
 
 	this.set("gun_settings", @settings);
 
@@ -64,7 +64,7 @@ void onInit(CSprite@ this)
 		int[] frames = {0, 1, 2, 3, 4, 5, 6, 7};
 		anim.AddFrames(frames);
 		flash.SetRelativeZ(1.0f);
-		flash.SetOffset(settings.MUZZLE_OFFSET);
+		flash.SetOffset(settings.MUZZLE_OFFSET+Vec2f(52,0));
 		flash.SetVisible(false);
 		// flash.setRenderStyle(RenderStyle::additive);
 	}
