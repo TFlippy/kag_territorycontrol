@@ -13,7 +13,7 @@ void onInit(CBlob@ this)
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
-	this.getCurrentScript().tickFrequency = 5;
+	this.getCurrentScript().tickFrequency = 60;
 
 	this.Tag("builder always hit");
 	this.Tag("ignore extractor");
@@ -24,12 +24,14 @@ void onInit(CBlob@ this)
 	
 	this.addCommandID("compactor_withdraw");
 	this.addCommandID("compactor_sync");
+	
+	this.Tag("remote_storage");
 }
 
-// void onTick(CBlob@ this)
-// {
-	// client_UpdateName(this);
-// }
+void onTick(CBlob@ this)
+{
+	client_UpdateName(this);
+}
 
 void client_UpdateName(CBlob@ this)
 {
@@ -90,6 +92,7 @@ void GetButtonsFor( CBlob@ this, CBlob@ caller )
 }
 
 // KAG's CBlob.Sync() is nonfunctional shit
+// just get gud, sync works fine if you use it right - Rob
 void server_Sync(CBlob@ this)
 {
 	if (isServer())
