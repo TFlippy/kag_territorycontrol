@@ -43,6 +43,7 @@ class BulletFade
 			Under.RotateByDegrees(-Aim.AngleDegrees());
 			
 			Vertex[]@ fade_vertex;
+			if(getRules().exists(Texture))
 			if(getRules().get(Texture, @fade_vertex)){
 				fade_vertex.push_back(Vertex(Front.x+Under.x, Front.y+Under.y, 1, 0, 1, Col)); //top left
 				fade_vertex.push_back(Vertex(Front.x+Over.x, Front.y+Over.y, 1, 1, 1, Col)); //top right

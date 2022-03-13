@@ -323,6 +323,11 @@ bool isTileBConcrete(TileType tile)
 	return tile >= CMap::tile_bconcrete && tile <= CMap::tile_bconcrete_v14;
 }
 
+bool isTileReinforcedConcrete(TileType tile)
+{
+	return tile >= CMap::tile_reinforcedconcrete && tile <= CMap::tile_reinforcedconcrete_d15;
+}
+
 bool isTileMossyConcrete(TileType tile)
 {
 	return tile >= CMap::tile_mossyconcrete && tile <= CMap::tile_mossyconcrete_d4;
