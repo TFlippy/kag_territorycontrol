@@ -60,20 +60,18 @@ void onInit(CBlob@ this)
 		if (XORRandom(100) < 80) 
 		{
 			if (XORRandom(10) == 0){
-				switch(XORRandom(5)){
+				switch(XORRandom(4)){
 					case 0:this.server_PutInInventory(server_CreateBlob("bp_automation", -1, this.getPosition()));break;
-					case 1:this.server_PutInInventory(server_CreateBlob("bp_chemistry", -1, this.getPosition()));break;
-					case 2:this.server_PutInInventory(server_CreateBlob("bp_energetics", -1, this.getPosition()));break;
-					case 3:this.server_PutInInventory(server_CreateBlob("bp_enrichment", -1, this.getPosition()));break;
-					case 4:this.server_PutInInventory(server_CreateBlob("bp_induction", -1, this.getPosition()));break;
+					case 1:this.server_PutInInventory(server_CreateBlob("bp_energetics", -1, this.getPosition()));break;
+					case 2:this.server_PutInInventory(server_CreateBlob("bp_enrichment", -1, this.getPosition()));break;
+					case 3:this.server_PutInInventory(server_CreateBlob("bp_induction", -1, this.getPosition()));break;
 				}
 			} else {
-				switch(XORRandom(5)){
+				switch(XORRandom(4)){
 					case 0:this.server_PutInInventory(server_CreateBlob("theory_automation", -1, this.getPosition()));break;
-					case 1:this.server_PutInInventory(server_CreateBlob("theory_chemistry", -1, this.getPosition()));break;
-					case 2:this.server_PutInInventory(server_CreateBlob("theory_energetics", -1, this.getPosition()));break;
-					case 3:this.server_PutInInventory(server_CreateBlob("theory_enrichment", -1, this.getPosition()));break;
-					case 4:this.server_PutInInventory(server_CreateBlob("theory_induction", -1, this.getPosition()));break;
+					case 1:this.server_PutInInventory(server_CreateBlob("theory_energetics", -1, this.getPosition()));break;
+					case 2:this.server_PutInInventory(server_CreateBlob("theory_enrichment", -1, this.getPosition()));break;
+					case 3:this.server_PutInInventory(server_CreateBlob("theory_induction", -1, this.getPosition()));break;
 				}
 			}
 		}

@@ -6,7 +6,6 @@
 #include "CheckSpam.as";
 #include "CTFShopCommon.as";
 #include "MakeMat.as";
-#include "MakeSeed.as";
 
 Random traderRandom(Time());
 
@@ -33,22 +32,16 @@ void onInit(CBlob@ this)
 	AddIconToken("$card_pack$", "CardPack.png", Vec2f(9, 9), 0);
 	AddIconToken("$choker_gem$", "Choker.png", Vec2f(10, 10), 0);
 	AddIconToken("$bubble_gem$", "BubbleGem.png", Vec2f(10, 10), 0);
-
-	addTokens(this); //colored shop icons
-
+	AddIconToken("$icon_mysterybox$", "MysteryBox.png", Vec2f(24, 16), 0);
+	
 	this.getCurrentScript().tickFrequency = 30 * 5;
 
 	// SHOP
 	this.set_Vec2f("shop offset", Vec2f(0, 0));
-	this.set_Vec2f("shop menu size", Vec2f(2, 4));
+	this.set_Vec2f("shop menu size", Vec2f(2, 3));
 	this.set_string("shop description", "Witch's Dilapidated Shack");
 	this.set_u8("shop icon", 25);
 
-	// {
-		// ShopItem@ s = addShopItem(this, "Sell Grain (1)", "$COIN$", "coin-40", "Sell 1 Grain for 40 coins.");
-		// AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
-		// s.spawnNothing = true;
-	// }
 	{
 		ShopItem@ s = addShopItem(this, "Process Mithril (1)", "$mat_mithrilingot$", "mat_mithrilingot-1", "I shall remove the deadly curse from this mythical metal.");
 		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril Ore", 10);
@@ -67,12 +60,6 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Companion Box", "$icon_animalbox$", "animalbox", "What's inside?\nI crammed this box with some sort of creature you may take a liking to!");
-		AddRequirement(s.requirements, "blob", "grain", "Grain", 5);
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
-		s.spawnNothing = true;
-	}
-	{
 		ShopItem@ s = addShopItem(this, "Terdla's Bubble Gem", "$bubble_gem$", "bubblegem", "A useless pretty blue gem! May cause hiccups");
 		AddRequirement(s.requirements, "coin", "", "Coins", 200);
 		s.spawnNothing = true;
@@ -88,51 +75,28 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", 30);
 		s.spawnNothing = true;
 	}
-	{
-		ShopItem@ s = addShopItem(this, "Ganja Weed", "$ganjapod$", "ganja_seed", "With these ingredients I may conjure a magical plant of valuable properties.");
-		AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
-		AddRequirement(s.requirements, "blob", "mat_copper", "Copper", 50);
-		AddRequirement(s.requirements, "blob", "mat_mithril", "Mithril", 30);
-		AddRequirement(s.requirements, "coin", "", "Coins", 150);
-		s.spawnNothing = true;
-	}
 
-	CSprite@ sprite = this.getSprite();
 
-	if (sprite !is null)
-	{
-		CSpriteLayer@ trader = sprite.addSpriteLayer("trader", "witch", 16, 24, 0, 0);
-		trader.SetRelativeZ(20);
-		Animation@ stop = trader.addAnimation("stop", 1, false);
-		stop.AddFrame(0);
-		Animation@ walk = trader.addAnimation("walk", 1, false);
-		walk.AddFrame(0); walk.AddFrame(1); walk.AddFrame(2); walk.AddFrame(3);
-		walk.time = 10;
-		walk.loop = true;
-		trader.SetOffset(Vec2f(0, 4));
-		trader.SetFrame(0);
-		trader.SetAnimation(stop);
-		trader.SetIgnoreParentFacing(true);
-		this.set_bool("trader moving", false);
-		this.set_bool("moving left", false);
-		this.set_u32("move timer", getGameTime() + (traderRandom.NextRanged(5) + 5)*getTicksASecond());
-		this.set_u32("next offset", traderRandom.NextRanged(16));
-	}
+	this.set_bool("trader moving", false);
+	this.set_bool("moving left", false);
+	this.set_u32("move timer", getGameTime() + (traderRandom.NextRanged(5) + 5)*getTicksASecond());
+	this.set_u32("next offset", traderRandom.NextRanged(16));
 }
 
-void onChangeTeam(CBlob@ this, const int oldTeam)
+void onInit(CSprite@ this)
 {
-	// reset shop colors
-	addTokens(this);
-}
-
-void addTokens(CBlob@ this)
-{
-	int teamnum = this.getTeamNum();
-	if (teamnum > 6) teamnum = 7;
-
-	AddIconToken("$icon_mysterybox$", "MysteryBox.png", Vec2f(24, 16), 0, teamnum);
-	AddIconToken("$icon_animalbox$", "AnimalBox.png", Vec2f(24, 16), 0, teamnum);
+	CSpriteLayer@ trader = this.addSpriteLayer("trader", "witch", 16, 24, 0, 0);
+	trader.SetRelativeZ(20);
+	Animation@ stop = trader.addAnimation("stop", 1, false);
+	stop.AddFrame(0);
+	Animation@ walk = trader.addAnimation("walk", 1, false);
+	walk.AddFrame(0); walk.AddFrame(1); walk.AddFrame(2); walk.AddFrame(3);
+	walk.time = 10;
+	walk.loop = true;
+	trader.SetOffset(Vec2f(0, 4));
+	trader.SetFrame(0);
+	trader.SetAnimation(stop);
+	trader.SetIgnoreParentFacing(true);
 }
 
 void onTick(CBlob@ this)
@@ -239,11 +203,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				if (callerPlayer is null) return;
 
 				callerPlayer.server_setCoins(callerPlayer.getCoins() +  parseInt(spl[1]));
-			}
-			else if(spl[0] == "ganja_seed")
-			{
-				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "ganja_plant", rand.NextRanged(0)+1);
 			}
 			else if (name.findFirst("mat_") != -1)
 			{

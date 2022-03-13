@@ -54,11 +54,11 @@ void onTick(CBlob@ this)
 						}
 					}
 				}
-				else if (bname == "log" || bname == "pumpkin" || bname == "grain" || bname == "ganjapod" )
+				else if (bname == "log" || bname == "pumpkin" || bname == "grain")
 				{
 					this.server_PutInInventory(b);
 				}
-				else if (bname == "pumpkin_plant" || bname == "ganja_plant" || bname == "grain_plant" )
+				else if (bname == "pumpkin_plant" || bname == "grain_plant")
 				{
 					if (b.hasTag("has pumpkin") || b.hasTag("has pod") || b.hasTag("has grain"))
 					{

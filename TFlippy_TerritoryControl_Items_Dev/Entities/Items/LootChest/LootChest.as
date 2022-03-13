@@ -45,7 +45,6 @@ const LootItem@[] c_items =
 	LootItem("foodcan", 2, 5, 500),
 	LootItem("bp_automation", 1, 0, 200),
 	LootItem("bp_energetics", 1, 0, 200),
-	LootItem("bp_chemistry", 1, 0, 200),
 	LootItem("bp_induction", 1, 0, 100),
 	LootItem("bp_enrichment", 1, 0, 100),
 	LootItem("theory_automation", 1, 0, 2000),

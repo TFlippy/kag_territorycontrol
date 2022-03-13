@@ -86,7 +86,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	AddIconToken("$constructionyard$", "ConstructionYardIcon.png", Vec2f(16, 16), 0, teamnum);
 	AddIconToken("$icon_camp$", "Camp.png", Vec2f(80, 24), 0, teamnum);
 	AddIconToken("$icon_patreonshop$", "PatreonShop.png", Vec2f(40, 40), 0, teamnum);
-	AddIconToken("$icon_nursery$","Nursery.png",Vec2f(40, 32), 5, teamnum);
 	AddIconToken("$icon_library$", "Library.png", Vec2f(40, 24), 0, teamnum);
 	AddIconToken("$icon_workshop$", "Building.png", Vec2f(40, 24), 0);
 
@@ -113,7 +112,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	AddIconToken("$icon_chickenassembler$", "ChickenAssembler.png", Vec2f(56, 24), 0, teamnum);
 	AddIconToken("$icon_oiltank$","OilTank.png",Vec2f(32, 16), 0, teamnum);
 	AddIconToken("$icon_gastank$","GasTank.png",Vec2f(16, 24), 0, teamnum);
-	AddIconToken("$icon_chemlab$","ChemLab.png",Vec2f(48, 24), 0, teamnum);
 
 	//Miscellaneous
 	AddIconToken("$icon_lamppost$", "LampPost.png", Vec2f(8, 24), 0);
@@ -437,15 +435,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		blocks[1].push_back(b);
 	}
 	{
-		BuildBlock b(0, "nursery", "$icon_nursery$", "Nursery\nRaise plants and crops for various purposes.");
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
-		AddRequirement(b.reqs, "blob", "mat_dirt", "Dirt", 50);
-		b.buildOnGround = true;
-		b.size.Set(40, 32);
-		blocks[1].push_back(b);
-	}
-	{
 		BuildBlock b(0, "library", "$icon_library$", "Library\nBuy and sell various blueprints.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 125);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
@@ -574,16 +563,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "bp_automation", "Blueprint (Advanced Automation)", 1);
 		b.buildOnGround = true;
 		b.size.Set(56, 24);
-		blocks[2].push_back(b);
-	}
-	{
-		BuildBlock b(0, "chemlab", "$icon_chemlab$", "Chemical Production Machine\nA machine capable of manufacturing basic drugs and chemicals.");
-		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
-		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
-		AddRequirement(b.reqs, "blob", "mat_copperingot", "Copper Ingot", 40);
-		AddRequirement(b.reqs, "blob", "bp_chemistry", "Blueprint (Chemistry)", 1);
-		b.buildOnGround = true;
-		b.size.Set(48, 24);
 		blocks[2].push_back(b);
 	}
 	{

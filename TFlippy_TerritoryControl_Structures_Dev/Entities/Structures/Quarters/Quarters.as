@@ -91,7 +91,6 @@ void onInit(CBlob@ this)
 	AddIconToken("$quarters_burger$", "Quarters.png", Vec2f(24, 24), 9);
 	AddIconToken("$rest$", "InteractionIcons.png", Vec2f(32, 32), 29);
 	AddIconToken("$beer$", "Beer.png", Vec2f(8, 8), 0);
-	AddIconToken("$ganjatea$", "Food.png", Vec2f(16, 16), 2);
 
 	//load config
 	if (getRules().exists("ctf_costs_config"))
@@ -109,7 +108,7 @@ void onInit(CBlob@ this)
 
 	// SHOP
 	this.set_Vec2f("shop offset", Vec2f_zero);
-	this.set_Vec2f("shop menu size", Vec2f(6, 1));
+	this.set_Vec2f("shop menu size", Vec2f(5, 1));
 	this.set_string("shop description", "Buy");
 	this.set_u8("shop icon", 25);
 
@@ -126,10 +125,6 @@ void onInit(CBlob@ this)
 		s.buttonheight = 1;
 		AddRequirement(s.requirements, "coin", "", "Coins", cost_meal);
 	}
-	// {
-		// ShopItem@ s = addShopItem(this, "Egg - Full Health", "$quarters_egg$", "egg", "A suspiciously undercooked egg, maybe it will hatch.", false);
-		// AddRequirement(s.requirements, "coin", "", "Coins", cost_egg);
-	// }
 	{
 		ShopItem@ s = addShopItem(this, "Burger - Full Health", "$quarters_burger$", "food", "A burger to go.", true);
 		AddRequirement(s.requirements, "coin", "", "Coins", cost_burger);
@@ -138,11 +133,10 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Bear's Beer", "$beer$", "beer", "A real beer for real men. Those who drink Bear's Bear are strong men.", false);
 		AddRequirement(s.requirements, "coin", "", "Coins", 20);
 	}
-	{
-		ShopItem@ s = addShopItem(this, "Ganja Tea", "$ganjatea$", "tea", "A drink to ease the soul. Known to mysteriously stop illnesses.", false);
-		AddRequirement(s.requirements, "blob", "mat_ganja", "Ganja Leaves", 5);
-		AddRequirement(s.requirements, "coin", "", "Coins", 20);
-	}
+	//{
+		//ShopItem@ s = addShopItem(this, "Egg - Full Health", "$quarters_egg$", "egg", "A suspiciously undercooked egg, maybe it will hatch.", false);
+		//AddRequirement(s.requirements, "coin", "", "Coins", cost_egg);
+	//}
 }
 
 void onTick(CBlob@ this)

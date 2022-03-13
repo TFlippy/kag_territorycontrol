@@ -65,10 +65,6 @@ CBlob@ server_MakeSeed(Vec2f atpos, string blobname)
 	{
 		return server_MakeSeed(atpos, blobname, 100, 8, 4);
 	}
-	else if (blobname == "ganja_plant")
-	{
-		return server_MakeSeed(atpos, blobname, 300, 9, 4);
-	}
 	return server_MakeSeed(atpos, blobname, 100, 0, 4);
 }
 

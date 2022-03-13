@@ -70,7 +70,6 @@ LootItem@[] c_items = //Same as the mystery box EXCEPT no badgers and no gold or
 	LootItem("puntgun", 1, 1, 225),
 	LootItem("juggernauthammer", 1, 1, 50),
 	LootItem("gyromat", 1, 1, 500),
-	LootItem("bp_chemistry", 1, 1, 175),
 	LootItem("hobo", 1, 1, 122),
 	LootItem("cube", 1, 0, 1) //poggers
 };

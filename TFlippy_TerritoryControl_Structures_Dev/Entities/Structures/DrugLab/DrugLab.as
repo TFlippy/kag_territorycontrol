@@ -138,7 +138,6 @@ void React(CBlob@ this)
 			const f32 dirt_count = inv.getCount("mat_dirt");
 			const f32 coal_count = inv.getCount("mat_coal");
 			const f32 protopopov_count = inv.getCount("mat_protopopov");
-			const f32 ganja_count = inv.getCount("mat_ganja");
 
 			const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
 			const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
@@ -163,8 +162,6 @@ void React(CBlob@ this)
 			CBlob@ fiks_blob = inv.getItem("fiks");
 			CBlob@ grain_blob = inv.getItem("grain");
 			CBlob@ rippio_blob = inv.getItem("rippio");
-			CBlob@ ganja_blob = inv.getItem("mat_ganja");
-			CBlob@ ganjapod_blob = inv.getItem("ganjapod");
 
 			bool hasOil = oil_blob !is null;
 			bool hasMethane = methane_blob !is null;
@@ -184,35 +181,7 @@ void React(CBlob@ this)
 			bool hasFiks = fiks_blob !is null;
 			bool hasGrain = grain_blob !is null;
 			bool hasRippio = rippio_blob !is null;
-			bool hasGanja = ganja_blob !is null;
-			bool hasGanjaPod = ganjapod_blob !is null;
-			// Boof Gas Recipe
-			if (pressure > 1000 && heat > 700 && hasGanjaPod)
-			{
-				if (isServer())
-				{
-					ganjapod_blob.server_Die();
 
-					Material::createFor(this, "mat_boof", 15 + XORRandom(5));
-				}
-
-				ShakeScreen(20.0f, 30, this.getPosition());
-				this.getSprite().PlaySound("DrugLab_Create_Gas.ogg", 1.00f, 1.00f);
-			}
-			// Boof Recipe
-			if (pressure > 1000 && heat < 500 && hasGanja && hasDirt && ganja_count >= 20 && dirt_count >= 20)
-			{
-				if (isServer())
-				{
-					ganja_blob.server_SetQuantity(Maths::Max(ganja_blob.getQuantity() - 20, 0));
-					dirt_blob.server_SetQuantity(Maths::Max(dirt_blob.getQuantity() - 20, 0));
-
-					Material::createFor(this, "boof", 1 + XORRandom(2));
-				}
-
-				ShakeScreen(20.0f, 30, this.getPosition());
-				this.getSprite().PlaySound("DrugLab_Create_Creamy.ogg", 1.00f, 1.00f);
-			}
 			// Gooby Recipe
 			if (pressure > 25000 && heat > 1000 && hasRippio && hasFiks && hasDangerMeat && dangermeat_count >= 45)
 			{
