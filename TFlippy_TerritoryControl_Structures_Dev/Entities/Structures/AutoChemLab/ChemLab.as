@@ -94,12 +94,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CInventory@ inv = this.getInventory();
 		if (inv !is null)
 		{
-			const f32 mithril_count = inv.getCount("mat_mithril");
-			const f32 e_mithril_count = inv.getCount("mat_mithrilenriched");
-			const f32 methane_count = inv.getCount("mat_methane");
-			const f32 fuel_count = inv.getCount("mat_fuel");
-			const f32 acid_count = inv.getCount("mat_acid");
-			const f32 mustard_count = inv.getCount("mat_mustard");
+			const f32
+			mithril_count = inv.getCount("mat_mithril"),
+			e_mithril_count = inv.getCount("mat_mithrilenriched"),
+			methane_count = inv.getCount("mat_methane"),
+			fuel_count = inv.getCount("mat_fuel"),
+			acid_count = inv.getCount("mat_acid"),
+			mustard_count = inv.getCount("mat_mustard");
+			
 			const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
 			const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
 
@@ -168,95 +170,66 @@ void React(CBlob@ this)
 		CInventory@ inv = this.getInventory();
 		if (inv !is null)
 		{
-			const f32 mithril_count = inv.getCount("mat_mithril");
-			const f32 e_mithril_count = inv.getCount("mat_mithrilenriched");
-			const f32 fuel_count = inv.getCount("mat_fuel");
-			const f32 acid_count = inv.getCount("mat_acid");
-			const f32 oil_count = inv.getCount("mat_oil");
-			const f32 sulphur_count = inv.getCount("mat_sulphur");
-			const f32 meat_count = inv.getCount("mat_meat");
-			const f32 dangermeat_count = inv.getCount("mat_dangerousmeat");
-			const f32 methane_count = inv.getCount("mat_methane");
-			const f32 mustard_count = inv.getCount("mat_mustard");
-			const f32 dirt_count = inv.getCount("mat_dirt");
-			const f32 coal_count = inv.getCount("mat_coal");
-			const f32 protopopov_count = inv.getCount("mat_protopopov");
-			const f32 ganja_count = inv.getCount("mat_ganja");
+			const f32
+			mithril_count = inv.getCount("mat_mithril"),
+			e_mithril_count = inv.getCount("mat_mithrilenriched"),
+			fuel_count = inv.getCount("mat_fuel"),
+			acid_count = inv.getCount("mat_acid"),
+			oil_count = inv.getCount("mat_oil"),
+			sulphur_count = inv.getCount("mat_sulphur"),
+			meat_count = inv.getCount("mat_meat"),
+			dangermeat_count = inv.getCount("mat_dangerousmeat"),
+			methane_count = inv.getCount("mat_methane"),
+			mustard_count = inv.getCount("mat_mustard"),
+			dirt_count = inv.getCount("mat_dirt"),
+			coal_count = inv.getCount("mat_coal"),
+			protopopov_count = inv.getCount("mat_protopopov");
 
 			const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
 			const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
 
 			//print_log(this, "React; P: " + pressure + "; H: " + heat); //Disabled due to rcon spam
 
-			CBlob@ oil_blob = inv.getItem("mat_oil");
-			CBlob@ methane_blob = inv.getItem("mat_methane");
-			CBlob@ acid_blob = inv.getItem("mat_acid");
-			CBlob@ fuel_blob = inv.getItem("mat_fuel");
-			CBlob@ mustard_blob = inv.getItem("mat_mustard");
-			CBlob@ meat_blob = inv.getItem("mat_meat");
-			CBlob@ dangermeat_blob = inv.getItem("mat_dangerousmeat");
-			CBlob@ mithril_blob = inv.getItem("mat_mithril");
-			CBlob@ sulphur_blob = inv.getItem("mat_sulphur");
-			CBlob@ dirt_blob = inv.getItem("mat_dirt");
-			CBlob@ e_mithril_blob = inv.getItem("mat_mithrilenriched");
-			CBlob@ coal_blob = inv.getItem("mat_coal");
-			CBlob@ protopopov_blob = inv.getItem("mat_protopopov");
-			CBlob@ protopopovBulb_blob = inv.getItem("protopopovbulb");
-			CBlob@ vodka_blob = inv.getItem("vodka");
-			CBlob@ fiks_blob = inv.getItem("fiks");
-			CBlob@ grain_blob = inv.getItem("grain");
-			CBlob@ rippio_blob = inv.getItem("rippio");
-			CBlob@ ganja_blob = inv.getItem("mat_ganja");
-			CBlob@ ganjapod_blob = inv.getItem("ganjapod");
+			CBlob@
+			oil_blob = inv.getItem("mat_oil"),
+			methane_blob = inv.getItem("mat_methane"),
+			acid_blob = inv.getItem("mat_acid"),
+			fuel_blob = inv.getItem("mat_fuel"),
+			mustard_blob = inv.getItem("mat_mustard"),
+			meat_blob = inv.getItem("mat_meat"),
+			dangermeat_blob = inv.getItem("mat_dangerousmeat"),
+			mithril_blob = inv.getItem("mat_mithril"),
+			sulphur_blob = inv.getItem("mat_sulphur"),
+			dirt_blob = inv.getItem("mat_dirt"),
+			e_mithril_blob = inv.getItem("mat_mithrilenriched"),
+			coal_blob = inv.getItem("mat_coal"),
+			protopopov_blob = inv.getItem("mat_protopopov"),
+			protopopovBulb_blob = inv.getItem("protopopovbulb"),
+			vodka_blob = inv.getItem("vodka"),
+			fiks_blob = inv.getItem("fiks"),
+			grain_blob = inv.getItem("grain"),
+			rippio_blob = inv.getItem("rippio");
 
-			bool hasOil = oil_blob !is null;
-			bool hasMethane = methane_blob !is null;
-			bool hasFuel = fuel_blob !is null;
-			bool hasAcid = acid_blob !is null;
-			bool hasMithrilEnriched = e_mithril_blob !is null;
-			bool hasMeat = meat_blob !is null;
-			bool hasDangerMeat = dangermeat_blob !is null;
-			bool hasDirt = dirt_blob !is null;
-			bool hasSulphur = sulphur_blob !is null;
-			bool hasMustard = mustard_blob !is null;
-			bool hasMithril = mithril_blob !is null;
-			bool hasCoal = coal_blob !is null;
-			bool hasProtopopov = protopopov_blob !is null;
-			bool hasProtopopovBulb = protopopovBulb_blob !is null;
-			bool hasVodka = vodka_blob !is null;
-			bool hasFiks = fiks_blob !is null;
-			bool hasGrain = grain_blob !is null;
-			bool hasRippio = rippio_blob !is null;
-			bool hasGanja = ganja_blob !is null;
-			bool hasGanjaPod = ganjapod_blob !is null;
+			const bool
+			hasOil = oil_blob !is null,
+			hasMethane = methane_blob !is null,
+			hasFuel = fuel_blob !is null,
+			hasAcid = acid_blob !is null,
+			hasMithrilEnriched = e_mithril_blob !is null,
+			hasMeat = meat_blob !is null,
+			hasDangerMeat = dangermeat_blob !is null,
+			hasDirt = dirt_blob !is null,
+			hasSulphur = sulphur_blob !is null,
+			hasMustard = mustard_blob !is null,
+			hasMithril = mithril_blob !is null,
+			hasCoal = coal_blob !is null,
+			hasProtopopov = protopopov_blob !is null,
+			hasProtopopovBulb = protopopovBulb_blob !is null,
+			hasVodka = vodka_blob !is null,
+			hasFiks = fiks_blob !is null,
+			hasGrain = grain_blob !is null,
+			hasRippio = rippio_blob !is null;
 
-			// Boof Gas Recipe
-			if (pressure > 1000 && heat > 700 && hasGanjaPod)
-			{
-				if (isServer())
-				{
-					ganjapod_blob.server_Die();
-
-					Material::createFor(this, "mat_boof", 15 + XORRandom(5));
-				}
-
-				ShakeScreen(20.0f, 30, this.getPosition());
-				this.getSprite().PlaySound("DrugLab_Create_Gas.ogg", 1.00f, 1.00f);
-			}
-			// Boof Recipe
-			if (pressure > 1000 && heat < 500 && hasGanja && hasDirt && ganja_count >= 20 && dirt_count >= 20)
-			{
-				if (isServer())
-				{
-					ganja_blob.server_SetQuantity(Maths::Max(ganja_blob.getQuantity() - 20, 0));
-					dirt_blob.server_SetQuantity(Maths::Max(dirt_blob.getQuantity() - 20, 0));
-
-					Material::createFor(this, "boof", 1 + XORRandom(2));
-				}
-
-				ShakeScreen(20.0f, 30, this.getPosition());
-				this.getSprite().PlaySound("DrugLab_Create_Creamy.ogg", 1.00f, 1.00f);
-			}
 			// Gooby Recipe
 			/*if (pressure > 25000 && heat > 1000 && hasRippio && hasFiks && hasDangerMeat && dangermeat_count >= 45)
 			{
@@ -712,12 +685,13 @@ void onTick(CBlob@ this)
 		f32 modifier = 1.00f;
 		const f32 max_pressure = this.get_f32("pressure_max") + this.get_f32("upgrade");
 
-		const f32 mithril_count = inv.getCount("mat_mithril");
-		const f32 e_mithril_count = inv.getCount("mat_mithrilenriched");
-		const f32 fuel_count = inv.getCount("mat_fuel");
-		const f32 acid_count = inv.getCount("mat_acid");
-		const f32 methane_count = inv.getCount("mat_methane");
-		const f32 mustard_count = inv.getCount("mat_mustard");
+		const f32
+		mithril_count = inv.getCount("mat_mithril"),
+		e_mithril_count = inv.getCount("mat_mithrilenriched"),
+		fuel_count = inv.getCount("mat_fuel"),
+		acid_count = inv.getCount("mat_acid"),
+		methane_count = inv.getCount("mat_methane"),
+		mustard_count = inv.getCount("mat_mustard");
 
 		const f32 heat = this.get_f32("heat") + Maths::Pow((mithril_count * 3.00f) + (e_mithril_count * 15.00f), 2) / 20000.00f;
 		const f32 pressure = Maths::Pow(1000 + (methane_count * 75) + (fuel_count * 100) + (acid_count * 75) + (mustard_count * 25), Maths::Max(1, 1.00f + (heat * 0.0002f)));
@@ -776,10 +750,8 @@ const string[] chemNames = {
 	"protopopovbulb",
 	//"vodka",
 	//"fiks",
-	"grain",
+	"grain"
 	//"rippio",
-	"mat_ganja",
-	"ganjapod"
 };
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)

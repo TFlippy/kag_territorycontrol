@@ -210,7 +210,6 @@ void ReloadIcons(CRules@ this)
 	AddIconToken("$icon_fumes$", "Fumes.png", Vec2f(16, 8), 0);
 	AddIconToken("$icon_rippio$", "Rippio.png", Vec2f(8, 16), 0);
 	AddIconToken("$icon_propesko$", "Propesko.png", Vec2f(8, 8), 0);
-	AddIconToken("$icon_boof$", "Boof.png", Vec2f(11, 7), 0);
 	AddIconToken("$icon_minidruglab$", "MiniDrugLab.png", Vec2f(24, 24), 0);
 
 	// Cooked Foods

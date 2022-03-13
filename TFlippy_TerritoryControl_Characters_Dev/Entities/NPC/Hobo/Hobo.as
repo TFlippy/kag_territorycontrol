@@ -355,15 +355,6 @@ void onInit(CBlob@ this)
 	}
 	else if (rand.NextRanged(100) < 40)
 	{
-
-		if (rand.NextRanged(100) < 70)
-		{
-			u32 cost = getRandomCost(@rand, 300, 500);
-			ShopItem@ s = addShopItem(this, "sell boof", "$COIN$", "coin-" + cost, "ill take this giggly shit off yer hands fer " + cost + " coins.");
-			AddRequirement(s.requirements, "blob", "boof", "Boof", 1);
-			s.spawnNothing = true;
-		}
-
 		if (rand.NextRanged(100) < 50)
 		{
 			u32 cost = getRandomCost(@rand, 500, 700);

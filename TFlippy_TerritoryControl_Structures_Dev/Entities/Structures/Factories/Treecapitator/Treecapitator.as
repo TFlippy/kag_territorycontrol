@@ -58,9 +58,9 @@ void onTick(CBlob@ this)
 				{
 					this.server_PutInInventory(b);
 				}
-				else if (bname == "pumpkin_plant" || bname == "ganja_plant" || bname == "grain_plant" )
+				else if (bname == "pumpkin_plant" || bname == "grain_plant" )
 				{
-					if (b.hasTag("has pumpkin") || b.hasTag("has pod") || b.hasTag("has grain"))
+					if (b.hasTag("has pumpkin") || b.hasTag("has grain"))
 					{
 						this.server_Hit(b, b.getPosition(), Vec2f(0, 0), 1.00f, Hitters::saw);
 					}
