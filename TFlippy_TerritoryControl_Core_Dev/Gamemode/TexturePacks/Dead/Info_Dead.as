@@ -7,6 +7,8 @@ void onInit(CBlob@ this)
 	this.getShape().SetStatic(true);
 	
 	getRules().set_u8("map_type", MapType::dead);
+	
+	this.Tag("texture_pack");
 
 	if (isClient())
 	{

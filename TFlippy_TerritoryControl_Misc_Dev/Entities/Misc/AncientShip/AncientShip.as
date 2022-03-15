@@ -232,7 +232,7 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 			{
 				CBlob@ blob = server_CreateBlob(spl[0], callerBlob.getTeamNum(), this.getPosition());
 			}
-			else if (name.findFirst("mat_") != -1)
+			else if (name.findFirst("mat_") != -1 || name.findFirst("ammo_") != -1)
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;

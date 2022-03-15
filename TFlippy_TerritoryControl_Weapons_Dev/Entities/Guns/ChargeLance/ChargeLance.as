@@ -12,11 +12,11 @@ void onInit(CBlob@ this)
 	settings.AMMO_BLOB = "mat_lancerod"; //Ammunition the gun takes
 
 	//Bullet
-	settings.B_PER_SHOT = 25; //Shots per bullet | CHANGE B_SPREAD, otherwise both bullets will come out together
+	settings.B_PER_SHOT = 1; //Shots per bullet | CHANGE B_SPREAD, otherwise both bullets will come out together
 	settings.B_SPREAD = 1; //the higher the value, the more 'uncontrollable' bullets get
 	settings.B_GRAV = Vec2f(0, 0.0); //Bullet gravity drop
-	settings.B_SPEED = 145; //Bullet speed, STRONGLY AFFECTED/EFFECTS B_GRAV
-	settings.B_TTL = 20; //TTL = 'Time To Live' which determines the time the bullet lasts before despawning
+	settings.B_SPEED = 50; //Bullet speed, STRONGLY AFFECTED/EFFECTS B_GRAV
+	settings.B_TTL = 100; //TTL = 'Time To Live' which determines the time the bullet lasts before despawning
 	settings.B_DAMAGE = 50.0f; //1 is 1 heart
 	settings.B_TYPE = HittersTC::railgun_lance; //Type of bullet the gun shoots | hitter
 
@@ -43,6 +43,8 @@ void onInit(CBlob@ this)
 	
 	this.set_string("CustomBullet", "BulletGauss.png");
 	this.set_string("CustomFade", "PlasmaFade.png");
+	
+	this.set_u8("CustomPierce", 10);
 	
 	this.set_string("CustomSoundEmpty", "");
 	this.set_string("CustomSoundObject", "Sulphur_Explode.ogg");

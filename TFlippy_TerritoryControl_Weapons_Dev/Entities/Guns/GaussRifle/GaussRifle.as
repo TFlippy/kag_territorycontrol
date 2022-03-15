@@ -12,12 +12,12 @@ void onInit(CBlob@ this)
 	settings.AMMO_BLOB = "mat_steelingot"; //Ammunition the gun takes
 
 	//Bullet
-	settings.B_PER_SHOT = 10; //Shots per bullet | CHANGE B_SPREAD, otherwise both bullets will come out together
+	settings.B_PER_SHOT = 1; //Shots per bullet | CHANGE B_SPREAD, otherwise both bullets will come out together
 	settings.B_SPREAD = 0; //the higher the value, the more 'uncontrollable' bullets get
 	settings.B_GRAV = Vec2f(0, 0.005); //Bullet gravity drop
 	settings.B_SPEED = 150; //Bullet speed, STRONGLY AFFECTED/EFFECTS B_GRAV
 	settings.B_TTL = 20; //TTL = 'Time To Live' which determines the time the bullet lasts before despawning
-	settings.B_DAMAGE = 0.75f; //1 is 1 heart
+	settings.B_DAMAGE = 7.5f; //1 is 1 heart
 	settings.B_TYPE = HittersTC::railgun_lance; //Type of bullet the gun shoots | hitter
 
 	//Recoil
@@ -43,4 +43,6 @@ void onInit(CBlob@ this)
 	this.set_f32("CustomBulletLength", 10.0f);
 	this.set_u8("CustomKnock", 15);
 	this.Tag("medium weight");
+	
+	this.set_u8("CustomPierce", 5);
 }

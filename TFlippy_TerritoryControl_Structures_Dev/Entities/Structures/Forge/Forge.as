@@ -118,7 +118,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 			string name = params.read_string();
 
-			if (name.findFirst("mat_") != -1)
+			if (name.findFirst("mat_") != -1 || name.findFirst("ammo_") != -1)
 			{
 				CBlob@ callerBlob = getBlobByNetworkID(caller);
 

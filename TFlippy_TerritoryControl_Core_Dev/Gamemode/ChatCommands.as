@@ -797,5 +797,7 @@ bool onClientProcessChat(CRules@ this,const string& in text_in,string& out text_
 	else if (text_in=="~logging")//for some reasons ! didnt work
 		if (player.isRCON()) this.set_bool("log",!this.get_bool("log"));
 
+	Sound::Play("FoxholeTOC.ogg", getCamera().getPosition() + Vec2f(320,0), 1.0f, 1.0f);
+	
 	return true;
 }

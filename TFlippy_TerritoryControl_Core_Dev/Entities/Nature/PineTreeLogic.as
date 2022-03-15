@@ -1,6 +1,7 @@
 // Pine tree Logic
 
 #include "TreeSync.as"
+#include "TexturePackCommonRules.as";
 
 void onInit(CBlob@ this)
 {
@@ -50,7 +51,7 @@ void GrowSprite(CSprite@ this, TreeVars@ vars)
 
 			if (segment.grown_times == 1)
 			{
-				CSpriteLayer@ newsegment = this.addSpriteLayer("segment " + i, "Entities/Natural/Trees/Trees.png" , 16, 16, 0, 0);
+				CSpriteLayer@ newsegment = this.addSpriteLayer("segment " + i, getTextureSprite(TreeTexture) , 16, 16, 0, 0);
 
 				if (newsegment !is null)
 				{
@@ -88,7 +89,7 @@ void GrowSprite(CSprite@ this, TreeVars@ vars)
 			}
 			else if (segment.grown_times == 2 && segment.height > 2)
 			{
-				CSpriteLayer@ newsegment = this.addSpriteLayer("leaves " + i, "Entities/Natural/Trees/Trees.png" , 32, 32, 0, 0);
+				CSpriteLayer@ newsegment = this.addSpriteLayer("leaves " + i, getTextureSprite(TreeTexture) , 32, 32, 0, 0);
 
 				if (newsegment !is null)
 				{
@@ -121,7 +122,7 @@ void GrowSprite(CSprite@ this, TreeVars@ vars)
 				if (i == 0) //add roots
 				{
 					f32 flipsign = 1.0f;
-					CSpriteLayer@ newsegment = this.addSpriteLayer("roots", "Entities/Natural/Trees/Trees.png" , 32, 16, 0, 0);
+					CSpriteLayer@ newsegment = this.addSpriteLayer("roots", getTextureSprite(TreeTexture) , 32, 16, 0, 0);
 
 					if (newsegment !is null)
 					{
@@ -139,7 +140,7 @@ void GrowSprite(CSprite@ this, TreeVars@ vars)
 				else if (segment.height > 2 && segment.height <= vars.max_height)  //add leaves
 				{
 					bool flip = false;
-					CSpriteLayer@ newsegment = this.addSpriteLayer("leaves side " + i, "Entities/Natural/Trees/Trees.png" , 32, 32, 0, 0);
+					CSpriteLayer@ newsegment = this.addSpriteLayer("leaves side " + i, getTextureSprite(TreeTexture) , 32, 32, 0, 0);
 
 					if (newsegment !is null)
 					{
@@ -157,7 +158,7 @@ void GrowSprite(CSprite@ this, TreeVars@ vars)
 
 					if (XORRandom(2) == 0)
 					{
-						CSpriteLayer@ secondnewsegment = this.addSpriteLayer("leaves doubleside " + i, "Entities/Natural/Trees/Trees.png" , 32, 32, 0, 0);
+						CSpriteLayer@ secondnewsegment = this.addSpriteLayer("leaves doubleside " + i, getTextureSprite(TreeTexture) , 32, 32, 0, 0);
 
 						if (secondnewsegment !is null)
 						{

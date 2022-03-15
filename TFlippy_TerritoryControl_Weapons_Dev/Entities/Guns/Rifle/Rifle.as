@@ -39,6 +39,6 @@ void onInit(CBlob@ this)
 	//Custom
 	this.set_string("CustomCycle", "RifleCycle");
 	this.set_u8("CustomKnock", 6);
-	this.set_u8("CustomPenetration", 2);
+	this.set_u8("CustomBlockDamage", 3);
 	this.set_string("CustomBullet", "BulletHighCal.png");
 }
