@@ -1,5 +1,6 @@
 #include "CustomBlocks.as";
 #include "MapType.as";
+#include "TexturePackCommonRules.as";
 
 void onInit(CBlob@ this)
 {
@@ -7,6 +8,8 @@ void onInit(CBlob@ this)
 	this.getShape().SetStatic(true);
 	
 	getRules().set_u8("map_type", MapType::desert);
+	
+	this.Tag("texture_pack");
 
 	if (isClient())
 	{
@@ -21,5 +24,12 @@ void onInit(CBlob@ this)
 		map.AddBackground("Desert_BackgroundPlains.png", Vec2f(0.0f, -18.0f), Vec2f(0.3f, 0.3f), color_white);
 		map.AddBackground("Desert_BackgroundTrees.png", Vec2f(0.0f,  -5.0f), Vec2f(0.4f, 0.4f), color_white);
 		map.AddBackground("Desert_BackgroundIsland.png", Vec2f(0.0f, 0.0f), Vec2f(0.6f, 0.6f), color_white);
+		
+		
+		///Blob texture pack
+		setTextureSprite(this,TreeTexture,"Desert_Trees.png");
+		setTextureSprite(this,BushTexture,"Desert_Bushes.png");
+		setTextureSprite(this,IvyTexture,"Desert_Ivy.png");
+		swapBlobTextures();
 	}
 }
