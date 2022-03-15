@@ -23,6 +23,7 @@ class Bullet
     Vec2f BulletGrav;
     Vec2f OldPos;
     Vec2f Gravity;
+	s8 Hits;
     bool FacingLeft;
 
     f32 StartingAimAngle;
@@ -36,6 +37,9 @@ class Bullet
         @hoomanShooter = humanBlob;
         @gunBlob = gun;
         modules = pointer;
+
+		Hits = 1;
+		if(gunBlob.exists("CustomPierce"))Hits = gunBlob.get_u8("CustomPierce");
 
         GunSettings@ settings;
         gun.get("gun_settings", @settings);
@@ -69,9 +73,9 @@ class Bullet
         TimeLeft = Maths::Max(0, TimeLeft - 1);
 
         // Kill bullet at start of new tick (we don't instantly remove it so client can render it going splat)
-        if (TimeLeft == 0) return true;
+        if (TimeLeft <= 0) return true;
 
-        OldPos = LastLerpedPos;
+        OldPos = CurrentPos;
 
         bool customGravity = false;
         for (int a = 0; a < modules.length(); a++)
@@ -89,7 +93,7 @@ class Bullet
 
             // Direction shittery
             dir = Vec2f((FacingLeft ? -1 : 1), 0.0f).RotateBy(StartingAimAngle);
-            CurrentPos = ((dir * Speed) - (Gravity * Speed)) + CurrentPos;
+            CurrentPos += ((dir * Speed) - (Gravity * Speed));
             CurrentVelocity = CurrentPos - OldPos;
             Angle = -CurrentVelocity.getAngleDegrees();
         }
@@ -98,186 +102,189 @@ class Bullet
         {
             modules[a].onTick(this);
         }
+		
+		GunSettings@ settings;
+		gunBlob.get("gun_settings", @settings);
 
-        bool endBullet = false;
-        HitInfo@[] list;
-        if (map.getHitInfosFromRay(OldPos, Angle, CurrentVelocity.Length(), hoomanShooter, @list))
-        {
-            GunSettings@ settings;
-            gunBlob.get("gun_settings", @settings);
+		f32 ammotype = settings.B_TYPE;
+		f32 damage = settings.B_DAMAGE;
 
-            f32 ammotype = settings.B_TYPE;
-            f32 damage = settings.B_DAMAGE;
+		//Increase damage if hooman blob is a follower of the swaggy laggy
+		if (hoomanShooter.get_u8("deity_id") == Deity::swaglag)
+		{
+			CBlob@ altar = getBlobByName("altar_swaglag");
+			if (altar !is null)
+			{
+				damage *= 1.00f + Maths::Min(altar.get_f32("deity_power") * 0.01f, 2.00f);
+			}
+		}
+		
+		const string S_FLESH_HIT  = gunBlob.exists("CustomSoundFlesh")  ? gunBlob.get_string("CustomSoundFlesh")  : "BulletImpact.ogg";
+		const string S_OBJECT_HIT = gunBlob.exists("CustomSoundObject") ? gunBlob.get_string("CustomSoundObject") : "BulletImpact.ogg";
 
-            //Increase damage if hooman blob is a follower of the swaggy laggy
-            if (hoomanShooter.get_u8("deity_id") == Deity::swaglag)
-            {
-                CBlob@ altar = getBlobByName("altar_swaglag");
-                if (altar !is null)
-                {
-                    damage *= 1.00f + Maths::Min(altar.get_f32("deity_power") * 0.01f, 2.00f);
-                }
-            }
+		Vec2f newPos = CurrentPos;
+		bool continueRaycasting = true;
+		while(continueRaycasting){
+			continueRaycasting = false;
+			newPos = CurrentPos;
 
-            const string S_FLESH_HIT  = gunBlob.exists("CustomSoundFlesh")  ? gunBlob.get_string("CustomSoundFlesh")  : "BulletImpact.ogg";
-            const string S_OBJECT_HIT = gunBlob.exists("CustomSoundObject") ? gunBlob.get_string("CustomSoundObject") : "BulletImpact.ogg";
+			HitInfo@[] list;
+			if (map.getHitInfosFromRay(OldPos, Angle, (CurrentPos - OldPos).Length(), hoomanShooter, @list))
+			{
+				for (int a = 0; a < list.length() && Hits > 0; a++)
+				{
+					HitInfo@ hit = list[a];
+					Vec2f hitpos = hit.hitpos;
+					CBlob@ blob = @hit.blob;
+					if (blob !is null)
+					{
+						int hash = blob.getName().getHash();
+						switch (hash)
+						{
+							case 804095823: // platform
+							case 377147311: // iron platform
+							{
+								if (CollidesWithPlatform(blob, CurrentVelocity))
+								{
+									Hits -= 1;
+									if(Hits > 0)newPos = hitpos;
 
-            bool breakLoop = false;
+									if (isClient())
+									{
+										Sound::Play(S_OBJECT_HIT, hitpos, 1.5f);
+									}
+									if (isServer())
+									{
+										hoomanShooter.server_Hit(blob, hitpos, CurrentVelocity, damage, ammotype); 
+									}
+								}
+							}
+							break;
 
-            for (int a = 0; a < list.length(); a++)
-            {
-                HitInfo@ hit = list[a];
-                Vec2f hitpos = hit.hitpos;
-                CBlob@ blob = @hit.blob;
-                if (blob !is null)
-                {
-                    int hash = blob.getName().getHash();
-                    switch (hash)
-                    {
-                        case 804095823: // platform
-                        case 377147311: // iron platform
-                        {
-                            if (CollidesWithPlatform(blob, CurrentVelocity))
-                            {
-                                CurrentPos = hitpos;
-                                breakLoop = true;
+							default:
+							{
+								//print(blob.getName() + '\n'+blob.getName().getHash()); //useful for debugging new tiles to hit
 
-                                if (isClient())
-                                {
-                                    Sound::Play(S_OBJECT_HIT, CurrentPos, 1.5f);
-                                }
-                                if (isServer())
-                                {
-                                    hoomanShooter.server_Hit(blob, CurrentPos, CurrentVelocity, damage, ammotype); 
-                                }
-                            }
-                        }
-                        break;
+								if (blob.hasTag("flesh") || blob.isCollidable() || blob.hasTag("vehicle"))
+								{
 
-                        default:
-                        {
-                            //print(blob.getName() + '\n'+blob.getName().getHash()); //useful for debugging new tiles to hit
+									if (blob.getTeamNum() == gunBlob.getTeamNum() && !blob.getShape().isStatic()) continue;
+									else if (blob.hasTag("weapon") || blob.hasTag("dead") || blob.hasTag("invincible") || 
+											 blob.hasTag("food")   || blob.hasTag("gas")  || blob.isAttachedTo(hoomanShooter)) continue;
+									else if (blob.getName() == "iron_halfblock" || blob.getName() == "stone_halfblock") continue;
 
-                            if (blob.hasTag("flesh") || blob.isCollidable() || blob.hasTag("vehicle"))
-                            {
+									Hits -= 1;
+									if(Hits > 0)newPos = hitpos;
 
-                                if (blob.getTeamNum() == gunBlob.getTeamNum() && !blob.getShape().isStatic()) continue;
-                                else if (blob.hasTag("weapon") || blob.hasTag("dead") || blob.hasTag("invincible") || 
-                                         blob.hasTag("food")   || blob.hasTag("gas")  || blob.isAttachedTo(hoomanShooter)) continue;
-                                else if (blob.getName() == "iron_halfblock" || blob.getName() == "stone_halfblock") continue;
+									if (isServer())
+									{
+										if (blob.hasTag("door")) damage *= 1.5f;
+										hoomanShooter.server_Hit(blob, hitpos, dir, damage, ammotype);
+										gunBlob.server_Hit(blob, hitpos, dir, 0.0f, ammotype, false); //For calling onHitBlob
 
-                                CurrentPos = hitpos;
+										if (blob.hasTag("flesh") && gunBlob.exists("CustomKnock"))
+										{
+											SetKnocked(blob, gunBlob.get_u8("CustomKnock"));
+										}
 
-                                if (isServer())
-                                {
-                                    if (blob.hasTag("door")) damage *= 1.5f;
-                                    hoomanShooter.server_Hit(blob, CurrentPos, dir, damage, ammotype);
-                                    gunBlob.server_Hit(blob, CurrentPos, dir, 0.0f, ammotype, false); //For calling onHitBlob
+										CPlayer@ p = hoomanShooter.getPlayer();
+										if (p !is null)
+										{
+											if (gunBlob.exists("CustomCoinFlesh"))
+											{
+												if (blob.hasTag("player")) p.server_setCoins(p.getCoins() + gunBlob.get_u32("CustomCoinFlesh"));
+											}
+											if (gunBlob.exists("CustomCoinObject"))
+											{
+												if (blob.hasTag("vehicle")) p.server_setCoins(p.getCoins() + gunBlob.get_u32("CustomCoinObject"));
+											}
+										}
+									}
+									if (isClient())
+									{
+										Sound::Play(S_FLESH_HIT, newPos, 1.5f);
+									}
+								}
+							}
+						}
 
-                                    if (blob.hasTag("flesh") && gunBlob.exists("CustomKnock"))
-                                    {
-                                        SetKnocked(blob, gunBlob.get_u8("CustomKnock"));
-                                    }
+						for (int a = 0; a < modules.length(); a++)
+						{
+							modules[a].onHitBlob(this, blob, hash, hitpos, damage);
+						}
+					}
+					else
+					{ 
+						Tile tile = map.getTile(hitpos);
+						
+						if(!map.isTileBackground(tile) && tile.type != 0){
+							if (isServer()){
+								if(gunBlob.exists("CustomPierce") && gunBlob.get_u8("CustomPierce") > 1){
+									for (int i = 0; i < 20; i++)
+									map.server_DestroyTile(hitpos, damage*100.0f);
+								} else {
+									
+									int blockDamageRepeat = gunBlob.exists("CustomBlockDamage") ? gunBlob.get_u8("CustomBlockDamage") : 1;
+									for (int i = 0; i < blockDamageRepeat; i++)
+									{
+										if(isTileGlass(tile.type)){ ///Glass is instantly destroyed when shot
+											for (int i = 0; i < 2; i++)map.server_DestroyTile(hitpos, damage * 0.25f);
+										} else
+										if (map.isTileWood(tile.type)){ ///Wood takes damage every shot
+											map.server_DestroyTile(hitpos, damage * 0.25f);
+										} else
+										if (map.isTileGroundStuff(tile.type) || isTileReinforcedConcrete(tile.type)){ ///Earth and reinforced concrete are very resistant to bullet fire
+											if (XORRandom(8) < 1)map.server_DestroyTile(hitpos, damage * 0.25f);
+										} else
+										if (isTileKudzu(tile.type) || isTileConcrete(tile.type) || isTileMossyConcrete(tile.type)){ ///Concrete and leaves are somewhat resistant to bullet fire
+											if (XORRandom(4) < 1)map.server_DestroyTile(hitpos, damage * 0.25f);
+										} else {
+											if (XORRandom(2) < 1)map.server_DestroyTile(hitpos, damage * 0.25f); ///Everything else takes about 2 hits before it takes damage
+										}
+									}
+								}
+							}
+							if(!isTileKudzu(tile.type) && !isTileGlass(tile.type)){
+								Hits -= 1;
+								newPos = hitpos;
+							}
+						}
 
-                                    CPlayer@ p = hoomanShooter.getPlayer();
-                                    if (p !is null)
-                                    {
-                                        if (gunBlob.exists("CustomCoinFlesh"))
-                                        {
-                                            if (blob.hasTag("player")) p.server_setCoins(p.getCoins() + gunBlob.get_u32("CustomCoinFlesh"));
-                                        }
-                                        if (gunBlob.exists("CustomCoinObject"))
-                                        {
-                                            if (blob.hasTag("vehicle")) p.server_setCoins(p.getCoins() + gunBlob.get_u32("CustomCoinObject"));
-                                        }
-                                    }
-                                }
-                                if (isClient())
-                                {
-                                    Sound::Play(S_FLESH_HIT, CurrentPos, 1.5f);
-                                }
+						if(Hits > 0){
+							continueRaycasting = true;
+							OldPos = hitpos;
+						}
 
-                                breakLoop = true;
-                            }
-                        }
-                    }
+						if (isClient())
+						{
+							if (map.isTileGroundStuff(tile.type) || map.isTileWood(tile.type))
+							{
+								ParticleBulletHit("DustSmall.png", hitpos, -dir.Angle() - 90);
+							}
+							else if (map.isTileCastle(tile.type) || isTileConcrete(tile.type) || isTileReinforcedConcrete(tile.type))
+							{
+								ParticleBulletHit("Smoke.png", hitpos, -dir.Angle() - 90);
+							}
 
-                    for (int a = 0; a < modules.length(); a++)
-                    {
-                        modules[a].onHitBlob(this, blob, hash, hitpos, damage);
-                    }
+							Sound::Play(S_OBJECT_HIT, hitpos, 1.5f);
+						}
 
-                    if (breakLoop) // So we can break while inside the switch
-                    {
-                        endBullet = true;
-                        break;
-                    }
-                }
-                else
-                { 
-                    Tile tile = map.getTile(hitpos);
-                    if (isServer())
-                    {
-                        if (gunBlob.exists("CustomPenetration"))
-                        {
-                            for (int i = 0; i < gunBlob.get_u8("CustomPenetration"); i++)
-                            {
-                                map.server_DestroyTile(hitpos, damage * 0.25f);
-                            }
-                        }
-                        else
-                        {
-							if(isTileGlass(tile.type)){ ///Glass is instantly destroyed when shot
-								for (int i = 0; i < 2; i++)map.server_DestroyTile(hitpos, damage * 0.25f);
-							} else
-                            if (map.isTileWood(tile.type)){ ///Wood takes damage every shot
-                                map.server_DestroyTile(hitpos, damage * 0.25f);
-                            } else
-							if (map.isTileGroundStuff(tile.type) || isTileReinforcedConcrete(tile.type)){ ///Earth and reinforced concrete are very resistant to bullet fire
-                                if (XORRandom(8) < 1)map.server_DestroyTile(hitpos, damage * 0.25f);
-                            } else
-							if (isTileKudzu(tile.type) || isTileConcrete(tile.type) || isTileMossyConcrete(tile.type)){ ///Concrete and leaves are somewhat resistant to bullet fire
-                                if (XORRandom(4) < 1)map.server_DestroyTile(hitpos, damage * 0.25f);
-                            } else {
-                                if (XORRandom(2) < 1)map.server_DestroyTile(hitpos, damage * 0.25f); ///Everything else takes about 2 hits before it takes damage
-                            }
-                        }
-                    }
+						for (int a = 0; a < modules.length(); a++)
+						{
+							modules[a].onHitTile(this, tile, hitpos, damage);
+						}
+						
+						ParticleBullet(newPos, CurrentVelocity); //Little sparks
+					}
+				}
+			}
+		}
+		CurrentPos = newPos;
 
-                    if (isClient())
-                    {
-                        if (map.isTileGroundStuff(tile.type) || map.isTileWood(tile.type))
-                        {
-                            ParticleBulletHit("DustSmall.png", hitpos, -dir.Angle() - 90);
-                        }
-                        else if (map.isTileCastle(tile.type) || isTileConcrete(tile.type) || isTileReinforcedConcrete(tile.type))
-                        {
-                            ParticleBulletHit("Smoke.png", hitpos, -dir.Angle() - 90);
-                        }
-
-                        Sound::Play(S_OBJECT_HIT, hitpos, 1.5f);
-                    }
-
-                    for (int a = 0; a < modules.length(); a++)
-                    {
-                        modules[a].onHitTile(this, tile, hitpos, damage);
-                    }
-
-                    CurrentPos = hitpos;
-                    ParticleBullet(CurrentPos, CurrentVelocity); //Little sparks
-
-                    if (tile.type != CMap::tile_empty && !map.isTileBackground(tile))
-                    {
-                        endBullet = true;
-                    }
-                }
-            }
-        }
-
-        if (endBullet)
+        if(Hits <= 0)
         {
             if(Fade !is null)Fade.Front = CurrentPos;
-			TimeLeft = 1;
+			TimeLeft = 0;
         }
 
         return false;
