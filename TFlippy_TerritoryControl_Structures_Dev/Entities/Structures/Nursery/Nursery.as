@@ -189,7 +189,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				Random rand(getGameTime());
 				server_MakeSeedsFor(@callerBlob, "flowers", XORRandom(2)+1);
 			}
-			else if (name.findFirst("mat_") != -1)
+			else if (name.findFirst("mat_") != -1 || name.findFirst("ammo_") != -1)
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;

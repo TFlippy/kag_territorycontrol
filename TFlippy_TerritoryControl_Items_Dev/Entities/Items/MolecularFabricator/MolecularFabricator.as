@@ -298,7 +298,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 				callerBlob.server_Pickup(crate);
 			}
-			else if (name.findFirst("mat_") != -1)
+			else if (name.findFirst("mat_") != -1 || name.findFirst("ammo_") != -1)
 			{
 				CPlayer@ callerPlayer = callerBlob.getPlayer();
 				if (callerPlayer is null) return;
