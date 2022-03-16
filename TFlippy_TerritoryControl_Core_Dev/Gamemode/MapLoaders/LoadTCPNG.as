@@ -1191,11 +1191,25 @@ void CalculateMinimapColour(CMap@ this, u32 offset, TileType type, SColor &out c
 		col = c_sky_bottom;
 		col = col.getInterpolated(c_sky_top, heightGradient);
 		col = col.getInterpolated(c_sky, 0.75f);
+		
+		//Draw logo
+		if(isServer()){
+			int imageX = (this.tilemapwidth-map_icon_image.getWidth())/2;
+			int imageY = 0;
+			if(x >= imageX && x < imageX+map_icon_image.getWidth())
+			if(y >= imageY && y < imageY+map_icon_image.getHeight()){
+				map_icon_image.setPixelPosition(Vec2f(x-imageX,y-imageY));
+				SColor col_temp = map_icon_image.readPixel();
+				if(col_temp.getAlpha() >= 255)col = col_temp;
+			}
+		}
 	}
 
 	if (this.isInWater(pos)) col = col.getInterpolated(SColor(0xff1d85ab), 0.5f);
 	// if (this.isTileInFire(x, y)) col = col.getInterpolated(fire_colors[XORRandom(fire_colors.length)], 0.5f);
 }
+
+CFileImage@ map_icon_image = CFileImage("TC.png");
 
 bool isGrassTile(u16 tile)
 {
