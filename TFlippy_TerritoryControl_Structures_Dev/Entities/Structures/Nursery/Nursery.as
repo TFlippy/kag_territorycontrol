@@ -27,11 +27,10 @@ void onInit(CBlob@ this)
 	// getMap().server_SetTile(this.getPosition(), CMap::tile_wood_back);
 	
 	AddIconToken("$grainplant$", "NurseryIcons.png", Vec2f(16, 30), 0);
-	AddIconToken("$ganjaplant$", "NurseryIcons.png", Vec2f(20, 30), 1);
 	AddIconToken("$flowerplant$", "NurseryIcons.png", Vec2f(16, 16), 3);
 
 	this.set_Vec2f("shop offset", Vec2f(0,0));
-	this.set_Vec2f("shop menu size", Vec2f(5, 3));
+	this.set_Vec2f("shop menu size", Vec2f(5, 2));
 	this.set_string("shop description", "Plant Nursery");
 	this.set_u8("shop icon", 15);
 	
@@ -45,28 +44,11 @@ void onInit(CBlob@ this)
 		s.spawnNothing = true;
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Grain Harvest", "$grainplant$", "grain_seed", "Convert grain into 1-3 seeds.");
+		ShopItem@ s = addShopItem(this, "Grain Harvest", "$grain$", "grain_seed", "Convert grain into 1-3 seeds.");
 		AddRequirement(s.requirements, "blob", "grain", "Grain", 1);
 		s.customButton = true;
 		s.buttonwidth = 1;
-		s.buttonheight = 2;
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Ganja Seed", "$ganjaplant$", "ganja_seed", "A plant which is known for its drug properties.", true);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 70);
-		AddRequirement(s.requirements, "coin", "", "Coins", 100);
-		s.customButton = true;
-		s.buttonwidth = 1;
-		s.buttonheight = 2;
-		s.spawnNothing = true;
-	}
-	{
-		ShopItem@ s = addShopItem(this, "Ganja Harvest", "$ganjaplant$", "ganja_seed", "Convert a ganja pod into a seed.", true);
-		AddRequirement(s.requirements, "blob", "ganjapod", "Ganja Pod", 1);
-		s.customButton = true;
-		s.buttonwidth = 1;
-		s.buttonheight = 2;
+		s.buttonheight = 1;
 		s.spawnNothing = true;
 	}
 	{
@@ -173,11 +155,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				Random rand(getGameTime());
 				server_MakeSeedsFor(@callerBlob, "tree_bushy", 1);
-			}
-			else if(spl[0] == "ganja_seed")
-			{
-				Random rand(getGameTime());
-				server_MakeSeedsFor(@callerBlob, "ganja_plant", 1);
 			}
 			else if(spl[0] == "pumpkin_seed")
 			{
