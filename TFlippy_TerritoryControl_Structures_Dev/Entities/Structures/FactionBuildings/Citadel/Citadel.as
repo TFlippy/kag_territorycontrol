@@ -8,7 +8,8 @@
 void onInit(CBlob@ this)
 {
 	this.Tag("ignore extractor");
-	this.Tag("remote_storage");
+	this.Tag("smart_storage");
+	this.set_u16("capacity", 30);
 	
 	this.Tag("blocks spawn");
 	
@@ -140,6 +141,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				newBlob.set_string("base_name", this.get_string("base_name"));
 				newBlob.Init();
 
+				CBitStream bt;
+				bt.write_u16(newBlob.getNetworkID());
+				this.SendCommand(this.getCommandID("faction_upgrade"), bt);
 
 				this.MoveInventoryTo(newBlob);
 				this.server_Die();
@@ -151,42 +155,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			
 			f32 heal = this.getInitialHealth() * 0.05f;
 			this.server_SetHealth(Maths::Min(this.getHealth() + heal, this.getInitialHealth()));
-		}
-	}
-	
-	if (isServer())
-	{
-		if (cmd == this.getCommandID("sv_store"))
-		{
-			CBlob@ caller = getBlobByNetworkID(params.read_u16());
-			if (caller !is null)
-			{
-				CInventory @inv = caller.getInventory();
-				if (caller.getName() == "builder")
-				{
-					CBlob@ carried = caller.getCarriedBlob();
-					if (carried !is null)
-					{
-						if (carried.hasTag("temp blob"))
-						{
-							carried.server_Die();
-						}
-					}
-				}
-				
-				if (inv !is null)
-				{
-					while (inv.getItemsCount() > 0)
-					{
-						CBlob@ item = inv.getItem(0);
-						if (!this.server_PutInInventory(item))
-						{
-							caller.server_PutInInventory(item);
-							break;
-						}
-					}
-				}
-			}
 		}
 	}
 }

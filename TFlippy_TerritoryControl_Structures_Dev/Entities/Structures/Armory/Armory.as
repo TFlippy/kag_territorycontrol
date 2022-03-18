@@ -20,7 +20,7 @@ void onInit(CBlob@ this)
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
 
-	this.Tag("remote_storage");
+	this.Tag("smart_storage");
 	this.Tag("builder always hit");
 	this.Tag("change team on fort capture");
 
