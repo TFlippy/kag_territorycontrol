@@ -349,7 +349,7 @@ void onInit(CBlob@ this)
 		if (rand.NextRanged(100) < 30)
 		{
 			ShopItem@ s = addShopItem(this, "blue paper", "$theory_chemistry$", "theory_chemistry", "wipe ya ass");
-			AddRequirement(s.requirements, "coin", "", "Coins", 100 + rand.NextRanged(1400));
+			AddRequirement(s.requirements, "coin", "", "Coins", 750 + rand.NextRanged(750));
 			s.spawnNothing = true;
 		}
 	}
