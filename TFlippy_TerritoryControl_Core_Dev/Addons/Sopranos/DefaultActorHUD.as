@@ -31,9 +31,9 @@ void renderFrontStone(Vec2f farside, f32 width, f32 scale)
 
 void renderHPBar(CBlob@ blob, Vec2f origin)
 {
-	int segmentWidth = 24; // 32
+	u8 segmentWidth = 24; // 32
 	GUI::DrawIcon("GUI/jends2.png", 0, Vec2f(8, 16), origin+Vec2f(-8, 0)); // ("Entities/Common/GUI/BaseGUI.png", 0, Vec2f(16, 32), origin + Vec2f(-segmentWidth, 0));
-	int HPs = 0;
+	u8 HPs = 0;
 	for (f32 step = 0.0f; step < Maths::Max(blob.getHealth(), blob.getInitialHealth()); step += 0.5f)
 	{
 		GUI::DrawIcon("GUI/HPback.png", 0, Vec2f(12, 16), origin + Vec2f(segmentWidth * HPs, 0)); // ("Entities/Common/GUI/BaseGUI.png", 1, Vec2f(16, 32), origin + Vec2f(segmentWidth * HPs, 0));
@@ -43,7 +43,7 @@ void renderHPBar(CBlob@ blob, Vec2f origin)
 			string heartFile = step >= blob.getInitialHealth() ? "GUI/HPbar_Bonus.png" : "GUI/HPbar.png";
 
 			// Vec2f heartoffset = (Vec2f(2, 10) * 2);
-			Vec2f heartpos = origin + Vec2f(segmentWidth * HPs - 1, 0); // origin + Vec2f(segmentWidth * HPs, 0) + heartoffset;
+			Vec2f heartpos = origin + Vec2f(segmentWidth * HPs, 0); // origin + Vec2f(segmentWidth * HPs, 0) + heartoffset;
 			if (thisHP <= 0.125f) { GUI::DrawIcon(heartFile, 4, Vec2f(16, 16), heartpos); } // Vec2f(12, 12)
 			else if (thisHP <= 0.25f) { GUI::DrawIcon(heartFile, 3, Vec2f(16, 16), heartpos); } // Vec2f(12, 12)
 			else if (thisHP <= 0.375f) { GUI::DrawIcon(heartFile, 2, Vec2f(16, 16), heartpos); } // Vec2f(12, 12)
@@ -63,24 +63,16 @@ void onInit(CSprite@ this)
 
 void onRender(CSprite@ this)
 {
-	if (g_videorecording)
-		return;
-
+	if (g_videorecording) return;
 	CBlob@ blob = this.getBlob();
-	// Vec2f dim = Vec2f(320,64);
-	// Vec2f ul( getScreenWidth()/2.0f - dim.x/2.0f, getScreenHeight() - dim.y + 12 );
-	// Vec2f lr( ul.x + dim.x, ul.y + dim.y );
-	// GUI::DrawPane(ul, lr);
-	// renderBackBar(ul, dim.x, 1.0f);
-	// u8 bar_width_in_slots = blob.get_u8("gui_HUD_slots_width");
-	// f32 width = bar_width_in_slots * 32.0f;
-	// renderFrontStone( ul+Vec2f(dim.x,0), width, 1.0f);
-	Vec2f topleft(52, 10);
-	renderHPBar( blob, topleft); // ( blob, ul);
-
-	RenderUpkeepHUD(blob);
-	RenderTeamInventoryHUD(blob);
-	GUI::DrawIcon("GUI/jslot.png", 1, Vec2f(32, 32), Vec2f(2, 2));
+	if (blob.isMyPlayer())
+	{
+		RenderUpkeepHUD(blob);
+		RenderTeamInventoryHUD(blob);
+	
+		GUI::DrawIcon("GUI/jslot.png", 1, Vec2f(32, 32), Vec2f(2, 2));
+		renderHPBar(blob, Vec2f(52, 10));
+	}
 }
 
 void RenderUpkeepHUD(CBlob@ this)
@@ -122,7 +114,6 @@ void RenderUpkeepHUD(CBlob@ this)
 		string msg_bonuses = "Bonuses:\n";
 		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_COIN_GAIN) { msg_bonuses += "- Higher coin gain\n"; has_bonuses = true; }
 		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_MINING) { msg_bonuses += "- Increased mining yield\n"; has_bonuses = true; }
-		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_SPEED) { msg_bonuses += "- Increased movement speed\n"; has_bonuses = true; }
 		if (upkeep_ratio <= UPKEEP_RATIO_BONUS_RESPAWN_TIME) { msg_bonuses += "- Reduced respawn time\n"; has_bonuses = true; }
 
 		if (has_bonuses) GUI::DrawText(msg_bonuses, Vec2f(scWidth - 352, 90 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
@@ -135,7 +126,6 @@ void RenderUpkeepHUD(CBlob@ this)
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_COIN_DROP) { msg_penalties += "- Higher coin loss on death\n"; has_penalties = true; }
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RESPAWN_TIME) { msg_penalties += "- Increased respawn time\n"; has_penalties = true; }
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_STORAGE && team_data.storage_enabled) { msg_penalties += "- No Remote storage\n"; has_penalties = true; }
-		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_SPEED) { msg_penalties += "- Reduced movement speed\n"; has_penalties = true; }
 
 		if (has_penalties) GUI::DrawText(msg_penalties, Vec2f(scWidth - 352, 90 + Maths::Sin(getGameTime() / 8.0f)), SColor(255, color_red, color_green, 0));
 	}
@@ -146,14 +136,16 @@ const string[] teamItems =
 {
 	"mat_wood",
 	"mat_oil",
-	"mat_coal",
-	"mat_steelingot",
 	"mat_copperwire",
 	"mat_plasteel",
-	"mat_sulphur",
+	"mat_matter",
 	"mat_fuel",
 	"mat_methane",
 	"mat_acid",
+	"mat_meat",
+	"foodcan",
+	"grain",
+	"pumpkin",
 	"mat_mithrilenriched"
 };
 
@@ -162,8 +154,10 @@ const string[] teamOres =
 	"mat_stone",
 	"mat_copper",
 	"mat_iron",
+	"mat_coal",
 	"mat_gold",
-	"mat_mithril"
+	"mat_mithril",
+	"mat_dirt"
 };
 
 const string[] teamIngots =
@@ -171,37 +165,67 @@ const string[] teamIngots =
 	"mat_concrete",
 	"mat_copperingot",
 	"mat_ironingot",
+	"mat_steelingot",
 	"mat_goldingot",
-	"mat_mithrilingot"
-};
-
-const string[] teamBombs =
-{
-	"mat_incendiarybomb",
-	"mat_bunkerbuster",
-	"mat_dirtybomb",
-	"mat_smallbomb",
-	"mat_stunbomb",
-	"mat_clusterbomb",
-	"mat_mithrilbomb",
-	"mat_cocokbomb",
-	"mat_bigbomb",
-	"mat_bombita",
-	"firejob",
-	"fireboom",
-	"cruisemissile",
-	"guidedrocket"
+	"mat_mithrilingot",
+	"mat_sulphur"
 };
 
 const string[] teamAmmo =
 {
-	"ammo_bandit",
 	"ammo_lowcal",
 	"ammo_highcal",
 	"ammo_shotgun",
 	"ammo_gatling",
-	"mat_smallrocket",
-	"mat_mininuke"
+	"ammo_bandit"
+};
+
+const string[] matInvName =
+{
+	"Materials.png",
+	"Material_Oil.png",
+	"Material_CopperWire.png",
+	"Material_Plasteel.png",
+	"Material_Matter.png",
+	"Material_Fuel.png",
+	"Material_Methane.png",
+	"Material_Acid.png",
+	"Material_Meat.png",
+	"FoodCan.png",
+	"Grain.png",
+	"Pumpkin.png",
+	"Material_MithrilEnriched.png"
+};
+
+const string[] oreInvName =
+{
+	"Materials.png",
+	"Material_Copper.png",
+	"Material_Iron.png",
+	"Material_Coal.png",
+	"Materials.png",
+	"Material_Mithril.png",
+	"Material_Dirt.png"
+};
+
+const string[] ingotInvName =
+{
+	"Material_Concrete.png",
+	"Material_CopperIngot.png",
+	"Material_IronIngot.png",
+	"Material_SteelIngot.png",
+	"Material_GoldIngot.png",
+	"Material_MithrilIngot.png",
+	"Material_Sulphur.png"
+};
+
+const string[] ammoInvName =
+{
+	"Material_BanditAmmo.png",
+	"Material_PistolAmmo.png",
+	"Material_RifleAmmo.png",
+	"Material_GatlingAmmo.png",
+	"Material_ShotgunAmmo.png"
 };
 
 void RenderTeamInventoryHUD(CBlob@ this)
@@ -215,8 +239,7 @@ void RenderTeamInventoryHUD(CBlob@ this)
 		TeamData@ team_data;
 		GetTeamData(playerTeam, @team_data);
 
-		CBlob@[] baseBlobs;
-		CBlob@[] itemsToShow;
+		string[] itemsToShow;
 		int[] itemAmounts;
 		int[] jArray;
 		int[] bArray;
@@ -226,78 +249,72 @@ void RenderTeamInventoryHUD(CBlob@ this)
 
 		if (team_data != null)
 		{
-			u16 upkeep = team_data.upkeep;
-			u16 upkeep_cap = team_data.upkeep_cap;
-			f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
+			const u16 upkeep = team_data.upkeep;
+			const u16 upkeep_cap = team_data.upkeep_cap;
+			const f32 upkeep_ratio = f32(upkeep) / f32(upkeep_cap);
 			const bool faction_storage_enabled = team_data.storage_enabled;
 
 			storageEnabled = upkeep_ratio < UPKEEP_RATIO_PENALTY_STORAGE && faction_storage_enabled;
 		}
 
-		getBlobsByTag("remote_storage", @baseBlobs);
-		getBlobsByName("armory", @baseBlobs);
-
-		for (int i = 0; i < baseBlobs.length; i++) 
 		{
-			CBlob@ baseBlob = baseBlobs[i];
-			if (baseBlob.getTeamNum() != playerTeam)
+			CBlob@[] smartStorageBlobs;
+			getBlobsByTag("smart_storage", @smartStorageBlobs);
+			
+			for (u8 i = 0; i < smartStorageBlobs.length; i++) 
 			{
-				continue;
-			}
-
-			if ((baseBlob.getPosition() - this.getPosition()).Length() < 250.0f)
-			{
-				closeEnough = true;
-			}
-
-			CInventory@ inv = baseBlob.getInventory();
-			if (inv is null) return;
-
-			for (int j = 0; j < inv.getItemsCount(); j++)
-			{
-				CBlob@ item = inv.getItem(j);
-				string name = item.getInventoryName();
-				bool doContinue = false;
-				for (int k = 0; k < itemsToShow.length; k++)
-				{
-					if (itemsToShow[k].getInventoryName() == name)
-					{
-						itemAmounts[k] = itemAmounts[k] + item.getQuantity();
-						doContinue = true;
-						break;
-					}
-				}
-				if (doContinue)
+				CBlob@ baseBlob = smartStorageBlobs[i];
+				if (baseBlob.getTeamNum() != playerTeam)
 				{
 					continue;
 				}
-				itemsToShow.push_back(item);
-				itemAmounts.push_back(item.getQuantity());
-				jArray.push_back(-1);
-			}
-			for (int b = 0; b < inv.getItemsCount(); b++)
-			{
-				CBlob@ item = inv.getItem(b);
-				string name = item.getInventoryName();
-				bool doContinue = false;
-				for (int g = 0; g < itemsToShow.length; g++)
+
+				if (this.getDistanceTo(baseBlob) < 250.0f)
 				{
-					if (itemsToShow[g].getInventoryName() == name)
+					closeEnough = true;
+				}
+
+				const u16 overall_quantity = baseBlob.get_u16("smart_storage_quantity");
+				if (overall_quantity > 0)
+				{
+					u32 cur_quantity;
+					string[] templist = teamItems;
+					for (u8 z = 0; z < 4; z++)
 					{
-						itemAmounts[g] = itemAmounts[g] + item.getQuantity();
-						doContinue = true;
-						break;
+						switch (z)
+						{
+							case 0: templist = teamItems;	break;
+							case 1: templist = teamOres;	break;
+							case 2: templist = teamIngots;	break;
+							case 3: templist = teamAmmo;	break;
+						}
+						for (u8 j = 0; j < templist.length; j++)
+						{
+							string blobName = templist[j];
+							if (!baseBlob.exists("Storage_"+blobName)) continue;
+							cur_quantity = baseBlob.get_u32("Storage_"+blobName);
+							if (cur_quantity <= 0) continue;
+
+							bool doContinue = false;
+							for (u16 k = 0; k < itemsToShow.length; k++)
+							{
+								if (itemsToShow[k] == blobName)
+								{
+									itemAmounts[k] = itemAmounts[k] + cur_quantity;
+									doContinue = true;
+									break;
+								}
+							}
+							if (doContinue) continue;
+							itemAmounts.push_back(cur_quantity);
+							itemsToShow.push_back(blobName);
+							jArray.push_back(-1);
+						}
 					}
 				}
-				if (doContinue)
-				{
-					continue;
-				}
-				itemsToShow.push_back(item);
-				itemAmounts.push_back(item.getQuantity());
-				bArray.push_back(-1);
 			}
 		}
+		
 
 		bool storageAccessible = closeEnough && storageEnabled;
 
@@ -314,14 +331,14 @@ void RenderTeamInventoryHUD(CBlob@ this)
 		int j = 0;
 		int b = 0;
 		//indian code, gotta repeat it two times
-		for (int i = 0; i < itemsToShow.length; i++)
+		for (u8 i = 0; i < itemsToShow.length; i++)
 		{
 			//draw ores
-			CBlob@ item = itemsToShow[i];
-			string itemName = item.getName();
+			string itemName = itemsToShow[i];
 			bool passed = false;
+			const int quantity = itemAmounts[i];
 			int oreId = -1;
-			for (int k = 0; k < teamOres.length; k++)
+			for (u8 k = 0; k < teamOres.length; k++)
 			{
 				if (teamOres[k] == itemName)
 				{
@@ -330,14 +347,14 @@ void RenderTeamInventoryHUD(CBlob@ this)
 					break;
 				}
 			}
-			if (!passed)
+			if (!passed || quantity < 1)
 			{
 				continue;
 			}
 			bool hasIngot = false;
-			for (int l = 0; l < itemsToShow.length; l++)
+			for (u8 l = 0; l < itemsToShow.length; l++)
 			{
-				if (teamIngots[oreId] == itemsToShow[l].getName())
+				if (teamIngots[oreId] == itemsToShow[l])
 				{
 					hasIngot = true;
 					break;
@@ -348,43 +365,38 @@ void RenderTeamInventoryHUD(CBlob@ this)
 			Vec2f itemPos = Vec2f(getScreenWidth() - 150, 54 + j * 46) + hudPos;
 			GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), itemPos);
 			GUI::DrawIcon("GUI/jslot.png", 2, Vec2f(32, 32), itemPos + Vec2f(48, 0));
-			GUI::DrawIcon(item.inventoryIconName, item.inventoryIconFrame, item.inventoryFrameDimension, itemPos + Vec2f(8, 8));
 
 			if (!hasIngot)
 			{
 				GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), itemPos + Vec2f(96, 0));
-
-				if (teamIngots[oreId] == "mat_concrete") { GUI::DrawIcon("Material_Concrete.png", 1,Vec2f(16, 16), itemPos + Vec2f(104, 8)); }
-				else if (teamIngots[oreId] == "mat_copperingot") { GUI::DrawIcon("Material_CopperIngot.png", 0,Vec2f(16, 16), itemPos + Vec2f(104, 8)); }
-				else if (teamIngots[oreId] == "mat_ironingot") { GUI::DrawIcon("Material_IronIngot.png", 0, Vec2f(16, 16), itemPos + Vec2f(104, 8)); }
-				else if (teamIngots[oreId] == "mat_goldingot") { GUI::DrawIcon("Material_GoldIngot.png", 0, Vec2f(16, 16), itemPos + Vec2f(104, 8)); }
-				else if (teamIngots[oreId] == "mat_mithrilingot") { GUI::DrawIcon("Material_MithrilIngot.png", 0, Vec2f(16, 16), itemPos + Vec2f(104, 8)); }
+				GUI::DrawIcon(ingotInvName[oreId], 3,Vec2f(16, 16), itemPos + Vec2f(104, 8));
 
 				GUI::SetFont("menu");
 				GUI::DrawText("0", itemPos + Vec2f(126, 26), SColor(255, 255, 0, 0));
 			}
 
-			int quantity = itemAmounts[i];
-			f32 ratio = float(quantity) / float(item.maxQuantity);
-			SColor col = (SColor(255, 255, 255, 255));
 			int l = int(("" + quantity).get_length());
-			if (quantity != 1)
+			if (quantity > 0)
 			{
+				if (teamOres[oreId] == "mat_gold") { GUI::DrawIcon("Materials.png", 26, Vec2f(16, 16), itemPos + Vec2f(8, -2)); }
+				else if (teamOres[oreId] == "mat_stone") { GUI::DrawIcon("Materials.png", 24, Vec2f(16, 16), itemPos + Vec2f(8, -2)); }
+				else { GUI::DrawIcon(oreInvName[oreId], 3, Vec2f(16, 16), itemPos + Vec2f(8, -2)); }
+
 				GUI::SetFont("menu");
-				GUI::DrawText("" + quantity / 2, itemPos + Vec2f(38 - (l * 8), 26), col);
+				GUI::DrawText("" + quantity, itemPos + Vec2f(38 - (l * 8), 26), SColor(255, 240, 225, 225));
 			}
 			j++;
 		}
 		int jMax = j;
-		for (int i = 0; i < itemsToShow.length; i++)
+		for (u8 i = 0; i < itemsToShow.length; i++)
 		{
 			//draw ingots
 			int j2 = j;
-			CBlob@ item = itemsToShow[i];
-			string itemName = item.getName();
+			string itemName = itemsToShow[i];
 			bool passed = false;
 			int oreId = -1;
-			for (int k = 0; k < teamIngots.length; k++)
+			const int quantity = itemAmounts[i];
+			for (u8 k = 0; k < teamIngots.length; k++)
 			{
 				if (teamIngots[k] == itemName)
 				{
@@ -393,14 +405,14 @@ void RenderTeamInventoryHUD(CBlob@ this)
 					break;
 				}
 			}
-			if (!passed)
+			if (!passed || quantity < 1)
 			{
 				continue;
 			}
 			bool hasOre = false;
-			for (int l = 0; l < itemsToShow.length; l++)
+			for (u8 l = 0; l < itemsToShow.length; l++)
 			{
-				if (teamOres[oreId] == itemsToShow[l].getName())
+				if (teamOres[oreId] == itemsToShow[l])
 				{
 					j2 = jArray[l];
 					hasOre = true;
@@ -410,52 +422,50 @@ void RenderTeamInventoryHUD(CBlob@ this)
 
 			Vec2f itemPos = Vec2f(getScreenWidth() - 54, 54 + j2 * 46) + hudPos;
 			GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), itemPos);
-			GUI::DrawIcon(item.inventoryIconName, item.inventoryIconFrame, item.inventoryFrameDimension, itemPos + Vec2f(8, 8));
-
 			if (!hasOre)
 			{
 				GUI::DrawIcon("GUI/jslot.png", 2,Vec2f(32, 32), itemPos - Vec2f(48, 0));
 				GUI::DrawIcon("GUI/jslot.png", 0,Vec2f(32, 32), itemPos - Vec2f(96, 0));
 
-				if (teamOres[oreId] == "mat_copper") { GUI::DrawIcon("Material_Copper.png", 0, Vec2f(16, 16), itemPos + Vec2f(-88, 8)); }
-				else if (teamOres[oreId] == "mat_iron") { GUI::DrawIcon("Material_Iron.png", 0, Vec2f(16, 16), itemPos + Vec2f(-88, 8)); }
-				else if (teamOres[oreId] == "mat_gold") { GUI::DrawIcon("Materials.png", 2, Vec2f(16, 16), itemPos + Vec2f(-88, 8)); }
+				if (teamOres[oreId] == "mat_gold") GUI::DrawIcon("Materials.png", 26, Vec2f(16, 16), itemPos + Vec2f(-88, -2));
+				else if (teamOres[oreId] == "mat_stone") GUI::DrawIcon("Materials.png", 24, Vec2f(16, 16), itemPos + Vec2f(-88, -2));
+				else GUI::DrawIcon(oreInvName[oreId], 3, Vec2f(16, 16), itemPos + Vec2f(-88, -2));
 
 				GUI::SetFont("menu");
 				GUI::DrawText("0", itemPos + Vec2f(-66, 26), SColor(255, 255, 0, 0));
 			}
 
-			int quantity = itemAmounts[i];
-			f32 ratio = float(quantity) / float(item.maxQuantity);
-			SColor col = (ratio > 0.4f ? SColor(255, 255, 255, 255) :
-			             (ratio > 0.2f ? SColor(255, 255, 255, 128) :
-			             (ratio > 0.1f ? SColor(255, 255, 128, 0)   : SColor(255, 255, 0, 0))));
+			SColor col = SColor(255, 240, 225, 225);
 			int l = int(("" + quantity).get_length());
-			if (quantity != 1)
+			if (quantity > 0)
 			{
+				GUI::DrawIcon(ingotInvName[oreId], 3,Vec2f(16, 16), itemPos + Vec2f(4, 2));
+
 				GUI::SetFont("menu");
-				GUI::DrawText("" + quantity / 2, itemPos + Vec2f(38 - (l * 8), 26), col);
+				GUI::DrawText("" + quantity, itemPos + Vec2f(38 - (l * 8), 26), col);
 			}
 			if (j2 >= jMax)
 			{
 				j++;
 			}
 		}
-		for (int i = 0; i < itemsToShow.length; i++)
+		for (u8 i = 0; i < itemsToShow.length; i++)
 		{
 			//draw everything but ores & ingots
-			CBlob@ item = itemsToShow[i];
-			string itemName = item.getName();
+			string itemName = itemsToShow[i];
+			string itemInvName;
 			bool passed = false;
-			for (int k = 0; k < teamItems.length; k++)
+			const int quantity = itemAmounts[i];
+			for (u8 k = 0; k < teamItems.length; k++)
 			{
 				if (teamItems[k] == itemName)
 				{
 					passed = true;
+					itemInvName = matInvName[k];
 					break;
 				}
 			}
-			if (!passed)
+			if (!passed || quantity < 1)
 			{
 				continue;
 			}
@@ -463,106 +473,54 @@ void RenderTeamInventoryHUD(CBlob@ this)
 			Vec2f itemPos = Vec2f(getScreenWidth() - 54, 54 + j * 46) + hudPos;
 			GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), itemPos);
 
-			if (itemName == "mat_stone") { GUI::DrawIcon("GUI/jitem.png", 1,Vec2f(16, 16), itemPos + Vec2f(6, 6), 1.0f); }
-			else if (itemName == "mat_wood") {GUI::DrawIcon("GUI/jitem.png", 2, Vec2f(16, 16), itemPos + Vec2f(6, 6), 1.0f); }
-			else { GUI::DrawIcon(item.inventoryIconName, item.inventoryIconFrame, item.inventoryFrameDimension, itemPos + Vec2f(8, 8)); }
+			if (itemName == "mat_wood") GUI::DrawIcon("jitem.png", 2, Vec2f(16, 16), itemPos + Vec2f(8, 2), 1.0f);
+			else GUI::DrawIcon(itemInvName, 0, Vec2f(16, 16), itemPos + Vec2f(8, 8));
 
-			int quantity = itemAmounts[i];
-			f32 ratio = float(quantity) / float(item.maxQuantity);
-			SColor col = (ratio > 0.4f ? SColor(255, 255, 255, 255) :
-			             (ratio > 0.2f ? SColor(255, 255, 255, 128) :
-			             (ratio > 0.1f ? SColor(255, 255, 128, 0)   : SColor(255, 255, 0, 0))));
+			SColor col = SColor(255, 240, 225, 225);
 			int l = int(("" + quantity).get_length());
 			if (quantity != 1)
 			{
 				GUI::SetFont("menu");
-				GUI::DrawText("" + quantity / 2, itemPos + Vec2f(38 - (l * 8), 26), col);
+				GUI::DrawText("" + quantity, itemPos + Vec2f(38 - (l * 8), 26), col);
 			}
 			j++;
 		}
 
 		// Ammo and Bombs
-		for (int i = 0; i < itemsToShow.length; i++)
-		{
-			//draw teamBombs
-			CBlob@ bomb = itemsToShow[i];
-			string itemName = bomb.getName();
-			bool passed = false;
-			for (int k = 0; k < teamBombs.length; k++)
-			{
-				if (teamBombs[k] == itemName)
-				{
-					passed = true;
-					break;
-				}
-			}
-			if (!passed)
-			{
-				continue;
-			}
-
-			Vec2f itemPos = Vec2f(getScreenWidth() / 1.52 - 54 + b * 46, getScreenHeight() - 57) + hudPos2;
-			if (itemName == "cruisemissile" || itemName == "guidedrocket" || itemName == "mat_bigbomb" || 
-			    itemName == "mat_bombita" || itemName == "fireboom")
-			{
-				int xPos = (itemName == "fireboom" || itemName == "mat_bombita"  ? -6 : 8);
-				GUI::DrawIcon("GUI/jslot.png", 3, Vec2f(24, 42), itemPos + Vec2f(0, -34));
-				GUI::DrawIcon(bomb.inventoryIconName, bomb.inventoryIconFrame, bomb.inventoryFrameDimension, itemPos + Vec2f(xPos, -22), 1.0f, this.getTeamNum());
-			}
-			else
-			{
-				GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), itemPos);
-				GUI::DrawIcon(bomb.inventoryIconName, bomb.inventoryIconFrame, bomb.inventoryFrameDimension, itemPos + Vec2f(8, 8), 1.0f, this.getTeamNum());
-			}
-
-			int quantity = itemAmounts[i];
-			f32 ratio = float(quantity) / float(bomb.maxQuantity);
-			SColor col = SColor(255, 255, 255, 255);
-			int l = int(("" + quantity).get_length());
-			if (quantity != 1)
-			{
-				GUI::SetFont("menu");
-				GUI::DrawText("" + quantity / 2, itemPos + Vec2f(38 - (l * 8), 26), col);
-			}
-			b--;
-		}
-		
-		int AmmoX = 0;
-		
-		for (int i = itemsToShow.length-1; i >= 0; i--)
+		for (u8 i = 0; i < itemsToShow.length; i++)
 		{
 			//draw teamAmmo
-			CBlob@ ammo = itemsToShow[i];
-			string itemName = ammo.getName();
+			string itemName = itemsToShow[i];
+			string itemInvName;
 			bool passed = false;
-			for (int k = 0; k < teamAmmo.length; k++)
+			const int quantity = itemAmounts[i];
+			for (u8 k = 0; k < teamAmmo.length; k++)
 			{
 				if (teamAmmo[k] == itemName)
 				{
 					passed = true;
+					itemInvName = ammoInvName[k];
 					break;
 				}
 			}
-			if (!passed)
+			if (!passed || quantity < 1)
 			{
 				continue;
 			}
 
-			Vec2f itemPos = Vec2f(getScreenWidth() / 1.52 - 74 + b * 46 - AmmoX* 56, getScreenHeight() - 64) + hudPos2;
-			GUI::DrawIcon("ammo_slot.png", 0, Vec2f(32, 32), itemPos);
+			Vec2f itemPos = Vec2f(getScreenWidth() / 1.52 - 94 + b * 46, getScreenHeight() - 57) + hudPos2;
+			GUI::DrawIcon("GUI/jslot.png", 0, Vec2f(32, 32), itemPos);
 
-			GUI::DrawIcon(ammo.inventoryIconName, ammo.inventoryIconFrame, ammo.inventoryFrameDimension, itemPos + Vec2f(6, 2));
+			GUI::DrawIcon(itemInvName, 3, Vec2f(16, 16), itemPos + Vec2f(8, 8));
 
-			int quantity = itemAmounts[i];
-			f32 ratio = float(quantity) / float(ammo.maxQuantity);
-			SColor col = SColor(255, 255, 255, 255);
+			SColor col = SColor(255, 240, 225, 225);
 			int l = int(("" + quantity).get_length());
 			if (quantity != 1)
 			{
 				GUI::SetFont("menu");
-				GUI::DrawText("" + quantity / 2, itemPos + Vec2f(38 - (l * 8), 26), col);
+				GUI::DrawText("" + quantity, itemPos + Vec2f(38 - (l * 8), 26), col);
 			}
-			AmmoX++;
+			b--;
 		}
 	}
 }

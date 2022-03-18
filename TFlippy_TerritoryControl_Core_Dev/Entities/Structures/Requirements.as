@@ -1,6 +1,7 @@
 #include "ResearchCommon.as"
 #include "Survival_Structs.as";
 #include "Requirements_Tech.as"
+#include "SmartStorageHelpers.as";
 
 string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 {
@@ -165,8 +166,8 @@ bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, C
 			: (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null)) 
 		: (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
 
-	CBlob@[] baseBlobs;
-	
+	CBlob@[] smartStorageBlobs;
+
 	bool storageEnabled = false;
 	
 	if (playerBlob !is null)
@@ -191,28 +192,28 @@ bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, C
 
 		if (storageEnabled)
 		{
-			getBlobsByTag("remote_storage", @baseBlobs);
-			for (int i = 0; i < baseBlobs.length; i++)
+			getBlobsByTag("smart_storage", @smartStorageBlobs);
+			for (u8 i = 0; i< smartStorageBlobs.length; i++)
 			{
-				if (baseBlobs[i].getTeamNum() != playerTeam)
+				if (smartStorageBlobs[i].getTeamNum() != playerTeam)
 				{
-					baseBlobs.erase(i);
+					smartStorageBlobs.erase(i);
 					i--;
 				}
 			}
 			bool canPass = false;
-			for (int i = 0; i < baseBlobs.length; i++)
+
+			for (u8 i = 0; i < smartStorageBlobs.length; i++)
 			{
-				if ((baseBlobs[i].getPosition() - playerBlob.getPosition()).Length() < 250.0f)
+				if (playerBlob.getDistanceTo(smartStorageBlobs[i]) < 250.0f)
 				{
 					canPass = true;
 					break;
 				}
 			}
-			
 			if (!canPass)
 			{
-				baseBlobs.clear();
+				smartStorageBlobs.clear();
 			}
 		}
 	}
@@ -226,14 +227,9 @@ bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, C
 			
 			if (storageEnabled)
 			{
-				for (int i = 0; i< baseBlobs.length; i++)
+				for (u8 i = 0; i< smartStorageBlobs.length; i++)
 				{
-					sum += baseBlobs[i].getBlobCount(blobName);
-					if(baseBlobs[i].exists("compactor_resource")){
-						if(baseBlobs[i].get_string("compactor_resource") == blobName){
-							sum += baseBlobs[i].get_u32("compactor_quantity");
-						}
-					}
+					sum += smartStorageCheck(smartStorageBlobs[i],blobName);
 				}
 			}
 			
@@ -358,7 +354,7 @@ void server_TakeRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &ino
 			: (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null)) 
 		: (inv2 !is null ? (inv2.getBlob().getPlayer() !is null ? inv2.getBlob() : null) : null));
 
-	CBlob@[] baseBlobs;
+	CBlob@[] smartStorageBlobs;
 	
 	bool storageEnabled = false;
 
@@ -384,12 +380,12 @@ void server_TakeRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &ino
 
 		if (storageEnabled)
 		{
-			getBlobsByTag("remote_storage", @baseBlobs);
-			for (int i = 0; i < baseBlobs.length; i++)
+			getBlobsByTag("smart_storage", @smartStorageBlobs);
+			for (u8 i = 0; i < smartStorageBlobs.length; i++)
 			{
-				if (baseBlobs[i].getTeamNum() != playerTeam)
+				if (smartStorageBlobs[i].getTeamNum() != playerTeam)
 				{
-					baseBlobs.erase(i);
+					smartStorageBlobs.erase(i);
 					i--;
 				}
 			}
@@ -423,24 +419,15 @@ void server_TakeRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &ino
 
 			if (storageEnabled)
 			{
-				for (int i = 0; i < baseBlobs.length; i++)
+				for (u8 i = 0; i < smartStorageBlobs.length; i++)
 				{
 					if (taken >= quantity)
 					{
 						break;
 					}
-					u16 hold = taken;
-					taken += Maths::Min(baseBlobs[i].getBlobCount(blobName), quantity - taken);
-					baseBlobs[i].TakeBlob(blobName, quantity - hold);
-					
-					if(baseBlobs[i].exists("compactor_resource")){
-						if(baseBlobs[i].get_string("compactor_resource") == blobName){
-							int dif = Maths::Min(baseBlobs[i].get_u32("compactor_quantity"), quantity - taken);
-							taken += dif;
-							baseBlobs[i].sub_u32("compactor_quantity",dif);
-							baseBlobs[i].Sync("compactor_quantity",true);
-						}
-					}
+					u32 hold = Maths::Min(smartStorageCheck(smartStorageBlobs[i], blobName), quantity - taken);
+					smartStorageTake(smartStorageBlobs[i], blobName, quantity - taken);
+					taken += hold;
 				}
 			}
 		}
