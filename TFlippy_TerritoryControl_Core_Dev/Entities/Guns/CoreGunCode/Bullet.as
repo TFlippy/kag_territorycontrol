@@ -227,6 +227,8 @@ class Bullet
 									int blockDamageRepeat = gunBlob.exists("CustomBlockDamage") ? gunBlob.get_u8("CustomBlockDamage") : 1;
 									for (int i = 0; i < blockDamageRepeat; i++)
 									{
+										if(isTilePlasteel(tile.type)){ ///Plasteel does not take bullet damage
+										} else
 										if(isTileGlass(tile.type)){ ///Glass is instantly destroyed when shot
 											for (int i = 0; i < 2; i++)map.server_DestroyTile(hitpos, damage * 0.25f);
 										} else

@@ -338,6 +338,11 @@ bool isTileMossyBConcrete(TileType tile)
 	return tile >= CMap::tile_mossybconcrete && tile <= CMap::tile_mossybconcrete_d4;
 }
 
+bool isTilePlasteel(TileType tile)
+{
+	return tile >= CMap::tile_plasteel && tile <= CMap::tile_plasteel_d14;
+}
+
 bool isTileKudzu(TileType tile)
 {
 	return tile >= CMap::tile_kudzu && tile <= CMap::tile_kudzu_d0;
