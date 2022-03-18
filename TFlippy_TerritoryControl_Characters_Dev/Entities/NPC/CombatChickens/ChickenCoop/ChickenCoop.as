@@ -171,8 +171,7 @@ void SetMinimap(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	if (caller.getTeamNum() == this.getTeamNum())
-		this.set_bool("shop available", this.isOverlapping(caller));
+	this.set_bool("shop available", this.isOverlapping(caller) && caller.getTeamNum() == this.getTeamNum());
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
