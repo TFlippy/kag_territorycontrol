@@ -14,6 +14,7 @@ void onInit(CBlob@ this)
 
 	this.Tag("change team on fort capture");
 	this.addCommandID("write");
+	this.Tag("extractable");
 	//this.set_Vec2f("nobuild extend",Vec2f(0.0f, 8.0f));
 
 	this.inventoryButtonPos = Vec2f(10, 8);

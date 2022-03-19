@@ -1,70 +1,93 @@
-// TrapBlock.as
 
+#include "FilteringCommon.as";
+#include "CustomBlocks.as";
 #include "Hitters.as";
 #include "MapFlags.as";
-#include "MinableMatsCommon.as";
-
-int openRecursion = 0;
 
 void onInit(CBlob@ this)
 {
-	this.getSprite().SetZ(10);
-
+	this.getSprite().SetZ(50);
 	this.getShape().SetRotationsAllowed(false);
-	this.getShape().AddPlatformDirection(Vec2f(0, -1), 45, false);
-	this.set_bool("open", false);
+	this.getShape().getConsts().waterPasses = true;
+	
 	this.Tag("place norotate");
-
-	//block knight sword
-	this.Tag("blocks sword");
-	this.Tag("blocks water");
-
-	this.set_TileType("background tile", CMap::tile_castle_back);
 
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 
-	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
-
-	HarvestBlobMat[] mats = {};
-	mats.push_back(HarvestBlobMat(50.0f, "mat_stone")); 
-	mats.push_back(HarvestBlobMat(15.0f, "mat_wood"));
-	this.set("minableMats", mats);
+	
+	this.Tag("ignore blocking actors");
+	this.Tag("conveyor");
+	this.Tag("inline_block");
 }
 
 void onSetStatic(CBlob@ this, const bool isStatic)
 {
+	if (!isStatic) return;
+	
 	CSprite@ sprite = this.getSprite();
 	if (sprite is null) return;
-
-	sprite.getConsts().accurateLighting = true;
-
-	if (!isStatic) return;
-
-	Vec2f pos = this.getPosition();
-	CMap@ map = this.getMap();
-
-	for (int i = 0; i < 3; i++)
-	{
-		map.server_SetTile(Vec2f((pos.x - 8) + i * 8, pos.y), CMap::tile_castle_back);
+	
+	if(isServer()){
+		CMap@ map = getMap();
+		if(map.getTile(this.getPosition()).type == 0)map.server_SetTile(this.getPosition(), CMap::tile_biron);
 	}
+	
+	this.setPosition(this.getPosition()-Vec2f(0,3.5));
 
-	this.getSprite().PlaySound("/build_door.ogg");
+	sprite.SetOffset(Vec2f(0,-0.5));
+	sprite.SetZ(300);
+	
+	sprite.PlaySound("/build_door.ogg");
+	
+	CSpriteLayer@ Case = sprite.addSpriteLayer( "case","ConveyorBelt.png", 8, 1);
+	if(Case !is null)
+	{
+		Case.addAnimation("default",1,true);
+		int[] frames = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+		Case.animation.AddFrames(frames);
+		Case.SetRelativeZ(1);
+		Case.SetOffset(Vec2f(0,-1));
+		Case.SetFrameIndex(getGameTime() % 16);
+	}
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return !(this.hasBlob(blob.getName(), 0) || this.hasBlob(blob.getName(), 1));
+	if(blob.isKeyPressed(key_down))return false;
+	if(blob.hasTag("player")) return true;
+	if(server_isItemAccepted(this, blob.getName(),false))return false;
+	if(blob.getPosition().y > this.getPosition().y) return false;
+	
+	return true;
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob is null || blob.hasTag("player")) return;
-
-	if (Maths::Abs(blob.getVelocity().y) < 2.0f) blob.setVelocity(Vec2f(this.isFacingLeft() ? -1 : 1, -1.0f));
+	if (blob.getPosition().y > this.getPosition().y) return;
+	if (blob.getShape().isStatic())return;
+	if (blob.isAttached() || blob.isInWater())return;
+	
+	if(server_isItemAccepted(this, blob.getName(),false)){
+		blob.setVelocity(Vec2f(0.0f, 0.0f));
+		blob.setPosition(this.getPosition()+Vec2f(0,4));
+		this.getSprite().PlaySound("bridge_open.ogg");
+	} else {
+		if (Maths::Abs(blob.getVelocity().y) < 2.0f){
+			blob.setVelocity(Vec2f(this.isFacingLeft() ? -0.6f : 0.6f, -1.0f));
+		}
+	}
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
+	this.getSprite().SetZ(300);
 	return false;
+}
+
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	if (customData == Hitters::builder) damage *= 30.0f;
+	return damage;
 }

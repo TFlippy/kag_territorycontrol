@@ -13,7 +13,6 @@ void onInit(CBlob@ this)
 {
 	this.getCurrentScript().tickFrequency = 60;
 	this.Tag("builder always hit");
-	this.Tag("ignore extractor");
 	this.Tag("heavy weight");
 }
 

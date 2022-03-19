@@ -78,6 +78,7 @@ void onInit(CSprite@ this)
 void onInit(CBlob@ this)
 {
 	this.Tag("remote_storage");
+	this.Tag("extractable");
 
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
@@ -330,5 +331,5 @@ bool checkName(string blobName)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	return ((this.getTeamNum() > 100 ? true : forBlob.getTeamNum() == this.getTeamNum()) && forBlob.isOverlapping(this));
+	return ((this.getTeamNum() > 100 ? true : forBlob.getTeamNum() == this.getTeamNum()));
 }

@@ -32,6 +32,9 @@ void onInit(CBlob@ this)
 	//this.addCommandID("getin");
 	//this.addCommandID("getout");
 	this.addCommandID("stop unpack");
+	
+	this.Tag("crate");
+	this.Tag("extractable");
 
 	u8 frame = 0;
 	
@@ -510,7 +513,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		TryToAttachCargo(this, blob);
 	}
 	
-	if (blob !is null ? !blob.isCollidable() : !solid) return;
+	if(!solid)return;
 
 	f32 vellen = this.getOldVelocity().Length();
 

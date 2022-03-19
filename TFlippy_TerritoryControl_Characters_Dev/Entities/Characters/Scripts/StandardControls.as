@@ -170,6 +170,7 @@ void onTick(CBlob@ this)
 			// this.ClearMenus();
 
 			//  Vec2f center =  getDriver().getScreenCenterPos(); // center of screen
+			/*
 			Vec2f center = getControls().getMouseScreenPos();
 			if (this.exists("inventory offset"))
 			{
@@ -178,7 +179,8 @@ void onTick(CBlob@ this)
 			else
 			{
 				this.CreateInventoryMenu(center);
-			}
+			}*/
+			this.CreateInventoryMenu(Vec2f(getScreenWidth()*0.5f,getScreenHeight()*0.75f));
 
 			//getControls().setMousePosition( center );
 		}

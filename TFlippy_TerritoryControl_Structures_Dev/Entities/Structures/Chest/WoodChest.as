@@ -16,7 +16,9 @@ void onInit(CBlob@ this)
 
 	HarvestBlobMat[] mats = {};
 	mats.push_back(HarvestBlobMat(50.0f, "mat_wood"));
-	this.set("minableMats", mats);	
+	this.set("minableMats", mats);
+	
+	this.Tag("extractable");
 }
 
 void onTick(CBlob@ this)

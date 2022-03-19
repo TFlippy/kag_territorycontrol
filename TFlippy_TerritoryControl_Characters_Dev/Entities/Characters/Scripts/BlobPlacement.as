@@ -67,7 +67,7 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos)
 		return false;
 
 	// Is our blob not a ladder and are we trying to place it into a no build area
-	if (blobToPlace.getName() != "ladder")
+	if (blobToPlace.getName() != "ladder" && !blobToPlace.hasTag("conveyor"))
 	{
 		pos = cursorPos + Vec2f(map.tilesize * 0.2f, map.tilesize * 0.2f);
 
@@ -266,7 +266,7 @@ void onTick(CBlob@ this)
 		carryBlob.SetVisible(!carryBlob.hasTag("temp blob"));
 
 		bool onetile = false;
-		if (carryBlob.getName() == "ladder")
+		if (carryBlob.getName() == "ladder" || carryBlob.hasTag("conveyor"))
 		{
 			onetile = true;
 		}
@@ -306,6 +306,7 @@ void onTick(CBlob@ this)
 
 							if (blob is carryBlob || blob is this) continue;
 
+							if(!blob.hasTag("pipe") && !carryBlob.hasTag("pipe") ||  (blob.hasTag("pipe") && carryBlob.hasTag("pipe")))
 							overlapped = (blob.getPosition() - ontilepos).LengthSquared() < tsqr;
 						}
 					}

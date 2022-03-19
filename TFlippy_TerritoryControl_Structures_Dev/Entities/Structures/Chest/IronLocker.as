@@ -14,8 +14,6 @@ void onInit(CBlob@ this)
 	
 	this.server_setTeamNum(-1);
 	
-	this.Tag("ignore extractor");
-	
 	this.set_string("Owner", "");
 	this.addCommandID("sv_setowner");
 	this.addCommandID("sv_store");

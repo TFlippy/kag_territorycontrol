@@ -10,10 +10,10 @@ void onInit(CBlob@ this)
 {
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
-	this.set_TileType("background tile", CMap::tile_castle_back);
 	
 	this.Tag("builder always hit");
 	this.Tag("change team on fort capture");
+	this.Tag("extractable");
 }
 
 void onAddToInventory(CBlob@ this, CBlob@ blob)

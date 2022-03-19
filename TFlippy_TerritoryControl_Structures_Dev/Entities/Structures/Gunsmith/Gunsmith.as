@@ -36,6 +36,8 @@ void onInit(CBlob@ this)
 
 	this.Tag("builder always hit");
 	this.Tag("change team on fort capture");
+	
+	this.Tag("extractable");
 
 	this.getCurrentScript().tickFrequency = 300;
 	this.inventoryButtonPos = Vec2f(-8, 0);

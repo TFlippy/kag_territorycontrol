@@ -16,7 +16,6 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().mapCollisions = false;
 	this.Tag("builder always hit");
 
-	this.getCurrentScript().tickFrequency = 10;
 	this.getSprite().SetZ(-10.0f);
 
 	this.set_f32("pressure", 0.00f);
@@ -694,6 +693,7 @@ void onRender(CSprite@ this)
 
 void onTick(CBlob@ this)
 {
+  this.getCurrentScript().tickFrequency = 240 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 
   const u32 time = this.get_u32(timing);
   if (time > 0) {

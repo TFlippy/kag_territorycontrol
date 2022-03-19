@@ -90,31 +90,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	AddIconToken("$icon_library$", "Library.png", Vec2f(40, 24), 0, teamnum);
 	AddIconToken("$icon_workshop$", "Building.png", Vec2f(40, 24), 0);
 
-	//Automation
-	AddIconToken("$icon_conveyor$", "Conveyor.png", Vec2f(8, 8), 0, teamnum);
-	AddIconToken("$icon_climber$", "Climber.png", Vec2f(8, 8), 0, teamnum);
-	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 0, teamnum);
-	AddIconToken("$icon_filter$", "Filter.png", Vec2f(24, 8), 0, teamnum);
-	AddIconToken("$icon_launcher$", "Launcher.png", Vec2f(8, 8), 0, teamnum);
-	AddIconToken("$icon_jumper$", "Jumper.png", Vec2f(8, 8), 0, teamnum);
-	AddIconToken("$icon_autoforge$", "AutoForge.png", Vec2f(24, 32), 0, teamnum);
-	AddIconToken("$icon_inductionfurnace$", "InductionFurnace.png", Vec2f(40, 32), 0, teamnum);
-	AddIconToken("$icon_assembler$", "Assembler.png", Vec2f(40, 24), 0, teamnum);
-	AddIconToken("$icon_hopper$", "Hopper.png", Vec2f(24, 24), 0, teamnum);
-	AddIconToken("$icon_fetcher$", "Fetcher.png", Vec2f(24, 24), 0, teamnum);
-	AddIconToken("$icon_extractor$", "Extractor.png", Vec2f(16, 20), 0);
-	AddIconToken("$icon_filterextractor$", "FilterExtractor.png", Vec2f(24, 24), 0, teamnum);
-	AddIconToken("$icon_grinder$", "Grinder.png", Vec2f(40, 24), 0, teamnum);
-	AddIconToken("$icon_stonepile$", "StonePile.png", Vec2f(24, 40), 3, teamnum);
-	AddIconToken("$icon_packer$", "Packer.png", Vec2f(24, 16), 0, teamnum);
-	AddIconToken("$icon_compactor$", "Compactor.png", Vec2f(24, 32), 0, teamnum);
-	AddIconToken("$icon_inserter$", "Inserter.png", Vec2f(16, 16), 0);
-	AddIconToken("$icon_treecapitator$", "Treecapitator.png", Vec2f(24, 8), 0);
-	AddIconToken("$icon_chickenassembler$", "ChickenAssembler.png", Vec2f(56, 24), 0, teamnum);
-	AddIconToken("$icon_oiltank$","OilTank.png",Vec2f(32, 16), 0, teamnum);
-	AddIconToken("$icon_gastank$","GasTank.png",Vec2f(16, 24), 0, teamnum);
-	AddIconToken("$icon_chemlab$","ChemLab.png",Vec2f(48, 24), 0, teamnum);
-
 	//Miscellaneous
 	AddIconToken("$icon_lamppost$", "LampPost.png", Vec2f(8, 24), 0);
 	AddIconToken("$icon_ironlocker$", "IronLocker.png", Vec2f(16, 24), 0, teamnum);
@@ -292,6 +267,13 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		blocks[0].push_back(b);
 	}
 	{
+		BuildBlock b(0, "shifter", "$shifter$", "Shifter\n Moves things in a set direction, has a cooldown.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
+		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 1);
+		blocks[0].push_back(b);
+	}
+	{
 		BuildBlock b(CMap::tile_kudzu, "kudzu", "$kudzu_block$", "Mostly decorative kudzu leaves \n ");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
 		blocks[0].push_back(b);
@@ -456,44 +438,105 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 
 	BuildBlock[] page_2;
 	blocks.push_back(page_2);
+	
 	{
-		BuildBlock b(0, "conveyor", "$icon_conveyor$", "Conveyor Belt\nUsed to transport items.");
+		AddIconToken("$icon_conveyor$", "Conveyor.png", Vec2f(8, 8), 0, teamnum);
+		BuildBlock b(0, "conveyor", "$icon_conveyor$", "Conveyor Belt:\n\nUsed to transport items.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 4);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 6);
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "seperator", "$icon_separator$", "Separator\nItems matching the filter will be launched away.");
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 20);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
-		blocks[2].push_back(b);
-	}
-	/*{
-		BuildBlock b(0, "climber", "$icon_climber$", "Climber\nPulls items upwards.");
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 4);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 6);
-		blocks[2].push_back(b);
-	}*/
-	{
-		BuildBlock b(0, "launcher", "$icon_launcher$", "Launcher\nLaunches items to the eternity and beyond.");
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
-		blocks[2].push_back(b);
-	}
-	{
-		BuildBlock b(0, "filter", "$icon_filter$", "Filter\nItems matching the filter won't collide with this.");
+		AddIconToken("$icon_filter$", "Filter.png", Vec2f(8, 8), 0, teamnum);
+		BuildBlock b(0, "filter", "$icon_filter$", "Filter:\n\n$blue$Filtered$blue$ items will be ejected downwards.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 25);
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "jumper", "$icon_jumper$", "Jumper\nItems that collide will be launched up.");
+		AddIconToken("$icon_climber$", "Climber.png", Vec2f(8, 8), 5, teamnum);
+		BuildBlock b(0, "climber", "$icon_climber$", "Climber:\n\nPulls items upwards.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 4);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 6);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 5, teamnum);
+		BuildBlock b(0, "seperator", "$icon_separator$", "Separator:\n\n$blue$Filtered$blue$ items are pulled upward.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 20);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_jumper$", "Jumper.png", Vec2f(8, 16), 0, teamnum);
+		BuildBlock b(0, "jumper", "$icon_jumper$", "Jumper:\n\n$blue$Filtered$blue$ items will be launched straight up.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "autoforge", "$icon_autoforge$", "Auto-Forge\nProcesses raw materials and alloys just for you. Has a chance for a double yield.\n$RED$Requires coal to produce steel.$RED$$mat_coal$\n");
+		AddIconToken("$icon_launcher$", "Launcher.png", Vec2f(8, 8), 0, teamnum);
+		BuildBlock b(0, "launcher", "$icon_launcher$", "Launcher:\n\nLaunches items to the eternity and beyond.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_extractor$", "AutomationIcons.png", Vec2f(24, 48), 0);
+		BuildBlock b(0, "extractor", "$icon_extractor$", "Extractor:\n\nGrabs $blue$filtered$blue$ items from nearby inventories.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
+		b.buildOnGround = true;
+		b.size.Set(16, 16);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_fetcher$", "AutomationIcons.png", Vec2f(24, 48), 1, teamnum);
+		BuildBlock b(0, "fetcher", "$icon_fetcher$", "Fetcher:\n\nFetches $blue$specified$blue$ item from remote storages.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
+		b.buildOnGround = true;
+		b.size.Set(24, 32);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_stonepile$", "StonePile.png", Vec2f(24, 40), 3, teamnum);
+		BuildBlock b(0, "stonepile", "$icon_stonepile$", "Mining Silo:\n\nAutomatically collects ores from all of your team's mines.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 300);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
+		b.buildOnGround = true;
+		b.size.Set(24, 32);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_compactor$", "Compactor.png", Vec2f(24, 32), 0, teamnum);
+		BuildBlock b(0, "compactor", "$icon_compactor$", "Compactor:\n\nCan store enormous amounts of single resource.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 300);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 250);
+		b.buildOnGround = true;
+		b.size.Set(24, 32);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_gastank$","GasTank.png",Vec2f(16, 40), 0, teamnum);
+		BuildBlock b(0, "gastank", "$icon_gastank$", "Gas Tank:\n\nAutomatically collects methane from all of your team's methane collectors");
+		AddRequirement(b.reqs, "blob", "mat_ironingot","Iron Ingot", 15);
+		b.buildOnGround = true;
+		b.size.Set(16, 40);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_oiltank$","OilTank.png",Vec2f(24, 40), 0, teamnum);
+		BuildBlock b(0, "oiltank", "$icon_oiltank$", "Oil Tank:\n\nAutomatically collects oil from all of your team's pumpjacks.");
+		AddRequirement(b.reqs, "blob", "mat_wood","Wood", 250);
+		AddRequirement(b.reqs, "blob", "mat_ironingot","Iron Ingot", 2);
+		b.buildOnGround = true;
+		b.size.Set(24, 40);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_autoforge$", "AutoForge.png", Vec2f(24, 32), 0, teamnum);
+		BuildBlock b(0, "autoforge", "$icon_autoforge$", "Auto-Forge:\n\nProcesses raw materials and alloys just for you.\n\n$orange$Requires 2$mat_coal$and$mat_ironingot$to produce 1 steel.$orange$\n");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
 		b.buildOnGround = true;
@@ -501,47 +544,37 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "assembler", "$icon_assembler$", "Assembler\nAn elaborate piece of machinery that manufactures items.");
+		AddIconToken("$icon_inductionfurnace$", "InductionFurnace.png", Vec2f(40, 32), 0, teamnum);
+		BuildBlock b(0, "inductionfurnace", "$icon_inductionfurnace$", "Induction Furnace:\n\nA heavy-duty furnace that produces 4x more ingots at cost of lower speed.\n\n$orange$Requires 3$mat_coal$and$mat_ironingot$to produce 2 steel.$orange$\n");
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 60);
+		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 20);
+		// AddRequirement(b.reqs, "blob", "mat_battery", "Voltron Battery Plus", 50);
+		AddRequirement(b.reqs, "blob", "bp_induction", "Blueprint (Induction)", 1);
+		b.buildOnGround = true;
+		b.size.Set(40, 32);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_assembler$", "Assembler.png", Vec2f(32, 24), 0, teamnum);
+		BuildBlock b(0, "assembler", "$icon_assembler$", "Assembler:\n\nAn elaborate piece of machinery that manufactures items.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
-		// AddRequirement(b.reqs, "blob", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
 		b.buildOnGround = true;
-		b.size.Set(40, 24);
+		b.size.Set(32, 24);
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "drillrig", "$icon_drillrig$", "Driller Mole\nAn automatic drilling machine that mines resources underneath.");
-		AddRequirement(b.reqs, "blob", "drill", "Drill", 1);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
-		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
-		b.buildOnGround = true;
-		b.size.Set(24, 24);
-		blocks[2].push_back(b);
-	}
-	{
-		BuildBlock b(0, "hopper", "$icon_hopper$", "Hopper\nPicks up items lying on the ground.");
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 20);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 50);
-		blocks[2].push_back(b);
-	}
-	{
-		BuildBlock b(0, "extractor", "$icon_extractor$", "Extractor\nGrabs items from nearby inventories.");
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
-		b.buildOnGround = true;
-		b.size.Set(16, 32);
-		blocks[2].push_back(b);
-	}
-	{
-		BuildBlock b(0, "filterextractor", "$icon_filterextractor$", "Filtered Extractor\nGrabs specific items from nearby inventories. Slightly slower than the regular extractor.");
+		AddIconToken("$icon_mini_assembler$", "MiniAssembler.png", Vec2f(24, 18), 0, teamnum);
+		BuildBlock b(0, "miniassembler", "$icon_mini_assembler$", "Mini-Assembler:\n\nAn elaborate piece of machinery that manufactures items.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
 		b.buildOnGround = true;
-		b.size.Set(24, 32);
+		b.size.Set(24, 16);
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "grinder", "$icon_grinder$", "Grinder\nA dangerous machine capable of destroying almost everything.");
+		AddIconToken("$icon_grinder$", "OldGrinder.png", Vec2f(40, 24), 0, teamnum);
+		BuildBlock b(0, "grinder_old", "$icon_grinder$", "Grinder:\n\nA dangerous machine capable of destroying almost everything.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 250);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 5);
@@ -550,15 +583,64 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "packer", "$icon_packer$", "Packer\nA safe machine capable of packing almost everything.");
+		AddIconToken("$icon_mini_grinder$", "AutomationIcons.png", Vec2f(24, 24), 2, teamnum);
+		BuildBlock b(0, "grinder", "$icon_mini_grinder$", "Mini-Grinder:\n\nA dangerous machine capable of destroying almost everything.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 250);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingots", 5);
+		b.buildOnGround = true;
+		b.size.Set(32, 16);
+		blocks[2].push_back(b);
+	}
+	{
+		BuildBlock b(0, "drillrig", "$icon_drillrig$", "Driller Mole:\n\nAn automatic drilling machine that mines resources underneath.");
+		AddRequirement(b.reqs, "blob", "drill", "Drill", 1);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
+		b.buildOnGround = true;
+		b.size.Set(24, 24);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_hoppacker$", "Hoppacker.png", Vec2f(24, 24), 0, teamnum);
+		BuildBlock b(0, "hoppacker", "$icon_hoppacker$", "Hoppacker:\n\nA safe machine capable of storing and packing items into a crate.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
 		b.buildOnGround = true;
 		b.size.Set(24, 16);
 		blocks[2].push_back(b);
 	}
+	
+	/*{
+		AddIconToken("$icon_filterextractor$", "FilterExtractor.png", Vec2f(24, 24), 0, teamnum);
+		BuildBlock b(0, "filterextractor", "$icon_filterextractor$", "Filtered Extractor:\n\nGrabs specific items from nearby inventories. Slightly slower than the regular extractor.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
+		b.buildOnGround = true;
+		b.size.Set(24, 32);
+		blocks[2].push_back(b);
+	}*/
+	/*
 	{
-		BuildBlock b(0, "inserter", "$icon_inserter$", "Inserter\nTransfers items between inventories next to it.\nLarge funnel acts as input, small funnel as output.");
+		AddIconToken("$icon_hopper$", "Hopper.png", Vec2f(24, 24), 0, teamnum);
+		BuildBlock b(0, "hopper", "$icon_hopper$", "Hopper:\n\nPicks up items lying on the ground.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 20);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 50);
+		blocks[2].push_back(b);
+	}
+	{
+		AddIconToken("$icon_packer$", "Packer.png", Vec2f(24, 16), 0, teamnum);
+		BuildBlock b(0, "packer", "$icon_packer$", "Packer:\n\nA safe machine capable of packing almost everything.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
+		b.buildOnGround = true;
+		b.size.Set(24, 16);
+		blocks[2].push_back(b);
+	}
+	*/
+	{
+		AddIconToken("$icon_inserter$", "Inserter.png", Vec2f(16, 16), 0);
+		BuildBlock b(0, "inserter", "$icon_inserter$", "Inserter:\n\nTransfers items between inventories next to it.\nLarge funnel acts as input, small funnel as output.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 25);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 30);
 		b.buildOnGround = true;
@@ -566,7 +648,8 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "chickenassembler", "$icon_chickenassembler$", "UPF Assembly Line\nA reverse-engineered assembly line used to manufacture some of the UPF products.");
+		AddIconToken("$icon_chickenassembler$", "ChickenAssembler.png", Vec2f(56, 24), 0, teamnum);
+		BuildBlock b(0, "chickenassembler", "$icon_chickenassembler$", "UPF Assembly Line:\n\nA reverse-engineered assembly line used to manufacture some of the UPF products.");
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 10);
@@ -577,7 +660,8 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "chemlab", "$icon_chemlab$", "Chemical Production Machine\nA machine capable of manufacturing basic drugs and chemicals.");
+		AddIconToken("$icon_chemlab$","ChemLab.png",Vec2f(48, 24), 0, teamnum);
+		BuildBlock b(0, "chemlab", "$icon_chemlab$", "Chemical Production Machine:\n\nA machine capable of manufacturing basic drugs and chemicals.");
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
 		AddRequirement(b.reqs, "blob", "mat_copperingot", "Copper Ingot", 40);
@@ -587,67 +671,26 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "treecapitator", "$icon_treecapitator$", "Treecapitator\nMurders trees and stores their logs.");
+		AddIconToken("$icon_treecapitator$", "Treecapitator.png", Vec2f(24, 8), 0);
+		BuildBlock b(0, "treecapitator", "$icon_treecapitator$", "Treecapitator:\n\nMurders trees and stores their logs.");
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 70);
 		blocks[2].push_back(b);
 	}
 	{
-		BuildBlock b(0, "inductionfurnace", "$icon_inductionfurnace$", "Induction Furnace\nA heavy-duty furnace that produces up to 4x more ingots at cost of lower speed.");
-		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 60);
-		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 20);
-		// AddRequirement(b.reqs, "blob", "mat_battery", "Voltron Battery Plus", 50);
-		AddRequirement(b.reqs, "blob", "bp_induction", "Blueprint (Induction)", 1);
-		b.buildOnGround = true;
-		b.size.Set(40, 32);
-		blocks[2].push_back(b);
-	}
-	{
-		BuildBlock b(0, "oiltank", "$icon_oiltank$", "Oil Tank\nAutomatically collects oil from all of your team's pumpjacks.");
-		AddRequirement(b.reqs, "blob", "mat_wood","Wood", 250);
-		AddRequirement(b.reqs, "blob", "mat_ironingot","Iron Ingot", 2);
-		b.buildOnGround = true;
-		b.size.Set(32, 16);
-		blocks[2].push_back(b);
-	}
-	{
-		BuildBlock b(0, "stonepile", "$icon_stonepile$", "Stone Silo\nAutomatically collects ores from all of your team's mines.");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 300);
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
-		b.buildOnGround = true;
-		b.size.Set(24, 40);
-		blocks[2].push_back(b);
-	}
-	{
-		BuildBlock b(0, "compactor", "$icon_compactor$", "Compactor\nCan store enormous amounts of single resource.");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 300);
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 250);
-		b.buildOnGround = true;
-		b.size.Set(24, 32);
-		blocks[2].push_back(b);
-	}
-	{
-		BuildBlock b(0, "gastank", "$icon_gastank$", "Gas Tank\nAutomatically collects methane from all of your team's methane collectors");
-		AddRequirement(b.reqs, "blob", "mat_ironingot","Iron Ingot", 15);
-		b.buildOnGround = true;
-		b.size.Set(16, 24);
-		blocks[2].push_back(b);
-	}
-	{
-		BuildBlock b(0, "fetcher", "$icon_fetcher$", "Fetcher\nFetches specified item from inventories and ground.");
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
+		BuildBlock b(0, "mithrilreactor", "$icon_mithrilreactor$", "Mithril Reactor:\n\nA small reactor used for mithril enrichment and synthesis using gold.\nBecomes more stable when submerged in deep water.\n$mat_gold$$DEFEND_RIGHT$$mat_mithril_10x$$DEFEND_RIGHT$$mat_mithrilenriched_10x$\n\n$RED$Careless usage may result in\nan irradiated crater.$RED$\n");
+		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
+		AddRequirement(b.reqs, "blob", "mat_mithril", "Mithril", 100);
+		AddRequirement(b.reqs, "blob", "mat_mithrilingot", "Mithril Ingot", 5);
+		AddRequirement(b.reqs, "blob", "bp_enrichment", "Blueprint (Enrichment)", 1);
 		b.buildOnGround = true;
 		b.size.Set(24, 24);
 		blocks[2].push_back(b);
 	}
-	{
-		BuildBlock b(0, "shifter", "$shifter$", "Shifter\n Moves things in a set direction, has a cooldown.");
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
-		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 1);
-		blocks[2].push_back(b);
-	}
+	
+	
+	
+	
 
 	BuildBlock[] page_3;
 	blocks.push_back(page_3);
@@ -760,16 +803,6 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		BuildBlock b(0, "industriallamp", "$icon_industriallamp$", "Industrial Lamp\nA sturdy lamp to ligthen up the mood in your factory.\nActs as a support block.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 30);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 1);
-		blocks[3].push_back(b);
-	}
-	{
-		BuildBlock b(0, "mithrilreactor", "$icon_mithrilreactor$", "Mithril Reactor\nA small reactor used for mithril enrichment and synthesis using gold.\nBecomes more stable when submerged in deep water.\n$mat_gold$$DEFEND_RIGHT$$mat_mithril_10x$$DEFEND_RIGHT$$mat_mithrilenriched_10x$\n\n$RED$Careless usage may result in\nan irradiated crater.$RED$\n");
-		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
-		AddRequirement(b.reqs, "blob", "mat_mithril", "Mithril", 100);
-		AddRequirement(b.reqs, "blob", "mat_mithrilingot", "Mithril Ingot", 5);
-		AddRequirement(b.reqs, "blob", "bp_enrichment", "Blueprint (Enrichment)", 1);
-		b.buildOnGround = true;
-		b.size.Set(24, 24);
 		blocks[3].push_back(b);
 	}
 	{

@@ -8,6 +8,7 @@ string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 	u16 quantity=0;
 	bs.ResetBitIndex();
 
+	text += "\nRequires:\n";
 	while (!bs.isBufferEnd())
 	{
 		ReadRequirement(bs,requiredType,name,friendlyName,quantity);
@@ -93,6 +94,7 @@ string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 				text += quantityColor;
 			}
 		}
+		text += "\n";
 	}
 
 	return text;

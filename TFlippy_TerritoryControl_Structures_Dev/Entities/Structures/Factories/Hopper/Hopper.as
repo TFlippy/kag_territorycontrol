@@ -6,8 +6,8 @@ void onInit(CBlob @ this)
 	this.getShape().SetRotationsAllowed(false);
 	this.Tag("place norotate");
 
-	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
+	this.Tag("extractable");
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)

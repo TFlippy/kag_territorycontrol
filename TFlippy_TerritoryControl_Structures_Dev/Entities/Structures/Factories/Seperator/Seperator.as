@@ -1,68 +1,88 @@
-// TrapBlock.as
 
 #include "Hitters.as";
-#include "MapFlags.as";
-#include "MinableMatsCommon.as";
-
-int openRecursion = 0;
+#include "FilteringCommon.as";
 
 void onInit(CBlob@ this)
 {
-	this.getSprite().SetZ(10);
-
+	this.getSprite().SetZ(150);
 	this.getShape().SetRotationsAllowed(false);
-
-	this.set_bool("open", false);
+	
 	this.Tag("place norotate");
-
-	//block knight sword
 	this.Tag("blocks sword");
-	this.Tag("blocks water");
-
-	this.set_TileType("background tile", CMap::tile_castle_back);
-
+	
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 
-	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
+	this.Tag("ignore blocking actors");
+	this.Tag("conveyor");
+	this.Tag("pipe");
+}
 
-	HarvestBlobMat[] mats = {};
-	mats.push_back(HarvestBlobMat(10.0f, "mat_stone")); 
-	mats.push_back(HarvestBlobMat(5.0f, "mat_wood"));
-	this.set("minableMats", mats);
+void onInit(CSprite @this){
+	CSpriteLayer@ Case = this.addSpriteLayer( "case","Seperator.png", 8,8 );
+	if(Case !is null)
+	{
+		Case.addAnimation("default",0,false);
+		int[] frames = {4};
+		Case.animation.AddFrames(frames);
+		Case.SetRelativeZ(200);
+		Case.SetOffset(Vec2f(0,0));
+	}
+	this.SetFrameIndex(getGameTime() % 4);
 }
 
 void onSetStatic(CBlob@ this, const bool isStatic)
 {
+	if (!isStatic) return;
+	
+	if(isServer()){
+		CMap@ map = getMap();
+		if(map.getTile(this.getPosition()).type == 0)map.server_SetTile(this.getPosition()+Vec2f(0,0), CMap::tile_wood_back);
+	}
+	
 	CSprite@ sprite = this.getSprite();
 	if (sprite is null) return;
 
-	sprite.getConsts().accurateLighting = true;
-
-	if (!isStatic) return;
-
-	this.getSprite().PlaySound("/build_door.ogg");
+	sprite.PlaySound("/build_door.ogg");
+	sprite.SetZ(-50);
 }
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
+	if (blob is null) return false;
+	//if (blob.getPosition().y > this.getPosition().y) return false;
+	
 	return true;
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob is null || blob.hasTag("player")) return;
-	if (blob.getPosition().y > this.getPosition().y) return;
+	if (blob.getPosition().y < this.getPosition().y-4) return;
+	if (blob.getShape().isStatic())return;
+	if (blob.isAttached())return;
+	if (!server_isItemAccepted(this, blob.getName()))return;
 	
-	if (this.hasBlob(blob.getName(), 0))
-	{
-		blob.setVelocity(Vec2f(this.isFacingLeft() ? -1 : 1, -6));
+	if(blob.getPosition().x > this.getPosition().x-1 && blob.getPosition().x < this.getPosition().x+1){
+		blob.setVelocity(Vec2f(0.0f, -4.0f));
+	} else {
+		blob.setVelocity(Vec2f(0.0f, -4.0f));
+		
 		if(isClient()) this.getSprite().PlaySound("/launcher_boing" + XORRandom(2) + ".ogg", 0.5f, 0.9f);
+
+		blob.setPosition(Vec2f(this.getPosition().x,blob.getPosition().y));
 	}
-	else if (Maths::Abs(blob.getVelocity().y) < 2.0f) blob.setVelocity(Vec2f(this.isFacingLeft() ? -1 : 1, -1.0f));
+	
+	
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	return false;
+}
+
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	if (customData == Hitters::builder) damage *= 30.0f;
+	return damage;
 }

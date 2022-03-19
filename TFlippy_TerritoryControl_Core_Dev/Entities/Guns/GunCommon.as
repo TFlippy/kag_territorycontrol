@@ -63,7 +63,8 @@ class GunSettings
 	/// this.set_u32("CustomGunRecoil", uint recoil) //Distance the gun "kickbacks" when shot
 	///
 	/// this.set_u8("CustomKnock", int knocktime); //Time in ticks the victim is knocked for
-	/// this.set_u8("CustomPenetration", int penetration); //How much damage to blocks that are shot
+	/// this.set_u8("CustomBlockDamage", int repeats); //How many times damage to blocks is repeated
+	/// this.set_u8("CustomPierce", int pierces); //How many blobs/blocks are pierced.
 	///
 	/// this.Tag("SingleShotReloading"); //Switches the gun to use an alternative reloading method
 	/// this.Tag("CustomMuzzleLeft"); //Sets the muzzle flash sprite in the opposite direction

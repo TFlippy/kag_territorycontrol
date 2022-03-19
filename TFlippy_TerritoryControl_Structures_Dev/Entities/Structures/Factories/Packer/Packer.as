@@ -18,7 +18,6 @@ void onInit(CBlob@ this)
 	this.getCurrentScript().tickFrequency = 60;
 
 	this.Tag("builder always hit");
-	this.Tag("ignore extractor");
 	
 	this.set_u8("packer mode", 0);
 	

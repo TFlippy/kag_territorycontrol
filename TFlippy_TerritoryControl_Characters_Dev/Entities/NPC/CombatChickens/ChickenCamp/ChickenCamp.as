@@ -1,6 +1,5 @@
 ﻿void onInit(CBlob@ this)
 {
-	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
 	this.Tag("upf_base");
 	

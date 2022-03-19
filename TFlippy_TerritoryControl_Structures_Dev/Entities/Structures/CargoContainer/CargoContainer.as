@@ -8,6 +8,7 @@ void onInit(CBlob@ this)
 	this.inventoryButtonPos = Vec2f(-22, 0);
 	this.set_Vec2f("store_offset", Vec2f(4, 0));
 	this.Tag("remote_storage");
+	this.Tag("extractable");
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)

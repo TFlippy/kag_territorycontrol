@@ -21,33 +21,40 @@ const string[] matNamesResult = {
 };
 
 const int[] matRatio = { 
-	10,
-	10,
+	5,
+	5,
 	25,
-	20
+	10
+};
+
+const int[] matResult = { 
+	1,
+	1,
+	2,
+	1
 };
 
 void onInit(CBlob@ this)
 {
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
-	this.getCurrentScript().tickFrequency = 45;
 
-	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
 }
 
 void onTick(CBlob@ this)
 {
-	if (this.hasBlob("mat_ironingot", 4) && this.hasBlob("mat_coal", 4)) //steel ingots require coal to be created
+	this.getCurrentScript().tickFrequency = 60 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+	
+	if (this.hasBlob("mat_ironingot", 2) && this.hasBlob("mat_coal", 2)) //steel ingots require coal to be created
 	{
 		if (isServer())
 		{
 			CBlob@ mat = server_CreateBlob("mat_steelingot", -1, this.getPosition());
-			mat.server_SetQuantity(2);
+			mat.server_SetQuantity(1);
 			mat.Tag("justmade");
-			this.TakeBlob("mat_ironingot", 4);
-			this.TakeBlob("mat_coal", 4);
+			this.TakeBlob("mat_ironingot", 2);
+			this.TakeBlob("mat_coal", 2);
 		}
 		if (isClient())
 		{
@@ -62,7 +69,7 @@ void onTick(CBlob@ this)
 			if (isServer())
 			{
 				CBlob@ mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
-				mat.server_SetQuantity(2);
+				mat.server_SetQuantity(matResult[i]);
 				mat.Tag("justmade");
 				this.TakeBlob(matNames[i], matRatio[i]);
 			}
@@ -103,18 +110,4 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	// return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
 	return forBlob !is null && forBlob.isOverlapping(this);
-}
-
-void onAddToInventory( CBlob@ this, CBlob@ blob )
-{
-	if(blob.getName() != "gyromat") return;
-
-	this.getCurrentScript().tickFrequency = 45 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
-}
-
-void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
-{
-	if(blob.getName() != "gyromat") return;
-	
-	this.getCurrentScript().tickFrequency = 45 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

@@ -8,14 +8,12 @@ void onInit(CBlob@ this)
 	this.Tag("builder always hit");
 	this.Tag("change team on fort capture");
 	this.Tag("gas_tank");
+	this.Tag("extractable");
 }
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	return (forBlob.getTeamNum() == this.getTeamNum());
-	{
-		CBlob@ carried = forBlob.getCarriedBlob();
-		if (carried !is null) return carried.hasTag("mat_gas");
-		else return true;
-	}
+	CBlob@ carried = forBlob.getCarriedBlob();
+	if (carried !is null) return carried.hasTag("mat_gas");
+	else return true;
 }

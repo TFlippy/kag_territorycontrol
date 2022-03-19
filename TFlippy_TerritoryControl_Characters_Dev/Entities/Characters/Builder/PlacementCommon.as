@@ -106,6 +106,8 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		//cant build wood on stone background
 		return false;
 	}*/
+	
+	if(blob !is null)if(blob.hasTag("inline_block"))return true;
 
 	if ((buildTile == CMap::tile_glass && backtile.type == CMap::tile_glass_d0) ||																																						//glass block
 		(buildTile == CMap::tile_wood && backtile.type >= CMap::tile_wood_d1 && backtile.type <= CMap::tile_wood_d0) || 																												//wood block
@@ -175,16 +177,13 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		}
 		else return false;
 	}*/
-	else if (map.isTileSolid(backtile) || map.hasTileSolidBlobs(backtile))
+	else if(map.isTileSolid(backtile))//map.hasTileSolidBlobs(backtile)
 	{
-		if (!buildSolid && !map.hasTileSolidBlobsNoPlatform(backtile) && !map.isTileSolid(backtile))
-		{
-			//skip onwards, platforms don't block backwall
-		}
-		else
-		{
-			return false;
-		}
+		return false;
+	}
+	else if(map.hasTileSolidBlobsNoPlatform(backtile))//map.hasTileSolidBlobs(backtile)
+	{
+		if (buildSolid)return false;// && !map.hasTileSolidBlobsNoPlatform(backtile) 
 	}
 
 	//printf("c");
@@ -203,7 +202,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		return false;
 	}
 	// no blocking actors?
-	// printf("d");
+	//printf("d");
 	if (blob is null || !blob.hasTag("ignore blocking actors"))
 	{
 		bool isLadder = false;
@@ -243,7 +242,6 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 							if (!isSpikes && (b.getPosition() - middle).getLength() <= radius)
 							{
 								return false;
-
 							}
 
 						}
@@ -260,6 +258,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 							        !b.hasTag("dead") &&
 							        !b.hasTag("material") &&
 							        !b.hasTag("projectile") &&
+									!b.hasTag("inline_block") &&
 							        bname != "bush")
 							{
 								f32 angle_decomp = Maths::FMod(Maths::Abs(b.getAngleDegrees()), 180.0f);
@@ -347,5 +346,6 @@ bool isBuildRayBlocked(Vec2f pos, Vec2f target, Vec2f &out point)
 	return map.rayCastSolid(pos + Vec2f(0, halfsize), target, point) &&
 	       map.rayCastSolid(pos + Vec2f(halfsize, 0), target, point) &&
 	       map.rayCastSolid(pos + Vec2f(0, -halfsize), target, point) &&
+		   map.rayCastSolid(pos + Vec2f(0, -halfsize), target + Vec2f(0, -map.tilesize), point) &&
 	       map.rayCastSolid(pos + Vec2f(-halfsize, 0), target, point);
 }

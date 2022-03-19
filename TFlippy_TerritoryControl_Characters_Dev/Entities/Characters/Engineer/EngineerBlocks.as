@@ -82,7 +82,8 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 	AddIconToken("$reinforcedconcrete_block$", "World.png", Vec2f(8, 8), CMap::tile_reinforcedconcrete);
 	
 	AddIconToken("$icon_conveyor$", "Conveyor.png", Vec2f(8, 8), 0);
-	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 0);
+	AddIconToken("$icon_climber$", "Climber.png", Vec2f(8, 8), 5);
+	AddIconToken("$icon_separator$", "Seperator.png", Vec2f(8, 8), 5);
 	AddIconToken("$icon_filter$", "Filter.png", Vec2f(24, 8), 0);
 	AddIconToken("$icon_launcher$", "Launcher.png", Vec2f(8, 8), 0);
 	AddIconToken("$icon_autoforge$", "AutoForge.png", Vec2f(24, 32), 0);
@@ -403,11 +404,17 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		blocks[2].push_back(b);
 	}
 	{
+		BuildBlock b(0, "climber", "$icon_climber$", "Climber\nPulls items upwards.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 4);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 6);
+		blocks[2].push_back(b);
+	}
+	/*{
 		BuildBlock b(0, "launcher", "$icon_launcher$", "Launcher\nLaunches items to the eternity and beyond.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
 		blocks[2].push_back(b);
-	}
+	}*/
 	{
 		BuildBlock b(0, "filter", "$icon_filter$", "Filter\nItems matching the filter won't collide with this.");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
@@ -493,7 +500,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 10);
 		// AddRequirement(b.reqs, "tech", "tech_automation_advanced", "Technology (Advanced Automation)", 1);
-		AddRequirement(b.reqs, "blob", "bp_automation_advanced", "Blueprint (Advanced Automation)", 1);
+		AddRequirement(b.reqs, "blob", "bp_automation", "Blueprint (Advanced Automation)", 1);
 		b.buildOnGround = true;
 		b.size.Set(56, 24);
 		blocks[2].push_back(b);

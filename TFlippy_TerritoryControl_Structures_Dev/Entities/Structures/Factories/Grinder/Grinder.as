@@ -22,7 +22,8 @@ void onInit(CSprite@ this)
 		anim.AddFrame(7);
 		chop_left.SetAnimation(anim);
 		chop_left.SetRelativeZ(-1.0f);
-		chop_left.SetOffset(Vec2f(5.0f, -1.0f));
+		chop_left.SetOffset(Vec2f(5.0f, -6.0f));
+		chop_left.ScaleBy(-1, 1);
 	}
 
 	CSpriteLayer@ chop_right = this.addSpriteLayer("chop_right", "/Saw.png", 16, 16);
@@ -34,84 +35,51 @@ void onInit(CSprite@ this)
 		anim.AddFrame(7);
 		chop_right.SetAnimation(anim);
 		chop_right.SetRelativeZ(-1.0f);
-		chop_right.SetOffset(Vec2f(-5.0f, -2.0f));
+		chop_right.SetOffset(Vec2f(-5.0f, -6.0f));
 	}
 }
+
+void onSetStatic(CBlob@ this, const bool isStatic)
+{
+
+	this.setPosition(this.getPosition()+Vec2f(0,4));
+
+}
+
 void onInit(CBlob@ this)
 {
 	this.Tag("builder always hit");
+	this.Tag("extractable");
+	
+	//this.getCurrentScript().tickFrequency = 5;
 
-	this.getShape().SetOffset(Vec2f(0, 4));
 
 	{
-		Vec2f offset(-24, 8);
+		Vec2f offset(-28, 8);
 
 		Vec2f[] shape =
 		{
 			Vec2f(0.0f, 0.0f) - offset,
-			Vec2f(8.0f, 0.0f) - offset,
-			Vec2f(8.0f, 23.0f) - offset,
-			Vec2f(0.0f, 23.0f) - offset
+			Vec2f(4.0f, 0.0f) - offset,
+			Vec2f(4.0f, 14.0f) - offset,
+			Vec2f(0.0f, 14.0f) - offset
 		};
 		this.getShape().AddShape(shape);
 	}
 
 	{
-		Vec2f offset(8, 8);
+		Vec2f offset(0, 8);
 
 		Vec2f[] shape =
 		{
 			Vec2f(0.0f, 0.0f) - offset,
-			Vec2f(8.0f, 0.0f) - offset,
-			Vec2f(8.0f, 23.0f) - offset,
-			Vec2f(0.0f, 23.0f) - offset
+			Vec2f(4.0f, 0.0f) - offset,
+			Vec2f(4.0f, 14.0f) - offset,
+			Vec2f(0.0f, 14.0f) - offset
 		};
 		this.getShape().AddShape(shape);
 	}
-
-	this.set_TileType("background tile", CMap::tile_castle_back);
-	this.getShape().getConsts().mapCollisions = false;
-	this.getCurrentScript().tickFrequency = 5;
-	this.getShape().SetStatic(true);
-}
-
-void onTick(CBlob@ this)
-{
-	if (this.getTickSinceCreated() > 30)
-	{
-		ShapeConsts@ consts = this.getShape().getConsts();
-		consts.collidable = true;
-	}
-
-	CBlob@[] blobs;
-	if (getMap().getBlobsInRadius(this.getPosition()+Vec2f(0,-2) ,6.4f, @blobs))
-	{
-		int length = (blobs.length > MAX_GRINDABLE_AT_ONCE ? MAX_GRINDABLE_AT_ONCE : blobs.length);
-
-		for (uint i = 0; i < length; i++)
-		{
-			CBlob@ blob = blobs[i];
-			if (blob is null) { continue; }
-
-			if (canSaw(this, blob))
-			{
-				Blend(this, blob);
-				if (isServer())
-				{ 
-					this.server_Hit(blob, blob.getPosition(), Vec2f(0, -2), 2.00f, Hitters::saw, true); 
-				}
-			}
-			else if (blob.hasTag("material") ? !this.server_PutInInventory(blob) : true)
-			{
-				blob.setVelocity(Vec2f(4 - XORRandom(8), -4));
-
-				if (blobs.length > length) // lets increase the length if its a useless item
-				{
-					length += 1;
-				}
-			}
-		}
-	}
+	
 }
 
 void onTick(CSprite@ this)
@@ -121,9 +89,52 @@ void onTick(CSprite@ this)
 	CSpriteLayer@ chop_left = this.getSpriteLayer("chop_left");
 	CSpriteLayer@ chop_right = this.getSpriteLayer("chop_right");
 
-	if (chop_left !is null) chop_left.RotateBy(10.0f, Vec2f(0.5f, -0.5f));
+	if (chop_left !is null) chop_left.RotateBy(10.0f, Vec2f(-0.5f, -0.5f));
 	if (chop_right !is null) chop_right.RotateBy(-10.0f, Vec2f(0.5f, -0.5f));
 }
+
+void onTick(CBlob@ this)
+{
+	/*
+	if (this.getTickSinceCreated() > 30)
+	{
+		ShapeConsts@ consts = this.getShape().getConsts();
+		consts.collidable = true;
+	}*/
+
+	CBlob@[] blobs;
+	if (getMap().getBlobsInRadius(this.getPosition()+Vec2f(0,-2) ,6.4f, @blobs))
+	{
+		int length = (blobs.length > MAX_GRINDABLE_AT_ONCE ? MAX_GRINDABLE_AT_ONCE : blobs.length);
+
+		for (uint i = 0; i < length; i++)
+		{
+			CBlob@ blob = blobs[i];
+			
+			if(blob.getVelocity().y >= 0.0f && blob.getPosition().y < this.getPosition().y-6){
+				if (canSaw(this, blob))
+				{
+					Blend(this, blob);
+					if (isServer())
+					{ 
+						this.server_Hit(blob, blob.getPosition(), Vec2f(0, -2), 2.0f, Hitters::saw, true); 
+					}
+				}
+				else if (blob.hasTag("material") ? !this.server_PutInInventory(blob) : true)
+				{
+					blob.setVelocity(Vec2f(4 - XORRandom(8), -4));
+
+					if (blobs.length > length) // lets increase the length if its a useless item
+					{
+						length += 1;
+					}
+				}
+			}
+		}
+	}
+}
+
+
 
 bool canSaw(CBlob@ this, CBlob@ blob)
 {
@@ -299,7 +310,8 @@ void Blend(CBlob@ this, CBlob@ blob)
 
 					// print("" + amount);
 
-					blob.setVelocity(Vec2f(1 - XORRandom(2), -0.25f));
+					if(blob.getPosition().x < this.getPosition().x)blob.setVelocity(Vec2f(2, -1.0f));
+					else blob.setVelocity(Vec2f(-2, -1.0f));
 
 					MakeMat(this, this.getPosition(), "mat_meat", amount);
 				}

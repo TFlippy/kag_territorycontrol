@@ -8,8 +8,6 @@ void onInit(CBlob@ this)
 {
 	this.Tag("remote_storage");
 
-	this.Tag("ignore extractor");
-
 	this.Tag("upkeep building");
 	this.set_u8("upkeep cap increase", 1);
 	this.set_u8("upkeep cost", 0);
@@ -191,9 +189,4 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 	}
-}
-
-bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
-{
-	return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
 }

@@ -23,11 +23,19 @@ const string[] matNamesResult = {
 };
 
 const int[] matRatio = { 
-	10,
-	10,
-	10,
+	5,
+	5,
+	5,
 	25,
-	6
+	3
+};
+
+const int[] matResult = { 
+	2,
+	2,
+	2,
+	4,
+	2
 };
 
 const int[] coalRatio = {
@@ -35,16 +43,13 @@ const int[] coalRatio = {
 	0,
 	0,
 	0,
-	4
+	3
 };
 
 void onInit(CBlob@ this)
 {
-	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
-	this.getCurrentScript().tickFrequency = 90;
 
-	this.Tag("ignore extractor");
 	this.Tag("builder always hit");
 
 	CSprite@ sprite = this.getSprite();
@@ -59,6 +64,7 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	this.getCurrentScript().tickFrequency = 240 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -67,7 +73,7 @@ void onTick(CBlob@ this)
 			if (isServer())
 			{
 				CBlob @mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
-				mat.server_SetQuantity(4);
+				mat.server_SetQuantity(matResult[i]);
 				mat.Tag("justmade");
 				this.TakeBlob(matNames[i], matRatio[i]);
 				if (coalRatio[i] > 0) this.TakeBlob("mat_coal", coalRatio[i]);
@@ -106,18 +112,4 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	// return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
 	return forBlob !is null && forBlob.isOverlapping(this);
-}
-
-void onAddToInventory( CBlob@ this, CBlob@ blob )
-{
-	if(blob.getName() != "gyromat") return;
-
-	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
-}
-
-void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
-{
-	if(blob.getName() != "gyromat") return;
-
-	this.getCurrentScript().tickFrequency = 90 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
 }

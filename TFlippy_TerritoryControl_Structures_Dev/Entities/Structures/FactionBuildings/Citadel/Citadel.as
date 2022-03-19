@@ -7,7 +7,6 @@
 
 void onInit(CBlob@ this)
 {
-	this.Tag("ignore extractor");
 	this.Tag("remote_storage");
 	
 	this.Tag("blocks spawn");
@@ -189,9 +188,4 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 	}
-}
-
-bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
-{
-	return (forBlob.getTeamNum() == this.getTeamNum() && forBlob.isOverlapping(this));
 }

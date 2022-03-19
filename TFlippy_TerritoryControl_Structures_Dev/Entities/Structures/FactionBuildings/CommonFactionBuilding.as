@@ -11,6 +11,7 @@ const u32[] teamcolours = {0xff0000ff, 0xffff0000, 0xff00ff00, 0xffff00ff, 0xfff
 void onInit(CBlob@ this)
 {
 	this.Tag("faction_base");
+	this.Tag("extractable");
 
 	this.addCommandID("faction_captured");
 	this.addCommandID("faction_destroyed");
@@ -1010,4 +1011,9 @@ int highestCampLevel(CBlob@ this){
 		}
 	}
 	return highest;
+}
+
+bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
+{
+	return (forBlob.getTeamNum() == this.getTeamNum());
 }

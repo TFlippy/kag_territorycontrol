@@ -9,6 +9,7 @@ void onInit(CBlob@ this)
 	this.getShape().SetStatic(true);
 
 	this.Tag("builder always hit");
+	this.Tag("extractable");
 
 	this.getCurrentScript().tickFrequency = 150;
 
