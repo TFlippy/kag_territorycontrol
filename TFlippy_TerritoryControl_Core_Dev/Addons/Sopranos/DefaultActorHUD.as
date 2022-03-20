@@ -131,7 +131,7 @@ void RenderUpkeepHUD(CBlob@ this)
 	if (upkeep_ratio > 1.00f)
 	{
 		string msg_penalties = "Penalties:\n";
-		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RECRUITMENT) { msg_penalties += "- Recruitment disabled\n"; has_penalties = true; }
+		//if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RECRUITMENT) { msg_penalties += "- Recruitment disabled\n"; has_penalties = true; }
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_COIN_DROP) { msg_penalties += "- Higher coin loss on death\n"; has_penalties = true; }
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_RESPAWN_TIME) { msg_penalties += "- Increased respawn time\n"; has_penalties = true; }
 		if (upkeep_ratio >= UPKEEP_RATIO_PENALTY_STORAGE && team_data.storage_enabled) { msg_penalties += "- No Remote storage\n"; has_penalties = true; }
@@ -251,7 +251,7 @@ void RenderTeamInventoryHUD(CBlob@ this)
 			}
 
 			CInventory@ inv = baseBlob.getInventory();
-			if (inv is null) return;
+			if (inv is null)continue;
 
 			for (int j = 0; j < inv.getItemsCount(); j++)
 			{
@@ -296,6 +296,37 @@ void RenderTeamInventoryHUD(CBlob@ this)
 				itemsToShow.push_back(item);
 				itemAmounts.push_back(item.getQuantity());
 				bArray.push_back(-1);
+			}
+		}
+		
+		for (int i = 0; i < baseBlobs.length; i++) ///Loop through again for compactors, since compactors don't store the item, they can't add new entries, dumb system
+		{
+			CBlob@ baseBlob = baseBlobs[i];
+			if (baseBlob.getTeamNum() != playerTeam)
+			{
+				continue;
+			}
+
+			if ((baseBlob.getPosition() - this.getPosition()).Length() < 250.0f)
+			{
+				closeEnough = true;
+			}
+
+			if(baseBlob.exists("compactor_quantity")){
+				string compactResource = baseBlob.get_string("compactor_resource");
+				
+				if(!compactResource.empty()){
+					for (int k = 0; k < itemsToShow.length; k++)
+					{
+						
+						if (itemsToShow[k].getName() == compactResource)
+						{
+							
+							itemAmounts[k] = itemAmounts[k]+baseBlob.get_u32("compactor_quantity")*2;
+							break;
+						}
+					}
+				}
 			}
 		}
 

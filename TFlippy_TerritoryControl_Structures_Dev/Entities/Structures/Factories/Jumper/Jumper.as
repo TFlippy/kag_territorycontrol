@@ -1,6 +1,9 @@
 
 #include "FilteringCommon.as";
 
+void onInit(CBlob@ this){
+	this.Untag("whitelist");
+}
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
@@ -17,9 +20,11 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 			blob.setVelocity(Vec2f(0.0f, -8.0f));
 			blob.setPosition(Vec2f(this.getPosition().x,blob.getPosition().y));
 		}
+		if(isClient()) 
 		if(this.getSprite() !is null){
 			this.getSprite().SetAnimation("jump");
 			this.getSprite().SetFrameIndex(0);
+			this.getSprite().PlaySound("/launcher_boing" + XORRandom(2) + ".ogg", 0.5f, 0.9f);
 		}
 	}
 }

@@ -17,6 +17,9 @@ void onInit(CBlob@ this){
 
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
+	if(this.getDistanceTo(caller) > 12)return;
+	if(this.isAttached())return;
+	
 	Vec2f buttonPos;
 	if(this.exists("filter_button_pos"))buttonPos = this.get_Vec2f("filter_button_pos");
 
@@ -43,7 +46,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params){
 	{
 		CBlob@ carried = getBlobByNetworkID(params.read_u16());
 
-		if(isServer())
+		//if(isServer())
 		if (carried !is null){
 			string[]@ filter;
 			if(this.get("filtered_items", @filter)){
@@ -59,7 +62,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params){
 	{
 		int index = params.read_u8();
 
-		if(isServer()){
+		//if(isServer())
+		{
 			string[]@ filter;
 			if(this.get("filtered_items", @filter)){
 				filter.removeAt(index);
@@ -99,9 +103,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params){
 		int length = params.read_u8();
 		string[] filter;
 		for(int i = 0;i < length;i++)filter.push_back(params.read_string());
-
-		if(isClient())
-		if (caller !is null)
+		this.set("filtered_items", @filter);
+		
+		if(caller !is null)
+		if(caller.isMyPlayer())
 		{
 			CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos(), this, Vec2f(1, length+1), this.hasTag("whitelist") ? "Whitelist" : "Blacklist");
 			

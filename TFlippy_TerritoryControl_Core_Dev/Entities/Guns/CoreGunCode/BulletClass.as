@@ -87,7 +87,8 @@ class BulletHolder
 		for(int a = 0; a < fade.length(); a++)
         {
             if(fade[a].TimeLeft <= 0){
-				fade.removeAt(a);
+				fade.erase(a);
+				a--;
 			}
         }
 

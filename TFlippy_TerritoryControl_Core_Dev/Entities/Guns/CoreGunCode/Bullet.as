@@ -14,6 +14,8 @@ class Bullet
     CBlob@ gunBlob;
 	BulletFade@ Fade;
 
+	string Texture = "";
+
     // Pointer to BulletModules
     BulletModule@[] modules;
 
@@ -45,10 +47,15 @@ class Bullet
         gun.get("gun_settings", @settings);
 		
 		if(gunBlob.exists("CustomFade") && !v_fastrender){
-			@Fade = BulletFade(pos);
-			Fade.Texture = gunBlob.get_string("CustomFade");
-			BulletGrouped.addFade(Fade);
+			string fadeTexture = gunBlob.get_string("CustomFade");
+			if(!fadeTexture.empty()){ //No point even giving ourselves a fade if it doesn't have a texture
+				@Fade = BulletFade(pos);
+				Fade.Texture = fadeTexture;
+				BulletGrouped.addFade(Fade);
+			}
 		}
+		
+		Texture = gunBlob.get_string("CustomBullet");
 
 		TimeLeft = settings.B_TTL*0.9f;
 
@@ -98,9 +105,9 @@ class Bullet
             Angle = -CurrentVelocity.getAngleDegrees();
         }
 
-        for (int a = 0; a < modules.length(); a++)
+        for (int m = 0; m < modules.length(); m++)
         {
-            modules[a].onTick(this);
+            modules[m].onTick(this);
         }
 		
 		GunSettings@ settings;
@@ -124,21 +131,29 @@ class Bullet
 
 		Vec2f newPos = CurrentPos;
 		bool continueRaycasting = true;
-		while(continueRaycasting){
+		int safety = Hits*3;
+		while(continueRaycasting && safety > 0){
+			safety--;
+			if(safety <= 0)warn("Gun pierce safety limit was reached!! Gunlob:"+gunBlob.getName()+", Hits:"+Hits);
 			continueRaycasting = false;
 			newPos = CurrentPos;
 
 			HitInfo@[] list;
 			if (map.getHitInfosFromRay(OldPos, Angle, (CurrentPos - OldPos).Length(), hoomanShooter, @list))
 			{
-				for (int a = 0; a < list.length() && Hits > 0; a++)
+				for (int a = 0; a < list.length(); a++)
 				{
+					if(Hits <= 0)break;
+					
 					HitInfo@ hit = list[a];
 					Vec2f hitpos = hit.hitpos;
 					CBlob@ blob = @hit.blob;
 					if (blob !is null)
 					{
+						if(safety <= 0)print("Hitting blob: "+blob.getName());
+					
 						int hash = blob.getName().getHash();
+						bool breakOut = false;
 						switch (hash)
 						{
 							case 804095823: // platform
@@ -147,7 +162,10 @@ class Bullet
 								if (CollidesWithPlatform(blob, CurrentVelocity))
 								{
 									Hits -= 1;
-									if(Hits > 0)newPos = hitpos;
+									if(Hits <= 0){
+										newPos = hitpos;
+										breakOut = true;
+									}
 
 									if (isClient())
 									{
@@ -174,7 +192,10 @@ class Bullet
 									else if (blob.getName() == "iron_halfblock" || blob.getName() == "stone_halfblock") continue;
 
 									Hits -= 1;
-									if(Hits > 0)newPos = hitpos;
+									if(Hits <= 0){
+										newPos = hitpos;
+										breakOut = true;
+									}
 
 									if (isServer())
 									{
@@ -208,14 +229,16 @@ class Bullet
 							}
 						}
 
-						for (int a = 0; a < modules.length(); a++)
+						for (int m = 0; m < modules.length(); m++)
 						{
-							modules[a].onHitBlob(this, blob, hash, hitpos, damage);
+							modules[m].onHitBlob(this, blob, hash, hitpos, damage);
 						}
+						if(breakOut)break;
 					}
 					else
 					{ 
 						Tile tile = map.getTile(hitpos);
+						if(safety <= 0)print("Hitting tile: "+tile.type+" at pos: "+hitpos);
 						
 						if(!map.isTileBackground(tile) && tile.type != 0){
 							if (isServer()){
@@ -271,9 +294,9 @@ class Bullet
 							Sound::Play(S_OBJECT_HIT, hitpos, 1.5f);
 						}
 
-						for (int a = 0; a < modules.length(); a++)
+						for (int m = 0; m < modules.length(); m++)
 						{
-							modules[a].onHitTile(this, tile, hitpos, damage);
+							modules[m].onHitTile(this, tile, hitpos, damage);
 						}
 						
 						ParticleBullet(newPos, CurrentVelocity); //Little sparks
@@ -294,7 +317,7 @@ class Bullet
 
     void onRender() // Every bullet gets forced to join the queue in onRenders, so we use this to calc to position
     {
-        if(Fade !is null)Fade.Front = CurrentPos;
+        if(Fade !is null)Fade.Front = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
 		
 		// Are we on the screen?
         const Vec2f xLast = PDriver.getScreenPosFromWorldPos(OldPos);
@@ -307,19 +330,16 @@ class Bullet
             }
         }
 
-        //Find a better solution later
-        if (gunBlob.exists("CustomBullet") && gunBlob.get_string("CustomBullet").empty()) return;
-
         // Lerp
         Vec2f newPos = Vec2f_lerp(OldPos, CurrentPos, FRAME_TIME);
         LastLerpedPos = newPos;
-		
-		if(Fade !is null)Fade.Front = newPos;
 
         for (int a = 0; a < modules.length(); a++)
         {
             modules[a].onRender(this);
         }
+		
+		if(Texture.empty()) return; //No point in trying to render if we have no texture.
 
         const f32 B_LENGTH = gunBlob.get_f32("CustomBulletLength");
         const f32 B_WIDTH  = gunBlob.get_f32("CustomBulletWidth");
@@ -338,11 +358,11 @@ class Bullet
         topRight.RotateBy(angle, newPos);
 
         Vertex[]@ bullet_vertex;
-        getRules().get(gunBlob.get_string("CustomBullet"), @bullet_vertex);
-
-        bullet_vertex.push_back(Vertex(topLeft.x,  topLeft.y,  0, 0, 0, trueWhite)); // top left
-        bullet_vertex.push_back(Vertex(topRight.x, topRight.y, 0, 1, 0, trueWhite)); // top right
-        bullet_vertex.push_back(Vertex(botRight.x, botRight.y, 0, 1, 1, trueWhite)); // bot right
-        bullet_vertex.push_back(Vertex(botLeft.x,  botLeft.y,  0, 0, 1, trueWhite)); // bot left
+        if(getRules().get(Texture, @bullet_vertex)){
+			bullet_vertex.push_back(Vertex(topLeft.x,  topLeft.y,  0, 0, 0, trueWhite)); // top left
+			bullet_vertex.push_back(Vertex(topRight.x, topRight.y, 0, 1, 0, trueWhite)); // top right
+			bullet_vertex.push_back(Vertex(botRight.x, botRight.y, 0, 1, 1, trueWhite)); // bot right
+			bullet_vertex.push_back(Vertex(botLeft.x,  botLeft.y,  0, 0, 1, trueWhite)); // bot left
+		}
     }
 }

@@ -34,6 +34,7 @@ void onInit(CRules@ this)
 {
 	if (isClient())
 	{
+		
 		if (!this.exists("VertexBook"))
 		{
 			// Client vertex book used to grab bullet texture to batch render

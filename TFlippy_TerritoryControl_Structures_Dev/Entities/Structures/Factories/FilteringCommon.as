@@ -1,6 +1,6 @@
 
-bool server_isItemAccepted(CBlob @this, string item, bool Default = true){
-	if(item == "gyromat")return false;
+bool server_isItemAccepted(CBlob @this, string item){
+	if(item == "gyromat" || item == "wrench")return false;
 	
 	string[]@ filter;
 	if(this.get("filtered_items", @filter)){
@@ -15,5 +15,5 @@ bool server_isItemAccepted(CBlob @this, string item, bool Default = true){
 		}
 	}
 	
-	return Default;
+	return !this.hasTag("whitelist");
 }

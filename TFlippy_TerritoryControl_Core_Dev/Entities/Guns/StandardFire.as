@@ -53,36 +53,32 @@ void onInit(CBlob@ this)
 
 	if (isClient()) //&& !rules.get_bool(vert_name + '-inbook'))
 	{
-		if (vert_name == "")
-		{
-			// warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
-			return;
-		}
+		if (vert_name != ""){
+			//rules.set_bool(vert_name + '-inbook', true);
 
-		//rules.set_bool(vert_name + '-inbook', true);
+			Vertex[]@ bullet_vertex;
+			rules.get(vert_name, @bullet_vertex);
 
-		Vertex[]@ bullet_vertex;
-		rules.get(vert_name, @bullet_vertex);
+			if (bullet_vertex is null)
+			{
+				Vertex[] vert;
+				rules.set(vert_name, @vert);
+			}
 
-		if (bullet_vertex is null)
-		{
-			Vertex[] vert;
-			rules.set(vert_name, @vert);
-		}
-
-		// #blamekag
-		if (!rules.exists("VertexBook"))
-		{
-			string[] book;
-			rules.set("VertexBook", @book);
-			book.push_back(vert_name);
-		}
-		else
-		{
-			string[]@ book;
-			rules.get("VertexBook", @book);
-			book.push_back(vert_name);
-		}
+			// #blamekag
+			if (!rules.exists("VertexBook"))
+			{
+				string[] book;
+				rules.set("VertexBook", @book);
+				book.push_back(vert_name);
+			}
+			else
+			{
+				string[]@ book;
+				rules.get("VertexBook", @book);
+				book.push_back(vert_name);
+			}
+		} else warn(this.getName() + " Attempted to add an empty CustomBullet, this can cause null errors");
 		
 		if(fade_vert_name != ""){
 			Vertex[]@ fade_vertex;
@@ -107,7 +103,7 @@ void onInit(CBlob@ this)
 				rules.get("VertexBook", @book);
 				book.push_back(fade_vert_name);
 			}
-		}
+		} else warn(this.getName() + " Attempted to add an empty CustomFade, this can cause null errors");
 	}
 
 	this.set_u8("clip", settings.CLIP); //Clip u8 for easy maneuverability

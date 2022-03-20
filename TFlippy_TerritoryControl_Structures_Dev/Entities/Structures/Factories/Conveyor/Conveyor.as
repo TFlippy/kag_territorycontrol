@@ -30,7 +30,8 @@ void onSetStatic(CBlob@ this, const bool isStatic)
 		if(map.getTile(this.getPosition()).type == 0)map.server_SetTile(this.getPosition(), CMap::tile_wood_back);
 	}
 	
-	this.setPosition(this.getPosition()-Vec2f(0,3.5));
+	if(!this.hasTag("no_up"))this.setPosition(this.getPosition()-Vec2f(0,3.5));
+	this.Tag("no_up");
 
 	sprite.SetOffset(Vec2f(0,-0.5));
 	sprite.SetZ(300);

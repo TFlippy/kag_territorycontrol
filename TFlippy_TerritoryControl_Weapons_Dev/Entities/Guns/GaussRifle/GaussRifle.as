@@ -44,5 +44,5 @@ void onInit(CBlob@ this)
 	this.set_u8("CustomKnock", 15);
 	this.Tag("medium weight");
 	
-	this.set_u8("CustomPierce", 5);
+	this.set_u8("CustomPierce", 2);
 }

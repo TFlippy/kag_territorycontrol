@@ -33,7 +33,8 @@ void onSetStatic(CBlob@ this, const bool isStatic)
 		if(map.getTile(this.getPosition()).type == 0)map.server_SetTile(this.getPosition(), CMap::tile_biron);
 	}
 	
-	this.setPosition(this.getPosition()-Vec2f(0,3.5));
+	if(!this.hasTag("no_up"))this.setPosition(this.getPosition()-Vec2f(0,3.5));
+	this.Tag("no_up");
 
 	sprite.SetOffset(Vec2f(0,-0.5));
 	sprite.SetZ(300);
@@ -56,7 +57,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
 	if(blob.isKeyPressed(key_down))return false;
 	if(blob.hasTag("player")) return true;
-	if(server_isItemAccepted(this, blob.getName(),false))return false;
+	if(server_isItemAccepted(this, blob.getName()))return false;
 	if(blob.getPosition().y > this.getPosition().y) return false;
 	
 	return true;
@@ -66,10 +67,10 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 {
 	if (blob is null || blob.hasTag("player")) return;
 	if (blob.getPosition().y > this.getPosition().y) return;
-	if (blob.getShape().isStatic())return;
+	if (blob.getShape().isStatic() || blob.hasTag("building"))return;
 	if (blob.isAttached() || blob.isInWater())return;
 	
-	if(server_isItemAccepted(this, blob.getName(),false)){
+	if(server_isItemAccepted(this, blob.getName())){
 		blob.setVelocity(Vec2f(0.0f, 0.0f));
 		blob.setPosition(this.getPosition()+Vec2f(0,4));
 		this.getSprite().PlaySound("bridge_open.ogg");

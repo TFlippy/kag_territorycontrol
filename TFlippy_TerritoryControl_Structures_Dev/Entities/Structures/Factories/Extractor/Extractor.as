@@ -34,7 +34,7 @@ void onTick(CSprite@ this)
 				if(connection is null){
 					this.RemoveSpriteLayer(gear.name);
 				} else {
-					if(!connection.getShape().isStatic()){
+					//if(!connection.getShape().isStatic()){
 						Vec2f dif = (this.getBlob().getPosition()+Mid)-connection.getPosition();
 						dif = Vec2f(-dif.x,dif.y);
 						int dis = Maths::Max(dif.Length(),8);
@@ -46,7 +46,7 @@ void onTick(CSprite@ this)
 						} else {
 							this.RemoveSpriteLayer(gear.name);
 						}
-					}
+					//}
 				}
 			} else {
 				gear.RotateBy(5.0f*(this.getBlob().exists("gyromat_acceleration") ? this.getBlob().get_f32("gyromat_acceleration") : 1), Vec2f(0.5f,-0.5f));
@@ -59,7 +59,6 @@ void onTick(CSprite@ this)
 void onInit(CBlob@ this)
 {
 	this.getShape().getConsts().mapCollisions = false;
-	this.getCurrentScript().tickFrequency = 60;
 
 	this.Tag("builder always hit");
 }
