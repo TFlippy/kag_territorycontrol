@@ -203,22 +203,19 @@ u16 GetAmmo(CBlob@ this)
 
 void Shoot(CBlob@ this, f32 angle)
 {
-	if (isServer())
+	angle = angle * (this.isFacingLeft() ? -1 : 1);
+
+	GunSettings@ settings;
+	this.get("gun_settings", @settings);
+
+	// Muzzle
+	Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 1);
+	fromBarrel = fromBarrel.RotateBy(angle);
+
+	CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
+	if (gunner !is null && gunner.isMyPlayer())
 	{
-		angle = angle * (this.isFacingLeft() ? -1 : 1);
-
-		GunSettings@ settings;
-		this.get("gun_settings", @settings);
-
-		// Muzzle
-		Vec2f fromBarrel = Vec2f((settings.MUZZLE_OFFSET.x / 3) * (this.isFacingLeft() ? 1 : -1), settings.MUZZLE_OFFSET.y + 1);
-		fromBarrel = fromBarrel.RotateBy(angle);
-
-		CBlob@ gunner = this.getAttachmentPoint(0).getOccupied();
-		if (gunner !is null)
-		{
-			shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getPosition() + fromBarrel);
-		}
+		shootGun(this.getNetworkID(), angle, gunner.getNetworkID(), this.getPosition() + fromBarrel);
 	}
 
 	if (isClient())
