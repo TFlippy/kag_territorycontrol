@@ -314,7 +314,7 @@ bool onServerProcessChat(CRules@ this,const string& in text_in,string& out text_
 				}
 			}
 
-			if (isCool)
+			if (isCool || sv_test)
 			{
 				/*if (tokens[0]=="!awootism")
 				{
