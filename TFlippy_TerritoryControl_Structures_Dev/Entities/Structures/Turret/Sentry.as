@@ -212,7 +212,8 @@ void onTick(CBlob@ this)
 					f32 angle = -dir.Angle() + (this.isFacingLeft() ? 180 : 0);
 					angle += ((XORRandom(400) - 200) / 100.0f);
 
-					if (isServer())
+					CPlayer@ firstPlayer = getPlayer(0); //hack
+					if (firstPlayer !is null && firstPlayer.isMyPlayer())
 					{
 						GunSettings@ settings;
 						this.get("gun_settings", @settings);

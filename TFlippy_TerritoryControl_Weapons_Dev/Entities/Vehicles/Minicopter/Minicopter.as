@@ -203,8 +203,7 @@ void onTick(CBlob@ this)
 
 							if (pressed_m1 && isClient())
 							{
-								CBlob@ realPlayer = getLocalPlayerBlob();
-								if (getGameTime() > this.get_u32("fireDelayGun") && realPlayer !is null && realPlayer is hooman)
+								if (getGameTime() > this.get_u32("fireDelayGun") && hooman.isMyPlayer())
 								{
 									CBitStream params;
 									params.write_s32(this.get_f32("gunAngle"));
