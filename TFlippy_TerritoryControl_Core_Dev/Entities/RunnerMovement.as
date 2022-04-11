@@ -60,6 +60,9 @@ void onTick(CMovement@ this)
 	CShape@ shape = blob.getShape();
 
 	const f32 vellen = shape.vellen;
+	
+	if(down)
+		blob.getShape().checkCollisionsAgain = true;
 
 
 	if (is_client && getGameTime() % 3 == 0)
