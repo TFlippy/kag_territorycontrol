@@ -485,20 +485,23 @@ void onRenderScoreboard(CRules@ this)
 		}
 	}
 
+	int XOffset = 80;
+
 	// Discord Button
 	{
 		f32 width = 100;
 		f32 height = 40;
-
-		const string text = "Go to Vamist's Discord Server";
+		
+		const string text = "Join Our Discord";
 
 		Vec2f dim;
 		GUI::GetTextDimensions(text, dim);
 
 		width = dim.x + 20;
+		XOffset += width+20;
 
-		Vec2f tl = Vec2f(getScreenWidth() - 100 - width, y_offset + 10);
-		Vec2f br = Vec2f(getScreenWidth() - 100, tl.y + height);
+		Vec2f tl = Vec2f(getScreenWidth() - XOffset, y_offset + 10);
+		Vec2f br = Vec2f(getScreenWidth() - XOffset + width, tl.y + height);
 
 		CControls@ controls = getControls();
 		Vec2f mousePos = controls.getMouseScreenPos();
@@ -507,7 +510,8 @@ void onRenderScoreboard(CRules@ this)
 
 		if (hover)
 		{
-			GUI::DrawButton(tl, br);
+			if (controls.isKeyPressed(KEY_LBUTTON))GUI::DrawSunkenPane(tl, br);
+			else GUI::DrawButton(tl, br);
 
 			if (controls.isKeyJustPressed(KEY_LBUTTON))
 			{
@@ -537,9 +541,10 @@ void onRenderScoreboard(CRules@ this)
 		GUI::GetTextDimensions(text, dim);
 
 		width = dim.x + 20;
+		XOffset += width+20;
 
-		Vec2f tl = Vec2f(getScreenWidth() - 340 - width, y_offset + 10);
-		Vec2f br = Vec2f(getScreenWidth() - 340, tl.y + height);
+		Vec2f tl = Vec2f(getScreenWidth() - XOffset, y_offset + 10);
+		Vec2f br = Vec2f(getScreenWidth() - XOffset + width, tl.y + height);
 
 		CControls@ controls = getControls();
 		Vec2f mousePos = controls.getMouseScreenPos();
@@ -548,7 +553,8 @@ void onRenderScoreboard(CRules@ this)
 
 		if (hover)
 		{
-			GUI::DrawButton(tl, br);
+			if (controls.isKeyPressed(KEY_LBUTTON))GUI::DrawSunkenPane(tl, br);
+			else GUI::DrawButton(tl, br);
 
 			if (controls.isKeyJustPressed(KEY_LBUTTON))
 			{
@@ -578,9 +584,10 @@ void onRenderScoreboard(CRules@ this)
 		GUI::GetTextDimensions(text, dim);
 
 		width = dim.x + 20;
+		XOffset += width+20;
 
-		Vec2f tl = Vec2f(getScreenWidth() - 500 - width, y_offset + 10);
-		Vec2f br = Vec2f(getScreenWidth() - 500, tl.y + height);
+		Vec2f tl = Vec2f(getScreenWidth() - XOffset, y_offset + 10);
+		Vec2f br = Vec2f(getScreenWidth() - XOffset + width, tl.y + height);
 
 		CControls@ controls = getControls();
 		Vec2f mousePos = controls.getMouseScreenPos();
@@ -589,7 +596,8 @@ void onRenderScoreboard(CRules@ this)
 
 		if (hover)
 		{
-			GUI::DrawButton(tl, br);
+			if (controls.isKeyPressed(KEY_LBUTTON))GUI::DrawSunkenPane(tl, br);
+			else GUI::DrawButton(tl, br);
 
 			if (controls.isKeyJustPressed(KEY_LBUTTON))
 			{
@@ -608,8 +616,8 @@ void onRenderScoreboard(CRules@ this)
 		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
 	}
 
-	// Change log Button
-	{
+	// There is no changelog what the hell
+	/*{
 		f32 width = 100;
 		f32 height = 40;
 
@@ -619,9 +627,10 @@ void onRenderScoreboard(CRules@ this)
 		GUI::GetTextDimensions(text, dim);
 
 		width = dim.x + 20;
+		XOffset += width+20;
 
-		Vec2f tl = Vec2f(getScreenWidth() - 670 - width, y_offset + 10);
-		Vec2f br = Vec2f(getScreenWidth() - 670, tl.y + height);
+		Vec2f tl = Vec2f(getScreenWidth() - XOffset, y_offset + 10);
+		Vec2f br = Vec2f(getScreenWidth() - XOffset + width, tl.y + height);
 
 		CControls@ controls = getControls();
 		Vec2f mousePos = controls.getMouseScreenPos();
@@ -630,7 +639,8 @@ void onRenderScoreboard(CRules@ this)
 
 		if (hover)
 		{
-			GUI::DrawButton(tl, br);
+			if (controls.isKeyPressed(KEY_LBUTTON))GUI::DrawSunkenPane(tl, br);
+			else GUI::DrawButton(tl, br);
 
 			if (controls.isKeyJustPressed(KEY_LBUTTON))
 			{
@@ -639,6 +649,56 @@ void onRenderScoreboard(CRules@ this)
 				OpenWebsite("https://change.vamist.dev/tc/");
 				// Engine::AcceptWebsiteOpen(true);
 				// Menu::CloseAllMenus();
+			}
+		}
+		else
+		{
+			GUI::DrawPane(tl, br, 0xffcfcfcf);
+		}
+
+		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
+	}*/
+	
+	XOffset = 80;
+	
+	// Toggle Recoil Button
+	{
+		f32 width = 100;
+		f32 height = 40;
+
+		string text = "Recoil Mode: Reticle";
+		if(this.get_bool("mouse_recoil_mode")){
+			text = "Recoil Mode: Mouse";
+		}
+
+		Vec2f dim;
+		GUI::GetTextDimensions(text, dim);
+
+		width = dim.x + 20;
+		XOffset += width+20;
+
+		Vec2f tl = Vec2f(getScreenWidth() - XOffset, y_offset + 60);
+		Vec2f br = Vec2f(getScreenWidth() - XOffset + width, tl.y + height);
+
+		CControls@ controls = getControls();
+		Vec2f mousePos = controls.getMouseScreenPos();
+
+		bool hover = mousePos.x > tl.x && mousePos.x < br.x && mousePos.y > tl.y && mousePos.y < br.y;
+
+		if (hover)
+		{
+			if (controls.isKeyPressed(KEY_LBUTTON))GUI::DrawSunkenPane(tl, br);
+			else GUI::DrawButton(tl, br);
+		
+			if (controls.isKeyJustPressed(KEY_LBUTTON))
+			{
+				Sound::Play("option");
+
+				if(this.get_bool("mouse_recoil_mode")){
+					this.set_bool("mouse_recoil_mode",false);
+				} else {
+					this.set_bool("mouse_recoil_mode",true);
+				}
 			}
 		}
 		else
