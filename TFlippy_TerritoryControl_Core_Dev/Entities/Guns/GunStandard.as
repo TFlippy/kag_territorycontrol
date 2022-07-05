@@ -184,6 +184,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		this.set_bool("cancel_reload",params.read_bool());
 	}
+	else if (cmd == this.getCommandID("set_recoil"))
+	{
+		this.set_bool("mouse_recoil_mode",params.read_bool());
+		print("Wha"+this.get_bool("mouse_recoil_mode"));
+	}
 }
 
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint) 
@@ -195,10 +200,19 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	attached.Tag("noLMB");
 	attached.Tag("noShielding");
 
-	if (isClient() && this.exists("CustomSoundPickup"))
+	if (isClient())
 	{
-		CSprite@ sprite = this.getSprite();
-		sprite.PlaySound(this.get_string("CustomSoundPickup"));
+		if(this.exists("CustomSoundPickup")){
+			CSprite@ sprite = this.getSprite();
+			sprite.PlaySound(this.get_string("CustomSoundPickup"));
+		}
+		
+		CBitStream params;
+
+		params.write_bool(getRules().get_bool("mouse_recoil_mode"));
+		
+		this.SendCommand(this.getCommandID("set_recoil"), params);
+		print("Wha2"+getRules().get_bool("mouse_recoil_mode"));
 	}
 }
 

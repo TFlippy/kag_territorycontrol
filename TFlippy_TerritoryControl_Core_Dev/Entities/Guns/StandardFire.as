@@ -27,6 +27,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("reload");
 	this.addCommandID("cancelreload");
 	this.addCommandID("fireProj");
+	this.addCommandID("set_recoil");
 
 	// Set vars
 	this.set_bool("beginReload", false); //Starts a reload
@@ -159,6 +160,7 @@ void onInit(CBlob@ this)
 	
 	this.set_f32("anti_recoil",1.0f);
 	this.set_netid("force_aim",0);
+	this.set_bool("mouse_recoil_mode",false);
 }
 
 void onTick(CBlob@ this)
@@ -188,25 +190,29 @@ void onTick(CBlob@ this)
 					   point.isKeyPressed(key_action1) || holder.isKeyPressed(key_action1)); //semiautomatic
 			
 			
-			float antirecoil = this.get_f32("anti_recoil");
-			if(can_shoot && pressing_shoot){
-				if(antirecoil > 0.25f)antirecoil -= 0.01f;
-				else antirecoil = 0.25f;
+			if(this.get_bool("mouse_recoil_mode")){
+				this.set_f32("anti_recoil",1.0f);
+				this.set_f32("gun_recoil_current", 0.0f);
 			} else {
-				if(antirecoil < 1.0f)antirecoil += 0.01f;
-				else antirecoil = 1.0f;
+				float antirecoil = this.get_f32("anti_recoil");
+				if(can_shoot && pressing_shoot){
+					if(antirecoil > 0.25f)antirecoil -= 0.01f;
+					else antirecoil = 0.25f;
+				} else {
+					if(antirecoil < 1.0f)antirecoil += 0.01f;
+					else antirecoil = 1.0f;
+				}
+				CBlob@ force_target = getBlobByNetworkID(this.get_netid("force_aim"));
+				if(force_target !is null){
+					antirecoil = 1.0f;
+				}
+				this.set_f32("anti_recoil",antirecoil);
+				
+				this.set_f32("gun_recoil_current", Maths::Lerp(this.get_f32("gun_recoil_current"), 0, 0.45f));
 			}
-			CBlob@ force_target = getBlobByNetworkID(this.get_netid("force_aim"));
-			if(force_target !is null){
-				antirecoil = 1.0f;
-			}
-			this.set_f32("anti_recoil",antirecoil);
 			
-
 			CSprite@ sprite = this.getSprite();
 			f32 aimangle = getAimAngle(this, holder);
-
-			this.set_f32("gun_recoil_current", Maths::Lerp(this.get_f32("gun_recoil_current"), 0, 0.45f));
 
 			GunSettings@ settings;
 			this.get("gun_settings", @settings);

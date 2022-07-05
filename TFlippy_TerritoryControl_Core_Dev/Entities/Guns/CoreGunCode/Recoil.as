@@ -12,6 +12,7 @@
 class Recoil
 {
 	CBlob@ Blob;
+	CBlob@ Gun;
 	CControls@ BlobControls;
 	u16 TimeToNormal;
 	u16 ReturnTime;
@@ -29,6 +30,7 @@ class Recoil
 		}
 
 		@Blob = blob;
+		@Gun = Blob.getCarriedBlob();
 		@BlobControls = Blob.getControls();
 		RX = randomX;
 		RY = randomY;
@@ -46,7 +48,7 @@ class Recoil
 			return;
 		}
 
-		if (Blob is null)
+		if (Blob is null || Gun is null)
 		{
 			TimeToNormal == 0;
 			return;
@@ -70,19 +72,15 @@ class Recoil
 
 		Vec2f recoil = Vec2f(xTick, yTick);
 
-		
-
-		//yTick = -1;
-		//TimeToNormal -= 1;
-
-		//BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + recoil);
-		if(Blob.getCarriedBlob() !is null){
-			recoil.RotateByDegrees(Blob.getCarriedBlob().getAngleDegrees());
-			Vec2f aim = Blob.getCarriedBlob().get_Vec2f("aim");
+		if(Gun.get_bool("mouse_recoil_mode")){
+			BlobControls.setMousePosition(BlobControls.getMouseScreenPos() + recoil);
+		} else {
+			recoil.RotateByDegrees(Gun.getAngleDegrees());
+			Vec2f aim = Gun.get_Vec2f("aim");
 			if(aim.AngleDegrees() > 90 && aim.AngleDegrees() < 270){
-				if((aim+recoil).AngleDegrees() > 90)Blob.getCarriedBlob().set_Vec2f("aim",aim+recoil);
+				if((aim+recoil).AngleDegrees() > 90)Gun.set_Vec2f("aim",aim+recoil);
 			} else {
-				if((aim+recoil).AngleDegrees() < 90 || (aim+recoil).AngleDegrees() > 270)Blob.getCarriedBlob().set_Vec2f("aim",aim+recoil);
+				if((aim+recoil).AngleDegrees() < 90 || (aim+recoil).AngleDegrees() > 270)Gun.set_Vec2f("aim",aim+recoil);
 			}
 		}
 		ShakeScreen(Vec2f(xTick, yTick), 150, Blob.getInterpolatedPosition());
