@@ -3,7 +3,7 @@
 #include "BuilderCommon.as";
 #include "PlacementCommon.as";
 #include "Help.as";
-#include "CommonBuilderBlocks.as";
+#include "EngineerBlocks.as";
 
 namespace Builder
 {
@@ -32,8 +32,8 @@ const string[] PAGE_NAME =
 {
 	"Basic",
 	"Buildings",
-	"Automation",
 	"Miscellaneous",
+	"Automation",
 	// "Mechanisms"
 };
 
@@ -50,8 +50,10 @@ void onInit(CInventory@ this)
 
 	if(!blob.exists(blocks_property))
 	{
+		int team = 7;
+		if(getLocalPlayerBlob() !is null)if(getLocalPlayerBlob().getTeamNum() <= 7)team = getLocalPlayerBlob().getTeamNum();
 		BuildBlock[][] blocks;
-		addCommonBuilderBlocks(blocks);
+		addCommonEngineerBlocks(blocks, team);
 		blob.set(blocks_property, blocks);
 	}
 

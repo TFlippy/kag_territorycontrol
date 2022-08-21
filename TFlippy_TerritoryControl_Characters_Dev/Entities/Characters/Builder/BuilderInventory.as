@@ -22,7 +22,7 @@ namespace Builder
 		PAGE_ZERO = 0,
 		PAGE_ONE,
 		PAGE_TWO,
-		PAGE_THREE,
+		//PAGE_THREE,
 		// PAGE_FOUR,
 		PAGE_COUNT
 	};
@@ -32,8 +32,8 @@ const string[] PAGE_NAME =
 {
 	"Basic",
 	"Buildings",
-	"Automation",
 	"Miscellaneous",
+	"Automation",
 	// "Mechanisms"
 };
 
@@ -50,8 +50,10 @@ void onInit(CInventory@ this)
 
 	if(!blob.exists(blocks_property))
 	{
+		int team = 7;
+		if(getLocalPlayerBlob() !is null)if(getLocalPlayerBlob().getTeamNum() <= 7)team = getLocalPlayerBlob().getTeamNum();
 		BuildBlock[][] blocks;
-		addCommonBuilderBlocks(blocks, 7);
+		addCommonBuilderBlocks(blocks, team);
 		blob.set(blocks_property, blocks);
 	}
 
