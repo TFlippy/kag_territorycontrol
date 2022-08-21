@@ -50,8 +50,8 @@ const int[] ResearchTimes = //In Minutes
 	5,
 	10,
 	5,
-	20,
-	20
+	60,
+	10
 };
 
 const int[] ResearchCost = //Coins
@@ -121,6 +121,7 @@ void onInit(CBlob@ this)
 	this.set_string("research_name","");
 	
 	this.addCommandID("research");
+	this.addCommandID("fund");
 }
 
 void onTick(CBlob@ this){
@@ -151,6 +152,10 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	
 	int seconds = this.get_u32("research_time");
 	if(seconds > 0){
+		CBitStream params;
+		params.write_u16(caller.getNetworkID());
+		caller.CreateGenericButton(26, Vec2f(0, -7), this, this.getCommandID("fund"), "Fund with 1000 Coins\nHalves research time.", params);
+	
 		int minutes = seconds/60;
 		seconds = seconds % 60;
 		string time = ""+minutes+(seconds >= 10 ? ":" : ":0")+seconds;
@@ -236,6 +241,25 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					this.set_string("research_blob","theory_"+ResearchBlob[i]);
 					this.set_string("research_name",ResearchNames[i]);
 					this.Sync("research_name",true);
+				}
+			}
+		}
+	}
+	
+	if (cmd == this.getCommandID("fund"))
+	{
+		CBlob@ caller = getBlobByNetworkID(params.read_u16());
+		if(this.get_u32("research_time") > 0)
+		if(caller !is null){
+			CPlayer@player = caller.getPlayer();
+			if(player !is null){
+				int coins = player.getCoins();
+				if(coins >= 1000){
+					this.set_u32("research_time",this.get_u32("research_time")/2.0f);
+					if(isServer()){
+						player.server_setCoins(coins-1000);
+						this.Sync("research_time",true);
+					}
 				}
 			}
 		}
