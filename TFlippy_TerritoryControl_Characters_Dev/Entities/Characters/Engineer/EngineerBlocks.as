@@ -120,7 +120,7 @@ void addCommonEngineerBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 60);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 20);
 		// AddRequirement(b.reqs, "blob", "mat_battery", "Voltron Battery Plus", 50);
-		AddRequirement(b.reqs, "blob", "bp_induction", "Blueprint (Induction)", 1);
+		AddRequirement(b.reqs, "tech", "bp_induction", "Induction", 1);
 		b.buildOnGround = true;
 		b.size.Set(40, 32);
 		automation.push_back(b);
@@ -225,7 +225,7 @@ void addCommonEngineerBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 10);
 		// AddRequirement(b.reqs, "tech", "tech_automation_advanced", "Technology (Advanced Automation)", 1);
-		AddRequirement(b.reqs, "blob", "bp_automation", "Blueprint (Advanced Automation)", 1);
+		AddRequirement(b.reqs, "tech", "bp_automation", "Advanced Automation", 1);
 		b.buildOnGround = true;
 		b.size.Set(56, 24);
 		automation.push_back(b);
@@ -236,7 +236,7 @@ void addCommonEngineerBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 10);
 		AddRequirement(b.reqs, "blob", "mat_copperingot", "Copper Ingot", 40);
-		AddRequirement(b.reqs, "blob", "bp_chemistry", "Blueprint (Chemistry)", 1);
+		AddRequirement(b.reqs, "tech", "bp_chemistry", "Chemistry", 1);
 		b.buildOnGround = true;
 		b.size.Set(48, 24);
 		automation.push_back(b);
@@ -253,7 +253,7 @@ void addCommonEngineerBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_steelingot", "Steel Ingot", 20);
 		AddRequirement(b.reqs, "blob", "mat_mithril", "Mithril", 100);
 		AddRequirement(b.reqs, "blob", "mat_mithrilingot", "Mithril Ingot", 5);
-		AddRequirement(b.reqs, "blob", "bp_enrichment", "Blueprint (Enrichment)", 1);
+		AddRequirement(b.reqs, "tech", "bp_enrichment", "Enrichment", 1);
 		b.buildOnGround = true;
 		b.size.Set(24, 24);
 		automation.push_back(b);

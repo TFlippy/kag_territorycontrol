@@ -47,11 +47,11 @@ string getButtonRequirementsText(CBitStream& inout bs,bool missing)
 		}
 		else if (requiredType=="tech")
 		{
-			text += " \n$"; text += name; text += "$ ";
 			text += quantityColor;
 			text += friendlyName;
 			text += quantityColor;
-			// text += "\n\ntechnology required.\n";
+			text += " $"; text += name; text += "$ ";
+			text += " technology required.\n";
 		}
 		else if (requiredType == "seclev feature")
 		{
@@ -294,15 +294,25 @@ bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, C
 		}
 		else if (req == "tech")
 		{
-			int teamNum = playerBlob.getTeamNum();
-
-			if (HasFakeTech(getRules(), blobName, teamNum))
+			int sum = (inv1 !is null ? inv1.getBlob().getBlobCount(blobName) : 0);
+			sum += (inv2 !is null ? inv2.getBlob().getBlobCount(blobName) : 0);
+			
+			if (storageEnabled)
 			{
-				// print(blobName + " is gud");
+				for (int i = 0; i< baseBlobs.length; i++)
+				{
+					sum += baseBlobs[i].getBlobCount(blobName);
+					if(baseBlobs[i].exists("compactor_resource")){
+						if(baseBlobs[i].get_string("compactor_resource") == blobName){
+							sum += baseBlobs[i].get_u32("compactor_quantity");
+						}
+					}
+				}
 			}
-			else
+			
+			if (sum<1) 
 			{
-				AddRequirement(missingBs, req, blobName, friendlyName, quantity);
+				AddRequirement(missingBs,req,blobName,friendlyName,quantity);
 				has = false;
 			}
 		}

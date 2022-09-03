@@ -340,7 +340,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		BuildBlock b(0, "tinkertable", "$icon_tinkertable$", "Mechanist's Workshop\nA place where you can construct various trinkets and advanced machinery.\n$GREEN$Repairs adjacent vehicles.$GREEN$\n");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 70);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
-		// AddRequirement(b.reqs, "blob", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
+		// AddRequirement(b.reqs, "tech", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
 		b.buildOnGround = true;
 		b.size.Set(40, 24);
 		page_buildings.push_back(b);
@@ -349,7 +349,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		BuildBlock b(0, "armory", "$icon_armory$", "Armory\nA workshop where you can craft cheap equipment.\n$GREEN$Automatically stores nearby dropped weapons and armor.$GREEN$\n");
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 100);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
-		// AddRequirement(b.reqs, "blob", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
+		// AddRequirement(b.reqs, "tech", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
 		b.buildOnGround = true;
 		b.size.Set(40, 24);
 		page_buildings.push_back(b);
@@ -359,7 +359,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 150);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
 		// AddRequirement(b.reqs, "coin", "", "Coins", 75);
-		// AddRequirement(b.reqs, "blob", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
+		// AddRequirement(b.reqs, "tech", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
 		b.buildOnGround = true;
 		b.size.Set(40, 24);
 		page_buildings.push_back(b);
@@ -369,7 +369,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 100);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
 		// AddRequirement(b.reqs, "coin", "", "Coins", 50);
-		// AddRequirement(b.reqs, "blob", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
+		// AddRequirement(b.reqs, "tech", "bp_mechanist", "Blueprint (Mechanist's Workshop)", 1);
 		b.buildOnGround = true;
 		b.size.Set(40, 24);
 		page_buildings.push_back(b);
@@ -476,7 +476,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "blob", "mat_mithril", "Mithril", 100);
 		AddRequirement(b.reqs, "blob", "mat_battery", "Battery", 100);
 		AddRequirement(b.reqs, "coin", "", "Coins", 1000);
-		AddRequirement(b.reqs, "blob", "bp_energetics", "Blueprint (Energetics)", 1);
+		AddRequirement(b.reqs, "tech", "bp_energetics", "Energetics", 1);
 		b.buildOnGround = true;
 		b.size.Set(24, 96);
 		page_misc.push_back(b);

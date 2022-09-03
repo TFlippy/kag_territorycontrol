@@ -152,5 +152,5 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
-	return (forBlob.isOverlapping(this));
+	return (forBlob.isOverlapping(this) || forBlob.getShape().isStatic());
 }

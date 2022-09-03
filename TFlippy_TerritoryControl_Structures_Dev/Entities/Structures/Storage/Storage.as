@@ -78,7 +78,6 @@ void onInit(CSprite@ this)
 void onInit(CBlob@ this)
 {
 	this.Tag("remote_storage");
-	this.Tag("extractable");
 
 	this.set_TileType("background tile", CMap::tile_castle_back);
 	this.getShape().getConsts().mapCollisions = false;
