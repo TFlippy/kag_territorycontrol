@@ -49,8 +49,10 @@ const int[] coalRatio = {
 void onInit(CBlob@ this)
 {
 	this.getShape().getConsts().mapCollisions = false;
+	this.getCurrentScript().tickFrequency = 240;
 
 	this.Tag("builder always hit");
+	this.set_u16("bulk_modifier", 2);
 
 	CSprite@ sprite = this.getSprite();
 	if (sprite !is null)
@@ -64,23 +66,43 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	this.getCurrentScript().tickFrequency = 240 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
-
-	for (int i = 0; i < 5; i++)
+	f32 gyro = this.get_f32("gyromat_acceleration");
+	if (gyro > 6) // if gyro > 600% then start bulk production
 	{
-		if (this.hasBlob(matNames[i], matRatio[i]) && (coalRatio[i] == 0 || this.hasBlob("mat_coal", coalRatio[i])))
-		{
-			if (isServer())
-			{
-				CBlob @mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
-				mat.server_SetQuantity(matResult[i]);
-				mat.Tag("justmade");
-				this.TakeBlob(matNames[i], matRatio[i]);
-				if (coalRatio[i] > 0) this.TakeBlob("mat_coal", coalRatio[i]);
-			}
+		gyro /= 2;
+		this.set_u16("bulk_modifier", gyro*2);
+	}
+	else this.set_u16("bulk_modifier", 2);
 
-			this.getSprite().PlaySound("ProduceSound.ogg");
-			this.getSprite().PlaySound("BombMake.ogg");
+	this.getCurrentScript().tickFrequency = Maths::Max(240/gyro, 15);
+
+	CInventory@ inv = this.getInventory();
+	if (inv !is null)
+	{
+		for (u8 i = 0; i < 5; i++)
+		{
+			u8 bulk = Maths::Min(inv.getCount(matNames[i])/matRatio[i], this.get_u16("bulk_modifier") - (i == 3 ? 1 : 0)); // because gold has dif matResult
+			if (bulk > 0)
+			{
+				if (coalRatio[i] > 0) bulk = Maths::Min(inv.getCount("mat_coal")/coalRatio[i], bulk);
+				if (this.hasBlob(matNames[i], matRatio[i]*bulk) && (coalRatio[i] == 0 || this.hasBlob("mat_coal", coalRatio[i]*bulk)))
+				{
+					if (isServer())
+					{
+						CBlob @mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
+						mat.server_SetQuantity(matResult[i]*bulk);
+						mat.Tag("justmade");
+						this.TakeBlob(matNames[i], matRatio[i]*bulk);
+						if (coalRatio[i] > 0) this.TakeBlob("mat_coal", coalRatio[i]*bulk);
+					}
+
+					if (isClient())
+					{
+						this.getSprite().PlaySound("ProduceSound.ogg");
+						this.getSprite().PlaySound("BombMake.ogg");
+					}
+				}
+			}
 		}
 	}
 }
