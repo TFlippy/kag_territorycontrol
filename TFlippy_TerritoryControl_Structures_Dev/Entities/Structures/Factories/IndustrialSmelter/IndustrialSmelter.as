@@ -39,11 +39,11 @@ const int[] coalRatio = {
 };
 
 const int[] matResult = { 
-	1,
-	1,
-	1,
-	1,
-    1
+	2,
+	2,
+	2,
+	2,
+    2
 };
 
 void onInit(CBlob@ this)
@@ -53,7 +53,7 @@ void onInit(CBlob@ this)
 
 	this.Tag("builder always hit");
     
-    this.getCurrentScript().tickFrequency = 60;
+    this.getCurrentScript().tickFrequency = 240;
     
     this.addCommandID("make_sound");
     
@@ -71,7 +71,7 @@ void onTick(CBlob@ this)
 {
     if (isServer())
 	{
-        f32 ticks = 60.0 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
+        f32 ticks = 240.0 / (this.exists("gyromat_acceleration") ? this.get_f32("gyromat_acceleration") : 1);
         int bulk = 2;
         while(ticks <= 30.0){
             bulk *= 2;
@@ -98,7 +98,7 @@ void onTick(CBlob@ this)
             }
             
             if(r > 0){
-                CBlob @mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition());
+                CBlob @mat = server_CreateBlob(matNamesResult[i], -1, this.getPosition()+Vec2f(10,0));
                 mat.server_SetQuantity(matResult[i]*r);
                 mat.Tag("justmade");
                 made = true;

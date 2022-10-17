@@ -35,31 +35,27 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Copper Ingot (1)", "$mat_copperingot$", "mat_copperingot-1", "A soft conductive metal.", true);
 		AddRequirement(s.requirements, "blob", "mat_copper", "Copper Ore", 10);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 1);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Iron Ingot (1)", "$mat_ironingot$", "mat_ironingot-1", "A fairly strong metal used to make tools, equipment and such.", true);
 		AddRequirement(s.requirements, "blob", "mat_iron", "Iron Ore", 10);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal",1);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Steel Ingot (1)", "$mat_steelingot$", "mat_steelingot-1", "Much stronger than iron, but also more expensive.", true);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 2);
-		AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 2);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 5);
+		AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 5);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Gold Ingot (1)", "$mat_goldingot$", "mat_goldingot-1", "A fancy metal - traders' favourite.", true);
 		AddRequirement(s.requirements, "blob", "mat_gold", "Gold Ore", 25);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 1);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Coal (1)", "$mat_coal$", "mat_coal-1", "A black rock that is used for fuel.", true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 10);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal",1);
 		s.spawnNothing = true;
 	}
 
@@ -67,31 +63,37 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Copper Ingot (4)", "$mat_copperingot$", "mat_copperingot-4", "A soft conductive metal.", true);
 		AddRequirement(s.requirements, "blob", "mat_copper", "Copper Ore", 40);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 4);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Iron Ingot (4)", "$mat_ironingot$", "mat_ironingot-4", "A fairly strong metal used to make tools, equipment and such.", true);
 		AddRequirement(s.requirements, "blob", "mat_iron", "Iron Ore", 40);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 4);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Steel Ingot (4)", "$mat_steelingot$", "mat_steelingot-4", "Much stronger than iron, but also more expensive.", true);
-		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 16);
-		AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 4);
+		AddRequirement(s.requirements, "blob", "mat_ironingot", "Iron Ingot", 20);
+		AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 20);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Gold Ingot (4)", "$mat_goldingot$", "mat_goldingot-4", "A fancy metal - traders' favourite.", true);
 		AddRequirement(s.requirements, "blob", "mat_gold", "Gold Ore", 100);
-		// AddRequirement(s.requirements, "blob", "mat_coal", "Coal", 4);
 		s.spawnNothing = true;
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Coal (4)", "$mat_coal$", "mat_coal-4", "A black rock that is used for fuel.", true);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", 80);
 		s.spawnNothing = true;
+	}
+    
+    CSprite@ sprite = this.getSprite();
+	if (sprite !is null)
+	{
+		sprite.SetEmitSound("CampfireSound.ogg");
+		sprite.SetEmitSoundVolume(0.90f);
+		sprite.SetEmitSoundSpeed(1.0f);
+        sprite.SetEmitSoundPaused(true);
 	}
 }
 
@@ -103,11 +105,29 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	this.set_bool("shop available", this.isOverlapping(caller));
 }
 
+void onTick(CBlob @this){
+    if(isClient())
+    if(getGameTime() >= this.get_u32("time_used")+60){
+        this.getSprite().SetAnimation("default");
+        this.getSprite().SetEmitSoundPaused(true);
+        this.getCurrentScript().tickFrequency = 600;
+    }
+
+}
+
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("shop made item"))
 	{
-		this.getSprite().PlaySound("/ConstructShort");
+        if(isClient()){
+            this.getSprite().PlaySound("ProduceSound.ogg");
+            this.getSprite().PlaySound("BombMake.ogg");
+            
+            this.getSprite().SetAnimation("active");
+            this.getSprite().SetEmitSoundPaused(false);
+            this.getCurrentScript().tickFrequency = 1;
+            this.set_u32("time_used",getGameTime());
+        }
 
 		if (isServer())
 		{

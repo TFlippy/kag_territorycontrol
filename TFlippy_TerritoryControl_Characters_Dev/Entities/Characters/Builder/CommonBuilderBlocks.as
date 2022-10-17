@@ -434,6 +434,15 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		b.size.Set(40, 24);
 		page_buildings.push_back(b);
 	}
+    {
+		AddIconToken("$icon_autoforge$", "AutoForge.png", Vec2f(24, 32), 0, teamnum);
+		BuildBlock b(0, "autoforge", "$icon_autoforge$", "Auto-Forge:\n\nProcesses raw materials and alloys just for you.\n\n$orange$Requires $mat_coal$and$mat_ironingot$to produce steel$mat_steelingot$.$orange$\n");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
+		b.buildOnGround = true;
+		b.size.Set(24, 32);
+		page_buildings.push_back(b);
+	}
 	blocks.push_back(page_buildings);
 	
 

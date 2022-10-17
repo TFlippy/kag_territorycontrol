@@ -106,20 +106,20 @@ void addCommonEngineerBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		automation.push_back(b);
 	}
 	{
-		AddIconToken("$icon_autoforge$", "AutoForge.png", Vec2f(24, 32), 0, teamnum);
-		BuildBlock b(0, "autoforge", "$icon_autoforge$", "Auto-Forge:\n\nProcesses raw materials and alloys just for you.\n\n$orange$Requires 2$mat_coal$and$mat_ironingot$to produce 1 steel.$orange$\n");
-		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
+		AddIconToken("$icon_industrialsmelter$", "IndustrialSmelterIcon.png", Vec2f(19, 30), 0, teamnum);
+		BuildBlock b(0, "industrialsmelter", "$icon_industrialsmelter$", "Industrial Smelter:\n\nA large quantity smelter that produces 4x the amount of ingots.\n\n$orange$Requires$mat_coal$and$mat_ironingot$to produce steel$mat_steelingot$.$orange$\n");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 400);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
+        AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 40);
 		b.buildOnGround = true;
-		b.size.Set(24, 32);
+		b.size.Set(40, 40);
 		automation.push_back(b);
 	}
 	{
 		AddIconToken("$icon_inductionfurnace$", "InductionFurnace.png", Vec2f(40, 32), 0, teamnum);
-		BuildBlock b(0, "inductionfurnace", "$icon_inductionfurnace$", "Induction Furnace:\n\nA heavy-duty furnace that produces 4x more ingots at cost of lower speed.\n\n$orange$Requires 3$mat_coal$and$mat_ironingot$to produce 2 steel.$orange$\n");
+		BuildBlock b(0, "inductionfurnace", "$icon_inductionfurnace$", "Induction Furnace:\n\nA heavy-duty furnace that produces 5x more ingots at cost of lower speed.\n\n$orange$Requires$mat_oil$and$mat_ironingot$to produce steel$mat_steelingot$.$orange$\n");
 		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 60);
 		AddRequirement(b.reqs, "blob", "mat_copperwire", "Copper Wire", 20);
-		// AddRequirement(b.reqs, "blob", "mat_battery", "Voltron Battery Plus", 50);
 		AddRequirement(b.reqs, "tech", "bp_induction", "Induction", 1);
 		b.buildOnGround = true;
 		b.size.Set(40, 32);
