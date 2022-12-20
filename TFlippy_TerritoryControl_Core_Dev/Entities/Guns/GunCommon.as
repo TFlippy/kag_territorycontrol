@@ -128,6 +128,8 @@ f32 getAimAngle(CBlob@ this, CBlob@ holder)
 	float dis = Maths::Clamp((1.0f+dif.Length()*0.2f)*antirecoil, 0, dif.Length());
 	dif.Normalize();
 	aim = aim+dif*dis;
+    
+    if(this.get_bool("mouse_recoil_mode"))aim = HolderAim;
 	
 	CBlob@ force_target = getBlobByNetworkID(this.get_netid("force_aim"));
 	if(force_target !is null){

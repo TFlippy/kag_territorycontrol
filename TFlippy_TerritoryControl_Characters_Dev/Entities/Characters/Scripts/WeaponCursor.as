@@ -15,6 +15,8 @@ void onRender(CSprite@ this)
 			{
 
 				if(!hud.hasMenus())hud.HideCursor();
+                
+                bool OldCursor = gun.get_bool("mouse_recoil_mode");
 
 				GunSettings@ settings;
 				gun.get("gun_settings", @settings);
@@ -34,6 +36,7 @@ void onRender(CSprite@ this)
 				
 				int AimSpace = 8;
 				if (settings !is null)AimSpace = Maths::Max(settings.B_SPREAD*2,8);
+                if(OldCursor)AimSpace = 10;
 				
 				Vertex[] cross_height_vertex;
 				for( int i = 0; i < 4; i += 1){
@@ -65,7 +68,7 @@ void onRender(CSprite@ this)
 				
 				CBlob@ force_target = getBlobByNetworkID(gun.get_netid("force_aim"));
 				if(force_target is null){
-					GUI::DrawIcon("WeaponVirtualCursor.png", 0, Vec2f(32,32), virtual_pos+Vec2f(-31, -31));
+					if(!OldCursor)GUI::DrawIcon("WeaponVirtualCursor.png", 0, Vec2f(32,32), virtual_pos+Vec2f(-31, -31));
 				} else {
 					GUI::DrawIcon("WeaponVirtualCursor.png", 1, Vec2f(64,32), getDriver().getScreenPosFromWorldPos(force_target.getInterpolatedPosition()+Vec2f(0,-2))+Vec2f(-31, -31));
 				}
@@ -96,7 +99,8 @@ void onRender(CSprite@ this)
 					cross_height_vertex.push_back(Vertex(DrawPos.x+BotRight.x, DrawPos.y+BotRight.y,1, 1, 0, Col)); //bot right
 					cross_height_vertex.push_back(Vertex(DrawPos.x+BotLeft.x, DrawPos.y+BotLeft.y,1, 0.5, 0, Col)); //bot left
 				}
-				Render::RawQuads("GunCrossHair.png",cross_height_vertex);
+				if(!OldCursor)Render::RawQuads("GunCrossHair.png",cross_height_vertex);
+                else Render::RawQuads("GunCrossHairOld.png",cross_height_vertex);
 				
 				int Skip = 1;
 				bool angled = false;
