@@ -56,7 +56,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks)
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 75);
 		AddRequirement(b.reqs, "coin", "", "Coins", 50);
 		b.buildOnGround = true;
-		b.size.Set(55, 32);
+		b.size.Set(80, 24);
 		blocks[0].push_back(b);
 	}
 	{

@@ -336,8 +336,8 @@ void onTick(CRules@ this)
 				{
 					CBlob@[] bases;
 					getBlobsByTag("faction_base", @bases);
-					//getBlobsByTag("respawn", @bases);
 					CBlob@[] spawns;
+                    getBlobsByTag("respawn", @spawns);
 					int teamBases = 0;
 					bool has_bases = false;
 
@@ -462,7 +462,7 @@ void onTick(CRules@ this)
 
 					if (default_respawn)
 					{
-						CBlob@[] ruins;
+                        CBlob@[] ruins;
 						getBlobsByName("ruins", @ruins);
 
 						int ruins_count = 0;
@@ -547,6 +547,15 @@ bool doDefaultSpawn(CPlayer@ player, string blobType, u8 team, bool ignoreDisabl
 
 	CBlob@[] ruins;
 	getBlobsByName("ruins", @ruins);
+    
+    CBlob@[] outposts;
+	getBlobsByName("outpost", @outposts);
+
+    for (int i = 0; i < outposts.length; i++)
+	{
+		CBlob@ b = outposts[i];
+		if (b !is null && b.getTeamNum() >= 100) spawns.push_back(b);
+	}
 
 	for (int i = 0; i < ruins.length; i++)
 	{

@@ -443,6 +443,28 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		b.size.Set(24, 32);
 		page_buildings.push_back(b);
 	}
+    
+    if(teamnum < 100)
+    {
+        AddIconToken("$icon_outpost$", "VehicleIcons.png", Vec2f(32, 32), 6, teamnum);
+		BuildBlock b(0, "outpost", "$icon_outpost$", "Outpost\nA respawn point for your team.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 100);
+		AddRequirement(b.reqs, "coin", "", "Coins", 100);
+		b.buildOnGround = true;
+		b.size.Set(40, 40);
+		page_buildings.push_back(b);
+	}
+    if(teamnum >= 100)
+    {
+        AddIconToken("$icon_outpost$", "VehicleIcons.png", Vec2f(32, 32), 6, teamnum);
+		BuildBlock b(0, "outpost", "$icon_outpost$", "Outpost\nA respawn point for neutrals.");
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 250);
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 100);
+		b.buildOnGround = true;
+		b.size.Set(40, 40);
+		page_buildings.push_back(b);
+	}
 	blocks.push_back(page_buildings);
 	
 
