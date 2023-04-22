@@ -336,8 +336,8 @@ void onTick(CRules@ this)
 				{
 					CBlob@[] bases;
 					getBlobsByTag("faction_base", @bases);
+                    getBlobsByTag("respawn", @bases);
 					CBlob@[] spawns;
-                    getBlobsByTag("respawn", @spawns);
 					int teamBases = 0;
 					bool has_bases = false;
 
@@ -351,8 +351,12 @@ void onTick(CRules@ this)
 						CBlob@ base = bases[i];
 						if (base !is null && base.getTeamNum() == team)
 						{
-							has_bases = true;
-							if (base.hasTag("reinforcements allowed") || teamBases == 1) spawns.push_back(base);
+                            has_bases = true;
+                            if(base.hasTag("faction_base")){
+                                if(base.hasTag("reinforcements allowed") || teamBases == 1) spawns.push_back(base);
+                            } else {
+                                spawns.push_back(base);
+                            }
 						}
 					}
 
