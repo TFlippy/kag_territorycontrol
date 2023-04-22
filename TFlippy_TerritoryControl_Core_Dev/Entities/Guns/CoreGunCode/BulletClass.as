@@ -118,10 +118,17 @@ class BulletHolder
 			Bullet@ bullet = bullets[a];
 			bullet.onRender();
 		}
-		for (int a = 0; a < fade.length(); a++)
-		{
-			fade[a].onRender();
-		}
+        if(rules.get_bool("bullet_trails")){
+            for (int a = 0; a < fade.length(); a++)
+            {
+                fade[a].onRender();
+            }
+        } else {
+            for (int a = 0; a < fade.length(); a++)
+            {
+                fade[a].Kill();
+            }
+        }
 	}
 
 	Bullet@ CreateNewBullet(CBlob@ humanBlob, CBlob@ gun, f32 angle, Vec2f pos)

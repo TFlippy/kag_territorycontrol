@@ -36,6 +36,7 @@ void onInit(CBlob@ this)
 	this.set_u8("clickReload", 1); //'Click' moment after shooting
 	this.set_f32("gun_recoil_current", 0.0f); //Determines how far the kickback animation is when shooting
 
+    this.Tag("gun"); //Used for Toggling Recoil
 	this.Tag("weapon");
 	this.Tag("no shitty rotation reset");
 	this.Tag("hopperable");

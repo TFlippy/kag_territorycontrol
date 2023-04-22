@@ -46,6 +46,7 @@ bool draw_tier = false;
 void onInit(CRules@ this)
 {
 	onRestart(this);
+    loadUserSettings(this);
 }
 
 void onRestart(CRules@ this)
@@ -699,6 +700,69 @@ void onRenderScoreboard(CRules@ this)
 				} else {
 					this.set_bool("mouse_recoil_mode",true);
 				}
+                
+                saveUserSettings(this);
+                
+                CBlob @blob = getLocalPlayerBlob();
+                if(blob !is null)
+                if(blob.getCarriedBlob() !is null){
+                    CBlob @gun = blob.getCarriedBlob();
+                    if(gun.hasTag("gun")){
+                        CBitStream params;
+                        params.write_bool(this.get_bool("mouse_recoil_mode"));
+                        gun.SendCommand(gun.getCommandID("set_recoil"), params);
+                    }
+                }
+			}
+		}
+		else
+		{
+			GUI::DrawPane(tl, br, 0xffcfcfcf);
+		}
+
+		GUI::DrawTextCentered(text, Vec2f(tl.x + (width * 0.50f), tl.y + (height * 0.50f)), 0xffffffff);
+	}
+    
+    // Toggle Bullet Trails Button
+	{
+		f32 width = 100;
+		f32 height = 40;
+
+		string text = "Bullet Trails: Off";
+		if(this.get_bool("bullet_trails")){
+			text = "Bullet Trails: On";
+		}
+
+		Vec2f dim;
+		GUI::GetTextDimensions(text, dim);
+
+		width = dim.x + 20;
+		XOffset += width+20;
+
+		Vec2f tl = Vec2f(getScreenWidth() - XOffset, y_offset + 60);
+		Vec2f br = Vec2f(getScreenWidth() - XOffset + width, tl.y + height);
+
+		CControls@ controls = getControls();
+		Vec2f mousePos = controls.getMouseScreenPos();
+
+		bool hover = mousePos.x > tl.x && mousePos.x < br.x && mousePos.y > tl.y && mousePos.y < br.y;
+
+		if (hover)
+		{
+			if (controls.isKeyPressed(KEY_LBUTTON))GUI::DrawSunkenPane(tl, br);
+			else GUI::DrawButton(tl, br);
+		
+			if (controls.isKeyJustPressed(KEY_LBUTTON))
+			{
+				Sound::Play("option");
+
+				if(this.get_bool("bullet_trails")){
+					this.set_bool("bullet_trails",false);
+				} else {
+					this.set_bool("bullet_trails",true);
+				}
+                
+                saveUserSettings(this);
 			}
 		}
 		else
@@ -714,6 +778,29 @@ void onRenderScoreboard(CRules@ this)
 
 
 	if (hovered_accolade > -1) drawHoverExplanation(hovered_accolade, hovered_age, hovered_tier, mousePos + Vec2f(0,30));
+}
+
+void loadUserSettings(CRules@ this)
+{
+    ConfigFile@ cfg = ConfigFile();
+    if(!cfg.loadFile("../Cache/TCUserConfig.cfg")){
+        cfg.add_bool("reticle", true);
+        cfg.add_bool("bullet_trails", true);
+    }
+
+    if(cfg.exists("reticle"))this.set_bool("mouse_recoil_mode",cfg.read_bool("reticle"));
+    if(cfg.exists("bullet_trails"))this.set_bool("bullet_trails",cfg.read_bool("bullet_trails"));
+    
+    cfg.saveFile("TCUserConfig.cfg");
+}
+
+void saveUserSettings(CRules@ this)
+{
+    ConfigFile@ cfg = ConfigFile();
+    cfg.loadFile("../Cache/TCUserConfig.cfg");
+    cfg.add_bool("reticle", this.get_bool("mouse_recoil_mode"));
+    cfg.add_bool("bullet_trails", this.get_bool("bullet_trails"));
+    cfg.saveFile("TCUserConfig.cfg");
 }
 
 void drawHoverExplanation(int hovered_accolade, int hovered_age, int hovered_tier, Vec2f centre_top)

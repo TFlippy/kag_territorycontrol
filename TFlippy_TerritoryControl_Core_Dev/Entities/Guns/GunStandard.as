@@ -187,7 +187,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	else if (cmd == this.getCommandID("set_recoil"))
 	{
 		this.set_bool("mouse_recoil_mode",params.read_bool());
-		print("Wha"+this.get_bool("mouse_recoil_mode"));
 	}
 }
 
@@ -208,11 +207,8 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 		}
 		
 		CBitStream params;
-
 		params.write_bool(getRules().get_bool("mouse_recoil_mode"));
-		
 		this.SendCommand(this.getCommandID("set_recoil"), params);
-		print("Wha2"+getRules().get_bool("mouse_recoil_mode"));
 	}
 }
 

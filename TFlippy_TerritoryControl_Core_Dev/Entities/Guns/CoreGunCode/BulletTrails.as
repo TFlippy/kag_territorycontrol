@@ -1,11 +1,4 @@
-//////////////////////////////////////////////////////
-//
-//  BulletTrails.as - Vamist
-//
-//  Never got round to finishing this
-//  This just added a fade effect behind the bullets 
-//  so it looks a bit better
-//
+
 
 class BulletFade
 {
@@ -51,5 +44,10 @@ class BulletFade
 				fade_vertex.push_back(Vertex(Back.x+Under.x*0.5f, Back.y+Under.y*0.5f,1, 0, 0, BackCol)); //bot left
 			}
 		}
+    }
+    
+    void Kill()
+    {
+        TimeLeft = 0;
     }
 }
