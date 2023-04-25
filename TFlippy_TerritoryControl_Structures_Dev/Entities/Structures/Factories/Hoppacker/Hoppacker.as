@@ -47,39 +47,15 @@ void onInit(CBlob@ this)
 
 	this.Tag("builder always hit");
 	
-	this.set_u8("packer mode", 0);
+    this.set_bool("drop_crates",false);
 	
 	this.addCommandID("crate");
-	
+	this.addCommandID("crate_option");
 	
 	AttachmentPoint@ crateSlot = this.getAttachmentPoint(0);
 	if(crateSlot !is null){
 		crateSlot.offsetZ = 2;
 	}
-}
-
-void onTick(CBlob@ this)
-{
-	/*
-	CInventory@ inv = this.getInventory();
-
-	if (inv.getItemsCount() == 0) return;
-	
-	CBlob@[] blobs;
-	
-	for (uint i = 0; i < inv.getItemsCount(); i++)
-	{
-		CBlob@ blob = inv.getItem(i);
-	
-		if (blob !is null)
-		{
-			if (blob.getQuantity() == blob.maxQuantity) blobs.push_back(blob);
-		}
-	}
-	
-	if (blobs.length >= (this.get_u8("packer mode") + 1)) PackItems(this, blobs);
-	*/
-	
 }
 
 void PackItems(CBlob@ this, CBlob@[] blobs)
@@ -121,7 +97,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 				@crate = createCrate(this);
 			}
 			if(crate !is null){
-				if(!crate.server_PutInInventory(blob)){
+				if(!crate.server_PutInInventory(blob) && this.get_bool("drop_crates")){
 					this.DropCarried();
 					@crate = createCrate(this);
 					crate.server_PutInInventory(blob);
@@ -151,44 +127,49 @@ CBlob@ createCrate(CBlob @this){
 
 void GetButtonsFor( CBlob@ this, CBlob@ caller )
 {
-	CBitStream params;
-	params.write_u16(caller.getNetworkID());
+	bool askForWrench = true;
+    string lock = "Lock";
+    int icon = 3;
+    if(!this.get_bool("drop_crates")){
+        lock = "Unlock";
+        icon = 2;
+    }
 
 	if(this.getCarriedBlob() !is null){
-		caller.CreateGenericButton(24, Vec2f(0, -9), this, this.getCommandID("crate"), "Unload Crate",params);
+		if(caller.getCarriedBlob() !is null && caller.getCarriedBlob().getName() == "wrench"){
+            CBitStream params;
+            params.write_bool(!this.get_bool("drop_crates"));
+            caller.CreateGenericButton(icon, Vec2f(0, -9), this, this.getCommandID("crate_option"), lock+" crate",params);
+            askForWrench = false;
+        } else
+        if(this.get_bool("drop_crates")){
+            CBitStream params;
+            params.write_u16(caller.getNetworkID());
+            caller.CreateGenericButton(24, Vec2f(0, -9), this, this.getCommandID("crate"), "Unload Crate",params);
+            askForWrench = false;
+        }
 	} else
-	if(caller.getCarriedBlob() !is null)
-	if(caller.getCarriedBlob().hasTag("crate")){
-		caller.CreateGenericButton(24, Vec2f(0, -9), this, this.getCommandID("crate"), "Load Crate",params);
-	}
-}
-
-void PackerMenu(CBlob@ this, CBlob@ caller)
-{
-	if (caller.isMyPlayer())
-	{
-		CGridMenu@ menu = CreateGridMenu(getDriver().getScreenCenterPos() + Vec2f(0.0f, 0.0f), this, Vec2f(4, 1), "Set packing mode");
-		
-		if (menu !is null)
-		{
-			for (uint i = 0; i < 4; i++)
-			{
-				CBitStream params;
-				params.write_u8(i);
-
-				string text = "Set Packer Mode to " + (1 + i) + " stacks.";
-				
-				AddIconToken("$packer_icon_" + i + "$", "Packer_Icons.png", Vec2f(16, 16), i);
-				
-				CGridButton @butt = menu.AddButton("$packer_icon_" + i + "$", text, this.getCommandID("set packer mode"), params);
-				butt.hoverText = "Packer will pack items into crates if " + (i + 1) + "/4 slots in its inventory are full.";
-				if (this.get_u8("packer mode") == i)
-				{
-					butt.SetEnabled(false);
-				}
-			}
-		}
-	}
+	if(caller.getCarriedBlob() !is null){
+        if(caller.getCarriedBlob().hasTag("crate")){
+            CBitStream params;
+            params.write_u16(caller.getNetworkID());
+            caller.CreateGenericButton(24, Vec2f(0, -9), this, this.getCommandID("crate"), "Load Crate",params);
+            askForWrench = false;
+        } else
+        if(caller.getCarriedBlob().getName() == "wrench"){
+            CBitStream params;
+            params.write_bool(!this.get_bool("drop_crates"));
+            caller.CreateGenericButton(icon, Vec2f(0, -9), this, this.getCommandID("crate_option"), lock,params);
+            askForWrench = false;
+        }
+    }
+    
+    if(askForWrench){
+        CButton @butt= caller.CreateGenericButton(icon, Vec2f(0, -9), this, this.getCommandID("crate_option"), "Requires Wrench to "+lock);
+        if(butt !is null){
+            butt.SetEnabled(false);
+        }
+    }
 }
 
 void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
@@ -206,6 +187,12 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 				this.server_Pickup(caller.getCarriedBlob());
 			}
 		}
+	}
+    
+    if (cmd == this.getCommandID("crate_option"))
+	{	
+		bool drop_crates = params.read_bool();
+        this.set_bool("drop_crates",drop_crates);
 	}
 }
 
