@@ -35,10 +35,10 @@ void onTick(CSprite@ this)
 	}
 }
 
-void onSetStatic(CBlob@ this, const bool isStatic)
-{
-	this.setPosition(this.getPosition()-Vec2f(0,2));
-}
+//void onSetStatic(CBlob@ this, const bool isStatic)
+//{
+//	this.setPosition(this.getPosition()-Vec2f(0,2));
+//}
 
 void onInit(CBlob@ this)
 {
