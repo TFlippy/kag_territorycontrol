@@ -164,10 +164,10 @@ void addCommonEngineerBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		automation.push_back(b);
 	}
 	{
-		BuildBlock b(0, "drillrig", "$icon_drillrig$", "Driller Mole:\n\nAn automatic drilling machine that mines resources underneath.");
-		AddRequirement(b.reqs, "blob", "drill", "Drill", 1);
-		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
-		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
+		AddIconToken("$icon_grabber$", "Grabber.png", Vec2f(24, 24), 1, teamnum);
+		BuildBlock b(0, "grabber", "$icon_grabber$", "Grabber:\n\nGrabs $blue$specified$blue$ item from the floor or nearby storages.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 200);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
 		b.buildOnGround = true;
 		b.size.Set(24, 24);
 		automation.push_back(b);
@@ -239,6 +239,15 @@ void addCommonEngineerBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		AddRequirement(b.reqs, "tech", "bp_chemistry", "Chemistry", 1);
 		b.buildOnGround = true;
 		b.size.Set(48, 24);
+		automation.push_back(b);
+	}
+    {
+		BuildBlock b(0, "drillrig", "$icon_drillrig$", "Driller Mole:\n\nAn automatic drilling machine that mines resources underneath.");
+		AddRequirement(b.reqs, "blob", "drill", "Drill", 1);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 100);
+		AddRequirement(b.reqs, "blob", "mat_ironingot", "Iron Ingot", 2);
+		b.buildOnGround = true;
+		b.size.Set(24, 24);
 		automation.push_back(b);
 	}
 	{
