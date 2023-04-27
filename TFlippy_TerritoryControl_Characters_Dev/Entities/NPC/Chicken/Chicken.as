@@ -136,7 +136,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return blob !is null && (blob.isCollidable() && !blob.hasTag("player"));
+	return blob !is null && (blob.isCollidable() && !blob.hasTag("player") && blob.getName() != "egg");
 	//return !blob.hasTag("flesh");
 }
 

@@ -22,7 +22,7 @@ void onTick(CBlob@ this)
 
 	if (fq.Ate()) {
 		//this.getSprite().PlaySound("Pluck0");
-		server_CreateBlob("egg", this.getTeamNum(), this.getPosition() + Vec2f(0.0f, 5.0f));
+		server_CreateBlob("egg", this.getTeamNum(), this.getPosition() + Vec2f(0.0f, 0.0f));
 	}
 }
 
