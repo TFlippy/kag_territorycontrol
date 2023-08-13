@@ -61,6 +61,7 @@ LootItem@[] c_items =
 	LootItem("juggernauthammer", 1, 1, 50),
 	LootItem("gyromat", 1, 1, 500),
 	LootItem("bp_chemistry", 1, 1, 175),
+	LootItem("bp_modification", 1, 0, 1000), //This is the only way to get this so chances are a bit higher
 	LootItem("hobo", 1, 1, 122),
 	LootItem("cube", 1, 0, 1) //poggers
 };

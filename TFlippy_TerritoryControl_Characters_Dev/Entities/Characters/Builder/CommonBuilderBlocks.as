@@ -89,6 +89,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 	AddIconToken("$icon_nursery$","Nursery.png",Vec2f(40, 32), 5, teamnum);
 	AddIconToken("$icon_library$", "Library.png", Vec2f(40, 24), 0, teamnum);
 	AddIconToken("$icon_workshop$", "Building.png", Vec2f(40, 24), 0);
+	AddIconToken("$icon_modificationstation$", "ModificationStation.png", Vec2f(24, 24), 0, teamnum);
 
 	//Miscellaneous
 	AddIconToken("$icon_lamppost$", "LampPost.png", Vec2f(8, 24), 0);
@@ -425,6 +426,15 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int teamnum = 7)
 		b.buildOnGround = true;
 		b.size.Set(40, 32);
 		page_buildings.push_back(b);
+	}
+	{	
+		BuildBlock b(0, "modificationstation", "$icon_modificationstation$", "Modification Station \n Modify various things.");
+		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 100);
+		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 200);
+		AddRequirement(b.reqs, "coin", "", "Coins", 200);
+		b.buildOnGround = true;
+		b.size.Set(24, 24);
+		blocks[1].push_back(b);
 	}
 	{
 		BuildBlock b(0, "library", "$icon_library$", "Library\nBuy and sell various blueprints.");
